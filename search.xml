@@ -1,6 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>COMP3357 notes P1 - Cryptographic primitives</title>
+    <url>/2023/05/25/Cryptography-COMP3357/</url>
+    <content><![CDATA[<p>这一学期糊里糊涂选到了 CS 的高阶课 COMP3357，虽然死了很多脑细胞，但是学到了很多。加密学很有意思，Ravi 讲的很好，TA Zhang Chengru 也很认真负责，上起来很有实感</p>
+<p>之前的笔记太全面肯定不会再仔细看了，于是想趁暑假做一个 digest，让未来的自己也能回忆起一些有趣的内容。<a href="https://www.cnblogs.com/VeniVidiVici/category/2295972.html">这里</a>存放了所有的笔记</p>
+<span id="more"></span>
+<p>我打算将这个 digest 分为 2 parts，part 1 (本文) 主要介绍 cryptographic primitives 和他们的安全性定义；part 2 则介绍一些重要的加密学概念，包含群论和数论的有关知识</p>
+<p>当然，这两部分之间有着千丝万缕的联系，不可能完完全全的将其独立开来；由于这只是一个 digest，所以大量的细节将会省略，我只想尽量精简的用自己的理解描述所学到的东西</p>
+<p><br></p>
+<h2 id="Cryptographic-primitives"><a href="#Cryptographic-primitives" class="headerlink" title="Cryptographic primitives"></a>Cryptographic primitives</h2><p>Cryptographic primitives are well-established, low-level cryptographic algorithms that are frequently used to build cryptographic protocols for computer security systems. </p>
+<p>In this course, 6 kinds of cryptographic primitives are covered: </p>
+<ul>
+<li>Encryption scheme (private key encryption, public key encryption)</li>
+<li>Message authentication code, MAC</li>
+<li>Hash function</li>
+<li>Key exchange protocol</li>
+<li>Identification scheme</li>
+<li>Digital signature</li>
+</ul>
+<p>In most cases, the <strong>security</strong> of a cryptographic primitive is defined by an <strong>experiment</strong> (or <strong>game</strong>). The idea of <strong>reduction</strong> (归约) is critical in designing such experiments.</p>
+<p>In different application scenarios, the definition of <strong>security</strong> may vary. For a cryptographic primitive, <strong>strong</strong> notions are often <strong>more secure</strong> than <strong>weak</strong> ones. </p>
+<p>In constructing these primitives, many information theory and math related concepts are frequently applied. So we will also introduce some of them in P2: </p>
+<ul>
+<li>Information theory</li>
+<li>Pseudorandomness</li>
+<li>One-way function (this is also some kind of a cryptographic primitive)</li>
+<li>Number theory &amp; Group theory</li>
+<li>Hard problems (Factoring problem, RSA problem, Discrete logarithm problem, Diffie-Hellman problem)</li>
+</ul>
+<p>These concepts ensure the <strong>correctness</strong> and <strong>security</strong> of some primitives.</p>
+<p><br></p>
+<h2 id="Encryption-scheme"><a href="#Encryption-scheme" class="headerlink" title="Encryption scheme"></a>Encryption scheme</h2><p>Encryption scheme is the most common cryptographic primitive. (符合我对加密学的想象) It encrypts <strong>plaintext</strong> $m$ into <strong>ciphertext</strong> $c$. Without knowing specific <strong>key</strong> $k$, one cannot(*) recover $m$ from $c$.</p>
+<h3 id="Private-key-encryption"><a href="#Private-key-encryption" class="headerlink" title="Private key encryption"></a>Private key encryption</h3><p>Private key encryption, also known as <strong>symmetric encryption</strong>, is the encryption scheme that uses only one secret key $k$. It consists of 3 algorithms: key generation algorithm $Gen$, encryption algorithm $Enc$, decryption algorithm $Dec$.</p>
+<p>Algorithm $Gen(1^n)$ generates a secret key $k$. $k$ is only known by Alice (sender) and Bob (receiver). </p>
+<p>A typical private key encryption application scenario:</p>
+<ul>
+<li>$Gen(1^n)\to k$</li>
+<li>Alice runs $Enc_k(m)\to c$</li>
+<li>Alice transmits ciphertext $c$ to Bob through an <strong>insecure channel</strong></li>
+<li>Bob runs $Dec_k(c)\to m$, recovers the plaintext</li>
+</ul>
+<p>Note that $Enc$, $Dec$ take both key $k$ and $m$/$c$ as input. </p>
+<p>The unknowability of key $k$ is critical to the security of encryption scheme, because <strong>Kerckhoff’s principle</strong> indicates that the whole cryptosystem except the key is public knowledge. Adversary knows every detail about algorithms $Gen, Enc$ and $Dec$.</p>
+<h3 id="Public-key-encryption"><a href="#Public-key-encryption" class="headerlink" title="Public key encryption"></a>Public key encryption</h3><p>Public key encryption, also known as <strong>asymmetric encryption</strong>, is the encryption scheme that uses 2 keys: public key $pk$ and private key $sk$. It also consists of 3 algorithms: $Gen, Enc$ and $Dec$.</p>
+<p>Algorithm $Gen(1^n)$ generates $pk, sk$. Public key $pk$ is public knowledge; Private key $sk$ is only known by Bob (receiver). That’s why it is called <strong>asymmetric</strong>: the key distribution between 2 parties is uneven, Alice (sender) only knows $pk$, while Bob (receiver) knows both $sk$ and $pk$.</p>
+<p>A typical public key encryption application scenario:</p>
+<ul>
+<li>$Gen(1^n)\to \langle pk, sk\rangle$, $pk$ is distributed publicly. $sk$ remains secret except to Bob.</li>
+<li>Alice runs $Enc_{pk}(m)\to c$</li>
+<li>Alice transmits ciphertext $c$ to Bob through an insecure channel</li>
+<li>Bob runs $Dec_{sk}(c)\to m$</li>
+</ul>
+<p>Note that $Enc$ takes $pk, m$ as input, $Dec$ takes $sk, c$ as input.</p>
+<h3 id="Security-of-encryption-scheme"><a href="#Security-of-encryption-scheme" class="headerlink" title="Security of encryption scheme"></a>Security of encryption scheme</h3><h4 id="Perfect-Secrecy"><a href="#Perfect-Secrecy" class="headerlink" title="Perfect Secrecy"></a>Perfect Secrecy</h4><p>$\Pr[M=m|C=c]=\Pr[M=m]$.</p>
+<p>The <strong>strongest</strong> definition of security. It indicates that adversary <strong>with unbounded computational power</strong> cannot obtain <strong>any information about plaintext</strong> from a known ciphertext.</p>
+<p>That is, knowing the corresponding ciphertext $c$ <strong>has exactly no advantage</strong>. </p>
+<h4 id="EAV-security"><a href="#EAV-security" class="headerlink" title="EAV security"></a>EAV security</h4><h4 id="CPA-security"><a href="#CPA-security" class="headerlink" title="CPA security"></a>CPA security</h4><h4 id="CCA-security"><a href="#CCA-security" class="headerlink" title="CCA security"></a>CCA security</h4>]]></content>
+      <categories>
+        <category>notes</category>
+        <category>cryptography</category>
+      </categories>
+      <tags>
+        <tag>cryptography</tag>
+        <tag>course notes</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hexo blog 搭建笔记</title>
     <url>/2023/05/24/hexo-blog-study/</url>
     <content><![CDATA[<p><strong>Hello Hexo! Hello NexT! Hello GitHub Pages!</strong></p>
