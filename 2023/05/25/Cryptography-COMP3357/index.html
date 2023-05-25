@@ -28,7 +28,7 @@
 <meta property="og:description" content="这一学期糊里糊涂选到了 CS 的高阶课 COMP3357，虽然死了很多脑细胞，但是学到了很多。加密学很有意思，Ravi 讲的很好，TA Zhang Chengru 也很认真负责，上起来很有实感 之前的笔记太全面肯定不会再仔细看了，于是想趁暑假做一个 digest，让未来的自己也能回忆起一些有趣的内容。这里存放了所有的笔记">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-05-25T05:10:36.000Z">
-<meta property="article:modified_time" content="2023-05-25T09:08:54.414Z">
+<meta property="article:modified_time" content="2023-05-25T13:29:47.202Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="cryptography">
 <meta property="article:tag" content="course notes">
@@ -219,7 +219,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2023-05-25 13:10:36 / Modified: 17:08:54" itemprop="dateCreated datePublished" datetime="2023-05-25T13:10:36+08:00">2023-05-25</time>
+              <time title="Created: 2023-05-25 13:10:36 / Modified: 21:29:47" itemprop="dateCreated datePublished" datetime="2023-05-25T13:10:36+08:00">2023-05-25</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -255,14 +255,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3.4k</span>
+              <span>4k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>6 mins.</span>
+              <span>7 mins.</span>
             </span>
 
         </div>
@@ -324,10 +324,18 @@
 <li>Bob runs $Dec_{sk}(c)\to m$</li>
 </ul>
 <p>Note that $Enc$ takes $pk, m$ as input, $Dec$ takes $sk, c$ as input.</p>
-<h3 id="Security-of-encryption-scheme"><a href="#Security-of-encryption-scheme" class="headerlink" title="Security of encryption scheme"></a>Security of encryption scheme</h3><h4 id="Perfect-Secrecy"><a href="#Perfect-Secrecy" class="headerlink" title="Perfect Secrecy"></a>Perfect Secrecy</h4><p>$\Pr[M=m|C=c]=\Pr[M=m]$.</p>
+<p><br></p>
+<h3 id="Security-of-encryption-scheme"><a href="#Security-of-encryption-scheme" class="headerlink" title="Security of encryption scheme"></a>Security of encryption scheme</h3><h4 id="Perfect-Secrecy-Perfect-indistinguishability"><a href="#Perfect-Secrecy-Perfect-indistinguishability" class="headerlink" title="Perfect Secrecy (Perfect indistinguishability)"></a>Perfect Secrecy (Perfect indistinguishability)</h4><p>$\Pr[M=m|C=c]=\Pr[M=m]$.</p>
 <p>The <strong>strongest</strong> definition of security. It indicates that adversary <strong>with unbounded computational power</strong> cannot obtain <strong>any information about plaintext</strong> from a known ciphertext.</p>
-<p>That is, knowing the corresponding ciphertext $c$ <strong>has exactly no advantage</strong>. </p>
-<h4 id="EAV-security"><a href="#EAV-security" class="headerlink" title="EAV security"></a>EAV security</h4><h4 id="CPA-security"><a href="#CPA-security" class="headerlink" title="CPA security"></a>CPA security</h4><h4 id="CCA-security"><a href="#CCA-security" class="headerlink" title="CCA security"></a>CCA security</h4>
+<p>That is, knowing the corresponding ciphertext $c$ <strong>gives exactly no advantage</strong> to obtaining the plaintext $m$.</p>
+<p>Shannon points out that an encryption scheme is secure only when $|\mathscr{K}|\geq|\mathscr{M}|$ ($\mathscr{K}$ is key space, $\mathscr{M}$ is message space). One-time pad is a typical perfectly secure scheme.</p>
+<p>Perfect secrecy is an ideal definition; in real life, we <strong>relax</strong> this definition by:</p>
+<ul>
+<li><strong>Polynomial probabilisitic time (PPT)</strong> adversary (deprived of unbounded computational power)</li>
+<li>adversary is allowed to success with <strong>negligible</strong> probability</li>
+</ul>
+<h4 id="EAV-security"><a href="#EAV-security" class="headerlink" title="EAV security"></a>EAV security</h4><p>EAV security requires encryption scheme to be secure against any passive adversaries observing only one ciphertext. The threat model is represented by the experiment $\mathtt{PrivK}^{eav}_{\mathscr{A}. \Pi}$: </p>
+<h4 id="CPA-security"><a href="#CPA-security" class="headerlink" title="CPA security"></a>CPA security</h4><h4 id="CCA-security"><a href="#CCA-security" class="headerlink" title="CCA security"></a>CCA security</h4>
     </div>
 
     
@@ -426,7 +434,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Cryptographic-primitives"><span class="nav-number">1.</span> <span class="nav-text">Cryptographic primitives</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Encryption-scheme"><span class="nav-number">2.</span> <span class="nav-text">Encryption scheme</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Private-key-encryption"><span class="nav-number">2.1.</span> <span class="nav-text">Private key encryption</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Public-key-encryption"><span class="nav-number">2.2.</span> <span class="nav-text">Public key encryption</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Security-of-encryption-scheme"><span class="nav-number">2.3.</span> <span class="nav-text">Security of encryption scheme</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Perfect-Secrecy"><span class="nav-number">2.3.1.</span> <span class="nav-text">Perfect Secrecy</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#EAV-security"><span class="nav-number">2.3.2.</span> <span class="nav-text">EAV security</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CPA-security"><span class="nav-number">2.3.3.</span> <span class="nav-text">CPA security</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CCA-security"><span class="nav-number">2.3.4.</span> <span class="nav-text">CCA security</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Cryptographic-primitives"><span class="nav-number">1.</span> <span class="nav-text">Cryptographic primitives</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Encryption-scheme"><span class="nav-number">2.</span> <span class="nav-text">Encryption scheme</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Private-key-encryption"><span class="nav-number">2.1.</span> <span class="nav-text">Private key encryption</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Public-key-encryption"><span class="nav-number">2.2.</span> <span class="nav-text">Public key encryption</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Security-of-encryption-scheme"><span class="nav-number">2.3.</span> <span class="nav-text">Security of encryption scheme</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Perfect-Secrecy-Perfect-indistinguishability"><span class="nav-number">2.3.1.</span> <span class="nav-text">Perfect Secrecy (Perfect indistinguishability)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#EAV-security"><span class="nav-number">2.3.2.</span> <span class="nav-text">EAV security</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CPA-security"><span class="nav-number">2.3.3.</span> <span class="nav-text">CPA security</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CCA-security"><span class="nav-number">2.3.4.</span> <span class="nav-text">CCA security</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
