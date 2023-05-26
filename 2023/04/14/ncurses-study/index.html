@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 6.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-custom.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
 <link rel="stylesheet" href="/css/main.css">
@@ -304,7 +304,7 @@
 <p><br></p>
 <h2 id="在指定位置输出"><a href="#在指定位置输出" class="headerlink" title="在指定位置输出"></a>在指定位置输出</h2><p>在 ncurses 模式中，我们可以通过 <code>mv()</code> 函数轻松控制光标的位置，从而实现在终端的指定位置输出</p>
 <p><code>mv(x, y)</code> 将光标移动到当前窗口的第 $x$ 行第 $y$ 列 (<strong>行列均从 $0$ 开始</strong>)，且接下来输出的内容都将从该位置开始</p>
-<p>以下实例将在<strong>从屏幕中央开始</strong> (注意，是开始而不是位于) 输出 “Hello World!”</p>
+<p>以下实例将在<strong>从屏幕中央开始</strong> (注意，是开始而不是位于) 输出 &quot;Hello World!&quot;</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;ncurses.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"><span class="type">int</span> scrLine, scrCol;</span><br><span class="line"><span class="built_in">getmaxyx</span>(stdscr, scrLine, scrCol);       <span class="comment">// 获取标准屏幕的行/列数</span></span><br><span class="line"><span class="built_in">move</span>(scrLine / <span class="number">2</span> - <span class="number">1</span>, scrCol / <span class="number">2</span> - <span class="number">1</span>);   <span class="comment">// 将光标移至屏幕中央</span></span><br><span class="line"><span class="built_in">printw</span>(<span class="string">&quot;Hello World!&quot;</span>);</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 <p>移动光标和输出可以在同一个函数 <code>mvprintw()</code> 中完成: 例如上例程序可写成 <code>mvprintw(scrLine / 2 - 1, scrCol / 2 - 1, &quot;Hello World!&quot;)</code></p>
 <p>在输出完毕后，使用 <code>refresh()</code> 进行刷新，将输出显示到当前屏幕上</p>
@@ -331,7 +331,7 @@
 <p>只有将对父窗口重新刷新 <code>refresh()</code> 之后，所有的输出内容才会显示</p>
 <p><br></p>
 <h2 id="窗口转储"><a href="#窗口转储" class="headerlink" title="窗口转储"></a>窗口转储</h2><p>这在实现 text-base game 中是一个很实用的功能，它可以用来实现场景的切换，与<strong>读/存档功能</strong></p>
-<p>例如，”开始” 界面可以进入 “游戏” 界面，但从 “游戏” 界面返回时，由于屏幕已经被 “游戏” 界面所在窗口覆盖，我们需要重新加载 “开始” 界面</p>
+<p>例如，&quot;开始&quot; 界面可以进入 &quot;游戏&quot; 界面，但从 &quot;游戏&quot; 界面返回时，由于屏幕已经被 &quot;游戏&quot; 界面所在窗口覆盖，我们需要重新加载 &quot;开始&quot; 界面</p>
 <p>此时，利用窗口的转储，我们可以直接恢复之前的界面</p>
 <h3 id="标准窗口转储"><a href="#标准窗口转储" class="headerlink" title="标准窗口转储"></a>标准窗口转储</h3><p>标准窗口 stdscr 可以利用下面的两个函数进行存储与读取:</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">scr_dump</span><span class="params">(<span class="type">const</span> <span class="type">char</span>*)</span></span>;    <span class="comment">// 参数是当前目录下文件的名称: scr_dump 将会把标准窗口中的内容存储到对应名称的文件中</span></span><br><span class="line">                              <span class="comment">// 若当前目录下没有该名称的文件，将会创建一个</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">scr_restore</span><span class="params">(<span class="type">const</span> <span class="type">char</span>*)</span></span>; <span class="comment">// scr_restore 函数将会读取对应文件中存储的内容，并将其载入到标准窗口中</span></span><br></pre></td></tr></table></figure>
@@ -351,7 +351,7 @@
 <h2 id="颜色设置"><a href="#颜色设置" class="headerlink" title="颜色设置"></a>颜色设置</h2><p>有时候我们希望改变窗口的背景与文本颜色， ncurses 库对此也提供了支持</p>
 <p>在使用之前，我们先初始化颜色设置</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">has_color</span><span class="params">(<span class="type">void</span>)</span></span>;            <span class="comment">// 返回该环境是否支持颜色设置</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">start_color</span><span class="params">(<span class="type">void</span>)</span></span>;           <span class="comment">// 初始化颜色设置</span></span><br></pre></td></tr></table></figure>
-<p>在 <code>start_color()</code> 成功调用后，一系列的常量将会产生，例 <code>COLOR</code> (支持的颜色数量)，<code>COLOR_BLACK</code> (黑色), <code>COLOR_WHITE</code>…</p>
+<p>在 <code>start_color()</code> 成功调用后，一系列的常量将会产生，例 <code>COLOR</code> (支持的颜色数量)，<code>COLOR_BLACK</code> (黑色), <code>COLOR_WHITE</code>...</p>
 <p>我们使用 <code>init_pair()</code> 函数来创建 <strong>背景-文本</strong> 的颜色对，并用 <code>attron()</code> 函数激活</p>
 <p>接下来，直到 <code>attroff()</code> 关闭之前，所有输出的 背景-文本 都将是指定的颜色对</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">init_pair</span>(<span class="number">1</span>, COLOR_BLACK, COLOR_WHITE);  <span class="comment">// [黑]底[白]字为第 1 个颜色对</span></span><br><span class="line">                                         <span class="comment">// 注意，每一种颜色对的编号必须是不同的！</span></span><br><span class="line"><span class="built_in">attron</span>(<span class="built_in">COLOR_PAIR</span>(<span class="number">1</span>));                   <span class="comment">// 传入之前定义的颜色对作为参数 (以编号表示)，开启颜色设置</span></span><br><span class="line"><span class="built_in">printw</span>(<span class="string">&quot;Black background white text\n&quot;</span>);</span><br><span class="line"><span class="built_in">attroff</span>(<span class="built_in">COLOR_PAIR</span>(<span class="number">1</span>));                  <span class="comment">// 关闭颜色设置，恢复默认</span></span><br><span class="line">                                         <span class="comment">// 此处也可以直接 attron 其他颜色对，而无需先 attroff</span></span><br></pre></td></tr></table></figure>
@@ -504,7 +504,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
