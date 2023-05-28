@@ -12,7 +12,7 @@
 
 <link rel="stylesheet" href="/css/main.css">
 
-<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Sitka Heading:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
@@ -28,7 +28,7 @@
 <meta property="og:description" content="这一学期糊里糊涂选到了 CS 的高阶课 COMP3357，虽然死了很多脑细胞，但是学到了很多。加密学很有意思，Ravi 讲的很好，TA Zhang Chengru 也很认真负责，上起来很有实感 之前的笔记 (这里) 太全面肯定不会再仔细看了，于是想趁暑假做一个 digest，让未来的自己也能回忆起一些有趣的，令人大呼巧妙 (Eureka!) 的内容。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-05-25T05:10:36.000Z">
-<meta property="article:modified_time" content="2023-05-28T03:43:40.723Z">
+<meta property="article:modified_time" content="2023-05-28T09:14:02.399Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="cryptography">
 <meta property="article:tag" content="course notes">
@@ -222,13 +222,6 @@
 
               <time title="Created: 2023-05-25 13:10:36" itemprop="dateCreated datePublished" datetime="2023-05-25T13:10:36+08:00">2023-05-25</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-05-28 11:43:40" itemprop="dateModified" datetime="2023-05-28T11:43:40+08:00">2023-05-28</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -257,20 +250,43 @@
     </a>
   </span>
   
-  <br>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            繁
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "繁"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "简"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+<br>
             <span class="post-meta-item" title="Symbols count in article">
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>12k</span>
+              <span>15k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>19 mins.</span>
+              <span>25 mins.</span>
             </span>
 
         </div>
@@ -461,7 +477,58 @@
 <p>光是写出来就有一大串，就不具体介绍了 (我有一个绝妙的证明.jpg)</p>
 </blockquote>
 <p><br></p>
+<h2 id="Symmetric-or-Asymmetric-Key-s"><a href="#Symmetric-or-Asymmetric-Key-s" class="headerlink" title="Symmetric or Asymmetric Key(s)"></a>Symmetric or Asymmetric Key(s)</h2><p>The concept of symmetry and asymmetry refers to the keys distribution in 2 parties (sender and receiver). If the information is encoded and decoded with the same key $k$, we say the scheme is <strong>symmetric</strong>. Otherwise, it is <strong>asymmetric</strong>.</p>
+<h3 id="Private-Key-Encryption-and-MAC"><a href="#Private-Key-Encryption-and-MAC" class="headerlink" title="Private Key Encryption and MAC"></a>Private Key Encryption and MAC</h3><p>Private key encryption scheme and message authentication code (MAC) are symmetric primitives. In fact, private key encryption scheme is also called <strong>symmetric encryption</strong>.</p>
+<p>Private key encryption: Alice encrypts the message $m$ by running $Enc_k(m)\to c$. Bob decrypts the ciphertext $c$ by running $Dec_k(c)\to m$.</p>
+<p>Message authentication code (MAC): Alice authenticates $m$ by running $Mac_k(m)\to t$. Bob verifies the tag $t$ by checking $Vrfy_k(m,t)$ equals to $1$ or not. </p>
+<div class="note info no-icon">
+            <p><strong>Message Authentication Code (MAC)</strong> provides <strong>integrity</strong>, which ensures that the information is not tampered during transmission. </p><p>Alice applies the MAC algorithm to $m$ and produces an <strong>unforgeable</strong> tag $t:=Mac_k(m)$. Alice sends the tag $t$ along with the message $m$: Bob then verifies the tag to check whether the message $m$ is tampered or not. </p>
+          </div>
+<h3 id="Public-Key-Encryption-and-Digital-Signature"><a href="#Public-Key-Encryption-and-Digital-Signature" class="headerlink" title="Public Key Encryption and Digital Signature"></a>Public Key Encryption and Digital Signature</h3><p>Public key encryption scheme and digital signature are asymmetric primitives. Public key encryption scheme is also called <strong>asymmetric encryption</strong>.</p>
+<p>In asymmetric primitives, the key-generation algorithm $Gen(1^n)$ will produce <strong>a pair of keys</strong> $\langle pk, sk \rangle$. The <strong>public key</strong> $pk$ is <strong>publicly distributed</strong>, while <strong>private key</strong> $sk$ is only held by <strong>one party</strong>.</p>
+<p>Public key encryption: Alice encrypts the message $m$ with public key $pk$ by running $Enc_{pk}(m)\to c$. Bob decrypts the ciphertext $c$ with <strong>private key</strong> by running $Dec_{sk}(c)\to m$.</p>
+<p>Digital signature: Alice signs $m$ with <strong>private key</strong> by running $Sign_{sk}(m)\to \sigma$. Bob verifies the signature $\sigma$ by checking $Vrfy_{pk}(m, \sigma)$ equals to $1$ or not. </p>
+<p>Note that in public key encryption, receriver Bob holds the private key; while in digital signature, sender Alice holds the private key.</p>
+<h3 id="MAC-Versus-Digital-Signature"><a href="#MAC-Versus-Digital-Signature" class="headerlink" title="MAC Versus Digital Signature"></a>MAC Versus Digital Signature</h3><p>MAC and digital signature both provide <strong>integrity</strong>. However, the asymmetry of digital signature guarentees more than that.</p>
+<ul>
+<li><p>Public Verifiability</p>
+<p>A third party not directly participating in the protocol should also be able to verify the generated values. It is based on the <strong>publicity</strong> of $pk$. MAC cannot achieve this since $k$ must be kept secret for the defence of a malicious third party.</p>
+</li>
+<li><p>Transferability</p>
+</li>
+<li><p>Non-repudiation</p>
+<p>Once the signer signs a message $m$, he can <strong>NOT deny</strong> having done so afterwards. It is based on the secrecy of $sk$:  $sk$ is only known by signer and is paired up with $pk$. Anyone with $pk$ could convince that signer holds $sk$ with <strong>zero-knowledge</strong> of $sk$.</p>
+</li>
+</ul>
+<p><br></p>
+<h2 id="Randomized-Algorithm"><a href="#Randomized-Algorithm" class="headerlink" title="Randomized Algorithm"></a>Randomized Algorithm</h2><div class="note info no-icon">
+            <p>A randomized algorithm uses a source of (pseudo) randomness as part of its logic.</p>
+          </div>
+<p>Randomized algorithm, as opposed to <strong>deterministic algorithm</strong>, mapping the same input to several random outputs. The randomness is guaranteed by some random tapes implemented by TRNGs, PRGs, PRFs or PRPs.</p>
+<p>Randomized algorithms are essential to build secure cryptographic primitives: in particular, <strong>Any CPA-secure encryption scheme must be randomized</strong>.</p>
+<div class="note info no-icon">
+            <p>Chosen-plaintext attack (CPA): Adversary holds the <strong>encryption oracle</strong> $Enc_k(\cdot)$, which means he is able to obtain any ciphertext $c$ for a desired message $m$ <strong>without</strong> knowing secret key $k$.</p>
+          </div>
+<p>For a deterministic encryption scheme, there is a trivial CPA adversary $\mathscr{A}$: $\mathscr{A}$ ask $Enc_k(\cdot)$ to encrypt $m_0,m_1$ first and obtain $c_0=Enc_k(m_0), c_1=Enc_k(m_1)$. Then when it gets challenge ciphertext $c$, $\mathscr{A}$ simply compares $c$ to $c_0,c_1$. If $c=c_0$, output $0$, and if $c=c_1$, output $1$.</p>
+<p>Also we could see that, for <strong>public encryption scheme, EAV-security is equivalent to CPA-security</strong> since adversary knows public key $pk$. (equivalent to hold the encryption oracle $Enc_{pk}(\cdot)$)</p>
+<p><br></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning">
+            <p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
+          </div>
+<p>Course textbook: </p>
+<p><em>Introduction to Modern Cryptography (2nd edition)</em>, Katz, J. &amp; Lindell, Y., (2015), CRC Press, <a target="_blank" rel="noopener" href="https://ebookcentral.proquest.com/lib/HKUHK/detail.action?docID=1619504">view here</a></p>
 
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------------------そして、次の曲が始まるのです。-------------------------</div>
+    
+</div>
+
+      
     </div>
 
     
@@ -510,6 +577,7 @@
   
   
   
+
 
 
 
@@ -562,7 +630,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Cryptographic-Primitives"><span class="nav-number">1.</span> <span class="nav-text">Cryptographic Primitives</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kerckhoff-39-s-Principle"><span class="nav-number">2.</span> <span class="nav-text">Kerckhoff&#39;s Principle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Perfect-Secrecy-and-its-Relaxation"><span class="nav-number">3.</span> <span class="nav-text">Perfect Secrecy and its Relaxation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Probability-Definition"><span class="nav-number">3.1.</span> <span class="nav-text">Probability Definition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Adversarial-Indistinguishability-Experiment"><span class="nav-number">3.2.</span> <span class="nav-text">Adversarial Indistinguishability Experiment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shannon-39-s-Theorem"><span class="nav-number">3.3.</span> <span class="nav-text">Shannon&#39;s Theorem</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Relaxation-Computational-Secrecy"><span class="nav-number">3.4.</span> <span class="nav-text">Relaxation: Computational Secrecy</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pseudorandomness"><span class="nav-number">4.</span> <span class="nav-text">Pseudorandomness</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Idea-of-Reduction"><span class="nav-number">5.</span> <span class="nav-text">The Idea of Reduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Example-Pseudo-One-time-Pad"><span class="nav-number">5.1.</span> <span class="nav-text">Example: Pseudo One-time Pad</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reduction-Logic"><span class="nav-number">5.2.</span> <span class="nav-text">Reduction Logic</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Cryptographic-Primitives"><span class="nav-number">1.</span> <span class="nav-text">Cryptographic Primitives</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kerckhoff-39-s-Principle"><span class="nav-number">2.</span> <span class="nav-text">Kerckhoff&#39;s Principle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Perfect-Secrecy-and-its-Relaxation"><span class="nav-number">3.</span> <span class="nav-text">Perfect Secrecy and its Relaxation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Probability-Definition"><span class="nav-number">3.1.</span> <span class="nav-text">Probability Definition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Adversarial-Indistinguishability-Experiment"><span class="nav-number">3.2.</span> <span class="nav-text">Adversarial Indistinguishability Experiment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shannon-39-s-Theorem"><span class="nav-number">3.3.</span> <span class="nav-text">Shannon&#39;s Theorem</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Relaxation-Computational-Secrecy"><span class="nav-number">3.4.</span> <span class="nav-text">Relaxation: Computational Secrecy</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pseudorandomness"><span class="nav-number">4.</span> <span class="nav-text">Pseudorandomness</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Idea-of-Reduction"><span class="nav-number">5.</span> <span class="nav-text">The Idea of Reduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Example-Pseudo-One-time-Pad"><span class="nav-number">5.1.</span> <span class="nav-text">Example: Pseudo One-time Pad</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reduction-Logic"><span class="nav-number">5.2.</span> <span class="nav-text">Reduction Logic</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Symmetric-or-Asymmetric-Key-s"><span class="nav-number">6.</span> <span class="nav-text">Symmetric or Asymmetric Key(s)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Private-Key-Encryption-and-MAC"><span class="nav-number">6.1.</span> <span class="nav-text">Private Key Encryption and MAC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Public-Key-Encryption-and-Digital-Signature"><span class="nav-number">6.2.</span> <span class="nav-text">Public Key Encryption and Digital Signature</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MAC-Versus-Digital-Signature"><span class="nav-number">6.3.</span> <span class="nav-text">MAC Versus Digital Signature</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Randomized-Algorithm"><span class="nav-number">7.</span> <span class="nav-text">Randomized Algorithm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">8.</span> <span class="nav-text">Reference</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
