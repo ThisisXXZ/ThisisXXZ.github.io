@@ -159,7 +159,29 @@
             <p>Reduction provides an <strong>abstraction</strong>.</p>
           </div>
 <p>Understand the <strong>abstraction</strong> is the key to understand reduction. </p>
-<p>If we want to reduce the security of $\Pi&#39;$ to the security of $\Pi$, we need to <strong>construct</strong> an adversary $\mathscr{S}$ for $\Pi$ <strong>given the adversary $\mathscr{A}$ for $\Pi&#39;$ as its subroutine</strong>, which is to say, $\mathscr{S}$ employs (runs) $\mathscr{A}$ as a <strong>black box</strong> function.</p>
+<p>If we want to reduce the security of $\Pi&#39;$ to the security of $\Pi$, we need to <strong>construct</strong> an adversary $\mathscr{S}$ for $\Pi$ <strong>given the adversary $\mathscr{A}$ for $\Pi&#39;$ as its subroutine</strong>, which is to say, $\mathscr{S}$ employs (runs) $\mathscr{A}$ as a <strong>black box</strong> abstraction function (<strong>Encapsulation</strong>).</p>
+<p>The reduction involves 4 logic statements:</p>
+<ul>
+<li>$p:$ $\exists\  \mathscr{S}$ that is able to attack $\Pi$ with non-negligible advantage. </li>
+<li>$q:$ $\exists \ \mathscr{A}$ that is able to attack $\Pi&#39;$ with non-negligible advantage.</li>
+<li>$\lnot p:$ $\Pi$ is secure, which means $\mathscr{S}$ that could successfully attack $\Pi$ is NOT exist. </li>
+<li>$\lnot q:$ $\Pi&#39;$ is secure, which means $\mathscr{A}$ that could successfully attack $\Pi&#39;$ is NOT exist. </li>
+</ul>
+<p>If $\mathscr{S}$ is constructed successfully, it will be able to attack $\Pi$ with non-negligible advantage. Therefore we could conclude that if $\mathscr{A}$ could attack $\Pi&#39;$ successfully, $\mathscr{S}$ (which takes $\mathscr{A}$ as its subroutine) could attack $\Pi$. The corresponding logic is $q\to p$.</p>
+<p>According to the <strong>contrapositive statement</strong>, we have $\lnot p\to \lnot q$,  which implys that the security of $\Pi$ guarantees the security of $\Pi&#39;$. Therefore, the reduction is completed: we reduce the security of $\Pi&#39;$ to the security of $\Pi$.</p>
+<div class="note info no-icon">
+            <p><strong>Contrapositive</strong> argument:</p><p>The contrapositive of the conditional statement &quot;If $p$ then $q$. &quot; is &quot;If not $q$ then not $p$&quot;.</p><p>The logical equivalence could be expressed by $p\to q \iff \lnot q\to \lnot p$.</p>
+          </div>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>归约应该是整个密码学安全性证明中的核心思想之一。</p>
+<p>第一次接触归约时 (即上文中提到的对伪一次性密码本安全性的证明) 真的思考了超级久才把整个逻辑捋清。但一旦想明白了就会觉得实在是巧妙：假设攻击方案 $A$ 的敌手存在，我们直接将该敌手封装 (encapsulate) 起来作为攻击<strong>已知安全</strong>的方案 $B$ 的敌手的子程序 (subroutine)。如果构建成功，根据逆否命题就能完成归约。</p>
+<p>归约证明最难的地方应该在于 simulator $\mathscr{S}$ 的设计：其与子程序 $\mathscr{A}$ 的交互必须是黑盒式的，且<strong>无法</strong>让 $\mathscr{A}$ 察觉到与其互动的并不是 challenger $\mathscr{C}$，而是某个 simulator $\mathscr{S}$。</p>
+<p>在整个课程的学习中了解到了很多很妙的归约，例如 Pseudorandom function/permutation 构建的加密方案的 CPA 安全性证明，Hash-MAC 与 Hash-Sign 方案的安全性证明，Authenticate encryption 的安全性证明，RSA 硬核谓词 (Hard-core predicates) 的证明，RSA-FDH (Full-Domain Hash) signature 的不可伪造性证明，Fiat-Shamir transformation 的证明，Schnorr identification 的安全性证明……</p>
+<p>光是写出来就有一大串，就不具体介绍了 (我有一个绝妙的证明.jpg)</p>
+</blockquote>
+<p><br></p>
 ]]></content>
       <categories>
         <category>notes</category>
