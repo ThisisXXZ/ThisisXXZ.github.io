@@ -123,13 +123,18 @@
 <ul>
 <li><p>将 bar.txt 中所有的空白字符 (空格，制表符...) 全部转换为换行符：<code>tr &#39;[[:blank:]]&#39; &#39;\n&#39; &lt; bar.txt</code></p>
 </li>
-<li><p>将 bar.txt 中所有的小写字母转换为大写字母：<code>tr &#39;[[:lower:]]&#39; &#39;[[:upper:]]&#39; &lt; bar.txt</code> (注意，当 SET1 与 SET2 是一一对应的关系时，字符的转换才一一对应)</p>
+<li><p>将 bar.txt 中所有的小写字母转换为大写字母：<code>tr &#39;[[:lower:]]&#39; &#39;[[:upper:]]&#39; &lt; bar.txt</code> (注意，当 SET1 与 SET2 是<strong>一一对应</strong>的关系时，字符的转换才<strong>一一对应</strong>)</p>
 </li>
 <li><p>删除 bar.txt 中的所有空字符 (空格，制表符，换行符...) 使其称为一条连续的字符串: <code>tr -d &#39;[[:space:]]&#39; &lt; bar.txt</code> (使用 flag <code>-d</code> 进行删除)</p>
 </li>
-<li><p>使 bar.txt 中所有<strong>连续的字母缩减成只有一个</strong> (例如，&quot;ooookay!&quot; 缩减为 &quot;okay!&quot;)：<code>tr -s &#39;[[:alpha:]]&#39; &lt; bar.txt</code> (使用 flag <code>-s</code>)</p>
+<li><p>使 bar.txt 中所有<strong>连续的字母缩减成只有一个</strong> (例，&quot;ooookay!&quot; 缩减为 &quot;okay!&quot;)：<code>tr -s &#39;[[:alpha:]]&#39; &lt; bar.txt</code> (使用 flag <code>-s</code>)</p>
 </li>
 </ul>
+<p><br></p>
+<h2 id="Numerical-Computation"><a href="#Numerical-Computation" class="headerlink" title="Numerical Computation"></a>Numerical Computation</h2><p>由于 shell comment 中的 variable 只有 string 一种类型，若想方便快捷的进行算数运算，需要使用数学计算命令。</p>
+<h3 id="Double-Parentheses"><a href="#Double-Parentheses" class="headerlink" title="Double Parentheses"></a>Double Parentheses</h3><p>最推荐使用的命令是双小括号 <code>(( ))</code>；其语法为 <code>((expressions))</code>: 非常的简单，将算数表达式置于双小括号中即可。此外，写入 <code>(( ))</code> 中的算术表达式可以不止一个: 多个算数表达式用逗号 <code>,</code> 隔开，<strong>最后一个表达式</strong> 将作为 <code>(( ))</code> 命令的执行结果。</p>
+<p>使用 dollar 符号 <code>$</code> 获取 <code>(( ))</code> 命令的结果；这与使用 <code>$</code> 获取变量值是类似的。</p>
+<p>此外，写入 <code>(( ))</code> 中的 <code>expressions</code> 中的变量<strong>无需</strong>加 <code>$</code> 前缀：<code>(( ))</code> 命令会自动解析其中表达式的变量名，这也更符合程序员的书写习惯。</p>
 ]]></content>
       <categories>
         <category>notes</category>
