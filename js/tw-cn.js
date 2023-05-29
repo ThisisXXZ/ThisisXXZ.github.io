@@ -1,4 +1,4 @@
-var defaultEncoding = 2; // 网站默认语言，1: 繁體中文, 2: 简体中文
+var defaultEncoding = 2; // 网站默认语言, 1: 繁體中文, 2: 简体中文
 var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
 var cookieDomain = "https://bambrow.com/"; //更改为你的博客网址
 var msgToTraditionalChinese = "繁"; //此处可以更改为你想要显示的文字
