@@ -293,7 +293,6 @@
         <p><strong>Hello Hexo! Hello NexT! Hello GitHub Pages!</strong></p>
 <p>终于有一个完完全全属于自己的博客啦！弄完了以后很有成就感</p>
 <span id="more"></span>
-
 <p>接下来会陆陆续续把博客园上的一些  post 搬过来。当然博客园也不会停止更新，会将自己比较用心记的笔记同步在两边发布</p>
 <p>在 Hexo 发布的第一篇博客，就简短的记录一下搭建的过程中遇到的问题和解决办法吧</p>
 <h2 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h2><p>Hexo 是一个博客框架，它允许我们使用 markdown 撰写文章。在写好之后，Hexo 将解析文章并快速生成静态网页。它提供了超多的插件 plugin 和接口，还有很多好看的博客 theme (最有名的应该就是我现在用的这一套 NexT)</p>
@@ -306,14 +305,12 @@
 <li>public 文件夹：储存所有由 source 中源码生成的静态网页文件 (html 文件与 css 文件)</li>
 <li><code>_config.yml</code> 文件：Hexo 基础样式自定义文件，提供了许多接口。注意与 themes 中的 <code>_config.yml</code> 文件相区分；后续的<strong>非侵入式</strong> Hexo 主题自定义过程中，这两个配置文件是最为重要的</li>
 </ul>
-<br>
-
+<p><br></p>
 <h2 id="GitHub-Pages"><a href="#GitHub-Pages" class="headerlink" title="GitHub Pages"></a>GitHub Pages</h2><p>我们可以将 Hexo 远程部署在 GitHub Pages 上，且后续可以绑定新的域名</p>
 <p>在本地配置 git 之后 (生成 RSA 密钥后 SSH 连接到 <code>git@github.com</code>)，创建一个名称为 <code>[username].github.io</code> 的仓库。<code>[username].github.io</code> 是 Hexo 博客的网址。</p>
 <p>安装 <code>hexo-deployer-git</code> 插件，更改 <code>_config.yml</code> 配置后即可将 Hexo 一键部署到 GitHub Pages</p>
 <p>本地 Hexo 根目录中的 <code>.deploy_git</code> 文件夹将会储存在远端仓库中</p>
-<br>
-
+<p><br></p>
 <h2 id="Hexo-Command"><a href="#Hexo-Command" class="headerlink" title="Hexo Command"></a>Hexo Command</h2><p>记录一下常用的 Hexo 命令</p>
 <h3 id="new"><a href="#new" class="headerlink" title="new"></a>new</h3><p>使用 <code>hexo new [layout] &lt;title&gt;</code> 命令新建一个网页。</p>
 <p><code>[layout]</code> 储存在 scaffolds 文件夹中，初始有 post, page, draft 三种。当该函数缺省时，默认采用 post layout</p>
@@ -339,8 +336,7 @@
 <li><code>hexo s --debug</code> 启动服务器，并访问 <code>https://localhost:4000/</code> 预览查看本地的更改是否成功应用。若发现更改未生效，<code>hexo clean</code> 后 <code>hexo g</code> 重新生成所有的静态网页文件。重复该步骤，找到问题直至预览到本地更改生效</li>
 <li><code>hexo d</code> 部署网站，此时 post 将在 <code>[username].github.io</code> 网址上发布</li>
 </ul>
-<br>
-
+<p><br></p>
 <h2 id="Front-matter"><a href="#Front-matter" class="headerlink" title="Front-matter"></a>Front-matter</h2><p>Front-matter 是 markdown 源码最上方以 <code>---</code> 分隔的区域，其规定了这个网页的各项属性</p>
 <p>例：</p>
 <pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown"><span class="token front-matter-block"><span class="token punctuation">---</span>
@@ -356,7 +352,6 @@ mathjax: true
 top: 1
 comments: false</span>
 <span class="token punctuation">---</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
 <p>注意，这其中的一些 field 并不是默认的，而是在安装了对应的插件后实现的功能</p>
 <p>实现的过程就不一一介绍了，网上大把教程</p>
 <h3 id="tags-and-categories"><a href="#tags-and-categories" class="headerlink" title="tags and categories"></a>tags and categories</h3><p>在启用这两个 fields 之前，需要启用<a target="_blank" rel="noopener" href="https://theme-next.js.org/docs/theme-settings/custom-pages.html">自定义页面 (custom pages)</a> tags 与 categories，之后就可以为文章添加 tags 与 categories 了</p>
@@ -366,9 +361,8 @@ comments: false</span>
 <h3 id="top"><a href="#top" class="headerlink" title="top"></a>top</h3><p>安装 <code>hexo-generator-index-pin-top</code> 插件实现文章置顶功能</p>
 <p>添加 top field 来置顶文章：后面的数字代表置顶优先级。例：<code>top: 1</code> 的文章将会被置于 <code>top: 10</code> 文章的上方</p>
 <h3 id="comments"><a href="#comments" class="headerlink" title="comments"></a>comments</h3><p>本博客采用 valine 实现博客评论功能。缺省 comments field，评论区默认开启</p>
-<p>若想关闭某些 post&#x2F;page 的评论区，在对应的 front-matter 中添加 comment field 并设定为否 (<code>comments: false</code>)</p>
-<br>
-
+<p>若想关闭某些 post/page 的评论区，在对应的 front-matter 中添加 comment field 并设定为否 (<code>comments: false</code>)</p>
+<p><br></p>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ol>
 <li><p><a target="_blank" rel="noopener" href="https://hexo.io/docs/index.html">Hexo official documents</a></p>
 </li>

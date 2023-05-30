@@ -1,25 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Shell Command &amp; Script 笔记</title>
+    <url>/2023/05/28/shell-command/</url>
+    <content><![CDATA[<p>关于 shell command 和 shell script 的内容也是在 ENGG1340 课上系统学习的；但是课上教的内容太浅，甚至连应付考试 (没错，就是 midterm quiz) 都成问题。于是稍微自己加了点餐，现记录如下。</p>
+<span id="more"></span>
+<p>本文中的 shell command 与 shell script 均采用 <strong>bash shell</strong>。</p>
+<p><br></p>
+<h2 id="Variables-in-Shell-Script"><a href="#Variables-in-Shell-Script" class="headerlink" title="Variables in Shell Script"></a>Variables in Shell Script</h2><div class="note info no-icon">
+            <p>Variables in shell scripts have only <strong>ONE</strong> type, which is <strong>string</strong>.</p>
+          </div>
+<h3 id="Defining-Variables"><a href="#Defining-Variables" class="headerlink" title="Defining Variables"></a>Defining Variables</h3><p>有 3 种在 shell script 中定义变量的方式。然而无论哪一种，在变量赋值语句 <code>var=[value]</code> (注意， <code>=</code> 左右<strong>不能</strong>加空格) 中，等号右边都必须是一个<strong>字符串 string</strong>。</p>
+<ul>
+<li><p><code>[value]</code> is enclosed in single quotation marks <code>&#39;&#39;</code></p>
+<p><code>var=&#39;Trumpet&#39;</code> :  单引号中的内容不支持 <strong>variable substitution</strong></p>
+</li>
+<li><p><code>[value]</code> is enclosed in double quotation marks <code>&quot;&quot;</code></p>
+<p><code>var2=&quot;$var&quot;</code> : 双引号中的内容支持 <strong>variable substitution</strong> (所以 <code>var2</code> 的值也是 string <code>trumpet</code>)</p>
+</li>
+<li><p><code>[value]</code> is enclosed in backquote <code>` ` </code> or <code>$()</code></p>
+<p>反引号 <code>` ` </code> 与符号 <code>$()</code> 的作用一致; 反引号中支持输入 shell command，并以 shell command 运行后输出的结果作为变量的值。<strong>Note that the output of  any shell command could be expressed by a string.</strong></p>
+</li>
+</ul>
+<h3 id="Accessing-Variables"><a href="#Accessing-Variables" class="headerlink" title="Accessing Variables"></a>Accessing Variables</h3><p>使用 dollar 符号 <code>$</code> 来访问变量</p>
+<div class="note info no-icon">
+            <p><strong>Variable substitution: </strong> </p><p>We use <code>$var</code> to substitute <code>var</code> with the corresponding string (the value). For example, if <code>var=&#39;Euphonium&#39;</code>, and <code>title=&quot;Sound! $var&quot;</code>, then the variable <code>title</code> will be evaluated to the string <code>&quot;Sound! Euphonium&quot;</code>.  </p>
+          </div>
+<p><br></p>
+<p>文本处理一直是 shell script 出题的大头：然而课上学的关于这部分的内容实在是太少太少了，差评！接下来将会逐个介绍比较有用的文本处理命令。</p>
+<h2 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h2><p><code>grep</code> 是 <strong>按行</strong> 处理文本的重要命令之一，也是课上接触的唯一一个文本处理命令。而且这一命令也在我搭建该博客时起到了重要作用：查找关键词的功能真的超级好用。</p>
+<h3 id="grep-Specific-Lines"><a href="#grep-Specific-Lines" class="headerlink" title="grep Specific Lines"></a>grep Specific Lines</h3><ul>
+<li><p><code>grep &#39;foo&#39; bar.txt</code></p>
+<p>最朴素的 grep 用法，在 <code>bar.txt</code> 中查找所有包含 <code>foo</code> 的<strong>行</strong>并打印</p>
+</li>
+<li><p><code>grep -E &#39;[regex pattern]&#39; bar.txt</code></p>
+<p>使用 <strong>正则表达式 (regular expression)</strong> 匹配。加上 flag <code>-E</code> 后，在 <code>bar.txt</code> 中查找所有匹配上正则表达式<strong>模式 (pattern)</strong> <code>[regex pattern]</code> 的行并输出</p>
+</li>
+</ul>
+<h3 id="Flags-for-grep"><a href="#Flags-for-grep" class="headerlink" title="Flags for grep"></a>Flags for grep</h3><p>这里介绍一些常用的修饰 grep 的 flags</p>
+<ul>
+<li><p>--invert-match (<code>-v</code>)</p>
+<p>输出所有<strong>不</strong>匹配模式的<strong>行</strong></p>
+</li>
+<li><p>--only-matching (<code>-o</code>)</p>
+<p>仅输出与模式 <code>[regex pattern]</code> 匹配的部分，<strong>一次匹配占一行</strong>。例：<code>grep -E -o &#39;[a-zA-Z]&#39; bar.txt</code> 将输出 <code>bar.txt</code> 中的所有字母，一个字母占一行</p>
+</li>
+<li><p>--count (<code>-c</code>)</p>
+<p>仅输出匹配模式的行的数量。复合 <code>-vc</code> 输出<strong>不</strong>匹配模式的行的数量</p>
+</li>
+<li><p>--line-number (<code>-n</code>)</p>
+<p>在输出匹配模式的行的同时输出其<strong>行号</strong></p>
+</li>
+<li><p>--recursive (<code>-r</code>)</p>
+<p>递归查找子目录中的文件</p>
+</li>
+</ul>
+<p><br></p>
+<h2 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h2><p>sed 实际上是 Linux 中的一种文本编辑器。sed 命令本质上是以命令行的形式对编辑器 sed 进行调用。</p>
+<p>与 grep 相同，sed 也是 <strong>按行</strong> 对文本进行处理的：其基础语法是 <code>sed &#39;[script]&#39; bar.txt</code></p>
+<h3 id="add-a-line-a-i"><a href="#add-a-line-a-i" class="headerlink" title="add a line (a/i)"></a>add a line (a/i)</h3><ul>
+<li><p>在 bar.txt 的第 $2$ 行<strong>后</strong>添加新一行文本 &quot;Joker&quot; <code>sed &#39;2aJoker&#39; bar.txt</code></p>
+</li>
+<li><p>在 bar.txt 的第 $3$ 行<strong>前</strong>添加新一行文本 &quot;Skull&quot; <code>sed &#39;3iSkull&#39; bar.txt</code></p>
+</li>
+</ul>
+<h3 id="delete-lines-d"><a href="#delete-lines-d" class="headerlink" title="delete lines (d)"></a>delete lines (d)</h3><ul>
+<li><p>删除 bar.txt 的第 $2$ 行 <code>sed &#39;2d&#39; bar.txt</code></p>
+</li>
+<li><p>删除 bar.txt 的 $1-3$ 行 <code>sed &#39;1,3d&#39; bar.txt</code></p>
+</li>
+<li><p>删除 bar.txt 的 $3$ 到最后一行 (使用 <code>$</code> 符号) <code>sed &#39;3,$d&#39; bar.txt</code></p>
+</li>
+</ul>
+<h3 id="show-lines-p"><a href="#show-lines-p" class="headerlink" title="show lines (p)"></a>show lines (p)</h3><p>显示 bar.txt 的 $2-5$ 行: <code>sed -n &#39;2,5p&#39; bar.txt</code> (注意一定要加 flag <code>-n</code>)</p>
+<h3 id="change-lines-c"><a href="#change-lines-c" class="headerlink" title="change lines (c)"></a>change lines (c)</h3><p>将 bar.txt 的 $2-5$ 修改为 &quot;mona&quot;: <code>sed &#39;2,5cmona&#39; bar.txt</code></p>
+<p>(相当于先将 $2-5$ 删除，再在新的第 $2$ 行前添加一行 &quot;mona&quot;)</p>
+<h3 id="search-data"><a href="#search-data" class="headerlink" title="search data"></a>search data</h3><p>接下来是 sed 命令的高阶用法，<code>[script]</code> 语法变得更加复杂: 不同的成分之间将用 <code>/</code> 进行分隔。并且，<code>[script]</code> 是支持正则表达式的，可以用正则表达式而不是纯字符串来匹配模式</p>
+<ul>
+<li><p>找到 bar.txt 所有包含 &quot;oo&quot; 的行 <code>sed -n &#39;/oo/p&#39; bar.txt</code> (与 <code>grep &quot;oo&quot; bar.txt</code> 等价)</p>
+</li>
+<li><p>找到 bar.txt 所有不包含 &quot;oo&quot; 的行 (删除所有包含 &quot;oo&quot; 的行并输出剩余的部分)  <code>sed &#39;/oo/d&#39; bar.txt</code> (与 <code>grep -v &quot;oo&quot; bar.txt</code> 等价)</p>
+</li>
+<li><p>将 bar.txt 中所有包含 &quot;oo&quot; 的<strong>行中第一次出现</strong>的 &quot;oo&quot; 修改成 &quot;kk&quot; <code>sed &#39;s/oo/kk/&#39; bar.txt</code></p>
+</li>
+<li><p>只替换每行中第一次出现的字串显然不具有很大的应用价值，我们加上标识符 <code>g</code> 来将<strong>所有</strong> &quot;oo&quot; 替换成 &quot;kk&quot; <code>sed &#39;s/oo/kk/g&#39; bar.txt</code></p>
+</li>
+</ul>
+<p><br></p>
+<h2 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h2><p>awk 是一种语法上和 C 类似的<strong>文本编辑语言</strong>，<del>因此其语法比 shell script 更好理解</del>。awk 命令的本质是执行 awk 语言的脚本，这使其能完成很复杂的文本格式化功能。</p>
+<p>根据未老师的说法，sed 命令倾向于将<strong>一行看作一个整体修改</strong>，而 awk 则倾向于将一行看作<strong>很多字段的集合</strong> (类似于表格)。awk 的基础语法是 <code>awk &#39;[awk script]&#39; bar.txt</code></p>
+<h3 id="basic-script"><a href="#basic-script" class="headerlink" title="basic script"></a>basic script</h3><p>先介绍 awk 最基础的一个用法，即 <code>[awk script]</code> 呈现 <code>condition &#123;action&#125;</code> 的语法结构</p>
+<ul>
+<li><p>输出 bar.txt 中所有字段数等于 $3$ 的行 (分隔符为空格或制表符)：<code>awk &#39;NF==3&#39; bar.txt</code> (实际上是 <code>awk &#39;NF==3 &#123;print $0&#125;&#39; bar.txt</code> 的简写)</p>
+</li>
+<li><p>输出 bar.txt 中所有字段数等于 $3$ 的行 (分隔符为逗号 <code>,</code>)：<code>awk -F&#39;,&#39; &#39;NF==3&#39; bar.txt</code></p>
+</li>
+<li><p>输出 bar.txt 中所有字段数等于 $3$ 的行中的第 $1$ 与第 $3$ 个字段 (分隔符为空格或制表符)：<code>awk &#39;NF==3 &#123;print $1, $3&#125;&#39;</code></p>
+</li>
+</ul>
+<div class="note info no-icon">
+            <p><strong>Built-in variables</strong>:</p><p><code>NF</code> 是 awk 的<strong>内建变量</strong>，记录的是当前行的<strong>字段数</strong>。awk 还提供了许多其他的内建变量，例如：<code>FS</code> (字段分隔符，默认为任何 blank 字符), <code>length</code> (当前行的长度), <code>NR</code> (当前行的行号)。</p><p>并且，对一行中的 <code>NF</code> 个字段，<code>$0</code> 代表整行，<code>$i</code> $(1\leq i\leq NF)$ 代表第 $i$ 个字段。</p>
+          </div>
+<p>除此之外，我们甚至能在 <code>[awk script]</code> 中写入用 awk 语言编写的程序 (和 C 语法极其相似)，来完成一系列复杂的文本格式化。我将用以下两个例子进行说明：</p>
+<h3 id="Example-1"><a href="#Example-1" class="headerlink" title="Example 1"></a>Example 1</h3><p><img src="/2023/05/28/shell-command/eg1-text.png" alt></p>
+<p>对于这一系列杂乱的字段，我们想将其整理成一行中每两个字段间只保留一个空格作为分隔。这一过程用 C 语言来实现可以说非常简单，但是用 shell script 我一时半会真的想不出来。</p>
+<p>此时，我们直接<strong>使用 awk 命令作为 shell 与 C 语言的桥梁</strong> </p>
+<p><code>awk &#39;NF!=0 &#123; &#123;for (i=1;i&lt;NF;++i) printf &quot;%s &quot;, $i&#125; print $NF &#125;&#39; b.txt</code></p>
+<p>是不是一下变得简单多了：根据 basic script 的格式，我们先用 <code>NF!=0</code> 条件去掉空行，再进行 <code>&#123;&#125;</code> 中的 action 阶段；之后就几乎全是 C 语言的语法了。效果如下：</p>
+<p><img src="/2023/05/28/shell-command/eg1-command.png" alt></p>
+<h3 id="Example-2"><a href="#Example-2" class="headerlink" title="Example 2"></a>Example 2</h3><p>这是 midtern quiz 的一个题目，当时没有接触过 sed, awk, tr 命令的我一筹莫展。但在学会这些命令之后，这种题可以说是迎刃而解</p>
+<p><img src="/2023/05/28/shell-command/eg2-des1.png" alt></p>
+<p><img src="/2023/05/28/shell-command/eg2-des2.png" alt></p>
+<p>(将被若干空格，制表符，换行符等 <code>[:space:]</code> 符号分隔的字段整理成一行一个的形式，并且进行去重)</p>
+<p>一行 shell script 就可以解决: <code>tr &#39;[[:space:]]&#39; &#39;\n&#39; &lt; $1 | awk &#39;NF!=0 &amp;&amp; !a[$0]++&#39;</code> (思路来自 zrz)</p>
+<p>真的很妙，使用 tr 命令把字段展开后 (tr 命令的用法见下) 直接用 awk 语言定义了一个<strong>桶</strong>，对字段进行统计，这样就完成了去重 (注意，在 basic script 中的 <code>condition &#123;action&#125;</code> 范式中，缺省 action 默认是 <code>print $0</code>)</p>
+<p>如果想要做的更绝点，可以只用一个 awk 命令解决 (虽然这样本质上就是用 C 来写而不是 shell script 了)，即 <code>awk &#39;&#123;for (i = 1;i &lt;= NF; ++i) &#123;&#123;if (a[$i] == 0) print $i&#125; a[$i]++&#125;&#125;&#39; $1</code></p>
+<p>总而言之，<code>[awk script]</code> 中可以包含这些内容: <code>BEGIN&#123;&#125;</code> (在文本处理<strong>前</strong>执行的 action)， <code>&#123;&#125;</code> <strong>逐行处理</strong>文本时执行的 action，<code>END&#123;&#125;</code> 处理完所有文本<strong>后</strong>执行的 action。不在 <code>&#123;&#125;</code> 中的则是条件 condition (可缺省)</p>
+<p>另外，awk 也能像 sed 一样通过字符串或正则表达式进行模式匹配，这里就不多展开了，有 grep 与 sed 完成模式匹配的相关操作已经足够了。</p>
+<p><br></p>
+<h2 id="tr"><a href="#tr" class="headerlink" title="tr"></a>tr</h2><p>tr 命令的应用就比较简单粗暴了，其完成的是对<strong>指定文本的替换</strong>，和 <code>sed &#39;s/.../.../g&#39; file</code> 的功能几乎一致 (sed 更强大，其不仅能转换字符，还能<strong>转换模式</strong>)</p>
+<p>语法如下 <code>tr &#39;[SET1]&#39; &#39;[SET2]&#39; &lt; bar.txt</code>，<code>[SET1]</code> 与 <code>[SET2]</code> 可以是字符集，也可以是字符串，但<strong>并不是模式</strong>！因此它不支持正则表达式描述的模式匹配，只能够匹配字符串或字符集</p>
+<ul>
+<li><p>将 bar.txt 中所有的空白字符 (空格，制表符...) 全部转换为换行符：<code>tr &#39;[[:blank:]]&#39; &#39;\n&#39; &lt; bar.txt</code></p>
+</li>
+<li><p>将 bar.txt 中所有的小写字母转换为大写字母：<code>tr &#39;[[:lower:]]&#39; &#39;[[:upper:]]&#39; &lt; bar.txt</code> (注意，当 SET1 与 SET2 是<strong>一一对应</strong>的关系时，字符的转换才<strong>一一对应</strong>)</p>
+</li>
+<li><p>删除 bar.txt 中的所有空字符 (空格，制表符，换行符...) 使其称为一条连续的字符串: <code>tr -d &#39;[[:space:]]&#39; &lt; bar.txt</code> (使用 flag <code>-d</code> 进行删除)</p>
+</li>
+<li><p>使 bar.txt 中所有<strong>连续的字母缩减成只有一个</strong> (例，&quot;ooookay!&quot; 缩减为 &quot;okay!&quot;)：<code>tr -s &#39;[[:alpha:]]&#39; &lt; bar.txt</code> (使用 flag <code>-s</code>)</p>
+</li>
+</ul>
+<p><br></p>
+<h2 id="Numerical-Computation"><a href="#Numerical-Computation" class="headerlink" title="Numerical Computation"></a>Numerical Computation</h2><p>由于 shell comment 中的 variable 只有 string 一种类型，若想方便快捷的进行算数运算，需要使用数学计算命令。</p>
+<h3 id="Double-Parentheses"><a href="#Double-Parentheses" class="headerlink" title="Double Parentheses"></a>Double Parentheses</h3><p><strong>最推荐</strong>使用的命令是双小括号 <code>(( ))</code>；其语法为 <code>((expressions))</code>: 非常的简单，将算数表达式置于双小括号中即可。此外，写入 <code>(( ))</code> 中的算术表达式可以不止一个: 多个算数表达式用逗号 <code>,</code> 隔开，<strong>最后一个表达式</strong> 将作为 <code>(( ))</code> 命令的执行结果。</p>
+<p>使用 dollar 符号 <code>$</code> 获取 <code>(( ))</code> 命令的结果；这与使用 <code>$</code> 获取变量值是类似的。</p>
+<p>此外，写入 <code>(( ))</code> 中的 <code>expressions</code> 中的变量<strong>无需</strong>加 <code>$</code> 前缀：<code>(( ))</code> 命令会自动解析其中表达式的变量名，这也更符合程序员的书写习惯。</p>
+<p>例：先定义变量 <code>a=0</code>，以下三个命令是等价的 <code>((a=a+15))</code>, <code>((a+=15))</code>, <code>a=$((a+15))</code>。分别执行这三个命令后，<code>echo $a</code> 的结果都是 $15$。</p>
+<div class="note info no-icon">
+            <p>除了算数运算之外，双小括号 <code>(( ))</code> 命令还支持<strong>扩展逻辑运算</strong>与<strong>扩展流程控制语句</strong>，其语法和 C 非常相似。贴一段 shell script 程序感受一下:</p><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shebang important">#!/bin/sh</span>
+<span class="token assign-left variable">num</span><span class="token operator">=</span><span class="token number">100</span>
+<span class="token assign-left variable">total</span><span class="token operator">=</span><span class="token number">0</span>
+<span class="token keyword">for</span><span class="token variable"><span class="token punctuation">((</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;=</span>num<span class="token punctuation">;</span><span class="token operator">++</span>i<span class="token punctuation">))</span></span>     <span class="token comment"># 扩展流程控制: 1oop</span>
+<span class="token keyword">do</span>
+    <span class="token variable"><span class="token punctuation">((</span>total<span class="token operator">+=</span>i<span class="token punctuation">))</span></span>
+<span class="token keyword">done</span>
+<span class="token keyword">if</span><span class="token variable"><span class="token punctuation">((</span>total<span class="token operator">==</span><span class="token number">5050</span><span class="token punctuation">))</span></span>	  <span class="token comment"># 扩展逻辑运算；另外，可以使用 $((total==5050)) 获取布尔值结果</span>
+<span class="token keyword">then</span>
+    <span class="token builtin class-name">echo</span> <span class="token variable">$total</span>
+<span class="token keyword">fi</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+          </div>
+<h3 id="Square-Brackets"><a href="#Square-Brackets" class="headerlink" title="Square Brackets"></a>Square Brackets</h3><p>中括号命令 <code>[ ]</code> 与双小括号 <code>(( ))</code> 类似，但使用上并不是那么灵活。具体来说，<code>[ ]</code> 命令<strong>不能</strong>脱离赋值语句 <code>=</code> 而单独存在。</p>
+<p>比如，<code>((a+=10))</code> 命令可以让变量 <code>a</code> 自加 $10$，而替换成中括号，<code>[a+=10]</code> 这一命令是<strong>不合法</strong>的。我们必须写成赋值语句的形式：<code>a=$[a+=10]</code> 或是逻辑上更为自然的 <code>a=$[a+10]</code>。</p>
+<p>由此可见，<code>(( ))</code> 比 <code>[ ]</code> 的使用更加灵活。</p>
+<h3 id="let-Expression"><a href="#let-Expression" class="headerlink" title="let Expression"></a>let Expression</h3><p>这是课上介绍的方法：使用 <code>let</code> 命令来进行算数运算。<code>let</code> 命令的基本语法是 <code>let [expressions]</code>。与 <code>(( ))</code> 类似，<code>[expressions]</code> 中也可以写入多个算数表达式，<code>let</code> 将取最后一个表达式的结果作为整个命令的执行结果。不同之处在于，<code>let</code> 使用<strong>空格</strong>而不是逗号 <code>,</code> 对多个表达式进行分隔。</p>
+<p>此外，<code>let</code> 不能与赋值语句 <code>=</code> 复合：<code>a=$((a+10))</code> 改写为 <code>a=let a+10</code> 是不合法的；必须写成 <code>let a+=10</code>。</p>
+<p><code>let</code> 命令与 <code>[ ]</code> 命令优缺点互补：然而，两个命令都不如万能的 <code>(( ))</code>。</p>
+<p><br></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ol>
+<li>Runoob sed, awk, tr</li>
+<li><a href="https://blog.csdn.net/weixin_45187434/article/details/111064801">栗筝i-Shell 脚本数字运算</a></li>
+<li><a href="https://www.cnblogs.com/fnlingnzb-learner/p/10020697.html">Boblim-Bash 括号</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>programming</category>
+      </categories>
+      <tags>
+        <tag>shell command</tag>
+        <tag>shell script</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>COMP3357 notes P1</title>
     <url>/2023/05/25/Cryptography-COMP3357/</url>
     <content><![CDATA[<p>这一学期糊里糊涂选到了 CS 的高阶课 COMP3357，虽然死了很多脑细胞，但是学到了很多。加密学很有意思，Ravi 讲的很好，TA Zhang Chengru 也很认真负责，上起来很有实感</p>
 <p>之前的笔记 (<a href="https://www.cnblogs.com/VeniVidiVici/category/2295972.html">这里</a>) 太全面肯定不会再仔细看了，于是想趁暑假做一个 digest，让未来的自己也能回忆起一些有趣的，令人大呼巧妙 (Eureka!) 的内容。</p>
 <span id="more"></span>
-
 <p>我打算将 digest 分为两 parts，p1 (本文) 将主要介绍加密学概念中的有趣内容；而 p2 则侧重于数学 (数论，群论) 等在加密学中的应用</p>
-<br>
-
+<p><br></p>
 <div class="note warning">
-            <p>&amp;emsp; This article is a self-administered course note.<br>&amp;emsp; It will <strong>NOT</strong> cover any exam or assignment related content.</p>
+            <p>&emsp; This article is a self-administered course note.<br>&emsp; It will <strong>NOT</strong> cover any exam or assignment related content.</p>
           </div>
-
-<br>
-
+<p><br></p>
 <h2 id="Cryptographic-Primitives"><a href="#Cryptographic-Primitives" class="headerlink" title="Cryptographic Primitives"></a>Cryptographic Primitives</h2><div class="note info no-icon">
             <p>Cryptographic primitives are well-established, low-level <strong>cryptographic algorithms</strong> that are frequently used to build cryptographic protocols for computer security systems.</p>
           </div>
-
 <p>In this course, 7 kinds of cryptographic primitives are covered:</p>
 <ul>
 <li>Encryption scheme</li>
@@ -35,13 +201,12 @@
 <li>Confidentiality: only <strong>trusted party</strong> could understand the secret message. Secure encryption scheme provides confidentiality.</li>
 <li>Integrity: ensures the information has <strong>NOT</strong> been tampered in transmission. MAC and digital signature provide integrity.</li>
 <li>Non-repudiation: sender can <strong>NOT</strong> later deny that the message was sent. Digital signature provides non-repudiation.</li>
-<li>Authenticity, Public verifiability, transferability…</li>
+<li>Authenticity, Public verifiability, transferability...</li>
 </ul>
 <p>Also, for a cryptographic primitive, the definition of security varies in face of different <strong>threat model</strong>. </p>
 <div class="note info no-icon">
             <p><strong>Threat model</strong> consists of the adversary and his targets of attack.</p><p>In <strong>stronger</strong> notions of security, adversary tends to have more power, therefore cryptographic primitives with stronger definitions are <strong>more secure</strong> than weak ones.</p>
           </div>
-
 <p>In general, the <strong>security</strong> of a cryptographic primitive is defined by an <strong>experiment</strong> (or <strong>game</strong>). The idea of <strong>reduction</strong> (归约) is critical in designing such experiments.</p>
 <ul>
 <li>Encryption scheme: Passive eavesdropping (EAV) security, Chosen-plaintext-attack (CPA) security, Chosen-ciphertext-attack (CCA) security, Perfect secrecy</li>
@@ -52,46 +217,40 @@
 <li>Digital signature: Extentially unforgeable under a chosen-message attack</li>
 <li>One-way function: Non-invertibility</li>
 </ul>
-<br>
-
-<h2 id="Kerckhoff’s-Principle"><a href="#Kerckhoff’s-Principle" class="headerlink" title="Kerckhoff’s Principle"></a>Kerckhoff’s Principle</h2><div class="note info no-icon">
-            <p>Kerckhoff’s principle is the concept that a Cryptographic system should be designed to be secure, even if all its details, <strong>except for the key</strong>, are publicly known. </p>
+<p><br></p>
+<h2 id="Kerckhoff-39-s-Principle"><a href="#Kerckhoff-39-s-Principle" class="headerlink" title="Kerckhoff&#39;s Principle"></a>Kerckhoff&#39;s Principle</h2><div class="note info no-icon">
+            <p>Kerckhoff&#39;s principle is the concept that a Cryptographic system should be designed to be secure, even if all its details, <strong>except for the key</strong>, are publicly known. </p>
           </div>
-
-<p>Kerckhoff’s principle indicates that the unknowability of <strong>secret key</strong> $k$ is critical to ensure the security of cryptographic primitive. This principle also makes the storage and transmission of keys extremely important.</p>
-<br>
-
+<p>Kerckhoff&#39;s principle indicates that the unknowability of <strong>secret key</strong> $k$ is critical to ensure the security of cryptographic primitive. This principle also makes the storage and transmission of keys extremely important.</p>
+<p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
 <p>第一次学习柯克霍夫定律的时候确实有点惊艳的感觉：一个安全的加密方案竟然必须建立在其所有细节向敌手暴露的前提之下。尽管看上去有点反常识，仔细想想却是有道理的；如果连加密方案本身都需要进行保密，那它的应用价值将大大减少，更遑论加密算法的标准化与通用化了。</p>
 <p>而且由此可见现在流行的加密方案都是久经考验的：想象一下，由于算法的所有细节都是公开的知识，一定会有无数人尝试去破解；一个加密方案能够稳定的存在，这一事实本身就能证明其安全性。</p>
 </blockquote>
-<br>
-
+<p><br></p>
 <h2 id="Perfect-Secrecy-and-its-Relaxation"><a href="#Perfect-Secrecy-and-its-Relaxation" class="headerlink" title="Perfect Secrecy and its Relaxation"></a>Perfect Secrecy and its Relaxation</h2><div class="note info no-icon">
             <p>If an encryption scheme is perfectly secure, the ciphertext reveals <strong>NO</strong> additional information to the adversary about the underlying plaintext, even if the adversary has <strong>unbounded computational power</strong>.</p>
           </div>
-
 <p>Perfect secrecy is the <strong>strongest</strong> definition of security.</p>
 <h3 id="Probability-Definition"><a href="#Probability-Definition" class="headerlink" title="Probability Definition"></a>Probability Definition</h3><ul>
-<li>$\Pr[M&#x3D;m|C&#x3D;c]&#x3D;\Pr[M&#x3D;m]$ for all $m, c$</li>
-<li>(perfect indistinguishability) $\Pr[M&#x3D;m_0|C&#x3D;c]&#x3D;\Pr[M&#x3D;m_1|C&#x3D;c]$ for all $m_0,m_1,c$</li>
+<li>$\Pr[M=m|C=c]=\Pr[M=m]$ for all $m, c$</li>
+<li>(perfect indistinguishability) $\Pr[M=m_0|C=c]=\Pr[M=m_1|C=c]$ for all $m_0,m_1,c$</li>
 </ul>
-<h3 id="Adversarial-Indistinguishability-Experiment"><a href="#Adversarial-Indistinguishability-Experiment" class="headerlink" title="Adversarial Indistinguishability Experiment"></a>Adversarial Indistinguishability Experiment</h3><p>Encryption scheme $\Pi&#x3D;\langle Gen, Enc, Dec \rangle$, $Enc$ takes $k, m$ as input (in currying style $Enc_k$), $Dec$ takes $k, c$ as input (in currying style $Dec_k$). </p>
+<h3 id="Adversarial-Indistinguishability-Experiment"><a href="#Adversarial-Indistinguishability-Experiment" class="headerlink" title="Adversarial Indistinguishability Experiment"></a>Adversarial Indistinguishability Experiment</h3><p>Encryption scheme $\Pi=\langle Gen, Enc, Dec \rangle$, $Enc$ takes $k, m$ as input (in currying style $Enc_k$), $Dec$ takes $k, c$ as input (in currying style $Dec_k$). </p>
 <p>Threat model: adversary $\mathscr{A}$ with unbounded computational power</p>
 <ul>
 <li>$\mathscr{A}$ selects 2 plaintexts $m_0, m_1$.</li>
-<li><strong>Challenger</strong> $\mathscr{C}$ generates a random bit $b\in{0,1}$, and runs $Enc_k(m_b)\to c$. $c$ is called the <strong>challenge ciphertext</strong> and is given back to $\mathscr{A}$. </li>
-<li>$\mathscr{A}$ finally outputs a bit $b’$, indicating that $c$ corresponds to the plaintext $m_{b’}$.</li>
-<li>$\mathscr{A}$ successes if $b’&#x3D;b$.</li>
+<li><strong>Challenger</strong> $\mathscr{C}$ generates a random bit $b\in\{0,1\}$, and runs $Enc_k(m_b)\to c$. $c$ is called the <strong>challenge ciphertext</strong> and is given back to $\mathscr{A}$. </li>
+<li>$\mathscr{A}$ finally outputs a bit $b&#39;$, indicating that $c$ corresponds to the plaintext $m_{b&#39;}$.</li>
+<li>$\mathscr{A}$ successes if $b&#39;=b$.</li>
 </ul>
-<p>Perfect secrecy of $\Pi$ indicates that <strong>NO</strong> adversary could success in the above experiment with probability greater than $\frac{1}{2}$.  $\Pr[\mathtt{PrivK}^{eav}_{\mathscr{A}, \Pi}(n)&#x3D;1]&#x3D;\frac{1}{2}$.</p>
+<p>Perfect secrecy of $\Pi$ indicates that <strong>NO</strong> adversary could success in the above experiment with probability greater than $\frac{1}{2}$.  $\Pr[\mathtt{PrivK}^{eav}_{\mathscr{A}, \Pi}(n)=1]=\frac{1}{2}$.</p>
 <p>This means that adversary has NO better choice than simply <strong>outputting a random guess</strong>.</p>
-<h3 id="Shannon’s-Theorem"><a href="#Shannon’s-Theorem" class="headerlink" title="Shannon’s Theorem"></a>Shannon’s Theorem</h3><div class="note info no-icon">
+<h3 id="Shannon-39-s-Theorem"><a href="#Shannon-39-s-Theorem" class="headerlink" title="Shannon&#39;s Theorem"></a>Shannon&#39;s Theorem</h3><div class="note info no-icon">
             <p>Shannon points out that an encryption scheme could be perfectly secure only when $|\mathscr{K}|\geq |\mathscr{M}|$ ($\mathscr{K}$ is key space, $\mathscr{M}$ is message space). </p>
           </div>
-
-<p>One-time pad is a typical perfectly secure scheme: adversary can <strong>never</strong> derive $m$ from a given $c$ if he does not know the secret key $k$. In OTP, $|\mathscr{K}|&#x3D;|\mathscr{M}|&#x3D;2^n$.</p>
+<p>One-time pad is a typical perfectly secure scheme: adversary can <strong>never</strong> derive $m$ from a given $c$ if he does not know the secret key $k$. In OTP, $|\mathscr{K}|=|\mathscr{M}|=2^n$.</p>
 <p>In real life, perfectly secure encryption scheme has little application value: If 2 parties have the ability to <strong>safely transmit a key of the same length as the plaintext</strong>, then obviously it is better to transmit the plaintext directly. </p>
 <h3 id="Relaxation-Computational-Secrecy"><a href="#Relaxation-Computational-Secrecy" class="headerlink" title="Relaxation: Computational Secrecy"></a>Relaxation: Computational Secrecy</h3><p>The <strong>relaxed</strong> definition of perfect secrecy is more frequently used in reality:</p>
 <ul>
@@ -100,11 +259,9 @@
 </ul>
 <p>It is called <strong>asymptotic computational secrecy</strong>.</p>
 <div class="note info no-icon">
-            <p><strong>(Non-)Negligible advantage</strong> is an <strong>asymptotic</strong> concept. </p><p>$\varepsilon(n)$ denotes the negligible probability for a fixed security parameter $1^n$.  For example, the probablistic $\Pr[\mathtt{PrivK}^{eav}_{\mathscr{A}, \Pi}(n)&#x3D;1]\geq\frac{1}{2}+\varepsilon(n)$ indicates that adversary successes in the EAV experiment with <strong>non-negligible advantage</strong>: $\Pi$ is EAV-secure.</p>
+            <p><strong>(Non-)Negligible advantage</strong> is an <strong>asymptotic</strong> concept. </p><p>$\varepsilon(n)$ denotes the negligible probability for a fixed security parameter $1^n$.  For example, the probablistic $\Pr[\mathtt{PrivK}^{eav}_{\mathscr{A}, \Pi}(n)=1]\geq\frac{1}{2}+\varepsilon(n)$ indicates that adversary successes in the EAV experiment with <strong>non-negligible advantage</strong>: $\Pi$ is EAV-secure.</p>
           </div>
-
-<br>
-
+<p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
 <p>相信学习过密码学的同学所接触的第一个加密方法都是一次性密码本 One-time pad，这也是最令我惊叹的加密方法之一：其操作是那样的简单优美，只需要将明文和密钥异或起来即可生成密文。</p>
@@ -112,110 +269,98 @@
 <p>这不禁让我的中二之魂熊熊燃烧…… </p>
 <p>P.S. 事后我想了想，如果 $m$ 是有意义的一段文字，那么超高级文明得到 $m$ 并不会很难。所以超高级文明永远无法得到我随便乱想的一段乱码 $m$ !  (骄傲)</p>
 </blockquote>
-<br>
-
+<p><br></p>
 <h2 id="Pseudorandomness"><a href="#Pseudorandomness" class="headerlink" title="Pseudorandomness"></a>Pseudorandomness</h2><p>Randomness is a very important concept in cryptography (and not only in cryptography). Although the concept of randomness is often mentioned, what exactly is randomness and how is it implemented?</p>
-<p>Our understanding of the concept of “randomness” cannot be separated from the physical phenomena in real life. For example, the sequence of numbers obtained by rolling a six-sided die multiple times is clearly “random”; this randomness, guaranteed by physical experiments, is called <strong>True randomness</strong>.</p>
-<p>True random number generation is technically demanding and inefficient: a true random number generator (TRNG) must <strong>rely on some random external physical phenomenon as the information entropy resource</strong>, such as the trajectory of the user’s mouse movement, thermal noise from resistors and oscillators, computer hardware noise, etc.</p>
+<p>Our understanding of the concept of &quot;randomness&quot; cannot be separated from the physical phenomena in real life. For example, the sequence of numbers obtained by rolling a six-sided die multiple times is clearly &quot;random&quot;; this randomness, guaranteed by physical experiments, is called <strong>True randomness</strong>.</p>
+<p>True random number generation is technically demanding and inefficient: a true random number generator (TRNG) must <strong>rely on some random external physical phenomenon as the information entropy resource</strong>, such as the trajectory of the user&#39;s mouse movement, thermal noise from resistors and oscillators, computer hardware noise, etc.</p>
 <div class="note info no-icon">
             <p><strong>NO</strong> pure algorithms could achieve true randomness.</p><p>Here, <strong>pure</strong> algorithms are the algorithms that only use designed <strong>mathmatical formulaes or precalculated tables</strong> to produce number suquence. </p>
           </div>
-
 <p>TRNGs that generate random numbers with the help of external physical phenomenon is <strong>inefficient</strong>. Only pure algorithm could meet the requirement of producing many numbers efficiently. Therefore, the concept of <strong>pseudorandomness</strong> is put forward: Pseudorandom numbers are numbers that <strong>appear random</strong>.</p>
 <p>Pseudorandom number generators (PRGs) are the generators that efficiently generate pseudorandom number sequence. PRG takes a short seed $s$ and produces a pseudorandom string $G(s)$. </p>
 <div class="note info no-icon">
             <p>Pseudorandomness is the <strong>relaxation</strong> of true randomness.</p><p>We could say that pseudorandomness is equivalent to true randomness in probablistic polynomial time (PPT) background.</p>
           </div>
-
-<p>How to define “appear random”? There are several PPT <strong>statistical tests</strong> that used to check whether a number sequence is statistical independent or not. If a number sequence could pass all the statistical tests, it is regarded as random, no matter it is generated by TRNGs or PRGs. </p>
+<p>How to define &quot;appear random&quot;? There are several PPT <strong>statistical tests</strong> that used to check whether a number sequence is statistical independent or not. If a number sequence could pass all the statistical tests, it is regarded as random, no matter it is generated by TRNGs or PRGs. </p>
 <p>Essentially, pseudorandom number sequence (or say PRGs) is <strong>deterministic</strong> : for a fixed seed $s$, $G(s)$ always remains the same. However, if an adversary observing $G(s)$ without knowing the seed $s$, he can <strong>NOT</strong> distinguish $G(s)$ from a truly random number sequence $r$ with non-negligible advantage.</p>
 <p>We could see that in the definition of PRGs:</p>
-<p>$G$ is a PRG if for every PPT distinguisher $D$, $|\Pr_{s\leftarrow U_n}[D(G(s))&#x3D;1]-\Pr_{r\leftarrow U_{p(n)}}[D(r)&#x3D;1]|\leq \varepsilon(n)$.</p>
-<p>Note that $p(n)$ is the expansion factor of PRG: $G$ expands the seed $s$ ($|s|&#x3D;n$) to $G(s)$ ($|G(s)|&#x3D;p(n)$)</p>
-<br>
-
+<p>$G$ is a PRG if for every PPT distinguisher $D$, $|\Pr_{s\leftarrow U_n}[D(G(s))=1]-\Pr_{r\leftarrow U_{p(n)}}[D(r)=1]|\leq \varepsilon(n)$.</p>
+<p>Note that $p(n)$ is the expansion factor of PRG: $G$ expands the seed $s$ ($|s|=n$) to $G(s)$ ($|G(s)|=p(n)$)</p>
+<p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
 <p>伪随机也是我觉得十分巧妙的一个概念。</p>
 <p>其实，本质上来说，伪随机和加密十分相似。加密算法通过密钥 $k$ 的不可知性保证密文 $c$ 的不可解读性；而伪随机数生成器则通过种子 $s$ 的不可知性保证生成的数串 $G(s)$ 的 (伪) 随机性。</p>
 <p>这也可以说是柯克霍夫定律威力的延伸体现。</p>
 </blockquote>
-<br>
-
+<p><br></p>
 <h2 id="The-Idea-of-Reduction"><a href="#The-Idea-of-Reduction" class="headerlink" title="The Idea of Reduction"></a>The Idea of Reduction</h2><div class="note info no-icon">
-            <p>For problem $A$ and $B$, if there exists a computable function $f$ that for all instance $x\in A$, $A(x)&#x3D;B(f(x))$, we say that $A$ could <strong>reduce</strong> to $B$. </p>
+            <p>For problem $A$ and $B$, if there exists a computable function $f$ that for all instance $x\in A$, $A(x)=B(f(x))$, we say that $A$ could <strong>reduce</strong> to $B$. </p>
           </div>
-
 <p>Reduction (or simulation) is a powerful idea in computer science. Especially in cryptography, we use the idea of reduction to prove security of some cryptographic primitives.</p>
 <p>We will illustrate the idea of reduction with a concrete example.</p>
 <h3 id="Example-Pseudo-One-time-Pad"><a href="#Example-Pseudo-One-time-Pad" class="headerlink" title="Example: Pseudo One-time Pad"></a>Example: Pseudo One-time Pad</h3><div class="note info no-icon">
-            <p>Pseudo OTP:</p><p>Pseudo OTP solves OTP’s drawback that secret key $k$ needs to be as long as message $m$.</p><p>For $m\in {0,1}^n$, we expand a short key $k$ to the length $n$ with PRG: $r:&#x3D;G(k)$. Pseudo OTP encrypts as $c:&#x3D;m\oplus G(k)$.</p>
+            <p>Pseudo OTP:</p><p>Pseudo OTP solves OTP&#39;s drawback that secret key $k$ needs to be as long as message $m$.</p><p>For $m\in \{0,1\}^n$, we expand a short key $k$ to the length $n$ with PRG: $r:=G(k)$. Pseudo OTP encrypts as $c:=m\oplus G(k)$.</p>
           </div>
-
 <p>Try to prove: Pseudo OTP $\Pi$ is EAV-secure if $G$ is a PRG. </p>
-<p>We reduce “Pseudo OTP $\Pi$ is EAV-secure” to “$G$ is a PRG”.</p>
+<p>We reduce &quot;Pseudo OTP $\Pi$ is EAV-secure&quot; to &quot;$G$ is a PRG&quot;.</p>
 <p>Construct a distinguisher $D$ for $G$ <strong>given $\mathscr{A}$ attacking $\Pi$ as its subroutine</strong>.</p>
 <ul>
 <li>$D$ <strong>runs</strong> $\mathscr{A}(1^n)$.</li>
 <li>$\mathscr{A}$ outputs $m_0,m_1$.</li>
-<li>$D$ generates a random bit $b\in{0,1}$ and obtain $r$ from PRG challenger.</li>
+<li>$D$ generates a random bit $b\in\{0,1\}$ and obtain $r$ from PRG challenger.</li>
 <li>$D$ sends $m_b\oplus r$ back to $\mathscr{A}$.</li>
-<li>$\mathscr{A}$ finally outputs $b’$.</li>
-<li>If $b’&#x3D;b$, $D$ outputs $1$, otherwise $0$.</li>
+<li>$\mathscr{A}$ finally outputs $b&#39;$.</li>
+<li>If $b&#39;=b$, $D$ outputs $1$, otherwise $0$.</li>
 </ul>
-<p><img src="/2023/05/25/Cryptography-COMP3357/reduction.png" alt="reduction flow"></p>
+<p><img src="/2023/05/25/Cryptography-COMP3357/reduction.png" alt="reduction flow" title="reduction flowchart"></p>
 <p>Considering the following 2 cases:</p>
 <ul>
 <li><p>$r\leftarrow U_{n}$ is truly random</p>
-<p>In this case, the view of $\mathscr{A}$ is distributed identically to that of a <strong>true OTP protocol $\widetilde{\Pi}$ which obeys perfect secrecy</strong>, therefore $\Pr_{r\leftarrow U_{n}}[D(r)&#x3D;1]&#x3D;\Pr[b&#x3D;b’]&#x3D;\Pr[\mathtt{PrivK}^{eav}_{\mathscr{A}, \widetilde{\Pi}}(n)&#x3D;1]&#x3D;\frac{1}{2}$.</p>
+<p>In this case, the view of $\mathscr{A}$ is distributed identically to that of a <strong>true OTP protocol $\widetilde{\Pi}$ which obeys perfect secrecy</strong>, therefore $\Pr_{r\leftarrow U_{n}}[D(r)=1]=\Pr[b=b&#39;]=\Pr[\mathtt{PrivK}^{eav}_{\mathscr{A}, \widetilde{\Pi}}(n)=1]=\frac{1}{2}$.</p>
 </li>
-<li><p>$r:&#x3D;G(s)$ for some $s$ ($r$ is pseudorandom)</p>
-<p>In this case, the view of $\mathscr{A}$ when run as a subroutine of $D$ is that of the adversarial indistinguishability experiment of the Pseudo OTP $\Pi$, therefore $\Pr_{s\leftarrow U_m}[D(G(s))&#x3D;1]&#x3D;\Pr[b&#x3D;b’]&#x3D;\Pr[\mathtt{PrivK}^{eav}_{\mathscr{A}, \Pi}(n)&#x3D;1]$.</p>
+<li><p>$r:=G(s)$ for some $s$ ($r$ is pseudorandom)</p>
+<p>In this case, the view of $\mathscr{A}$ when run as a subroutine of $D$ is that of the adversarial indistinguishability experiment of the Pseudo OTP $\Pi$, therefore $\Pr_{s\leftarrow U_m}[D(G(s))=1]=\Pr[b=b&#39;]=\Pr[\mathtt{PrivK}^{eav}_{\mathscr{A}, \Pi}(n)=1]$.</p>
 </li>
 </ul>
 <p>Reduction process:</p>
-<p>Since $G$ is PRG: $|\Pr_{r\leftarrow U_{n}}[D(r)&#x3D;1]-\Pr_{s\leftarrow U_m}[D(G(s))&#x3D;1]|\leq \varepsilon(n)$.</p>
-<p>From the 2 equality above: $|\Pr[\mathtt{PrivK}^{eav}<em>{\mathscr{A}, \Pi}(n)&#x3D;1]-\Pr[\mathtt{PrivK}^{eav}</em>{\mathscr{A}, \widetilde{\Pi}}(n)&#x3D;1]|\leq \varepsilon(n)$.</p>
-<p>Therefore $\Pr[\mathtt{PrivK}^{eav}_{\mathscr{A}, \Pi}(n)&#x3D;1]\leq \varepsilon(n)+\frac{1}{2}$, which indicates that pseudo OTP is EAV-secure.</p>
+<p>Since $G$ is PRG: $|\Pr_{r\leftarrow U_{n}}[D(r)=1]-\Pr_{s\leftarrow U_m}[D(G(s))=1]|\leq \varepsilon(n)$.</p>
+<p>From the 2 equality above: $|\Pr[\mathtt{PrivK}^{eav}_{\mathscr{A}, \Pi}(n)=1]-\Pr[\mathtt{PrivK}^{eav}_{\mathscr{A}, \widetilde{\Pi}}(n)=1]|\leq \varepsilon(n)$.</p>
+<p>Therefore $\Pr[\mathtt{PrivK}^{eav}_{\mathscr{A}, \Pi}(n)=1]\leq \varepsilon(n)+\frac{1}{2}$, which indicates that pseudo OTP is EAV-secure.</p>
 <h3 id="Reduction-Logic"><a href="#Reduction-Logic" class="headerlink" title="Reduction Logic"></a>Reduction Logic</h3><div class="note info no-icon">
             <p>Reduction provides an <strong>abstraction</strong>.</p>
           </div>
-
 <p>Understand the <strong>abstraction</strong> is the key to understand reduction. </p>
-<p>If we want to reduce the security of $\Pi’$ to the security of $\Pi$, we need to <strong>construct</strong> an adversary $\mathscr{S}$ for $\Pi$ <strong>given the adversary $\mathscr{A}$ for $\Pi’$ as its subroutine</strong>, which is to say, $\mathscr{S}$ employs (runs) $\mathscr{A}$ as a <strong>black box</strong> abstraction function (<strong>Encapsulation</strong>).</p>
+<p>If we want to reduce the security of $\Pi&#39;$ to the security of $\Pi$, we need to <strong>construct</strong> an adversary $\mathscr{S}$ for $\Pi$ <strong>given the adversary $\mathscr{A}$ for $\Pi&#39;$ as its subroutine</strong>, which is to say, $\mathscr{S}$ employs (runs) $\mathscr{A}$ as a <strong>black box</strong> abstraction function (<strong>Encapsulation</strong>).</p>
 <p>The reduction involves 4 logic statements:</p>
 <ul>
 <li>$p:$ $\exists\  \mathscr{S}$ that is able to attack $\Pi$ with non-negligible advantage. </li>
-<li>$q:$ $\exists \ \mathscr{A}$ that is able to attack $\Pi’$ with non-negligible advantage.</li>
+<li>$q:$ $\exists \ \mathscr{A}$ that is able to attack $\Pi&#39;$ with non-negligible advantage.</li>
 <li>$\lnot p:$ $\Pi$ is secure, which means $\mathscr{S}$ that could successfully attack $\Pi$ is NOT exist. </li>
-<li>$\lnot q:$ $\Pi’$ is secure, which means $\mathscr{A}$ that could successfully attack $\Pi’$ is NOT exist.</li>
+<li>$\lnot q:$ $\Pi&#39;$ is secure, which means $\mathscr{A}$ that could successfully attack $\Pi&#39;$ is NOT exist. </li>
 </ul>
-<p>If $\mathscr{S}$ is constructed successfully, it will be able to attack $\Pi$ with non-negligible advantage. Therefore we could conclude that if $\mathscr{A}$ could attack $\Pi’$ successfully, $\mathscr{S}$ (which takes $\mathscr{A}$ as its subroutine) could attack $\Pi$. The corresponding logic is $q\to p$.</p>
-<p>According to the <strong>contrapositive statement</strong>, we have $\lnot p\to \lnot q$,  which implys that the security of $\Pi$ guarantees the security of $\Pi’$. Therefore, the reduction is completed: we reduce the security of $\Pi’$ to the security of $\Pi$.</p>
+<p>If $\mathscr{S}$ is constructed successfully, it will be able to attack $\Pi$ with non-negligible advantage. Therefore we could conclude that if $\mathscr{A}$ could attack $\Pi&#39;$ successfully, $\mathscr{S}$ (which takes $\mathscr{A}$ as its subroutine) could attack $\Pi$. The corresponding logic is $q\to p$.</p>
+<p>According to the <strong>contrapositive statement</strong>, we have $\lnot p\to \lnot q$,  which implys that the security of $\Pi$ guarantees the security of $\Pi&#39;$. Therefore, the reduction is completed: we reduce the security of $\Pi&#39;$ to the security of $\Pi$.</p>
 <div class="note info no-icon">
-            <p><strong>Contrapositive</strong> argument:</p><p>The contrapositive of the conditional statement “If $p$ then $q$. “ is “If not $q$ then not $p$”.</p><p>The logical equivalence could be expressed by $p\to q \iff \lnot q\to \lnot p$.</p>
+            <p><strong>Contrapositive</strong> argument:</p><p>The contrapositive of the conditional statement &quot;If $p$ then $q$. &quot; is &quot;If not $q$ then not $p$&quot;.</p><p>The logical equivalence could be expressed by $p\to q \iff \lnot q\to \lnot p$.</p>
           </div>
-
-<br>
-
+<p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
 <p>归约应该是整个密码学安全性证明中的核心思想之一。</p>
 <p>第一次接触归约时 (即上文中提到的对伪一次性密码本安全性的证明) 真的思考了超级久才把整个逻辑捋清。但一旦想明白了就会觉得实在是巧妙：假设攻击方案 $A$ 的敌手存在，我们直接将该敌手封装 (encapsulate) 起来作为攻击<strong>已知安全</strong>的方案 $B$ 的敌手的子程序 (subroutine)。如果构建成功，根据逆否命题就能完成归约。</p>
 <p>归约证明最难的地方应该在于 simulator $\mathscr{S}$ 的设计：其与子程序 $\mathscr{A}$ 的交互必须是黑盒式的，且<strong>无法</strong>让 $\mathscr{A}$ 察觉到与其互动的并不是 challenger $\mathscr{C}$，而是某个 simulator $\mathscr{S}$。</p>
-<p>在整个课程的学习中了解到了很多很妙的归约，例如 Pseudorandom function&#x2F;permutation 构建的加密方案的 CPA 安全性证明，Hash-MAC 与 Hash-Sign 方案的安全性证明，Authenticate encryption 的安全性证明，RSA 硬核谓词 (Hard-core predicates) 的证明，RSA-FDH (Full-Domain Hash) signature 的不可伪造性证明，Fiat-Shamir transformation 的证明，Schnorr identification 的安全性证明……</p>
+<p>在整个课程的学习中了解到了很多很妙的归约，例如 Pseudorandom function/permutation 构建的加密方案的 CPA 安全性证明，Hash-MAC 与 Hash-Sign 方案的安全性证明，Authenticate encryption 的安全性证明，RSA 硬核谓词 (Hard-core predicates) 的证明，RSA-FDH (Full-Domain Hash) signature 的不可伪造性证明，Fiat-Shamir transformation 的证明，Schnorr identification 的安全性证明……</p>
 <p>光是写出来就有一大串，就不具体介绍了 (我有一个绝妙的证明.jpg)</p>
 </blockquote>
-<br>
-
+<p><br></p>
 <h2 id="Symmetric-or-Asymmetric-Key-s"><a href="#Symmetric-or-Asymmetric-Key-s" class="headerlink" title="Symmetric or Asymmetric Key(s)"></a>Symmetric or Asymmetric Key(s)</h2><p>The concept of symmetry and asymmetry refers to the keys distribution in 2 parties (sender and receiver). If the information is encoded and decoded with the same key $k$, we say the scheme is <strong>symmetric</strong>. Otherwise, it is <strong>asymmetric</strong>.</p>
 <h3 id="Private-Key-Encryption-and-MAC"><a href="#Private-Key-Encryption-and-MAC" class="headerlink" title="Private Key Encryption and MAC"></a>Private Key Encryption and MAC</h3><p>Private key encryption scheme and message authentication code (MAC) are symmetric primitives. In fact, private key encryption scheme is also called <strong>symmetric encryption</strong>.</p>
 <p>Private key encryption: Alice encrypts the message $m$ by running $Enc_k(m)\to c$. Bob decrypts the ciphertext $c$ by running $Dec_k(c)\to m$.</p>
 <p>Message authentication code (MAC): Alice authenticates $m$ by running $Mac_k(m)\to t$. Bob verifies the tag $t$ by checking $Vrfy_k(m,t)$ equals to $1$ or not. </p>
 <div class="note info no-icon">
-            <p><strong>Message Authentication Code (MAC)</strong> provides <strong>integrity</strong>, which ensures that the information is not tampered during transmission. </p><p>Alice applies the MAC algorithm to $m$ and produces an <strong>unforgeable</strong> tag $t:&#x3D;Mac_k(m)$. Alice sends the tag $t$ along with the message $m$: Bob then verifies the tag to check whether the message $m$ is tampered or not. </p>
+            <p><strong>Message Authentication Code (MAC)</strong> provides <strong>integrity</strong>, which ensures that the information is not tampered during transmission. </p><p>Alice applies the MAC algorithm to $m$ and produces an <strong>unforgeable</strong> tag $t:=Mac_k(m)$. Alice sends the tag $t$ along with the message $m$: Bob then verifies the tag to check whether the message $m$ is tampered or not. </p>
           </div>
-
 <h3 id="Public-Key-Encryption-and-Digital-Signature"><a href="#Public-Key-Encryption-and-Digital-Signature" class="headerlink" title="Public Key Encryption and Digital Signature"></a>Public Key Encryption and Digital Signature</h3><p>Public key encryption scheme and digital signature are asymmetric primitives. Public key encryption scheme is also called <strong>asymmetric encryption</strong>.</p>
 <p>In asymmetric primitives, the key-generation algorithm $Gen(1^n)$ will produce <strong>a pair of keys</strong> $\langle pk, sk \rangle$. The <strong>public key</strong> $pk$ is <strong>publicly distributed</strong>, while <strong>private key</strong> $sk$ is only held by <strong>one party</strong>.</p>
 <p>Public key encryption: Alice encrypts the message $m$ with public key $pk$ by running $Enc_{pk}(m)\to c$. Bob decrypts the ciphertext $c$ with <strong>private key</strong> by running $Dec_{sk}(c)\to m$.</p>
@@ -232,26 +377,21 @@
 <p>Once the signer signs a message $m$, he can <strong>NOT deny</strong> having done so afterwards. It is based on the secrecy of $sk$:  $sk$ is only known by signer and is paired up with $pk$. Anyone with $pk$ could convince that signer holds $sk$ with <strong>zero-knowledge</strong> of $sk$.</p>
 </li>
 </ul>
-<br>
-
+<p><br></p>
 <h2 id="Randomized-Algorithm"><a href="#Randomized-Algorithm" class="headerlink" title="Randomized Algorithm"></a>Randomized Algorithm</h2><div class="note info no-icon">
             <p>A randomized algorithm uses a source of (pseudo) randomness as part of its logic.</p>
           </div>
-
 <p>Randomized algorithm, as opposed to <strong>deterministic algorithm</strong>, mapping the same input to several random outputs. The randomness is guaranteed by some random tapes implemented by TRNGs, PRGs, PRFs or PRPs.</p>
 <p>Randomized algorithms are essential to build secure cryptographic primitives: in particular, <strong>Any CPA-secure encryption scheme must be randomized</strong>.</p>
 <div class="note info no-icon">
             <p>Chosen-plaintext attack (CPA): Adversary holds the <strong>encryption oracle</strong> $Enc_k(\cdot)$, which means he is able to obtain any ciphertext $c$ for a desired message $m$ <strong>without</strong> knowing secret key $k$.</p>
           </div>
-
-<p>For a deterministic encryption scheme, there is a trivial CPA adversary $\mathscr{A}$: $\mathscr{A}$ ask $Enc_k(\cdot)$ to encrypt $m_0,m_1$ first and obtain $c_0&#x3D;Enc_k(m_0), c_1&#x3D;Enc_k(m_1)$. Then when it gets challenge ciphertext $c$, $\mathscr{A}$ simply compares $c$ to $c_0,c_1$. If $c&#x3D;c_0$, output $0$, and if $c&#x3D;c_1$, output $1$.</p>
+<p>For a deterministic encryption scheme, there is a trivial CPA adversary $\mathscr{A}$: $\mathscr{A}$ ask $Enc_k(\cdot)$ to encrypt $m_0,m_1$ first and obtain $c_0=Enc_k(m_0), c_1=Enc_k(m_1)$. Then when it gets challenge ciphertext $c$, $\mathscr{A}$ simply compares $c$ to $c_0,c_1$. If $c=c_0$, output $0$, and if $c=c_1$, output $1$.</p>
 <p>Also we could see that, for <strong>public encryption scheme, EAV-security is equivalent to CPA-security</strong> since adversary knows public key $pk$. (equivalent to hold the encryption oracle $Enc_{pk}(\cdot)$)</p>
-<br>
-
+<p><br></p>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning">
-            <p>&amp;emsp; This article is a self-administered course note.<br>&amp;emsp; References in the article are from corresponding course materials if not specified.</p>
+            <p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
           </div>
-
 <p>Course textbook: </p>
 <p><em>Introduction to Modern Cryptography (2nd edition)</em>, Katz, J. &amp; Lindell, Y., (2015), CRC Press, <a href="https://ebookcentral.proquest.com/lib/HKUHK/detail.action?docID=1619504">view here</a></p>
 ]]></content>
@@ -272,7 +412,6 @@
     <content><![CDATA[<p><strong>Hello Hexo! Hello NexT! Hello GitHub Pages!</strong></p>
 <p>终于有一个完完全全属于自己的博客啦！弄完了以后很有成就感</p>
 <span id="more"></span>
-
 <p>接下来会陆陆续续把博客园上的一些  post 搬过来。当然博客园也不会停止更新，会将自己比较用心记的笔记同步在两边发布</p>
 <p>在 Hexo 发布的第一篇博客，就简短的记录一下搭建的过程中遇到的问题和解决办法吧</p>
 <h2 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h2><p>Hexo 是一个博客框架，它允许我们使用 markdown 撰写文章。在写好之后，Hexo 将解析文章并快速生成静态网页。它提供了超多的插件 plugin 和接口，还有很多好看的博客 theme (最有名的应该就是我现在用的这一套 NexT)</p>
@@ -285,14 +424,12 @@
 <li>public 文件夹：储存所有由 source 中源码生成的静态网页文件 (html 文件与 css 文件)</li>
 <li><code>_config.yml</code> 文件：Hexo 基础样式自定义文件，提供了许多接口。注意与 themes 中的 <code>_config.yml</code> 文件相区分；后续的<strong>非侵入式</strong> Hexo 主题自定义过程中，这两个配置文件是最为重要的</li>
 </ul>
-<br>
-
+<p><br></p>
 <h2 id="GitHub-Pages"><a href="#GitHub-Pages" class="headerlink" title="GitHub Pages"></a>GitHub Pages</h2><p>我们可以将 Hexo 远程部署在 GitHub Pages 上，且后续可以绑定新的域名</p>
 <p>在本地配置 git 之后 (生成 RSA 密钥后 SSH 连接到 <code>git@github.com</code>)，创建一个名称为 <code>[username].github.io</code> 的仓库。<code>[username].github.io</code> 是 Hexo 博客的网址。</p>
 <p>安装 <code>hexo-deployer-git</code> 插件，更改 <code>_config.yml</code> 配置后即可将 Hexo 一键部署到 GitHub Pages</p>
 <p>本地 Hexo 根目录中的 <code>.deploy_git</code> 文件夹将会储存在远端仓库中</p>
-<br>
-
+<p><br></p>
 <h2 id="Hexo-Command"><a href="#Hexo-Command" class="headerlink" title="Hexo Command"></a>Hexo Command</h2><p>记录一下常用的 Hexo 命令</p>
 <h3 id="new"><a href="#new" class="headerlink" title="new"></a>new</h3><p>使用 <code>hexo new [layout] &lt;title&gt;</code> 命令新建一个网页。</p>
 <p><code>[layout]</code> 储存在 scaffolds 文件夹中，初始有 post, page, draft 三种。当该函数缺省时，默认采用 post layout</p>
@@ -318,8 +455,7 @@
 <li><code>hexo s --debug</code> 启动服务器，并访问 <code>https://localhost:4000/</code> 预览查看本地的更改是否成功应用。若发现更改未生效，<code>hexo clean</code> 后 <code>hexo g</code> 重新生成所有的静态网页文件。重复该步骤，找到问题直至预览到本地更改生效</li>
 <li><code>hexo d</code> 部署网站，此时 post 将在 <code>[username].github.io</code> 网址上发布</li>
 </ul>
-<br>
-
+<p><br></p>
 <h2 id="Front-matter"><a href="#Front-matter" class="headerlink" title="Front-matter"></a>Front-matter</h2><p>Front-matter 是 markdown 源码最上方以 <code>---</code> 分隔的区域，其规定了这个网页的各项属性</p>
 <p>例：</p>
 <pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown"><span class="token front-matter-block"><span class="token punctuation">---</span>
@@ -335,7 +471,6 @@ mathjax: true
 top: 1
 comments: false</span>
 <span class="token punctuation">---</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
 <p>注意，这其中的一些 field 并不是默认的，而是在安装了对应的插件后实现的功能</p>
 <p>实现的过程就不一一介绍了，网上大把教程</p>
 <h3 id="tags-and-categories"><a href="#tags-and-categories" class="headerlink" title="tags and categories"></a>tags and categories</h3><p>在启用这两个 fields 之前，需要启用<a href="https://theme-next.js.org/docs/theme-settings/custom-pages.html">自定义页面 (custom pages)</a> tags 与 categories，之后就可以为文章添加 tags 与 categories 了</p>
@@ -345,9 +480,8 @@ comments: false</span>
 <h3 id="top"><a href="#top" class="headerlink" title="top"></a>top</h3><p>安装 <code>hexo-generator-index-pin-top</code> 插件实现文章置顶功能</p>
 <p>添加 top field 来置顶文章：后面的数字代表置顶优先级。例：<code>top: 1</code> 的文章将会被置于 <code>top: 10</code> 文章的上方</p>
 <h3 id="comments"><a href="#comments" class="headerlink" title="comments"></a>comments</h3><p>本博客采用 valine 实现博客评论功能。缺省 comments field，评论区默认开启</p>
-<p>若想关闭某些 post&#x2F;page 的评论区，在对应的 front-matter 中添加 comment field 并设定为否 (<code>comments: false</code>)</p>
-<br>
-
+<p>若想关闭某些 post/page 的评论区，在对应的 front-matter 中添加 comment field 并设定为否 (<code>comments: false</code>)</p>
+<p><br></p>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ol>
 <li><p><a href="https://hexo.io/docs/index.html">Hexo official documents</a></p>
 </li>
@@ -375,33 +509,27 @@ comments: false</span>
     <url>/2023/04/14/ncurses-study/</url>
     <content><![CDATA[<p>这次 ENGG1340 课程的 group project 是设计并实现一个 <strong>text-base game</strong>，作为终端上运行的 text-base game，有一个出彩的 GUI 肯定是一个加分项！</p>
 <span id="more"></span>
-
 <p>在未老师的介绍下，我知道了有 <code>&lt;ncurses.h&gt;</code> 库这么一个神奇的东西；最重要的是，虽然它不属于 C++ 标准库，但是在学校 server 里居然默认下载好了 (可见其出名的功能强大)<br>据说很多热门的终端程序，例如 Vim，SL 都用到了 ncurses</p>
 <p>花了一个下午学习了一下用法，在这里简单的总结一下，并且附上一些简单 GUI 组成的实例</p>
 <h2 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h2><p>官方 release 网址在<a href="https://invisible-island.net/ncurses/announce.html">这里</a></p>
 <p>在终端上输入命令 <code>sudo apt-get install libncurses5</code> 进行安装</p>
-<br>
-
+<p><br></p>
 <h2 id="Compilation"><a href="#Compilation" class="headerlink" title="Compilation"></a>Compilation</h2><p>所有使用了 <code>&lt;ncurses.h&gt;</code> 库的程序，在编译时需要添加参数 <code>-l ncurses</code> 使编译器链接到 ncurses 库</p>
 <p>例: <code>g++ -o test test.cpp -lncurses</code></p>
-<br>
-
+<p><br></p>
 <h2 id="初始化窗口对象"><a href="#初始化窗口对象" class="headerlink" title="初始化窗口对象"></a>初始化窗口对象</h2><p>使用 <code>initscr()</code> 初始化标准窗口对象 stdscr (WINDOW 类)</p>
-<p>初始化过后，我们接下来将与该窗口对象进行交互: std::cin&#x2F;out, scan&#x2F;printf 等标准输入输出将失效</p>
-<br>
-
+<p>初始化过后，我们接下来将与该窗口对象进行交互: std::cin/out, scan/printf 等标准输入输出将失效</p>
+<p><br></p>
 <h2 id="返回常规终端模式"><a href="#返回常规终端模式" class="headerlink" title="返回常规终端模式"></a>返回常规终端模式</h2><p>当使用完 ncurses，想回到常规终端模式时，使用 <code>endwin()</code> 来关闭窗口</p>
 <p>通常在程序退出前调用 <code>endwin()</code></p>
-<br>
-
-<h2 id="输入-x2F-输出"><a href="#输入-x2F-输出" class="headerlink" title="输入&#x2F;输出"></a>输入&#x2F;输出</h2><p>在调用 <code>endwin()</code> 之前，标准输入输出将失效</p>
-<p>想要与初始化后的窗口对象交互，我们需要使用 ncurses 库提供的输入&#x2F;输出函数</p>
+<p><br></p>
+<h2 id="输入-输出"><a href="#输入-输出" class="headerlink" title="输入/输出"></a>输入/输出</h2><p>在调用 <code>endwin()</code> 之前，标准输入输出将失效</p>
+<p>想要与初始化后的窗口对象交互，我们需要使用 ncurses 库提供的输入/输出函数</p>
 <pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;ncurses.h></span></span>
 
 <span class="token keyword">int</span> <span class="token function">scanw</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token operator">*</span> format<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// 用法与 scanf 相同</span>
 <span class="token keyword">int</span> <span class="token function">printw</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token operator">*</span> format<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 用法与 printf 相同</span>
 <span class="token keyword">int</span> <span class="token function">getch</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                <span class="token comment">// 用法同 getchar, 有阻碍程序继续的功能</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
 <p>由于 gp 中使用了很多 string，我自定义了两个接口用来处理 string 类型的输入输出</p>
 <pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;string></span></span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;ncurses.h></span></span>
@@ -414,12 +542,10 @@ string <span class="token function">instr</span><span class="token punctuation">
 <span class="token keyword">void</span> <span class="token function">outstr</span><span class="token punctuation">(</span>string s<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
   <span class="token function">printw</span><span class="token punctuation">(</span><span class="token string">"%s"</span><span class="token punctuation">,</span> s<span class="token punctuation">.</span><span class="token function">c_str</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<br>
-
+<p><br></p>
 <h2 id="在指定位置输出"><a href="#在指定位置输出" class="headerlink" title="在指定位置输出"></a>在指定位置输出</h2><p>在 ncurses 模式中，我们可以通过 <code>mv()</code> 函数轻松控制光标的位置，从而实现在终端的指定位置输出</p>
 <p><code>mv(x, y)</code> 将光标移动到当前窗口的第 $x$ 行第 $y$ 列 (<strong>行列均从 $0$ 开始</strong>)，且接下来输出的内容都将从该位置开始</p>
-<p>以下实例将在<strong>从屏幕中央开始</strong> (注意，是开始而不是位于) 输出 “Hello World!”</p>
+<p>以下实例将在<strong>从屏幕中央开始</strong> (注意，是开始而不是位于) 输出 &quot;Hello World!&quot;</p>
 <pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;ncurses.h></span></span>
 
 <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
@@ -428,18 +554,15 @@ string <span class="token function">instr</span><span class="token punctuation">
 <span class="token function">move</span><span class="token punctuation">(</span>scrLine <span class="token operator">/</span> <span class="token number">2</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> scrCol <span class="token operator">/</span> <span class="token number">2</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// 将光标移至屏幕中央</span>
 <span class="token function">printw</span><span class="token punctuation">(</span><span class="token string">"Hello World!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
 <p>移动光标和输出可以在同一个函数 <code>mvprintw()</code> 中完成: 例如上例程序可写成 <code>mvprintw(scrLine / 2 - 1, scrCol / 2 - 1, &quot;Hello World!&quot;)</code></p>
 <p>在输出完毕后，使用 <code>refresh()</code> 进行刷新，将输出显示到当前屏幕上</p>
-<br>
-
-<h2 id="新窗口-x2F-子窗口"><a href="#新窗口-x2F-子窗口" class="headerlink" title="新窗口&#x2F;子窗口"></a>新窗口&#x2F;子窗口</h2><h3 id="创建新窗口-x2F-子窗口"><a href="#创建新窗口-x2F-子窗口" class="headerlink" title="创建新窗口&#x2F;子窗口"></a>创建新窗口&#x2F;子窗口</h3><p>在未指定的情况下，<code>initscr()</code> 初始化的窗口是标准屏幕 <code>stdscr</code></p>
+<p><br></p>
+<h2 id="新窗口-子窗口"><a href="#新窗口-子窗口" class="headerlink" title="新窗口/子窗口"></a>新窗口/子窗口</h2><h3 id="创建新窗口-子窗口"><a href="#创建新窗口-子窗口" class="headerlink" title="创建新窗口/子窗口"></a>创建新窗口/子窗口</h3><p>在未指定的情况下，<code>initscr()</code> 初始化的窗口是标准屏幕 <code>stdscr</code></p>
 <p>而有时我们需要多个窗口；通过创建新窗口 (<code>newwin</code>) 或子窗口 (<code>subwin</code>)</p>
 <p>创建新窗口时，其会被分配一个新的内存；而子窗口与其父窗口共用内存</p>
 <pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">WINDOW<span class="token operator">*</span> <span class="token function">newwin</span><span class="token punctuation">(</span><span class="token keyword">int</span> line<span class="token punctuation">,</span> <span class="token keyword">int</span> col<span class="token punctuation">,</span> <span class="token keyword">int</span> x<span class="token punctuation">,</span> <span class="token keyword">int</span> y<span class="token punctuation">)</span><span class="token punctuation">;</span>                 <span class="token comment">// 创建新窗口</span>
 WINDOW<span class="token operator">*</span> <span class="token function">submin</span><span class="token punctuation">(</span>WINDOW<span class="token operator">*</span> parent<span class="token punctuation">,</span> <span class="token keyword">int</span> line<span class="token punctuation">,</span> <span class="token keyword">int</span> col<span class="token punctuation">,</span> <span class="token keyword">int</span> x<span class="token punctuation">,</span> <span class="token keyword">int</span> y<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 创建子窗口，其父窗口为 parent</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<h3 id="删除新窗口-x2F-子窗口"><a href="#删除新窗口-x2F-子窗口" class="headerlink" title="删除新窗口&#x2F;子窗口"></a>删除新窗口&#x2F;子窗口</h3><p>使用 <code>del(win)</code> 删除窗口 win，即，释放其所占用的内存</p>
+<h3 id="删除新窗口-子窗口"><a href="#删除新窗口-子窗口" class="headerlink" title="删除新窗口/子窗口"></a>删除新窗口/子窗口</h3><p>使用 <code>del(win)</code> 删除窗口 win，即，释放其所占用的内存</p>
 <ul>
 <li><p>删除窗口 win 并<strong>不代表</strong> 屏幕上 win 输出的内容会消失，因此在删除之前调用 <code>wclear(win)</code> 与 <code>wrefresh(win)</code> 进行清屏</p>
 </li>
@@ -455,7 +578,6 @@ WINDOW<span class="token operator">*</span> <span class="token function">submin<
 WINDOW<span class="token operator">*</span> sub <span class="token operator">=</span> <span class="token function">subwin</span><span class="token punctuation">(</span>stdscr<span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// sub 是标准窗口的子窗口</span>
 <span class="token function">wmvprintw</span><span class="token punctuation">(</span>sub<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"Skull"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
 <span class="token function">touchwin</span><span class="token punctuation">(</span>stdscr<span class="token punctuation">)</span><span class="token punctuation">;</span>                              <span class="token comment">// 由于 sub 与标准窗口共用内存，我们用 touchwin() 函数标记标准窗口被修改即可，而非使用 wrefresh()</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
 <h3 id="子窗口与父窗口"><a href="#子窗口与父窗口" class="headerlink" title="子窗口与父窗口"></a>子窗口与父窗口</h3><p>当我们使用 <code>wmove()</code> 或其他对非标准窗口的交互函数对子窗口进行操作时，父窗口 (或其他子窗口) 输出的内容会暂时消失</p>
 <p>解决方法是：在 <code>touchwin(fascr)</code> 过后，再对父窗口进行<strong>刷新</strong></p>
 <p>即 <code>wrefresh(father_scr)</code> 或 <code>refresh()</code> (当父窗口是标准窗口时)</p>
@@ -472,19 +594,16 @@ WINDOW<span class="token operator">*</span> downwin <span class="token operator"
 <span class="token function">wscanw</span><span class="token punctuation">(</span>downwin<span class="token punctuation">,</span> <span class="token string">"%d"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token function">getch</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
 <p>当未加 <code>refresh()</code> 时，<code>upwin</code> 窗口的输出内容 (即 box 绘出的边框) 将不会显示</p>
 <p>只有将对父窗口重新刷新 <code>refresh()</code> 之后，所有的输出内容才会显示</p>
-<br>
-
-<h2 id="窗口转储"><a href="#窗口转储" class="headerlink" title="窗口转储"></a>窗口转储</h2><p>这在实现 text-base game 中是一个很实用的功能，它可以用来实现场景的切换，与<strong>读&#x2F;存档功能</strong></p>
-<p>例如，”开始” 界面可以进入 “游戏” 界面，但从 “游戏” 界面返回时，由于屏幕已经被 “游戏” 界面所在窗口覆盖，我们需要重新加载 “开始” 界面</p>
+<p><br></p>
+<h2 id="窗口转储"><a href="#窗口转储" class="headerlink" title="窗口转储"></a>窗口转储</h2><p>这在实现 text-base game 中是一个很实用的功能，它可以用来实现场景的切换，与<strong>读/存档功能</strong></p>
+<p>例如，&quot;开始&quot; 界面可以进入 &quot;游戏&quot; 界面，但从 &quot;游戏&quot; 界面返回时，由于屏幕已经被 &quot;游戏&quot; 界面所在窗口覆盖，我们需要重新加载 &quot;开始&quot; 界面</p>
 <p>此时，利用窗口的转储，我们可以直接恢复之前的界面</p>
 <h3 id="标准窗口转储"><a href="#标准窗口转储" class="headerlink" title="标准窗口转储"></a>标准窗口转储</h3><p>标准窗口 stdscr 可以利用下面的两个函数进行存储与读取:</p>
 <pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">int</span> <span class="token function">scr_dump</span><span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 参数是当前目录下文件的名称: scr_dump 将会把标准窗口中的内容存储到对应名称的文件中</span>
                               <span class="token comment">// 若当前目录下没有该名称的文件，将会创建一个</span>
 <span class="token keyword">int</span> <span class="token function">scr_restore</span><span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// scr_restore 函数将会读取对应文件中存储的内容，并将其载入到标准窗口中</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-
 <p>以下是一个简单的例程 (gp 中的界面转换可以以此为基础)</p>
 <pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token function">printw</span><span class="token punctuation">(</span><span class="token string">"Main Menu\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>          <span class="token comment">// 标准窗口作为主界面 main menu</span>
 <span class="token function">refresh</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -503,7 +622,6 @@ WINDOW<span class="token operator">*</span> win <span class="token operator">=</
 <span class="token comment">// getch();</span>
 <span class="token function">scr_restore</span><span class="token punctuation">(</span><span class="token string">"a"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>               <span class="token comment">// 返回主界面 main menu, 使用 scr_restore() 恢复</span>
 <span class="token function">refresh</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
 <p>若有时我们需要暂时退出 ncurses 模式，回到行缓冲模式，我们可以储存当前标准窗口的内容后再退出</p>
 <p>(或使用 <code>def_prog_mode()</code> 与 <code>reset_prog_mode()</code> 函数，由于 gp 中可能不会用到，这里不多介绍)</p>
 <h3 id="非标准窗口转储"><a href="#非标准窗口转储" class="headerlink" title="非标准窗口转储"></a>非标准窗口转储</h3><p>当然，除了标准窗口 stdscr，其他任何我们新创建的窗口都可以进行转储</p>
@@ -511,24 +629,19 @@ WINDOW<span class="token operator">*</span> win <span class="token operator">=</
 <pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">int</span> <span class="token function">putwin</span><span class="token punctuation">(</span>WINDOW<span class="token operator">*</span><span class="token punctuation">,</span> FILE<span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">// 存</span>
 <span class="token keyword">int</span> <span class="token function">getwin</span><span class="token punctuation">(</span>WINDOW<span class="token operator">*</span><span class="token punctuation">,</span> FILE<span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">// 读</span>
                                 <span class="token comment">// 注意，这两个函数的文件参数不是文件名 (字符串)，而是文件指针</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-
-<br>
-
+<p><br></p>
 <h2 id="滚屏操作"><a href="#滚屏操作" class="headerlink" title="滚屏操作"></a>滚屏操作</h2><p>在行缓冲模式中，若输出的内容超过了终端的 bottom line，将会自动滚屏 (旧的输出将会向上滚动，为新的输出留位置)</p>
 <p>我以为 ncurses 中的窗口默认滚屏，结果当输出超出屏幕时，反而向右溢出了</p>
 <p>我翻了好久的库文档，终于找到了对应的函数 (<a href="https://manpages.debian.org/bullseye/ncurses-doc/scrollok.3ncurses.en.html">这里</a>)</p>
 <pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">int</span> <span class="token function">scrollok</span><span class="token punctuation">(</span>WIN<span class="token operator">*</span><span class="token punctuation">,</span> <span class="token keyword">bool</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token comment">// 在 WIN 指针指向的窗口中开启 (true)/关闭 (false) 滚屏</span>
 <span class="token function">setscrreg</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">,</span> <span class="token keyword">int</span> line<span class="token punctuation">)</span><span class="token punctuation">;</span>      <span class="token comment">// 在 scrollok 开启后，可以在窗口中设立一个滚屏区，在该区域内有滚屏</span>
                                  <span class="token comment">// 滚屏区从第 [x] 行开始，共占 [line] 行</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-
-<br>
-
+<p><br></p>
 <h2 id="颜色设置"><a href="#颜色设置" class="headerlink" title="颜色设置"></a>颜色设置</h2><p>有时候我们希望改变窗口的背景与文本颜色， ncurses 库对此也提供了支持</p>
 <p>在使用之前，我们先初始化颜色设置</p>
 <pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">bool</span> <span class="token function">has_color</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span><span class="token punctuation">;</span>            <span class="token comment">// 返回该环境是否支持颜色设置</span>
 <span class="token keyword">int</span> <span class="token function">start_color</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span><span class="token punctuation">;</span>           <span class="token comment">// 初始化颜色设置</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<p>在 <code>start_color()</code> 成功调用后，一系列的常量将会产生，例 <code>COLOR</code> (支持的颜色数量)，<code>COLOR_BLACK</code> (黑色), <code>COLOR_WHITE</code>…</p>
+<p>在 <code>start_color()</code> 成功调用后，一系列的常量将会产生，例 <code>COLOR</code> (支持的颜色数量)，<code>COLOR_BLACK</code> (黑色), <code>COLOR_WHITE</code>...</p>
 <p>我们使用 <code>init_pair()</code> 函数来创建 <strong>背景-文本</strong> 的颜色对，并用 <code>attron()</code> 函数激活</p>
 <p>接下来，直到 <code>attroff()</code> 关闭之前，所有输出的 背景-文本 都将是指定的颜色对</p>
 <pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token function">init_pair</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> COLOR_BLACK<span class="token punctuation">,</span> COLOR_WHITE<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// [黑]底[白]字为第 1 个颜色对</span>
@@ -537,10 +650,8 @@ WINDOW<span class="token operator">*</span> win <span class="token operator">=</
 <span class="token function">printw</span><span class="token punctuation">(</span><span class="token string">"Black background white text\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token function">attroff</span><span class="token punctuation">(</span><span class="token function">COLOR_PAIR</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                  <span class="token comment">// 关闭颜色设置，恢复默认</span>
                                          <span class="token comment">// 此处也可以直接 attron 其他颜色对，而无需先 attroff</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
 <p>对非标准窗口的操作使用 <code>wattron(WINDOW*, ...)</code> 与 <code>wattroff(WINDOW*, ...)</code></p>
-<br>
-
+<p><br></p>
 <h2 id="其他输出文本效果"><a href="#其他输出文本效果" class="headerlink" title="其他输出文本效果"></a>其他输出文本效果</h2><p><code>attron()</code> 与 <code>attroff()</code> 不仅可以用来设定颜色，还能够实现许多输出文本效果</p>
 <p>这些效果通过一系列常量来代表: <code>A_BLINK</code>, <code>A_DIM</code>, <code>A_UNDERLINE</code></p>
 <p>例如: <code>attron(A_BLINK)</code>，那么在 <code>attronoff(A_BLINK)</code> 之前输出的文本都将闪烁显示</p>
@@ -559,18 +670,14 @@ A_INVIS        <span class="token comment">// 空白显示模式</span>
 A_ALTCHARSET   <span class="token comment">// 字符交替</span>
 A_CHARTEXT     <span class="token comment">// 字符掩盖</span>
 <span class="token function">COLOR_PAIR</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span>  <span class="token comment">// 前景、背景色设置</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-
-<br>
-
-
+<p><br></p>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ol>
 <li><a href="https://manpages.debian.org/bullseye/ncurses-doc/">Debian ncurses manpage</a><ul>
 <li><a href="https://manpages.debian.org/bullseye/ncurses-doc/scrollok.3ncurses.en.html">滚屏 scrollok</a> </li>
 <li><a href="https://manpages.debian.org/testing/ncurses-bin/scr_dump.5.en.html">窗口转储 scr_dump</a></li>
 </ul>
 </li>
-<li><a href="https://blog.csdn.net/tingya/article/details/4800120?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-1-4800120-blog-80753248.235%5Ev28%5Epc_relevant_t0_download&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-1-4800120-blog-80753248.235%5Ev28%5Epc_relevant_t0_download&utm_relevant_index=2">tiga-Unix&#x2F;Linux下的Curses库开发指南——第三章curses库窗口</a> (这好像也是转载的，但是翻译的很好，也很全)</li>
+<li><a href="https://blog.csdn.net/tingya/article/details/4800120?spm=1001.2101.3001.6650.1&amp;utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-4800120-blog-80753248.235%5Ev28%5Epc_relevant_t0_download&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-4800120-blog-80753248.235%5Ev28%5Epc_relevant_t0_download&amp;utm_relevant_index=2">tiga-Unix/Linux下的Curses库开发指南——第三章curses库窗口</a> (这好像也是转载的，但是翻译的很好，也很全)</li>
 <li><a href="https://kewth.github.io/2019/10/01/ncurses/">KeBlog-ncurses</a> (Kewth NB)</li>
 <li><a href="https://blog.csdn.net/ztq_12345/article/details/100560314">ztq-ncurses库 常用函数及基本使用</a> (有一个通过子窗口实现分屏的程序，gp 的时候可以借鉴，修改一下参数)</li>
 <li><a href="https://blog.csdn.net/Rong_Toa/article/details/80763206">ncurses 输出修饰</a> (包含了 ncurses 提供的一系列 attr 前缀函数，对输出进行修饰，很有用)</li>
@@ -583,192 +690,6 @@ A_CHARTEXT     <span class="token comment">// 字符掩盖</span>
       <tags>
         <tag>ncurses</tag>
         <tag>library</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Shell Command &amp; Script 笔记</title>
-    <url>/2023/05/28/shell-command/</url>
-    <content><![CDATA[<p>关于 shell command 和 shell script 的内容也是在 ENGG1340 课上系统学习的；但是课上教的内容太浅，甚至连应付考试 (没错，就是 midterm quiz) 都成问题。于是稍微自己加了点餐，现记录如下。</p>
-<span id="more"></span>
-
-<p>本文中的 shell command 与 shell script 均采用 bash shell。</p>
-<br>
-
-<h2 id="Variables-in-Shell-Script"><a href="#Variables-in-Shell-Script" class="headerlink" title="Variables in Shell Script"></a>Variables in Shell Script</h2><div class="note info no-icon">
-            <p>Variables in shell scripts have only <strong>ONE</strong> type, which is <strong>string</strong>.</p>
-          </div>
-
-<h3 id="Defining-Variables"><a href="#Defining-Variables" class="headerlink" title="Defining Variables"></a>Defining Variables</h3><p>有 3 种在 shell script 中定义变量的方式。然而无论哪一种，在变量赋值语句 <code>var=[value]</code> (注意， <code>=</code> 左右<strong>不能</strong>加空格) 中，等号右边都必须是一个<strong>字符串 string</strong>。</p>
-<ul>
-<li><p><code>[value]</code> is enclosed in single quotation marks <code>&#39;&#39;</code></p>
-<p><code>var=&#39;Trumpet&#39;</code> :  单引号中的内容不支持 <strong>variable substitution</strong></p>
-</li>
-<li><p><code>[value]</code> is enclosed in double quotation marks <code>&quot;&quot;</code></p>
-<p><code>var2=&quot;$var&quot;</code> : 双引号中的内容支持 <strong>variable substitution</strong> (所以 <code>var2</code> 的值也是 string <code>trumpet</code>)</p>
-</li>
-<li><p><code>[value]</code> is enclosed in backquote <code>` `</code> or <code>$()</code></p>
-<p>反引号 <code>` `</code> 与符号 <code>$()</code> 的作用一致; 反引号中支持输入 shell command，并以 shell command 运行后输出的结果作为变量的值。<strong>Note that the output of  any shell command could be expressed by a string.</strong></p>
-</li>
-</ul>
-<h3 id="Accessing-Variables"><a href="#Accessing-Variables" class="headerlink" title="Accessing Variables"></a>Accessing Variables</h3><p>使用 dollar 符号 <code>$</code> 来访问变量</p>
-<div class="note info no-icon">
-            <p>**Variable substitution: ** </p><p>We use <code>$var</code> to substitute <code>var</code> with the corresponding string (the value). For example, if <code>var=&#39;Euphonium&#39;</code>, and <code>title=&quot;Sound! $var&quot;</code>, then the variable <code>title</code> will be evaluated to the string <code>&quot;Sound! Euphonium&quot;</code>.  </p>
-          </div>
-
-<br>
-
-<p>文本处理一直是 shell script 出题的大头：然而课上学的关于这部分的内容实在是太少太少了，差评！接下来将会逐个介绍比较有用的文本处理命令。</p>
-<h2 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h2><p><code>grep</code> 是 <strong>按行</strong> 处理文本的重要命令之一，也是课上接触的唯一一个文本处理命令。而且这一命令也在我搭建该博客时起到了重要作用：查找关键词的功能真的超级好用。</p>
-<h3 id="grep-Specific-Lines"><a href="#grep-Specific-Lines" class="headerlink" title="grep Specific Lines"></a>grep Specific Lines</h3><ul>
-<li><p><code>grep &#39;foo&#39; bar.txt</code></p>
-<p>最朴素的 grep 用法，在 <code>bar.txt</code> 中查找所有包含 <code>foo</code> 的<strong>行</strong>并打印</p>
-</li>
-<li><p><code>grep -E &#39;[regex pattern]&#39; bar.txt</code></p>
-<p>使用 <strong>正则表达式 (regular expression)</strong> 匹配。加上 flag <code>-E</code> 后，在 <code>bar.txt</code> 中查找所有匹配上正则表达式<strong>模式 (pattern)</strong> <code>[regex pattern]</code> 的行并输出</p>
-</li>
-</ul>
-<h3 id="Flags-for-grep"><a href="#Flags-for-grep" class="headerlink" title="Flags for grep"></a>Flags for grep</h3><p>这里介绍一些常用的修饰 grep 的 flags</p>
-<ul>
-<li><p>–invert-match (<code>-v</code>)</p>
-<p>输出所有<strong>不</strong>匹配模式的<strong>行</strong></p>
-</li>
-<li><p>–only-matching (<code>-o</code>)</p>
-<p>仅输出与模式 <code>[regex pattern]</code> 匹配的部分，<strong>一次匹配占一行</strong>。例：<code>grep -E -o &#39;[a-zA-Z]&#39; bar.txt</code> 将输出 <code>bar.txt</code> 中的所有字母，一个字母占一行</p>
-</li>
-<li><p>–count (<code>-c</code>)</p>
-<p>仅输出匹配模式的行的数量。复合 <code>-vc</code> 输出<strong>不</strong>匹配模式的行的数量</p>
-</li>
-<li><p>–line-number (<code>-n</code>)</p>
-<p>在输出匹配模式的行的同时输出其<strong>行号</strong></p>
-</li>
-<li><p>–recursive (<code>-r</code>)</p>
-<p>递归查找子目录中的文件</p>
-</li>
-</ul>
-<br>
-
-<h2 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h2><p>sed 实际上是 Linux 中的一种文本编辑器。sed 命令本质上是以命令行的形式对编辑器 sed 进行调用。</p>
-<p>与 grep 相同，sed 也是 <strong>按行</strong> 对文本进行处理的：其基础语法是 <code>sed &#39;[script]&#39; bar.txt</code></p>
-<h3 id="add-a-line-a-x2F-i"><a href="#add-a-line-a-x2F-i" class="headerlink" title="add a line (a&#x2F;i)"></a>add a line (a&#x2F;i)</h3><ul>
-<li><p>在 bar.txt 的第 $2$ 行<strong>后</strong>添加新一行文本 “Joker” <code>sed &#39;2aJoker&#39; bar.txt</code></p>
-</li>
-<li><p>在 bar.txt 的第 $3$ 行<strong>前</strong>添加新一行文本 “Skull” <code>sed &#39;3iSkull&#39; bar.txt</code></p>
-</li>
-</ul>
-<h3 id="delete-lines-d"><a href="#delete-lines-d" class="headerlink" title="delete lines (d)"></a>delete lines (d)</h3><ul>
-<li><p>删除 bar.txt 的第 $2$ 行 <code>sed &#39;2d&#39; bar.txt</code></p>
-</li>
-<li><p>删除 bar.txt 的 $1-3$ 行 <code>sed &#39;1,3d&#39; bar.txt</code></p>
-</li>
-<li><p>删除 bar.txt 的 $3$ 到最后一行 (使用 <code>$</code> 符号) <code>sed &#39;3,$d&#39; bar.txt</code></p>
-</li>
-</ul>
-<h3 id="show-lines-p"><a href="#show-lines-p" class="headerlink" title="show lines (p)"></a>show lines (p)</h3><p>显示 bar.txt 的 $2-5$ 行: <code>sed -n &#39;2,5p&#39; bar.txt</code> (注意一定要加 flag <code>-n</code>)</p>
-<h3 id="change-lines-c"><a href="#change-lines-c" class="headerlink" title="change lines (c)"></a>change lines (c)</h3><p>将 bar.txt 的 $2-5$ 修改为 “mona”: <code>sed &#39;2,5cmona&#39; bar.txt</code></p>
-<p>(相当于先将 $2-5$ 删除，再在新的第 $2$ 行前添加一行 “mona”)</p>
-<h3 id="search-data"><a href="#search-data" class="headerlink" title="search data"></a>search data</h3><p>接下来是 sed 命令的高阶用法，<code>[script]</code> 语法变得更加复杂: 不同的成分之间将用 <code>/</code> 进行分隔。并且，<code>[script]</code> 是支持正则表达式的，可以用正则表达式而不是纯字符串来匹配模式</p>
-<ul>
-<li><p>找到 bar.txt 所有包含 “oo” 的行 <code>sed -n &#39;/oo/p&#39; bar.txt</code> (与 <code>grep &quot;oo&quot; bar.txt</code> 等价)</p>
-</li>
-<li><p>找到 bar.txt 所有不包含 “oo” 的行 (删除所有包含 “oo” 的行并输出剩余的部分)  <code>sed &#39;/oo/d&#39; bar.txt</code> (与 <code>grep -v &quot;oo&quot; bar.txt</code> 等价)</p>
-</li>
-<li><p>将 bar.txt 中所有包含 “oo” 的<strong>行中第一次出现</strong>的 “oo” 修改成 “kk” <code>sed &#39;s/oo/kk/&#39; bar.txt</code></p>
-</li>
-<li><p>只替换每行中第一次出现的字串显然不具有很大的应用价值，我们加上标识符 <code>g</code> 来将<strong>所有</strong> “oo” 替换成 “kk” <code>sed &#39;s/oo/kk/g&#39; bar.txt</code></p>
-</li>
-</ul>
-<br>
-
-<h2 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h2><p>awk 是一种语法上和 C 类似的<strong>文本编辑语言</strong>，<del>因此其语法比 shell script 更好理解</del>。awk 命令的本质是执行 awk 语言的脚本，这使其能完成很复杂的文本格式化功能。</p>
-<p>根据未老师的说法，sed 命令倾向于将<strong>一行看作一个整体修改</strong>，而 awk 则倾向于将一行看作<strong>很多字段的集合</strong> (类似于表格)。awk 的基础语法是 <code>awk &#39;[awk script]&#39; bar.txt</code></p>
-<h3 id="basic-script"><a href="#basic-script" class="headerlink" title="basic script"></a>basic script</h3><p>先介绍 awk 最基础的一个用法，即 <code>[awk script]</code> 呈现 <code>condition &#123;action&#125;</code> 的语法结构</p>
-<ul>
-<li><p>输出 bar.txt 中所有字段数等于 $3$ 的行 (分隔符为空格或制表符)：<code>awk &#39;NF==3&#39; bar.txt</code> (实际上是 <code>awk &#39;NF==3 &#123;print $0&#125;&#39; bar.txt</code> 的简写)</p>
-</li>
-<li><p>输出 bar.txt 中所有字段数等于 $3$ 的行 (分隔符为逗号 <code>,</code>)：<code>awk -F&#39;,&#39; &#39;NF==3&#39; bar.txt</code></p>
-</li>
-<li><p>输出 bar.txt 中所有字段数等于 $3$ 的行中的第 $1$ 与第 $3$ 个字段 (分隔符为空格或制表符)：<code>awk &#39;NF==3 &#123;print $1, $3&#125;&#39;</code></p>
-</li>
-</ul>
-<div class="note info no-icon">
-            <p><strong>Built-in variables</strong>:</p><p><code>NF</code> 是 awk 的<strong>内建变量</strong>，记录的是当前行的<strong>字段数</strong>。awk 还提供了许多其他的内建变量，例如：<code>FS</code> (字段分隔符，默认为任何 blank 字符), <code>length</code> (当前行的长度), <code>NR</code> (当前行的行号)。</p><p>并且，对一行中的 <code>NF</code> 个字段，<code>$0</code> 代表整行，<code>$i</code> $(1\leq i\leq NF)$ 代表第 $i$ 个字段。</p>
-          </div>
-
-<p>除此之外，我们甚至能在 <code>[awk script]</code> 中写入用 awk 语言编写的程序 (和 C 语法极其相似)，来完成一系列复杂的文本格式化。我将用以下两个例子进行说明：</p>
-<h3 id="Example-1"><a href="#Example-1" class="headerlink" title="Example 1"></a>Example 1</h3><p><img src="/2023/05/28/shell-command/eg1-text.png"></p>
-<p>对于这一系列杂乱的字段，我们想将其整理成一行中每两个字段间只保留一个空格作为分隔。这一过程用 C 语言来实现可以说非常简单，但是用 shell script 我一时半会真的想不出来。</p>
-<p>此时，我们直接<strong>使用 awk 命令作为 shell 与 C 语言的桥梁</strong> </p>
-<p><code>awk &#39;NF!=0 &#123; &#123;for (i=1;i&lt;NF;++i) printf &quot;%s &quot;, $i&#125; print $NF &#125;&#39; b.txt</code></p>
-<p>是不是一下变得简单多了：根据 basic script 的格式，我们先用 <code>NF!=0</code> 条件去掉空行，再进行 <code>&#123;&#125;</code> 中的 action 阶段；之后就几乎全是 C 语言的语法了。效果如下：</p>
-<p><img src="/2023/05/28/shell-command/eg1-command.png"></p>
-<h3 id="Example-2"><a href="#Example-2" class="headerlink" title="Example 2"></a>Example 2</h3><p>这是 midtern quiz 的一个题目，当时没有接触过 sed, awk, tr 命令的我一筹莫展。但在学会这些命令之后，这种题可以说是迎刃而解</p>
-<p><img src="/2023/05/28/shell-command/eg2-des1.png"></p>
-<p><img src="/2023/05/28/shell-command/eg2-des2.png"></p>
-<p>(将被若干空格，制表符，换行符等 <code>[:space:]</code> 符号分隔的字段整理成一行一个的形式，并且进行去重)</p>
-<p>一行 shell script 就可以解决: <code>tr &#39;[[:space:]]&#39; &#39;\n&#39; &lt; $1 | awk &#39;NF!=0 &amp;&amp; !a[$0]++&#39;</code> (思路来自 zrz)</p>
-<p>真的很妙，使用 tr 命令把字段展开后 (tr 命令的用法见下) 直接用 awk 语言定义了一个<strong>桶</strong>，对字段进行统计，这样就完成了去重 (注意，在 basic script 中的 <code>condition &#123;action&#125;</code> 范式中，缺省 action 默认是 <code>print $0</code>)</p>
-<p>如果想要做的更绝点，可以只用一个 awk 命令解决 (虽然这样本质上就是用 C 来写而不是 shell script 了)，即 <code>awk &#39;&#123;for (i = 1;i &lt;= NF; ++i) &#123;&#123;if (a[$i] == 0) print $i&#125; a[$i]++&#125;&#125;&#39; $1</code></p>
-<p>总而言之，<code>[awk script]</code> 中可以包含这些内容: <code>BEGIN&#123;&#125;</code> (在文本处理<strong>前</strong>执行的 action)， <code>&#123;&#125;</code> <strong>逐行处理</strong>文本时执行的 action，<code>END&#123;&#125;</code> 处理完所有文本<strong>后</strong>执行的 action。不在 <code>&#123;&#125;</code> 中的则是条件 condition (可缺省)</p>
-<p>另外，awk 也能像 sed 一样通过字符串或正则表达式进行模式匹配，这里就不多展开了，有 grep 与 sed 完成模式匹配的相关操作已经足够了。</p>
-<br>
-
-<h2 id="tr"><a href="#tr" class="headerlink" title="tr"></a>tr</h2><p>tr 命令的应用就比较简单粗暴了，其完成的是对<strong>指定文本的替换</strong>，和 <code>sed &#39;s/.../.../g&#39; file</code> 的功能几乎一致 (sed 更强大，其不仅能转换字符，还能<strong>转换模式</strong>)</p>
-<p>语法如下 <code>tr &#39;[SET1]&#39; &#39;[SET2]&#39; &lt; bar.txt</code>，<code>[SET1]</code> 与 <code>[SET2]</code> 可以是字符集，也可以是字符串，但<strong>并不是模式</strong>！因此它不支持正则表达式描述的模式匹配，只能够匹配字符串或字符集</p>
-<ul>
-<li><p>将 bar.txt 中所有的空白字符 (空格，制表符…) 全部转换为换行符：<code>tr &#39;[[:blank:]]&#39; &#39;\n&#39; &lt; bar.txt</code></p>
-</li>
-<li><p>将 bar.txt 中所有的小写字母转换为大写字母：<code>tr &#39;[[:lower:]]&#39; &#39;[[:upper:]]&#39; &lt; bar.txt</code> (注意，当 SET1 与 SET2 是<strong>一一对应</strong>的关系时，字符的转换才<strong>一一对应</strong>)</p>
-</li>
-<li><p>删除 bar.txt 中的所有空字符 (空格，制表符，换行符…) 使其称为一条连续的字符串: <code>tr -d &#39;[[:space:]]&#39; &lt; bar.txt</code> (使用 flag <code>-d</code> 进行删除)</p>
-</li>
-<li><p>使 bar.txt 中所有<strong>连续的字母缩减成只有一个</strong> (例，”ooookay!” 缩减为 “okay!”)：<code>tr -s &#39;[[:alpha:]]&#39; &lt; bar.txt</code> (使用 flag <code>-s</code>)</p>
-</li>
-</ul>
-<br>
-
-<h2 id="Numerical-Computation"><a href="#Numerical-Computation" class="headerlink" title="Numerical Computation"></a>Numerical Computation</h2><p>由于 shell comment 中的 variable 只有 string 一种类型，若想方便快捷的进行算数运算，需要使用数学计算命令。</p>
-<h3 id="Double-Parentheses"><a href="#Double-Parentheses" class="headerlink" title="Double Parentheses"></a>Double Parentheses</h3><p><strong>最推荐</strong>使用的命令是双小括号 <code>(( ))</code>；其语法为 <code>((expressions))</code>: 非常的简单，将算数表达式置于双小括号中即可。此外，写入 <code>(( ))</code> 中的算术表达式可以不止一个: 多个算数表达式用逗号 <code>,</code> 隔开，<strong>最后一个表达式</strong> 将作为 <code>(( ))</code> 命令的执行结果。</p>
-<p>使用 dollar 符号 <code> $</code> 获取 <code>(( ))</code> 命令的结果；这与使用 <code>$</code> 获取变量值是类似的。</p>
-<p>此外，写入 <code>(( ))</code> 中的 <code>expressions</code> 中的变量<strong>无需</strong>加 <code> $</code> 前缀：<code>(( ))</code> 命令会自动解析其中表达式的变量名，这也更符合程序员的书写习惯。</p>
-<p>例：先定义变量 <code>a=0</code>，以下三个命令是等价的 <code>((a=a+15))</code>, <code>((a+=15))</code>, <code>a=$((a+15))</code>。分别执行这三个命令后，<code>echo $a</code> 的结果都是 $15$。</p>
-<div class="note info no-icon">
-            <p>除了算数运算之外，双小括号 <code>(( ))</code> 命令还支持<strong>扩展逻辑运算</strong>与<strong>扩展流程控制语句</strong>，其语法和 C 非常相似。贴一段 shell script 程序感受一下:</p><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shebang important">#!/bin/sh</span>
-<span class="token assign-left variable">num</span><span class="token operator">=</span><span class="token number">100</span>
-<span class="token assign-left variable">total</span><span class="token operator">=</span><span class="token number">0</span>
-<span class="token keyword">for</span><span class="token variable"><span class="token punctuation">((</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;=</span>num<span class="token punctuation">;</span><span class="token operator">++</span>i<span class="token punctuation">))</span></span>     <span class="token comment"># 扩展流程控制: 1oop</span>
-<span class="token keyword">do</span>
-    <span class="token variable"><span class="token punctuation">((</span>total<span class="token operator">+=</span>i<span class="token punctuation">))</span></span>
-<span class="token keyword">done</span>
-<span class="token keyword">if</span><span class="token variable"><span class="token punctuation">((</span>total<span class="token operator">==</span><span class="token number">5050</span><span class="token punctuation">))</span></span>	  <span class="token comment"># 扩展逻辑运算；另外，可以使用 $((total==5050)) 获取布尔值结果</span>
-<span class="token keyword">then</span>
-    <span class="token builtin class-name">echo</span> <span class="token variable">$total</span>
-<span class="token keyword">fi</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-          </div>
-
-<h3 id="Square-Brackets"><a href="#Square-Brackets" class="headerlink" title="Square Brackets"></a>Square Brackets</h3><p>中括号命令 <code>[ ]</code> 与双小括号 <code>(( ))</code> 类似，但使用上并不是那么灵活。具体来说，<code>[ ]</code> 命令<strong>不能</strong>脱离赋值语句 <code>=</code> 而单独存在。</p>
-<p>比如，<code>((a+=10))</code> 命令可以让变量 <code>a</code> 自加 $10$，而替换成中括号，<code>[a+=10]</code> 这一命令是<strong>不合法</strong>的。我们必须写成赋值语句的形式：<code>a=$[a+=10]</code> 或是逻辑上更为自然的 <code>a=$[a+10]</code>。</p>
-<p>由此可见，<code>(( ))</code> 比 <code>[ ]</code> 的使用更加灵活。</p>
-<h3 id="let-Expression"><a href="#let-Expression" class="headerlink" title="let Expression"></a>let Expression</h3><p>这是课上介绍的方法：使用 <code>let</code> 命令来进行算数运算。<code>let</code> 命令的基本语法是 <code>let [expressions]</code>。与 <code>(( ))</code> 类似，<code>[expressions]</code> 中也可以写入多个算数表达式，<code>let</code> 将取最后一个表达式的结果作为整个命令的执行结果。不同之处在于，<code>let</code> 使用<strong>空格</strong>而不是逗号 <code>,</code> 对多个表达式进行分隔。</p>
-<p>此外，<code>let</code> 不能与赋值语句 <code>=</code> 复合：<code>a=$((a+10))</code> 改写为 <code>a=let a+10</code> 是不合法的；必须写成 <code>let a+=10</code>。</p>
-<p><code>let</code> 命令与 <code>[ ]</code> 命令优缺点互补：然而，两个命令都不如万能的 <code>(( ))</code>。</p>
-<br>
-
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ol>
-<li><p>Runoob sed, awk, tr</p>
-</li>
-<li><p><a href="https://www.cnblogs.com/fnlingnzb-learner/p/10020697.html">Boblim-Bash 括号</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/weixin_45187434/article/details/111064801">栗筝i-Shell 脚本数字运算</a></p>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>notes</category>
-        <category>programming</category>
-      </categories>
-      <tags>
-        <tag>shell command</tag>
-        <tag>shell script</tag>
       </tags>
   </entry>
 </search>
