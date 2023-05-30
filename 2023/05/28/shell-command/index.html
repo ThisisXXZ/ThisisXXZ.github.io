@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://thisisxxz.github.io/2023/05/28/shell-command/eg2-des1.png">
 <meta property="og:image" content="https://thisisxxz.github.io/2023/05/28/shell-command/eg2-des2.png">
 <meta property="article:published_time" content="2023-05-28T13:00:40.000Z">
-<meta property="article:modified_time" content="2023-05-29T16:24:33.327Z">
+<meta property="article:modified_time" content="2023-05-30T04:23:23.203Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="shell command">
 <meta property="article:tag" content="shell script">
@@ -230,7 +230,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-05-30 00:24:33" itemprop="dateModified" datetime="2023-05-30T00:24:33+08:00">2023-05-30</time>
+                <time title="Modified: 2023-05-30 12:23:23" itemprop="dateModified" datetime="2023-05-30T12:23:23+08:00">2023-05-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -242,7 +242,7 @@
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/notes/programmings/" itemprop="url" rel="index"><span itemprop="name">programmings</span></a>
+                  <a href="/categories/notes/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
                 </span>
             </span>
 
@@ -276,14 +276,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>5.4k</span>
+              <span>6k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>9 mins.</span>
+              <span>10 mins.</span>
             </span>
 
         </div>
@@ -297,11 +297,14 @@
       
         <p>关于 shell command 和 shell script 的内容也是在 ENGG1340 课上系统学习的；但是课上教的内容太浅，甚至连应付考试 (没错，就是 midterm quiz) 都成问题。于是稍微自己加了点餐，现记录如下。</p>
 <span id="more"></span>
+
 <p>本文中的 shell command 与 shell script 均采用 bash shell。</p>
-<p><br></p>
+<br>
+
 <h2 id="Variables-in-Shell-Script"><a href="#Variables-in-Shell-Script" class="headerlink" title="Variables in Shell Script"></a>Variables in Shell Script</h2><div class="note info no-icon">
             <p>Variables in shell scripts have only <strong>ONE</strong> type, which is <strong>string</strong>.</p>
           </div>
+
 <h3 id="Defining-Variables"><a href="#Defining-Variables" class="headerlink" title="Defining Variables"></a>Defining Variables</h3><p>有 3 种在 shell script 中定义变量的方式。然而无论哪一种，在变量赋值语句 <code>var=[value]</code> (注意， <code>=</code> 左右<strong>不能</strong>加空格) 中，等号右边都必须是一个<strong>字符串 string</strong>。</p>
 <ul>
 <li><p><code>[value]</code> is enclosed in single quotation marks <code>&#39;&#39;</code></p>
@@ -310,15 +313,17 @@
 <li><p><code>[value]</code> is enclosed in double quotation marks <code>&quot;&quot;</code></p>
 <p><code>var2=&quot;$var&quot;</code> : 双引号中的内容支持 <strong>variable substitution</strong> (所以 <code>var2</code> 的值也是 string <code>trumpet</code>)</p>
 </li>
-<li><p><code>[value]</code> is enclosed in backquote <code>` ` </code> or <code>$()</code></p>
-<p>反引号 <code>` ` </code> 与符号 <code>$()</code> 的作用一致; 反引号中支持输入 shell command，并以 shell command 运行后输出的结果作为变量的值。<strong>Note that the output of  any shell command could be expressed by a string.</strong></p>
+<li><p><code>[value]</code> is enclosed in backquote <code>` `</code> or <code>$()</code></p>
+<p>反引号 <code>` `</code> 与符号 <code>$()</code> 的作用一致; 反引号中支持输入 shell command，并以 shell command 运行后输出的结果作为变量的值。<strong>Note that the output of  any shell command could be expressed by a string.</strong></p>
 </li>
 </ul>
 <h3 id="Accessing-Variables"><a href="#Accessing-Variables" class="headerlink" title="Accessing Variables"></a>Accessing Variables</h3><p>使用 dollar 符号 <code>$</code> 来访问变量</p>
 <div class="note info no-icon">
-            <p><strong>Variable substitution: </strong> </p><p>We use <code>$var</code> to substitute <code>var</code> with the corresponding string (the value). For example, if <code>var=&#39;Euphonium&#39;</code>, and <code>title=&quot;Sound! $var&quot;</code>, then the variable <code>title</code> will be evaluated to the string <code>&quot;Sound! Euphonium&quot;</code>.  </p>
+            <p>**Variable substitution: ** </p><p>We use <code>$var</code> to substitute <code>var</code> with the corresponding string (the value). For example, if <code>var=&#39;Euphonium&#39;</code>, and <code>title=&quot;Sound! $var&quot;</code>, then the variable <code>title</code> will be evaluated to the string <code>&quot;Sound! Euphonium&quot;</code>.  </p>
           </div>
-<p><br></p>
+
+<br>
+
 <p>文本处理一直是 shell script 出题的大头：然而课上学的关于这部分的内容实在是太少太少了，差评！接下来将会逐个介绍比较有用的文本处理命令。</p>
 <h2 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h2><p><code>grep</code> 是 <strong>按行</strong> 处理文本的重要命令之一，也是课上接触的唯一一个文本处理命令。而且这一命令也在我搭建该博客时起到了重要作用：查找关键词的功能真的超级好用。</p>
 <h3 id="grep-Specific-Lines"><a href="#grep-Specific-Lines" class="headerlink" title="grep Specific Lines"></a>grep Specific Lines</h3><ul>
@@ -331,29 +336,30 @@
 </ul>
 <h3 id="Flags-for-grep"><a href="#Flags-for-grep" class="headerlink" title="Flags for grep"></a>Flags for grep</h3><p>这里介绍一些常用的修饰 grep 的 flags</p>
 <ul>
-<li><p>--invert-match (<code>-v</code>)</p>
+<li><p>–invert-match (<code>-v</code>)</p>
 <p>输出所有<strong>不</strong>匹配模式的<strong>行</strong></p>
 </li>
-<li><p>--only-matching (<code>-o</code>)</p>
+<li><p>–only-matching (<code>-o</code>)</p>
 <p>仅输出与模式 <code>[regex pattern]</code> 匹配的部分，<strong>一次匹配占一行</strong>。例：<code>grep -E -o &#39;[a-zA-Z]&#39; bar.txt</code> 将输出 <code>bar.txt</code> 中的所有字母，一个字母占一行</p>
 </li>
-<li><p>--count (<code>-c</code>)</p>
+<li><p>–count (<code>-c</code>)</p>
 <p>仅输出匹配模式的行的数量。复合 <code>-vc</code> 输出<strong>不</strong>匹配模式的行的数量</p>
 </li>
-<li><p>--line-number (<code>-n</code>)</p>
+<li><p>–line-number (<code>-n</code>)</p>
 <p>在输出匹配模式的行的同时输出其<strong>行号</strong></p>
 </li>
-<li><p>--recursive (<code>-r</code>)</p>
+<li><p>–recursive (<code>-r</code>)</p>
 <p>递归查找子目录中的文件</p>
 </li>
 </ul>
-<p><br></p>
+<br>
+
 <h2 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h2><p>sed 实际上是 Linux 中的一种文本编辑器。sed 命令本质上是以命令行的形式对编辑器 sed 进行调用。</p>
 <p>与 grep 相同，sed 也是 <strong>按行</strong> 对文本进行处理的：其基础语法是 <code>sed &#39;[script]&#39; bar.txt</code></p>
-<h3 id="add-a-line-a-i"><a href="#add-a-line-a-i" class="headerlink" title="add a line (a/i)"></a>add a line (a/i)</h3><ul>
-<li><p>在 bar.txt 的第 $2$ 行<strong>后</strong>添加新一行文本 &quot;Joker&quot; <code>sed &#39;2aJoker&#39; bar.txt</code></p>
+<h3 id="add-a-line-a-x2F-i"><a href="#add-a-line-a-x2F-i" class="headerlink" title="add a line (a&#x2F;i)"></a>add a line (a&#x2F;i)</h3><ul>
+<li><p>在 bar.txt 的第 $2$ 行<strong>后</strong>添加新一行文本 “Joker” <code>sed &#39;2aJoker&#39; bar.txt</code></p>
 </li>
-<li><p>在 bar.txt 的第 $3$ 行<strong>前</strong>添加新一行文本 &quot;Skull&quot; <code>sed &#39;3iSkull&#39; bar.txt</code></p>
+<li><p>在 bar.txt 的第 $3$ 行<strong>前</strong>添加新一行文本 “Skull” <code>sed &#39;3iSkull&#39; bar.txt</code></p>
 </li>
 </ul>
 <h3 id="delete-lines-d"><a href="#delete-lines-d" class="headerlink" title="delete lines (d)"></a>delete lines (d)</h3><ul>
@@ -365,20 +371,21 @@
 </li>
 </ul>
 <h3 id="show-lines-p"><a href="#show-lines-p" class="headerlink" title="show lines (p)"></a>show lines (p)</h3><p>显示 bar.txt 的 $2-5$ 行: <code>sed -n &#39;2,5p&#39; bar.txt</code> (注意一定要加 flag <code>-n</code>)</p>
-<h3 id="change-lines-c"><a href="#change-lines-c" class="headerlink" title="change lines (c)"></a>change lines (c)</h3><p>将 bar.txt 的 $2-5$ 修改为 &quot;mona&quot;: <code>sed &#39;2,5cmona&#39; bar.txt</code></p>
-<p>(相当于先将 $2-5$ 删除，再在新的第 $2$ 行前添加一行 &quot;mona&quot;)</p>
+<h3 id="change-lines-c"><a href="#change-lines-c" class="headerlink" title="change lines (c)"></a>change lines (c)</h3><p>将 bar.txt 的 $2-5$ 修改为 “mona”: <code>sed &#39;2,5cmona&#39; bar.txt</code></p>
+<p>(相当于先将 $2-5$ 删除，再在新的第 $2$ 行前添加一行 “mona”)</p>
 <h3 id="search-data"><a href="#search-data" class="headerlink" title="search data"></a>search data</h3><p>接下来是 sed 命令的高阶用法，<code>[script]</code> 语法变得更加复杂: 不同的成分之间将用 <code>/</code> 进行分隔。并且，<code>[script]</code> 是支持正则表达式的，可以用正则表达式而不是纯字符串来匹配模式</p>
 <ul>
-<li><p>找到 bar.txt 所有包含 &quot;oo&quot; 的行 <code>sed -n &#39;/oo/p&#39; bar.txt</code> (与 <code>grep &quot;oo&quot; bar.txt</code> 等价)</p>
+<li><p>找到 bar.txt 所有包含 “oo” 的行 <code>sed -n &#39;/oo/p&#39; bar.txt</code> (与 <code>grep &quot;oo&quot; bar.txt</code> 等价)</p>
 </li>
-<li><p>找到 bar.txt 所有不包含 &quot;oo&quot; 的行 (删除所有包含 &quot;oo&quot; 的行并输出剩余的部分)  <code>sed &#39;/oo/d&#39; bar.txt</code> (与 <code>grep -v &quot;oo&quot; bar.txt</code> 等价)</p>
+<li><p>找到 bar.txt 所有不包含 “oo” 的行 (删除所有包含 “oo” 的行并输出剩余的部分)  <code>sed &#39;/oo/d&#39; bar.txt</code> (与 <code>grep -v &quot;oo&quot; bar.txt</code> 等价)</p>
 </li>
-<li><p>将 bar.txt 中所有包含 &quot;oo&quot; 的<strong>行中第一次出现</strong>的 &quot;oo&quot; 修改成 &quot;kk&quot; <code>sed &#39;s/oo/kk/&#39; bar.txt</code></p>
+<li><p>将 bar.txt 中所有包含 “oo” 的<strong>行中第一次出现</strong>的 “oo” 修改成 “kk” <code>sed &#39;s/oo/kk/&#39; bar.txt</code></p>
 </li>
-<li><p>只替换每行中第一次出现的字串显然不具有很大的应用价值，我们加上标识符 <code>g</code> 来将<strong>所有</strong> &quot;oo&quot; 替换成 &quot;kk&quot; <code>sed &#39;s/oo/kk/g&#39; bar.txt</code></p>
+<li><p>只替换每行中第一次出现的字串显然不具有很大的应用价值，我们加上标识符 <code>g</code> 来将<strong>所有</strong> “oo” 替换成 “kk” <code>sed &#39;s/oo/kk/g&#39; bar.txt</code></p>
 </li>
 </ul>
-<p><br></p>
+<br>
+
 <h2 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h2><p>awk 是一种语法上和 C 类似的<strong>文本编辑语言</strong>，<del>因此其语法比 shell script 更好理解</del>。awk 命令的本质是执行 awk 语言的脚本，这使其能完成很复杂的文本格式化功能。</p>
 <p>根据未老师的说法，sed 命令倾向于将<strong>一行看作一个整体修改</strong>，而 awk 则倾向于将一行看作<strong>很多字段的集合</strong> (类似于表格)。awk 的基础语法是 <code>awk &#39;[awk script]&#39; bar.txt</code></p>
 <h3 id="basic-script"><a href="#basic-script" class="headerlink" title="basic script"></a>basic script</h3><p>先介绍 awk 最基础的一个用法，即 <code>[awk script]</code> 呈现 <code>condition &#123;action&#125;</code> 的语法结构</p>
@@ -393,40 +400,67 @@
 <div class="note info no-icon">
             <p><strong>Built-in variables</strong>:</p><p><code>NF</code> 是 awk 的<strong>内建变量</strong>，记录的是当前行的<strong>字段数</strong>。awk 还提供了许多其他的内建变量，例如：<code>FS</code> (字段分隔符，默认为任何 blank 字符), <code>length</code> (当前行的长度), <code>NR</code> (当前行的行号)。</p><p>并且，对一行中的 <code>NF</code> 个字段，<code>$0</code> 代表整行，<code>$i</code> $(1\leq i\leq NF)$ 代表第 $i$ 个字段。</p>
           </div>
+
 <p>除此之外，我们甚至能在 <code>[awk script]</code> 中写入用 awk 语言编写的程序 (和 C 语法极其相似)，来完成一系列复杂的文本格式化。我将用以下两个例子进行说明：</p>
-<h3 id="Example-1"><a href="#Example-1" class="headerlink" title="Example 1"></a>Example 1</h3><p><img src="/2023/05/28/shell-command/eg1-text.png" alt></p>
+<h3 id="Example-1"><a href="#Example-1" class="headerlink" title="Example 1"></a>Example 1</h3><p><img src="/2023/05/28/shell-command/eg1-text.png"></p>
 <p>对于这一系列杂乱的字段，我们想将其整理成一行中每两个字段间只保留一个空格作为分隔。这一过程用 C 语言来实现可以说非常简单，但是用 shell script 我一时半会真的想不出来。</p>
 <p>此时，我们直接<strong>使用 awk 命令作为 shell 与 C 语言的桥梁</strong> </p>
 <p><code>awk &#39;NF!=0 &#123; &#123;for (i=1;i&lt;NF;++i) printf &quot;%s &quot;, $i&#125; print $NF &#125;&#39; b.txt</code></p>
 <p>是不是一下变得简单多了：根据 basic script 的格式，我们先用 <code>NF!=0</code> 条件去掉空行，再进行 <code>&#123;&#125;</code> 中的 action 阶段；之后就几乎全是 C 语言的语法了。效果如下：</p>
-<p><img src="/2023/05/28/shell-command/eg1-command.png" alt></p>
+<p><img src="/2023/05/28/shell-command/eg1-command.png"></p>
 <h3 id="Example-2"><a href="#Example-2" class="headerlink" title="Example 2"></a>Example 2</h3><p>这是 midtern quiz 的一个题目，当时没有接触过 sed, awk, tr 命令的我一筹莫展。但在学会这些命令之后，这种题可以说是迎刃而解</p>
-<p><img src="/2023/05/28/shell-command/eg2-des1.png" alt></p>
-<p><img src="/2023/05/28/shell-command/eg2-des2.png" alt></p>
+<p><img src="/2023/05/28/shell-command/eg2-des1.png"></p>
+<p><img src="/2023/05/28/shell-command/eg2-des2.png"></p>
 <p>(将被若干空格，制表符，换行符等 <code>[:space:]</code> 符号分隔的字段整理成一行一个的形式，并且进行去重)</p>
 <p>一行 shell script 就可以解决: <code>tr &#39;[[:space:]]&#39; &#39;\n&#39; &lt; $1 | awk &#39;NF!=0 &amp;&amp; !a[$0]++&#39;</code> (思路来自 zrz)</p>
 <p>真的很妙，使用 tr 命令把字段展开后 (tr 命令的用法见下) 直接用 awk 语言定义了一个<strong>桶</strong>，对字段进行统计，这样就完成了去重 (注意，在 basic script 中的 <code>condition &#123;action&#125;</code> 范式中，缺省 action 默认是 <code>print $0</code>)</p>
 <p>如果想要做的更绝点，可以只用一个 awk 命令解决 (虽然这样本质上就是用 C 来写而不是 shell script 了)，即 <code>awk &#39;&#123;for (i = 1;i &lt;= NF; ++i) &#123;&#123;if (a[$i] == 0) print $i&#125; a[$i]++&#125;&#125;&#39; $1</code></p>
 <p>总而言之，<code>[awk script]</code> 中可以包含这些内容: <code>BEGIN&#123;&#125;</code> (在文本处理<strong>前</strong>执行的 action)， <code>&#123;&#125;</code> <strong>逐行处理</strong>文本时执行的 action，<code>END&#123;&#125;</code> 处理完所有文本<strong>后</strong>执行的 action。不在 <code>&#123;&#125;</code> 中的则是条件 condition (可缺省)</p>
 <p>另外，awk 也能像 sed 一样通过字符串或正则表达式进行模式匹配，这里就不多展开了，有 grep 与 sed 完成模式匹配的相关操作已经足够了。</p>
-<p><br></p>
+<br>
+
 <h2 id="tr"><a href="#tr" class="headerlink" title="tr"></a>tr</h2><p>tr 命令的应用就比较简单粗暴了，其完成的是对<strong>指定文本的替换</strong>，和 <code>sed &#39;s/.../.../g&#39; file</code> 的功能几乎一致 (sed 更强大，其不仅能转换字符，还能<strong>转换模式</strong>)</p>
 <p>语法如下 <code>tr &#39;[SET1]&#39; &#39;[SET2]&#39; &lt; bar.txt</code>，<code>[SET1]</code> 与 <code>[SET2]</code> 可以是字符集，也可以是字符串，但<strong>并不是模式</strong>！因此它不支持正则表达式描述的模式匹配，只能够匹配字符串或字符集</p>
 <ul>
-<li><p>将 bar.txt 中所有的空白字符 (空格，制表符...) 全部转换为换行符：<code>tr &#39;[[:blank:]]&#39; &#39;\n&#39; &lt; bar.txt</code></p>
+<li><p>将 bar.txt 中所有的空白字符 (空格，制表符…) 全部转换为换行符：<code>tr &#39;[[:blank:]]&#39; &#39;\n&#39; &lt; bar.txt</code></p>
 </li>
 <li><p>将 bar.txt 中所有的小写字母转换为大写字母：<code>tr &#39;[[:lower:]]&#39; &#39;[[:upper:]]&#39; &lt; bar.txt</code> (注意，当 SET1 与 SET2 是<strong>一一对应</strong>的关系时，字符的转换才<strong>一一对应</strong>)</p>
 </li>
-<li><p>删除 bar.txt 中的所有空字符 (空格，制表符，换行符...) 使其称为一条连续的字符串: <code>tr -d &#39;[[:space:]]&#39; &lt; bar.txt</code> (使用 flag <code>-d</code> 进行删除)</p>
+<li><p>删除 bar.txt 中的所有空字符 (空格，制表符，换行符…) 使其称为一条连续的字符串: <code>tr -d &#39;[[:space:]]&#39; &lt; bar.txt</code> (使用 flag <code>-d</code> 进行删除)</p>
 </li>
-<li><p>使 bar.txt 中所有<strong>连续的字母缩减成只有一个</strong> (例，&quot;ooookay!&quot; 缩减为 &quot;okay!&quot;)：<code>tr -s &#39;[[:alpha:]]&#39; &lt; bar.txt</code> (使用 flag <code>-s</code>)</p>
+<li><p>使 bar.txt 中所有<strong>连续的字母缩减成只有一个</strong> (例，”ooookay!” 缩减为 “okay!”)：<code>tr -s &#39;[[:alpha:]]&#39; &lt; bar.txt</code> (使用 flag <code>-s</code>)</p>
 </li>
 </ul>
-<p><br></p>
+<br>
+
 <h2 id="Numerical-Computation"><a href="#Numerical-Computation" class="headerlink" title="Numerical Computation"></a>Numerical Computation</h2><p>由于 shell comment 中的 variable 只有 string 一种类型，若想方便快捷的进行算数运算，需要使用数学计算命令。</p>
-<h3 id="Double-Parentheses"><a href="#Double-Parentheses" class="headerlink" title="Double Parentheses"></a>Double Parentheses</h3><p>最推荐使用的命令是双小括号 <code>(( ))</code>；其语法为 <code>((expressions))</code>: 非常的简单，将算数表达式置于双小括号中即可。此外，写入 <code>(( ))</code> 中的算术表达式可以不止一个: 多个算数表达式用逗号 <code>,</code> 隔开，<strong>最后一个表达式</strong> 将作为 <code>(( ))</code> 命令的执行结果。</p>
-<p>使用 dollar 符号 <code>$</code> 获取 <code>(( ))</code> 命令的结果；这与使用 <code>$</code> 获取变量值是类似的。</p>
-<p>此外，写入 <code>(( ))</code> 中的 <code>expressions</code> 中的变量<strong>无需</strong>加 <code>$</code> 前缀：<code>(( ))</code> 命令会自动解析其中表达式的变量名，这也更符合程序员的书写习惯。</p>
+<h3 id="Double-Parentheses"><a href="#Double-Parentheses" class="headerlink" title="Double Parentheses"></a>Double Parentheses</h3><p><strong>最推荐</strong>使用的命令是双小括号 <code>(( ))</code>；其语法为 <code>((expressions))</code>: 非常的简单，将算数表达式置于双小括号中即可。此外，写入 <code>(( ))</code> 中的算术表达式可以不止一个: 多个算数表达式用逗号 <code>,</code> 隔开，<strong>最后一个表达式</strong> 将作为 <code>(( ))</code> 命令的执行结果。</p>
+<p>使用 dollar 符号 <code> $</code> 获取 <code>(( ))</code> 命令的结果；这与使用 <code>$</code> 获取变量值是类似的。</p>
+<p>此外，写入 <code>(( ))</code> 中的 <code>expressions</code> 中的变量<strong>无需</strong>加 <code> $</code> 前缀：<code>(( ))</code> 命令会自动解析其中表达式的变量名，这也更符合程序员的书写习惯。</p>
+<p>例：先定义变量 <code>a=0</code>，以下三个命令是等价的 <code>((a=a+15))</code>, <code>((a+=15))</code>, <code>a=$((a+15))</code>。分别执行这三个命令后，<code>echo $a</code> 的结果都是 $15$。</p>
+<div class="note info no-icon">
+            <p>除了算数运算之外，双小括号 <code>(( ))</code> 命令还支持<strong>扩展逻辑运算</strong>与<strong>扩展流程控制语句</strong>，其语法和 C 非常相似。贴一段 shell script 程序感受一下:</p><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shebang important">#!/bin/sh</span>
+<span class="token assign-left variable">num</span><span class="token operator">=</span><span class="token number">100</span>
+<span class="token assign-left variable">total</span><span class="token operator">=</span><span class="token number">0</span>
+<span class="token keyword">for</span><span class="token variable"><span class="token punctuation">((</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;=</span>num<span class="token punctuation">;</span><span class="token operator">++</span>i<span class="token punctuation">))</span></span>     <span class="token comment"># 扩展流程控制: 1oop</span>
+<span class="token keyword">do</span>
+    <span class="token variable"><span class="token punctuation">((</span>total<span class="token operator">+=</span>i<span class="token punctuation">))</span></span>
+<span class="token keyword">done</span>
+<span class="token keyword">if</span><span class="token variable"><span class="token punctuation">((</span>total<span class="token operator">==</span><span class="token number">5050</span><span class="token punctuation">))</span></span>	  <span class="token comment"># 扩展逻辑运算；另外，可以使用 $((total==5050)) 获取布尔值结果</span>
+<span class="token keyword">then</span>
+    <span class="token builtin class-name">echo</span> <span class="token variable">$total</span>
+<span class="token keyword">fi</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+          </div>
+
+<h3 id="Square-Brackets"><a href="#Square-Brackets" class="headerlink" title="Square Brackets"></a>Square Brackets</h3><p>中括号命令 <code>[ ]</code> 与双小括号 <code>(( ))</code> 类似，但使用上并不是那么灵活。具体来说，<code>[ ]</code> 命令<strong>不能</strong>脱离赋值语句 <code>=</code> 而单独存在。</p>
+<p>比如，<code>((a+=10))</code> 命令可以让变量 <code>a</code> 自加 $10$，而替换成中括号，<code>[a+=10]</code> 这一命令是<strong>不合法</strong>的。我们必须写成赋值语句的形式：<code>a=$[a+=10]</code> 或是逻辑上更为自然的 <code>a=$[a+10]</code>。</p>
+<p>由此可见，<code>(( ))</code> 比 <code>[ ]</code> 的使用更加灵活。</p>
+<h3 id="let-Expression"><a href="#let-Expression" class="headerlink" title="let Expression"></a>let Expression</h3><p>这是课上介绍的方法：使用 <code>let</code> 命令来进行算数运算。<code>let</code> 命令的基本语法是 <code>let [expressions]</code>。与 <code>(( ))</code> 类似，<code>[expressions]</code> 中也可以写入多个算数表达式，<code>let</code> 将取最后一个表达式的结果作为整个命令的执行结果。不同之处在于，<code>let</code> 使用<strong>空格</strong>而不是逗号 <code>,</code> 对多个表达式进行分隔。</p>
+<p>此外，<code>let</code> 不能与赋值语句 <code>=</code> 复合：<code>a=$((a+10))</code> 改写为 <code>a=let a+10</code> 是不合法的；必须写成 <code>let a+=10</code>。</p>
+<p><code>let</code> 命令与 <code>[ ]</code> 命令优缺点互补：然而，两个命令都不如万能的 <code>(( ))</code>。</p>
+<br>
+
+ 
 
     </div>
 
@@ -538,7 +572,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Variables-in-Shell-Script"><span class="nav-number">1.</span> <span class="nav-text">Variables in Shell Script</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Defining-Variables"><span class="nav-number">1.1.</span> <span class="nav-text">Defining Variables</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Accessing-Variables"><span class="nav-number">1.2.</span> <span class="nav-text">Accessing Variables</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#grep"><span class="nav-number">2.</span> <span class="nav-text">grep</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#grep-Specific-Lines"><span class="nav-number">2.1.</span> <span class="nav-text">grep Specific Lines</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Flags-for-grep"><span class="nav-number">2.2.</span> <span class="nav-text">Flags for grep</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sed"><span class="nav-number">3.</span> <span class="nav-text">sed</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#add-a-line-a-i"><span class="nav-number">3.1.</span> <span class="nav-text">add a line (a&#x2F;i)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#delete-lines-d"><span class="nav-number">3.2.</span> <span class="nav-text">delete lines (d)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#show-lines-p"><span class="nav-number">3.3.</span> <span class="nav-text">show lines (p)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#change-lines-c"><span class="nav-number">3.4.</span> <span class="nav-text">change lines (c)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#search-data"><span class="nav-number">3.5.</span> <span class="nav-text">search data</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#awk"><span class="nav-number">4.</span> <span class="nav-text">awk</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#basic-script"><span class="nav-number">4.1.</span> <span class="nav-text">basic script</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Example-1"><span class="nav-number">4.2.</span> <span class="nav-text">Example 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Example-2"><span class="nav-number">4.3.</span> <span class="nav-text">Example 2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tr"><span class="nav-number">5.</span> <span class="nav-text">tr</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Numerical-Computation"><span class="nav-number">6.</span> <span class="nav-text">Numerical Computation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Double-Parentheses"><span class="nav-number">6.1.</span> <span class="nav-text">Double Parentheses</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Variables-in-Shell-Script"><span class="nav-number">1.</span> <span class="nav-text">Variables in Shell Script</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Defining-Variables"><span class="nav-number">1.1.</span> <span class="nav-text">Defining Variables</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Accessing-Variables"><span class="nav-number">1.2.</span> <span class="nav-text">Accessing Variables</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#grep"><span class="nav-number">2.</span> <span class="nav-text">grep</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#grep-Specific-Lines"><span class="nav-number">2.1.</span> <span class="nav-text">grep Specific Lines</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Flags-for-grep"><span class="nav-number">2.2.</span> <span class="nav-text">Flags for grep</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sed"><span class="nav-number">3.</span> <span class="nav-text">sed</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#add-a-line-a-x2F-i"><span class="nav-number">3.1.</span> <span class="nav-text">add a line (a&#x2F;i)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#delete-lines-d"><span class="nav-number">3.2.</span> <span class="nav-text">delete lines (d)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#show-lines-p"><span class="nav-number">3.3.</span> <span class="nav-text">show lines (p)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#change-lines-c"><span class="nav-number">3.4.</span> <span class="nav-text">change lines (c)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#search-data"><span class="nav-number">3.5.</span> <span class="nav-text">search data</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#awk"><span class="nav-number">4.</span> <span class="nav-text">awk</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#basic-script"><span class="nav-number">4.1.</span> <span class="nav-text">basic script</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Example-1"><span class="nav-number">4.2.</span> <span class="nav-text">Example 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Example-2"><span class="nav-number">4.3.</span> <span class="nav-text">Example 2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tr"><span class="nav-number">5.</span> <span class="nav-text">tr</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Numerical-Computation"><span class="nav-number">6.</span> <span class="nav-text">Numerical Computation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Double-Parentheses"><span class="nav-number">6.1.</span> <span class="nav-text">Double Parentheses</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Square-Brackets"><span class="nav-number">6.2.</span> <span class="nav-text">Square Brackets</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#let-Expression"><span class="nav-number">6.3.</span> <span class="nav-text">let Expression</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -561,7 +595,7 @@
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
