@@ -523,7 +523,7 @@ A_CHARTEXT     <span class="token comment">// 字符掩盖</span>
   </entry>
   <entry>
     <title>Shell Command &amp; Script 笔记</title>
-    <url>/2023/05/28/shell-command/</url>
+    <url>/2023/05/05/shell-command/</url>
     <content><![CDATA[<p>关于 shell command 和 shell script 的内容也是在 ENGG1340 课上系统学习的；但是课上教的内容太浅，甚至连应付考试 (没错，就是 midterm quiz) 都成问题。于是稍微自己加了点餐，现记录如下。</p>
 <span id="more"></span>
 <p>本文中的 shell command 与 shell script 均采用 <strong>bash shell</strong>。</p>
@@ -623,15 +623,15 @@ A_CHARTEXT     <span class="token comment">// 字符掩盖</span>
             <p><strong>Built-in variables</strong>:</p><p><code>NF</code> 是 awk 的<strong>内建变量</strong>，记录的是当前行的<strong>字段数</strong>。awk 还提供了许多其他的内建变量，例如：<code>FS</code> (字段分隔符，默认为任何 blank 字符), <code>length</code> (当前行的长度), <code>NR</code> (当前行的行号)。</p><p>并且，对一行中的 <code>NF</code> 个字段，<code>$0</code> 代表整行，<code>$i</code> $(1\leq i\leq NF)$ 代表第 $i$ 个字段。</p>
           </div>
 <p>除此之外，我们甚至能在 <code>[awk script]</code> 中写入用 awk 语言编写的程序 (和 C 语法极其相似)，来完成一系列复杂的文本格式化。我将用以下两个例子进行说明：</p>
-<h3 id="Example-1"><a href="#Example-1" class="headerlink" title="Example 1"></a>Example 1</h3><p><img src="/2023/05/28/shell-command/eg1-text.png" alt="1.1"></p>
+<h3 id="Example-1"><a href="#Example-1" class="headerlink" title="Example 1"></a>Example 1</h3><p><img src="/2023/05/05/shell-command/eg1-text.png" alt="1.1"></p>
 <p>对于这一系列杂乱的字段，我们想将其整理成一行中每两个字段间只保留一个空格作为分隔。这一过程用 C 语言来实现可以说非常简单，但是用 shell script 我一时半会真的想不出来。</p>
 <p>此时，我们直接<strong>使用 awk 命令作为 shell 与 C 语言的桥梁</strong> </p>
 <p><code>awk &#39;NF!=0 &#123; &#123;for (i=1;i&lt;NF;++i) printf &quot;%s &quot;, $i&#125; print $NF &#125;&#39; b.txt</code></p>
 <p>是不是一下变得简单多了：根据 basic script 的格式，我们先用 <code>NF!=0</code> 条件去掉空行，再进行 <code>&#123;&#125;</code> 中的 action 阶段；之后就几乎全是 C 语言的语法了。效果如下：</p>
-<p><img src="/2023/05/28/shell-command/eg1-command.png" alt="1.2"></p>
+<p><img src="/2023/05/05/shell-command/eg1-command.png" alt="1.2"></p>
 <h3 id="Example-2"><a href="#Example-2" class="headerlink" title="Example 2"></a>Example 2</h3><p>这是 midtern quiz 的一个题目，当时没有接触过 sed, awk, tr 命令的我一筹莫展。但在学会这些命令之后，这种题可以说是迎刃而解</p>
-<p><img src="/2023/05/28/shell-command/eg2-des1.png" alt></p>
-<p><img src="/2023/05/28/shell-command/eg2-des2.png" alt="2.1"></p>
+<p><img src="/2023/05/05/shell-command/eg2-des1.png" alt></p>
+<p><img src="/2023/05/05/shell-command/eg2-des2.png" alt="2.1"></p>
 <p>(将被若干空格，制表符，换行符等 <code>[:space:]</code> 符号分隔的字段整理成一行一个的形式，并且进行去重)</p>
 <p>一行 shell script 就可以解决: <code>tr &#39;[[:space:]]&#39; &#39;\n&#39; &lt; $1 | awk &#39;NF!=0 &amp;&amp; !a[$0]++&#39;</code> (思路来自 zrz)</p>
 <p>真的很妙，使用 tr 命令把字段展开后 (tr 命令的用法见下) 直接用 awk 语言定义了一个<strong>桶</strong>，对字段进行统计，这样就完成了去重 (注意，在 basic script 中的 <code>condition &#123;action&#125;</code> 范式中，缺省 action 默认是 <code>print $0</code>)</p>
@@ -690,6 +690,34 @@ A_CHARTEXT     <span class="token comment">// 字符掩盖</span>
       <tags>
         <tag>shell command</tag>
         <tag>shell script</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>向世界发起叛逆——简评女神异闻录5 (Persona 5)</title>
+    <url>/2023/05/30/persona-5/</url>
+    <content><![CDATA[<p><strong>第一篇</strong>评论，献给有 “天下<strong>第一</strong>” 之称的 P5。这也是我走出确诊克罗恩病的阴霾，回归正常学习生活后玩到的<strong>第一个</strong>游戏。在主图结束完一天充实的学习后，坐地铁回到窄小的出租屋，打开 P5R 继续和怪盗团伙伴的冒险——这种日子定义为 “幸福” 毫不为过。再加上主角 Joker 也是乘地铁上下学，上堂读书落堂偷心；游戏和日常的巧合带给我一种奇妙的代入感 (<del>其实就是中二病犯了</del>)。</p>
+<p>谨以这篇评论纪念 P5R 这三个月来带给我的感动。</p>
+<span id="more"></span>
+<p><br></p>
+<p><img src="/2023/05/30/persona-5/achievements.png" alt="全成就军火展示"></p>
+<p><br></p>
+<h2 id="这是一场叛逆"><a href="#这是一场叛逆" class="headerlink" title="这是一场叛逆"></a>这是一场叛逆</h2><blockquote>
+<p>感谢在成为大人的必经之路上，还能给我一场逃避的梦。   —— Steam comment from Lestatice</p>
+</blockquote>
+<p>纵观 P 系列主角团，几乎所有成员都是正处于青春期的高中学生 (为什么是几乎？善吉大叔你自己想想)。ATLUS 也将女神异闻录系列定义为 <strong>青春 RPG</strong>。</p>
+<p>说起青春，大人们总是又爱又恨：一方面，青春是美好的，是蓬勃的，是“早上八九点钟的太阳”；而另一方面，我们又常常听到家长抱怨自己的孩子“青春期到了，开始和我对着干了”，甚至青春期还有一个来者不善的别名“<strong>叛逆期</strong>”。</p>
+<p>然而，从教育学的角度来说，叛逆本质上是青少年作为个体<strong>自我意识的觉醒</strong>：他们所“对着干”的并非大人，而是大人的威权。他们作出的反叛举动，是希望自己的<strong>人格</strong>能够得到尊重；如果父母拒绝理解和沟通，不愿放低姿态，那么所谓的叛逆将越来越严重。</p>
+<p>由此可见，叛逆这一词是大人视角的，以<strong>驯服</strong>为标准的说辞：换个角度看，对于受到不公对待的青少年来说，叛逆是他们最正常不过的诉求。</p>
+<p>我们的主角 Joker，正是在目睹同伴受到死亡威胁与自身遭遇不公的双重刺激下，发生了「人格面具」(persona，ペルソナ) 的<strong>觉醒</strong>：接下来，他将与建立起深厚羁绊的同伴们华丽地开启一场对「大人们」(おとな) 的终极<strong>叛逆</strong>……</p>
+<h3 id="问题学生们"><a href="#问题学生们" class="headerlink" title="问题学生们"></a>问题学生们</h3>]]></content>
+      <categories>
+        <category>reviews</category>
+        <category>game</category>
+      </categories>
+      <tags>
+        <tag>review</tag>
+        <tag>JRPG</tag>
+        <tag>Atlus</tag>
       </tags>
   </entry>
 </search>
