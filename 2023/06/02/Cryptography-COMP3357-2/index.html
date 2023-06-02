@@ -21,21 +21,23 @@
     var CONFIG = {"hostname":"thisisxxz.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="Hello Hexo! Hello NexT! Hello GitHub Pages! 终于有一个完完全全属于自己的博客啦！弄完了以后很有成就感。">
+  <meta name="description" content="COMP3357 digest 的 P2 部分 (P1 部分在这里)，主要介绍群论 (group theory)，数论 (algorithmic number theory) 的相关知识以及它们在 cryptography 中的应用。这里的应用包括著名的 RSA 系列难题 (hard problems) 与 Discrete Logarithm 系列难题，及 one-way functions 的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo blog 搭建笔记">
-<meta property="og:url" content="https://thisisxxz.github.io/2023/05/24/hexo-blog-study/index.html">
+<meta property="og:title" content="COMP3357 notes P2">
+<meta property="og:url" content="https://thisisxxz.github.io/2023/06/02/Cryptography-COMP3357-2/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="Hello Hexo! Hello NexT! Hello GitHub Pages! 终于有一个完完全全属于自己的博客啦！弄完了以后很有成就感。">
+<meta property="og:description" content="COMP3357 digest 的 P2 部分 (P1 部分在这里)，主要介绍群论 (group theory)，数论 (algorithmic number theory) 的相关知识以及它们在 cryptography 中的应用。这里的应用包括著名的 RSA 系列难题 (hard problems) 与 Discrete Logarithm 系列难题，及 one-way functions 的">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-05-24T09:43:00.000Z">
-<meta property="article:modified_time" content="2023-06-02T13:12:56.522Z">
+<meta property="article:published_time" content="2023-06-02T07:56:06.000Z">
+<meta property="article:modified_time" content="2023-06-02T13:09:08.958Z">
 <meta property="article:author" content="XXZ">
-<meta property="article:tag" content="blog">
-<meta property="article:tag" content="hexo">
+<meta property="article:tag" content="cryptography">
+<meta property="article:tag" content="course notes">
+<meta property="article:tag" content="group theory">
+<meta property="article:tag" content="number theory">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://thisisxxz.github.io/2023/05/24/hexo-blog-study/">
+<link rel="canonical" href="https://thisisxxz.github.io/2023/06/02/Cryptography-COMP3357-2/">
 
 
 <script id="page-configurations">
@@ -48,7 +50,7 @@
   };
 </script>
 
-  <title>Hexo blog 搭建笔记 | ThisisXXZ's Blog</title>
+  <title>COMP3357 notes P2 | ThisisXXZ's Blog</title>
   
 
 
@@ -197,7 +199,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://thisisxxz.github.io/2023/05/24/hexo-blog-study/">
+    <link itemprop="mainEntityOfPage" href="https://thisisxxz.github.io/2023/06/02/Cryptography-COMP3357-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar.jpg">
@@ -210,7 +212,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Hexo blog 搭建笔记
+          COMP3357 notes P2
         </h1>
 
         <div class="post-meta">
@@ -221,16 +223,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2023-05-24 17:43:00" itemprop="dateCreated datePublished" datetime="2023-05-24T17:43:00+08:00">2023-05-24</time>
+              <time title="Created: 2023-06-02 15:56:06 / Modified: 21:09:08" itemprop="dateCreated datePublished" datetime="2023-06-02T15:56:06+08:00">2023-06-02</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-06-02 21:12:56" itemprop="dateModified" datetime="2023-06-02T21:12:56+08:00">2023-06-02</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -241,7 +237,7 @@
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/notes/blog/" itemprop="url" rel="index"><span itemprop="name">blog</span></a>
+                  <a href="/categories/notes/cryptography/" itemprop="url" rel="index"><span itemprop="name">cryptography</span></a>
                 </span>
             </span>
 
@@ -275,14 +271,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3k</span>
+              <span>4.1k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>5 mins.</span>
+              <span>7 mins.</span>
             </span>
 
         </div>
@@ -294,79 +290,59 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><strong>Hello Hexo! Hello NexT! Hello GitHub Pages!</strong></p>
-<p>终于有一个完完全全属于自己的博客啦！弄完了以后很有成就感。</p>
+        <p>COMP3357 digest 的 P2 部分 (P1 部分在<a href="https://thisisxxz.github.io/2023/05/25/Cryptography-COMP3357/">这里</a>)，主要介绍群论 (group theory)，数论 (algorithmic number theory) 的相关知识以及它们在 cryptography 中的应用。这里的应用包括著名的 RSA 系列难题 (hard problems) 与 Discrete Logarithm 系列难题，及 one-way functions 的构建。</p>
 <span id="more"></span>
-<p>接下来会陆陆续续把博客园上的一些  post 搬过来。当然博客园也不会停止更新，会将自己比较用心记的笔记同步在两边发布</p>
-<p>在 Hexo 发布的第一篇博客，就简短的记录一下搭建的过程中遇到的问题和解决办法吧</p>
-<h2 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h2><p>Hexo 是一个博客框架，它允许我们使用 markdown 撰写文章。在写好之后，Hexo 将解析文章并快速生成静态网页。它提供了超多的插件 plugin 和接口，还有很多好看的博客 theme (最有名的应该就是我现在用的这一套 NexT)</p>
-<p>使用 Hexo 需要 <code>Node.js</code> 环境与 <code>git</code>。在必备的应用安装完成之后可以使用 npm 包下载器安装 Hexo <code>npm install -g hexo-cli</code></p>
-<p>在选择的根目录中打开 git Bash，使用 <code>hexo init</code> 命令初始化 Hexo 本地框架。初始化后根目录将会生成 (仅列出较为重要的)：</p>
-<ul>
-<li>source 文件夹：储存所有网页的源码 (markdown 文件)。其中的 <code>_post</code> 文件夹储存的是 post 的源码</li>
-<li>themes 文件夹：储存 Hexo 主题</li>
-<li>scaffolds 文件夹：储存若干自定义的 <code>[layout]</code>，即生成网页时采用的模板。初始 <code>layout</code> 有三种，分别是 draft, post 与 page</li>
-<li>public 文件夹：储存所有由 source 中源码生成的静态网页文件 (html 文件与 css 文件)</li>
-<li><code>_config.yml</code> 文件：Hexo 基础样式自定义文件，提供了许多接口。注意与 themes 中的 <code>_config.yml</code> 文件相区分；后续的<strong>非侵入式</strong> Hexo 主题自定义过程中，这两个配置文件是最为重要的</li>
-</ul>
+<p>同样，与 CnBlogs 中的笔记不同，这里不会详细的记载每个相关的知识点；只会尝试简略地总结一些能让未来的自己也会感到有趣，巧妙的内容 (Eureka!)。</p>
 <p><br></p>
-<h2 id="GitHub-Pages"><a href="#GitHub-Pages" class="headerlink" title="GitHub Pages"></a>GitHub Pages</h2><p>我们可以将 Hexo 远程部署在 GitHub Pages 上，且后续可以绑定新的域名</p>
-<p>在本地配置 git 之后 (生成 RSA 密钥后 SSH 连接到 <code>git@github.com</code>)，创建一个名称为 <code>[username].github.io</code> 的仓库。<code>[username].github.io</code> 是 Hexo 博客的网址。</p>
-<p>安装 <code>hexo-deployer-git</code> 插件，更改 <code>_config.yml</code> 配置后即可将 Hexo 一键部署到 GitHub Pages</p>
-<p>本地 Hexo 根目录中的 <code>.deploy_git</code> 文件夹将会储存在远端仓库中</p>
+<div class="note warning">
+            <p>&emsp; This article is a self-administered course note.<br>&emsp; It will <strong>NOT</strong> cover any exam or assignment related content.</p>
+          </div>
 <p><br></p>
-<h2 id="Hexo-Command"><a href="#Hexo-Command" class="headerlink" title="Hexo Command"></a>Hexo Command</h2><p>记录一下常用的 Hexo 命令</p>
-<h3 id="new"><a href="#new" class="headerlink" title="new"></a>new</h3><p>使用 <code>hexo new [layout] &lt;title&gt;</code> 命令新建一个网页。</p>
-<p><code>[layout]</code> 储存在 scaffolds 文件夹中，初始有 post, page, draft 三种。当该函数缺省时，默认采用 post layout</p>
-<p>若 <code>&lt;title&gt;</code> 包含空格，使用双引号括起来</p>
-<ul>
-<li><code>hexo new post &lt;title&gt;</code> 新建一个 post。此时 <code>source/_post</code> 中将会生成可供编辑的 markdown 源码文件。新建文章时一般采用 post layout</li>
-<li><code>hexo new page &lt;title&gt;</code> 新建一个 page。此时 source 中将会生成对应的 page 文件夹，并在其中生成可供编辑的 markdown 源码文件 (<code>source/[title]/index.md</code>)。新建页面 (如 about，tags，categories) 时一般采用 page layout</li>
-<li><code>hexo new draft &lt;title&gt;</code> 新建一个 draft。此时 <code>source/_drafts</code> 中将会生成可供编辑的 markdown 源码文件。新建草稿时采用 draft layout，并且可使用 publish 命令 <code>hexo publish [layout] &lt;title&gt;</code> 将 draft 发布为正式的 post</li>
-</ul>
-<h3 id="generate"><a href="#generate" class="headerlink" title="generate"></a>generate</h3><p>使用 <code>hexo g</code> 命令生成静态文件 (即根据 source 中的源码文件生成 public 中的静态网页文件)</p>
-<h3 id="server"><a href="#server" class="headerlink" title="server"></a>server</h3><p>使用 <code>hexo s</code> 命令启动服务器。默认情况下，本地访问地址为 <code>https://localhost:4000/</code> </p>
-<p>启动服务器后可以访问上述本地地址对博客进行预览</p>
-<p>添加参数 <code>--debug</code> 在启动服务器后输出调试信息</p>
-<h3 id="deploy"><a href="#deploy" class="headerlink" title="deploy"></a>deploy</h3><p>使用 <code>hexo d</code> 命令部署网站</p>
-<p>若 Hexo 部署在 GitHub Pages 上，该命令会将本地的更改 push 到远端仓库</p>
-<p><code>hexo g -d</code> 与 <code>hexo d -g</code> 命令的意义相同：让 Hexo 在生成静态文件后立即部署网站</p>
-<h3 id="clean"><a href="#clean" class="headerlink" title="clean"></a>clean</h3><p>使用 <code>hexo clean</code> 命令清除所有缓存文件 (<code>db.json</code>) 与已生成的静态网页 (public 文件夹)</p>
-<p>当发现本地更改不生效时，常 <code>hexo clean</code> 后 <code>hexo g</code> 刷新所有的静态网页文件</p>
-<p>一个典型的发布新文章过程：</p>
-<ul>
-<li><code>hexo new post &quot;hello-hexo&quot;</code> 新建 post，对 <code>source/_post</code> 中的对应 markdown 源码进行编辑</li>
-<li><code>hexo g</code> 生成静态网页文件</li>
-<li><code>hexo s --debug</code> 启动服务器，并访问 <code>https://localhost:4000/</code> 预览查看本地的更改是否成功应用。若发现更改未生效，<code>hexo clean</code> 后 <code>hexo g</code> 重新生成所有的静态网页文件。重复该步骤，找到问题直至预览到本地更改生效</li>
-<li><code>hexo d</code> 部署网站，此时 post 将在 <code>[username].github.io</code> 网址上发布</li>
-</ul>
+<h2 id="Multiplicative-Inverse"><a href="#Multiplicative-Inverse" class="headerlink" title="Multiplicative Inverse"></a>Multiplicative Inverse</h2><div class="note info no-icon">
+            <p>Definition. If for a given integer $b$, there exists an integer $c$ such that $bc=1\mod{N}$, we say that $b$ is <strong>invertible</strong> modulo $N$, and call $c$ a <strong>multiplicative inverse</strong> of $b$ modulo $N$.</p>
+          </div>
+<p>The multiplicative inverse is <strong>NOT</strong> unique. For an invertible $b$, if $c$ is an inverse of $b$, every $x$ congruent with $c$ modulo $N$ is also an inverse of $b$. ($x\equiv c\mod{N}$). We use $b^{-1}$ to denote the inverse of $b$ that $b^{-1}\in\{1,2,...N-1\}$.</p>
+<div class="note info no-icon">
+            <p>Theorem. Let $b,N$ be integers, with $b\geq 1$, and $N&gt;1$. Then $b$ is <strong>invertible</strong> modulo $N$ if and only if  $b$ is <strong>relatively prime</strong> to $N$. Note that integers $b,N$ are relatively prime (or coprime) means $\gcd(b,N)=1$.</p>
+          </div>
+<p>Therefore, for a prime $p$, every $b\in \{1,2,...p-1\}$ is <strong>invertible</strong> modulo $p$. </p>
+<p>The above theorem could be proved by applying <strong>Bezout&#39;s identity: </strong> it states that for every positive integer $a,b$, there exists a pair of integers $\langle X,Y \rangle$ that $Xa+Yb=\gcd(a,b)$.</p>
 <p><br></p>
-<h2 id="Front-matter"><a href="#Front-matter" class="headerlink" title="Front-matter"></a>Front-matter</h2><p>Front-matter 是 markdown 源码最上方以 <code>---</code> 分隔的区域，其规定了这个网页的各项属性</p>
-<p>例：</p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: Hexo study notes</span><br><span class="line">date: 2023-05-24 17:43:00</span><br><span class="line">tags:</span><br><span class="line"><span class="bullet">-</span> hexo</span><br><span class="line"><span class="bullet">-</span> blog</span><br><span class="line">categories:</span><br><span class="line"><span class="bullet">-</span> notes</span><br><span class="line"><span class="bullet">-</span> hexo</span><br><span class="line">mathjax: true</span><br><span class="line">top: 1</span><br><span class="line"><span class="section">comments: false</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
-<p>注意，这其中的一些 field 并不是默认的，而是在安装了对应的插件后实现的功能</p>
-<p>实现的过程就不一一介绍了，网上大把教程</p>
-<h3 id="tags-and-categories"><a href="#tags-and-categories" class="headerlink" title="tags and categories"></a>tags and categories</h3><p>在启用这两个 fields 之前，需要启用<a target="_blank" rel="noopener" href="https://theme-next.js.org/docs/theme-settings/custom-pages.html">自定义页面 (custom pages)</a> tags 与 categories，之后就可以为文章添加 tags 与 categories 了</p>
-<p>注意对同一篇文章，tags 的关系是平行的，categories 的关系是树形的</p>
-<p>如上例，文章 <code>Hexo study notes</code> 的 tags 是 <code>hexo</code> 与 <code>blog</code>，其所属的类别是 <code>notes/hexo</code></p>
-<h3 id="mathjax"><a href="#mathjax" class="headerlink" title="mathjax"></a>mathjax</h3><p>使用 Hexo 默认的渲染引擎时，markdown 中使用 <code>$</code> 符号括起来的数学公式解析会出现问题。根据这一<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/108766968">教程</a>，我们安装 <code>hexo-math</code> 插件使用 <code>MathJax/KaTex</code> 渲染数学公式，并在每篇文章开头的 Front-matter 中启用 mathjax 引擎 (<code>mathjax: true</code>)</p>
-<h3 id="top"><a href="#top" class="headerlink" title="top"></a>top</h3><p>安装 <code>hexo-generator-index-pin-top</code> 插件实现文章置顶功能</p>
-<p>添加 top field 来置顶文章：后面的数字代表置顶优先级。例：<code>top: 1</code> 的文章将会被置于 <code>top: 10</code> 文章的上方</p>
-<h3 id="comments"><a href="#comments" class="headerlink" title="comments"></a>comments</h3><p>本博客采用 valine 实现博客评论功能。缺省 comments field，评论区默认开启</p>
-<p>若想关闭某些 post/page 的评论区，在对应的 front-matter 中添加 comment field 并设定为否 (<code>comments: false</code>)</p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>逆元这个概念算是老熟人了；它将<strong>模意义下的除法转化为乘法</strong>。</p>
+<p>求逆元的常见方法：扩展欧几里得算法，欧拉定理，费马小定理。这些方法在接下来都会进行介绍。</p>
+</blockquote>
 <p><br></p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ol>
-<li><p><a target="_blank" rel="noopener" href="https://hexo.io/docs/index.html">Hexo official documents</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://theme-next.js.org/">NexT Theme for Hexo</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="http://yearito.cn/categories/%E6%8A%80%E6%9C%AF/%E5%8D%9A%E5%AE%A2/">yearito-Hexo美化</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/108766968">Hexo配置Mathjax渲染数学公式</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/nineya_com/article/details/103394315">Hexo实现文章置顶功能</a></p>
-</li>
-</ol>
+<h2 id="Euler-39-s-Totient-Function"><a href="#Euler-39-s-Totient-Function" class="headerlink" title="Euler&#39;s Totient Function"></a>Euler&#39;s Totient Function</h2><div class="note info no-icon">
+            <p>Definition. Euler&#39;s Totient Function $\varphi(N)$ is defined as the number of <strong>positive integers</strong> $\leq N$ that are <strong>relatively prime</strong> to $N$, where $1$ is counted as being relatively prime to all integers.</p>
+          </div>
+<p>The general case of Euler&#39;s Totient Function is $\varphi(n)=n\Pi_{p|n}(1-\frac{1}{p})=n(1-\frac{1}{p_1})(1-\frac{1}{p_2})...(1-\frac{1}{p_r})$. This is essentially the <strong>Inclusion-Exclusion principle</strong>. </p>
+<h3 id="Code-Implementation-Linear-Sieve"><a href="#Code-Implementation-Linear-Sieve" class="headerlink" title="Code Implementation: Linear Sieve"></a>Code Implementation: Linear Sieve</h3><p>To calculate a specific totient of $n$, we could design a trivial $O(n\log n)$ algorithm based on the above formula. However, there exists a sieve algorithm that could calculate totients of number $1$ to $n$ in linear time $O(n)$. Below is the code in C++:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// the Euler sieve</span></span><br><span class="line"><span class="comment">// bool array: is_prime, int array: prime, phi</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sieve</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; N; ++i)    is_prime[i] = <span class="number">1</span>;</span><br><span class="line">    cnt = <span class="number">0</span>;</span><br><span class="line">    is_prime[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">    phi[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= N; ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (is_prime[i]) &#123;</span><br><span class="line">            prime[++cnt] = i;</span><br><span class="line">            phi[i] = i - <span class="number">1</span>;     <span class="comment">// for a prime p, phi[p] = p - 1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= cnt &amp;&amp; i * prime[j] &lt;= N; ++j) &#123;</span><br><span class="line">            is_prime[i * prime[j]] = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">if</span> (i % prime[j])</span><br><span class="line">                phi[i * prime[j]] = phi[i] * phi[prime[j]];</span><br><span class="line">               <span class="keyword">else</span> &#123;</span><br><span class="line">                phi[i * prime[j]] = phi[i] * prime[j];</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Reference &amp; Explanation: <a target="_blank" rel="noopener" href="https://oi-wiki.org/math/number-theory/sieve/#%E7%AD%9B%E6%B3%95%E6%B1%82%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0">(OI Wiki) Linear Sieve for Euler&#39;s totient function</a></p>
+<h3 id="Euler-39-s-Theorem"><a href="#Euler-39-s-Theorem" class="headerlink" title="Euler&#39;s Theorem"></a>Euler&#39;s Theorem</h3><div class="note info no-icon">
+            <p>Theorem. Let $n$ be a positive integer, and let $a$ be an integer that is <strong>relatively prime</strong> to $n$. Then $a^{\varphi(n)}\equiv 1\pmod{n}$, where $\varphi(n)$ is Euler&#39;s totient function of $n$.</p>
+          </div>
+<p>Since $\gcd(a,n)=1$, $a$ is invertible modulo $n$. According to Euler&#39;s Theorem, $a^{\varphi(n)}\equiv 1\pmod{n}$. Therefore $a\times a^{\varphi(n)-1}\equiv 1\pmod{n}$. $a^{\varphi(n)-1}$ is a <strong>multiplicative inverse</strong> of $a$ modulo $n$. </p>
+<p>An <strong>informal</strong> proof. (need the knowledge of $\mathbb{Z}_n^{*}$, <strong>multiplicative group</strong> of integers modulo $n$). For $a\in\mathbb{Z}_n^{*}$, $\{r_1,r_2,...r_{\varphi(n)}\}=(\mathbb{Z}/n)^{*}=\{ar_1,ar_2,...ar_{\varphi(n)}\}$. Therefore $r_1r_2...r_{\varphi(n)}\equiv (ar_1)(ar_2)...(ar_{\varphi(n)})$, which reduces to $1\equiv a^{\varphi(n)}$. This cancellation is allowed since all $r_i$ have multiplicative inverses modulo $n$. </p>
+<p>Reference &amp; Explanation: <a target="_blank" rel="noopener" href="https://brilliant.org/wiki/eulers-theorem/#proofs-of-the-theorem">(Brilliant Math Wiki) Proof of Euler&#39;s Theorem</a></p>
+<p><br></p>
+<blockquote>
+<p>Eureka&#39;s moment!</p>
+<p>欧拉函数也接触了很长一段时间了，刻在 DNA 里的 $\varphi * \mathbf{1}=\mathbf{Id}$。</p>
+<p>这里主要想讲下关于欧拉函数的一般公式：$\varphi(n)=n\Pi_{p|n}(1-\frac{1}{p})$。本质上这是一个<strong>容斥原理</strong>的应用。</p>
+<p>举个例子就容易理解了：假设 $n$ 只有两个质因子 $p_1,p_2$，那么展开上式可得 $\varphi(n)=n-\frac{n}{p_1}-\frac{n}{p_2}+\frac{n}{p_1p_2}$. 用自然语言描述，即在 $1-n$ 中与 $n$ 互质的数的个数为 $n$ 减去是 $p_1$ 倍数的数的个数，再减去是 $p_2$ 倍数的数的个数。此时，是 $p_1p_2$ 倍数的数将会被<strong>重复</strong>减去两次；根据容斥原理，我们将多减的个数重新加回来，因此最后再加上是 $p_1p_2$ 倍数的数的个数。</p>
+<p>关于欧拉函数线性筛算法的设计也十分巧妙，它是建立在质数线性筛的基础上的。具体可见 OI Wiki 中的相关解释，讲的很清楚。</p>
+</blockquote>
+<p><br></p>
+<h2 id="Extended-Euclidean-Algorithm-eGCD"><a href="#Extended-Euclidean-Algorithm-eGCD" class="headerlink" title="Extended Euclidean Algorithm (eGCD)"></a>Extended Euclidean Algorithm (eGCD)</h2><p><br></p>
+<h2 id="Chinese-Remainder-Theorem-CRT"><a href="#Chinese-Remainder-Theorem-CRT" class="headerlink" title="Chinese Remainder Theorem (CRT)"></a>Chinese Remainder Theorem (CRT)</h2><p><br></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning">
+            <p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
+          </div>
+<p>Course textbook: </p>
+<p><em>Introduction to Modern Cryptography (2nd edition)</em>, Katz, J. &amp; Lindell, Y., (2015), CRC Press, <a target="_blank" rel="noopener" href="https://ebookcentral.proquest.com/lib/HKUHK/detail.action?docID=1619504">view here</a></p>
 
     </div>
 
@@ -393,7 +369,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>Post link: </strong>
-    <a href="https://thisisxxz.github.io/2023/05/24/hexo-blog-study/" title="Hexo blog 搭建笔记">https://thisisxxz.github.io/2023/05/24/hexo-blog-study/</a>
+    <a href="https://thisisxxz.github.io/2023/06/02/Cryptography-COMP3357-2/" title="COMP3357 notes P2">https://thisisxxz.github.io/2023/06/02/Cryptography-COMP3357-2/</a>
   </li>
   <li class="post-copyright-license">
     <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
@@ -404,8 +380,10 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/blog/" rel="tag"><i class="fa fa-tag"></i> blog</a>
-              <a href="/tags/hexo/" rel="tag"><i class="fa fa-tag"></i> hexo</a>
+              <a href="/tags/cryptography/" rel="tag"><i class="fa fa-tag"></i> cryptography</a>
+              <a href="/tags/course-notes/" rel="tag"><i class="fa fa-tag"></i> course notes</a>
+              <a href="/tags/group-theory/" rel="tag"><i class="fa fa-tag"></i> group theory</a>
+              <a href="/tags/number-theory/" rel="tag"><i class="fa fa-tag"></i> number theory</a>
           </div>
 
         
@@ -414,13 +392,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/05/05/shell-command/" rel="prev" title="Shell Command & Script 笔记">
-      <i class="fa fa-chevron-left"></i> Shell Command & Script 笔记
+    <a href="/2023/06/01/blog-update-log/" rel="prev" title="【折腾】 Blog Update Logs">
+      <i class="fa fa-chevron-left"></i> 【折腾】 Blog Update Logs
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/05/25/Cryptography-COMP3357/" rel="next" title="COMP3357 notes P1">
-      COMP3357 notes P1 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -481,7 +456,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hexo"><span class="nav-number">1.</span> <span class="nav-text">Hexo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GitHub-Pages"><span class="nav-number">2.</span> <span class="nav-text">GitHub Pages</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hexo-Command"><span class="nav-number">3.</span> <span class="nav-text">Hexo Command</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#new"><span class="nav-number">3.1.</span> <span class="nav-text">new</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#generate"><span class="nav-number">3.2.</span> <span class="nav-text">generate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#server"><span class="nav-number">3.3.</span> <span class="nav-text">server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deploy"><span class="nav-number">3.4.</span> <span class="nav-text">deploy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#clean"><span class="nav-number">3.5.</span> <span class="nav-text">clean</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Front-matter"><span class="nav-number">4.</span> <span class="nav-text">Front-matter</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#tags-and-categories"><span class="nav-number">4.1.</span> <span class="nav-text">tags and categories</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mathjax"><span class="nav-number">4.2.</span> <span class="nav-text">mathjax</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#top"><span class="nav-number">4.3.</span> <span class="nav-text">top</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#comments"><span class="nav-number">4.4.</span> <span class="nav-text">comments</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Multiplicative-Inverse"><span class="nav-number">1.</span> <span class="nav-text">Multiplicative Inverse</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Euler-39-s-Totient-Function"><span class="nav-number">2.</span> <span class="nav-text">Euler&#39;s Totient Function</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation-Linear-Sieve"><span class="nav-number">2.1.</span> <span class="nav-text">Code Implementation: Linear Sieve</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Euler-39-s-Theorem"><span class="nav-number">2.2.</span> <span class="nav-text">Euler&#39;s Theorem</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Extended-Euclidean-Algorithm-eGCD"><span class="nav-number">3.</span> <span class="nav-text">Extended Euclidean Algorithm (eGCD)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chinese-Remainder-Theorem-CRT"><span class="nav-number">4.</span> <span class="nav-text">Chinese Remainder Theorem (CRT)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://thisisxxz.github.io/2023/05/05/shell-command/eg2-des1.png">
 <meta property="og:image" content="https://thisisxxz.github.io/2023/05/05/shell-command/eg2-des2.png">
 <meta property="article:published_time" content="2023-05-05T12:34:40.000Z">
-<meta property="article:modified_time" content="2023-05-30T13:41:31.305Z">
+<meta property="article:modified_time" content="2023-06-02T11:48:41.794Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="shell command">
 <meta property="article:tag" content="shell script">
@@ -219,6 +219,8 @@
         </h1>
 
         <div class="post-meta">
+
+          
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-calendar"></i>
@@ -232,7 +234,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-05-30 21:41:31" itemprop="dateModified" datetime="2023-05-30T21:41:31+08:00">2023-05-30</time>
+                <time title="Modified: 2023-06-02 19:48:41" itemprop="dateModified" datetime="2023-06-02T19:48:41+08:00">2023-06-02</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -431,17 +433,7 @@
 <p>此外，写入 <code>(( ))</code> 中的 <code>expressions</code> 中的变量<strong>无需</strong>加 <code>$</code> 前缀：<code>(( ))</code> 命令会自动解析其中表达式的变量名，这也更符合程序员的书写习惯。</p>
 <p>例：先定义变量 <code>a=0</code>，以下三个命令是等价的 <code>((a=a+15))</code>, <code>((a+=15))</code>, <code>a=$((a+15))</code>。分别执行这三个命令后，<code>echo $a</code> 的结果都是 $15$。</p>
 <div class="note info no-icon">
-            <p>除了算数运算之外，双小括号 <code>(( ))</code> 命令还支持<strong>扩展逻辑运算</strong>与<strong>扩展流程控制语句</strong>，其语法和 C 非常相似。贴一段 shell script 程序感受一下:</p><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shebang important">#!/bin/sh</span>
-<span class="token assign-left variable">num</span><span class="token operator">=</span><span class="token number">100</span>
-<span class="token assign-left variable">total</span><span class="token operator">=</span><span class="token number">0</span>
-<span class="token keyword">for</span><span class="token variable"><span class="token punctuation">((</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;=</span>num<span class="token punctuation">;</span><span class="token operator">++</span>i<span class="token punctuation">))</span></span>     <span class="token comment"># 扩展流程控制: 1oop</span>
-<span class="token keyword">do</span>
-    <span class="token variable"><span class="token punctuation">((</span>total<span class="token operator">+=</span>i<span class="token punctuation">))</span></span>
-<span class="token keyword">done</span>
-<span class="token keyword">if</span><span class="token variable"><span class="token punctuation">((</span>total<span class="token operator">==</span><span class="token number">5050</span><span class="token punctuation">))</span></span>	  <span class="token comment"># 扩展逻辑运算；另外，可以使用 $((total==5050)) 获取布尔值结果</span>
-<span class="token keyword">then</span>
-    <span class="token builtin class-name">echo</span> <span class="token variable">$total</span>
-<span class="token keyword">fi</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+            <p>除了算数运算之外，双小括号 <code>(( ))</code> 命令还支持<strong>扩展逻辑运算</strong>与<strong>扩展流程控制语句</strong>，其语法和 C 非常相似。贴一段 shell script 程序感受一下:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">num=100</span><br><span class="line">total=0</span><br><span class="line"><span class="keyword">for</span>((i=<span class="number">0</span>;i&lt;=num;++i))     <span class="comment"># 扩展流程控制: 1oop</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    ((total+=i))</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="keyword">if</span>((total==<span class="number">5050</span>))      <span class="comment"># 扩展逻辑运算；另外，可以使用 $((total==5050)) 获取布尔值结果</span></span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$total</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
           </div>
 <h3 id="Square-Brackets"><a href="#Square-Brackets" class="headerlink" title="Square Brackets"></a>Square Brackets</h3><p>中括号命令 <code>[ ]</code> 与双小括号 <code>(( ))</code> 类似，但使用上并不是那么灵活。具体来说，<code>[ ]</code> 命令<strong>不能</strong>脱离赋值语句 <code>=</code> 而单独存在。</p>
 <p>比如，<code>((a+=10))</code> 命令可以让变量 <code>a</code> 自加 $10$，而替换成中括号，<code>[a+=10]</code> 这一命令是<strong>不合法</strong>的。我们必须写成赋值语句的形式：<code>a=$[a+=10]</code> 或是逻辑上更为自然的 <code>a=$[a+10]</code>。</p>
@@ -585,7 +577,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -598,7 +590,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
