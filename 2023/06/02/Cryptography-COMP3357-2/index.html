@@ -29,7 +29,7 @@
 <meta property="og:description" content="COMP3357 digest 的 P2 部分 (P1 部分在这里)，主要介绍群论 (group theory)，数论 (algorithmic number theory) 的相关知识以及它们在 cryptography 中的应用。这里的应用包括著名的 RSA 系列难题 (hard problems) 与 Discrete Logarithm 系列难题，及 one-way functions 的">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-06-02T07:56:06.000Z">
-<meta property="article:modified_time" content="2023-06-02T13:09:08.958Z">
+<meta property="article:modified_time" content="2023-06-03T06:18:42.751Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="cryptography">
 <meta property="article:tag" content="course notes">
@@ -236,10 +236,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-06-02 15:56:06 / Modified: 21:09:08" itemprop="dateCreated datePublished" datetime="2023-06-02T15:56:06+08:00">2023-06-02</time>
+              <time title="Created: 2023-06-02 15:56:06" itemprop="dateCreated datePublished" datetime="2023-06-02T15:56:06+08:00">2023-06-02</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-06-03 14:18:42" itemprop="dateModified" datetime="2023-06-03T14:18:42+08:00">2023-06-03</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -284,14 +290,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>4.1k</span>
+              <span>6.6k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>7 mins.</span>
+              <span>11 mins.</span>
             </span>
 
         </div>
@@ -349,11 +355,80 @@
 <p>关于欧拉函数线性筛算法的设计也十分巧妙，它是建立在质数线性筛的基础上的。具体可见 OI Wiki 中的相关解释，讲的很清楚。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Extended-Euclidean-Algorithm-eGCD"><a href="#Extended-Euclidean-Algorithm-eGCD" class="headerlink" title="Extended Euclidean Algorithm (eGCD)"></a>Extended Euclidean Algorithm (eGCD)</h2><p><br></p>
-<h2 id="Chinese-Remainder-Theorem-CRT"><a href="#Chinese-Remainder-Theorem-CRT" class="headerlink" title="Chinese Remainder Theorem (CRT)"></a>Chinese Remainder Theorem (CRT)</h2><p><br></p>
+<h2 id="Extended-Euclidean-Algorithm-eGCD"><a href="#Extended-Euclidean-Algorithm-eGCD" class="headerlink" title="Extended Euclidean Algorithm (eGCD)"></a>Extended Euclidean Algorithm (eGCD)</h2><div class="note info no-icon">
+            <p>Euclidean Algorithm (辗转相除法) is one of the oldest and most widely known algorithms. It is a $O(\log n)$ method of computing the <strong>greatest common divisor</strong> (GCD) of two integers $a,b$.</p>
+          </div>
+<p>According to <strong>Bezout&#39;s Identity</strong>, there exists integers $X$ and $Y$ that $Xa+Yb=\gcd(a,b)$ given $a,b$. The <strong>extended</strong> Euclidean algorithm is the method of computing such $X$ and $Y$.</p>
+<p>Assuming two adjacent levels in the GCD recursive process:</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">current $X$</th>
+<th style="text-align:center">current $Y$</th>
+<th style="text-align:center">current $a$</th>
+<th style="text-align:center">current $b$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">unknown $X$</td>
+<td style="text-align:center">unknown $Y$</td>
+<td style="text-align:center">$a$</td>
+<td style="text-align:center">$b$</td>
+</tr>
+<tr>
+<td style="text-align:center">known $X&#39;$</td>
+<td style="text-align:center">known $Y&#39;$</td>
+<td style="text-align:center">$b$</td>
+<td style="text-align:center">$a\% b$</td>
+</tr>
+</tbody>
+</table>
+</div>
+<script type="math/tex; mode=display">
+\begin{aligned}
+Xa+Yb&=X'b+Y'(a\% b) \\
+Xa+Yb&=X'b+Y'(a-\lfloor \frac{a}{b}\rfloor b) \\
+Xa+Yb&=Y'a+(X'-Y'\lfloor \frac{a}{b} \rfloor)b \\
+\end{aligned}</script><p>Therefore $X=Y&#39;, Y=X&#39;-Y&#39;\lfloor \frac{a}{b} \rfloor$</p>
+<h3 id="Code-Implementation"><a href="#Code-Implementation" class="headerlink" title="Code Implementation"></a>Code Implementation</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">exgcd</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span>&amp; x, <span class="type">int</span>&amp; y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (b == <span class="number">0</span>) &#123;</span><br><span class="line">        x = <span class="number">1</span>, y = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">return</span> a;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> gcd = <span class="built_in">exgcd</span>(b, a % b, x, y); </span><br><span class="line">    <span class="type">int</span> _x = x;</span><br><span class="line">    x = y, y = _x - y * a / b;       <span class="comment">// from the above equities</span></span><br><span class="line">    <span class="keyword">return</span> gcd;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Using-eGCD-to-get-Inverse"><a href="#Using-eGCD-to-get-Inverse" class="headerlink" title="Using eGCD to get Inverse"></a>Using eGCD to get Inverse</h3><p>Given $b,N$, if $\gcd(b,N)=1$, $b$ is <strong>invertible</strong> modulo $N$. We could apply eGCD algorithm to find <strong>multiplicative inverse</strong> of $b$ modulo $N$. </p>
+<p>Run the above function <code>exgcd(b,N,x,y)</code>, we could obtain $x$ and $y$ that $xb+yN=\gcd(b,N)=1$. Therefore $xb\equiv 1 \pmod{N}$. $x$ is a multiplicative inverse of $b$ modulo $N$. </p>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>不得不感叹聪明的人与时代无关。这一这么古老的算法也花了我一段时间去弄懂。</p>
+<p>无论是 GCD 还是 exGCD，其核心在于<strong>欧几里得公式</strong> $\gcd(a,b)=\gcd(b,a\%b)$. exGCD 只是在这一基础上结合了裴蜀定理递推计算对应的 $x$ 和 $y$。</p>
+<p>这里提供一个非正式的证明：首先是一个基本事实：对于互质的 $\langle k_1,k_2 \rangle$，$\langle k_1\% k_2, k_2\rangle$ 也一定互质。这一为了方便用群论的知识做个解释：$\gcd(k_1,k_2)=1$, 所以 $k_1 \in (\mathbb{Z}/k_2)^{*}$。自然 $k_1\% k_2 \in (\mathbb{Z}/k_2)^{*}$，所以 $\gcd(k_1\% k_2,k_2)=1$。</p>
+<p>那么对于任意正整数 $a,b$，设 $d=\gcd(a,b)$，则有 $a=k_1d, b=k_2d$，且 $\gcd(k_1,k_2)=1$. 那么 $a\%b=a-\lfloor \frac{a}{b} \rfloor b=a-\lfloor \frac{k_1}{k_2} \rfloor b=k_1d- \lfloor \frac{k_1}{k_2} \rfloor k_2d=(k_1\% k_2)d$。根据上面的事实，我们有 $\gcd(k_2,k_1\% k_2)=1$，所以 $\gcd(b, a\%b)=d\gcd(k_2, k_1\% k_2)=d$。</p>
+</blockquote>
+<p><br></p>
+<h2 id="Chinese-Remainder-Theorem-CRT"><a href="#Chinese-Remainder-Theorem-CRT" class="headerlink" title="Chinese Remainder Theorem (CRT)"></a>Chinese Remainder Theorem (CRT)</h2><blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>今有物不知其数，三三数之剩二，五五数之剩三，七七数之剩二，问物几何？ —— <em>孙子算经</em></p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote> 
+<div class="note info no-icon">
+            <p>The Chinese remainder theorem (CRT) is a theorem which gives a unique solution to a <strong>simultaneous linear congruences with coprime moduli</strong>. In its basic form, the CRT will determine a number $p$ that, when divided by some given <strong>divisors</strong>, leaves <strong>given remainders</strong>.</p>
+          </div>
+<p>If $m_1,...,m_k$ are <strong>pairwise coprime</strong>, i.e., $\gcd(m_i,m_j)=1$ for $i\neq j$, then the following system</p>
+<script type="math/tex; mode=display">
+\begin{cases}
+    \ x\equiv a_1 \pmod{m_1} \\
+    \ x\equiv a_2 \pmod{m_2} \\
+    \ ..., \\
+    \ x\equiv a_k \pmod{m_k}
+\end{cases}</script><p>has <strong>exactly one solution in the sense of module $M=\Pi_{i=1}^k m_i$</strong> for any $a_1,a_2,...,a_k\in \mathbb{Z}$.</p>
+<p>We define $M_i=M/m_i$ and $t_i\equiv M_i^{-1}\pmod{m_i}$, then the solution to this congruences is $x\equiv \sum_{i=1}^k a_iM_it_i \mod{M}$. Note that $x$ is <strong>unique</strong> modulo $M$.</p>
+<p>The proof of correctness and uniqueness of CRT: <a target="_blank" rel="noopener" href="https://www.cnblogs.com/VeniVidiVici/p/17280855.html">My CnBlogs</a></p>
+<p><br></p>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning">
             <p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
           </div>
+<p>Math content:</p>
+<p><a target="_blank" rel="noopener" href="https://oi-wiki.org/">OI Wiki</a>, <a target="_blank" rel="noopener" href="https://brilliant.org/">Brilliant Math Wiki</a></p>
 <p>Course textbook: </p>
 <p><em>Introduction to Modern Cryptography (2nd edition)</em>, Katz, J. &amp; Lindell, Y., (2015), CRC Press, <a target="_blank" rel="noopener" href="https://ebookcentral.proquest.com/lib/HKUHK/detail.action?docID=1619504">view here</a></p>
 
@@ -363,22 +438,18 @@
       
       <div>
     
-        <div style="text-align:center;color: #ccc;font-size:14px;">-------------------------そして、次の曲が始まるのです。-------------------------</div>
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
     
 </div>
-
+<br />
       
     </div>
 
     
     
-    <div class="post-widgets">
-      <div id="needsharebutton-postbottom">
-        <span class="btn">
-          <i class="fa fa-share-alt" aria-hidden="true"></i>
-        </span>
-      </div>
-    </div>
+    
         
 
 <div>
@@ -395,7 +466,13 @@
   </li>
 </ul>
 </div>
-
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -475,7 +552,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Multiplicative-Inverse"><span class="nav-number">1.</span> <span class="nav-text">Multiplicative Inverse</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Euler-39-s-Totient-Function"><span class="nav-number">2.</span> <span class="nav-text">Euler&#39;s Totient Function</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation-Linear-Sieve"><span class="nav-number">2.1.</span> <span class="nav-text">Code Implementation: Linear Sieve</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Euler-39-s-Theorem"><span class="nav-number">2.2.</span> <span class="nav-text">Euler&#39;s Theorem</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Extended-Euclidean-Algorithm-eGCD"><span class="nav-number">3.</span> <span class="nav-text">Extended Euclidean Algorithm (eGCD)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chinese-Remainder-Theorem-CRT"><span class="nav-number">4.</span> <span class="nav-text">Chinese Remainder Theorem (CRT)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Multiplicative-Inverse"><span class="nav-number">1.</span> <span class="nav-text">Multiplicative Inverse</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Euler-39-s-Totient-Function"><span class="nav-number">2.</span> <span class="nav-text">Euler&#39;s Totient Function</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation-Linear-Sieve"><span class="nav-number">2.1.</span> <span class="nav-text">Code Implementation: Linear Sieve</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Euler-39-s-Theorem"><span class="nav-number">2.2.</span> <span class="nav-text">Euler&#39;s Theorem</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Extended-Euclidean-Algorithm-eGCD"><span class="nav-number">3.</span> <span class="nav-text">Extended Euclidean Algorithm (eGCD)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation"><span class="nav-number">3.1.</span> <span class="nav-text">Code Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-eGCD-to-get-Inverse"><span class="nav-number">3.2.</span> <span class="nav-text">Using eGCD to get Inverse</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chinese-Remainder-Theorem-CRT"><span class="nav-number">4.</span> <span class="nav-text">Chinese Remainder Theorem (CRT)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
