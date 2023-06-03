@@ -18,7 +18,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"thisisxxz.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"thisisxxz.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="关于 shell command 和 shell script 的内容也是在 ENGG1340 课上系统学习的；但是课上教的内容太浅，甚至连应付考试 (没错，就是 midterm quiz) 都成问题。于是稍微自己加了点餐，现记录如下。">
@@ -411,15 +411,15 @@
             <p><strong>Built-in variables</strong>:</p><p><code>NF</code> 是 awk 的<strong>内建变量</strong>，记录的是当前行的<strong>字段数</strong>。awk 还提供了许多其他的内建变量，例如：<code>FS</code> (字段分隔符，默认为任何 blank 字符), <code>length</code> (当前行的长度), <code>NR</code> (当前行的行号)。</p><p>并且，对一行中的 <code>NF</code> 个字段，<code>$0</code> 代表整行，<code>$i</code> $(1\leq i\leq NF)$ 代表第 $i$ 个字段。</p>
           </div>
 <p>除此之外，我们甚至能在 <code>[awk script]</code> 中写入用 awk 语言编写的程序 (和 C 语法极其相似)，来完成一系列复杂的文本格式化。我将用以下两个例子进行说明：</p>
-<h3 id="Example-1"><a href="#Example-1" class="headerlink" title="Example 1"></a>Example 1</h3><p><img src="/2023/05/05/shell-command/eg1-text.png" alt="1.1"></p>
+<h3 id="Example-1"><a href="#Example-1" class="headerlink" title="Example 1"></a>Example 1</h3><p><img data-src="eg1-text.png" alt="1.1"></p>
 <p>对于这一系列杂乱的字段，我们想将其整理成一行中每两个字段间只保留一个空格作为分隔。这一过程用 C 语言来实现可以说非常简单，但是用 shell script 我一时半会真的想不出来。</p>
 <p>此时，我们直接<strong>使用 awk 命令作为 shell 与 C 语言的桥梁</strong> </p>
 <p><code>awk &#39;NF!=0 &#123; &#123;for (i=1;i&lt;NF;++i) printf &quot;%s &quot;, $i&#125; print $NF &#125;&#39; b.txt</code></p>
 <p>是不是一下变得简单多了：根据 basic script 的格式，我们先用 <code>NF!=0</code> 条件去掉空行，再进行 <code>&#123;&#125;</code> 中的 action 阶段；之后就几乎全是 C 语言的语法了。效果如下：</p>
-<p><img src="/2023/05/05/shell-command/eg1-command.png" alt="1.2"></p>
+<p><img data-src="eg1-command.png" alt="1.2"></p>
 <h3 id="Example-2"><a href="#Example-2" class="headerlink" title="Example 2"></a>Example 2</h3><p>这是 midtern quiz 的一个题目，当时没有接触过 sed, awk, tr 命令的我一筹莫展。但在学会这些命令之后，这种题可以说是迎刃而解</p>
-<p><img src="/2023/05/05/shell-command/eg2-des1.png" alt></p>
-<p><img src="/2023/05/05/shell-command/eg2-des2.png" alt="2.1"></p>
+<p><img data-src="eg2-des1.png" alt></p>
+<p><img data-src="eg2-des2.png" alt="2.1"></p>
 <p>(将被若干空格，制表符，换行符等 <code>[:space:]</code> 符号分隔的字段整理成一行一个的形式，并且进行去重)</p>
 <p>一行 shell script 就可以解决: <code>tr &#39;[[:space:]]&#39; &#39;\n&#39; &lt; $1 | awk &#39;NF!=0 &amp;&amp; !a[$0]++&#39;</code> (思路来自 zrz)</p>
 <p>真的很妙，使用 tr 命令把字段展开后 (tr 命令的用法见下) 直接用 awk 语言定义了一个<strong>桶</strong>，对字段进行统计，这样就完成了去重 (注意，在 basic script 中的 <code>condition &#123;action&#125;</code> 范式中，缺省 action 默认是 <code>print $0</code>)</p>
@@ -704,6 +704,7 @@
   <script src="/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
   <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 
