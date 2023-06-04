@@ -21,15 +21,15 @@
     var CONFIG = {"hostname":"thisisxxz.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="COMP3357 digest 的 P2 部分 (P1 部分在这里)，主要介绍群论 (group theory)，数论 (algorithmic number theory) 的相关知识以及它们在 cryptography 中的应用。这里的应用包括著名的 RSA 系列难题 (hard problems) 与 Discrete Logarithm 系列难题，及 one-way functions 的">
+  <meta name="description" content="COMP3357 digest 的 P2 部分 (P1 部分在这里，P3 部分在这里)，主要介绍群论 (group theory)，数论 (algorithmic number theory) 的相关知识以及它们在 cryptography 中的应用。该部分的内容主要是为了 P3 部分做铺垫：P3 中的困难问题 (hard problems) 与单向函数 (one-way function) 的构">
 <meta property="og:type" content="article">
 <meta property="og:title" content="COMP3357 notes P2">
 <meta property="og:url" content="https://thisisxxz.github.io/2023/06/02/Cryptography-COMP3357-2/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="COMP3357 digest 的 P2 部分 (P1 部分在这里)，主要介绍群论 (group theory)，数论 (algorithmic number theory) 的相关知识以及它们在 cryptography 中的应用。这里的应用包括著名的 RSA 系列难题 (hard problems) 与 Discrete Logarithm 系列难题，及 one-way functions 的">
+<meta property="og:description" content="COMP3357 digest 的 P2 部分 (P1 部分在这里，P3 部分在这里)，主要介绍群论 (group theory)，数论 (algorithmic number theory) 的相关知识以及它们在 cryptography 中的应用。该部分的内容主要是为了 P3 部分做铺垫：P3 中的困难问题 (hard problems) 与单向函数 (one-way function) 的构">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-06-02T07:56:06.000Z">
-<meta property="article:modified_time" content="2023-06-04T03:23:23.541Z">
+<meta property="article:modified_time" content="2023-06-04T10:13:28.638Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="cryptography">
 <meta property="article:tag" content="course notes">
@@ -244,7 +244,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-06-04 11:23:23" itemprop="dateModified" datetime="2023-06-04T11:23:23+08:00">2023-06-04</time>
+                <time title="Modified: 2023-06-04 18:13:28" itemprop="dateModified" datetime="2023-06-04T18:13:28+08:00">2023-06-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -290,14 +290,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>11k</span>
+              <span>13k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>19 mins.</span>
+              <span>22 mins.</span>
             </span>
 
         </div>
@@ -309,7 +309,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>COMP3357 digest 的 P2 部分 (P1 部分在<a href="https://thisisxxz.github.io/2023/05/25/Cryptography-COMP3357/">这里</a>)，主要介绍群论 (group theory)，数论 (algorithmic number theory) 的相关知识以及它们在 cryptography 中的应用。这里的应用包括著名的 RSA 系列难题 (hard problems) 与 Discrete Logarithm 系列难题，及 one-way functions 的构建。</p>
+        <p>COMP3357 digest 的 P2 部分 (P1 部分在<a href="https://thisisxxz.github.io/2023/05/25/Cryptography-COMP3357/">这里</a>，P3 部分在这里)，主要介绍群论 (group theory)，数论 (algorithmic number theory) 的相关知识以及它们在 cryptography 中的应用。该部分的内容主要是为了 P3 部分做铺垫：P3 中的困难问题 (hard problems) 与单向函数 (one-way function) 的构建与这一节里提到的数论/群论知识存在紧密的联系。</p>
 <span id="more"></span>
 <p>同样，与 CnBlogs 中的笔记不同，这里不会详细的记载每个相关的知识点；只会尝试简略地总结一些能让未来的自己也会感到有趣，巧妙的内容 (Eureka!)。</p>
 <p><br></p>
@@ -428,9 +428,28 @@ Xa+Yb&=Y'a+(X'-Y'\lfloor \frac{a}{b} \rfloor)b \\
 <blockquote>
 <p>Eureka moment!</p>
 <p>数论的定理多如牛毛，在众多熟悉或不熟悉的外国名字中看到一个「中国」剩余定理还是非常之亲切的。</p>
-<p>CRT 提供了互质模数的线性同余方程组的解。在密码学中 CRT 经常被运用于简化模意义下求幂的运算。具体来说，对于合数模数 $M$ 且 $\gcd(M,a)\neq 1$ 的情况，可以应用 CRT 简化 $a^e\mod{M}$ 的计算。此外，CRT 还能用于加速 <strong>RSA 的解密过程 (RSA decryption)</strong>。RSA 系统将会在下面进行介绍。</p>
+<p>CRT 提供了互质模数的线性同余方程组的解。在密码学中 CRT 经常被运用于简化模意义下求幂的运算。具体来说，对于合数模数 $M$ 且 $\gcd(M,a)\neq 1$ 的情况，可以应用 CRT 简化 $a^e\mod{M}$ 的计算。此外，CRT 还能用于加速 <strong>RSA 的解密过程 (RSA decryption)</strong>。</p>
 <script type="math/tex; mode=display">
 m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} \end{cases} \Rightarrow \begin{cases} m\equiv (c\mod p)^{d\mod{(p-1)}}\mod{p}\\ m\equiv (c\mod q)^{d\mod{(q - 1)}}\mod{q} \end{cases}</script><p>Bob (Receiver) 是知道 $N$ 的两个 factor $p$ 与 $q$ 的，因此其先将朴素的解密过程转化为这一线性同余方程组，并应用 CRT 得到方程的解，也即消息 $m$。这一解密方式比直接计算 $c^d\mod{N}$ 快了 <strong>$4$ 倍</strong>左右。</p>
+<p>P.S. RSA 问题是一个著名的困难问题 (hard problems)，我将会在 P3 中进行介绍。</p>
+</blockquote>
+<p><br></p>
+<h2 id="Quadratic-Residue"><a href="#Quadratic-Residue" class="headerlink" title="Quadratic Residue"></a>Quadratic Residue</h2><div class="note info no-icon">
+            <p>If there is an integer $0&lt;x&lt;p$ such that $x^2\equiv a\pmod{p}$. We call $a$ a <strong>quadratic residue</strong> modulo $p$. Otherwise (such $x$ doesn&#39;t exist), we call $a$ a <strong>quadratic nonresidue</strong> modulo $p$.</p><p>Note that $p \nmid a$ to exclude the trivial cases $x=0$.</p>
+          </div>
+<p>The quadratic residue problem requires us to solve the congrence $x^2\equiv a\pmod{p}$. Essentially it is to <strong>find the square root</strong> of $a$ in the sense of modulo $p$. Usually, the moduli $p$ is an <strong>odd prime</strong>.</p>
+<h3 id="Legendre-Symbol"><a href="#Legendre-Symbol" class="headerlink" title="Legendre Symbol"></a>Legendre Symbol</h3><p>The legendre symbol is a <strong>number theoretic function</strong> $(\frac{a}{p})$ which is defined to be equal to $\pm 1$ depending on whether $a$ is a quadratic residue modulo $p$. </p>
+<script type="math/tex; mode=display">
+(\frac{a}{p})=(a|p)=\begin{cases} \ 0, \ if \ \ p|a \\ \  1, \ if \ a \ is \ a \ quadratic \ residue \ modulo \ p \\ -1 , \ if \ a \ is \ a \ quadratic \ nonresidue \ modulo \ p \end{cases}</script><h3 id="Euler-39-s-Criterion"><a href="#Euler-39-s-Criterion" class="headerlink" title="Euler&#39;s Criterion"></a>Euler&#39;s Criterion</h3><div class="note info no-icon">
+            <p>For an odd prime $p$ and $p \nmid a$, the Legendre symbol $(\frac{a}{p})\equiv a^{(p-1)/2} \pmod{p}$.</p>
+          </div>
+<p>For an odd prime $p$ and $p \nmid a$, according to Euler&#39;s critetion, we could determine whether $a$ is a quadratic residue modulo $p$ by checking whether $a^{(p-1)/2}\mod{p}$ equals to $1$ or not.</p>
+<p>See the prove <a target="_blank" rel="noopener" href="https://oi-wiki.org/math/number-theory/residue/#%E5%A5%87%E7%B4%A0%E6%95%B0%E7%9A%84%E4%BA%8C%E6%AC%A1%E5%89%A9%E4%BD%99">here</a>.</p>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>虽然在本课程中关于二次剩余问题的内容只是浅尝辄止，但我觉得还是非常有必要将其单独拿出来进行介绍，因为这个问题的研究在数论上占有举足轻重的地位。</p>
+<p>二次剩余问题本质上是<strong>模意义下的开根问题</strong>，实际上是 RSA 问题的铺垫：RSA 问题本质上是模意义下的开 $e$ 次根问题。因此，当 $e=2$ 时，RSA 问题与二次剩余问题等价。</p>
 </blockquote>
 <p><br></p>
 <h2 id="Group-Theory-Introduction"><a href="#Group-Theory-Introduction" class="headerlink" title="Group Theory: Introduction"></a>Group Theory: Introduction</h2><div class="note info no-icon">
@@ -479,22 +498,35 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <p>Eureka moment!</p>
 <p>注意，我们这里介绍的是费马小定理的<strong>群论表述</strong>；事实上，其拥有一个更为广为人知的数学表述。对于任意整数 $a$, 质数 $p$，有 $a^{p}\equiv a\pmod{p}$。</p>
 <p>当 $\gcd(a,p)=1$ 时，我们能够由此推导出欧拉定理。</p>
-<p>当 $gcd(a,p)\neq 1$ 时，由于 $p$ 是质数，$a$ 一定是 $p$ 的倍数 $p|a$. 那么显然此时 $a^p \equiv a \equiv 0\pmod{p}$.</p>
+<p>当 $\gcd(a,p)\neq 1$ 时，由于 $p$ 是质数，$a$ 一定是 $p$ 的倍数 $p|a$. 那么显然此时 $a^p \equiv a \equiv 0\pmod{p}$.</p>
 </blockquote>
 <p><br></p>
-<h2 id="Cyclic-Groups"><a href="#Cyclic-Groups" class="headerlink" title="Cyclic Groups"></a>Cyclic Groups</h2><p>Before stepping into the definition of <strong>cyclic groups</strong>, we introduce the definition of <strong>order of a group element</strong>. </p>
+<h2 id="Cyclic-Groups-and-Generators"><a href="#Cyclic-Groups-and-Generators" class="headerlink" title="Cyclic Groups and Generators"></a>Cyclic Groups and Generators</h2><p>Before stepping into the definition of <strong>cyclic groups</strong>, we introduce the definition of <strong>order of a group element</strong>. </p>
 <div class="note info no-icon">
-            <p>Definition. The order of a group element $g\in \mathbb{G}$ is the <strong>smallest positive integer</strong> $r$ such that $g^r=1$, and is denoted by $ord(g)$.</p>
+            <p>Definition. <strong>The order of a group element</strong> $g\in \mathbb{G}$ is the <strong>smallest positive integer</strong> $r$ such that $g^r=1$, and is denoted by $ord(g)$.</p>
           </div>
-<p>Note that it is different from <strong>the order of a group</strong>.</p>
+<p>Note the distinction between the two concepts <strong>the order of a group</strong> and <strong>the order of a group element</strong>.</p>
+<div class="note info no-icon">
+            <p>Definition. If an element $g\in \mathbb{G}$ has order $|\mathbb{G}|$, then $\mathbb{G}$ is a <strong>cyclic group</strong> and can be denoted by $\mathbb{G}=\langle g \rangle$. We call $g$ the <strong>generator</strong> of $\mathbb{G}$.</p>
+          </div>
+<p>Therefore, if $\mathbb{G}$ is a <strong>cyclic group</strong> and $|\mathbb{G}|=m$, there must exists a <strong>generator</strong> $g\in\mathbb{G}$ that could generate the whole group by constantly multiplying itself, i.e., $\{g, g^2, ..., g^m\}=\mathbb{G}$.</p>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>之前搞 OI 的时候在数论里学习到了<strong>原根 (primitive root)</strong> 的概念，然而并不是很明白。到大学学到生成元 (generator) 的概念突然有了醍醐灌顶之感。实际上，<strong>原根和生成元的概念是一体两面。</strong></p>
+<p><strong>若一个正整数 $m$ 有原根 $g$，那么就意味着群 $(\mathbb{Z}/m)^{*}$ 是一个循环群，且它的生成元为 $g$。</strong></p>
+<p>正整数 $m$ 有原根的充要条件为：它能表达为下列形式之一 $2,4,p^n,2p^n$，其中 $p$ 为奇素数。且若 $m$ 有原根，其原根的个数为 $\varphi(\varphi(m))$。部分证明见我的 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/VeniVidiVici/p/17280855.html">CnBlogs: 整数模p乘法群是循环群</a>。</p>
+</blockquote>
 <p><br></p>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning">
             <p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
           </div>
-<p>Math content:</p>
-<p><a target="_blank" rel="noopener" href="https://oi-wiki.org/">OI Wiki</a>, <a target="_blank" rel="noopener" href="https://brilliant.org/">Brilliant Math Wiki</a></p>
 <p>Course textbook: </p>
 <p><em>Introduction to Modern Cryptography (2nd edition)</em>, Katz, J. &amp; Lindell, Y., (2015), CRC Press, <a target="_blank" rel="noopener" href="https://ebookcentral.proquest.com/lib/HKUHK/detail.action?docID=1619504">view here</a></p>
+<p>Course info:</p>
+<p>Code: COMP3357, Lecturer: Dr. Ravi. Ramanathan, TA: Zhang Chengru</p>
+<p>Math content:</p>
+<p><a target="_blank" rel="noopener" href="https://oi-wiki.org/">OI Wiki</a>, <a target="_blank" rel="noopener" href="https://brilliant.org/">Brilliant Math Wiki</a>, <a target="_blank" rel="noopener" href="https://mathworld.wolfram.com/">Wolframe MathWorld</a>.</p>
 
     </div>
 
@@ -616,7 +648,7 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Multiplicative-Inverse"><span class="nav-number">1.</span> <span class="nav-text">Multiplicative Inverse</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Euler-39-s-Totient-Function"><span class="nav-number">2.</span> <span class="nav-text">Euler&#39;s Totient Function</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation-Linear-Sieve"><span class="nav-number">2.1.</span> <span class="nav-text">Code Implementation: Linear Sieve</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Euler-39-s-Theorem"><span class="nav-number">2.2.</span> <span class="nav-text">Euler&#39;s Theorem</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Extended-Euclidean-Algorithm-eGCD"><span class="nav-number">3.</span> <span class="nav-text">Extended Euclidean Algorithm (eGCD)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation"><span class="nav-number">3.1.</span> <span class="nav-text">Code Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-eGCD-to-get-Inverse"><span class="nav-number">3.2.</span> <span class="nav-text">Using eGCD to get Inverse</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chinese-Remainder-Theorem-CRT"><span class="nav-number">4.</span> <span class="nav-text">Chinese Remainder Theorem (CRT)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation-1"><span class="nav-number">4.1.</span> <span class="nav-text">Code Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Group-Theory-Introduction"><span class="nav-number">5.</span> <span class="nav-text">Group Theory: Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Subgroups"><span class="nav-number">5.1.</span> <span class="nav-text">Subgroups</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Modulo-Multiplication-Group"><span class="nav-number">5.2.</span> <span class="nav-text">Modulo Multiplication Group</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fermat-39-s-Little-Theorem"><span class="nav-number">6.</span> <span class="nav-text">Fermat&#39;s Little Theorem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Corollary-1"><span class="nav-number">6.1.</span> <span class="nav-text">Corollary 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Corollary-2"><span class="nav-number">6.2.</span> <span class="nav-text">Corollary 2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cyclic-Groups"><span class="nav-number">7.</span> <span class="nav-text">Cyclic Groups</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">8.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Multiplicative-Inverse"><span class="nav-number">1.</span> <span class="nav-text">Multiplicative Inverse</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Euler-39-s-Totient-Function"><span class="nav-number">2.</span> <span class="nav-text">Euler&#39;s Totient Function</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation-Linear-Sieve"><span class="nav-number">2.1.</span> <span class="nav-text">Code Implementation: Linear Sieve</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Euler-39-s-Theorem"><span class="nav-number">2.2.</span> <span class="nav-text">Euler&#39;s Theorem</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Extended-Euclidean-Algorithm-eGCD"><span class="nav-number">3.</span> <span class="nav-text">Extended Euclidean Algorithm (eGCD)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation"><span class="nav-number">3.1.</span> <span class="nav-text">Code Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-eGCD-to-get-Inverse"><span class="nav-number">3.2.</span> <span class="nav-text">Using eGCD to get Inverse</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chinese-Remainder-Theorem-CRT"><span class="nav-number">4.</span> <span class="nav-text">Chinese Remainder Theorem (CRT)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation-1"><span class="nav-number">4.1.</span> <span class="nav-text">Code Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Quadratic-Residue"><span class="nav-number">5.</span> <span class="nav-text">Quadratic Residue</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Legendre-Symbol"><span class="nav-number">5.1.</span> <span class="nav-text">Legendre Symbol</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Euler-39-s-Criterion"><span class="nav-number">5.2.</span> <span class="nav-text">Euler&#39;s Criterion</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Group-Theory-Introduction"><span class="nav-number">6.</span> <span class="nav-text">Group Theory: Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Subgroups"><span class="nav-number">6.1.</span> <span class="nav-text">Subgroups</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Modulo-Multiplication-Group"><span class="nav-number">6.2.</span> <span class="nav-text">Modulo Multiplication Group</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fermat-39-s-Little-Theorem"><span class="nav-number">7.</span> <span class="nav-text">Fermat&#39;s Little Theorem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Corollary-1"><span class="nav-number">7.1.</span> <span class="nav-text">Corollary 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Corollary-2"><span class="nav-number">7.2.</span> <span class="nav-text">Corollary 2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cyclic-Groups-and-Generators"><span class="nav-number">8.</span> <span class="nav-text">Cyclic Groups and Generators</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
