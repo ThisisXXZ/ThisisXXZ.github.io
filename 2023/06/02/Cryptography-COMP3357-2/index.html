@@ -29,7 +29,7 @@
 <meta property="og:description" content="COMP3357 digest 的 P2 部分 (P1 部分在这里)，主要介绍群论 (group theory)，数论 (algorithmic number theory) 的相关知识以及它们在 cryptography 中的应用。这里的应用包括著名的 RSA 系列难题 (hard problems) 与 Discrete Logarithm 系列难题，及 one-way functions 的">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-06-02T07:56:06.000Z">
-<meta property="article:modified_time" content="2023-06-03T15:48:17.327Z">
+<meta property="article:modified_time" content="2023-06-04T03:23:23.541Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="cryptography">
 <meta property="article:tag" content="course notes">
@@ -244,7 +244,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-06-03 23:48:17" itemprop="dateModified" datetime="2023-06-03T23:48:17+08:00">2023-06-03</time>
+                <time title="Modified: 2023-06-04 11:23:23" itemprop="dateModified" datetime="2023-06-04T11:23:23+08:00">2023-06-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -290,14 +290,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>9.4k</span>
+              <span>11k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>16 mins.</span>
+              <span>19 mins.</span>
             </span>
 
         </div>
@@ -455,7 +455,33 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <p>The multiplicative group of integers modulo $n$, $(\mathbb{Z}/n)^{*}$, is very worth researching. $(\mathbb{Z}/n)^{*}:=$ <strong>invertible</strong> elements in $\{1,2,...n-1\}$ under multiplication modulo $n:=$ $\{b\in \{1,...,n-1\}|\gcd(b,n)=1 \}$. Therefore $|(\mathbb{Z}/n)^{*}|=\varphi(n)$. If $n$ is prime (which is usually denoted $p$), $|(\mathbb{Z}/p)^{*}|=p-1$.</p>
 <p>$(\mathbb{Z}/n)^{*}$ is also denoted $\mathbb{Z}^{*}_n$.</p>
 <p><br></p>
-<h2 id="Fermat-39-s-Little-Theorem"><a href="#Fermat-39-s-Little-Theorem" class="headerlink" title="Fermat&#39;s Little Theorem"></a>Fermat&#39;s Little Theorem</h2><p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>群论虽然是第一次接触学习，但它的定义与相关的一些定理意外的容易理解 (遵循直觉)。 可能是由于 &quot;群&quot; 这一概念在日常生活中已经渗透得很深，以致于抽象成为数学模型后也有较强的既视感。</p>
+<p>这里想要重点提一下<strong>整数模 $n$ 乘法群</strong> $(\mathbb{Z}/n)^{*}$，这是一个很重要的群。对于它的研究起源于对模 $n$ 剩余类 (residue classes) 的研究。我们知道，对于模 $n$ 剩余类 $\{0,1,2,...,n-1\}$，若群运算 (group operation) 是加法 $+$，剩余类能够很自然的形成一个群 $(\mathbb{Z}/n)^{+}$。然而，若我们将群运算设为乘法 $\times$，剩余类并不能形成一个群。这是因为群性质要求<strong>每个群元素都具有逆元</strong> (inverse)；而在模 $n$ 剩余类中，只有与 $n$ 互质的群元素才有逆元。因此，我们将与 $n$ 不互质的元素剔除，剩下的就是整数模 $n$ 乘法群 $(\mathbb{Z}/n)^{*}$ 了。</p>
+</blockquote>
+<p><br></p>
+<h2 id="Fermat-39-s-Little-Theorem"><a href="#Fermat-39-s-Little-Theorem" class="headerlink" title="Fermat&#39;s Little Theorem"></a>Fermat&#39;s Little Theorem</h2><div class="note info no-icon">
+            <p>Theorem. Let $\mathbb{G}$ be a finite group of order $m=|\mathbb{G}|$. Then for any $g\in \mathbb{G}$, it holds that $g^m=1$.</p>
+          </div>
+<p>Proof. $\mathbb{G}=\{g_1,g_2,...,g_m\}$, $g\in \mathbb{G}$. $g_i\neq g_j$ for all $i,j$, therefore $gg_i\neq gg_j$ for all $i,j$. Therefore with the <strong>closure</strong> property of the group $\mathbb{G}$, $\{gg_1,gg_2,...gg_m\}$ is a <strong>permutation</strong> of $\{g_1,g_2,...,g_m\}$. Then we have $(gg_1)(gg_2)...(gg_m)=g_1g_2...g_m$, which could be reduced to $g^m=1$.</p>
+<p>We could see the <strong>similarity</strong> between the proof of Fermat&#39;s little theorem and Euler&#39;s theorem. In fact, <u><strong>Fermat&#39;s little theorem is the general form of Euler&#39;s theorem</strong></u>. Let $\mathbb{G}$ be the modulo multiplication group $(\mathbb{Z}/n)^{*}$, one could derive the Euler&#39;s theorem.</p>
+<h3 id="Corollary-1"><a href="#Corollary-1" class="headerlink" title="Corollary 1"></a>Corollary 1</h3><div class="note info no-icon">
+            <p>Corollary (Fermat&#39;s Little Theorem). Let $\mathbb{G}$ be a finite group of order $m$. Then for any $g\in \mathbb{G}$, and any integer $x$, we have $g^x=g^{[x\mod m]}$.</p>
+          </div>
+<p>Many exponents calculation could be simplified using this corollary. </p>
+<p>For example, if computing $5^{1000}\mod 11$, we could see $5\in (\mathbb{Z}/11)^{*}$ since $\gcd(5,11)=1$. Applying the above corollary $5^{1000}\mod{11}=5^{[1000\mod \varphi(11)]}\mod{11}=5^{[1000\mod{10}]}\mod{11}=1$.</p>
+<h3 id="Corollary-2"><a href="#Corollary-2" class="headerlink" title="Corollary 2"></a>Corollary 2</h3><div class="note info no-icon">
+            <p>Corollary (Fermat&#39;s Little Theorem). Let $\mathbb{G}$ be a finite group of order $m$. Let $e&gt;0$ be an integer, and define the function, $f_e:\mathbb{G}\to \mathbb{G}$ by $f_e(g)=g^e$.</p><ul><li>If $\gcd(e,m)=1$, then $f_e$ is a <strong>permutation</strong>, i.e., a <strong>bijection</strong>.</li><li>Moreover, if $d=e^{-1}\mod{m}$, then $f_d$ is the inverse of $f_e$.</li></ul>
+          </div>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>注意，我们这里介绍的是费马小定理的<strong>群论表述</strong>；事实上，其拥有一个更为广为人知的数学表述。对于任意整数 $a$, 质数 $p$，有 $a^{p}\equiv a\pmod{p}$。</p>
+<p>当 $\gcd(a,p)=1$ 时，我们能够由此推导出欧拉定理。</p>
+<p>当 $gcd(a,p)\neq 1$ 时，由于 $p$ 是质数，$a$ 一定是 $p$ 的倍数 $p|a$. 那么显然此时 $a^p \equiv a \equiv 0\pmod{p}$.</p>
+</blockquote>
+<p><br></p>
 <h2 id="Cyclic-Groups"><a href="#Cyclic-Groups" class="headerlink" title="Cyclic Groups"></a>Cyclic Groups</h2><p>Before stepping into the definition of <strong>cyclic groups</strong>, we introduce the definition of <strong>order of a group element</strong>. </p>
 <div class="note info no-icon">
             <p>Definition. The order of a group element $g\in \mathbb{G}$ is the <strong>smallest positive integer</strong> $r$ such that $g^r=1$, and is denoted by $ord(g)$.</p>
@@ -590,7 +616,7 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Multiplicative-Inverse"><span class="nav-number">1.</span> <span class="nav-text">Multiplicative Inverse</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Euler-39-s-Totient-Function"><span class="nav-number">2.</span> <span class="nav-text">Euler&#39;s Totient Function</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation-Linear-Sieve"><span class="nav-number">2.1.</span> <span class="nav-text">Code Implementation: Linear Sieve</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Euler-39-s-Theorem"><span class="nav-number">2.2.</span> <span class="nav-text">Euler&#39;s Theorem</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Extended-Euclidean-Algorithm-eGCD"><span class="nav-number">3.</span> <span class="nav-text">Extended Euclidean Algorithm (eGCD)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation"><span class="nav-number">3.1.</span> <span class="nav-text">Code Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-eGCD-to-get-Inverse"><span class="nav-number">3.2.</span> <span class="nav-text">Using eGCD to get Inverse</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chinese-Remainder-Theorem-CRT"><span class="nav-number">4.</span> <span class="nav-text">Chinese Remainder Theorem (CRT)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation-1"><span class="nav-number">4.1.</span> <span class="nav-text">Code Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Group-Theory-Introduction"><span class="nav-number">5.</span> <span class="nav-text">Group Theory: Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Subgroups"><span class="nav-number">5.1.</span> <span class="nav-text">Subgroups</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Modulo-Multiplication-Group"><span class="nav-number">5.2.</span> <span class="nav-text">Modulo Multiplication Group</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fermat-39-s-Little-Theorem"><span class="nav-number">6.</span> <span class="nav-text">Fermat&#39;s Little Theorem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cyclic-Groups"><span class="nav-number">7.</span> <span class="nav-text">Cyclic Groups</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">8.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Multiplicative-Inverse"><span class="nav-number">1.</span> <span class="nav-text">Multiplicative Inverse</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Euler-39-s-Totient-Function"><span class="nav-number">2.</span> <span class="nav-text">Euler&#39;s Totient Function</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation-Linear-Sieve"><span class="nav-number">2.1.</span> <span class="nav-text">Code Implementation: Linear Sieve</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Euler-39-s-Theorem"><span class="nav-number">2.2.</span> <span class="nav-text">Euler&#39;s Theorem</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Extended-Euclidean-Algorithm-eGCD"><span class="nav-number">3.</span> <span class="nav-text">Extended Euclidean Algorithm (eGCD)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation"><span class="nav-number">3.1.</span> <span class="nav-text">Code Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-eGCD-to-get-Inverse"><span class="nav-number">3.2.</span> <span class="nav-text">Using eGCD to get Inverse</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chinese-Remainder-Theorem-CRT"><span class="nav-number">4.</span> <span class="nav-text">Chinese Remainder Theorem (CRT)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation-1"><span class="nav-number">4.1.</span> <span class="nav-text">Code Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Group-Theory-Introduction"><span class="nav-number">5.</span> <span class="nav-text">Group Theory: Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Subgroups"><span class="nav-number">5.1.</span> <span class="nav-text">Subgroups</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Modulo-Multiplication-Group"><span class="nav-number">5.2.</span> <span class="nav-text">Modulo Multiplication Group</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fermat-39-s-Little-Theorem"><span class="nav-number">6.</span> <span class="nav-text">Fermat&#39;s Little Theorem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Corollary-1"><span class="nav-number">6.1.</span> <span class="nav-text">Corollary 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Corollary-2"><span class="nav-number">6.2.</span> <span class="nav-text">Corollary 2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cyclic-Groups"><span class="nav-number">7.</span> <span class="nav-text">Cyclic Groups</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">8.</span> <span class="nav-text">Reference</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
