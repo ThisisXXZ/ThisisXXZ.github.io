@@ -29,7 +29,7 @@
 <meta property="og:description" content="COMP3357 digest 的 P3 部分 (P1 部分在这里，P2 部分在这里)，主要介绍密码学中的几个困难问题 (hard problems) 与一个重要的密码学概念 (同时也是一个 cryptographic primitive) 单向函数 (one-way function). 这一 Part 涉及到的困难问题 (Factoring problem, RSA problem, Disc">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-06-04T16:04:22.000Z">
-<meta property="article:modified_time" content="2023-06-04T16:23:29.224Z">
+<meta property="article:modified_time" content="2023-06-05T06:33:10.968Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="cryptography">
 <meta property="article:tag" content="course notes">
@@ -238,7 +238,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2023-06-05 00:04:22 / Modified: 00:23:29" itemprop="dateCreated datePublished" datetime="2023-06-05T00:04:22+08:00">2023-06-05</time>
+              <time title="Created: 2023-06-05 00:04:22 / Modified: 14:33:10" itemprop="dateCreated datePublished" datetime="2023-06-05T00:04:22+08:00">2023-06-05</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -284,14 +284,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>732</span>
+              <span>5.1k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1 mins.</span>
+              <span>9 mins.</span>
             </span>
 
         </div>
@@ -312,6 +312,66 @@
             <p>&emsp; This article is a self-administered course note.<br>&emsp; It will <strong>NOT</strong> cover any exam or assignment related content.</p>
           </div>
 <p><br></p>
+<h2 id="Hardness-of-Mathematical-Problems"><a href="#Hardness-of-Mathematical-Problems" class="headerlink" title="Hardness of Mathematical Problems"></a>Hardness of Mathematical Problems</h2><p>When discussing <strong>hardness</strong> of mathematical problems with input some integer $N$, we study asymptotics in terms of the <strong>input length</strong>.</p>
+<p>Integer $N$ will be assumed to be represented in binary. The <strong>running time</strong> of an algorithm taking as input an integer $N$ is measured in terms of $||N||$, the length of the binary representation of $N$. </p>
+<p>Note that $||N||=\lfloor \log N \rfloor+1$.</p>
+<div class="note info no-icon">
+            <p>A problem is considered to be <strong>easy</strong> if the running time of its algorithm is <strong>polynomial</strong> in $||N||$.</p>
+          </div>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>这里对数学问题困难性 (hardness) 的定义是建立在算法数论 (algorithmic number theory) 的视角上的。</p>
+<p>实际上，这个概念更贴近计算机领域而不是纯数学领域。如果从算法时间复杂度的角度来定义，就好理解多了：一个时间复杂度为 $O(\mathtt{poly}(n))$ 的算法是<strong>高效 (efficient)</strong> 的，对应的问题是<strong>简单 (easy)</strong> 的。而时间复杂度为 $O(\mathtt{exp}(n))$ 的算法是<strong>低效 (inefficient)</strong> 的，对应的问题是 <strong>困难 (hard)</strong> 的。</p>
+</blockquote>
+<p><br></p>
+<h2 id="Factoring-Problem"><a href="#Factoring-Problem" class="headerlink" title="Factoring Problem"></a>Factoring Problem</h2><p>Factoring could be viewed as the inverse operation of multiplication. Multiplying two primes $p$ and $q$ as $N=p\times q$ is <strong>easy</strong>, while factorizing $N$ to derive $p$ and $q$ is <strong>hard</strong>.</p>
+<div class="note info no-icon">
+            <p>Factoring the product of two primes: Given $N=pq$, where $p,q$ are primes, find $p$ and $q$.</p>
+          </div>
+<h3 id="Factoring-Experiment"><a href="#Factoring-Experiment" class="headerlink" title="Factoring Experiment"></a>Factoring Experiment</h3><p>Cryptographically, the hardness of the factoring problem is indicated by the <strong>factoring experiment</strong> $\mathtt{Factor}_{\mathscr{A}, Genmodulus}(n)$, where GenModulus is an <strong>efficient (polynomial-time)</strong> algorithm that, on input $1^n$, outputs $(N,p,q)$ where $N=pq$, and $p,q$ are $n$-bit primes except with negligible probability.</p>
+<div class="note info no-icon">
+            <p>Definition. Factoring is hard relative to GenModulus if for all <strong>probabilistic polynomial-time algorithm</strong> $\mathscr{A}$, there exists a negligible $\varepsilon(n)$ that $\Pr[\mathtt{Factor}_{\mathscr{A}, GenModulus}(n)=1]\leq \varepsilon(n)$.</p>
+          </div>
+<p><strong>The Factoring Assumption</strong> is the assumption that there exists a GenModulus relative to which factoring is hard.</p>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>这里对数学问题困难性的定义又与上面的算法数论 (algorithmic number theory) 或计算机科学领域的定义不同，是以<strong>实验</strong>来描述的。是不是很有加密学的特色？</p>
+<p>这里还要注意一个概念：<strong>密码学假设 (assumption)</strong>，它将某个数学问题的困难性归约到实验中的一个高效 (efficient) 算法的存在性上。对于大数质因数分解问题 (Factoring problem)，其困难性被某个高效的 GenModulus 算法的存在保证。</p>
+</blockquote>
+<p><br></p>
+<h2 id="RSA-Problem"><a href="#RSA-Problem" class="headerlink" title="RSA Problem"></a>RSA Problem</h2><p>Given a modulus $N$ and integer $e&gt;2$, such that $\gcd(e, \varphi(N))=1$.</p>
+<p>By the Corollary 2 of the Fermat&#39;s Little Theorem (see it in P2), we know that exponentiation to the $e$-th power mod $N$ is a <strong>permutation</strong> on $(\mathbb{Z}/N)^{*}$; </p>
+<p>For any $y\in (\mathbb{Z}/N)^{*}$, let $[y^{1/e} \mod{N}]$ be the unique element which yields $y$ when raised to the $e$-th power mod $N$, i.e., <strong>the $e$-th root of $y$ mod $N$</strong>. </p>
+<p>If $e\cdot d\equiv 1\pmod{\varphi(N)}$, then raising to the $d$-th power is the <strong>inverse</strong> of raising to the $e$-th power, that is, for any $g\in (\mathbb{Z}/N)^{*}$, $(g^e)^d \equiv g\pmod{N}$. Therefore, if $y=g^e$, $y^{1/e}=g=y^d\pmod{N}$.</p>
+<div class="note info no-icon">
+            <p>RSA problem is essentially finding $e$-th root of $y$ mod $N$: Given $N,e,y$, compute $[y^{1/e}\mod{N}]$. Note that $e&gt;2$ and $\gcd(e, \varphi(N))=1$, $\gcd(y, N)=1$. </p>
+          </div>
+<h3 id="RSA-Experiment"><a href="#RSA-Experiment" class="headerlink" title="RSA Experiment"></a>RSA Experiment</h3><p>Similarly, we have the RSA experiment $\mathtt{RSA}$-$\mathtt{inv}_{\mathscr{A}, GenRSA}(n)$, where GenRSA is an efficient algorithm that, on input $1^n$, outputs a modulus $N$ that is the product of two $n$-bit primes $p,q$, as well as integers $e,d&gt;0$ with $\gcd(e, \varphi(N))=1$ and $ed\equiv 1\pmod{\varphi(N)}$.</p>
+<div class="note info no-icon">
+            <p>Definition. RSA problem is hard relative to GenRSA if for all probabilistic polynomial time algorithm $\mathscr{A}$, there exists a negligible $\varepsilon(n)$ that $\Pr[\mathtt{RSAinv}_{\mathscr{A}, GenRSA}(n)=1]\leq \varepsilon(n)$.</p>
+          </div>
+<p>The RSA Assumption is the assumption that there exists a GenRSA algorithm relative to which the RSA problem is hard. Note that GenRSA can be constructed from GenModulus.</p>
+<h3 id="RSA-and-Factoring"><a href="#RSA-and-Factoring" class="headerlink" title="RSA and Factoring"></a>RSA and Factoring</h3><p>The hardness of RSA problem could be <strong>reduced</strong> to the hardness of factoring problem, which is to say, one could efficiently solve RSA problem if he could efficiently solve factoring problem. </p>
+<p>Assume there exists an efficient algorithm $\mathscr{A}$ that could factorize $N$ into two distinct primes $p,q$, then we could construct an efficient $\mathscr{A}&#39;$ that could solve RSA problem.</p>
+<ul>
+<li>$\mathscr{A}&#39;$ runs $\mathscr{A}(N)$ and obtain two <strong>distinct odd primes</strong> $p,q$ that $N=pq$.</li>
+<li>$\mathscr{A}&#39;$ simply computes $\varphi(N)=(p-1)(q-1)$.</li>
+<li>$\mathscr{A}&#39;$ computes $d\equiv e^{-1}\pmod{\varphi(N)}$ with extended Euclidean algorithm.</li>
+<li>$\mathscr{A}&#39;$ could compute $y^{1/e}$ mod $N$ efficiently by computing $y^d$ mod $N$.</li>
+</ul>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>RSA 问题本质上是<strong>求模意义下的 $e$ 次方根</strong>。注意 RSA 问题中的模数 $N$ 是两个不同的大奇质数 $p,q$ 之积。</p>
+<p>RSA 问题的巧妙之处在于，利用群的 closure 性质与费马小定理可得，<strong>模意义下的 $e$ 次方根与模意义下的 $d$ 次方幂是等价的</strong>；其中 $\gcd(e, \varphi(N))=1$, $d\equiv e^{-1} \pmod{\varphi(N)}$. 也就是说，如果敌手得知 $\varphi(N)$，那么他就能通过计算得出 $d$，从而轻松解决 RSA 问题。</p>
+<p>然而得知 $\varphi(N)$ 也是<strong>困难的</strong>；这由 Factoring problem 的困难性保证。对于只有两个质因数 $p,q$ 的模数 $N$, $\varphi(N)=\varphi(pq)=\varphi(p)\varphi(q)=(p-1)(q-1)$。所以，得到 $\varphi(N)$ 的前提是成功将 $N$ 分解为 $p,q$。 </p>
+<p>著名的 RSA 公钥加密就应用了这一性质：在该加密中，公钥 $pk=e$, 私钥 $sk=d$。加密 $Enc_{pk}(m)=m^e$，解密 $Dec_{sk}(c)=c^d$ (均在 mod $N$ 意义下)。RSA 问题的困难性保证了任意不持有私钥的敌手无法由密文 $c=m^e$ 破解消息 $m$ (即，得到 $c$ 在模 $N$ 意义下的 $e$ 次方根)。</p>
+</blockquote>
+<p><br></p>
+<h2 id="Discrete-Logarithm-Problem"><a href="#Discrete-Logarithm-Problem" class="headerlink" title="Discrete Logarithm Problem"></a>Discrete Logarithm Problem</h2><p><br></p>
+<h2 id="Diffie-Hellman-Problem"><a href="#Diffie-Hellman-Problem" class="headerlink" title="Diffie-Hellman Problem"></a>Diffie-Hellman Problem</h2><p><br></p>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning">
             <p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
           </div>
@@ -440,7 +500,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">1.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hardness-of-Mathematical-Problems"><span class="nav-number">1.</span> <span class="nav-text">Hardness of Mathematical Problems</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Factoring-Problem"><span class="nav-number">2.</span> <span class="nav-text">Factoring Problem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Factoring-Experiment"><span class="nav-number">2.1.</span> <span class="nav-text">Factoring Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RSA-Problem"><span class="nav-number">3.</span> <span class="nav-text">RSA Problem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RSA-Experiment"><span class="nav-number">3.1.</span> <span class="nav-text">RSA Experiment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RSA-and-Factoring"><span class="nav-number">3.2.</span> <span class="nav-text">RSA and Factoring</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Discrete-Logarithm-Problem"><span class="nav-number">4.</span> <span class="nav-text">Discrete Logarithm Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Diffie-Hellman-Problem"><span class="nav-number">5.</span> <span class="nav-text">Diffie-Hellman Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
