@@ -173,13 +173,35 @@
 <li>Adversary $\mathscr{A}$ is given $1^n$ and $y$ as inputs. $\mathscr{A}$ outputs $x&#39;$.</li>
 <li>$\mathscr{A}$ succeeds and the experiment evaluates to $1$ if and only if $f(x&#39;)=y$.</li>
 </ul>
-<p>Note that $x&#39;$ does NOT neccessarily have to equal $x$, as long as $f(x&#39;)=y$.</p>
+<p>Note that the <strong>preimage</strong> $x&#39;$ does NOT neccessarily have to equal $x$, as long as $f(x&#39;)=y$.</p>
 <div class="note info no-icon">
             <p>Definition. A function $f:\{0,1\}^{*}\to \{0,1\}^{*}$ is <strong>one-way</strong> if the following two conditions hold:</p><ul><li>(<strong>Easy to compute</strong>): There is a polynomial-time algorithm that on input $x$ outputs $f(x)$.</li><li>(<strong>Hard to invert</strong>): For all PPT algorithm $\mathscr{A}$ there is a negligible function $\varepsilon(n)$ such that: $\Pr[\mathtt{Invert}_{\mathscr{A}. f}(n)=1]\leq \varepsilon(n)$.</li></ul>
           </div>
-<h3 id="One-Way-Functions-Based-on-Assumptions"><a href="#One-Way-Functions-Based-on-Assumptions" class="headerlink" title="One-Way Functions Based on Assumptions"></a>One-Way Functions Based on Assumptions</h3><h3 id="Hard-Core-Predicates"><a href="#Hard-Core-Predicates" class="headerlink" title="Hard-Core Predicates"></a>Hard-Core Predicates</h3><p><br></p>
+<h3 id="One-Way-Functions-Based-on-Assumptions"><a href="#One-Way-Functions-Based-on-Assumptions" class="headerlink" title="One-Way Functions Based on Assumptions"></a>One-Way Functions Based on Assumptions</h3><p>We could construct one-way functions based on the above four assumptions (factoring assumption, RSA assumption, discrete logarithm assumption, Diffie-Hellman assumption). </p>
+<p>We illustrate this by using <strong>factoring assumption</strong> to construct a one-way function.</p>
+<p>Given $1^n$ and GenModulus, define the (deterministic) function $f_{Gen}$ as follows:</p>
+<ul>
+<li>Input: A random tage: string $x$ of length $n$</li>
+<li>Output: Integer $N$.</li>
+<li>Compute $(N,p,q):=GenModulus(1^n;x)$ and return $N$.</li>
+</ul>
+<div class="note info no-icon">
+            <p>Theorem. If the Factoring problem is hard relative to GenModulus, then $f_{Gen}$ is one-way.</p>
+          </div>
+<h3 id="Hard-Core-Predicates"><a href="#Hard-Core-Predicates" class="headerlink" title="Hard-Core Predicates"></a>Hard-Core Predicates</h3><p>For a one-way function $f$, it does not exist any PPT adversary that could efficiently invert it. However, the <strong>partial information</strong> of the preimage may be easily revealed.</p>
+<p>Consider the function $f:\{0,1\}^{2n}\to \{0,1\}^{2n}$ and one-way function $g:\{0,1\}^n\to \{0,1\}^n$. We could define $f(x,y)=g(x)||y$. Since $g$ is one-way, it is trivial that $f$ is also one-way. However, it is easy to know the last $n$ bits of the preimage are exactly the last $n$ bits of $f(x,y)$.</p>
+<p>Though $f$ is one-way, half of the information about the preimage is revealed.</p>
+<p>We define hard-core predicate $hc$ of a one-way function as <strong>the bit that could NEVER be revealed.</strong> Informally speaking, $hc(x)$ is <strong>a bit</strong> that is efficiently computable given $x$, but hard to compute given $f(x)$.</p>
+<div class="note info no-icon">
+            <p>Definition. A function $hc:\{0,1\}^{*}\to\{0,1\}$ is a hard-core predicate of a function $f$ if: </p><ul><li>hc can be computed in polynomial time.</li><li>For every probabilistic polynomial-time algorithm $\mathscr{A}$ there is a negligible function $\varepsilon(n)$ such that $\Pr_{x\leftarrow \{0,1\}^n}[\mathscr{A}(1^n,f(x))=hc(x)]\leq 1/2+\varepsilon(n)$.</li></ul>
+          </div>
+<p><strong>A hard-core predicate for the RSA problem is the least significant bit.</strong> That is to say, compute $lsb(x)$ given $y=[x^e\mod{N}]$ is hard.</p>
+<p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
+<p>做了这么长的铺垫，终于来到了单向函数 (one-way function) 的介绍。我觉得单向函数是密码学中最重要的概念之一，它的定义体现了密码学的核心思想—— <strong>Easy to compute, hard to invert.</strong></p>
+<p>首先来谈谈它的存在性。之前介绍的三个数学难题 (hard problems) 都很符合单向函数的定义；Factoring problem，质数相乘容易，质因数分解难；RSA problem，模意义下幂运算简单，开方运算难；Discrete Logarithm problem，模意义下幂运算简单，对数运算难；因此，由这些难题的猜想 (assumptions) 构造单向函数再自然不过。</p>
+<p>最后谈谈它的意义。实际上，无论是加密 (encryption)，消息验证码 (MAC)，数字签名 (digital signature)……这些加密学原语 (cryptographic primitives) 本质上都是构建单向函数的过程。以加密 (公钥加密) 为例：由消息 $m$ 计算密文 $c$ 简单 (公钥 $pk$ 公开)，而由密文 $c$ 还原 $m$ 困难。</p>
 </blockquote>
 <p><br></p>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning">
