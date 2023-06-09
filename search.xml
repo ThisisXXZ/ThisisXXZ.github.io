@@ -56,6 +56,8 @@
 <ul>
 <li>issue: 由于 GitHub pages 拒绝百度爬虫访问，现时无法将部署在 GitHub pages 上的网站提交至百度进行收录。考虑解决方案：双线部署。 (感觉好麻烦，算了，百度你有眼无珠)</li>
 </ul>
+<p>10.6.2023: (侵入式更改) 在侧边栏添加网易云音乐播放器并播放超好听的三日月之舞。调整 sitemap 与 rss 按钮为平行显示。(有样学样写了一段 css 代码，居然能跑，好开心) 暂时关闭友链显示。</p>
+<p><br></p>
 ]]></content>
       <categories>
         <category>logs</category>
@@ -85,9 +87,14 @@
 </ul>
 <p>自己没看标程补完了！爽！F 题和 G 题都挺有意思的，感觉 F 题努力想一想也能想出来。</p>
 <p><br></p>
-<h3 id="CF-Educational-Round-149-Div-2"><a href="#CF-Educational-Round-149-Div-2" class="headerlink" title="CF Educational Round #149 (Div.2)"></a>CF Educational Round #149 (Div.2)</h3><p><a href="https://codeforces.com/contest/1837">link</a>。vp，做了 A-D 四道题。基本上都是贪心，码量很小。E 题是个组合数学题，稍微复杂点 (难度是橙)，考试结束以后才做出来。没有 1A，交了三次才过，但是做出来还是很有成就感的。只要想到规模减半的子问题模型，思路就很简单了，注意几个不同情况即可。</p>
-<p>F 题似乎是二分答案，但是怎么选择最优的 $k$ 个问题没什么头绪。如果想不出来就记录一下。 </p>
+<h3 id="CF-Educational-Round-149-Div-2"><a href="#CF-Educational-Round-149-Div-2" class="headerlink" title="CF Educational Round #149 (Div.2)"></a>CF Educational Round #149 (Div.2)</h3><p><a href="https://codeforces.com/contest/1837">link</a>。vp，做了 A-D 四道题。基本上都是贪心，码量很小。E 题是个组合数学题，稍微复杂点 (难度是橙)，考试结束以后才做出来。没有 1A，交了三次才过，但是做出来还是很有成就感的。只要想到规模减半的子问题模型，思路就很简单了。</p>
+<p>具体来说，在当前问题规模为 $2^k$ 的情况下，我们分别安排第 $[1,2^{k-1}]$ 队的相对顺序与第 $[2^{k-1}+1,2^k]$ 队的相对顺序，使得第 $[2^{k-1}+1,2^k]$ 队全部在这一轮被淘汰，并计算组合方案。第 $[1,2^{k-1}]$ 队的相对顺序是一个规模为 $2^{k-1}$ 的子问题；而第 $[2^{k-1}+1,2^k]$ 队的相对顺序则是一个 trivial 的组合数学问题。</p>
+<p>F 题似乎是二分答案，但是怎么选择最优的 $k$ 个问题没什么头绪。如果想不出来就记录一下。(OK 懒得想了)</p>
 <p>这次 vp 也暴露出我的问题：切送分题的速度实在是太慢了。在 ICPC 这种对手速与脑速要求都很高的比赛规则下，这个问题挺致命的。只能多写一些尽量克服这个缺点吧。</p>
+<ul>
+<li><a href="http://thisisxxz.com/2023/06/09/CFE149T6/">CF Educational Round #149 <em>Problem F</em> Editorial for Two</a></li>
+</ul>
+<p><br></p>
 ]]></content>
       <categories>
         <category>logs</category>
@@ -96,6 +103,37 @@
         <tag>programming</tag>
         <tag>plan</tag>
         <tag>log</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Codeforces 1837F Editorial for Two</title>
+    <url>/2023/06/09/CFE149T6/</url>
+    <content><![CDATA[<p>题目来自 Codeforces Educational Round #149 (Div.2) F。<a href="https://codeforces.com/contest/1837/problem/F">link</a></p>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning">
+            <p>&emsp; This article provides a <strong>feasible</strong> solution to a certain competitive programming problem.<br>&emsp; If you have better solutions, feel free to share with me!</p>
+          </div>
+<p><br></p>
+<h2 id="Problem-Description"><a href="#Problem-Description" class="headerlink" title="Problem Description"></a>Problem Description</h2><p>给出长度为 $n$ 的数列 $\{a_1,a_2,...,a_n\}$ $(1\leq a_i\leq10^9)$，选出一个长度为 $k$ 的子序列 $(1\leq k\leq n\leq 3\cdot 10^5)$，并将该子序列分为左右两部分。找到合适的划分方案，使得 $\{\max($左侧元素之和，右侧元素之和$)\}$ 最小，并求出该最小值。数据组数 $1\leq t\leq 10^4$，保证 $\sum n\leq 3\times 10^5$。</p>
+<p><br></p>
+<h2 id="Tutorial"><a href="#Tutorial" class="headerlink" title="Tutorial"></a>Tutorial</h2><p>首先最小化最大值一眼二分答案。考虑当前二分的值为 $x$。问题转化为，在长度为 $n$ 的数列中，选出两个长度之和为 $k$ 的子序列，使得这两个子序列的元素之和均 $\leq x$。并且，这两个子序列<strong>不重合</strong>：第一个子序列的末尾元素一定在第二个子序列的起始元素之前。</p>
+<p>考虑维护前缀数组 $pre_i$ 与后缀数组 $suf_i$，标记在前缀 $a_{1...i}$ 或后缀 $a_{i...n}$ 中，<strong>最多</strong>能够选择多少个元素，使得这些元素之和 $\leq x$。若我们能够成功计算出 $pre_i$ 与 $suf_i$，那么只要使得 $pre_i+suf_{i+1}\geq k$ 的 $i$ 存在，就能选出两个不重合，且元素之和 $\leq x$ 的两个子序列。</p>
+<p>现在问题转化为 $pre_i$ 与 $suf_i$ 的计算。这里采取一个简单但巧妙的贪心算法：以 $pre_i$ 为例，维护一个<strong>大根堆</strong> (或优先队列)，堆内所有元素的和 $sum$ 与堆的大小 $size$。对于新元素 $a_i$，先将 $a_i$ 加入堆中，并更新 $sum$, $size$。若 $sum\leq x$，$pre_i=size$；如果 $sum&gt;x$，则持续弹出堆顶元素直至 $sum\leq x$，再设置 $pre_i=size$。</p>
+<p>有人把这种算法称为<strong>反悔堆</strong>：弹出堆顶元素其实就是“反悔”之前做出的选择，贪心更新最优解的过程。</p>
+<p><br></p>
+<h2 id="Code-Implementation"><a href="#Code-Implementation" class="headerlink" title="Code Implementation"></a>Code Implementation</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+<p><br></p>
+]]></content>
+      <categories>
+        <category>solutions</category>
+        <category>programming</category>
+      </categories>
+      <tags>
+        <tag>binary search</tag>
+        <tag>greedy</tag>
+        <tag>heap</tag>
+        <tag>subsequence</tag>
       </tags>
   </entry>
   <entry>
@@ -1000,8 +1038,8 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
         <category>blog</category>
       </categories>
       <tags>
-        <tag>blog</tag>
         <tag>hexo</tag>
+        <tag>blog</tag>
       </tags>
   </entry>
   <entry>
