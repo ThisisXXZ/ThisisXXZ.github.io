@@ -126,7 +126,7 @@
 <p><br></p>
 <h2 id="Tutorial"><a href="#Tutorial" class="headerlink" title="Tutorial"></a>Tutorial</h2><p>首先最小化最大值一眼二分答案。考虑当前二分的值为 $x$。问题转化为，在长度为 $n$ 的数列中，选出两个长度之和为 $k$ 的子序列，使得这两个子序列的元素之和均 $\leq x$。并且，这两个子序列<strong>不重合</strong>：第一个子序列的末尾元素一定在第二个子序列的起始元素之前。</p>
 <p>考虑维护前缀数组 $pre_i$ 与后缀数组 $suf_i$，标记在前缀 $a_{1...i}$ 或后缀 $a_{i...n}$ 中，<strong>最多</strong>能够选择多少个元素，使得这些元素之和 $\leq x$。若我们能够成功计算出 $pre_i$ 与 $suf_i$，那么只要使得 $pre_i+suf_{i+1}\geq k$ 的 $i$ 存在，就能选出两个不重合，且元素之和 $\leq x$ 的两个子序列。</p>
-<p>现在问题转化为 $pre_i$ 与 $suf_i$ 的计算。这里采取一个简单但巧妙的贪心算法：以 $pre_i$ 为例，维护一个<strong>大根堆</strong> (或优先队列)，堆内所有元素的和 $sum$ 与堆的大小 $size$。对于新元素 $a_i$，先将 $a_i$ 加入堆中，并更新 $sum$, $size$。若 $sum\leq x$，$pre_i=size$；如果 $sum&gt;x$，则持续弹出堆顶元素直至 $sum\leq x$，再设置 $pre_i=size$。</p>
+<p>关于 $pre_i$ 与 $suf_i$ 的计算，这里采取一个简单但巧妙的贪心算法：以 $pre_i$ 为例，维护一个<strong>大根堆</strong> (或优先队列)，堆内所有元素的和 $sum$ 与堆的大小 $size$。对于新元素 $a_i$，先将 $a_i$ 加入堆中，并更新 $sum$, $size$。若 $sum\leq x$，$pre_i=size$；如果 $sum&gt;x$，则持续弹出堆顶元素直至 $sum\leq x$，再设置 $pre_i=size$。</p>
 <p>有人把这种算法称为<strong>反悔堆</strong>：弹出堆顶元素其实就是“反悔”之前做出的选择，贪心更新最优解的过程。</p>
 <p><br></p>
 <h2 id="Code-Implementation"><a href="#Code-Implementation" class="headerlink" title="Code Implementation"></a>Code Implementation</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
