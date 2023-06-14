@@ -2,29 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 6.3.0">
+<meta name="viewport" content="width=device-width">
 <meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-custom.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-custom.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
   <meta name="google-site-verification" content="true">
   <meta name="msvalidate.01" content="true">
 
 <link rel="stylesheet" href="/css/main.css">
 
-<link rel="stylesheet" href="https://fonts.font.im/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Sitka Heading:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CSitka+Heading:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.thisisxxz.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":290,"display":"post","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
-  </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
-  <meta name="description" content="COMP3357 digest 的 P2 部分 (P1 部分在这里，P3 部分在这里)，主要介绍群论 (group theory)，数论 (number theory) 的相关知识以及它们在 cryptography 中的应用。 该部分的内容主要是为了 P3 部分做铺垫：P3 中的困难问题 (hard problems) 与单向函数 (one-way function) 的构建与这一节里提到的数论">
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="COMP3357 digest 的 P2 部分 (P1 部分在这里，P3 部分在这里)，主要介绍群论 (group theory)，数论 (number theory) 的相关知识以及它们在 cryptography 中的应用。 该部分的内容主要是为了 P3 部分做铺垫：P3 中的困难问题 (hard problems) 与单向函数 (one-way function) 的构建与这一节里提到的数论">
 <meta property="og:type" content="article">
 <meta property="og:title" content="COMP3357 notes P2">
 <meta property="og:url" content="https://www.thisisxxz.com/2023/06/02/Cryptography-COMP3357-2/index.html">
@@ -32,7 +31,7 @@
 <meta property="og:description" content="COMP3357 digest 的 P2 部分 (P1 部分在这里，P3 部分在这里)，主要介绍群论 (group theory)，数论 (number theory) 的相关知识以及它们在 cryptography 中的应用。 该部分的内容主要是为了 P3 部分做铺垫：P3 中的困难问题 (hard problems) 与单向函数 (one-way function) 的构建与这一节里提到的数论">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-06-02T07:56:06.000Z">
-<meta property="article:modified_time" content="2023-06-05T10:09:20.652Z">
+<meta property="article:modified_time" content="2023-06-14T03:35:47.200Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="cryptography">
 <meta property="article:tag" content="course notes">
@@ -40,23 +39,29 @@
 <meta property="article:tag" content="number theory">
 <meta name="twitter:card" content="summary">
 
+
 <link rel="canonical" href="https://www.thisisxxz.com/2023/06/02/Cryptography-COMP3357-2/">
 
 
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'en'
-  };
-</script>
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/06/02/Cryptography-COMP3357-2/","path":"2023/06/02/Cryptography-COMP3357-2/","title":"COMP3357 notes P2"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>COMP3357 notes P2 | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
 <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
 #needsharebutton-postbottom {
   cursor: pointer;
   height: 26px;
   margin-top: 10px;
+  margin-left: 50%;
   position: relative;
 }
 #needsharebutton-postbottom .btn {
@@ -66,68 +71,40 @@
   padding: 1px 4px;
 }
 </style>
-  <title>COMP3357 notes P2 | ThisisXXZ's Blog</title>
-  
-
-
-
-
-
-
   <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 <!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
   <div class="site-meta">
 
     <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">ThisisXXZ's Blog</h1>
-      <span class="logo-line-after"><i></i></span>
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">Sound! Euphonium</p>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
   </div>
 
   <div class="site-nav-right">
-    <div class="toggle popup-trigger">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
         <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
@@ -135,49 +112,8 @@
 
 
 
-
 <nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
-
-  </li>
-        
-            
-  <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
-
-  </li>
-
-
-      
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
-
-  </li>
-        <li class="menu-item menu-item-categories">
-
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
-
-  </li>
-        <li class="menu-item menu-item-sitemap">
-
-    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
-
-  </li>
-        <li class="menu-item menu-item-rss">
-
-    <a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a>
-
-  </li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -188,87 +124,188 @@
 
 
   <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
+    <div class="popup search-popup"><div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off"
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
            placeholder="Searching..." spellcheck="false"
            type="search" class="search-input">
   </div>
-  <span class="popup-btn-close">
+  <span class="popup-btn-close" role="button">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div id="search-result">
-  <div id="no-result">
-    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
   </div>
 </div>
 
     </div>
   </div>
 
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Multiplicative-Inverse"><span class="nav-number">1.</span> <span class="nav-text">Multiplicative Inverse</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Euler-39-s-Totient-Function"><span class="nav-number">2.</span> <span class="nav-text">Euler&#39;s Totient Function</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation-Linear-Sieve"><span class="nav-number">2.1.</span> <span class="nav-text">Code Implementation: Linear Sieve</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Euler-39-s-Theorem"><span class="nav-number">2.2.</span> <span class="nav-text">Euler&#39;s Theorem</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Extended-Euclidean-Algorithm-eGCD"><span class="nav-number">3.</span> <span class="nav-text">Extended Euclidean Algorithm (eGCD)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation"><span class="nav-number">3.1.</span> <span class="nav-text">Code Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-eGCD-to-get-Inverse"><span class="nav-number">3.2.</span> <span class="nav-text">Using eGCD to get Inverse</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chinese-Remainder-Theorem-CRT"><span class="nav-number">4.</span> <span class="nav-text">Chinese Remainder Theorem (CRT)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation-1"><span class="nav-number">4.1.</span> <span class="nav-text">Code Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Quadratic-Residue"><span class="nav-number">5.</span> <span class="nav-text">Quadratic Residue</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Legendre-Symbol"><span class="nav-number">5.1.</span> <span class="nav-text">Legendre Symbol</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Euler-39-s-Criterion"><span class="nav-number">5.2.</span> <span class="nav-text">Euler&#39;s Criterion</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Group-Theory-Introduction"><span class="nav-number">6.</span> <span class="nav-text">Group Theory: Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Subgroups"><span class="nav-number">6.1.</span> <span class="nav-text">Subgroups</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Modulo-Multiplication-Group"><span class="nav-number">6.2.</span> <span class="nav-text">Modulo Multiplication Group</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fermat-39-s-Little-Theorem"><span class="nav-number">7.</span> <span class="nav-text">Fermat&#39;s Little Theorem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Corollary-1"><span class="nav-number">7.1.</span> <span class="nav-text">Corollary 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Corollary-2"><span class="nav-number">7.2.</span> <span class="nav-text">Corollary 2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cyclic-Groups-and-Generators"><span class="nav-number">8.</span> <span class="nav-text">Cyclic Groups and Generators</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
 </div>
-    </header>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
 
     
-  <div class="reading-progress-bar"></div>
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="http://bing.com/" title="http:&#x2F;&#x2F;bing.com" rel="noopener" target="_blank">Testing...</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+        <div class="pjax">
+        </div>
+  </aside>
 
-  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+    </div>
+
+    <div class="main-inner post posts-expand">
 
 
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
+  
 
-          <div class="content post posts-expand">
-            
 
-    
+<div class="post-block">
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
     <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/06/02/Cryptography-COMP3357-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
       <meta itemprop="name" content="XXZ">
-      <meta itemprop="description" content="如果努力的尽头是奇迹">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="COMP3357 notes P2 | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           COMP3357 notes P2
         </h1>
 
-        <div class="post-meta">
+        <div class="post-meta-container">
+          <div class="post-meta">
 
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2023-06-02 15:56:06" itemprop="dateCreated datePublished" datetime="2023-06-02T15:56:06+08:00">2023-06-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-06-05 18:09:20" itemprop="dateModified" datetime="2023-06-05T18:09:20+08:00">2023-06-05</time>
-              </span>
+      <time title="Created: 2023-06-02 15:56:06" itemprop="dateCreated datePublished" datetime="2023-06-02T15:56:06+08:00">2023-06-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-06-14 11:35:47" itemprop="dateModified" datetime="2023-06-14T11:35:47+08:00">2023-06-14</time>
+    </span>
 
-          
-          <span class="post-meta-item">
+  <span class="post-meta-item">
     <span class="post-meta-item-icon">
         <i class="far fa-file-word"></i>
     </span>
@@ -292,6 +329,7 @@
     translateInitilization();
 </script>
 
+</div>
 
         </div>
       </header>
@@ -299,25 +337,19 @@
     
     
     
-    <div class="post-body" itemprop="articleBody">
-
-      
-        <p>COMP3357 digest 的 P2 部分 (P1 部分在<a target="_blank" rel="noopener" href="https://thisisxxz.github.io/2023/05/25/Cryptography-COMP3357/">这里</a>，P3 部分在<a target="_blank" rel="noopener" href="https://thisisxxz.github.io/2023/06/05/Cryptography-COMP3357-3/">这里</a>)，主要介绍群论 (group theory)，数论 (number theory) 的相关知识以及它们在 cryptography 中的应用。</p>
+    <div class="post-body" itemprop="articleBody"><p>COMP3357 digest 的 P2 部分 (P1 部分在<a target="_blank" rel="noopener" href="https://thisisxxz.github.io/2023/05/25/Cryptography-COMP3357/">这里</a>，P3 部分在<a target="_blank" rel="noopener" href="https://thisisxxz.github.io/2023/06/05/Cryptography-COMP3357-3/">这里</a>)，主要介绍群论 (group theory)，数论 (number theory) 的相关知识以及它们在 cryptography 中的应用。</p>
 <p>该部分的内容主要是为了 P3 部分做铺垫：P3 中的困难问题 (hard problems) 与单向函数 (one-way function) 的构建与这一节里提到的数论/群论知识存在紧密的联系。</p>
 <span id="more"></span>
 <p>同样，与 CnBlogs 中的笔记不同，这里不会详细的记载每个相关的知识点；只会尝试简略地总结一些能让未来的自己也会感到有趣，巧妙的内容 (Eureka!)。</p>
 <p><br></p>
-<div class="note warning">
-            <p>&emsp; This article is a self-administered course note.<br>&emsp; It will <strong>NOT</strong> cover any exam or assignment related content.</p>
-          </div>
+<div class="note warning"><p>&emsp; This article is a self-administered course note.<br>&emsp; It will <strong>NOT</strong> cover any exam or assignment related content.</p>
+</div>
 <p><br></p>
-<h2 id="Multiplicative-Inverse"><a href="#Multiplicative-Inverse" class="headerlink" title="Multiplicative Inverse"></a>Multiplicative Inverse</h2><div class="note info no-icon">
-            <p>Definition. If for a given integer $b$, there exists an integer $c$ such that $bc=1\mod{N}$, we say that $b$ is <strong>invertible</strong> modulo $N$, and call $c$ a <strong>multiplicative inverse</strong> of $b$ modulo $N$.</p>
-          </div>
+<h2 id="Multiplicative-Inverse"><a href="#Multiplicative-Inverse" class="headerlink" title="Multiplicative Inverse"></a>Multiplicative Inverse</h2><div class="note info no-icon"><p>Definition. If for a given integer $b$, there exists an integer $c$ such that $bc=1\mod{N}$, we say that $b$ is <strong>invertible</strong> modulo $N$, and call $c$ a <strong>multiplicative inverse</strong> of $b$ modulo $N$.</p>
+</div>
 <p>The multiplicative inverse is <strong>NOT</strong> unique. For an invertible $b$, if $c$ is an inverse of $b$, every $x$ congruent with $c$ modulo $N$ is also an inverse of $b$. ($x\equiv c\mod{N}$). We use $b^{-1}$ to denote the inverse of $b$ that $b^{-1}\in\{1,2,...N-1\}$.</p>
-<div class="note info no-icon">
-            <p>Theorem. Let $b,N$ be integers, with $b\geq 1$, and $N&gt;1$. Then $b$ is <strong>invertible</strong> modulo $N$ if and only if  $b$ is <strong>relatively prime</strong> to $N$. Note that integers $b,N$ are relatively prime (or coprime) means $\gcd(b,N)=1$.</p>
-          </div>
+<div class="note info no-icon"><p>Theorem. Let $b,N$ be integers, with $b\geq 1$, and $N&gt;1$. Then $b$ is <strong>invertible</strong> modulo $N$ if and only if  $b$ is <strong>relatively prime</strong> to $N$. Note that integers $b,N$ are relatively prime (or coprime) means $\gcd(b,N)=1$.</p>
+</div>
 <p>Therefore, for a prime $p$, every $b\in \{1,2,...p-1\}$ is <strong>invertible</strong> modulo $p$. </p>
 <p>The above theorem could be proved by applying <strong>Bezout&#39;s identity: </strong> it states that for every positive integer $a,b$, there exists a pair of integers $\langle X,Y \rangle$ that $Xa+Yb=\gcd(a,b)$.</p>
 <p><br></p>
@@ -327,16 +359,14 @@
 <p>求逆元的常见方法：扩展欧几里得算法，欧拉定理，费马小定理。这些方法在接下来都会进行介绍。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Euler-39-s-Totient-Function"><a href="#Euler-39-s-Totient-Function" class="headerlink" title="Euler&#39;s Totient Function"></a>Euler&#39;s Totient Function</h2><div class="note info no-icon">
-            <p>Definition. Euler&#39;s Totient Function $\varphi(N)$ is defined as the number of <strong>positive integers</strong> $\leq N$ that are <strong>relatively prime</strong> to $N$, where $1$ is counted as being relatively prime to all integers.</p>
-          </div>
-<p>The general case of Euler&#39;s Totient Function is $\varphi(n)=n\Pi_{p|n}(1-\frac{1}{p})=n(1-\frac{1}{p_1})(1-\frac{1}{p_2})...(1-\frac{1}{p_r})$. This is essentially the <strong>Inclusion-Exclusion principle</strong>. </p>
+<h2 id="Euler-39-s-Totient-Function"><a href="#Euler-39-s-Totient-Function" class="headerlink" title="Euler&#39;s Totient Function"></a>Euler&#39;s Totient Function</h2><div class="note info no-icon"><p>Definition. Euler&#39;s Totient Function $\varphi(N)$ is defined as the number of <strong>positive integers</strong> $\leq N$ that are <strong>relatively prime</strong> to $N$, where $1$ is counted as being relatively prime to all integers.</p>
+</div>
+<p>The general case of Euler&#39;s Totient is $\varphi(n)=n\Pi_{p|n}(1-\frac{1}{p})=n(1-\frac{1}{p_1})(1-\frac{1}{p_2})...(1-\frac{1}{p_r})$. This is essentially the <strong>Inclusion-Exclusion principle</strong>. </p>
 <h3 id="Code-Implementation-Linear-Sieve"><a href="#Code-Implementation-Linear-Sieve" class="headerlink" title="Code Implementation: Linear Sieve"></a>Code Implementation: Linear Sieve</h3><p>To calculate a specific totient of $n$, we could design a trivial $O(n\log n)$ algorithm based on the above formula. However, there exists a sieve algorithm that could calculate totients of number $1$ to $n$ in linear time $O(n)$. Below is the code in C++:</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// the Euler sieve</span></span><br><span class="line"><span class="comment">// bool array: is_prime, int array: prime, phi</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sieve</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; N; ++i)    is_prime[i] = <span class="number">1</span>;</span><br><span class="line">    cnt = <span class="number">0</span>;</span><br><span class="line">    is_prime[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">    phi[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= N; ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (is_prime[i]) &#123;</span><br><span class="line">            prime[++cnt] = i;</span><br><span class="line">            phi[i] = i - <span class="number">1</span>;     <span class="comment">// for a prime p, phi[p] = p - 1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= cnt &amp;&amp; i * prime[j] &lt;= N; ++j) &#123;</span><br><span class="line">            is_prime[i * prime[j]] = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">if</span> (i % prime[j])</span><br><span class="line">                phi[i * prime[j]] = phi[i] * phi[prime[j]];</span><br><span class="line">               <span class="keyword">else</span> &#123;</span><br><span class="line">                phi[i * prime[j]] = phi[i] * prime[j];</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Reference &amp; Explanation: <a target="_blank" rel="noopener" href="https://oi-wiki.org/math/number-theory/sieve/#%E7%AD%9B%E6%B3%95%E6%B1%82%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0">(OI Wiki) Linear Sieve for Euler&#39;s totient function</a></p>
-<h3 id="Euler-39-s-Theorem"><a href="#Euler-39-s-Theorem" class="headerlink" title="Euler&#39;s Theorem"></a>Euler&#39;s Theorem</h3><div class="note info no-icon">
-            <p>Theorem. Let $n$ be a positive integer, and let $a$ be an integer that is <strong>relatively prime</strong> to $n$. Then $a^{\varphi(n)}\equiv 1\pmod{n}$, where $\varphi(n)$ is Euler&#39;s totient function of $n$.</p>
-          </div>
+<h3 id="Euler-39-s-Theorem"><a href="#Euler-39-s-Theorem" class="headerlink" title="Euler&#39;s Theorem"></a>Euler&#39;s Theorem</h3><div class="note info no-icon"><p>Theorem. Let $n$ be a positive integer, and let $a$ be an integer that is <strong>relatively prime</strong> to $n$. Then $a^{\varphi(n)}\equiv 1\pmod{n}$, where $\varphi(n)$ is Euler&#39;s totient function of $n$.</p>
+</div>
 <p>Since $\gcd(a,n)=1$, $a$ is invertible modulo $n$. According to Euler&#39;s Theorem, $a^{\varphi(n)}\equiv 1\pmod{n}$. Therefore $a\times a^{\varphi(n)-1}\equiv 1\pmod{n}$. $a^{\varphi(n)-1}$ is a <strong>multiplicative inverse</strong> of $a$ modulo $n$. </p>
 <p>An <strong>informal</strong> proof. (need the knowledge of $\mathbb{Z}_n^{*}$, <strong>multiplicative group</strong> of integers modulo $n$). For $a\in\mathbb{Z}_n^{*}$, $\{r_1,r_2,...r_{\varphi(n)}\}=(\mathbb{Z}/n)^{*}=\{ar_1,ar_2,...ar_{\varphi(n)}\}$. Therefore $r_1r_2...r_{\varphi(n)}\equiv (ar_1)(ar_2)...(ar_{\varphi(n)})$, which reduces to $1\equiv a^{\varphi(n)}$. This cancellation is allowed since all $r_i$ have multiplicative inverses modulo $n$. </p>
 <p>Reference &amp; Explanation: <a target="_blank" rel="noopener" href="https://brilliant.org/wiki/eulers-theorem/#proofs-of-the-theorem">(Brilliant Math Wiki) Proof of Euler&#39;s Theorem</a></p>
@@ -349,9 +379,8 @@
 <p>关于欧拉函数线性筛算法的设计也十分巧妙，它是建立在质数线性筛的基础上的。具体可见 OI Wiki 中的相关解释，讲的很清楚。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Extended-Euclidean-Algorithm-eGCD"><a href="#Extended-Euclidean-Algorithm-eGCD" class="headerlink" title="Extended Euclidean Algorithm (eGCD)"></a>Extended Euclidean Algorithm (eGCD)</h2><div class="note info no-icon">
-            <p>Euclidean Algorithm (辗转相除法) is one of the oldest and most widely known algorithms. It is a $O(\log n)$ method of computing the <strong>greatest common divisor</strong> (GCD) of two integers $a,b$.</p>
-          </div>
+<h2 id="Extended-Euclidean-Algorithm-eGCD"><a href="#Extended-Euclidean-Algorithm-eGCD" class="headerlink" title="Extended Euclidean Algorithm (eGCD)"></a>Extended Euclidean Algorithm (eGCD)</h2><div class="note info no-icon"><p>Euclidean Algorithm (辗转相除法) is one of the oldest and most widely known algorithms. It is a $O(\log n)$ method of computing the <strong>greatest common divisor</strong> (GCD) of two integers $a,b$.</p>
+</div>
 <p>According to <strong>Bezout&#39;s Identity</strong>, there exists integers $X$ and $Y$ that $Xa+Yb=\gcd(a,b)$ given $a,b$. The <strong>extended</strong> Euclidean algorithm is the method of computing such $X$ and $Y$.</p>
 <p>Assuming two adjacent levels in the GCD recursive process:</p>
 <div class="table-container">
@@ -399,14 +428,11 @@ Xa+Yb&=Y'a+(X'-Y'\lfloor \frac{a}{b} \rfloor)b \\
 </blockquote>
 <p><br></p>
 <h2 id="Chinese-Remainder-Theorem-CRT"><a href="#Chinese-Remainder-Theorem-CRT" class="headerlink" title="Chinese Remainder Theorem (CRT)"></a>Chinese Remainder Theorem (CRT)</h2><blockquote class="blockquote-center">
-            <i class="fa fa-quote-left"></i>
-            <p>今有物不知其数，三三数之剩二，五五数之剩三，七七数之剩二，问物几何？ —— <em>孙子算经</em></p>
+<p>今有物不知其数，三三数之剩二，五五数之剩三，七七数之剩二，问物几何？ —— <em>孙子算经</em></p>
 
-            <i class="fa fa-quote-right"></i>
-          </blockquote> 
-<div class="note info no-icon">
-            <p>The Chinese remainder theorem (CRT) is a theorem which gives a unique solution to a <strong>simultaneous linear congruences with coprime moduli</strong>. In its basic form, the CRT will determine a number $p$ that, when divided by some given <strong>divisors</strong>, leaves <strong>given remainders</strong>.</p>
-          </div>
+</blockquote> 
+<div class="note info no-icon"><p>The Chinese remainder theorem (CRT) is a theorem which gives a unique solution to a <strong>simultaneous linear congruences with coprime moduli</strong>. In its basic form, the CRT will determine a number $p$ that, when divided by some given <strong>divisors</strong>, leaves <strong>given remainders</strong>.</p>
+</div>
 <p>If $m_1,...,m_k$ are <strong>pairwise coprime</strong>, i.e., $\gcd(m_i,m_j)=1$ for $i\neq j$, then the following system</p>
 <script type="math/tex; mode=display">
 \begin{cases}
@@ -428,15 +454,14 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <p>P.S. RSA 问题是一个著名的困难问题 (hard problems)，我将会在 P3 中进行介绍。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Quadratic-Residue"><a href="#Quadratic-Residue" class="headerlink" title="Quadratic Residue"></a>Quadratic Residue</h2><div class="note info no-icon">
-            <p>If there is an integer $0&lt;x&lt;p$ such that $x^2\equiv a\pmod{p}$. We call $a$ a <strong>quadratic residue</strong> modulo $p$. Otherwise (such $x$ doesn&#39;t exist), we call $a$ a <strong>quadratic nonresidue</strong> modulo $p$.</p><p>Note that $p \nmid a$ to exclude the trivial cases $x=0$.</p>
-          </div>
+<h2 id="Quadratic-Residue"><a href="#Quadratic-Residue" class="headerlink" title="Quadratic Residue"></a>Quadratic Residue</h2><div class="note info no-icon"><p>If there is an integer $0&lt;x&lt;p$ such that $x^2\equiv a\pmod{p}$. We call $a$ a <strong>quadratic residue</strong> modulo $p$. Otherwise (such $x$ doesn&#39;t exist), we call $a$ a <strong>quadratic nonresidue</strong> modulo $p$.</p>
+<p>Note that $p \nmid a$ to exclude the trivial cases $x=0$.</p>
+</div>
 <p>The quadratic residue problem requires us to solve the congrence $x^2\equiv a\pmod{p}$. Essentially it is to <strong>find the square root</strong> of $a$ in the sense of modulo $p$. Usually, the moduli $p$ is an <strong>odd prime</strong>.</p>
 <h3 id="Legendre-Symbol"><a href="#Legendre-Symbol" class="headerlink" title="Legendre Symbol"></a>Legendre Symbol</h3><p>The legendre symbol is a <strong>number theoretic function</strong> $(\frac{a}{p})$ which is defined to be equal to $\pm 1$ depending on whether $a$ is a quadratic residue modulo $p$. </p>
 <script type="math/tex; mode=display">
-(\frac{a}{p})=(a|p)=\begin{cases} \ 0, \ if \ \ p|a \\ \  1, \ if \ a \ is \ a \ quadratic \ residue \ modulo \ p \\ -1 , \ if \ a \ is \ a \ quadratic \ nonresidue \ modulo \ p \end{cases}</script><h3 id="Euler-39-s-Criterion"><a href="#Euler-39-s-Criterion" class="headerlink" title="Euler&#39;s Criterion"></a>Euler&#39;s Criterion</h3><div class="note info no-icon">
-            <p>For an odd prime $p$ and $p \nmid a$, the Legendre symbol $(\frac{a}{p})\equiv a^{(p-1)/2} \pmod{p}$.</p>
-          </div>
+(\frac{a}{p})=(a|p)=\begin{cases} \ 0, \ if \ \ p|a \\ \  1, \ if \ a \ is \ a \ quadratic \ residue \ modulo \ p \\ -1 , \ if \ a \ is \ a \ quadratic \ nonresidue \ modulo \ p \end{cases}</script><h3 id="Euler-39-s-Criterion"><a href="#Euler-39-s-Criterion" class="headerlink" title="Euler&#39;s Criterion"></a>Euler&#39;s Criterion</h3><div class="note info no-icon"><p>For an odd prime $p$ and $p \nmid a$, the Legendre symbol $(\frac{a}{p})\equiv a^{(p-1)/2} \pmod{p}$.</p>
+</div>
 <p>For an odd prime $p$ and $p \nmid a$, according to Euler&#39;s critetion, we could determine whether $a$ is a quadratic residue modulo $p$ by checking whether $a^{(p-1)/2}\mod{p}$ equals to $1$ or not.</p>
 <p>See the prove <a target="_blank" rel="noopener" href="https://oi-wiki.org/math/number-theory/residue/#%E5%A5%87%E7%B4%A0%E6%95%B0%E7%9A%84%E4%BA%8C%E6%AC%A1%E5%89%A9%E4%BD%99">here</a>.</p>
 <p><br></p>
@@ -446,9 +471,8 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <p>二次剩余问题本质上是<strong>模意义下的开根问题</strong>，实际上是 RSA 问题的铺垫：RSA 问题本质上是模意义下的开 $e$ 次根问题。因此，当 $e=2$ 时，RSA 问题与二次剩余问题等价。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Group-Theory-Introduction"><a href="#Group-Theory-Introduction" class="headerlink" title="Group Theory: Introduction"></a>Group Theory: Introduction</h2><div class="note info no-icon">
-            <p><strong>Group theory</strong> is the study of groups. Groups are <strong>sets</strong> equipped with an <strong>operation</strong> that satisfies certain basic properties. They are closure, identity, inverse, and associativity.</p>
-          </div>
+<h2 id="Group-Theory-Introduction"><a href="#Group-Theory-Introduction" class="headerlink" title="Group Theory: Introduction"></a>Group Theory: Introduction</h2><div class="note info no-icon"><p><strong>Group theory</strong> is the study of groups. Groups are <strong>sets</strong> equipped with an <strong>operation</strong> that satisfies certain basic properties. They are closure, identity, inverse, and associativity.</p>
+</div>
 <p>Set $\mathbb{G}$ and a <strong>binary operation</strong> $\circ$ defined on $\mathbb{G}$ that:</p>
 <ul>
 <li>Closure: For all $g_1,g_2\in \mathbb{G}$, it holds that $g_1 \circ g_2\in \mathbb{G}$</li>
@@ -458,13 +482,11 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 </ul>
 <p><strong>Order</strong> of a finite group $\mathbb{G}$, denoted $|\mathbb{G}|$, is the number of elements in $\mathbb{G}$.</p>
 <p>If group $\mathbb{G}$ is an <strong>Abelian group</strong>, it will satisfiy the additionally <strong>commutativity</strong>: For all $g_1,g_2\in\mathbb{G}$, $g_1\circ g_2=g_2\circ g_1$.</p>
-<h3 id="Subgroups"><a href="#Subgroups" class="headerlink" title="Subgroups"></a>Subgroups</h3><div class="note info no-icon">
-            <p>Definition. If $\mathbb{G}$ is a group, a set $\mathbb{H}\subseteq \mathbb{G}$ is a <strong>subgroup</strong> of $\mathbb{G}$ if $\mathbb{H}$ itself forms a group <strong>under the same operation</strong>. $\mathbb{H}$ is a <strong>strict</strong> subgroup of $\mathbb{G}$ if $\mathbb{H} \neq \mathbb{G}$.</p>
-          </div>
+<h3 id="Subgroups"><a href="#Subgroups" class="headerlink" title="Subgroups"></a>Subgroups</h3><div class="note info no-icon"><p>Definition. If $\mathbb{G}$ is a group, a set $\mathbb{H}\subseteq \mathbb{G}$ is a <strong>subgroup</strong> of $\mathbb{G}$ if $\mathbb{H}$ itself forms a group <strong>under the same operation</strong>. $\mathbb{H}$ is a <strong>strict</strong> subgroup of $\mathbb{G}$ if $\mathbb{H} \neq \mathbb{G}$.</p>
+</div>
 <p>Note that every group $\mathbb{G}$ always has the <strong>trivial subgroups</strong> $\mathbb{G}$ and $\{e\}$.</p>
-<h3 id="Modulo-Multiplication-Group"><a href="#Modulo-Multiplication-Group" class="headerlink" title="Modulo Multiplication Group"></a>Modulo Multiplication Group</h3><div class="note info no-icon">
-            <p>A modulo multiplication group $(\mathbb{Z}/n)^{*}$ is a finite group of <strong>residue classes</strong> prime to $n$ under <strong>multiplication mod</strong> $n$. $(\mathbb{Z}/n)^{*}$ is <strong>Abelian</strong> of group order $\varphi(n)$, where $\varphi(n)$ is the <strong>totient function</strong>. </p>
-          </div>
+<h3 id="Modulo-Multiplication-Group"><a href="#Modulo-Multiplication-Group" class="headerlink" title="Modulo Multiplication Group"></a>Modulo Multiplication Group</h3><div class="note info no-icon"><p>A modulo multiplication group $(\mathbb{Z}/n)^{*}$ is a finite group of <strong>residue classes</strong> prime to $n$ under <strong>multiplication mod</strong> $n$. $(\mathbb{Z}/n)^{*}$ is <strong>Abelian</strong> of group order $\varphi(n)$, where $\varphi(n)$ is the <strong>totient function</strong>. </p>
+</div>
 <p>The multiplicative group of integers modulo $n$, $(\mathbb{Z}/n)^{*}$, is very worth researching. $(\mathbb{Z}/n)^{*}:=$ <strong>invertible</strong> elements in $\{1,2,...n-1\}$ under multiplication modulo $n:=$ $\{b\in \{1,...,n-1\}|\gcd(b,n)=1 \}$. Therefore $|(\mathbb{Z}/n)^{*}|=\varphi(n)$. If $n$ is prime (which is usually denoted $p$), $|(\mathbb{Z}/p)^{*}|=p-1$.</p>
 <p>$(\mathbb{Z}/n)^{*}$ is also denoted $\mathbb{Z}^{*}_n$.</p>
 <p><br></p>
@@ -474,19 +496,20 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <p>这里想要重点提一下<strong>整数模 $n$ 乘法群</strong> $(\mathbb{Z}/n)^{*}$，这是一个很重要的群。对于它的研究起源于对模 $n$ 剩余类 (residue classes) 的研究。我们知道，对于模 $n$ 剩余类 $\{0,1,2,...,n-1\}$，若群运算 (group operation) 是加法 $+$，剩余类能够很自然的形成一个群 $(\mathbb{Z}/n)^{+}$。然而，若我们将群运算设为乘法 $\times$，剩余类并不能形成一个群。这是因为群性质要求<strong>每个群元素都具有逆元</strong> (inverse)；而在模 $n$ 剩余类中，只有与 $n$ 互质的群元素才有逆元。因此，我们将与 $n$ 不互质的元素剔除，剩下的就是整数模 $n$ 乘法群 $(\mathbb{Z}/n)^{*}$ 了。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Fermat-39-s-Little-Theorem"><a href="#Fermat-39-s-Little-Theorem" class="headerlink" title="Fermat&#39;s Little Theorem"></a>Fermat&#39;s Little Theorem</h2><div class="note info no-icon">
-            <p>Theorem. Let $\mathbb{G}$ be a finite group of order $m=|\mathbb{G}|$. Then for any $g\in \mathbb{G}$, it holds that $g^m=1$.</p>
-          </div>
+<h2 id="Fermat-39-s-Little-Theorem"><a href="#Fermat-39-s-Little-Theorem" class="headerlink" title="Fermat&#39;s Little Theorem"></a>Fermat&#39;s Little Theorem</h2><div class="note info no-icon"><p>Theorem. Let $\mathbb{G}$ be a finite group of order $m=|\mathbb{G}|$. Then for any $g\in \mathbb{G}$, it holds that $g^m=1$.</p>
+</div>
 <p>Proof. $\mathbb{G}=\{g_1,g_2,...,g_m\}$, $g\in \mathbb{G}$. $g_i\neq g_j$ for all $i,j$, therefore $gg_i\neq gg_j$ for all $i,j$. Therefore with the <strong>closure</strong> property of the group $\mathbb{G}$, $\{gg_1,gg_2,...gg_m\}$ is a <strong>permutation</strong> of $\{g_1,g_2,...,g_m\}$. Then we have $(gg_1)(gg_2)...(gg_m)=g_1g_2...g_m$, which could be reduced to $g^m=1$.</p>
 <p>We could see the <strong>similarity</strong> between the proof of Fermat&#39;s little theorem and Euler&#39;s theorem. In fact, <u><strong>Fermat&#39;s little theorem is the general form of Euler&#39;s theorem</strong></u>. Let $\mathbb{G}$ be the modulo multiplication group $(\mathbb{Z}/n)^{*}$, one could derive the Euler&#39;s theorem.</p>
-<h3 id="Corollary-1"><a href="#Corollary-1" class="headerlink" title="Corollary 1"></a>Corollary 1</h3><div class="note info no-icon">
-            <p>Corollary (Fermat&#39;s Little Theorem). Let $\mathbb{G}$ be a finite group of order $m$. Then for any $g\in \mathbb{G}$, and any integer $x$, we have $g^x=g^{[x\mod m]}$.</p>
-          </div>
+<h3 id="Corollary-1"><a href="#Corollary-1" class="headerlink" title="Corollary 1"></a>Corollary 1</h3><div class="note info no-icon"><p>Corollary (Fermat&#39;s Little Theorem). Let $\mathbb{G}$ be a finite group of order $m$. Then for any $g\in \mathbb{G}$, and any integer $x$, we have $g^x=g^{[x\mod m]}$.</p>
+</div>
 <p>Many exponents calculation could be simplified using this corollary. </p>
 <p>For example, if computing $5^{1000}\mod 11$, we could see $5\in (\mathbb{Z}/11)^{*}$ since $\gcd(5,11)=1$. Applying the above corollary $5^{1000}\mod{11}=5^{[1000\mod \varphi(11)]}\mod{11}=5^{[1000\mod{10}]}\mod{11}=1$.</p>
-<h3 id="Corollary-2"><a href="#Corollary-2" class="headerlink" title="Corollary 2"></a>Corollary 2</h3><div class="note info no-icon">
-            <p>Corollary (Fermat&#39;s Little Theorem). Let $\mathbb{G}$ be a finite group of order $m$. Let $e&gt;0$ be an integer, and define the function, $f_e:\mathbb{G}\to \mathbb{G}$ by $f_e(g)=g^e$.</p><ul><li>If $\gcd(e,m)=1$, then $f_e$ is a <strong>permutation</strong>, i.e., a <strong>bijection</strong>.</li><li>Moreover, if $d=e^{-1}\mod{m}$, then $f_d$ is the inverse of $f_e$.</li></ul>
-          </div>
+<h3 id="Corollary-2"><a href="#Corollary-2" class="headerlink" title="Corollary 2"></a>Corollary 2</h3><div class="note info no-icon"><p>Corollary (Fermat&#39;s Little Theorem). Let $\mathbb{G}$ be a finite group of order $m$. Let $e&gt;0$ be an integer, and define the function, $f_e:\mathbb{G}\to \mathbb{G}$ by $f_e(g)=g^e$.</p>
+<ul>
+<li>If $\gcd(e,m)=1$, then $f_e$ is a <strong>permutation</strong>, i.e., a <strong>bijection</strong>.</li>
+<li>Moreover, if $d=e^{-1}\mod{m}$, then $f_d$ is the inverse of $f_e$.</li>
+</ul>
+</div>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
@@ -496,13 +519,11 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 </blockquote>
 <p><br></p>
 <h2 id="Cyclic-Groups-and-Generators"><a href="#Cyclic-Groups-and-Generators" class="headerlink" title="Cyclic Groups and Generators"></a>Cyclic Groups and Generators</h2><p>Before stepping into the definition of <strong>cyclic groups</strong>, we introduce the definition of <strong>order of a group element</strong>. </p>
-<div class="note info no-icon">
-            <p>Definition. <strong>The order of a group element</strong> $g\in \mathbb{G}$ is the <strong>smallest positive integer</strong> $r$ such that $g^r=1$, and is denoted by $ord(g)$.</p>
-          </div>
+<div class="note info no-icon"><p>Definition. <strong>The order of a group element</strong> $g\in \mathbb{G}$ is the <strong>smallest positive integer</strong> $r$ such that $g^r=1$, and is denoted by $ord(g)$.</p>
+</div>
 <p>Note the distinction between the two concepts <strong>the order of a group</strong> and <strong>the order of a group element</strong>.</p>
-<div class="note info no-icon">
-            <p>Definition. If an element $g\in \mathbb{G}$ has order $|\mathbb{G}|$, then $\mathbb{G}$ is a <strong>cyclic group</strong> and can be denoted by $\mathbb{G}=\langle g \rangle$. We call $g$ the <strong>generator</strong> of $\mathbb{G}$.</p>
-          </div>
+<div class="note info no-icon"><p>Definition. If an element $g\in \mathbb{G}$ has order $|\mathbb{G}|$, then $\mathbb{G}$ is a <strong>cyclic group</strong> and can be denoted by $\mathbb{G}=\langle g \rangle$. We call $g$ the <strong>generator</strong> of $\mathbb{G}$.</p>
+</div>
 <p>Therefore, if $\mathbb{G}$ is a <strong>cyclic group</strong> and $|\mathbb{G}|=m$, there must exists a <strong>generator</strong> $g\in\mathbb{G}$ that could generate the whole group by constantly multiplying itself, i.e., $\{g, g^2, ..., g^m\}=\mathbb{G}$.</p>
 <p><br></p>
 <blockquote>
@@ -512,9 +533,8 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <p>正整数 $m$ 有原根 (群 $(\mathbb{Z}/m)^{*}$ 为循环群) 的<strong>充要条件</strong>为：它能表达为下列形式之一 $2,4,p^n,2p^n$，其中 $p$ 为奇素数。且若 $m$ 有原根，其原根的个数为 $\varphi(\varphi(m))$。部分证明 ($m$ 为质数) 见我的 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/VeniVidiVici/p/17214675.html">CnBlogs: 循环群</a>；这里还提到，任意<strong>质数阶群 (group of prime order) 一定是循环群</strong>。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning">
-            <p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
-          </div>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning"><p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
+</div>
 <p>Course textbook: </p>
 <p><em>Introduction to Modern Cryptography (2nd edition)</em>, Katz, J. &amp; Lindell, Y., (2015), CRC Press, <a target="_blank" rel="noopener" href="https://ebookcentral.proquest.com/lib/HKUHK/detail.action?docID=1619504">view here</a></p>
 <p>Course info:</p>
@@ -540,19 +560,21 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
     
     
     
-        
 
-<div>
-<ul class="post-copyright">
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
   <li class="post-copyright-author">
-    <strong>Post author:  </strong>XXZ
+      <strong>Post author:  </strong>XXZ
   </li>
   <li class="post-copyright-link">
-    <strong>Post link: </strong>
-    <a href="https://www.thisisxxz.com/2023/06/02/Cryptography-COMP3357-2/" title="COMP3357 notes P2">https://www.thisisxxz.com/2023/06/02/Cryptography-COMP3357-2/</a>
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2023/06/02/Cryptography-COMP3357-2/" title="COMP3357 notes P2">https://www.thisisxxz.com/2023/06/02/Cryptography-COMP3357-2/</a>
   </li>
   <li class="post-copyright-license">
-    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
   </li>
 </ul>
 </div>
@@ -563,8 +585,6 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
         </span>
       </div>
     </div>
-
-      <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/cryptography/" rel="tag"><i class="fa fa-tag"></i> cryptography</a>
               <a href="/tags/course-notes/" rel="tag"><i class="fa fa-tag"></i> course notes</a>
@@ -574,276 +594,74 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 
         
 
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2023/06/01/blog-update-log/" rel="prev" title="Blog Update Logs">
-      <i class="fa fa-chevron-left"></i> Blog Update Logs
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/06/05/Cryptography-COMP3357-3/" rel="next" title="COMP3357 notes P3">
-      COMP3357 notes P3 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
-
-
-
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/06/01/blog-update-log/" rel="prev" title="Blog Update Logs">
+                  <i class="fa fa-chevron-left"></i> Blog Update Logs
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/06/05/Cryptography-COMP3357-3/" rel="next" title="COMP3357 notes P3">
+                  COMP3357 notes P3 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
           </div>
-          
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
     <div class="comments" id="valine-comments"></div>
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          Table of Contents
-        </li>
-        <li class="sidebar-nav-overview">
-          Overview
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Multiplicative-Inverse"><span class="nav-number">1.</span> <span class="nav-text">Multiplicative Inverse</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Euler-39-s-Totient-Function"><span class="nav-number">2.</span> <span class="nav-text">Euler&#39;s Totient Function</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation-Linear-Sieve"><span class="nav-number">2.1.</span> <span class="nav-text">Code Implementation: Linear Sieve</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Euler-39-s-Theorem"><span class="nav-number">2.2.</span> <span class="nav-text">Euler&#39;s Theorem</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Extended-Euclidean-Algorithm-eGCD"><span class="nav-number">3.</span> <span class="nav-text">Extended Euclidean Algorithm (eGCD)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation"><span class="nav-number">3.1.</span> <span class="nav-text">Code Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-eGCD-to-get-Inverse"><span class="nav-number">3.2.</span> <span class="nav-text">Using eGCD to get Inverse</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chinese-Remainder-Theorem-CRT"><span class="nav-number">4.</span> <span class="nav-text">Chinese Remainder Theorem (CRT)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation-1"><span class="nav-number">4.1.</span> <span class="nav-text">Code Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Quadratic-Residue"><span class="nav-number">5.</span> <span class="nav-text">Quadratic Residue</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Legendre-Symbol"><span class="nav-number">5.1.</span> <span class="nav-text">Legendre Symbol</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Euler-39-s-Criterion"><span class="nav-number">5.2.</span> <span class="nav-text">Euler&#39;s Criterion</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Group-Theory-Introduction"><span class="nav-number">6.</span> <span class="nav-text">Group Theory: Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Subgroups"><span class="nav-number">6.1.</span> <span class="nav-text">Subgroups</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Modulo-Multiplication-Group"><span class="nav-number">6.2.</span> <span class="nav-text">Modulo Multiplication Group</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fermat-39-s-Little-Theorem"><span class="nav-number">7.</span> <span class="nav-text">Fermat&#39;s Little Theorem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Corollary-1"><span class="nav-number">7.1.</span> <span class="nav-text">Corollary 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Corollary-2"><span class="nav-number">7.2.</span> <span class="nav-text">Corollary 2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cyclic-Groups-and-Generators"><span class="nav-number">8.</span> <span class="nav-text">Cyclic Groups and Generators</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <a href="/about/">
-      <img class="site-author-image" itemprop="image" alt="XXZ"
-        src="/uploads/avatar-sumire.jpg">
-    </a>
-  <p class="site-author-name" itemprop="name">XXZ</p>
-  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
 </div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">14</span>
-          <span class="site-state-item-name">posts</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-            <a href="/categories/">
-          
-        <span class="site-state-item-count">10</span>
-        <span class="site-state-item-name">categories</span></a>
-      </div>
-      <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
-        <span class="site-state-item-count">34</span>
-        <span class="site-state-item-name">tags</span></a>
-      </div>
-  </nav>
-</div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
-      </span>
-  </div>
+  </main>
 
+  <footer class="footer">
+    <div class="footer-inner">
 
-  <div class="links-of-blogroll motion-element">
-    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
-      Here comes the links!
-    </div>
-    <ul class="links-of-blogroll-list">
-        <li class="links-of-blogroll-item">
-          <a href="http://bing.com/" title="http:&#x2F;&#x2F;bing.com" rel="noopener" target="_blank">Testing...</a>
-        </li>
-    </ul>
-  </div>
-  <div class="cc-license motion-element" itemprop="license">
-    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
-  </div>
-
-<div class="feed-link motion-element">
-  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
-</div>
-
-      </div>
-        <div class="back-to-top motion-element">
-          <i class="fa fa-arrow-up"></i>
-          <span>0%</span>
-        </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
 
 <div class="copyright">
-  
-  &copy; 2019 – 
+  &copy; 
   <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">XXZ</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
   </div>
 
-        
-
-
-
-
-
-
-
-
-      </div>
-    </footer>
-  </div>
+    </div>
+  </footer>
 
   
-  <script size="70" alpha="0.35" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/pjax/pjax.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
-  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
+  <div class="reading-progress-bar"></div>
 
-<script src="/js/utils.js"></script>
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
-<script src="/js/motion.js"></script>
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 
-<script src="/js/schemes/pisces.js"></script>
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
 
 
-<script src="/js/next-boot.js"></script>
 
-  <script>
-var pjax = new Pjax({
-  selectors: [
-    'head title',
-    '#page-configurations',
-    '.content-wrap',
-    '.post-toc-wrap',
-    '.languages',
-    '#pjax'
-  ],
-  switches: {
-    '.post-toc-wrap': Pjax.switches.innerHTML
-  },
-  analytics: false,
-  cacheBust: false,
-  scrollTo : !CONFIG.bookmark.enable
-});
 
-window.addEventListener('pjax:success', () => {
-  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
-    var code = element.text || element.textContent || element.innerHTML || '';
-    var parent = element.parentNode;
-    parent.removeChild(element);
-    var script = document.createElement('script');
-    if (element.id) {
-      script.id = element.id;
-    }
-    if (element.className) {
-      script.className = element.className;
-    }
-    if (element.type) {
-      script.type = element.type;
-    }
-    if (element.src) {
-      script.src = element.src;
-      // Force synchronous loading of peripheral JS.
-      script.async = false;
-    }
-    if (element.dataset.pjax !== undefined) {
-      script.dataset.pjax = '';
-    }
-    if (code !== '') {
-      script.appendChild(document.createTextNode(code));
-    }
-    parent.appendChild(script);
-  });
-  NexT.boot.refresh();
-  // Define Motion Sequence & Bootstrap Motion.
-  if (CONFIG.motion.enable) {
-    NexT.motion.integrator
-      .init()
-      .add(NexT.motion.middleWares.subMenu)
-      .add(NexT.motion.middleWares.postList)
-      .bootstrap();
-  }
-  NexT.utils.updateSidebarPosition();
-});
-</script>
-
+  <script src="/js/third-party/fancybox.js"></script>
 
 
 
@@ -853,79 +671,11 @@ window.addEventListener('pjax:success', () => {
 
 
   
-<script src="/js/local-search.js"></script>
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-    <div id="pjax">
-  
-
-  
-      
-
-<script>
-  if (typeof MathJax === 'undefined') {
-    window.MathJax = {
-      loader: {
-        source: {
-          '[tex]/amsCd': '[tex]/amscd',
-          '[tex]/AMScd': '[tex]/amscd'
-        }
-      },
-      tex: {
-        inlineMath: {'[+]': [['$', '$']]},
-        tags: 'ams'
-      },
-      options: {
-        renderActions: {
-          findScript: [10, doc => {
-            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-              const display = !!node.type.match(/; *mode=display/);
-              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-              const text = document.createTextNode('');
-              node.parentNode.replaceChild(text, node);
-              math.start = {node: text, delim: '', n: 0};
-              math.end = {node: text, delim: '', n: 0};
-              doc.math.push(math);
-            });
-          }, '', false],
-          insertedScript: [200, () => {
-            document.querySelectorAll('mjx-container').forEach(node => {
-              let target = node.parentNode;
-              if (target.nodeName.toLowerCase() === 'li') {
-                target.parentNode.classList.add('has-jax');
-              }
-            });
-          }, '', false]
-        }
-      }
-    };
-    (function () {
-      var script = document.createElement('script');
-      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
-      script.defer = true;
-      document.head.appendChild(script);
-    })();
-  } else {
-    MathJax.startup.document.state(0);
-    MathJax.texReset();
-    MathJax.typeset();
-  }
-</script>
-
-    
-
-  
 
   <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
   <script>
@@ -937,35 +687,19 @@ window.addEventListener('pjax:success', () => {
       new needShareButton('#needsharebutton-postbottom', pbOptions);
   </script>
 
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://thisisxxz.com/","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/06/02/Cryptography-COMP3357-2/"}</script>
 <script>
-NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
-  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
-    var GUEST = ['nick', 'mail', 'link'];
-    var guest = 'nick,mail';
-    guest = guest.split(',').filter(item => {
-      return GUEST.includes(item);
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
     });
-    new Valine({
-      el         : '#valine-comments',
-      verify     : false,
-      notify     : false,
-      appId      : 'LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz',
-      appKey     : 'V7I2yuRh1bALJ9vrRQlXOBDh',
-      placeholder: "Sound! Euphonium",
-      avatar     : 'retro',
-      meta       : guest,
-      pageSize   : '5' || 10,
-      visitor    : false,
-      lang       : 'en' || 'zh-cn',
-      path       : location.pathname,
-      recordIP   : false,
-      serverURLs : ''
-    });
-  }, window.Valine);
 });
 </script>
-
-    </div>
 
   
 

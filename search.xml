@@ -4,7 +4,7 @@
     <title>Blog Update Logs</title>
     <url>/2023/06/01/blog-update-log/</url>
     <content><![CDATA[<p>本博客的更新日志。</p>
-<p>version info: <code>hexo:6.3.0</code>, <code>hexo-cli:4.3.1</code>, <code>NexT:7.8.0</code>, <code>node:18.16.0</code>, <code>git:2.39.1.windows.1</code></p>
+<p>version info: <code>hexo:6.3.0</code>, <code>hexo-cli:4.3.1</code>, <code>NexT 8.17.0</code>, <code>node:18.16.0</code>, <code>git:2.39.1.windows.1</code></p>
 <span id="more"></span>
 <p><br></p>
 <h2 id="Version-1-0"><a href="#Version-1-0" class="headerlink" title="Version 1.0"></a>Version 1.0</h2><p>23.5.2023: 本站成功建立！采用 <a href="https://hexo.io/">Hexo</a> 搭建静态博客框架并部署至 Github Pages。</p>
@@ -78,6 +78,14 @@
 </ul>
 <p><img src="/2023/06/01/blog-update-log/kumiko.jpg" alt="なんですか、これ"></p>
 <p>12.6.2023: 一直有移动端访问博客文字不显示的问题。但是打开 VPN 后加载却很快，怀疑是由于默认的 Google fonts host <code>fonts.googleapis.com</code> 加载不稳定。遂将其更改为 <code>fonts.font.im</code>。</p>
+<p>14.6.2023: (重大更新) 将 NexT 版本由 <code>7.8.0</code> 更新至 latest <code>8.17.0</code>。基本复现了之前所做的所有侵入式更改。仍有两个问题待解决：</p>
+<ul>
+<li><code>NeedMoreShare2</code> 插件显示位置出现问题。已提交 issue。</li>
+<li>新版本取消了对 Valine 的支持。重新加载 Valine 后评论消失。</li>
+</ul>
+<p><br></p>
+<h2 id="Intrusive-Cusromization"><a href="#Intrusive-Cusromization" class="headerlink" title="Intrusive Cusromization"></a>Intrusive Cusromization</h2><p>侵入式更改涉及到对以下文件的修改：(根目录为 <code>/themes/next/</code>)</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/layout/:</span><br><span class="line">- _custom/:</span><br><span class="line">    - custom.njk</span><br><span class="line">- _macro/:</span><br><span class="line">    - pessage-end-tag.njk</span><br><span class="line">    - post.njk</span><br><span class="line">- _partials/:</span><br><span class="line">    - post/post-meta.njk</span><br><span class="line">    - head/head.njk</span><br><span class="line">    - sidebar/site-overview.njk</span><br><span class="line">- layout.njk </span><br><span class="line"></span><br><span class="line">/source/js/:</span><br><span class="line">- cursor/:</span><br><span class="line">    - explosion.min.js</span><br><span class="line">    - fireworks.js</span><br><span class="line">- tw-cn.js</span><br><span class="line"></span><br><span class="line">/source/css/:</span><br><span class="line">- _common/components/post/post-header.styl</span><br><span class="line">- _variables/:</span><br><span class="line">    - base.styl</span><br><span class="line">    - Pisces.styl</span><br></pre></td></tr></table></figure>
 <p><br></p>
 ]]></content>
       <categories>
@@ -118,7 +126,8 @@
 <li><a href="http://thisisxxz.com/2023/06/09/CFE149T6/">CF Educational Round #149 <em>Problem F</em> Editorial for Two</a></li>
 </ul>
 <p><br></p>
-<h3 id="CF-Educational-Round-150-Div-2"><a href="#CF-Educational-Round-150-Div-2" class="headerlink" title="CF Educational Round #150 (Div.2)"></a>CF Educational Round #150 (Div.2)</h3><p><a href="https://codeforces.com/contest/1841">link</a>。我好菜 😿卡在 C 了，明明看起来很简单。看评论区大部分也是在 C 折戟了。A 和 B 这次倒是做的很快，15 min 做完了，一个贪心一个简单规律。好伤心！明天把剩下的题补一补。也要吸取教训，过了 30 min 没想出来就去看下一题，不要死磕到底。(不过作为训练这样也是可以的吧？大概？)     </p>
+<h3 id="CF-Educational-Round-150-Div-2"><a href="#CF-Educational-Round-150-Div-2" class="headerlink" title="CF Educational Round #150 (Div.2)"></a>CF Educational Round #150 (Div.2)</h3><p><a href="https://codeforces.com/contest/1841">link</a>。我好菜 😿卡在 C 了，明明看起来很简单。看评论区大部分也是在 C 折戟了。A 和 B 这次倒是做的很快，15 min 做完了，一个贪心一个简单规律。好伤心！明天把剩下的题补一补。</p>
+<p>补题的时候发现，D 题是一个很套路的 DP，如果先打 D 就好了。通过这次要吸取教训，过了 30 min 没想出来就去看下一题，不要死磕到底。(不过作为训练这样也是可以的吧？大概？) </p>
 ]]></content>
       <categories>
         <category>logs</category>
@@ -127,6 +136,92 @@
         <tag>programming</tag>
         <tag>plan</tag>
         <tag>log</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Codeforces 1841E Fill the Matrix</title>
+    <url>/2023/06/13/CFE150T5/</url>
+    <content><![CDATA[<p>题目来自 Codeforces Educational Round #150 (Div.2) E。<a href="https://codeforces.com/contest/1841/problem/E">link</a></p>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>&emsp; This article provides a <strong>feasible</strong> solution to a certain competitive programming problem.<br>&emsp; If you have better solutions, feel free to share with me!</p>
+</div>
+<p><br></p>
+<h2 id="Problem-Description"><a href="#Problem-Description" class="headerlink" title="Problem Description"></a>Problem Description</h2><p>原题题面讲的有点复杂，这里采用 <a href="https://space.bilibili.com/206214">@灵茶山艾府</a> 的翻译：</p>
+<p>给出一个 $n\times n$ 的矩阵，第 $i$ <strong>列</strong>的前 $a_i$ <strong>行</strong>是白色，其余行是黑色 (初始局面)。要求从中选出至多 $m$ 个白色格子，再将剩余的格子涂黑。</p>
+<p>长为 $x$ 的水平连续白色格子对答案的贡献是 $x-1$，求答案的最大值。</p>
+<p><br></p>
+<h2 id="Tutorial"><a href="#Tutorial" class="headerlink" title="Tutorial"></a>Tutorial</h2><p><br></p>
+<h2 id="Code-Implementation"><a href="#Code-Implementation" class="headerlink" title="Code Implementation"></a>Code Implementation</h2><p><br></p>
+]]></content>
+      <categories>
+        <category>solution</category>
+        <category>programming</category>
+      </categories>
+      <tags>
+        <tag>greedy</tag>
+        <tag>divide and conquer</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Codeforces 1841D Pairs of Segments</title>
+    <url>/2023/06/13/CFE150T4/</url>
+    <content><![CDATA[<p>题目来自 Codeforces Educational Round #150 (Div.2) D。<a href="https://codeforces.com/contest/1841/problem/D">link</a></p>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>&emsp; This article provides a <strong>feasible</strong> solution to a certain competitive programming problem.<br>&emsp; If you have better solutions, feel free to share with me!</p>
+</div>
+<p><br></p>
+<h2 id="Problem-Description"><a href="#Problem-Description" class="headerlink" title="Problem Description"></a>Problem Description</h2><p>给出 $n$ 个闭区间 $[l_1,r_1], [l_2,r_2], ..., [l_n,r_n]$。你需要去除其中的 $k$ 个区间，满足：可以将剩下的区间分为 $\frac{n-k}{2}$ 对，使得<strong>每一对区间有交集，且与其他对的区间没有交集</strong>。输出 $k$ 的最小值。</p>
+<p>$1\leq t\leq 1000, 2\leq n\leq 2000, 0\leq l_i\leq r_i\leq 10^9$。</p>
+<p> <br></p>
+<h2 id="Tutorial"><a href="#Tutorial" class="headerlink" title="Tutorial"></a>Tutorial</h2><p>首先注意到 &quot;区间没有交集&quot; 这一经典的区间 DP 性质，这为题目的解决提供了<strong>单调性</strong>。若我们将所有区间按照左端点排序，那么对于 $i&lt;j&lt;k$，如果区间 $i$ 与区间 $j$ 不相交，它与区间 $k$ 也不相交。</p>
+<p>根据这个事实我们有结论，对于选定的区间 $i$，若我们要选择相交的区间 $j$ 与之配对，那么区间 $j$ 的<strong>右端点越小越好</strong>；因为一旦 $j$ 被确定，所有左端点 $&lt; j$ 右端点的区间都将被去除。</p>
+<p>在左区间选定的情况下存在选择右区间的最佳策略，于是考虑<strong>倒序</strong>进行 DP：令 $dp[i]$ 为第 $[i,n]$ 个区间中我们最多能够选取的区间的数量，那么最终的答案 $k_{min}=n-dp[1]$。考虑选取/不选取第 $i$ 个区间进行转移：</p>
+<ul>
+<li>不选取区间 $i$。此时 $dp[i]=\max(dp[i], dp[i+1])$。</li>
+<li>选取区间 $i$。此时我们需要找到一个与区间 $i$ 相交的，且<strong>右端点最小</strong>的区间 $j$ 与之配对。找到区间 $j$ 后，所有与区间 $i$ 与区间 $j$ 相交的区间将被去除。因此 $dp[i]=dp[k]+2$，$k$ 为 $[j+1,n]$ 中<strong>最左边 (leftmost)</strong> 的，不与区间 $i$ 与区间 $j$ 相交的区间。</li>
+</ul>
+<p><img src="/2023/06/13/CFE150T4/sol.png" alt="Solution from silxi"></p>
+<p><br></p>
+<h2 id="Code-Implementation"><a href="#Code-Implementation" class="headerlink" title="Code Implementation"></a>Code Implementation</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_N = <span class="number">2010</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">segment</span> &#123;</span><br><span class="line">    <span class="type">int</span> l, r;</span><br><span class="line">    <span class="type">bool</span> <span class="keyword">operator</span> &lt; (<span class="type">const</span> segment&amp; x) <span class="type">const</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (l == x.l) ? r &lt; x.r : l &lt; x.l;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; seg[MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> dp[MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    ios_base::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="number">0</span>); cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> t;</span><br><span class="line">    cin &gt;&gt; t;</span><br><span class="line">    <span class="keyword">while</span> (t--) &#123;</span><br><span class="line">        <span class="type">int</span> n;</span><br><span class="line">        cin &gt;&gt; n;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)    cin &gt;&gt; seg[i].l &gt;&gt; seg[i].r;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n + <span class="number">1</span>; ++i)    dp[i] = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">sort</span>(seg + <span class="number">1</span>, seg + n + <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = n; i &gt;= <span class="number">1</span>; --i) &#123;</span><br><span class="line">            dp[i] = <span class="built_in">max</span>(dp[i], dp[i + <span class="number">1</span>]);</span><br><span class="line">            <span class="type">int</span> j = <span class="number">0</span>, minr = <span class="number">1e9</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> p = i + <span class="number">1</span>; p &lt;= n; ++p) &#123;</span><br><span class="line">                <span class="keyword">if</span> (seg[p].l &lt;= seg[i].r) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (seg[p].r &lt;= minr) &#123;</span><br><span class="line">                        minr = seg[p].r;</span><br><span class="line">                        j = p;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (!j) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="type">int</span> k = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> p = j + <span class="number">1</span>; p &lt;= n; ++p) &#123;</span><br><span class="line">                <span class="keyword">if</span> (seg[p].l &gt; <span class="built_in">max</span>(seg[i].r, seg[j].r)) &#123;</span><br><span class="line">                    k = p;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            dp[i] = <span class="built_in">max</span>(dp[i], dp[k] + <span class="number">2</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        cout &lt;&lt; n - dp[<span class="number">1</span>] &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+]]></content>
+      <categories>
+        <category>solutions</category>
+        <category>programming</category>
+      </categories>
+      <tags>
+        <tag>DP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Codeforces 1841C Ranom Numbers</title>
+    <url>/2023/06/13/CFE150T3/</url>
+    <content><![CDATA[<p>题目来自 Codeforces Educational Round #150 (Div.2) C。<a href="https://codeforces.com/contest/1841/problem/C">link</a></p>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>&emsp; This article provides a <strong>feasible</strong> solution to a certain competitive programming problem.<br>&emsp; If you have better solutions, feel free to share with me!</p>
+</div>
+<p><br></p>
+<h2 id="Problem-Description"><a href="#Problem-Description" class="headerlink" title="Problem Description"></a>Problem Description</h2><p>定义 $A=1, B=10, C=100, D=1000, E=10000$，输入一个只包含 $A-E$ 的字符串 $s$。</p>
+<p>我们定义 $s$ 中某个字符 $s_i$ 的价值 $v_i$ 为：</p>
+<ul>
+<li>存在 $j&gt;i$ 使得 $s_j&gt;s_i$，则 $v_i$ 为 $s_i$ 所对应数字的<strong>相反数</strong></li>
+<li>Otherwise，$v_i$ 为 $s_i$ 所对应的数字</li>
+</ul>
+<p>定义字符串 $s$ 的价值为其中所有字符价值之和 $\sum v_i$，你可以修改<strong>至多一个字符</strong>，使得修改过后的字符串 $s&#39;$ 的价值最大，并求出该最大值。$1\leq |s|\leq 2\times10^5, 1\leq t\leq 10^4$。</p>
+<p> <br></p>
+<h2 id="Tutorial"><a href="#Tutorial" class="headerlink" title="Tutorial"></a>Tutorial</h2><p>虽然最后顺着考试时的思路做出来了，但是非常的丑陋，代码就不放在这里贻笑大方了。思路很简单：枚举每一个 $s_i$ ，计算将其分别改成 $A-E$ 时对答案造成的影响并取最大值。然而这样做需要分类讨论，代码十分的 lengthy 且 error-prone。因此不仅时间复杂度是堪堪可过的 $O($大常数 $5n)$，实现起来也让人晕头转向。</p>
+<p><br></p>
+<h2 id="Code-Implementation"><a href="#Code-Implementation" class="headerlink" title="Code Implementation"></a>Code Implementation</h2><p><br></p>
+]]></content>
+      <categories>
+        <category>solutions</category>
+        <category>programming</category>
+      </categories>
+      <tags>
+        <tag>greedy</tag>
       </tags>
   </entry>
   <entry>
@@ -187,18 +282,23 @@
 <li><strong>Write-once-read-many</strong> operations. It means you can <strong>NOT</strong> edit an existing files but can append new data to them.</li>
 </ul>
 <p>Replication guarentees the fault tolerance of HDFS.</p>
-<div class="note info no-icon">
-            <p>Concepts.</p><p><strong>Blocks</strong>: Minimum amount of data that can be read of written. Fault tolerance provided.<br><strong>Nodes</strong>: Single system which is responsible to store and process data. </p><ul><li>Primary/Name nodes: Regulates file access to clients and assigns tasks to secondary nodes.</li><li>Secondary/Data nodes: Executes the instructions from primary nodes.</li></ul>
-          </div>
+<div class="note info no-icon"><p>Concepts.</p>
+<p><strong>Blocks</strong>: Minimum amount of data that can be read of written. Fault tolerance provided.<br><strong>Nodes</strong>: Single system which is responsible to store and process data. </p>
+<ul>
+<li>Primary/Name nodes: Regulates file access to clients and assigns tasks to secondary nodes.</li>
+<li>Secondary/Data nodes: Executes the instructions from primary nodes.</li>
+</ul>
+</div>
 <p><br></p>
 <h2 id="Introduction-to-Hive"><a href="#Introduction-to-Hive" class="headerlink" title="Introduction to Hive"></a>Introduction to Hive</h2><p>Hive is a <strong>data warehouse software</strong> within Hadoop that is designed for reading, writing and managing <strong>tabular-type datasets</strong> and data analysis. </p>
 <ul>
 <li>It is scalable, fast, and easy to use.</li>
 <li>Hive works very similar to traditional Relational Database Management System (RDBMS). Hive Query Language (HiveQL) is also <strong>inspired by SQL</strong>.</li>
 </ul>
-<div class="note info no-icon">
-            <p>Concepts.</p><p><strong>Data warehouse</strong>: stores historical data from different sources for analyzing and extracting.</p><p><strong>Relational Database Management System (RDBMS)</strong>: stores data in a <strong>structured format tabular form</strong>. Structured Query Language (SQL) is most used in RDBMS.</p>
-          </div>
+<div class="note info no-icon"><p>Concepts.</p>
+<p><strong>Data warehouse</strong>: stores historical data from different sources for analyzing and extracting.</p>
+<p><strong>Relational Database Management System (RDBMS)</strong>: stores data in a <strong>structured format tabular form</strong>. Structured Query Language (SQL) is most used in RDBMS.</p>
+</div>
 <p>Hive architecture consists of Hive Client, Hive Services and Hive Storage &amp; Computing.</p>
 <p><img src="/2023/06/11/intro-to-hadoop/hive.png" alt="Hive Architecture"></p>
 <ul>
@@ -308,9 +408,8 @@
 </tbody>
 </table>
 </div>
-<div class="note info no-icon">
-            <p>Examples. <strong>Structured data</strong>: personal ID, address, phone number. <strong>Semi-structured data</strong>: social media posts with hash tags <code>#</code>. <strong>Unstructured data</strong>: pictures, videos.</p>
-          </div>
+<div class="note info no-icon"><p>Examples. <strong>Structured data</strong>: personal ID, address, phone number. <strong>Semi-structured data</strong>: social media posts with hash tags <code>#</code>. <strong>Unstructured data</strong>: pictures, videos.</p>
+</div>
 <h3 id="Big-Data-Characteristics-4V-39-s"><a href="#Big-Data-Characteristics-4V-39-s" class="headerlink" title="Big Data Characteristics: 4V&#39;s"></a>Big Data Characteristics: 4V&#39;s</h3><ul>
 <li><strong>V</strong>elocity: Big Data is being generated extremely <strong>fast</strong>, and the process <strong>NEVER stops</strong>.</li>
 <li><strong>V</strong>olume: the amount of Big Data generated is vast.</li>
@@ -331,9 +430,8 @@
 <li>Scaling out (horizontally): adding additional nodes with the same capacity until the problem is tractable.  The most commonly used data scaling strategy.</li>
 </ul>
 <p>The individual nodes arranged horizontally are called a <strong>computing cluster</strong>. The computing clusters can solve problems that are known as &quot;<strong>embarrassingly parallel</strong>&quot; calculations.</p>
-<div class="note info no-icon">
-            <p><strong>Embarrassingly parallel (or perfectly parallel)</strong> problems are the kind of workloads that can be easily divided and run independently of one another. If one process fails, it has NO impact on the others and can easily be rerun.</p>
-          </div>
+<div class="note info no-icon"><p><strong>Embarrassingly parallel (or perfectly parallel)</strong> problems are the kind of workloads that can be easily divided and run independently of one another. If one process fails, it has NO impact on the others and can easily be rerun.</p>
+</div>
 <p>However, sorting a large data set adds significant complexity to the process, which makes the problem &quot;<strong>not so easy parallel</strong>&quot;. Therefore the multiple computations must coordinate with one another because each process needs to be aware of of the state of its peer processes.</p>
 <p>Basically, <u><strong>we are asking a cluster of computers to behave as a single computer.</strong></u> This requires sending messages across a network to each other or writing them into a <strong>file system</strong> that is accessible to all processes on the cluster. </p>
 <h3 id="Fault-Tolerance"><a href="#Fault-Tolerance" class="headerlink" title="Fault Tolerance"></a>Fault Tolerance</h3><p>Fault tolerance enables a system to continue operating properly in the event of the failure of some of its components. </p>
@@ -367,9 +465,8 @@
     <content><![CDATA[<p>题目来自 Codeforces Educational Round #149 (Div.2) F。<a href="https://codeforces.com/contest/1837/problem/F">link</a></p>
 <span id="more"></span>
 <p><br></p>
-<div class="note warning">
-            <p>&emsp; This article provides a <strong>feasible</strong> solution to a certain competitive programming problem.<br>&emsp; If you have better solutions, feel free to share with me!</p>
-          </div>
+<div class="note warning"><p>&emsp; This article provides a <strong>feasible</strong> solution to a certain competitive programming problem.<br>&emsp; If you have better solutions, feel free to share with me!</p>
+</div>
 <p><br></p>
 <h2 id="Problem-Description"><a href="#Problem-Description" class="headerlink" title="Problem Description"></a>Problem Description</h2><p>给出长度为 $n$ 的数列 $\{a_1,a_2,...,a_n\}$ $(1\leq a_i\leq10^9)$，选出一个长度为 $k$ 的子序列 $(1\leq k\leq n\leq 3\cdot 10^5)$，并将该子序列分为左右两部分。找到合适的划分方案，使得 $\{\max($左侧元素之和，右侧元素之和$)\}$ 最小，并求出该最小值。数据组数 $1\leq t\leq 10^4$，保证 $\sum n\leq 3\times 10^5$。</p>
 <p><br></p>
@@ -398,9 +495,8 @@
     <content><![CDATA[<p>题目来自 Codeforces Round #878 (Div.3) G。<a href="https://codeforces.com/contest/1840/problem/G1">link (easy)</a>, <a href="https://codeforces.com/contest/1840/problem/G2">link (hard)</a></p>
 <span id="more"></span>
 <p><br></p>
-<div class="note warning">
-            <p>&emsp; This article provides a <strong>feasible</strong> solution to a certain competitive programming problem.<br>&emsp; If you have better solutions, feel free to share with me!</p>
-          </div>
+<div class="note warning"><p>&emsp; This article provides a <strong>feasible</strong> solution to a certain competitive programming problem.<br>&emsp; If you have better solutions, feel free to share with me!</p>
+</div>
 <p><br></p>
 <h2 id="Problem-Description"><a href="#Problem-Description" class="headerlink" title="Problem Description"></a>Problem Description</h2><p>一个转盘分为 $n$ 块 ($1\leq n\leq 10^6$) ，上面的数字是 $1-n$ 的一个<strong>排列</strong>。你并不知道 $n$ 的值。</p>
 <p>初始时，指针指向数字 $x$。你可以向评测机询问从当前状态顺时针 ($+$) 或逆时针 ($-$) 旋转 $k$ 块后，指针指向的数字是多少。你可以询问至多 $2023$ (easy version) 或 $1000$ (hard version) 次。</p>
@@ -445,9 +541,8 @@
     <content><![CDATA[<p>题目来自 Codeforces Round #878 (Div.3) F。<a href="https://codeforces.com/contest/1840/problem/F">link</a></p>
 <span id="more"></span>
 <p><br></p>
-<div class="note warning">
-            <p>&emsp; This article provides a <strong>feasible</strong> solution to a certain competitive programming problem.<br>&emsp; If you have better solutions, feel free to share with me!</p>
-          </div>
+<div class="note warning"><p>&emsp; This article provides a <strong>feasible</strong> solution to a certain competitive programming problem.<br>&emsp; If you have better solutions, feel free to share with me!</p>
+</div>
 <p><br></p>
 <h2 id="Problem-Description"><a href="#Problem-Description" class="headerlink" title="Problem Description"></a>Problem Description</h2><p>在 $t=0$ 秒，玩家在 $(0,0)$。玩家的目的地在右下角 $(n,m)$ $(1\leq n\cdot m\leq 10^4)$。每一秒，玩家可以：(1) 向右移动 (2) 向下移动 (3) 原地不动。</p>
 <p>除此之外，有  $r$ ($1\leq r \leq 100$) 个轨道炮，第 $i$ 个轨道炮将在 $t=t_i$ 秒对第 $p_i$ 行<strong>或</strong>第 $q_i$ 列进行打击。</p>
@@ -481,7 +576,6 @@
       <tags>
         <tag>DP</tag>
         <tag>BFS</tag>
-        <tag>codeforces</tag>
       </tags>
   </entry>
   <entry>
@@ -492,16 +586,14 @@
 <span id="more"></span>
 <p>同样，与 CnBlogs 中的笔记不同，这里不会详细的记载每个相关的知识点；只会尝试简略地总结一些能让未来的自己也会感到有趣，巧妙的内容 (Eureka!)。</p>
 <p><br></p>
-<div class="note warning">
-            <p>&emsp; This article is a self-administered course note.<br>&emsp; It will <strong>NOT</strong> cover any exam or assignment related content.</p>
-          </div>
+<div class="note warning"><p>&emsp; This article is a self-administered course note.<br>&emsp; It will <strong>NOT</strong> cover any exam or assignment related content.</p>
+</div>
 <p><br></p>
 <h2 id="Hardness-of-Mathematical-Problems"><a href="#Hardness-of-Mathematical-Problems" class="headerlink" title="Hardness of Mathematical Problems"></a>Hardness of Mathematical Problems</h2><p>When discussing <strong>hardness</strong> of mathematical problems with input some integer $N$, we study asymptotics in terms of the <strong>input length</strong>.</p>
 <p>Integer $N$ will be assumed to be represented in binary. The <strong>running time</strong> of an algorithm taking as input an integer $N$ is measured in terms of $||N||$, the length of the binary representation of $N$. </p>
 <p>Note that $||N||=\lfloor \log N \rfloor+1$.</p>
-<div class="note info no-icon">
-            <p>A problem is considered to be <strong>easy</strong> if the running time of its algorithm is <strong>polynomial</strong> in $||N||$.</p>
-          </div>
+<div class="note info no-icon"><p>A problem is considered to be <strong>easy</strong> if the running time of its algorithm is <strong>polynomial</strong> in $||N||$.</p>
+</div>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
@@ -510,14 +602,12 @@
 </blockquote>
 <p><br></p>
 <h2 id="Factoring-Problem"><a href="#Factoring-Problem" class="headerlink" title="Factoring Problem"></a>Factoring Problem</h2><p>Factoring could be viewed as the inverse operation of multiplication. Multiplying two primes $p$ and $q$ as $N=p\times q$ is <strong>easy</strong>, while factorizing $N$ to derive $p$ and $q$ is <strong>hard</strong>.</p>
-<div class="note info no-icon">
-            <p>Factoring the product of two primes: Given $N=pq$, where $p,q$ are primes, find $p$ and $q$.</p>
-          </div>
+<div class="note info no-icon"><p>Factoring the product of two primes: Given $N=pq$, where $p,q$ are primes, find $p$ and $q$.</p>
+</div>
 <h3 id="Factoring-Experiment"><a href="#Factoring-Experiment" class="headerlink" title="Factoring Experiment"></a>Factoring Experiment</h3><p>Cryptographically, the hardness of the factoring problem is indicated by the <strong>factoring experiment</strong> $\mathtt{Factor}_{\mathscr{A}, Genmodulus}(n)$, where GenModulus is an <strong>efficient (polynomial-time)</strong> algorithm that, on input $1^n$, outputs $(N,p,q)$ where $N=pq$, and $p,q$ are $n$-bit primes except with negligible probability.</p>
 <p>Adversary $\mathscr{A}$ with $N$ needs to efficiently compute the corresponding $p,q$.</p>
-<div class="note info no-icon">
-            <p>Definition. Factoring is hard relative to GenModulus if for all <strong>probabilistic polynomial-time algorithm</strong> $\mathscr{A}$, there exists a negligible $\varepsilon(n)$ that $\Pr[\mathtt{Factor}_{\mathscr{A}, GenModulus}(n)=1]\leq \varepsilon(n)$.</p>
-          </div>
+<div class="note info no-icon"><p>Definition. Factoring is hard relative to GenModulus if for all <strong>probabilistic polynomial-time algorithm</strong> $\mathscr{A}$, there exists a negligible $\varepsilon(n)$ that $\Pr[\mathtt{Factor}_{\mathscr{A}, GenModulus}(n)=1]\leq \varepsilon(n)$.</p>
+</div>
 <p><strong>The Factoring Assumption</strong> is the assumption that there exists a GenModulus relative to which factoring is hard.</p>
 <p><br></p>
 <blockquote>
@@ -530,14 +620,12 @@
 <p>By the Corollary 2 of the Fermat&#39;s Little Theorem (see it in P2), we know that exponentiation to the $e$-th power mod $N$ is a <strong>permutation</strong> on $(\mathbb{Z}/N)^{*}$; </p>
 <p>For any $y\in (\mathbb{Z}/N)^{*}$, let $[y^{1/e} \mod{N}]$ be the unique element which yields $y$ when raised to the $e$-th power mod $N$, i.e., <strong>the $e$-th root of $y$ mod $N$</strong>. </p>
 <p>If $e\cdot d\equiv 1\pmod{\varphi(N)}$, then raising to the $d$-th power is the <strong>inverse</strong> of raising to the $e$-th power, that is, for any $g\in (\mathbb{Z}/N)^{*}$, $(g^e)^d \equiv g\pmod{N}$. Therefore, if $y=g^e$, $y^{1/e}=g=y^d\pmod{N}$.</p>
-<div class="note info no-icon">
-            <p>RSA problem is essentially finding $e$-th root of $y$ mod $N$: Given $N,e,y$, compute $[y^{1/e}\mod{N}]$. Note that $e&gt;2$ and $\gcd(e, \varphi(N))=1$, $\gcd(y, N)=1$. </p>
-          </div>
+<div class="note info no-icon"><p>RSA problem is essentially finding $e$-th root of $y$ mod $N$: Given $N,e,y$, compute $[y^{1/e}\mod{N}]$. Note that $e&gt;2$ and $\gcd(e, \varphi(N))=1$, $\gcd(y, N)=1$. </p>
+</div>
 <h3 id="RSA-Experiment"><a href="#RSA-Experiment" class="headerlink" title="RSA Experiment"></a>RSA Experiment</h3><p>Similarly, we have the RSA experiment $\mathtt{RSA}$-$\mathtt{inv}_{\mathscr{A}, GenRSA}(n)$, where GenRSA is an efficient algorithm that, on input $1^n$, outputs a modulus $N$ that is the product of two $n$-bit primes $p,q$, as well as integers $e,d&gt;0$ with $\gcd(e, \varphi(N))=1$ and $ed\equiv 1\pmod{\varphi(N)}$.</p>
 <p>Adversary $\mathscr{A}$ with $N,e$ and a <u><strong>uniform</strong></u> $y\in (\mathbb{Z}/N)^{*}$ needs to efficiently compute the corresponding $x$.</p>
-<div class="note info no-icon">
-            <p>Definition. RSA problem is hard relative to GenRSA if for all probabilistic polynomial time algorithm $\mathscr{A}$, there exists a negligible $\varepsilon(n)$ that $\Pr[\mathtt{RSAinv}_{\mathscr{A}, GenRSA}(n)=1]\leq \varepsilon(n)$.</p>
-          </div>
+<div class="note info no-icon"><p>Definition. RSA problem is hard relative to GenRSA if for all probabilistic polynomial time algorithm $\mathscr{A}$, there exists a negligible $\varepsilon(n)$ that $\Pr[\mathtt{RSAinv}_{\mathscr{A}, GenRSA}(n)=1]\leq \varepsilon(n)$.</p>
+</div>
 <p>The RSA Assumption is the assumption that there exists a GenRSA algorithm relative to which the RSA problem is hard. Note that GenRSA can be constructed from GenModulus.</p>
 <h3 id="RSA-and-Factoring"><a href="#RSA-and-Factoring" class="headerlink" title="RSA and Factoring"></a>RSA and Factoring</h3><p>The hardness of RSA problem could be <strong>reduced</strong> to the hardness of factoring problem, which is to say, one could efficiently solve RSA problem if he could efficiently solve factoring problem. </p>
 <p>Assume there exists an efficient algorithm $\mathscr{A}$ that could factorize $N$ into two distinct primes $p,q$, then we could construct an efficient $\mathscr{A}&#39;$ that could solve RSA problem.</p>
@@ -558,14 +646,12 @@
 <p><br></p>
 <h2 id="Discrete-Logarithm-Problem"><a href="#Discrete-Logarithm-Problem" class="headerlink" title="Discrete Logarithm Problem"></a>Discrete Logarithm Problem</h2><p>Fix a <strong>cyclic</strong> group $\mathbb{G}$ of order $q$, and generator $g\in\mathbb{G}$. We know that $\{g^0,g^1,...,g^{q-1}\}=\mathbb{G}$.</p>
 <p>Equilently, for every $h\in\mathbb{G}$, there is a unique $x\in \mathbb{Z}_q$, such that $g^x=h$. We define $\log_g{h}$ to be this $x$. This is the <strong>discrete logarithm</strong> of $h$ with respect to $g$ in the group $\mathbb{G}$.</p>
-<div class="note info no-icon">
-            <p><strong>Discrete Logarithm</strong> problem in $\mathbb{G}$: Given $g\in \mathbb{G}$ and <u><strong>uniform</strong></u> $h\in \mathbb{G}$, compute $\log_g{h}$. </p>
-          </div>
+<div class="note info no-icon"><p><strong>Discrete Logarithm</strong> problem in $\mathbb{G}$: Given $g\in \mathbb{G}$ and <u><strong>uniform</strong></u> $h\in \mathbb{G}$, compute $\log_g{h}$. </p>
+</div>
 <h3 id="Discrete-Logarithm-Experiment"><a href="#Discrete-Logarithm-Experiment" class="headerlink" title="Discrete-Logarithm Experiment"></a>Discrete-Logarithm Experiment</h3><p>Similarly, we have the discrete-logarithm experiment $\mathtt{DLog}_{\mathscr{A}, \mathscr{G}} (n)$ where $\mathscr{G}$ is an efficient group-generation algorithm that, on input $1^n$, outputs a cyclic group $\mathbb{G}$, its order $q$, and a generator $g$.</p>
 <p>Adversary $\mathscr{A}$ with $\mathbb{G},q,g$ and a <u><strong>uniform</strong></u> $h\in\mathbb{G}$ needs to efficiently compute correponding $x$.</p>
-<div class="note info no-icon">
-            <p>Definition. RSA problem is hard relative to $\mathscr{G}$ if for all probabilistic polynomial time algorithm $\mathscr{A}$, there exists a negligible $\varepsilon(n)$ that $\Pr[\mathtt{DLog}_{\mathscr{A}, \mathscr{G}}(n)=1]\leq \varepsilon(n)$.</p>
-          </div>
+<div class="note info no-icon"><p>Definition. RSA problem is hard relative to $\mathscr{G}$ if for all probabilistic polynomial time algorithm $\mathscr{A}$, there exists a negligible $\varepsilon(n)$ that $\Pr[\mathtt{DLog}_{\mathscr{A}, \mathscr{G}}(n)=1]\leq \varepsilon(n)$.</p>
+</div>
 <p>The Discrete Logarithm Assumption is the assumption that there exists a group-generation algorithm $\mathscr{G}$ relative to which the Discrete Logarithm problem is hard.</p>
 <p><br></p>
 <blockquote>
@@ -576,9 +662,9 @@
 <p><br></p>
 <h2 id="Diffie-Hellman-Problem"><a href="#Diffie-Hellman-Problem" class="headerlink" title="Diffie-Hellman Problem"></a>Diffie-Hellman Problem</h2><p>Fix cyclic group $\mathbb{G}$ of order $q$, and generator $g\in\mathbb{G}$.</p>
 <p>Given elements $h_1,h_2\in \mathbb{G}$, define Diiffie-Hellman function $DH_g(h_1,h_2)=g^{\log_g h_1\cdot\log_g h_2}$. That is, if $h_1=g^{x_1}$, $h_2=g^{x_2}$, then $DH_g(h_1,h_2)=g^{x_1\cdot x_2}$.</p>
-<div class="note info no-icon">
-            <p>Computational Diffie-Hellman (CDH) in $\mathbb{G}$: Given $g\in \mathbb{G}$, and <u><strong>uniform</strong></u> $h_1,h_2\in\mathbb{G}$, compute $DH_g(h_1,h_2)$.</p><p>Decisional Diffie-Hellman (DDH) in $\mathbb{G}$: Given $g\in\mathbb{G}$, and <u><strong>uniform</strong></u> $h_1,h_2\in\mathbb{G}$, <strong>distinguish</strong> $DH_g(h_1,h_2)$ from a <u><strong>uniform</strong></u> group element $h&#39;\in \mathbb{G}$.</p>
-          </div>
+<div class="note info no-icon"><p>Computational Diffie-Hellman (CDH) in $\mathbb{G}$: Given $g\in \mathbb{G}$, and <u><strong>uniform</strong></u> $h_1,h_2\in\mathbb{G}$, compute $DH_g(h_1,h_2)$.</p>
+<p>Decisional Diffie-Hellman (DDH) in $\mathbb{G}$: Given $g\in\mathbb{G}$, and <u><strong>uniform</strong></u> $h_1,h_2\in\mathbb{G}$, <strong>distinguish</strong> $DH_g(h_1,h_2)$ from a <u><strong>uniform</strong></u> group element $h&#39;\in \mathbb{G}$.</p>
+</div>
 <p>CDH and DDH experiments could be constructed similarly so they are not covered here.</p>
 <p>It is easy to see that if one could solve Discrete Logarithm problem, he could also solve CDH problem; and if one could solve CDH problem, he could also solve DDH problem. </p>
 <p><strong>So DLog $\to$ CDH $\to$ DDH, the assumption is getting stronger and stronger, </strong> which is to say, if one could NOT solve DDH problem, it would be <strong>impossible</strong> for him to solve CDH or DLog problem. </p>
@@ -597,9 +683,12 @@
 <li>$\mathscr{A}$ succeeds and the experiment evaluates to $1$ if and only if $f(x&#39;)=y$.</li>
 </ul>
 <p>Note that the <strong>preimage</strong> $x&#39;$ does NOT neccessarily have to equal $x$, as long as $f(x&#39;)=y$.</p>
-<div class="note info no-icon">
-            <p>Definition. A function $f:\{0,1\}^{*}\to \{0,1\}^{*}$ is <strong>one-way</strong> if the following two conditions hold:</p><ul><li>(<strong>Easy to compute</strong>): There is a polynomial-time algorithm that on input $x$ outputs $f(x)$.</li><li>(<strong>Hard to invert</strong>): For all PPT algorithm $\mathscr{A}$ there is a negligible function $\varepsilon(n)$ such that: $\Pr[\mathtt{Invert}_{\mathscr{A}. f}(n)=1]\leq \varepsilon(n)$.</li></ul>
-          </div>
+<div class="note info no-icon"><p>Definition. A function $f:\{0,1\}^{*}\to \{0,1\}^{*}$ is <strong>one-way</strong> if the following two conditions hold:</p>
+<ul>
+<li>(<strong>Easy to compute</strong>): There is a polynomial-time algorithm that on input $x$ outputs $f(x)$.</li>
+<li>(<strong>Hard to invert</strong>): For all PPT algorithm $\mathscr{A}$ there is a negligible function $\varepsilon(n)$ such that: $\Pr[\mathtt{Invert}_{\mathscr{A}. f}(n)=1]\leq \varepsilon(n)$.</li>
+</ul>
+</div>
 <h3 id="One-Way-Functions-Based-on-Assumptions"><a href="#One-Way-Functions-Based-on-Assumptions" class="headerlink" title="One-Way Functions Based on Assumptions"></a>One-Way Functions Based on Assumptions</h3><p>We could construct one-way functions based on the above four assumptions (factoring assumption, RSA assumption, discrete logarithm assumption, Diffie-Hellman assumption). </p>
 <p>We illustrate this by using <strong>factoring assumption</strong> to construct a one-way function.</p>
 <p>Given $1^n$ and GenModulus, define the (deterministic) function $f_{Gen}$ as follows:</p>
@@ -608,16 +697,18 @@
 <li>Output: Integer $N$.</li>
 <li>Compute $(N,p,q):=GenModulus(1^n;x)$ and return $N$.</li>
 </ul>
-<div class="note info no-icon">
-            <p>Theorem. If the Factoring problem is hard relative to GenModulus, then $f_{Gen}$ is one-way.</p>
-          </div>
+<div class="note info no-icon"><p>Theorem. If the Factoring problem is hard relative to GenModulus, then $f_{Gen}$ is one-way.</p>
+</div>
 <h3 id="Hard-Core-Predicates"><a href="#Hard-Core-Predicates" class="headerlink" title="Hard-Core Predicates"></a>Hard-Core Predicates</h3><p>For a one-way function $f$, it does not exist any PPT adversary that could efficiently invert it. However, the <strong>partial information</strong> of the preimage may be easily revealed.</p>
 <p>Consider the function $f:\{0,1\}^{2n}\to \{0,1\}^{2n}$ and one-way function $g:\{0,1\}^n\to \{0,1\}^n$. We could define $f(x,y)=g(x)||y$. Since $g$ is one-way, it is trivial that $f$ is also one-way. However, it is easy to know the last $n$ bits of the preimage are exactly the last $n$ bits of $f(x,y)$.</p>
 <p>Though $f$ is one-way, half of the information about the preimage is revealed.</p>
 <p>We define hard-core predicate $hc$ of a one-way function as <strong>the bit that could NEVER be revealed.</strong> Informally speaking, $hc(x)$ is <strong>a bit</strong> that is efficiently computable given $x$, but hard to compute given $f(x)$.</p>
-<div class="note info no-icon">
-            <p>Definition. A function $hc:\{0,1\}^{*}\to\{0,1\}$ is a hard-core predicate of a function $f$ if: </p><ul><li>hc can be computed in polynomial time.</li><li>For every probabilistic polynomial-time algorithm $\mathscr{A}$ there is a negligible function $\varepsilon(n)$ such that $\Pr_{x\leftarrow \{0,1\}^n}[\mathscr{A}(1^n,f(x))=hc(x)]\leq 1/2+\varepsilon(n)$.</li></ul>
-          </div>
+<div class="note info no-icon"><p>Definition. A function $hc:\{0,1\}^{*}\to\{0,1\}$ is a hard-core predicate of a function $f$ if: </p>
+<ul>
+<li>hc can be computed in polynomial time.</li>
+<li>For every probabilistic polynomial-time algorithm $\mathscr{A}$ there is a negligible function $\varepsilon(n)$ such that $\Pr_{x\leftarrow \{0,1\}^n}[\mathscr{A}(1^n,f(x))=hc(x)]\leq 1/2+\varepsilon(n)$.</li>
+</ul>
+</div>
 <p><strong>A hard-core predicate for the RSA problem is the least significant bit.</strong> That is to say, compute $lsb(x)$ given $y=[x^e\mod{N}]$ is hard.</p>
 <p><br></p>
 <blockquote>
@@ -628,9 +719,8 @@
 <p>一个单向陷门函数有以下性质：(1) 单向性 (2) 存在陷门。这是否和某些原语的构造十分相似？以公钥加密  (或是 CPA 安全的私钥加密) 为例，加密消息 $m$ 得到密文 $c$ 很容易：$Enc_{pk}(m)\to c$ (公钥 $pk$ 公开)；而由密文 $c$ 解密得到原文 $m$ 却很困难。此为<strong>单向性 (one-way)</strong>。而倘若知道私钥 $sk$，由密文 $c$ 解密得到原文 $m$ 的过程就非常简单：$Dec_{sk}(c)\to m$。因此，私钥 $sk$ 是加密函数 $Enc_{pk}$ 的<strong>陷门 (trapdoor)</strong>。</p>
 </blockquote>
 <p> <br></p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning">
-            <p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
-          </div>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning"><p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
+</div>
 <p>Course info:</p>
 <p>Code: COMP3357, Lecturer: Dr. Ravi. Ramanathan, TA: Zhang Chengru</p>
 <p>Course textbook: </p>
@@ -655,17 +745,14 @@
 <span id="more"></span>
 <p>同样，与 CnBlogs 中的笔记不同，这里不会详细的记载每个相关的知识点；只会尝试简略地总结一些能让未来的自己也会感到有趣，巧妙的内容 (Eureka!)。</p>
 <p><br></p>
-<div class="note warning">
-            <p>&emsp; This article is a self-administered course note.<br>&emsp; It will <strong>NOT</strong> cover any exam or assignment related content.</p>
-          </div>
+<div class="note warning"><p>&emsp; This article is a self-administered course note.<br>&emsp; It will <strong>NOT</strong> cover any exam or assignment related content.</p>
+</div>
 <p><br></p>
-<h2 id="Multiplicative-Inverse"><a href="#Multiplicative-Inverse" class="headerlink" title="Multiplicative Inverse"></a>Multiplicative Inverse</h2><div class="note info no-icon">
-            <p>Definition. If for a given integer $b$, there exists an integer $c$ such that $bc=1\mod{N}$, we say that $b$ is <strong>invertible</strong> modulo $N$, and call $c$ a <strong>multiplicative inverse</strong> of $b$ modulo $N$.</p>
-          </div>
+<h2 id="Multiplicative-Inverse"><a href="#Multiplicative-Inverse" class="headerlink" title="Multiplicative Inverse"></a>Multiplicative Inverse</h2><div class="note info no-icon"><p>Definition. If for a given integer $b$, there exists an integer $c$ such that $bc=1\mod{N}$, we say that $b$ is <strong>invertible</strong> modulo $N$, and call $c$ a <strong>multiplicative inverse</strong> of $b$ modulo $N$.</p>
+</div>
 <p>The multiplicative inverse is <strong>NOT</strong> unique. For an invertible $b$, if $c$ is an inverse of $b$, every $x$ congruent with $c$ modulo $N$ is also an inverse of $b$. ($x\equiv c\mod{N}$). We use $b^{-1}$ to denote the inverse of $b$ that $b^{-1}\in\{1,2,...N-1\}$.</p>
-<div class="note info no-icon">
-            <p>Theorem. Let $b,N$ be integers, with $b\geq 1$, and $N&gt;1$. Then $b$ is <strong>invertible</strong> modulo $N$ if and only if  $b$ is <strong>relatively prime</strong> to $N$. Note that integers $b,N$ are relatively prime (or coprime) means $\gcd(b,N)=1$.</p>
-          </div>
+<div class="note info no-icon"><p>Theorem. Let $b,N$ be integers, with $b\geq 1$, and $N&gt;1$. Then $b$ is <strong>invertible</strong> modulo $N$ if and only if  $b$ is <strong>relatively prime</strong> to $N$. Note that integers $b,N$ are relatively prime (or coprime) means $\gcd(b,N)=1$.</p>
+</div>
 <p>Therefore, for a prime $p$, every $b\in \{1,2,...p-1\}$ is <strong>invertible</strong> modulo $p$. </p>
 <p>The above theorem could be proved by applying <strong>Bezout&#39;s identity: </strong> it states that for every positive integer $a,b$, there exists a pair of integers $\langle X,Y \rangle$ that $Xa+Yb=\gcd(a,b)$.</p>
 <p><br></p>
@@ -675,16 +762,14 @@
 <p>求逆元的常见方法：扩展欧几里得算法，欧拉定理，费马小定理。这些方法在接下来都会进行介绍。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Euler-39-s-Totient-Function"><a href="#Euler-39-s-Totient-Function" class="headerlink" title="Euler&#39;s Totient Function"></a>Euler&#39;s Totient Function</h2><div class="note info no-icon">
-            <p>Definition. Euler&#39;s Totient Function $\varphi(N)$ is defined as the number of <strong>positive integers</strong> $\leq N$ that are <strong>relatively prime</strong> to $N$, where $1$ is counted as being relatively prime to all integers.</p>
-          </div>
-<p>The general case of Euler&#39;s Totient Function is $\varphi(n)=n\Pi_{p|n}(1-\frac{1}{p})=n(1-\frac{1}{p_1})(1-\frac{1}{p_2})...(1-\frac{1}{p_r})$. This is essentially the <strong>Inclusion-Exclusion principle</strong>. </p>
+<h2 id="Euler-39-s-Totient-Function"><a href="#Euler-39-s-Totient-Function" class="headerlink" title="Euler&#39;s Totient Function"></a>Euler&#39;s Totient Function</h2><div class="note info no-icon"><p>Definition. Euler&#39;s Totient Function $\varphi(N)$ is defined as the number of <strong>positive integers</strong> $\leq N$ that are <strong>relatively prime</strong> to $N$, where $1$ is counted as being relatively prime to all integers.</p>
+</div>
+<p>The general case of Euler&#39;s Totient is $\varphi(n)=n\Pi_{p|n}(1-\frac{1}{p})=n(1-\frac{1}{p_1})(1-\frac{1}{p_2})...(1-\frac{1}{p_r})$. This is essentially the <strong>Inclusion-Exclusion principle</strong>. </p>
 <h3 id="Code-Implementation-Linear-Sieve"><a href="#Code-Implementation-Linear-Sieve" class="headerlink" title="Code Implementation: Linear Sieve"></a>Code Implementation: Linear Sieve</h3><p>To calculate a specific totient of $n$, we could design a trivial $O(n\log n)$ algorithm based on the above formula. However, there exists a sieve algorithm that could calculate totients of number $1$ to $n$ in linear time $O(n)$. Below is the code in C++:</p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// the Euler sieve</span></span><br><span class="line"><span class="comment">// bool array: is_prime, int array: prime, phi</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sieve</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; N; ++i)    is_prime[i] = <span class="number">1</span>;</span><br><span class="line">    cnt = <span class="number">0</span>;</span><br><span class="line">    is_prime[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">    phi[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= N; ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (is_prime[i]) &#123;</span><br><span class="line">            prime[++cnt] = i;</span><br><span class="line">            phi[i] = i - <span class="number">1</span>;     <span class="comment">// for a prime p, phi[p] = p - 1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= cnt &amp;&amp; i * prime[j] &lt;= N; ++j) &#123;</span><br><span class="line">            is_prime[i * prime[j]] = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">if</span> (i % prime[j])</span><br><span class="line">                phi[i * prime[j]] = phi[i] * phi[prime[j]];</span><br><span class="line">               <span class="keyword">else</span> &#123;</span><br><span class="line">                phi[i * prime[j]] = phi[i] * prime[j];</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Reference &amp; Explanation: <a href="https://oi-wiki.org/math/number-theory/sieve/#%E7%AD%9B%E6%B3%95%E6%B1%82%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0">(OI Wiki) Linear Sieve for Euler&#39;s totient function</a></p>
-<h3 id="Euler-39-s-Theorem"><a href="#Euler-39-s-Theorem" class="headerlink" title="Euler&#39;s Theorem"></a>Euler&#39;s Theorem</h3><div class="note info no-icon">
-            <p>Theorem. Let $n$ be a positive integer, and let $a$ be an integer that is <strong>relatively prime</strong> to $n$. Then $a^{\varphi(n)}\equiv 1\pmod{n}$, where $\varphi(n)$ is Euler&#39;s totient function of $n$.</p>
-          </div>
+<h3 id="Euler-39-s-Theorem"><a href="#Euler-39-s-Theorem" class="headerlink" title="Euler&#39;s Theorem"></a>Euler&#39;s Theorem</h3><div class="note info no-icon"><p>Theorem. Let $n$ be a positive integer, and let $a$ be an integer that is <strong>relatively prime</strong> to $n$. Then $a^{\varphi(n)}\equiv 1\pmod{n}$, where $\varphi(n)$ is Euler&#39;s totient function of $n$.</p>
+</div>
 <p>Since $\gcd(a,n)=1$, $a$ is invertible modulo $n$. According to Euler&#39;s Theorem, $a^{\varphi(n)}\equiv 1\pmod{n}$. Therefore $a\times a^{\varphi(n)-1}\equiv 1\pmod{n}$. $a^{\varphi(n)-1}$ is a <strong>multiplicative inverse</strong> of $a$ modulo $n$. </p>
 <p>An <strong>informal</strong> proof. (need the knowledge of $\mathbb{Z}_n^{*}$, <strong>multiplicative group</strong> of integers modulo $n$). For $a\in\mathbb{Z}_n^{*}$, $\{r_1,r_2,...r_{\varphi(n)}\}=(\mathbb{Z}/n)^{*}=\{ar_1,ar_2,...ar_{\varphi(n)}\}$. Therefore $r_1r_2...r_{\varphi(n)}\equiv (ar_1)(ar_2)...(ar_{\varphi(n)})$, which reduces to $1\equiv a^{\varphi(n)}$. This cancellation is allowed since all $r_i$ have multiplicative inverses modulo $n$. </p>
 <p>Reference &amp; Explanation: <a href="https://brilliant.org/wiki/eulers-theorem/#proofs-of-the-theorem">(Brilliant Math Wiki) Proof of Euler&#39;s Theorem</a></p>
@@ -697,9 +782,8 @@
 <p>关于欧拉函数线性筛算法的设计也十分巧妙，它是建立在质数线性筛的基础上的。具体可见 OI Wiki 中的相关解释，讲的很清楚。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Extended-Euclidean-Algorithm-eGCD"><a href="#Extended-Euclidean-Algorithm-eGCD" class="headerlink" title="Extended Euclidean Algorithm (eGCD)"></a>Extended Euclidean Algorithm (eGCD)</h2><div class="note info no-icon">
-            <p>Euclidean Algorithm (辗转相除法) is one of the oldest and most widely known algorithms. It is a $O(\log n)$ method of computing the <strong>greatest common divisor</strong> (GCD) of two integers $a,b$.</p>
-          </div>
+<h2 id="Extended-Euclidean-Algorithm-eGCD"><a href="#Extended-Euclidean-Algorithm-eGCD" class="headerlink" title="Extended Euclidean Algorithm (eGCD)"></a>Extended Euclidean Algorithm (eGCD)</h2><div class="note info no-icon"><p>Euclidean Algorithm (辗转相除法) is one of the oldest and most widely known algorithms. It is a $O(\log n)$ method of computing the <strong>greatest common divisor</strong> (GCD) of two integers $a,b$.</p>
+</div>
 <p>According to <strong>Bezout&#39;s Identity</strong>, there exists integers $X$ and $Y$ that $Xa+Yb=\gcd(a,b)$ given $a,b$. The <strong>extended</strong> Euclidean algorithm is the method of computing such $X$ and $Y$.</p>
 <p>Assuming two adjacent levels in the GCD recursive process:</p>
 <div class="table-container">
@@ -747,14 +831,11 @@ Xa+Yb&=Y'a+(X'-Y'\lfloor \frac{a}{b} \rfloor)b \\
 </blockquote>
 <p><br></p>
 <h2 id="Chinese-Remainder-Theorem-CRT"><a href="#Chinese-Remainder-Theorem-CRT" class="headerlink" title="Chinese Remainder Theorem (CRT)"></a>Chinese Remainder Theorem (CRT)</h2><blockquote class="blockquote-center">
-            <i class="fa fa-quote-left"></i>
-            <p>今有物不知其数，三三数之剩二，五五数之剩三，七七数之剩二，问物几何？ —— <em>孙子算经</em></p>
+<p>今有物不知其数，三三数之剩二，五五数之剩三，七七数之剩二，问物几何？ —— <em>孙子算经</em></p>
 
-            <i class="fa fa-quote-right"></i>
-          </blockquote> 
-<div class="note info no-icon">
-            <p>The Chinese remainder theorem (CRT) is a theorem which gives a unique solution to a <strong>simultaneous linear congruences with coprime moduli</strong>. In its basic form, the CRT will determine a number $p$ that, when divided by some given <strong>divisors</strong>, leaves <strong>given remainders</strong>.</p>
-          </div>
+</blockquote> 
+<div class="note info no-icon"><p>The Chinese remainder theorem (CRT) is a theorem which gives a unique solution to a <strong>simultaneous linear congruences with coprime moduli</strong>. In its basic form, the CRT will determine a number $p$ that, when divided by some given <strong>divisors</strong>, leaves <strong>given remainders</strong>.</p>
+</div>
 <p>If $m_1,...,m_k$ are <strong>pairwise coprime</strong>, i.e., $\gcd(m_i,m_j)=1$ for $i\neq j$, then the following system</p>
 <script type="math/tex; mode=display">
 \begin{cases}
@@ -776,15 +857,14 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <p>P.S. RSA 问题是一个著名的困难问题 (hard problems)，我将会在 P3 中进行介绍。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Quadratic-Residue"><a href="#Quadratic-Residue" class="headerlink" title="Quadratic Residue"></a>Quadratic Residue</h2><div class="note info no-icon">
-            <p>If there is an integer $0&lt;x&lt;p$ such that $x^2\equiv a\pmod{p}$. We call $a$ a <strong>quadratic residue</strong> modulo $p$. Otherwise (such $x$ doesn&#39;t exist), we call $a$ a <strong>quadratic nonresidue</strong> modulo $p$.</p><p>Note that $p \nmid a$ to exclude the trivial cases $x=0$.</p>
-          </div>
+<h2 id="Quadratic-Residue"><a href="#Quadratic-Residue" class="headerlink" title="Quadratic Residue"></a>Quadratic Residue</h2><div class="note info no-icon"><p>If there is an integer $0&lt;x&lt;p$ such that $x^2\equiv a\pmod{p}$. We call $a$ a <strong>quadratic residue</strong> modulo $p$. Otherwise (such $x$ doesn&#39;t exist), we call $a$ a <strong>quadratic nonresidue</strong> modulo $p$.</p>
+<p>Note that $p \nmid a$ to exclude the trivial cases $x=0$.</p>
+</div>
 <p>The quadratic residue problem requires us to solve the congrence $x^2\equiv a\pmod{p}$. Essentially it is to <strong>find the square root</strong> of $a$ in the sense of modulo $p$. Usually, the moduli $p$ is an <strong>odd prime</strong>.</p>
 <h3 id="Legendre-Symbol"><a href="#Legendre-Symbol" class="headerlink" title="Legendre Symbol"></a>Legendre Symbol</h3><p>The legendre symbol is a <strong>number theoretic function</strong> $(\frac{a}{p})$ which is defined to be equal to $\pm 1$ depending on whether $a$ is a quadratic residue modulo $p$. </p>
 <script type="math/tex; mode=display">
-(\frac{a}{p})=(a|p)=\begin{cases} \ 0, \ if \ \ p|a \\ \  1, \ if \ a \ is \ a \ quadratic \ residue \ modulo \ p \\ -1 , \ if \ a \ is \ a \ quadratic \ nonresidue \ modulo \ p \end{cases}</script><h3 id="Euler-39-s-Criterion"><a href="#Euler-39-s-Criterion" class="headerlink" title="Euler&#39;s Criterion"></a>Euler&#39;s Criterion</h3><div class="note info no-icon">
-            <p>For an odd prime $p$ and $p \nmid a$, the Legendre symbol $(\frac{a}{p})\equiv a^{(p-1)/2} \pmod{p}$.</p>
-          </div>
+(\frac{a}{p})=(a|p)=\begin{cases} \ 0, \ if \ \ p|a \\ \  1, \ if \ a \ is \ a \ quadratic \ residue \ modulo \ p \\ -1 , \ if \ a \ is \ a \ quadratic \ nonresidue \ modulo \ p \end{cases}</script><h3 id="Euler-39-s-Criterion"><a href="#Euler-39-s-Criterion" class="headerlink" title="Euler&#39;s Criterion"></a>Euler&#39;s Criterion</h3><div class="note info no-icon"><p>For an odd prime $p$ and $p \nmid a$, the Legendre symbol $(\frac{a}{p})\equiv a^{(p-1)/2} \pmod{p}$.</p>
+</div>
 <p>For an odd prime $p$ and $p \nmid a$, according to Euler&#39;s critetion, we could determine whether $a$ is a quadratic residue modulo $p$ by checking whether $a^{(p-1)/2}\mod{p}$ equals to $1$ or not.</p>
 <p>See the prove <a href="https://oi-wiki.org/math/number-theory/residue/#%E5%A5%87%E7%B4%A0%E6%95%B0%E7%9A%84%E4%BA%8C%E6%AC%A1%E5%89%A9%E4%BD%99">here</a>.</p>
 <p><br></p>
@@ -794,9 +874,8 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <p>二次剩余问题本质上是<strong>模意义下的开根问题</strong>，实际上是 RSA 问题的铺垫：RSA 问题本质上是模意义下的开 $e$ 次根问题。因此，当 $e=2$ 时，RSA 问题与二次剩余问题等价。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Group-Theory-Introduction"><a href="#Group-Theory-Introduction" class="headerlink" title="Group Theory: Introduction"></a>Group Theory: Introduction</h2><div class="note info no-icon">
-            <p><strong>Group theory</strong> is the study of groups. Groups are <strong>sets</strong> equipped with an <strong>operation</strong> that satisfies certain basic properties. They are closure, identity, inverse, and associativity.</p>
-          </div>
+<h2 id="Group-Theory-Introduction"><a href="#Group-Theory-Introduction" class="headerlink" title="Group Theory: Introduction"></a>Group Theory: Introduction</h2><div class="note info no-icon"><p><strong>Group theory</strong> is the study of groups. Groups are <strong>sets</strong> equipped with an <strong>operation</strong> that satisfies certain basic properties. They are closure, identity, inverse, and associativity.</p>
+</div>
 <p>Set $\mathbb{G}$ and a <strong>binary operation</strong> $\circ$ defined on $\mathbb{G}$ that:</p>
 <ul>
 <li>Closure: For all $g_1,g_2\in \mathbb{G}$, it holds that $g_1 \circ g_2\in \mathbb{G}$</li>
@@ -806,13 +885,11 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 </ul>
 <p><strong>Order</strong> of a finite group $\mathbb{G}$, denoted $|\mathbb{G}|$, is the number of elements in $\mathbb{G}$.</p>
 <p>If group $\mathbb{G}$ is an <strong>Abelian group</strong>, it will satisfiy the additionally <strong>commutativity</strong>: For all $g_1,g_2\in\mathbb{G}$, $g_1\circ g_2=g_2\circ g_1$.</p>
-<h3 id="Subgroups"><a href="#Subgroups" class="headerlink" title="Subgroups"></a>Subgroups</h3><div class="note info no-icon">
-            <p>Definition. If $\mathbb{G}$ is a group, a set $\mathbb{H}\subseteq \mathbb{G}$ is a <strong>subgroup</strong> of $\mathbb{G}$ if $\mathbb{H}$ itself forms a group <strong>under the same operation</strong>. $\mathbb{H}$ is a <strong>strict</strong> subgroup of $\mathbb{G}$ if $\mathbb{H} \neq \mathbb{G}$.</p>
-          </div>
+<h3 id="Subgroups"><a href="#Subgroups" class="headerlink" title="Subgroups"></a>Subgroups</h3><div class="note info no-icon"><p>Definition. If $\mathbb{G}$ is a group, a set $\mathbb{H}\subseteq \mathbb{G}$ is a <strong>subgroup</strong> of $\mathbb{G}$ if $\mathbb{H}$ itself forms a group <strong>under the same operation</strong>. $\mathbb{H}$ is a <strong>strict</strong> subgroup of $\mathbb{G}$ if $\mathbb{H} \neq \mathbb{G}$.</p>
+</div>
 <p>Note that every group $\mathbb{G}$ always has the <strong>trivial subgroups</strong> $\mathbb{G}$ and $\{e\}$.</p>
-<h3 id="Modulo-Multiplication-Group"><a href="#Modulo-Multiplication-Group" class="headerlink" title="Modulo Multiplication Group"></a>Modulo Multiplication Group</h3><div class="note info no-icon">
-            <p>A modulo multiplication group $(\mathbb{Z}/n)^{*}$ is a finite group of <strong>residue classes</strong> prime to $n$ under <strong>multiplication mod</strong> $n$. $(\mathbb{Z}/n)^{*}$ is <strong>Abelian</strong> of group order $\varphi(n)$, where $\varphi(n)$ is the <strong>totient function</strong>. </p>
-          </div>
+<h3 id="Modulo-Multiplication-Group"><a href="#Modulo-Multiplication-Group" class="headerlink" title="Modulo Multiplication Group"></a>Modulo Multiplication Group</h3><div class="note info no-icon"><p>A modulo multiplication group $(\mathbb{Z}/n)^{*}$ is a finite group of <strong>residue classes</strong> prime to $n$ under <strong>multiplication mod</strong> $n$. $(\mathbb{Z}/n)^{*}$ is <strong>Abelian</strong> of group order $\varphi(n)$, where $\varphi(n)$ is the <strong>totient function</strong>. </p>
+</div>
 <p>The multiplicative group of integers modulo $n$, $(\mathbb{Z}/n)^{*}$, is very worth researching. $(\mathbb{Z}/n)^{*}:=$ <strong>invertible</strong> elements in $\{1,2,...n-1\}$ under multiplication modulo $n:=$ $\{b\in \{1,...,n-1\}|\gcd(b,n)=1 \}$. Therefore $|(\mathbb{Z}/n)^{*}|=\varphi(n)$. If $n$ is prime (which is usually denoted $p$), $|(\mathbb{Z}/p)^{*}|=p-1$.</p>
 <p>$(\mathbb{Z}/n)^{*}$ is also denoted $\mathbb{Z}^{*}_n$.</p>
 <p><br></p>
@@ -822,19 +899,20 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <p>这里想要重点提一下<strong>整数模 $n$ 乘法群</strong> $(\mathbb{Z}/n)^{*}$，这是一个很重要的群。对于它的研究起源于对模 $n$ 剩余类 (residue classes) 的研究。我们知道，对于模 $n$ 剩余类 $\{0,1,2,...,n-1\}$，若群运算 (group operation) 是加法 $+$，剩余类能够很自然的形成一个群 $(\mathbb{Z}/n)^{+}$。然而，若我们将群运算设为乘法 $\times$，剩余类并不能形成一个群。这是因为群性质要求<strong>每个群元素都具有逆元</strong> (inverse)；而在模 $n$ 剩余类中，只有与 $n$ 互质的群元素才有逆元。因此，我们将与 $n$ 不互质的元素剔除，剩下的就是整数模 $n$ 乘法群 $(\mathbb{Z}/n)^{*}$ 了。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Fermat-39-s-Little-Theorem"><a href="#Fermat-39-s-Little-Theorem" class="headerlink" title="Fermat&#39;s Little Theorem"></a>Fermat&#39;s Little Theorem</h2><div class="note info no-icon">
-            <p>Theorem. Let $\mathbb{G}$ be a finite group of order $m=|\mathbb{G}|$. Then for any $g\in \mathbb{G}$, it holds that $g^m=1$.</p>
-          </div>
+<h2 id="Fermat-39-s-Little-Theorem"><a href="#Fermat-39-s-Little-Theorem" class="headerlink" title="Fermat&#39;s Little Theorem"></a>Fermat&#39;s Little Theorem</h2><div class="note info no-icon"><p>Theorem. Let $\mathbb{G}$ be a finite group of order $m=|\mathbb{G}|$. Then for any $g\in \mathbb{G}$, it holds that $g^m=1$.</p>
+</div>
 <p>Proof. $\mathbb{G}=\{g_1,g_2,...,g_m\}$, $g\in \mathbb{G}$. $g_i\neq g_j$ for all $i,j$, therefore $gg_i\neq gg_j$ for all $i,j$. Therefore with the <strong>closure</strong> property of the group $\mathbb{G}$, $\{gg_1,gg_2,...gg_m\}$ is a <strong>permutation</strong> of $\{g_1,g_2,...,g_m\}$. Then we have $(gg_1)(gg_2)...(gg_m)=g_1g_2...g_m$, which could be reduced to $g^m=1$.</p>
 <p>We could see the <strong>similarity</strong> between the proof of Fermat&#39;s little theorem and Euler&#39;s theorem. In fact, <u><strong>Fermat&#39;s little theorem is the general form of Euler&#39;s theorem</strong></u>. Let $\mathbb{G}$ be the modulo multiplication group $(\mathbb{Z}/n)^{*}$, one could derive the Euler&#39;s theorem.</p>
-<h3 id="Corollary-1"><a href="#Corollary-1" class="headerlink" title="Corollary 1"></a>Corollary 1</h3><div class="note info no-icon">
-            <p>Corollary (Fermat&#39;s Little Theorem). Let $\mathbb{G}$ be a finite group of order $m$. Then for any $g\in \mathbb{G}$, and any integer $x$, we have $g^x=g^{[x\mod m]}$.</p>
-          </div>
+<h3 id="Corollary-1"><a href="#Corollary-1" class="headerlink" title="Corollary 1"></a>Corollary 1</h3><div class="note info no-icon"><p>Corollary (Fermat&#39;s Little Theorem). Let $\mathbb{G}$ be a finite group of order $m$. Then for any $g\in \mathbb{G}$, and any integer $x$, we have $g^x=g^{[x\mod m]}$.</p>
+</div>
 <p>Many exponents calculation could be simplified using this corollary. </p>
 <p>For example, if computing $5^{1000}\mod 11$, we could see $5\in (\mathbb{Z}/11)^{*}$ since $\gcd(5,11)=1$. Applying the above corollary $5^{1000}\mod{11}=5^{[1000\mod \varphi(11)]}\mod{11}=5^{[1000\mod{10}]}\mod{11}=1$.</p>
-<h3 id="Corollary-2"><a href="#Corollary-2" class="headerlink" title="Corollary 2"></a>Corollary 2</h3><div class="note info no-icon">
-            <p>Corollary (Fermat&#39;s Little Theorem). Let $\mathbb{G}$ be a finite group of order $m$. Let $e&gt;0$ be an integer, and define the function, $f_e:\mathbb{G}\to \mathbb{G}$ by $f_e(g)=g^e$.</p><ul><li>If $\gcd(e,m)=1$, then $f_e$ is a <strong>permutation</strong>, i.e., a <strong>bijection</strong>.</li><li>Moreover, if $d=e^{-1}\mod{m}$, then $f_d$ is the inverse of $f_e$.</li></ul>
-          </div>
+<h3 id="Corollary-2"><a href="#Corollary-2" class="headerlink" title="Corollary 2"></a>Corollary 2</h3><div class="note info no-icon"><p>Corollary (Fermat&#39;s Little Theorem). Let $\mathbb{G}$ be a finite group of order $m$. Let $e&gt;0$ be an integer, and define the function, $f_e:\mathbb{G}\to \mathbb{G}$ by $f_e(g)=g^e$.</p>
+<ul>
+<li>If $\gcd(e,m)=1$, then $f_e$ is a <strong>permutation</strong>, i.e., a <strong>bijection</strong>.</li>
+<li>Moreover, if $d=e^{-1}\mod{m}$, then $f_d$ is the inverse of $f_e$.</li>
+</ul>
+</div>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
@@ -844,13 +922,11 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 </blockquote>
 <p><br></p>
 <h2 id="Cyclic-Groups-and-Generators"><a href="#Cyclic-Groups-and-Generators" class="headerlink" title="Cyclic Groups and Generators"></a>Cyclic Groups and Generators</h2><p>Before stepping into the definition of <strong>cyclic groups</strong>, we introduce the definition of <strong>order of a group element</strong>. </p>
-<div class="note info no-icon">
-            <p>Definition. <strong>The order of a group element</strong> $g\in \mathbb{G}$ is the <strong>smallest positive integer</strong> $r$ such that $g^r=1$, and is denoted by $ord(g)$.</p>
-          </div>
+<div class="note info no-icon"><p>Definition. <strong>The order of a group element</strong> $g\in \mathbb{G}$ is the <strong>smallest positive integer</strong> $r$ such that $g^r=1$, and is denoted by $ord(g)$.</p>
+</div>
 <p>Note the distinction between the two concepts <strong>the order of a group</strong> and <strong>the order of a group element</strong>.</p>
-<div class="note info no-icon">
-            <p>Definition. If an element $g\in \mathbb{G}$ has order $|\mathbb{G}|$, then $\mathbb{G}$ is a <strong>cyclic group</strong> and can be denoted by $\mathbb{G}=\langle g \rangle$. We call $g$ the <strong>generator</strong> of $\mathbb{G}$.</p>
-          </div>
+<div class="note info no-icon"><p>Definition. If an element $g\in \mathbb{G}$ has order $|\mathbb{G}|$, then $\mathbb{G}$ is a <strong>cyclic group</strong> and can be denoted by $\mathbb{G}=\langle g \rangle$. We call $g$ the <strong>generator</strong> of $\mathbb{G}$.</p>
+</div>
 <p>Therefore, if $\mathbb{G}$ is a <strong>cyclic group</strong> and $|\mathbb{G}|=m$, there must exists a <strong>generator</strong> $g\in\mathbb{G}$ that could generate the whole group by constantly multiplying itself, i.e., $\{g, g^2, ..., g^m\}=\mathbb{G}$.</p>
 <p><br></p>
 <blockquote>
@@ -860,9 +936,8 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <p>正整数 $m$ 有原根 (群 $(\mathbb{Z}/m)^{*}$ 为循环群) 的<strong>充要条件</strong>为：它能表达为下列形式之一 $2,4,p^n,2p^n$，其中 $p$ 为奇素数。且若 $m$ 有原根，其原根的个数为 $\varphi(\varphi(m))$。部分证明 ($m$ 为质数) 见我的 <a href="https://www.cnblogs.com/VeniVidiVici/p/17214675.html">CnBlogs: 循环群</a>；这里还提到，任意<strong>质数阶群 (group of prime order) 一定是循环群</strong>。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning">
-            <p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
-          </div>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning"><p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
+</div>
 <p>Course textbook: </p>
 <p><em>Introduction to Modern Cryptography (2nd edition)</em>, Katz, J. &amp; Lindell, Y., (2015), CRC Press, <a href="https://ebookcentral.proquest.com/lib/HKUHK/detail.action?docID=1619504">view here</a></p>
 <p>Course info:</p>
@@ -884,51 +959,49 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
   <entry>
     <title>向世界发起叛逆 - 简评女神异闻录5 (Persona 5)</title>
     <url>/2023/05/30/persona-5/</url>
-    <content><![CDATA[<p><strong>第一篇</strong>评论，献给有 “天下<strong>第一</strong>” 之称的 P5。这也是我走出确诊克罗恩病的阴霾，回归正常学习生活后玩到的<strong>第一个</strong>游戏。在主图结束完一天充实的学习后，坐地铁回到窄小的出租屋，打开 P5R 继续和怪盗团伙伴的冒险——这种日子定义为 “幸福” 毫不为过。再加上主角 Joker 也是乘地铁上下学，上堂读书落堂偷心；游戏和日常的巧合带给我一种奇妙的代入感 (<del>其实就是中二病犯了</del>)。</p>
+    <content><![CDATA[<p>第一篇评论，献给有 “天下第一” 之称的 P5。这也是我走出确诊克罗恩病的阴霾，回归正常学习生活后玩到的第一个游戏。在主图结束完一天充实的学习后，坐地铁回到窄小的出租屋，打开 P5R 继续和怪盗团伙伴的冒险——这种日子定义为 “幸福” 毫不为过。再加上主角 Joker 也是乘地铁上下学，上堂读书落堂偷心；游戏和日常的巧合带给我一种奇妙的代入感 (<del>其实就是中二病犯了</del>)。</p>
 <p>谨以这篇评论纪念 P5R 这三个月来带给我的感动。</p>
 <span id="more"></span>
 <p><br></p>
 <p><img src="/2023/05/30/persona-5/achievements.png" alt="全成就军火展示"></p>
 <p><br></p>
-<div class="note warning">
-            <p>&emsp; &emsp; <strong>Spoiler Alert!</strong></p><p>&emsp; &emsp; This article may contain *spoilers*. </p>
-          </div>
+<div class="note warning"><p>&emsp; &emsp; <strong>Spoiler Alert!</strong></p>
+<p>&emsp; &emsp; This article may contain *spoilers*. </p>
+</div>
 <p><br></p>
 <h2 id="这是一场叛逆"><a href="#这是一场叛逆" class="headerlink" title="这是一场叛逆"></a>这是一场叛逆</h2><blockquote class="blockquote-center">
-            <i class="fa fa-quote-left"></i>
-            <p>感谢在成为大人的必经之路上，还能给我一场逃避的梦。   —— Steam comment from Lestatice</p>
+<p>感谢在成为大人的必经之路上，还能给我一场逃避的梦。   —— Steam comment from Lestatice</p>
 
-            <i class="fa fa-quote-right"></i>
-          </blockquote> 
-<p>纵观 P 系列主角团，<strong>几乎</strong>所有成员都是处于后青春期的高中学生。ATLUS 也将女神异闻录系列定义为 <strong>青春 RPG</strong>。</p>
-<p>青春期是人整个生命阶段中的一个重要时期。一方面，它是美好的，蓬勃的，是“早上八九点钟的太阳”；而另一方面，青少年的人格逐渐完善，<strong>自我意识开始觉醒</strong>：他们要求得到与「大人们」平等的地位，希望自己的<strong>人格</strong>得到尊重。与此同时，青春期也是一个人初窥到社会不公的时期：对世界童话般的认知逐渐崩塌，取而代之的是震惊和错愕——世间的不平事实在太多，而肯站出来的人又太少。<strong>为什么没人愿意伸张正义？</strong>这是<strong>独属于青春期的疑问</strong>。</p>
+</blockquote> 
+<p>纵观 P 系列主角团，<strong>几乎</strong>所有成员都是处于后青春期的高中学生。ATLUS 也将女神异闻录系列定义为<strong>青春 RPG</strong>。</p>
+<p>青春期是人整个生命阶段中的一个重要时期。一方面，它是美好的，蓬勃的，是“早上八九点钟的太阳”；而另一方面，青少年的人格逐渐完善，自我意识开始觉醒：他们要求得到与「大人们」平等的地位，希望自己的人格得到尊重。与此同时，青春期也是一个人初窥到社会不公的时期：对世界童话般的认知逐渐崩塌，取而代之的是震惊和错愕——世间的不平事实在太多，而肯站出来的人又太少。<strong>为什么没人愿意伸张正义？</strong>这是<strong>独属于青春期的疑问</strong>。</p>
 <p>面对这个赤诚的疑问，「大人们」不愿，也不敢回答。</p>
 <p>关心他们的大人们在一瞬间中看到了过去的自己，却也只能委婉的留下一句“不要多管闲事”；</p>
 <p><img src="/2023/05/30/persona-5/odona1.png" alt="&quot;我收留你的原因也许是看到了过去的自己&quot;"></p>
 <p>而「堕落的大人们」(クズなおとな) 不仅对这个问题嗤之以鼻，还将他们的行为定义为<strong>叛逆</strong>。</p>
 <p><img src="/2023/05/30/persona-5/odona2.png" alt="相信每个人都听过这句话"></p>
-<p>仔细想想，<strong>叛逆</strong>这一词是多么的傲慢！它是大人视角的，以<strong>驯服</strong>为标准的说辞：换个角度看，对于受到不公对待的青少年来说，叛逆是他们最正常不过的诉求。</p>
-<p>我们的主角 Joker，正是在目睹同伴受到死亡威胁与自身遭遇不公的双重刺激下，发生了「人格面具」(persona，ペルソナ) 的<strong>觉醒</strong>：接下来，他将与建立起深厚羁绊的同伴们华丽地开启一场对「堕落的大人们」的终极<strong>叛逆</strong>……</p>
+<p>仔细想想，叛逆这一词是多么的傲慢！它是大人视角的，以驯服为标准的说辞：换个角度看，对于受到不公对待的青少年来说，叛逆是他们最正常不过的诉求。</p>
+<p>我们的主角 Joker，正是在目睹同伴受到死亡威胁与自身遭遇不公的双重刺激下，发生了「人格面具」(persona，ペルソナ) 的觉醒：接下来，他将与建立起深厚羁绊的同伴们华丽地开启一场对「堕落的大人们」的终极叛逆……</p>
 <p><br></p>
 <h2 id="失去容身之所的问题学生们"><a href="#失去容身之所的问题学生们" class="headerlink" title="失去容身之所的问题学生们"></a>失去容身之所的问题学生们</h2><p><em>热血高校</em>，<em>麻辣教师 GTO</em>，<em>垫底辣妹</em>……日本人似乎对“问题学生”情有独钟：这些作品大多信奉并传达这样一种观点：“不良少年”们的本性并不坏，他们只是「<strong>失去了容身之所</strong>」而已。甚至，相较于那些用功读书的人，不良少年们对社会的不公义更为敏感，反应更为激烈。</p>
 <p>「<strong>容身之所</strong>」(<strong>居場所</strong>，いばしょ) 究竟是什么？这是个很典型的日式词汇，如果要在中文里找一个词来对应的话，我觉得应该是指所谓 “<strong>内心的归宿</strong>”。对不良少年们来说，内在上，他们由于受到某些打击失去了目标，从而变得迷茫；外在上，他们很难从家人，朋友，教师等重要角色处获得引导与慰藉。</p>
 <p><img src="/2023/05/30/persona-5/yiibashio.png" alt="龙司是最典型的不良少年"></p>
-<p>这些失去「<strong>容身之所</strong>」的少年们，很容易聚在一起抱团取暖，互相支持鼓励；与此同时，他们也需要一个<strong>信念</strong>。而这一信念，决定了他们的未来。90 年代风靡一时的香港 <em>古惑仔</em> 系列电影，讲述的其实也是一群失去「<strong>容身之所</strong>」的少年。在没有 persona 与天鹅绒房间的现实世界，他们选择了“行古惑”，入黑道。即使他们之间的兄弟情谊是那样的令人感动，最后也逃不过血流遍地的悲惨结局。</p>
-<p>好在我们的主角团是一群善良的人，又拥有 persona 的神奇力量，他们选择了以 “<strong>不对有困难的人视而不见</strong>” 作为自己的<strong>信念</strong>。怪盗团这一身份，不仅解决了他们当下面临的危机，也成为了支撑他们前进的精神源泉。即使最后不免分道扬镳，这个独特的羁绊也使得他们不再迷茫，永远获得了自己的「<strong>容身之所</strong>」。</p>
+<p>这些失去「容身之所」的少年们，很容易聚在一起抱团取暖，互相支持鼓励；与此同时，他们也需要一个<strong>信念</strong>。而这一信念，决定了他们的未来。90 年代风靡一时的香港 <em>古惑仔</em> 系列电影，讲述的其实也是一群失去「容身之所」的少年。在没有 persona 与天鹅绒房间的现实世界，他们选择了“行古惑”，入黑道。即使他们之间的兄弟情谊是那样的令人感动，最后也逃不过血流遍地的悲惨结局。</p>
+<p>好在我们的主角团是一群善良的人，又拥有 persona 的神奇力量，他们选择了以 “<strong>不对有困难的人视而不见</strong>” 作为自己的信念。怪盗团这一身份，不仅解决了他们当下面临的危机，也成为了支撑他们前进的精神源泉。即使最后不免分道扬镳，这个独特的羁绊也使得他们不再迷茫，永远获得了自己的「容身之所」。</p>
 <p><img src="/2023/05/30/persona-5/foundation.jpg" alt="怪盗团成立纪念"></p>
 <h3 id="开拓的战车：坂本龙司"><a href="#开拓的战车：坂本龙司" class="headerlink" title="开拓的战车：坂本龙司"></a>开拓的战车：坂本龙司</h3><p>作为初始四人 (三人一猫) 组之一，好兄弟龙司是从开始陪伴 Joker 到最后的人。他的性格可以说是标准的男二模板：讲义气，冲动，大大咧咧，有勇无谋，还有点好色；在怪盗团中也一直作为被吐槽的对象。</p>
-<p>虽然初始人设普通，但龙司在整个游戏中的改变和成长却可以称得上是最令人瞩目 (之一) 的。在他表面的性格背后还隐藏着许多其他的东西——而发现这一切的正是主角 Joker。Joker 和怪盗团为这个原不良少年带来了<strong>信念</strong>，而他也向怪盗团回报以自己热烈的心。秀尽学园门口异世界 APP 命运般的开启，令这辆生锈的<strong>战车</strong> (The Chariot) 重新开始了<strong>奔跑</strong>。</p>
+<p>虽然初始人设普通，但龙司在整个游戏中的改变和成长却可以称得上是最令人瞩目 (之一) 的。在他表面的性格背后还隐藏着许多其他的东西——而发现这一切的正是主角 Joker。Joker 和怪盗团为这个原不良少年带来了信念，而他也向怪盗团回报以自己热烈的心。秀尽学园门口异世界 APP 命运般的开启，令这辆生锈的<strong>战车</strong> (The Chariot) 重新开始了奔跑。</p>
 <p>事实上，大家所诟病较多的龙司的缺点几乎从未造成过什么重大的后果。虽然做事冲动，但是却有着<strong>超高的行动力</strong>，是 Joker 的左膀右臂；虽然经常被说有勇无谋，但他同时也是怪盗团中最<strong>敢想敢做</strong>的人；虽然有点好色，但面对女生却意外的有<strong>绅士风度</strong>；对杏作出的“下头”举动建立在他们早就相识的基础上，更近似于无伤大雅的玩笑。此外，他也是全团中最关心，最信赖 Joker 的人。作为怪盗团的<strong>冲锋队长</strong>，龙司将战车<strong>热烈莽撞</strong>的个性展现的淋漓尽致。</p>
 <p><strong>那么，龙司的问题到底出在哪里？</strong></p>
 <p>自始至终，龙司一直秉承着这样一个信念：<strong>要不断的令大人物悔改，使怪盗团的名气越来越高</strong>。他认为只有站在高处，才能给受到压迫的人带来希望；做不被大众所认识的无名英雄，并不能从根本上解决问题。</p>
 <p><img src="/2023/05/30/persona-5/ryuji1.png" alt="与其躲在暗处，不如成为烟花"></p>
 <p>这一想法是正确的：事实上，怪盗团也一直朝着这个方向前进，因此才能得到大众的支持击败伪神。然而在此之前，随着怪盗团取得一个又一个胜利，人气越来越高，龙司的心境也发生了微妙的变化。在不知不觉间，龙司想要怪盗团名扬天下的「理由」由“<strong>帮助有困难的人</strong>”变为了“<strong>自己</strong>”……</p>
-<p>值得注意的是，与三岛不同，龙司的转变并非出于<strong>虚荣</strong>：与看起来不同，<strong>龙司从来不是一个虚荣的人</strong>。虽然常说要利用怪盗团的身份泡妞，但那终究只是口嗨而已；在金城悔改后，怪盗团众人得到了金城的秘宝——一箱子的大钞。而此时龙司的愿望居然只是以后顿顿可以吃“猪肉味增汤套餐”；当发现钞票是假的之后，龙司 (以及怪盗团全员) 的反应又如何？他释怀地笑了。<strong>大家都笑了</strong>。而这，不可能是一个贪慕虚荣的人会有的反应。</p>
-<p>与其他成员相比，在遇到怪盗团之前，龙司是最接近<strong>一无所有</strong>的。没有朋友，没有未来，没有信念，剩下的只有对母亲和田径社社员的愧疚，和对鸭志田的仇恨。被夺走「容身之所」的他，只能眼睁睁的看着自己一步步沉沦。怪盗团的出现对他而言无疑是一种<strong>救赎</strong>，也正因如此，他比任何人都不希望怪盗团停止活动。怪盗团给予了他希望，也逐渐成为了他的「<strong>执念</strong>」。为了怪盗团能够继续，无论付出什么代价都是必要的，否则“至今积累起来的东西，就全部完蛋了”。迷路的战车，就这样跌入了陷阱。</p>
+<p>值得注意的是，与三岛不同，龙司的转变并非出于虚荣：与看起来不同，<strong>龙司从来不是一个虚荣的人</strong>。虽然常说要利用怪盗团的身份泡妞，但那终究只是口嗨而已；在金城悔改后，怪盗团众人得到了金城的秘宝——一箱子的大钞。而此时龙司的愿望居然只是以后顿顿可以吃“猪肉味增汤套餐”；当发现钞票是假的之后，龙司 (以及怪盗团全员) 的反应又如何？他释怀地笑了。大家都笑了。而这，不可能是一个贪慕虚荣的人会有的反应。</p>
+<p>与其他成员相比，在遇到怪盗团之前，龙司是最接近<strong>一无所有</strong>的。没有朋友，没有未来，没有信念，剩下的只有对母亲和田径社社员的愧疚，和对鸭志田的仇恨。被夺走「容身之所」的他，只能眼睁睁的看着自己一步步沉沦。怪盗团的出现对他而言无疑是一种救赎，也正因如此，他比任何人都不希望怪盗团停止活动。怪盗团给予了他希望，也逐渐成为了他的「<strong>执念</strong>」。为了怪盗团能够继续，无论付出什么代价都是必要的，否则“至今积累起来的东西，就全部完蛋了”。迷路的战车，就这样跌入了陷阱。</p>
 <p><img src="/2023/05/30/persona-5/ryuji2.png" alt="怪盗团真的是为了“满足期待”而诞生的吗？"></p>
 <p>随着时间推移，巨大的阴谋浮出水面，当初主张改心奥村邦和的龙司才发现自己令怪盗团陷入了多么严重的危机。自己明明是想让怪盗团变得更好，又为什么会跌入对手的圈套呢？在无孔不入的国家机器面前，龙司第一次感受到了自己的无力。悔恨和不甘心由心底涌出，化作一声声无济于事的怒吼。</p>
-<p>到这里，他才真正意识到自己所做的一切并<strong>不是</strong>为了遇到困难的人，而是可笑的<strong>自我满足</strong>；不知不觉间，自己竟然丢失了最宝贵的<strong>初心</strong>。对怪盗团的忠诚，反而成了枷锁。当晚，充满愧疚的他找 Joker 谈心：“不知道什么时候，我变得得意忘形了。想着只要为了正义，什么都可以做，这样和我们一直以来对付的那些人根本没有区别。” </p>
-<p>龙司呀龙司，难道你还没有觉察到吗？就算怪盗团解散，你也<strong>再不是「一无所有」</strong>了。和伙伴们并肩战斗建立起的<strong>羁绊</strong>，是不会消失的啊！不如说，只要<strong>初心未改</strong>，无论是否展开活动，无论大家是否还能聚在一起，怪盗团就永远<strong>不会</strong>解散！</p>
+<p>到这里，他才真正意识到自己所做的一切并不是为了遇到困难的人，而是可笑的<strong>自我满足</strong>；不知不觉间，自己竟然丢失了最宝贵的<strong>初心</strong>。对怪盗团的忠诚，反而成了枷锁。当晚，充满愧疚的他找 Joker 谈心：“不知道什么时候，我变得得意忘形了。想着只要为了正义，什么都可以做，这样和我们一直以来对付的那些人根本没有区别。” </p>
+<p>龙司呀龙司，难道你还没有觉察到吗？就算怪盗团解散，你也再不是「一无所有」了。和伙伴们并肩战斗建立起的<strong>羁绊</strong>，是不会消失的啊！不如说，只要初心未改，无论是否展开活动，无论大家是否还能聚在一起，怪盗团就永远不会解散！</p>
 <p>明白了这一点的战车，重新上路了。无论是接下来对狮童，伪神的讨伐，还是第三学期和丸喜的战斗，龙司都立下了赫赫战功。这是因为，他已经找到了自己<strong>真正想要守护的东西</strong>。</p>
 <p><img src="/2023/05/30/persona-5/ryuji3.jpg" alt="伪神讨伐前，不再迷茫的龙司"></p>
 <h3 id="反叛的女教皇：新岛真"><a href="#反叛的女教皇：新岛真" class="headerlink" title="反叛的女教皇：新岛真"></a>反叛的女教皇：新岛真</h3><p>鸭志田悔改事件的第二天，一位英气勃勃的女学生走进了校长办公室。她来这里是为了接下一个任务：调查有关心之怪盗团的传闻。校长信任她的能力，允诺事件平息之后将大学的保送名额分配给她。</p>
@@ -936,29 +1009,27 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <p><strong>姐姐新岛冴，是真的「容身之所」所在；但她同时也是亲手夺走真「容身之所」的人。</strong></p>
 <p><br></p>
 <h2 id="不可爱也不迷人的反派角色们"><a href="#不可爱也不迷人的反派角色们" class="headerlink" title="不可爱也不迷人的反派角色们"></a>不可爱也不迷人的反派角色们</h2><p>不得不说，P5 中的反派角色们 (鸭志田，斑目，金城，奥村，狮童) 的<strong>脸谱化</strong>比较严重。他们代表的是一种纯粹的恶，仿佛天生就是为了被怪盗团改心而存在。</p>
-<p>这种少年-大人，正义-邪恶的简单二元对立虽然增加了玩家在游玩时的情感共鸣，但也不免使得反派的塑造过于<strong>扁平</strong>。作为名义上最终 boss 的日本首相竞选人狮童正义，完全没有最强反派的架势，不仅当街猥亵妇女，电梯插队，还不惜动用私权陷害一个<del>普通日本</del>高中生，属实是有些<strong>平易近人</strong>了。</p>
+<p>这种少年-大人，正义-邪恶的简单二元对立虽然增加了玩家在游玩时的情感共鸣，但也不免使得反派的塑造过于<strong>扁平</strong>。作为名义上最终 boss 的日本首相竞选人狮童正义，完全没有最强反派的架势，不仅当街猥亵妇女，电梯插队，还不惜动用私权陷害一个<del>普通日本</del>高中生，属实是有些平易近人了。</p>
 <p><img src="/2023/05/30/persona-5/shito.png" alt="哥你认真的？"></p>
 <p>唯一一个稍微值得称道的塑造是祐介的师傅，大画伯斑目一流斋。开场时的演技过于精湛 (与杏形成了鲜明对比) 以致作为玩家的我一度都产生了些许动摇。并且，在后续祐介 coop 的剧情中，斑目的老朋友川锅提到，在过去，斑目曾因为小祐介发高烧而急得到处奔走。如果只是将祐介视作一颗仅供自己支配的摇钱树，又怎会如此上心？</p>
 <p>宫殿里的暗影 (shadow) 毫无疑问暴露了人内心中最黑暗，最被欲望所浸染的部分，所以他们所说的话才那么的令人深恶痛绝。然而，人心是难辨黑白的，希望与欲望是并蒂的：在全国画展上认识到这一点的祐介，大概也能以新的心情面对被自己亲手改心的，如同父亲一般的“师傅”了。</p>
 <h3 id="逆位的正义：明智吾郎"><a href="#逆位的正义：明智吾郎" class="headerlink" title="逆位的正义：明智吾郎"></a>逆位的正义：明智吾郎</h3><p>明智吾郎大概是全篇中<strong>争议最大</strong>的一个角色了。一般来说，争议大的角色往往有着较立体的塑造；然而我觉得明智的塑造可以说是 P5 (特别是 P5R) 中的一大败笔。可以看出制作组想要塑造一个与 Joker 对立的反派角色，并且衍生出一段侦探怪盗相爱相杀的王道剧情；可惜笔力不够，起到的只有反效果。</p>
-<p>虽然同为失去「容身之所」的 persona 掌控者，明智的<strong>信念</strong>居然是“帮助抛弃自己的爹坐上首相宝座后再毁掉他”；这一段话我打出来都觉得难绷。这一无厘头的复仇方式不仅极大的破坏了前期塑造出的高智商侦探人设，在<strong>思想高度</strong>上也根本无法与怪盗团匹敌，自然而然就支撑不起其与怪盗团对立的地位了。注意，Joker 的信念从来不是 “向狮童复仇” 或是 “洗清自己的冤屈”，而是 “帮助有困难的人们”；如果要塑造一个和 Joker 角色对立的反派，至少在<strong>信念</strong>上不能产生明显的差距。在这一点上，丸喜明显更加适合取代明智的地位。</p>
+<p>虽然同为失去「容身之所」的 persona 掌控者，明智的<strong>信念</strong>居然是“帮助抛弃自己的爹坐上首相宝座后再毁掉他”；这一段话我打出来都觉得难绷。这一无厘头的复仇方式不仅极大的破坏了前期塑造出的高智商侦探人设，在<strong>思想高度</strong>上也根本无法与怪盗团匹敌，自然而然就支撑不起其与怪盗团对立的地位了。注意，Joker 的信念从来不是“向狮童复仇” 或是“洗清自己的冤屈”，而是“帮助有困难的人们”；若想塑造一个和 Joker 角色对立的反派，至少在信念上不能产生明显的差距。在这一点上，丸喜明显更加适合取代明智的地位。</p>
 <p>不提这些，明智还是导致双叶母亲与春父亲死亡的直接凶手；这使得任何方式的洗白都显得无比苍白。而怪盗团居然如此轻易就原谅了明智，这也间接使得怪盗团的人设产生了崩坏。</p>
 <h3 id="无私的织梦者：丸喜拓人"><a href="#无私的织梦者：丸喜拓人" class="headerlink" title="无私的织梦者：丸喜拓人"></a>无私的织梦者：丸喜拓人</h3><blockquote class="blockquote-center">
-            <i class="fa fa-quote-left"></i>
-            <p>自由不能以彻底放弃自由为代价。   —— 密尔 <em>论自由</em></p>
+<p>自由不能以彻底放弃自由为代价。   —— 密尔 <em>论自由</em></p>
 
-            <i class="fa fa-quote-right"></i>
-          </blockquote> 
+</blockquote> 
 <p>P5R 中新增的两个角色，心理老师丸喜拓人与学妹芳泽堇，在第三学期登上主场。丸喜老师是一个塑造的很好的角色，以其命名的假结局丸喜结局也发人深省。</p>
 <p>初看丸喜结局，一切都是那么的美好：Joker 留在了卢布朗，龙司在田径部挥洒汗水，杏也再也不用面对挚友轻生的痛苦。斑目一直都是德艺双馨的大画伯，带领祐介追求真正的美。连摩尔加纳也如愿以偿，获得了人类之身。而得到最大“救赎”的还是剩下三个成员：真与春的父亲都回到了她们的身边，仿佛从来没有离去过；双叶的母亲也回到“现实”，与双叶、惣治郎组成了真正的家庭。</p>
 <p><img src="/2023/05/30/persona-5/futaba.jpg" alt="你忍心夺走这个笑容吗？"></p>
 <p>得到这一切的代价是真正的现实被扭曲，怪盗团之间的羁绊不复存在：曾经并肩作战的回忆一并被抹杀，之所以相互还认识靠的只是各自残留的心愿。丸喜为怪盗团的每一位成员编织了最“完美”的「容身之所」，取走了他们自己<strong>奋力抗争</strong>得到的「容身之所」。</p>
 <p><strong>这一切，值得吗？</strong></p>
-<p>网络上对于丸喜结局的批驳，大多集中在逻辑层面：首先，在攻略丸喜殿堂时可以发现，丸喜对除怪盗团之外普罗大众的愿望的处理其实十分潦草：这是由于丸喜终究只是一个人，无法对所有人进行深刻了解；其次，每个人的愿望之间存在<strong>冲突</strong>，如果不对其他人的愿望<strong>擅自进行更改</strong>，就不能真正意义上的实现“所有人的愿望”。</p>
-<p>若我们抛开这一切逻辑上的谬误，想象一个全知全能的丸喜神：祂需要你让渡“<strong>自己克服挑战</strong>”的权利，或是牺牲“<strong>自己克服挑战</strong>”的回忆，来换取一个<strong>百分百幸福</strong>的，即使可能不是原来的自己所期望的，美好未来。你会选择心甘情愿的接受吗？</p>
+<p>网络上对于丸喜结局的批驳，大多集中在逻辑层面：首先，在攻略丸喜殿堂时可以发现，丸喜对除怪盗团之外普罗大众的愿望的处理其实十分潦草：这是由于丸喜终究只是一个人，无法对所有人进行深刻了解；其次，每个人的愿望之间存在冲突，如果不对其他人的愿望<strong>擅自进行更改</strong>，就不能真正意义上的实现所有人的愿望。</p>
+<p>若我们抛开这一切逻辑上的谬误，想象一个全知全能的丸喜神：祂需要你让渡“<strong>自己克服挑战</strong>”的权利，或是牺牲“<strong>自己克服挑战</strong>”的回忆，来换取一个百分百幸福的，即使可能不是原来的自己所期望的美好未来。你会选择心甘情愿的接受吗？</p>
 <p>在进行游戏时，「我」毫不犹豫的选择了反抗：这是因为<strong>叛逆</strong>是 Joker 的性格，也是怪盗团的灵魂，更是整个 P 系列的主题所在。虽然非自己所愿，怪盗团的其他团员们忘记了过去的自己，抛弃了羁绊，这无疑是一种<strong>背叛</strong>；而作为玩家的「我」自然不能令 Joker 失望。</p>
 <p><strong>然而作为普通人，生活在现实世界中的「我」呢？</strong></p>
-<p>犹豫了一会，我想<strong>目前</strong>我的答案是<strong>否</strong>；这是因为在我仅仅 20 年的人生历程中，还未曾遇到过任何足以让我痛苦或者遗憾终生的事件。与多数人相比，<strong>目前的我</strong>无疑是幸运的。</p>
+<p>犹豫了一会，我想<strong>目前</strong>我的答案是<strong>否</strong>；这是因为在我仅仅 20 年的人生历程中，还未曾遇到过任何足以让我痛苦或者遗憾终生的事件。与多数人相比，目前的我无疑是幸运的。</p>
 <p>然而未来谁也说不准。感叹着“太可怕了，我可受不了”的王子，最后也承受了沦为乞丐的苦难。如果我也面临着像双叶与春那样与重要的人分别的命运 (呸呸呸大吉利是)，到那时，我还能充满底气的拒绝祂的提议吗？</p>
 <p>我不敢想下去。</p>
 <p><br></p>
@@ -983,13 +1054,11 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <span id="more"></span>
 <p>我打算将 digest 分为 3 parts，p1 (本文) 将主要介绍加密学概念中的有趣内容；<a href="https://thisisxxz.github.io/2023/06/02/Cryptography-COMP3357-2/">p2</a> 则侧重于数学 (数论，群论) 等知识在加密学中的应用；而 <a href="https://thisisxxz.github.io/2023/06/05/Cryptography-COMP3357-3/">p3</a> 则是对 p2 的延申，将会介绍加密学中的困难问题 (hard problems) 与单向函数 (one-way function)，其与 p2 中的相关知识存在密切的联系。</p>
 <p><br></p>
-<div class="note warning">
-            <p>&emsp; This article is a self-administered course note.<br>&emsp; It will <strong>NOT</strong> cover any exam or assignment related content.</p>
-          </div>
+<div class="note warning"><p>&emsp; This article is a self-administered course note.<br>&emsp; It will <strong>NOT</strong> cover any exam or assignment related content.</p>
+</div>
 <p><br></p>
-<h2 id="Cryptographic-Primitives"><a href="#Cryptographic-Primitives" class="headerlink" title="Cryptographic Primitives"></a>Cryptographic Primitives</h2><div class="note info no-icon">
-            <p>Cryptographic primitives are well-established, low-level <strong>cryptographic algorithms</strong> that are frequently used to build cryptographic protocols for computer security systems.</p>
-          </div>
+<h2 id="Cryptographic-Primitives"><a href="#Cryptographic-Primitives" class="headerlink" title="Cryptographic Primitives"></a>Cryptographic Primitives</h2><div class="note info no-icon"><p>Cryptographic primitives are well-established, low-level <strong>cryptographic algorithms</strong> that are frequently used to build cryptographic protocols for computer security systems.</p>
+</div>
 <p>In this course, 7 kinds of cryptographic primitives are covered:</p>
 <ul>
 <li>Encryption scheme</li>
@@ -1008,9 +1077,9 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <li>Authenticity, Public verifiability, transferability...</li>
 </ul>
 <p>Also, for a cryptographic primitive, the definition of security varies in face of different <strong>threat model</strong>. </p>
-<div class="note info no-icon">
-            <p><strong>Threat model</strong> consists of the adversary and his targets of attack.</p><p>In <strong>stronger</strong> notions of security, adversary tends to have more power, therefore cryptographic primitives with stronger definitions are <strong>more secure</strong> than weak ones.</p>
-          </div>
+<div class="note info no-icon"><p><strong>Threat model</strong> consists of the adversary and his targets of attack.</p>
+<p>In <strong>stronger</strong> notions of security, adversary tends to have more power, therefore cryptographic primitives with stronger definitions are <strong>more secure</strong> than weak ones.</p>
+</div>
 <p>In general, the <strong>security</strong> of a cryptographic primitive is defined by an <strong>experiment</strong> (or <strong>game</strong>). The idea of <strong>reduction</strong> (归约) is critical in designing such experiments.</p>
 <ul>
 <li>Encryption scheme: Passive eavesdropping (EAV) security, Chosen-plaintext-attack (CPA) security, Chosen-ciphertext-attack (CCA) security, Perfect secrecy</li>
@@ -1022,9 +1091,8 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <li>One-way function: Non-invertibility</li>
 </ul>
 <p><br></p>
-<h2 id="Kerckhoff-39-s-Principle"><a href="#Kerckhoff-39-s-Principle" class="headerlink" title="Kerckhoff&#39;s Principle"></a>Kerckhoff&#39;s Principle</h2><div class="note info no-icon">
-            <p>Kerckhoff&#39;s principle is the concept that a Cryptographic system should be designed to be secure, even if all its details, <strong>except for the key</strong>, are publicly known. </p>
-          </div>
+<h2 id="Kerckhoff-39-s-Principle"><a href="#Kerckhoff-39-s-Principle" class="headerlink" title="Kerckhoff&#39;s Principle"></a>Kerckhoff&#39;s Principle</h2><div class="note info no-icon"><p>Kerckhoff&#39;s principle is the concept that a Cryptographic system should be designed to be secure, even if all its details, <strong>except for the key</strong>, are publicly known. </p>
+</div>
 <p>Kerckhoff&#39;s principle indicates that the unknowability of <strong>secret key</strong> $k$ is critical to ensure the security of cryptographic primitive. This principle also makes the storage and transmission of keys extremely important.</p>
 <p><br></p>
 <blockquote>
@@ -1033,9 +1101,8 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <p>而且由此可见现在流行的加密方案都是久经考验的：想象一下，由于算法的所有细节都是公开的知识，一定会有无数人尝试去破解；一个加密方案能够稳定的存在，这一事实本身就能证明其安全性。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Perfect-Secrecy-and-its-Relaxation"><a href="#Perfect-Secrecy-and-its-Relaxation" class="headerlink" title="Perfect Secrecy and its Relaxation"></a>Perfect Secrecy and its Relaxation</h2><div class="note info no-icon">
-            <p>If an encryption scheme is perfectly secure, the ciphertext reveals <strong>NO</strong> additional information to the adversary about the underlying plaintext, even if the adversary has <strong>unbounded computational power</strong>.</p>
-          </div>
+<h2 id="Perfect-Secrecy-and-its-Relaxation"><a href="#Perfect-Secrecy-and-its-Relaxation" class="headerlink" title="Perfect Secrecy and its Relaxation"></a>Perfect Secrecy and its Relaxation</h2><div class="note info no-icon"><p>If an encryption scheme is perfectly secure, the ciphertext reveals <strong>NO</strong> additional information to the adversary about the underlying plaintext, even if the adversary has <strong>unbounded computational power</strong>.</p>
+</div>
 <p>Perfect secrecy is the <strong>strongest</strong> definition of security.</p>
 <h3 id="Probability-Definition"><a href="#Probability-Definition" class="headerlink" title="Probability Definition"></a>Probability Definition</h3><ul>
 <li>$\Pr[M=m|C=c]=\Pr[M=m]$ for all $m, c$</li>
@@ -1051,9 +1118,8 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 </ul>
 <p>Perfect secrecy of $\Pi$ indicates that <strong>NO</strong> adversary could success in the above experiment with probability greater than $\frac{1}{2}$.  $\Pr[\mathtt{PrivK}^{eav}_{\mathscr{A}, \Pi}(n)=1]=\frac{1}{2}$.</p>
 <p>This means that adversary has NO better choice than simply <strong>outputting a random guess</strong>.</p>
-<h3 id="Shannon-39-s-Theorem"><a href="#Shannon-39-s-Theorem" class="headerlink" title="Shannon&#39;s Theorem"></a>Shannon&#39;s Theorem</h3><div class="note info no-icon">
-            <p>Shannon points out that an encryption scheme could be perfectly secure only when $|\mathscr{K}|\geq |\mathscr{M}|$ ($\mathscr{K}$ is key space, $\mathscr{M}$ is message space). </p>
-          </div>
+<h3 id="Shannon-39-s-Theorem"><a href="#Shannon-39-s-Theorem" class="headerlink" title="Shannon&#39;s Theorem"></a>Shannon&#39;s Theorem</h3><div class="note info no-icon"><p>Shannon points out that an encryption scheme could be perfectly secure only when $|\mathscr{K}|\geq |\mathscr{M}|$ ($\mathscr{K}$ is key space, $\mathscr{M}$ is message space). </p>
+</div>
 <p>One-time pad is a typical perfectly secure scheme: adversary can <strong>never</strong> derive $m$ from a given $c$ if he does not know the secret key $k$. In OTP, $|\mathscr{K}|=|\mathscr{M}|=2^n$.</p>
 <p>In real life, perfectly secure encryption scheme has little application value: If 2 parties have the ability to <strong>safely transmit a key of the same length as the plaintext</strong>, then obviously it is better to transmit the plaintext directly. </p>
 <h3 id="Relaxation-Computational-Secrecy"><a href="#Relaxation-Computational-Secrecy" class="headerlink" title="Relaxation: Computational Secrecy"></a>Relaxation: Computational Secrecy</h3><p>The <strong>relaxed</strong> definition of perfect secrecy is more frequently used in reality:</p>
@@ -1062,9 +1128,9 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <li>adversary is allowed to success with <strong>negligible advantage</strong></li>
 </ul>
 <p>It is called <strong>asymptotic computational secrecy</strong>.</p>
-<div class="note info no-icon">
-            <p><strong>(Non-)Negligible advantage</strong> is an <strong>asymptotic</strong> concept. </p><p>$\varepsilon(n)$ denotes the negligible probability for a fixed security parameter $1^n$.  For example, the probablistic $\Pr[\mathtt{PrivK}^{eav}_{\mathscr{A}, \Pi}(n)=1]\geq\frac{1}{2}+\varepsilon(n)$ indicates that adversary successes in the EAV experiment with <strong>non-negligible advantage</strong>: $\Pi$ is EAV-secure.</p>
-          </div>
+<div class="note info no-icon"><p><strong>(Non-)Negligible advantage</strong> is an <strong>asymptotic</strong> concept. </p>
+<p>$\varepsilon(n)$ denotes the negligible probability for a fixed security parameter $1^n$.  For example, the probablistic $\Pr[\mathtt{PrivK}^{eav}_{\mathscr{A}, \Pi}(n)=1]\geq\frac{1}{2}+\varepsilon(n)$ indicates that adversary successes in the EAV experiment with <strong>non-negligible advantage</strong>: $\Pi$ is EAV-secure.</p>
+</div>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
@@ -1077,14 +1143,14 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <h2 id="Pseudorandomness"><a href="#Pseudorandomness" class="headerlink" title="Pseudorandomness"></a>Pseudorandomness</h2><p>Randomness is a very important concept in cryptography (and not only in cryptography). Although the concept of randomness is often mentioned, what exactly is randomness and how is it implemented?</p>
 <p>Our understanding of the concept of &quot;randomness&quot; cannot be separated from the physical phenomena in real life. For example, the sequence of numbers obtained by rolling a six-sided die multiple times is clearly &quot;random&quot;; this randomness, guaranteed by physical experiments, is called <strong>True randomness</strong>.</p>
 <p>True random number generation is technically demanding and inefficient: a true random number generator (TRNG) must <strong>rely on some random external physical phenomenon as the information entropy resource</strong>, such as the trajectory of the user&#39;s mouse movement, thermal noise from resistors and oscillators, computer hardware noise, etc.</p>
-<div class="note info no-icon">
-            <p><strong>NO</strong> pure algorithms could achieve true randomness.</p><p>Here, <strong>pure</strong> algorithms are the algorithms that only use designed <strong>mathmatical formulaes or precalculated tables</strong> to produce number suquence. </p>
-          </div>
+<div class="note info no-icon"><p><strong>NO</strong> pure algorithms could achieve true randomness.</p>
+<p>Here, <strong>pure</strong> algorithms are the algorithms that only use designed <strong>mathmatical formulaes or precalculated tables</strong> to produce number suquence. </p>
+</div>
 <p>TRNGs that generate random numbers with the help of external physical phenomenon is <strong>inefficient</strong>. Only pure algorithm could meet the requirement of producing many numbers efficiently. Therefore, the concept of <strong>pseudorandomness</strong> is put forward: Pseudorandom numbers are numbers that <strong>appear random</strong>.</p>
 <p>Pseudorandom number generators (PRGs) are the generators that efficiently generate pseudorandom number sequence. PRG takes a short seed $s$ and produces a pseudorandom string $G(s)$. </p>
-<div class="note info no-icon">
-            <p>Pseudorandomness is the <strong>relaxation</strong> of true randomness.</p><p>We could say that pseudorandomness is equivalent to true randomness in probablistic polynomial time (PPT) background.</p>
-          </div>
+<div class="note info no-icon"><p>Pseudorandomness is the <strong>relaxation</strong> of true randomness.</p>
+<p>We could say that pseudorandomness is equivalent to true randomness in probablistic polynomial time (PPT) background.</p>
+</div>
 <p>How to define &quot;appear random&quot;? There are several PPT <strong>statistical tests</strong> that used to check whether a number sequence is statistical independent or not. If a number sequence could pass all the statistical tests, it is regarded as random, no matter it is generated by TRNGs or PRGs. </p>
 <p>Essentially, pseudorandom number sequence (or say PRGs) is <strong>deterministic</strong> : for a fixed seed $s$, $G(s)$ always remains the same. However, if an adversary observing $G(s)$ without knowing the seed $s$, he can <strong>NOT</strong> distinguish $G(s)$ from a truly random number sequence $r$ with non-negligible advantage.</p>
 <p>We could see that in the definition of PRGs:</p>
@@ -1098,14 +1164,14 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <p>这也可以说是柯克霍夫定律威力的延伸体现。</p>
 </blockquote>
 <p><br></p>
-<h2 id="The-Idea-of-Reduction"><a href="#The-Idea-of-Reduction" class="headerlink" title="The Idea of Reduction"></a>The Idea of Reduction</h2><div class="note info no-icon">
-            <p>For problem $A$ and $B$, if there exists a computable function $f$ that for all instance $x\in A$, $A(x)=B(f(x))$, we say that $A$ could <strong>reduce</strong> to $B$. </p>
-          </div>
+<h2 id="The-Idea-of-Reduction"><a href="#The-Idea-of-Reduction" class="headerlink" title="The Idea of Reduction"></a>The Idea of Reduction</h2><div class="note info no-icon"><p>For problem $A$ and $B$, if there exists a computable function $f$ that for all instance $x\in A$, $A(x)=B(f(x))$, we say that $A$ could <strong>reduce</strong> to $B$. </p>
+</div>
 <p>Reduction (or simulation) is a powerful idea in computer science. Especially in cryptography, we use the idea of reduction to prove security of some cryptographic primitives.</p>
 <p>We will illustrate the idea of reduction with a concrete example.</p>
-<h3 id="Example-Pseudo-One-time-Pad"><a href="#Example-Pseudo-One-time-Pad" class="headerlink" title="Example: Pseudo One-time Pad"></a>Example: Pseudo One-time Pad</h3><div class="note info no-icon">
-            <p>Pseudo OTP:</p><p>Pseudo OTP solves OTP&#39;s drawback that secret key $k$ needs to be as long as message $m$.</p><p>For $m\in \{0,1\}^n$, we expand a short key $k$ to the length $n$ with PRG: $r:=G(k)$. Pseudo OTP encrypts as $c:=m\oplus G(k)$.</p>
-          </div>
+<h3 id="Example-Pseudo-One-time-Pad"><a href="#Example-Pseudo-One-time-Pad" class="headerlink" title="Example: Pseudo One-time Pad"></a>Example: Pseudo One-time Pad</h3><div class="note info no-icon"><p>Pseudo OTP:</p>
+<p>Pseudo OTP solves OTP&#39;s drawback that secret key $k$ needs to be as long as message $m$.</p>
+<p>For $m\in \{0,1\}^n$, we expand a short key $k$ to the length $n$ with PRG: $r:=G(k)$. Pseudo OTP encrypts as $c:=m\oplus G(k)$.</p>
+</div>
 <p>Try to prove: Pseudo OTP $\Pi$ is EAV-secure if $G$ is a PRG. </p>
 <p>We reduce &quot;Pseudo OTP $\Pi$ is EAV-secure&quot; to &quot;$G$ is a PRG&quot;.</p>
 <p>Construct a distinguisher $D$ for $G$ <strong>given $\mathscr{A}$ attacking $\Pi$ as its subroutine</strong>.</p>
@@ -1131,9 +1197,8 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <p>Since $G$ is PRG: $|\Pr_{r\leftarrow U_{n}}[D(r)=1]-\Pr_{s\leftarrow U_m}[D(G(s))=1]|\leq \varepsilon(n)$.</p>
 <p>From the 2 equality above: $|\Pr[\mathtt{PrivK}^{eav}_{\mathscr{A}, \Pi}(n)=1]-\Pr[\mathtt{PrivK}^{eav}_{\mathscr{A}, \widetilde{\Pi}}(n)=1]|\leq \varepsilon(n)$.</p>
 <p>Therefore $\Pr[\mathtt{PrivK}^{eav}_{\mathscr{A}, \Pi}(n)=1]\leq \varepsilon(n)+\frac{1}{2}$, which indicates that pseudo OTP is EAV-secure.</p>
-<h3 id="Reduction-Logic"><a href="#Reduction-Logic" class="headerlink" title="Reduction Logic"></a>Reduction Logic</h3><div class="note info no-icon">
-            <p>Reduction provides an <strong>abstraction</strong>.</p>
-          </div>
+<h3 id="Reduction-Logic"><a href="#Reduction-Logic" class="headerlink" title="Reduction Logic"></a>Reduction Logic</h3><div class="note info no-icon"><p>Reduction provides an <strong>abstraction</strong>.</p>
+</div>
 <p>Understand the <strong>abstraction</strong> is the key to understand reduction. </p>
 <p>If we want to reduce the security of $\Pi&#39;$ to the security of $\Pi$, we need to <strong>construct</strong> an adversary $\mathscr{S}$ for $\Pi$ <strong>given the adversary $\mathscr{A}$ for $\Pi&#39;$ as its subroutine</strong>, which is to say, $\mathscr{S}$ employs (runs) $\mathscr{A}$ as a <strong>black box</strong> abstraction function (<strong>Encapsulation</strong>).</p>
 <p>The reduction involves 4 logic statements:</p>
@@ -1145,9 +1210,10 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 </ul>
 <p>If $\mathscr{S}$ is constructed successfully, it will be able to attack $\Pi$ with non-negligible advantage. Therefore we could conclude that if $\mathscr{A}$ could attack $\Pi&#39;$ successfully, $\mathscr{S}$ (which takes $\mathscr{A}$ as its subroutine) could attack $\Pi$. The corresponding logic is $q\to p$.</p>
 <p>According to the <strong>contrapositive statement</strong>, we have $\lnot p\to \lnot q$,  which implys that the security of $\Pi$ guarantees the security of $\Pi&#39;$. Therefore, the reduction is completed: we reduce the security of $\Pi&#39;$ to the security of $\Pi$.</p>
-<div class="note info no-icon">
-            <p><strong>Contrapositive</strong> argument:</p><p>The contrapositive of the conditional statement &quot;If $p$ then $q$. &quot; is &quot;If not $q$ then not $p$&quot;.</p><p>The logical equivalence could be expressed by $p\to q \iff \lnot q\to \lnot p$.</p>
-          </div>
+<div class="note info no-icon"><p><strong>Contrapositive</strong> argument:</p>
+<p>The contrapositive of the conditional statement &quot;If $p$ then $q$. &quot; is &quot;If not $q$ then not $p$&quot;.</p>
+<p>The logical equivalence could be expressed by $p\to q \iff \lnot q\to \lnot p$.</p>
+</div>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
@@ -1162,9 +1228,9 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <h3 id="Private-Key-Encryption-and-MAC"><a href="#Private-Key-Encryption-and-MAC" class="headerlink" title="Private Key Encryption and MAC"></a>Private Key Encryption and MAC</h3><p>Private key encryption scheme and message authentication code (MAC) are symmetric primitives. In fact, private key encryption scheme is also called <strong>symmetric encryption</strong>.</p>
 <p>Private key encryption: Alice encrypts the message $m$ by running $Enc_k(m)\to c$. Bob decrypts the ciphertext $c$ by running $Dec_k(c)\to m$.</p>
 <p>Message authentication code (MAC): Alice authenticates $m$ by running $Mac_k(m)\to t$. Bob verifies the tag $t$ by checking $Vrfy_k(m,t)$ equals to $1$ or not. </p>
-<div class="note info no-icon">
-            <p><strong>Message Authentication Code (MAC)</strong> provides <strong>integrity</strong>, which ensures that the information is not tampered during transmission. </p><p>Alice applies the MAC algorithm to $m$ and produces an <strong>unforgeable</strong> tag $t:=Mac_k(m)$. Alice sends the tag $t$ along with the message $m$: Bob then verifies the tag to check whether the message $m$ is tampered or not. </p>
-          </div>
+<div class="note info no-icon"><p><strong>Message Authentication Code (MAC)</strong> provides <strong>integrity</strong>, which ensures that the information is not tampered during transmission. </p>
+<p>Alice applies the MAC algorithm to $m$ and produces an <strong>unforgeable</strong> tag $t:=Mac_k(m)$. Alice sends the tag $t$ along with the message $m$: Bob then verifies the tag to check whether the message $m$ is tampered or not. </p>
+</div>
 <h3 id="Public-Key-Encryption-and-Digital-Signature"><a href="#Public-Key-Encryption-and-Digital-Signature" class="headerlink" title="Public Key Encryption and Digital Signature"></a>Public Key Encryption and Digital Signature</h3><p>Public key encryption scheme and digital signature are asymmetric primitives. Public key encryption scheme is also called <strong>asymmetric encryption</strong>.</p>
 <p>In asymmetric primitives, the key-generation algorithm $Gen(1^n)$ will produce <strong>a pair of keys</strong> $\langle pk, sk \rangle$. The <strong>public key</strong> $pk$ is <strong>publicly distributed</strong>, while <strong>private key</strong> $sk$ is only held by <strong>one party</strong>.</p>
 <p>Public key encryption: Alice encrypts the message $m$ with public key $pk$ by running $Enc_{pk}(m)\to c$. Bob decrypts the ciphertext $c$ with <strong>private key</strong> by running $Dec_{sk}(c)\to m$.</p>
@@ -1182,20 +1248,17 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 </li>
 </ul>
 <p><br></p>
-<h2 id="Randomized-Algorithm"><a href="#Randomized-Algorithm" class="headerlink" title="Randomized Algorithm"></a>Randomized Algorithm</h2><div class="note info no-icon">
-            <p>A randomized algorithm uses a source of (pseudo) randomness as part of its logic.</p>
-          </div>
+<h2 id="Randomized-Algorithm"><a href="#Randomized-Algorithm" class="headerlink" title="Randomized Algorithm"></a>Randomized Algorithm</h2><div class="note info no-icon"><p>A randomized algorithm uses a source of (pseudo) randomness as part of its logic.</p>
+</div>
 <p>Randomized algorithm, as opposed to <strong>deterministic algorithm</strong>, mapping the same input to several random outputs. The randomness is guaranteed by some random tapes implemented by TRNGs, PRGs, PRFs or PRPs.</p>
 <p>Randomized algorithms are essential to build secure cryptographic primitives: in particular, <strong>Any CPA-secure encryption scheme must be randomized</strong>.</p>
-<div class="note info no-icon">
-            <p>Chosen-plaintext attack (CPA): Adversary holds the <strong>encryption oracle</strong> $Enc_k(\cdot)$, which means he is able to obtain any ciphertext $c$ for a desired message $m$ <strong>without</strong> knowing secret key $k$.</p>
-          </div>
+<div class="note info no-icon"><p>Chosen-plaintext attack (CPA): Adversary holds the <strong>encryption oracle</strong> $Enc_k(\cdot)$, which means he is able to obtain any ciphertext $c$ for a desired message $m$ <strong>without</strong> knowing secret key $k$.</p>
+</div>
 <p>For a deterministic encryption scheme, there is a trivial CPA adversary $\mathscr{A}$: $\mathscr{A}$ ask $Enc_k(\cdot)$ to encrypt $m_0,m_1$ first and obtain $c_0=Enc_k(m_0), c_1=Enc_k(m_1)$. Then when it gets challenge ciphertext $c$, $\mathscr{A}$ simply compares $c$ to $c_0,c_1$. If $c=c_0$, output $0$, and if $c=c_1$, output $1$.</p>
 <p>Also we could see that, for <strong>public encryption scheme, EAV-security is equivalent to CPA-security</strong> since adversary knows public key $pk$. (equivalent to hold the encryption oracle $Enc_{pk}(\cdot)$)</p>
 <p><br></p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning">
-            <p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
-          </div>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning"><p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
+</div>
 <p>Course info:</p>
 <p>Code: COMP3357, Lecturer: Dr. Ravi. Ramanathan, TA: Zhang Chengru</p>
 <p>Course textbook: </p>
@@ -1305,9 +1368,8 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <span id="more"></span>
 <p>本文中的 shell command 与 shell script 均采用 <strong>bash shell</strong>。</p>
 <p><br></p>
-<h2 id="Variables-in-Shell-Script"><a href="#Variables-in-Shell-Script" class="headerlink" title="Variables in Shell Script"></a>Variables in Shell Script</h2><div class="note info no-icon">
-            <p>Variables in shell scripts have only <strong>ONE</strong> type, which is <strong>string</strong>.</p>
-          </div>
+<h2 id="Variables-in-Shell-Script"><a href="#Variables-in-Shell-Script" class="headerlink" title="Variables in Shell Script"></a>Variables in Shell Script</h2><div class="note info no-icon"><p>Variables in shell scripts have only <strong>ONE</strong> type, which is <strong>string</strong>.</p>
+</div>
 <h3 id="Defining-Variables"><a href="#Defining-Variables" class="headerlink" title="Defining Variables"></a>Defining Variables</h3><p>有 3 种在 shell script 中定义变量的方式。然而无论哪一种，在变量赋值语句 <code>var=[value]</code> (注意， <code>=</code> 左右<strong>不能</strong>加空格) 中，等号右边都必须是一个<strong>字符串 string</strong>。</p>
 <ul>
 <li><p><code>[value]</code> is enclosed in single quotation marks <code>&#39;&#39;</code></p>
@@ -1321,9 +1383,9 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 </li>
 </ul>
 <h3 id="Accessing-Variables"><a href="#Accessing-Variables" class="headerlink" title="Accessing Variables"></a>Accessing Variables</h3><p>使用 dollar 符号 <code>$</code> 来访问变量</p>
-<div class="note info no-icon">
-            <p><strong>Variable substitution: </strong> </p><p>We use <code>$var</code> to substitute <code>var</code> with the corresponding string (the value). For example, if <code>var=&#39;Euphonium&#39;</code>, and <code>title=&quot;Sound! $var&quot;</code>, then the variable <code>title</code> will be evaluated to the string <code>&quot;Sound! Euphonium&quot;</code>.  </p>
-          </div>
+<div class="note info no-icon"><p><strong>Variable substitution: </strong> </p>
+<p>We use <code>$var</code> to substitute <code>var</code> with the corresponding string (the value). For example, if <code>var=&#39;Euphonium&#39;</code>, and <code>title=&quot;Sound! $var&quot;</code>, then the variable <code>title</code> will be evaluated to the string <code>&quot;Sound! Euphonium&quot;</code>.  </p>
+</div>
 <p><br></p>
 <p>文本处理一直是 shell script 出题的大头：然而课上学的关于这部分的内容实在是太少太少了，差评！接下来将会逐个介绍比较有用的文本处理命令。</p>
 <h2 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h2><p><code>grep</code> 是 <strong>按行</strong> 处理文本的重要命令之一，也是课上接触的唯一一个文本处理命令。而且这一命令也在我搭建该博客时起到了重要作用：查找关键词的功能真的超级好用。</p>
@@ -1396,9 +1458,10 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <li><p>输出 bar.txt 中所有字段数等于 $3$ 的行中的第 $1$ 与第 $3$ 个字段 (分隔符为空格或制表符)：<code>awk &#39;NF==3 &#123;print $1, $3&#125;&#39;</code></p>
 </li>
 </ul>
-<div class="note info no-icon">
-            <p><strong>Built-in variables</strong>:</p><p><code>NF</code> 是 awk 的<strong>内建变量</strong>，记录的是当前行的<strong>字段数</strong>。awk 还提供了许多其他的内建变量，例如：<code>FS</code> (字段分隔符，默认为任何 blank 字符), <code>length</code> (当前行的长度), <code>NR</code> (当前行的行号)。</p><p>并且，对一行中的 <code>NF</code> 个字段，<code>$0</code> 代表整行，<code>$i</code> $(1\leq i\leq NF)$ 代表第 $i$ 个字段。</p>
-          </div>
+<div class="note info no-icon"><p><strong>Built-in variables</strong>:</p>
+<p><code>NF</code> 是 awk 的<strong>内建变量</strong>，记录的是当前行的<strong>字段数</strong>。awk 还提供了许多其他的内建变量，例如：<code>FS</code> (字段分隔符，默认为任何 blank 字符), <code>length</code> (当前行的长度), <code>NR</code> (当前行的行号)。</p>
+<p>并且，对一行中的 <code>NF</code> 个字段，<code>$0</code> 代表整行，<code>$i</code> $(1\leq i\leq NF)$ 代表第 $i$ 个字段。</p>
+</div>
 <p>除此之外，我们甚至能在 <code>[awk script]</code> 中写入用 awk 语言编写的程序 (和 C 语法极其相似)，来完成一系列复杂的文本格式化。我将用以下两个例子进行说明：</p>
 <h3 id="Example-1"><a href="#Example-1" class="headerlink" title="Example 1"></a>Example 1</h3><p><img src="/2023/05/05/shell-command/eg1-text.png" alt="1.1"></p>
 <p>对于这一系列杂乱的字段，我们想将其整理成一行中每两个字段间只保留一个空格作为分隔。这一过程用 C 语言来实现可以说非常简单，但是用 shell script 我一时半会真的想不出来。</p>
@@ -1434,9 +1497,9 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 <p>使用 dollar 符号 <code>$</code> 获取 <code>(( ))</code> 命令的结果；这与使用 <code>$</code> 获取变量值是类似的。</p>
 <p>此外，写入 <code>(( ))</code> 中的 <code>expressions</code> 中的变量<strong>无需</strong>加 <code>$</code> 前缀：<code>(( ))</code> 命令会自动解析其中表达式的变量名，这也更符合程序员的书写习惯。</p>
 <p>例：先定义变量 <code>a=0</code>，以下三个命令是等价的 <code>((a=a+15))</code>, <code>((a+=15))</code>, <code>a=$((a+15))</code>。分别执行这三个命令后，<code>echo $a</code> 的结果都是 $15$。</p>
-<div class="note info no-icon">
-            <p>除了算数运算之外，双小括号 <code>(( ))</code> 命令还支持<strong>扩展逻辑运算</strong>与<strong>扩展流程控制语句</strong>，其语法和 C 非常相似。贴一段 shell script 程序感受一下:</p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">num=100</span><br><span class="line">total=0</span><br><span class="line"><span class="keyword">for</span>((i=<span class="number">0</span>;i&lt;=num;++i))     <span class="comment"># 扩展流程控制: 1oop</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    ((total+=i))</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="keyword">if</span>((total==<span class="number">5050</span>))      <span class="comment"># 扩展逻辑运算；另外，可以使用 $((total==5050)) 获取布尔值结果</span></span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$total</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
-          </div>
+<div class="note info no-icon"><p>除了算数运算之外，双小括号 <code>(( ))</code> 命令还支持<strong>扩展逻辑运算</strong>与<strong>扩展流程控制语句</strong>，其语法和 C 非常相似。贴一段 shell script 程序感受一下:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">num=100</span><br><span class="line">total=0</span><br><span class="line"><span class="keyword">for</span>((i=<span class="number">0</span>;i&lt;=num;++i))     <span class="comment"># 扩展流程控制: 1oop</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    ((total+=i))</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="keyword">if</span>((total==<span class="number">5050</span>))      <span class="comment"># 扩展逻辑运算；另外，可以使用 $((total==5050)) 获取布尔值结果</span></span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$total</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+</div>
 <h3 id="Square-Brackets"><a href="#Square-Brackets" class="headerlink" title="Square Brackets"></a>Square Brackets</h3><p>中括号命令 <code>[ ]</code> 与双小括号 <code>(( ))</code> 类似，但使用上并不是那么灵活。具体来说，<code>[ ]</code> 命令<strong>不能</strong>脱离赋值语句 <code>=</code> 而单独存在。</p>
 <p>比如，<code>((a+=10))</code> 命令可以让变量 <code>a</code> 自加 $10$，而替换成中括号，<code>[a+=10]</code> 这一命令是<strong>不合法</strong>的。我们必须写成赋值语句的形式：<code>a=$[a+=10]</code> 或是逻辑上更为自然的 <code>a=$[a+10]</code>。</p>
 <p>由此可见，<code>(( ))</code> 比 <code>[ ]</code> 的使用更加灵活。</p>
