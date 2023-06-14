@@ -31,10 +31,11 @@
 <meta property="og:description" content="题目来自 Codeforces Educational Round #150 (Div.2) E。link">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-06-13T13:23:59.000Z">
-<meta property="article:modified_time" content="2023-06-13T13:36:50.176Z">
+<meta property="article:modified_time" content="2023-06-14T12:35:31.246Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="greedy">
 <meta property="article:tag" content="divide and conquer">
+<meta property="article:tag" content="set">
 <meta name="twitter:card" content="summary">
 
 
@@ -190,7 +191,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -292,9 +293,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2023-06-13 21:23:59 / Modified: 21:36:50" itemprop="dateCreated datePublished" datetime="2023-06-13T21:23:59+08:00">2023-06-13</time>
+      <time title="Created: 2023-06-13 21:23:59" itemprop="dateCreated datePublished" datetime="2023-06-13T21:23:59+08:00">2023-06-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-06-14 20:35:31" itemprop="dateModified" datetime="2023-06-14T20:35:31+08:00">2023-06-14</time>
     </span>
 
   <span class="post-meta-item">
@@ -339,8 +346,18 @@
 <p>给出一个 $n\times n$ 的矩阵，第 $i$ <strong>列</strong>的前 $a_i$ <strong>行</strong>是白色，其余行是黑色 (初始局面)。要求从中选出至多 $m$ 个白色格子，再将剩余的格子涂黑。</p>
 <p>长为 $x$ 的水平连续白色格子对答案的贡献是 $x-1$，求答案的最大值。</p>
 <p><br></p>
-<h2 id="Tutorial"><a href="#Tutorial" class="headerlink" title="Tutorial"></a>Tutorial</h2><p><br></p>
-<h2 id="Code-Implementation"><a href="#Code-Implementation" class="headerlink" title="Code Implementation"></a>Code Implementation</h2><p><br></p>
+<h2 id="Tutorial"><a href="#Tutorial" class="headerlink" title="Tutorial"></a>Tutorial</h2><p>选择一个长度为 $k$ 的水平连续段对答案的贡献为 $k-1$。若选择了 $s$ 段，答案为 $\sum_{i=1}^s (k_i-1)=m-s$。最大化答案意味着最小化选择的段数 $s$。</p>
+<p>若要使选择的段数 $s$ 最小，我们需要尽量选择<strong>最长</strong>的段。问题转化为在初始局面中找到这些最长的水平连续段。在矩阵中连续段的数量是 $O(n^2)$ 级别的，使用暴力显然行不通。</p>
+<p>考虑维护 $cnt_i$，表示长度为 $i$ 的连续段的个数。对于一个初始的全白矩阵，$cnt_n=n$。</p>
+<p>考虑加入<strong>一列</strong>高度为 $a_i$ 的黑色段对 $cnt$ 的影响：首先，$a_i$ 个长度为 $n$ 的连续段会被隔开，$cnt_n=n-a_i$；同时，两种新长度的连续段将会被创造，(左侧) $cnt_{i-1}=a_i$，(右侧) $cnt_{n-i}=a_i$。 </p>
+<p>根据分治原则，易发现<strong>由高到低</strong>处理黑色列是最合适的：这样能够保证每次加入一个黑色列，对 $cnt$ 的维护方法始终一致，即 <strong>1. 移除特定长度的连续段 2. 加入(至多)两种新长度的连续段。</strong></p>
+<p>设当前黑色列的高度为 $v$，位于第 $i$ 列，其左边界为第 $pre$ 列，右边界为第 $suf$ 列。由于我们由高到低进行处理，其左边界与右边界列一定不比它低。那么 $cnt_{suf-pre-1}$ 减小 $v$，$cnt_{i-pre-1}$ 与 $cnt_{suf-i-1}$ 增加 $v$。</p>
+<p>此时问题转化为动态维护某一列左右的边界，用一个 set 即可实现。set 初始插入 $0$ 与 $n+1$ 作为边界哨兵。</p>
+<p>当所有列都成功加入后，我们得到了初始局面下的 $cnt$ 数组。那么答案就呼之欲出了：由 $n$ 到 $1$ 倒序枚举长度，尽量选择当前最长的连续段用来填充 $m$，并计算所用的连续段数量 $s$。答案即为 $m-s$。</p>
+<p><br></p>
+<h2 id="Code-Implementation"><a href="#Code-Implementation" class="headerlink" title="Code Implementation"></a>Code Implementation</h2><p>得到 $cnt$ 数组后倒序填充 $m$ 求答案的过程还有点小坑，记得讨论代码中标注的情况 (*)</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;set&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_N = <span class="number">2e5</span> + <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">column</span> &#123;</span><br><span class="line">    <span class="type">int</span> ind, val;</span><br><span class="line">    <span class="type">bool</span> <span class="keyword">operator</span> &lt; (<span class="type">const</span> column&amp; x) <span class="type">const</span> &#123; <span class="keyword">return</span> ind &lt; x.ind; &#125;</span><br><span class="line">&#125; col[MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="type">long</span> <span class="type">long</span> cnt[MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">cmp</span><span class="params">(column&amp; x, column&amp; y)</span> </span>&#123; <span class="keyword">return</span> x.val &gt; y.val;  &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    ios_base::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="number">0</span>); cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> t;</span><br><span class="line">    cin &gt;&gt; t;</span><br><span class="line">    <span class="keyword">while</span> (t--) &#123;</span><br><span class="line">        <span class="type">int</span> n;</span><br><span class="line">        <span class="type">long</span> <span class="type">long</span> m;</span><br><span class="line">        cin &gt;&gt; n;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">            col[i].ind = i;</span><br><span class="line">            cin &gt;&gt; col[i].val;</span><br><span class="line">            cnt[i] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        cin &gt;&gt; m;</span><br><span class="line">        <span class="built_in">sort</span>(col + <span class="number">1</span>, col + n + <span class="number">1</span>, cmp);</span><br><span class="line">        </span><br><span class="line">        set&lt;column&gt; st;</span><br><span class="line">        st.<span class="built_in">insert</span>(column&#123;<span class="number">0</span>, n&#125;);</span><br><span class="line">        st.<span class="built_in">insert</span>(column&#123;n + <span class="number">1</span>, n&#125;);</span><br><span class="line"></span><br><span class="line">        cnt[n] = n;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">            set&lt;column&gt;::iterator it = st.<span class="built_in">insert</span>(col[i]).first;</span><br><span class="line">            --it;</span><br><span class="line">            <span class="type">int</span> pre_ind = it-&gt;ind;</span><br><span class="line">            ++it, ++it;</span><br><span class="line">            <span class="type">int</span> suf_ind = it-&gt;ind;</span><br><span class="line">            <span class="type">int</span> cur_ind = col[i].ind, cur_val = col[i].val;</span><br><span class="line">            cnt[suf_ind - pre_ind - <span class="number">1</span>] -= cur_val;</span><br><span class="line">            cnt[cur_ind - pre_ind - <span class="number">1</span>] += cur_val;</span><br><span class="line">            cnt[suf_ind - cur_ind - <span class="number">1</span>] += cur_val;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//        for (int i = 1; i &lt;= n; ++i) cout &lt;&lt; i &lt;&lt; &quot; &quot; &lt;&lt; cnt[i] &lt;&lt; endl;</span></span><br><span class="line"></span><br><span class="line">        <span class="type">long</span> <span class="type">long</span> s = <span class="number">0</span>, tmp_m = m;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = n; i &gt;= <span class="number">1</span>; --i) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!cnt[i])    <span class="keyword">continue</span>;</span><br><span class="line">            <span class="type">long</span> <span class="type">long</span> cur_s = <span class="built_in">min</span>(cnt[i], tmp_m / i);</span><br><span class="line">            tmp_m -= cur_s * i;</span><br><span class="line">            s += cur_s;</span><br><span class="line">            <span class="keyword">if</span> (!tmp_m) <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">if</span> (cur_s &lt; cnt[i] &amp;&amp; tmp_m &lt; i) &#123;    <span class="comment">// *</span></span><br><span class="line">                s++;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        cout &lt;&lt; m - s &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br> </p>
 
     </div>
 
@@ -364,6 +381,12 @@
     <footer class="post-footer">
           
 
+<!-- JS库 clipboard 用来拷贝内容到粘贴板-->
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 用来显示提示信息-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.2/dist/sweetalert.min.js"></script>
+
 <div class="post-copyright">
 <ul>
   <li class="post-copyright-author">
@@ -372,11 +395,38 @@
   <li class="post-copyright-link">
       <strong>Post link: </strong>
       <a href="https://www.thisisxxz.com/2023/06/13/CFE150T5/" title="Codeforces 1841E Fill the Matrix">https://www.thisisxxz.com/2023/06/13/CFE150T5/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference">
+        <i
+          style="cursor: pointer"
+          class="fa fa-clipboard"
+          data-clipboard-text="[XXZ's Blog | Codeforces 1841E Fill the Matrix](https://www.thisisxxz.com/2023/06/13/CFE150T5/)"
+          aria-label="  Markdown-style reference is now on your clipboard"></i>
+      </span>
   </li>
   <li class="post-copyright-license">
       <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
   </li>
 </ul>
+
+<!--new-->
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1000,
+      button: false
+    });
+  });
+</script>
+
 </div>
 <div class="post-widgets">
       <div id="needsharebutton-postbottom">
@@ -388,6 +438,7 @@
           <div class="post-tags">
               <a href="/tags/greedy/" rel="tag"><i class="fa fa-tag"></i> greedy</a>
               <a href="/tags/divide-and-conquer/" rel="tag"><i class="fa fa-tag"></i> divide and conquer</a>
+              <a href="/tags/set/" rel="tag"><i class="fa fa-tag"></i> set</a>
           </div>
 
         

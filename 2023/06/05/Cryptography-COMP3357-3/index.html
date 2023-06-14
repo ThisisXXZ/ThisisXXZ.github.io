@@ -192,7 +192,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -504,6 +504,12 @@
     <footer class="post-footer">
           
 
+<!-- JS库 clipboard 用来拷贝内容到粘贴板-->
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 用来显示提示信息-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.2/dist/sweetalert.min.js"></script>
+
 <div class="post-copyright">
 <ul>
   <li class="post-copyright-author">
@@ -512,11 +518,38 @@
   <li class="post-copyright-link">
       <strong>Post link: </strong>
       <a href="https://www.thisisxxz.com/2023/06/05/Cryptography-COMP3357-3/" title="COMP3357 notes P3">https://www.thisisxxz.com/2023/06/05/Cryptography-COMP3357-3/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference">
+        <i
+          style="cursor: pointer"
+          class="fa fa-clipboard"
+          data-clipboard-text="[XXZ's Blog | COMP3357 notes P3](https://www.thisisxxz.com/2023/06/05/Cryptography-COMP3357-3/)"
+          aria-label="  Markdown-style reference is now on your clipboard"></i>
+      </span>
   </li>
   <li class="post-copyright-license">
       <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
   </li>
 </ul>
+
+<!--new-->
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1000,
+      button: false
+    });
+  });
+</script>
+
 </div>
 <div class="post-widgets">
       <div id="needsharebutton-postbottom">
