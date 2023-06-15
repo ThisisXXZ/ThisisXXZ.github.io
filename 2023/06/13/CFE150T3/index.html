@@ -31,7 +31,7 @@
 <meta property="og:description" content="题目来自 Codeforces Educational Round #150 (Div.2) C。link">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-06-13T04:12:01.000Z">
-<meta property="article:modified_time" content="2023-06-14T14:16:30.198Z">
+<meta property="article:modified_time" content="2023-06-15T02:59:04.850Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="DP">
 <meta name="twitter:card" content="summary">
@@ -178,7 +178,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">18</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -299,7 +299,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-06-14 22:16:30" itemprop="dateModified" datetime="2023-06-14T22:16:30+08:00">2023-06-14</time>
+      <time title="Modified: 2023-06-15 10:59:04" itemprop="dateModified" datetime="2023-06-15T10:59:04+08:00">2023-06-15</time>
     </span>
 
   <span class="post-meta-item">
@@ -349,7 +349,7 @@
 <p>定义字符串 $s$ 的价值为其中所有字符价值之和 $\sum v_i$，你可以修改<strong>至多一个字符</strong>，使得修改过后的字符串 $s&#39;$ 的价值最大，并求出该最大值。$1\leq |s|\leq 2\times10^5, 1\leq t\leq 10^4$。</p>
 <p> <br></p>
 <h2 id="Tutorial"><a href="#Tutorial" class="headerlink" title="Tutorial"></a>Tutorial</h2><p>虽然最后顺着考试时的思路做出来了，但是非常的丑陋，代码就不放在这里贻笑大方了。思路很简单：枚举每一个 $s_i$ ，计算将其分别改成 $A-E$ 时对答案造成的影响并取最大值。然而这样做需要分类讨论，代码十分的 lengthy 且 error-prone。因此不仅时间复杂度是堪堪可过的 $O($大常数 $5n)$，实现起来也让人晕头转向。</p>
-<h3 id="Greedy-Approach"><a href="#Greedy-Approach" class="headerlink" title="Greedy Approach"></a>Greedy Approach</h3><p>这道题的贪心做法认为，对于某个字母，如果我们要将其改大，那么修改其第一次出现 (first occurance) 的位置最优；如果我们要将其改小，那么修改其最后一次出现 (last occurance) 的位置最优。证明见 <a target="_blank" rel="noopener" href="https://codeforces.com/blog/entry/117262">editorial</a>。如此，一共只有 $5\times 2$ 个位置需要考虑。枚举每个位置改变的字母并 $O(n)$ 计算答案，时间复杂度为 $O(5n)$。</p>
+<h3 id="Greedy-Approach"><a href="#Greedy-Approach" class="headerlink" title="Greedy Approach"></a>Greedy Approach</h3><p>这道题的贪心做法认为，对于某个字母，如果我们要将其改大，那么修改其第一次出现 (first occurance) 的位置最优；如果我们要将其改小，那么修改其最后一次出现 (last occurance) 的位置最优。证明见 <a target="_blank" rel="noopener" href="https://codeforces.com/blog/entry/117262">editorial</a>。如此，一共只有 $5\times 2$ 个位置需要考虑。枚举每个位置改变的字母并 $O(n)$ 计算答案，时间复杂度为 $O(50n)$。</p>
 <p>虽然这个贪心看上去很妙，但是我有一个地方没想通，题解中的证明也没有考虑到这种情况：例如对于 $CEC$ ，若我们要将 $C$ 改大成 $D$，按照贪心的思路，应该将第一个 $C$ 改为 $D$。然而实际上将第二个 $C$ 改为 $D$ 最优。这一特例影响了证明的正确性，我也无法找到合适的解释，所以在此就不采用贪心实现了。</p>
 <h3 id="DP-Approach"><a href="#DP-Approach" class="headerlink" title="DP Approach"></a>DP Approach</h3><p>字符串中每一个字母的值受其右侧的最大字母影响；<strong>为了方便进行 DP，我们将字符串翻转，字母的值转而受到其左侧的最大字母影响。</strong></p>
 <p>令 $dp[i][j][k]$ 表示考虑到第 $i$ 个字符，前 $[0,i]$ 个字符中最大的字符为 $j$，前 $[0,i]$ 个字符中是否 $(k=0/1)$ 发生了改变，在该状态下字符串的最大值。转移很简单：对于状态 $dp[i][j][k]$，若 $k=0$，我们枚举 $j$ 并由 $dp[i-1][j][0]$ 进行转移。若 $k=1$，我们考虑被修改的字母位于 $[1,i-1]$ 还是就处在当前位置 $i$。第一种情况与 $k=0$ 的转移类似，而第二种情况，我们进行二层枚举，枚举当前位置修改过后的字母并由 $dp[i-1][j][0]$ 进行转移。</p>
@@ -523,6 +523,15 @@
 
 
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
 
 <script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/06/13/CFE150T3/"}</script>
 <script>
@@ -538,15 +547,6 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
