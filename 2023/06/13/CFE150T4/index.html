@@ -32,7 +32,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/06/13/CFE150T4/sol.png">
 <meta property="article:published_time" content="2023-06-13T10:01:09.000Z">
-<meta property="article:modified_time" content="2023-06-13T12:21:32.323Z">
+<meta property="article:modified_time" content="2023-06-16T04:34:18.675Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="DP">
 <meta name="twitter:card" content="summary">
@@ -180,13 +180,13 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -293,9 +293,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2023-06-13 18:01:09 / Modified: 20:21:32" itemprop="dateCreated datePublished" datetime="2023-06-13T18:01:09+08:00">2023-06-13</time>
+      <time title="Created: 2023-06-13 18:01:09" itemprop="dateCreated datePublished" datetime="2023-06-13T18:01:09+08:00">2023-06-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-06-16 12:34:18" itemprop="dateModified" datetime="2023-06-16T12:34:18+08:00">2023-06-16</time>
     </span>
 
   <span class="post-meta-item">
@@ -350,7 +356,7 @@
 <p><br></p>
 <h2 id="Code-Implementation"><a href="#Code-Implementation" class="headerlink" title="Code Implementation"></a>Code Implementation</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_N = <span class="number">2010</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">segment</span> &#123;</span><br><span class="line">    <span class="type">int</span> l, r;</span><br><span class="line">    <span class="type">bool</span> <span class="keyword">operator</span> &lt; (<span class="type">const</span> segment&amp; x) <span class="type">const</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (l == x.l) ? r &lt; x.r : l &lt; x.l;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; seg[MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> dp[MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    ios_base::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="number">0</span>); cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> t;</span><br><span class="line">    cin &gt;&gt; t;</span><br><span class="line">    <span class="keyword">while</span> (t--) &#123;</span><br><span class="line">        <span class="type">int</span> n;</span><br><span class="line">        cin &gt;&gt; n;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)    cin &gt;&gt; seg[i].l &gt;&gt; seg[i].r;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n + <span class="number">1</span>; ++i)    dp[i] = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">sort</span>(seg + <span class="number">1</span>, seg + n + <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = n; i &gt;= <span class="number">1</span>; --i) &#123;</span><br><span class="line">            dp[i] = <span class="built_in">max</span>(dp[i], dp[i + <span class="number">1</span>]);</span><br><span class="line">            <span class="type">int</span> j = <span class="number">0</span>, minr = <span class="number">1e9</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> p = i + <span class="number">1</span>; p &lt;= n; ++p) &#123;</span><br><span class="line">                <span class="keyword">if</span> (seg[p].l &lt;= seg[i].r) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (seg[p].r &lt;= minr) &#123;</span><br><span class="line">                        minr = seg[p].r;</span><br><span class="line">                        j = p;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (!j) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="type">int</span> k = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> p = j + <span class="number">1</span>; p &lt;= n; ++p) &#123;</span><br><span class="line">                <span class="keyword">if</span> (seg[p].l &gt; <span class="built_in">max</span>(seg[i].r, seg[j].r)) &#123;</span><br><span class="line">                    k = p;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            dp[i] = <span class="built_in">max</span>(dp[i], dp[k] + <span class="number">2</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        cout &lt;&lt; n - dp[<span class="number">1</span>] &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
-
+<!-- flag of hidden posts -->
     </div>
 
     <div>
@@ -433,18 +439,6 @@
 
         
 
-          <div class="post-nav">
-            <div class="post-nav-item">
-                <a href="/2023/06/13/CFE150T3/" rel="prev" title="Codeforces 1841C Ranom Numbers">
-                  <i class="fa fa-chevron-left"></i> Codeforces 1841C Ranom Numbers
-                </a>
-            </div>
-            <div class="post-nav-item">
-                <a href="/2023/06/13/CFE150T5/" rel="next" title="Codeforces 1841E Fill the Matrix">
-                  Codeforces 1841E Fill the Matrix <i class="fa fa-chevron-right"></i>
-                </a>
-            </div>
-          </div>
     </footer>
   </article>
 </div>
