@@ -31,8 +31,9 @@
 <meta property="og:description" content="For me, great algorithms are the poetry of computation.    — Donald Knuth   Presented by Robert Sedgwick &amp; Kevin Wayne，普林斯顿大名鼎鼎的算法课程，在 Coursera 上接近满分的评价：这么多 buff 加身的神课，不认真刷一下都对不起我自己。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/weighted.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/cost-model.png">
 <meta property="article:published_time" content="2023-06-16T15:27:57.000Z">
-<meta property="article:modified_time" content="2023-06-17T04:08:25.216Z">
+<meta property="article:modified_time" content="2023-06-17T15:45:07.820Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="course notes">
 <meta property="article:tag" content="algorithm">
@@ -164,7 +165,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Union-Find"><span class="nav-number">1.</span> <span class="nav-text">Union-Find</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Problem-Model-Dynamic-Connectivity"><span class="nav-number">1.1.</span> <span class="nav-text">Problem Model: Dynamic Connectivity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Improvements"><span class="nav-number">1.2.</span> <span class="nav-text">Improvements</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation"><span class="nav-number">1.3.</span> <span class="nav-text">Code Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">2.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Union-Find"><span class="nav-number">1.</span> <span class="nav-text">Union-Find</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Problem-Model-Dynamic-Connectivity"><span class="nav-number">1.1.</span> <span class="nav-text">Problem Model: Dynamic Connectivity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Improvements"><span class="nav-number">1.2.</span> <span class="nav-text">Improvements</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation"><span class="nav-number">1.3.</span> <span class="nav-text">Code Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Analysis-of-Algorithms"><span class="nav-number">2.</span> <span class="nav-text">Analysis of Algorithms</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Mathematical-Models"><span class="nav-number">2.1.</span> <span class="nav-text">Mathematical Models</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Order-of-Growth-Classifications"><span class="nav-number">2.2.</span> <span class="nav-text">Order-of-Growth Classifications</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Commonly-Used-Notations"><span class="nav-number">2.3.</span> <span class="nav-text">Commonly Used Notations</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-Language-Style"><span class="nav-number">3.</span> <span class="nav-text">Java Language Style</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -302,7 +303,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-06-17 12:08:25" itemprop="dateModified" datetime="2023-06-17T12:08:25+08:00">2023-06-17</time>
+      <time title="Modified: 2023-06-17 23:45:07" itemprop="dateModified" datetime="2023-06-17T23:45:07+08:00">2023-06-17</time>
     </span>
 
   <span class="post-meta-item">
@@ -346,10 +347,11 @@
 <p>我想通过学习这门课得到什么？</p>
 <ul>
 <li>想将之前参加 OI 掌握的算法知识系统化；</li>
-<li>采用 Java 进行授课，想通过这门课了解一下这个热门的语言；</li>
+<li>采用 Java 进行授课，想通过这门课入门这个著名的纯 OOP 语言；</li>
 <li>这门课有 10 个超高质量的 Projects，实际问题背景，丰富的测试样例，竟然还配有教授<strong>工业级别高效实现</strong>的源码！即使抄下来做板子都是十分宝贵的收获。</li>
 </ul>
 <p>笔记同样分为 2 Parts，分别对应课程设计中的 I 与 II。Let&#39;s enjoy!</p>
+<p>另，本课程 projects 的代码实现存放在 <a target="_blank" rel="noopener" href="https://github.com/ThisisXXZ/Algorithms-Princeton">ThisisXXZ/Algorithms-Princeton - GitHub</a> 中，仅供参考。</p>
 <p><br></p>
 <div class="note warning"><p>&emsp; This article is a self-administered course note.<br>&emsp; It will <strong>NOT</strong> cover any exam or assignment related content.</p>
 </div>
@@ -385,8 +387,95 @@
 <h3 id="Code-Implementation"><a href="#Code-Implementation" class="headerlink" title="Code Implementation"></a>Code Implementation</h3><p>Weighted quick-union with path compression: <strong>in practice, WQUPC is linear</strong>.</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UF</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span>[] parent;    <span class="comment">// parant[i] = parent of i</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">byte</span>[] rank;     <span class="comment">// we apply union by rank here (never more than 31)</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> count;       <span class="comment">// numbers of connected components</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">UF</span><span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (n &lt; <span class="number">0</span>)    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>();</span><br><span class="line">        count = n;</span><br><span class="line">        parant = <span class="keyword">new</span> <span class="title class_">int</span>[n];</span><br><span class="line">        rank = <span class="keyword">new</span> <span class="title class_">byte</span>[n];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">            parent[i] = i;</span><br><span class="line">            rank[i] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">find</span><span class="params">(<span class="type">int</span> p)</span> &#123;</span><br><span class="line">        validate(p);</span><br><span class="line">        <span class="keyword">while</span> (p != parent[p]) &#123;</span><br><span class="line">            parent[p] = parent[parent[p]];    <span class="comment">// path compression by halving</span></span><br><span class="line">            p = parent[p];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> p;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">count</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">connected</span><span class="params">(<span class="type">int</span> p, <span class="type">int</span> q)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> find(p) == find(q);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">union</span><span class="params">(<span class="type">int</span> p, <span class="type">int</span> q)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">rootP</span> <span class="operator">=</span> find(p);</span><br><span class="line">        <span class="type">int</span> <span class="variable">rootQ</span> <span class="operator">=</span> find(q);</span><br><span class="line">        <span class="keyword">if</span> (rootP == rootQ)    <span class="keyword">return</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span>      (rank[rootP] &lt; rank[rootQ])    parent[rootP] = rootQ;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (rank[rootP] &gt; rank[rootQ])    parent[rootQ] = rootP;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            parent[rootQ] = rootP;</span><br><span class="line">            ++rank[rootP];</span><br><span class="line">        &#125;</span><br><span class="line">        --count;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">validate</span><span class="params">(<span class="type">int</span> p)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> parent.length;</span><br><span class="line">        <span class="keyword">if</span> (p &lt; <span class="number">0</span> || p &gt;= n) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Index is not between 0 and &quot;</span> + (n-<span class="number">1</span>));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> StdIn.readInt();</span><br><span class="line">        <span class="type">UF</span> <span class="variable">uf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UF</span>(n);</span><br><span class="line">        <span class="keyword">while</span> (!StdIn.isEmpty()) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">p</span> <span class="operator">=</span> StdIn.readInt();</span><br><span class="line">            <span class="type">int</span> <span class="variable">q</span> <span class="operator">=</span> StdIn.readInt();</span><br><span class="line">            <span class="keyword">if</span> (uf.find(p) == uf.find(q))    <span class="keyword">continue</span>;</span><br><span class="line">            uf.union(p, q);</span><br><span class="line">            StdOut.println(p + <span class="string">&quot; &quot;</span> + q);</span><br><span class="line">        &#125;</span><br><span class="line">        StdOut.println(uf.count() + <span class="string">&quot; components&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
+<h2 id="Analysis-of-Algorithms"><a href="#Analysis-of-Algorithms" class="headerlink" title="Analysis of Algorithms"></a>Analysis of Algorithms</h2><p>学到这里才发现之前用 Big-Oh notation $O(n)$ 描述时间复杂度是一个常见的误区……！</p>
+<h3 id="Mathematical-Models"><a href="#Mathematical-Models" class="headerlink" title="Mathematical Models"></a>Mathematical Models</h3><p>The <strong>total running time</strong> of an algorithm is <strong>the sum of cost $\times$ frequency for all operations</strong>. In principle, we could always develop an accurate mathematical models for a particular algorithm.</p>
+<p>However, taking exactly all operations into consideration seems too <strong>tedious</strong>.</p>
+<p><strong>Simplification 1: cost model</strong></p>
+<div class="note info no-icon"><p>Cost model. Use some basic operations as a <strong>proxy</strong> for running time.</p>
+</div>
+<p>When a proper cost model is chosen, other operations could be ignored.</p>
+<p><img src="/2023/06/16/algo-princeton-p1/cost-model.png" alt="choose the operation with the highest frequency as the cost model"></p>
+<p><strong>Simplification 2: tilde notation</strong></p>
+<p>We use tilde notation $\sim$ to estimate running time (or memory) as a function of input size $N$. It will <strong>ignore all lower-order terms</strong>.</p>
+<ul>
+<li>When $N$ is large, lower-order terms are negligible.</li>
+<li>When $N$ is small, we simply don&#39;t care.</li>
+</ul>
+<p>Technically, $f(N)\sim g(N)$ means $\lim_{N\to\infty} \frac{f(N)}{g(N)}=1$.</p>
+<h3 id="Order-of-Growth-Classifications"><a href="#Order-of-Growth-Classifications" class="headerlink" title="Order-of-Growth Classifications"></a>Order-of-Growth Classifications</h3><div class="note info no-icon"><p>Good news. the small set of functions $1,\log N,N,N\log N,N^2,N^3$ and $2^N$ suffices to describe order-of-growth of typical algorithms.</p>
+</div>
+<p>Here are the common order-of-growth classifications: </p>
+<ul>
+<li>constant $1$: statement</li>
+<li>logarithmic $\log N$: divide in half</li>
+<li>linear $N$: loop</li>
+<li><strong>linearithmic</strong> $N\log N$: divide and conquer</li>
+<li>quadratic $N^2$: double loops</li>
+<li>cubic $N^3$: triple loops</li>
+<li>exponential $2^N$: exhaustive search</li>
+</ul>
+<p>Typically, <strong>better order of growth $\to$ faster in practice</strong>.</p>
+<h3 id="Commonly-Used-Notations"><a href="#Commonly-Used-Notations" class="headerlink" title="Commonly Used Notations"></a>Commonly Used Notations</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">notation</th>
+<th style="text-align:center">provides</th>
+<th style="text-align:center">used to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Tilde $\sim$</td>
+<td style="text-align:center">leading term</td>
+<td style="text-align:center">provide approximate model</td>
+</tr>
+<tr>
+<td style="text-align:center">Big Theta $\Theta(\cdot)$</td>
+<td style="text-align:center">asymptotic growth rate</td>
+<td style="text-align:center">classify algorithms</td>
+</tr>
+<tr>
+<td style="text-align:center">Big Oh $O(\cdot)$</td>
+<td style="text-align:center">$\Theta(\cdot)$ and smaller</td>
+<td style="text-align:center">develop upper bounds</td>
+</tr>
+<tr>
+<td style="text-align:center">Big Omega $\Omega(\cdot)$</td>
+<td style="text-align:center">$\Theta(\cdot)$ and larger</td>
+<td style="text-align:center">develop lower bounds</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="note info no-icon"><p>Common mistake. Interpreting big-Oh as an approximate model.</p>
+</div>
+<p>Example: 1-SUM problem $=$ &quot;<em>Is there a 0 in the array?</em>&quot;</p>
+<ul>
+<li><p>Upper bound. <strong>A specific algorithm</strong>.</p>
+<p>Brute-force algorithm for 1-SUM: Look at every array entry.<br>Running time of the optimal algorithm for 1-SUM is $O(N)$.</p>
+</li>
+<li><p>Lower bound. <strong>Proof that no algorithm can do better</strong>.</p>
+<p>Have to examine all $N$ entries (any unexamined one might be $0$).<br>Running time of the optimal algorithm for 1-SUM is $\Omega(N)$.</p>
+</li>
+</ul>
+<p>If for a specific problem, upper bound $O(N)=$ lower bound $\Omega(N)$, we say there exists an <strong>optimal algorithm</strong> with $\Theta(N)$ running time.</p>
+<p>Algorithm design aims to <strong>reduce the gap</strong> between upper bound $O(N)$ and lower bound $\Omega(N)$.</p>
+<p><br></p>
+<h2 id="Java-Language-Style"><a href="#Java-Language-Style" class="headerlink" title="Java Language Style"></a>Java Language Style</h2><p>这节课的 projects 设计实在是太良心了，在评分反馈里居然还包含 style check！难以想象在这节课上倾注了多少心血……至少我从来没有见到有一门课的评分标准里还包含 coding style。</p>
+<ol>
+<li>The instance variable name must start with <strong>a lowercase letter and use camelCase</strong>.</li>
+<li>Remove unused import statements.</li>
+<li>Typecast (类型转换) must <strong>be followed by a whitespace</strong>.</li>
+<li>Define constructors after static and instance variables but before methods.</li>
+<li>Define constant variables to hold the constants used more than once.</li>
+</ol>
+<p><br></p>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning"><p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
 </div>
+<p>Course info:<br><a target="_blank" rel="noopener" href="https://www.coursera.org/learn/algorithms-part1">Algorithms, Part 1, Princeton University</a>. Lecturer: Robert Sedgewick &amp; Kevin Wayne.</p>
+<p>Course textbook:<br><em>Algorithms (4th edition)</em>, Sedgewick, R. &amp; Wayne, K., (2011), Addison-Wesley Professional, <a target="_blank" rel="noopener" href="https://algs4.cs.princeton.edu/home/">view</a></p>
+<p><br></p>
 
     </div>
 
@@ -410,11 +499,12 @@
     <footer class="post-footer">
           
 
-<!-- JS库 clipboard 用来拷贝内容到粘贴板-->
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
 <script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
 
-<!-- JS库 sweetalert 用来显示提示信息-->
+<!-- JS库 sweetalert 显示提示信息-->
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 
 <div class="post-copyright">
 <ul>
@@ -425,20 +515,20 @@
       <strong>Post link: </strong>
       <a href="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/" title="Algorithms, Part 1, Princeton University">https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/</a>
       <!--copy buttom-->
-      <span class="copy-path" title="Click to copy markdown-style reference">
-        <i
-          style="cursor: pointer"
-          class="fa fa-clipboard"
-          data-clipboard-text="[XXZ's Blog | Algorithms, Part 1, Princeton University](https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/)"
-          aria-label="  Markdown-style reference is now on your clipboard"></i>
-      </span>
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | Algorithms, Part 1, Princeton University](https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
   </li>
   <li class="post-copyright-license">
       <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
   </li>
 </ul>
 
-<!--new-->
 <script>
   var clipboard = new ClipboardJS(".fa-clipboard");
   clipboard.on("success", function(target) {
