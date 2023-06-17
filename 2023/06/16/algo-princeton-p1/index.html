@@ -30,12 +30,14 @@
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
 <meta property="og:description" content="For me, great algorithms are the poetry of computation.    — Donald Knuth   Presented by Robert Sedgwick &amp; Kevin Wayne，普林斯顿大名鼎鼎的算法课程，在 Coursera 上接近满分的评价：这么多 buff 加身的神课，不认真刷一下都对不起我自己。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/weighted.png">
 <meta property="article:published_time" content="2023-06-16T15:27:57.000Z">
-<meta property="article:modified_time" content="2023-06-16T16:33:06.157Z">
+<meta property="article:modified_time" content="2023-06-17T04:08:25.216Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="course notes">
 <meta property="article:tag" content="algorithm">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/weighted.png">
 
 
 <link rel="canonical" href="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/">
@@ -162,7 +164,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Union-Find"><span class="nav-number">1.</span> <span class="nav-text">Union-Find</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Problem-Model"><span class="nav-number">1.1.</span> <span class="nav-text">Problem Model</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">2.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Union-Find"><span class="nav-number">1.</span> <span class="nav-text">Union-Find</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Problem-Model-Dynamic-Connectivity"><span class="nav-number">1.1.</span> <span class="nav-text">Problem Model: Dynamic Connectivity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Improvements"><span class="nav-number">1.2.</span> <span class="nav-text">Improvements</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation"><span class="nav-number">1.3.</span> <span class="nav-text">Code Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">2.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -300,7 +302,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-06-17 00:33:06" itemprop="dateModified" datetime="2023-06-17T00:33:06+08:00">2023-06-17</time>
+      <time title="Modified: 2023-06-17 12:08:25" itemprop="dateModified" datetime="2023-06-17T12:08:25+08:00">2023-06-17</time>
     </span>
 
   <span class="post-meta-item">
@@ -341,7 +343,7 @@
 </blockquote>
 <p>Presented by Robert Sedgwick &amp; Kevin Wayne，普林斯顿大名鼎鼎的算法课程，在 Coursera 上接近满分的评价：这么多 buff 加身的神课，不认真刷一下都对不起我自己。</p>
 <span id="more"></span>
-<p>为什么要选择这门课？</p>
+<p>我想通过学习这门课得到什么？</p>
 <ul>
 <li>想将之前参加 OI 掌握的算法知识系统化；</li>
 <li>采用 Java 进行授课，想通过这门课了解一下这个热门的语言；</li>
@@ -354,7 +356,36 @@
 <p><br></p>
 <h2 id="Union-Find"><a href="#Union-Find" class="headerlink" title="Union-Find"></a>Union-Find</h2><p>把并查集作为课程中第一个介绍的算法实在是独具匠心。</p>
 <p>我现在还记得第一次学到并查集时的惊喜：它像是一篇精彩的短文，读完让人大呼过瘾。其实现是那么的精巧而简洁，以至于在之后在学习 BST，LCT 等复杂晦涩的算法时，我时常会怀念这种 Eureka 的感觉。</p>
-<h3 id="Problem-Model"><a href="#Problem-Model" class="headerlink" title="Problem Model"></a>Problem Model</h3><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning"><p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
+<h3 id="Problem-Model-Dynamic-Connectivity"><a href="#Problem-Model-Dynamic-Connectivity" class="headerlink" title="Problem Model: Dynamic Connectivity"></a>Problem Model: Dynamic Connectivity</h3><p>Given a set of $N$ objects.</p>
+<ul>
+<li>Union command: connect two objects.</li>
+<li>Find/connected query: is there a path connecting the two objects?</li>
+</ul>
+<p>Primitive method: Given a unique $id$ for each <strong>connected component</strong>. </p>
+<ul>
+<li>Quick-Find: $O(n)$ updates the $id$ as an <strong>array</strong>. $O(1)$ query by checking $id$.</li>
+<li>Quick-Union: $O(1)$ updates the $id$ as a <strong>forest</strong>. $O(n)$ query by checking the $id$ of root.</li>
+</ul>
+<h3 id="Improvements"><a href="#Improvements" class="headerlink" title="Improvements"></a>Improvements</h3><p><strong>Improvement 1: Weighting</strong></p>
+<ul>
+<li>Modify Quick-Union to avoid tall trees.</li>
+<li>Keep track of <strong>size of each tree</strong> (number of objects).</li>
+<li>Balance by linking the root of smaller tree to the root of larger tree. (Reasonable alternatives: union by height or &quot;rank&quot;)</li>
+</ul>
+<div class="note info no-icon"><p>Proposition. <b>Depth of any node $x$ is at most $\lg{N}$.</b></p>
+<p>Pf. When does depth of $x$ increase?<br>Increase by $1$ when tree $T_1$ containing $x$ is merged into another tree $T_2$.</p>
+<ul>
+<li>The size of the tree containing $x$ <strong>at least doubles</strong> since $|T_2|\geq |T_1|$.</li>
+<li>Size of tree containing $x$ can double at most $\lg N$ times.</li>
+</ul>
+</div>
+<p><img src="/2023/06/16/algo-princeton-p1/weighted.png" alt="Weighting flattened the tree greatly"></p>
+<p><strong>Improvement 2: path compression</strong></p>
+<p>Just after computing the root of $p$, set the $id$ of each examined node to point of that root.</p>
+<h3 id="Code-Implementation"><a href="#Code-Implementation" class="headerlink" title="Code Implementation"></a>Code Implementation</h3><p>Weighted quick-union with path compression: <strong>in practice, WQUPC is linear</strong>.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UF</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span>[] parent;    <span class="comment">// parant[i] = parent of i</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">byte</span>[] rank;     <span class="comment">// we apply union by rank here (never more than 31)</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> count;       <span class="comment">// numbers of connected components</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">UF</span><span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (n &lt; <span class="number">0</span>)    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>();</span><br><span class="line">        count = n;</span><br><span class="line">        parant = <span class="keyword">new</span> <span class="title class_">int</span>[n];</span><br><span class="line">        rank = <span class="keyword">new</span> <span class="title class_">byte</span>[n];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">            parent[i] = i;</span><br><span class="line">            rank[i] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">find</span><span class="params">(<span class="type">int</span> p)</span> &#123;</span><br><span class="line">        validate(p);</span><br><span class="line">        <span class="keyword">while</span> (p != parent[p]) &#123;</span><br><span class="line">            parent[p] = parent[parent[p]];    <span class="comment">// path compression by halving</span></span><br><span class="line">            p = parent[p];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> p;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">count</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">connected</span><span class="params">(<span class="type">int</span> p, <span class="type">int</span> q)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> find(p) == find(q);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">union</span><span class="params">(<span class="type">int</span> p, <span class="type">int</span> q)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">rootP</span> <span class="operator">=</span> find(p);</span><br><span class="line">        <span class="type">int</span> <span class="variable">rootQ</span> <span class="operator">=</span> find(q);</span><br><span class="line">        <span class="keyword">if</span> (rootP == rootQ)    <span class="keyword">return</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span>      (rank[rootP] &lt; rank[rootQ])    parent[rootP] = rootQ;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (rank[rootP] &gt; rank[rootQ])    parent[rootQ] = rootP;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            parent[rootQ] = rootP;</span><br><span class="line">            ++rank[rootP];</span><br><span class="line">        &#125;</span><br><span class="line">        --count;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">validate</span><span class="params">(<span class="type">int</span> p)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> parent.length;</span><br><span class="line">        <span class="keyword">if</span> (p &lt; <span class="number">0</span> || p &gt;= n) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Index is not between 0 and &quot;</span> + (n-<span class="number">1</span>));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> StdIn.readInt();</span><br><span class="line">        <span class="type">UF</span> <span class="variable">uf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UF</span>(n);</span><br><span class="line">        <span class="keyword">while</span> (!StdIn.isEmpty()) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">p</span> <span class="operator">=</span> StdIn.readInt();</span><br><span class="line">            <span class="type">int</span> <span class="variable">q</span> <span class="operator">=</span> StdIn.readInt();</span><br><span class="line">            <span class="keyword">if</span> (uf.find(p) == uf.find(q))    <span class="keyword">continue</span>;</span><br><span class="line">            uf.union(p, q);</span><br><span class="line">            StdOut.println(p + <span class="string">&quot; &quot;</span> + q);</span><br><span class="line">        &#125;</span><br><span class="line">        StdOut.println(uf.count() + <span class="string">&quot; components&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning"><p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
 </div>
 
     </div>
