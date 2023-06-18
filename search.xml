@@ -79,7 +79,7 @@
 <p><img src="/2023/06/01/blog-update-log/kumiko.jpg" alt="なんですか、これ"></p>
 <p>14.6.2023: (NexT 重大版本更新) 将 NexT 版本由 <code>7.8.0</code> 更新至 latest <code>8.17.0</code>。基本复现了之前所做的所有侵入式更改。解决了移动端博客文字不显示的问题。仍有两个问题待解决：</p>
 <ul>
-<li><code>NeedMoreShare2</code> 插件显示位置出现问题。已提交 issue。</li>
+<li>(已解决，修改 <code>needmoreshare.js</code>) <code>NeedMoreShare2</code> 插件显示位置出现问题。已提交 issue。</li>
 <li>(已解决) 新版本取消了对 Valine 的支持。重新加载 Valine 后评论消失。</li>
 </ul>
 <p>15.6.2023: (侵入式更改) 在 copyright 栏目中的博客链接末尾增添复制按钮。</p>
@@ -120,7 +120,7 @@
 <li><p><strong>程序设计与算法专项课程，北京大学</strong></p>
 </li>
 <li><p><strong>Cryptography, the University of Hong Kong</strong></p>
-<p><a href="https://thisisxxz.com/categories/notes/cryptography/">see notes here</a>. 在整个大一生涯中收获最多的一门课，深入了解了密码学及其原理。讲师 Ravi 和助教都十分的认真负责，给分 fair 且 lenient。在学习的过程中也常常会被密码系统设计的精妙所震撼。只是如果未来想要涉足这一领域，恐怕需要对数学的深刻理解 (i.e. 智商高)。</p>
+<p><a href="https://thisisxxz.com/categories/notes/courses/Cryptography-HKU/">see notes here</a>. 在整个大一生涯中收获最多的一门课，深入了解了密码学及其原理。讲师 Ravi 和助教都十分的认真负责，给分 fair 且 lenient。在学习的过程中也常常会被密码系统设计的精妙所震撼。只是如果未来想要涉足这一领域，恐怕需要对数学的深刻理解 (i.e. 智商高)。</p>
 </li>
 <li><p>开始 <a href="https://www.thisisxxz.com/2023/06/07/OI-rehab-plan/">Competitive Programming 复健计划</a></p>
 </li>
@@ -187,6 +187,79 @@
       </tags>
   </entry>
   <entry>
+    <title>Algorithms, Part 3, Princeton University</title>
+    <url>/2023/06/18/algo-princeton-p3/</url>
+    <content><![CDATA[<p>这是 <a href="https://thisisxxz.com/categories/notes/courses/Algorithms-Princeton/">Algorithms I &amp; II, Princeton</a> 系列笔记的 P3 部分。零基础接触 Java，就从这门课开始吧！这篇笔记将会记录课程中覆盖到的关于 Java 的各类语言知识。</p>
+<span id="more"></span>
+<p>Java 的语法和 C++ 还是挺像的，想要入门并不困难。因此这里将主要记录一些<strong>不一样的东西</strong>......！</p>
+<p><br></p>
+<h2 id="Generics"><a href="#Generics" class="headerlink" title="Generics"></a>Generics</h2><p>Suppose we&#39;ve implemented a data structure <code>StackOfStrings</code>, what could we do if the clients also want <code>StackOfURLs</code>, <code>StackOfInts</code>, <code>StackOfVans</code>...?</p>
+<ul>
+<li><p>Attempt 1. Implement a seperate stack class for each type. ($\times$)</p>
+</li>
+<li><p><strong>Attempt 2. Implement a stack with items of type <code>Object</code></strong>. See codes below:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">StackOfObjects</span> <span class="variable">s</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StackOfObjects</span>();</span><br><span class="line"><span class="type">Apple</span>  <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Apple</span>();</span><br><span class="line"><span class="type">Orange</span> <span class="variable">b</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Orange</span>();</span><br><span class="line">s.push(a);</span><br><span class="line">s.push(b);</span><br><span class="line">a = (Apple) (s.pop());            <span class="comment">// error-prone: this will cause run-time error!</span></span><br></pre></td></tr></table></figure>
+<p>The type <code>Object</code> could be seen as the base class in C++. <code>Apple</code> and <code>Orange</code> are derived classes. However, this requires <strong>casting</strong> in client, which may cause <strong>run-time error</strong> if types mismatch.</p>
+</li>
+<li><p><strong>Attempt 3. Applying Java generics</strong>. See codes below:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Stack&lt;Apple&gt; s = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;Apple&gt;();</span><br><span class="line"><span class="type">Apple</span>  <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Apple</span>();</span><br><span class="line"><span class="type">Orange</span> <span class="variable">b</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Orange</span>();</span><br><span class="line">s.push(a);</span><br><span class="line">s.push(b);                        <span class="comment">// compile-time error happens!</span></span><br><span class="line">a = s.pop();</span><br></pre></td></tr></table></figure>
+<p>Using Java generics avoid casting in client and could discover type dismatch errors <strong>at compile-time instead of run-time</strong>. </p>
+</li>
+</ul>
+<div class="note info no-icon"><p>Guiding principles. <strong>Welcome compile-time errors; avoid run-time errors.</strong></p>
+</div>
+<p>Note that Java does <strong>NOT</strong> support <strong>generic array</strong>. To achieve this, proper casting is needed: </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> Item[] s;</span><br><span class="line">...</span><br><span class="line">    s = <span class="keyword">new</span> <span class="title class_">Item</span>[capacity];              <span class="comment">// Wrong! Java doesn&#x27;t support generic array</span></span><br><span class="line">    s = (Item[]) <span class="keyword">new</span> <span class="title class_">Object</span>[capacity];   <span class="comment">// Acceptable. the &quot;ugly&quot; cast</span></span><br><span class="line"><span class="comment">// Even with casting, Java will warn you for &quot;unchecked cast&quot;</span></span><br></pre></td></tr></table></figure>
+<p>Q. What to do about <strong>primitive types</strong>?</p>
+<p>To create a generic stack with primitive types like <code>int</code>, we use the corresponding <strong>wrapper types</strong>. Note that Java supports <strong>autoboxing</strong> which allows <strong>automatic cast</strong> between a primitive type and its wrapper.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Stack&lt;Integer&gt; s = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;Integer&gt;();</span><br><span class="line">s.push(<span class="number">17</span>);       <span class="comment">// s.push(Integer.valueOf(17));</span></span><br><span class="line"><span class="type">int</span> <span class="variable">a</span> <span class="operator">=</span> s.pop();  <span class="comment">// int a = s.pop().IntValue();</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<blockquote>
+<p>学到这里，我发现 Java 的泛型 (generics) 与 C++ 中的类模板 (templates) 很相似，就连定义的语法都同样采用 diamond operator <code>&lt;&gt;</code>。上网搜索发现，Java 的泛型 (即 attempt 3) 本质上是上文中 attempt 2 的语法糖。这也是为什么 Java 的泛型又被称作<strong>类型参数化 (type parameterization)</strong>。</p>
+<p>具体来说，在 Java 中，两个泛型栈实例 <code>Stack&lt;Apple&gt;</code> 与 <code>Stack&lt;Orange&gt;</code> 将共享 <code>Stack</code> 类的静态变量；而在 C++ 中则不会，这两个模板栈属于完全不同的类。</p>
+</blockquote>
+<p><br></p>
+<h2 id="Iterators"><a href="#Iterators" class="headerlink" title="Iterators"></a>Iterators</h2><p>By implementing the <code>java.lang.Iterable</code> interface, we could support <strong>iteration</strong> over data structure items by clients, without revealing the internal representation of the data structure.</p>
+<p>There are <strong>two interfaces</strong> that we need to implement in our data structure:</p>
+<ul>
+<li><p><code>Iterable</code> : Has a method that returns an <code>Iterator</code>.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Iterable</span>&lt;Item&gt; &#123;</span><br><span class="line">    Iterator&lt;Item&gt; <span class="title function_">iterator</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Iterator</code>: Has methods <code>hasNext()</code> and <code>next()</code>.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Iterator</span>&lt;Item&gt; &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span>;</span><br><span class="line">    Item <span class="title function_">next</span><span class="params">()</span>;</span><br><span class="line">    <span class="comment">// optional: void remove(); </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>If the above two interfaces are properly implemented, Java supports elegant client code (<strong>&quot;foreach&quot; statement</strong>) for interating items in your data structures.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// foreach statement code (shorthand):</span></span><br><span class="line"><span class="keyword">for</span> (String s : stack)    StdOut.println(s);</span><br><span class="line"></span><br><span class="line"><span class="comment">// equivalent code (longhand):</span></span><br><span class="line">Iterator&lt;String&gt; i = stack.iterator();</span><br><span class="line"><span class="keyword">while</span> (i.hasNext()) &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> i.next();</span><br><span class="line">    StdOut.println(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Here is a sample code on how to implement a <strong>reverse iterator</strong> for an array-based stack.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Iterator;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Stack</span>&lt;Item&gt; <span class="keyword">implements</span> <span class="title class_">Iterable</span>&lt;Item&gt; &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">public</span> Iterator&lt;Item&gt; <span class="title function_">iterator</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ReverseArrayIterator</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">ReverseArrayIterator</span> <span class="keyword">implements</span> <span class="title class_">Iterator</span>&lt;Item&gt; &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> N;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span> &#123; <span class="keyword">return</span> i &gt; <span class="number">0</span>;  &#125;</span><br><span class="line">        <span class="keyword">public</span> Item <span class="title function_">next</span><span class="params">()</span>       &#123; <span class="keyword">return</span> s[--i]; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="Java-Language-Style"><a href="#Java-Language-Style" class="headerlink" title="Java Language Style"></a>Java Language Style</h2><p>这门课的 projects 设计实在是太良心了，在评分反馈里居然还包含 style check！难以想象教职员们为课程的准备倾注了多少心血……至少我从来没有见过有一门课的评分标准里还包含 coding style。</p>
+<ol>
+<li>The instance variable name must start with <strong>a lowercase letter and use camelCase</strong>.</li>
+<li>Remove unused import statements.</li>
+<li>Typecast (类型转换) must <strong>be followed by a whitespace</strong>.</li>
+<li>Define constructors after static and instance variables but before methods.</li>
+<li>Define constant variables to hold the constants used more than once.</li>
+</ol>
+<p><br></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning"><p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
+</div>
+<p>Course info:<br><a href="https://www.coursera.org/learn/algorithms-part1">Algorithms, Part 1, Princeton University</a>. Lecturer: Robert Sedgewick &amp; Kevin Wayne.</p>
+<p>Course textbook:<br><em>Algorithms (4th edition)</em>, Sedgewick, R. &amp; Wayne, K., (2011), Addison-Wesley Professional, <a href="https://algs4.cs.princeton.edu/home/">view</a></p>
+<p><br></p>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>courses</category>
+        <category>Algorithms, Princeton</category>
+      </categories>
+      <tags>
+        <tag>course notes</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Algorithms, Part 1, Princeton University</title>
     <url>/2023/06/16/algo-princeton-p1/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -201,7 +274,7 @@
 <li>采用 Java 进行授课，想通过这门课入门这个著名的纯 OOP 语言；</li>
 <li>这门课有 10 个超高质量的 Projects，实际问题背景，丰富的测试样例，竟然还配有教授<strong>工业级别高效实现</strong>的源码！即使抄下来做板子都是十分宝贵的收获。</li>
 </ul>
-<p>笔记同样分为 2 Parts，分别对应课程设计中的 I 与 II。Let&#39;s enjoy!</p>
+<p>笔记分为 3 Parts：P1 与 P2 分别对应课程设计中的 I 与 II。而 P3 则侧重于我在这门课中学到的 Java 知识。</p>
 <p>另，本课程 projects 的代码实现存放在 <a href="https://github.com/ThisisXXZ/Algorithms-Princeton">ThisisXXZ/Algorithms-Princeton - GitHub</a> 中，仅供参考。</p>
 <p><br></p>
 <div class="note warning"><p>&emsp; This article is a self-administered course note.<br>&emsp; It will <strong>NOT</strong> cover any exam or assignment related content.</p>
@@ -313,14 +386,49 @@
 <p>If for a specific problem, upper bound $O(N)=$ lower bound $\Omega(N)$, we say there exists an <strong>optimal algorithm</strong> with $\Theta(N)$ running time.</p>
 <p>Algorithm design aims to <strong>reduce the gap</strong> between upper bound $O(N)$ and lower bound $\Omega(N)$.</p>
 <p><br></p>
-<h2 id="Java-Language-Style"><a href="#Java-Language-Style" class="headerlink" title="Java Language Style"></a>Java Language Style</h2><p>这节课的 projects 设计实在是太良心了，在评分反馈里居然还包含 style check！难以想象在这节课上倾注了多少心血……至少我从来没有见到有一门课的评分标准里还包含 coding style。</p>
-<ol>
-<li>The instance variable name must start with <strong>a lowercase letter and use camelCase</strong>.</li>
-<li>Remove unused import statements.</li>
-<li>Typecast (类型转换) must <strong>be followed by a whitespace</strong>.</li>
-<li>Define constructors after static and instance variables but before methods.</li>
-<li>Define constant variables to hold the constants used more than once.</li>
-</ol>
+<h2 id="Stack-amp-Queue"><a href="#Stack-amp-Queue" class="headerlink" title="Stack &amp; Queue"></a>Stack &amp; Queue</h2><p>No need to give a detailed introduction on these two famous data structures. We will focus on how to implement them in two different approaches - <strong>linked lists or resizing arrays</strong>.</p>
+<ul>
+<li>Approach 1. linked lists. (ez)</li>
+<li><strong>Approach 2. resizing arrays.</strong></li>
+</ul>
+<h3 id="Resizing-Array-Implementation"><a href="#Resizing-Array-Implementation" class="headerlink" title="Resizing-Array Implementation"></a>Resizing-Array Implementation</h3><p>Consider an array-based stack. The implementation is trivial; however, we need to know the size $N$ of the input data to avoid <strong>stack overflow</strong>.</p>
+<p>Therefore, we introduce the resizing arrays to this problem: the resizing arrays <strong>grow and shrink</strong> dynamically according to the current data size.</p>
+<ul>
+<li>How to grow array? (operation <code>push()</code>)<br>If <strong>array is full</strong>, create a new array of <strong>twice (repeated doubling)</strong> the size, and copy items.</li>
+<li>How to shrink array? (operation <code>pop()</code>)<br>If <strong>array is one-quarter full</strong>, create a new array of <strong>half the size</strong>, and copy items. </li>
+</ul>
+<div class="note info no-icon"><p>Note that we shrink array when it is $1/4$ full instead of $1/2$ full to avoid the worst case: <strong>push-pop-push-pop...sequence when array is full</strong>.</p>
+</div>
+<p>It is proven that the <strong>amortized running time</strong> of a single push/pop is <strong>constant</strong>. (in particular, $3$)</p>
+<p><img src="/2023/06/16/algo-princeton-p1/resize.png" alt="Note that the array size grow exponentially: $2^t$ for t-th growth"></p>
+<h3 id="Linked-Lists-Versus-Resizing-Arrays"><a href="#Linked-Lists-Versus-Resizing-Arrays" class="headerlink" title="Linked Lists Versus Resizing Arrays"></a>Linked Lists Versus Resizing Arrays</h3><p>Tradeoffs. Time Versus Space.</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">implementation/cost</th>
+<th style="text-align:center">time</th>
+<th style="text-align:center">space</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Linked Lists</td>
+<td style="text-align:center">Every operation takes constant time in the <strong>worst case</strong>.</td>
+<td style="text-align:center">Use extra space to deal with the links.</td>
+</tr>
+<tr>
+<td style="text-align:center">Resizing Arrays</td>
+<td style="text-align:center">Every operation takes constant <strong>amortized</strong> time.</td>
+<td style="text-align:center">Less wasted space.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="Code-Implementation-1"><a href="#Code-Implementation-1" class="headerlink" title="Code Implementation"></a>Code Implementation</h3><p>Here is a <strong>resizing-array</strong> implementation for a queue.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ResizingArrayQueue</span>&lt;Item&gt; <span class="keyword">implements</span> <span class="title class_">Iterable</span>&lt;Item&gt; &#123;</span><br><span class="line">    <span class="comment">// initial capacity of underlying resizing array</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">INIT_CAPACITY</span> <span class="operator">=</span> <span class="number">8</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Item[] q;       <span class="comment">// queue elements</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> n;          <span class="comment">// number of elements on queue</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> first;      <span class="comment">// index of first element of queue</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> last;       <span class="comment">// index of next available slot</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Initializes an empty queue.</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ResizingArrayQueue</span><span class="params">()</span> &#123;</span><br><span class="line">        q = (Item[]) <span class="keyword">new</span> <span class="title class_">Object</span>[INIT_CAPACITY];</span><br><span class="line">        n = <span class="number">0</span>;</span><br><span class="line">        first = <span class="number">0</span>;</span><br><span class="line">        last = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// return true if this queue is empty; false otherwise</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isEmpty</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> n == <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Returns the number of items in this queue.</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">size</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> n;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// resize the underlying array</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">resize</span><span class="params">(<span class="type">int</span> capacity)</span> &#123;</span><br><span class="line">        <span class="keyword">assert</span> capacity &gt;= n;</span><br><span class="line">        Item[] copy = (Item[]) <span class="keyword">new</span> <span class="title class_">Object</span>[capacity];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            copy[i] = q[(first + i) % q.length];</span><br><span class="line">        &#125;</span><br><span class="line">        q = copy;</span><br><span class="line">        first = <span class="number">0</span>;</span><br><span class="line">        last  = n;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Adds the item to this queue.</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">enqueue</span><span class="params">(Item item)</span> &#123;</span><br><span class="line">        <span class="comment">// double size of array if necessary and recopy to front of array</span></span><br><span class="line">        <span class="keyword">if</span> (n == q.length) resize(<span class="number">2</span>*q.length);   <span class="comment">// double size of array if necessary</span></span><br><span class="line">        q[last++] = item;                        <span class="comment">// add item</span></span><br><span class="line">        <span class="keyword">if</span> (last == q.length) last = <span class="number">0</span>;          <span class="comment">// wrap-around</span></span><br><span class="line">        n++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Removes and returns the item on this queue that was least recently added.</span></span><br><span class="line">    <span class="keyword">public</span> Item <span class="title function_">dequeue</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (isEmpty()) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NoSuchElementException</span>(<span class="string">&quot;Queue underflow&quot;</span>);</span><br><span class="line">        <span class="type">Item</span> <span class="variable">item</span> <span class="operator">=</span> q[first];</span><br><span class="line">        q[first] = <span class="literal">null</span>;                            <span class="comment">// to avoid loitering</span></span><br><span class="line">        n--;</span><br><span class="line">        first++;</span><br><span class="line">        <span class="keyword">if</span> (first == q.length) first = <span class="number">0</span>;           <span class="comment">// wrap-around</span></span><br><span class="line">        <span class="comment">// shrink size of array if necessary</span></span><br><span class="line">        <span class="keyword">if</span> (n &gt; <span class="number">0</span> &amp;&amp; n == q.length/<span class="number">4</span>) resize(q.length/<span class="number">2</span>);</span><br><span class="line">        <span class="keyword">return</span> item;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Returns the item least recently added to this queue.</span></span><br><span class="line">    <span class="keyword">public</span> Item <span class="title function_">peek</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (isEmpty()) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NoSuchElementException</span>(<span class="string">&quot;Queue underflow&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> q[first];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Iterator&lt;Item&gt; <span class="title function_">iterator</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ArrayIterator</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// an array iterator, from first to last-1</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">ArrayIterator</span> <span class="keyword">implements</span> <span class="title class_">Iterator</span>&lt;Item&gt; &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> i &lt; n;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> Item <span class="title function_">next</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (!hasNext()) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NoSuchElementException</span>();</span><br><span class="line">            <span class="type">Item</span> <span class="variable">item</span> <span class="operator">=</span> q[(i + first) % q.length];</span><br><span class="line">            i++;</span><br><span class="line">            <span class="keyword">return</span> item;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        ResizingArrayQueue&lt;String&gt; queue = <span class="keyword">new</span> <span class="title class_">ResizingArrayQueue</span>&lt;String&gt;();</span><br><span class="line">        <span class="keyword">while</span> (!StdIn.isEmpty()) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">item</span> <span class="operator">=</span> StdIn.readString();</span><br><span class="line">            <span class="keyword">if</span> (!item.equals(<span class="string">&quot;-&quot;</span>)) queue.enqueue(item);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (!queue.isEmpty()) StdOut.print(queue.dequeue() + <span class="string">&quot; &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        StdOut.println(<span class="string">&quot;(&quot;</span> + queue.size() + <span class="string">&quot; left on queue)&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="Interview-Questions"><a href="#Interview-Questions" class="headerlink" title="Interview Questions"></a>Interview Questions</h2><p>这门课在每个模组中间还插入了一些面试问题。感觉有点像 NOIp 笔试，其中也不乏一些有趣的问题。</p>
 <p><br></p>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning"><p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
 </div>
