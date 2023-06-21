@@ -23,15 +23,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="COMP3357 digest 的 P3 部分 (P1 部分在这里，P2 部分在这里)，主要介绍密码学中的几个困难问题 (hard problems) 与一个重要的 cryptographic primitive:  单向函数 (one-way function). 这一 Part 涉及到的困难问题 (Factoring problem, RSA problem, Discrete Logarit">
+    <meta name="description" content="COMP3357 digest 的 P3 部分 (P1 部分在这里，P2 部分在这里)，主要介绍密码学中的几个困难问题 (hard problems) 与一个重要的 cryptographic primitive: 单向函数 (one-way function). 这一 Part 涉及到的困难问题 (Factoring problem, RSA problem, Discrete Log">
 <meta property="og:type" content="article">
 <meta property="og:title" content="COMP3357 notes P3">
 <meta property="og:url" content="https://www.thisisxxz.com/2023/06/05/Cryptography-COMP3357-3/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="COMP3357 digest 的 P3 部分 (P1 部分在这里，P2 部分在这里)，主要介绍密码学中的几个困难问题 (hard problems) 与一个重要的 cryptographic primitive:  单向函数 (one-way function). 这一 Part 涉及到的困难问题 (Factoring problem, RSA problem, Discrete Logarit">
+<meta property="og:description" content="COMP3357 digest 的 P3 部分 (P1 部分在这里，P2 部分在这里)，主要介绍密码学中的几个困难问题 (hard problems) 与一个重要的 cryptographic primitive: 单向函数 (one-way function). 这一 Part 涉及到的困难问题 (Factoring problem, RSA problem, Discrete Log">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-06-04T16:04:22.000Z">
-<meta property="article:modified_time" content="2023-06-17T15:06:55.089Z">
+<meta property="article:modified_time" content="2023-06-21T10:34:07.596Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="cryptography">
 <meta property="article:tag" content="course notes">
@@ -169,7 +169,10 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hardness-of-Mathematical-Problems"><span class="nav-number">1.</span> <span class="nav-text">Hardness of Mathematical Problems</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Factoring-Problem"><span class="nav-number">2.</span> <span class="nav-text">Factoring Problem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Factoring-Experiment"><span class="nav-number">2.1.</span> <span class="nav-text">Factoring Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RSA-Problem"><span class="nav-number">3.</span> <span class="nav-text">RSA Problem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RSA-Experiment"><span class="nav-number">3.1.</span> <span class="nav-text">RSA Experiment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RSA-and-Factoring"><span class="nav-number">3.2.</span> <span class="nav-text">RSA and Factoring</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Discrete-Logarithm-Problem"><span class="nav-number">4.</span> <span class="nav-text">Discrete Logarithm Problem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Discrete-Logarithm-Experiment"><span class="nav-number">4.1.</span> <span class="nav-text">Discrete-Logarithm Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Diffie-Hellman-Problem"><span class="nav-number">5.</span> <span class="nav-text">Diffie-Hellman Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#One-Way-Function"><span class="nav-number">6.</span> <span class="nav-text">One-Way Function</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Inverting-Experiment"><span class="nav-number">6.1.</span> <span class="nav-text">The Inverting Experiment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#One-Way-Functions-Based-on-Assumptions"><span class="nav-number">6.2.</span> <span class="nav-text">One-Way Functions Based on Assumptions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hard-Core-Predicates"><span class="nav-number">6.3.</span> <span class="nav-text">Hard-Core Predicates</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#hardness-of-mathematical-problems"><span class="nav-number">1.</span> <span class="nav-text">Hardness of Mathematical
+Problems</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#factoring-problem"><span class="nav-number">2.</span> <span class="nav-text">Factoring Problem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#factoring-experiment"><span class="nav-number">2.1.</span> <span class="nav-text">Factoring Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rsa-problem"><span class="nav-number">3.</span> <span class="nav-text">RSA Problem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rsa-experiment"><span class="nav-number">3.1.</span> <span class="nav-text">RSA Experiment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rsa-and-factoring"><span class="nav-number">3.2.</span> <span class="nav-text">RSA and Factoring</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#discrete-logarithm-problem"><span class="nav-number">4.</span> <span class="nav-text">Discrete Logarithm Problem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#discrete-logarithm-experiment"><span class="nav-number">4.1.</span> <span class="nav-text">Discrete-Logarithm
+Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#diffie-hellman-problem"><span class="nav-number">5.</span> <span class="nav-text">Diffie-Hellman Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#one-way-function"><span class="nav-number">6.</span> <span class="nav-text">One-Way Function</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#the-inverting-experiment"><span class="nav-number">6.1.</span> <span class="nav-text">The Inverting Experiment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#one-way-functions-based-on-assumptions"><span class="nav-number">6.2.</span> <span class="nav-text">One-Way Functions Based
+on Assumptions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hard-core-predicates"><span class="nav-number">6.3.</span> <span class="nav-text">Hard-Core Predicates</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -307,7 +310,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-06-17 23:06:55" itemprop="dateModified" datetime="2023-06-17T23:06:55+08:00">2023-06-17</time>
+      <time title="Modified: 2023-06-21 18:34:07" itemprop="dateModified" datetime="2023-06-21T18:34:07+08:00">2023-06-21</time>
     </span>
 
   <span class="post-meta-item">
@@ -342,148 +345,336 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>COMP3357 digest 的 P3 部分 (P1 部分在<a target="_blank" rel="noopener" href="https://thisisxxz.github.io/2023/05/25/Cryptography-COMP3357/">这里</a>，P2 部分在<a target="_blank" rel="noopener" href="https://thisisxxz.github.io/2023/06/02/Cryptography-COMP3357-2/">这里</a>)，主要介绍密码学中的几个困难问题 (hard problems) 与一个重要的 cryptographic primitive:  单向函数 (one-way function).</p>
-<p>这一 Part 涉及到的困难问题 (Factoring problem, RSA problem, Discrete Logarithm problem, Diffie-Hellman problem) 的构建与 P2 中的数论，群论知识密切相关，注意参考。 </p>
+    <div class="post-body" itemprop="articleBody"><p>COMP3357 digest 的 P3 部分 (P1 部分在<a target="_blank" rel="noopener" href="https://thisisxxz.github.io/2023/05/25/Cryptography-COMP3357/">这里</a>，P2
+部分在<a target="_blank" rel="noopener" href="https://thisisxxz.github.io/2023/06/02/Cryptography-COMP3357-2/">这里</a>)，主要介绍密码学中的几个困难问题
+(hard problems) 与一个重要的 cryptographic primitive: 单向函数 (one-way
+function).</p>
+<p>这一 Part 涉及到的困难问题 (Factoring problem, RSA problem, Discrete
+Logarithm problem, Diffie-Hellman problem) 的构建与 P2
+中的数论，群论知识密切相关，注意参考。</p>
 <span id="more"></span>
-<p>同样，与 CnBlogs 中的笔记不同，这里不会详细的记载每个相关的知识点；只会尝试简略地总结一些能让未来的自己也会感到有趣，巧妙的内容 (Eureka!)。</p>
+<p>同样，与 CnBlogs
+中的笔记不同，这里不会详细的记载每个相关的知识点；只会尝试简略地总结一些能让未来的自己也会感到有趣，巧妙的内容
+(Eureka!)。</p>
 <p><br></p>
-<div class="note warning"><p>&emsp; This article is a self-administered course note.<br>&emsp; It will <strong>NOT</strong> cover any exam or assignment related content.</p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
 </div>
 <p><br></p>
-<h2 id="Hardness-of-Mathematical-Problems"><a href="#Hardness-of-Mathematical-Problems" class="headerlink" title="Hardness of Mathematical Problems"></a>Hardness of Mathematical Problems</h2><p>When discussing <strong>hardness</strong> of mathematical problems with input some integer $N$, we study asymptotics in terms of the <strong>input length</strong>.</p>
-<p>Integer $N$ will be assumed to be represented in binary. The <strong>running time</strong> of an algorithm taking as input an integer $N$ is measured in terms of $||N||$, the length of the binary representation of $N$. </p>
-<p>Note that $||N||=\lfloor \log N \rfloor+1$.</p>
-<div class="note info no-icon"><p>A problem is considered to be <strong>easy</strong> if the running time of its algorithm is <strong>polynomial</strong> in $||N||$.</p>
+<h2 id="hardness-of-mathematical-problems">Hardness of Mathematical
+Problems</h2>
+<p>When discussing <strong>hardness</strong> of mathematical problems
+with input some integer <span class="math inline">\(N\)</span>, we study
+asymptotics in terms of the <strong>input length</strong>.</p>
+<p>Integer <span class="math inline">\(N\)</span> will be assumed to be
+represented in binary. The <strong>running time</strong> of an algorithm
+taking as input an integer <span class="math inline">\(N\)</span> is
+measured in terms of <span class="math inline">\(||N||\)</span>, the
+length of the binary representation of <span class="math inline">\(N\)</span>.</p>
+<p>Note that <span class="math inline">\(||N||=\lfloor \log N
+\rfloor+1\)</span>.</p>
+<div class="note info no-icon"><p>A problem is considered to be <strong>easy</strong> if the running
+time of its algorithm is <strong>polynomial</strong> in <span class="math inline">\(||N||\)</span>.</p>
 </div>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
-<p>这里对数学问题困难性 (hardness) 的定义是建立在算法数论 (algorithmic number theory) 的视角上的。</p>
-<p>实际上，这个概念更贴近计算机领域而不是纯数学领域。如果从算法时间复杂度的角度来定义，就好理解多了：一个时间复杂度为 $O(\mathtt{poly}(n))$ 的算法是<strong>高效 (efficient)</strong> 的，对应的问题是<strong>简单 (easy)</strong> 的。而时间复杂度为 $O(\mathtt{exp}(n))$ 的算法是<strong>低效 (inefficient)</strong> 的，对应的问题是<strong>困难 (hard)</strong> 的。</p>
+<p>这里对数学问题困难性 (hardness) 的定义是建立在算法数论 (algorithmic
+number theory) 的视角上的。</p>
+<p>实际上，这个概念更贴近计算机领域而不是纯数学领域。如果从算法时间复杂度的角度来定义，就好理解多了：一个时间复杂度为
+<span class="math inline">\(O(\mathtt{poly}(n))\)</span>
+的算法是<strong>高效 (efficient)</strong> 的，对应的问题是<strong>简单
+(easy)</strong> 的。而时间复杂度为 <span class="math inline">\(O(\mathtt{exp}(n))\)</span> 的算法是<strong>低效
+(inefficient)</strong> 的，对应的问题是<strong>困难 (hard)</strong>
+的。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Factoring-Problem"><a href="#Factoring-Problem" class="headerlink" title="Factoring Problem"></a>Factoring Problem</h2><p>Factoring could be viewed as the inverse operation of multiplication. Multiplying two primes $p$ and $q$ as $N=p\times q$ is <strong>easy</strong>, while factorizing $N$ to derive $p$ and $q$ is <strong>hard</strong>.</p>
-<div class="note info no-icon"><p>Factoring the product of two primes: Given $N=pq$, where $p,q$ are primes, find $p$ and $q$.</p>
+<h2 id="factoring-problem">Factoring Problem</h2>
+<p>Factoring could be viewed as the inverse operation of multiplication.
+Multiplying two primes <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> as <span class="math inline">\(N=p\times q\)</span> is <strong>easy</strong>,
+while factorizing <span class="math inline">\(N\)</span> to derive <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> is <strong>hard</strong>.</p>
+<div class="note info no-icon"><p>Factoring the product of two primes: Given <span class="math inline">\(N=pq\)</span>, where <span class="math inline">\(p,q\)</span> are primes, find <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span>.</p>
 </div>
-<h3 id="Factoring-Experiment"><a href="#Factoring-Experiment" class="headerlink" title="Factoring Experiment"></a>Factoring Experiment</h3><p>Cryptographically, the hardness of the factoring problem is indicated by the <strong>factoring experiment</strong> $\mathtt{Factor}_{\mathscr{A}, Genmodulus}(n)$, where GenModulus is an <strong>efficient (polynomial-time)</strong> algorithm that, on input $1^n$, outputs $(N,p,q)$ where $N=pq$, and $p,q$ are $n$-bit primes except with negligible probability.</p>
-<p>Adversary $\mathscr{A}$ with $N$ needs to efficiently compute the corresponding $p,q$.</p>
-<div class="note info no-icon"><p>Definition. Factoring is hard relative to GenModulus if for all <strong>probabilistic polynomial-time algorithm</strong> $\mathscr{A}$, there exists a negligible $\varepsilon(n)$ that $\Pr[\mathtt{Factor}_{\mathscr{A}, GenModulus}(n)=1]\leq \varepsilon(n)$.</p>
+<h3 id="factoring-experiment">Factoring Experiment</h3>
+<p>Cryptographically, the hardness of the factoring problem is indicated
+by the <strong>factoring experiment</strong> <span class="math inline">\(\mathtt{Factor}_{\mathscr{A},
+Genmodulus}(n)\)</span>, where GenModulus is an <strong>efficient
+(polynomial-time)</strong> algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs <span class="math inline">\((N,p,q)\)</span> where <span class="math inline">\(N=pq\)</span>, and <span class="math inline">\(p,q\)</span> are <span class="math inline">\(n\)</span>-bit primes except with negligible
+probability.</p>
+<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(N\)</span> needs to efficiently compute the
+corresponding <span class="math inline">\(p,q\)</span>.</p>
+<div class="note info no-icon"><p>Definition. Factoring is hard relative to GenModulus if for all
+<strong>probabilistic polynomial-time algorithm</strong> <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
+<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{Factor}_{\mathscr{A},
+GenModulus}(n)=1]\leq \varepsilon(n)\)</span>.</p>
 </div>
-<p><strong>The Factoring Assumption</strong> is the assumption that there exists a GenModulus relative to which factoring is hard.</p>
+<p><strong>The Factoring Assumption</strong> is the assumption that
+there exists a GenModulus relative to which factoring is hard.</p>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
-<p>这里对数学问题困难性的定义又与上面的算法数论 (algorithmic number theory) 或计算机科学领域的定义不同，是以<strong>实验</strong>来描述的。是不是很有加密学的特色？</p>
-<p>这里还要注意一个概念：<strong>密码学假设 (assumption)</strong>，它将某个数学问题的困难性归约到实验中的一个高效 (efficient) 算法的存在性上。对于大数质因数分解问题 (Factoring problem)，其困难性被某个高效的 GenModulus 算法的存在保证。</p>
+<p>这里对数学问题困难性的定义又与上面的算法数论 (algorithmic number
+theory)
+或计算机科学领域的定义不同，是以<strong>实验</strong>来描述的。是不是很有加密学的特色？</p>
+<p>这里还要注意一个概念：<strong>密码学假设
+(assumption)</strong>，它将某个数学问题的困难性归约到实验中的一个高效
+(efficient) 算法的存在性上。对于大数质因数分解问题 (Factoring
+problem)，其困难性被某个高效的 GenModulus 算法的存在保证。</p>
 </blockquote>
 <p><br></p>
-<h2 id="RSA-Problem"><a href="#RSA-Problem" class="headerlink" title="RSA Problem"></a>RSA Problem</h2><p>Given a modulus $N$ and integer $e&gt;2$, such that $\gcd(e, \varphi(N))=1$.</p>
-<p>By the Corollary 2 of the Fermat&#39;s Little Theorem (see it in P2), we know that exponentiation to the $e$-th power mod $N$ is a <strong>permutation</strong> on $(\mathbb{Z}/N)^{*}$; </p>
-<p>For any $y\in (\mathbb{Z}/N)^{*}$, let $[y^{1/e} \mod{N}]$ be the unique element which yields $y$ when raised to the $e$-th power mod $N$, i.e., <strong>the $e$-th root of $y$ mod $N$</strong>. </p>
-<p>If $e\cdot d\equiv 1\pmod{\varphi(N)}$, then raising to the $d$-th power is the <strong>inverse</strong> of raising to the $e$-th power, that is, for any $g\in (\mathbb{Z}/N)^{*}$, $(g^e)^d \equiv g\pmod{N}$. Therefore, if $y=g^e$, $y^{1/e}=g=y^d\pmod{N}$.</p>
-<div class="note info no-icon"><p>RSA problem is essentially finding $e$-th root of $y$ mod $N$: Given $N,e,y$, compute $[y^{1/e}\mod{N}]$. Note that $e&gt;2$ and $\gcd(e, \varphi(N))=1$, $\gcd(y, N)=1$. </p>
+<h2 id="rsa-problem">RSA Problem</h2>
+<p>Given a modulus <span class="math inline">\(N\)</span> and integer
+<span class="math inline">\(e&gt;2\)</span>, such that <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>.</p>
+<p>By the Corollary 2 of the Fermat's Little Theorem (see it in P2), we
+know that exponentiation to the <span class="math inline">\(e\)</span>-th power mod <span class="math inline">\(N\)</span> is a <strong>permutation</strong> on
+<span class="math inline">\((\mathbb{Z}/N)^{\*}\)</span>;</p>
+<p>For any <span class="math inline">\(y\in
+(\mathbb{Z}/N)^{\*}\)</span>, let <span class="math inline">\([y^{1/e}
+\mod{N}]\)</span> be the unique element which yields <span class="math inline">\(y\)</span> when raised to the <span class="math inline">\(e\)</span>-th power mod <span class="math inline">\(N\)</span>, i.e., <strong>the <span class="math inline">\(e\)</span>-th root of <span class="math inline">\(y\)</span> mod <span class="math inline">\(N\)</span></strong>.</p>
+<p>If <span class="math inline">\(e\cdot d\equiv
+1\pmod{\varphi(N)}\)</span>, then raising to the <span class="math inline">\(d\)</span>-th power is the
+<strong>inverse</strong> of raising to the <span class="math inline">\(e\)</span>-th power, that is, for any <span class="math inline">\(g\in (\mathbb{Z}/N)^{\*}\)</span>, <span class="math inline">\((g^e)^d \equiv g\pmod{N}\)</span>. Therefore, if
+<span class="math inline">\(y=g^e\)</span>, <span class="math inline">\(y^{1/e}=g=y^d\pmod{N}\)</span>.</p>
+<div class="note info no-icon"><p>RSA problem is essentially finding <span class="math inline">\(e\)</span>-th root of <span class="math inline">\(y\)</span> mod <span class="math inline">\(N\)</span>: Given <span class="math inline">\(N,e,y\)</span>, compute <span class="math inline">\([y^{1/e}\mod{N}]\)</span>. Note that <span class="math inline">\(e&gt;2\)</span> and <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>, <span class="math inline">\(\gcd(y, N)=1\)</span>.</p>
 </div>
-<h3 id="RSA-Experiment"><a href="#RSA-Experiment" class="headerlink" title="RSA Experiment"></a>RSA Experiment</h3><p>Similarly, we have the RSA experiment $\mathtt{RSA}$-$\mathtt{inv}_{\mathscr{A}, GenRSA}(n)$, where GenRSA is an efficient algorithm that, on input $1^n$, outputs a modulus $N$ that is the product of two $n$-bit primes $p,q$, as well as integers $e,d&gt;0$ with $\gcd(e, \varphi(N))=1$ and $ed\equiv 1\pmod{\varphi(N)}$.</p>
-<p>Adversary $\mathscr{A}$ with $N,e$ and a <u><strong>uniform</strong></u> $y\in (\mathbb{Z}/N)^{*}$ needs to efficiently compute the corresponding $x$.</p>
-<div class="note info no-icon"><p>Definition. RSA problem is hard relative to GenRSA if for all probabilistic polynomial time algorithm $\mathscr{A}$, there exists a negligible $\varepsilon(n)$ that $\Pr[\mathtt{RSAinv}_{\mathscr{A}, GenRSA}(n)=1]\leq \varepsilon(n)$.</p>
+<h3 id="rsa-experiment">RSA Experiment</h3>
+<p>Similarly, we have the RSA experiment <span class="math inline">\(\mathtt{RSA}\)</span>-<span class="math inline">\(\mathtt{inv}_{\mathscr{A}, GenRSA}(n)\)</span>,
+where GenRSA is an efficient algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs a modulus <span class="math inline">\(N\)</span> that is the product of two <span class="math inline">\(n\)</span>-bit primes <span class="math inline">\(p,q\)</span>, as well as integers <span class="math inline">\(e,d&gt;0\)</span> with <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span> and <span class="math inline">\(ed\equiv 1\pmod{\varphi(N)}\)</span>.</p>
+<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(N,e\)</span> and a <u><strong>uniform</strong></u>
+<span class="math inline">\(y\in (\mathbb{Z}/N)^{\*}\)</span> needs to
+efficiently compute the corresponding <span class="math inline">\(x\)</span>.</p>
+<div class="note info no-icon"><p>Definition. RSA problem is hard relative to GenRSA if for all
+probabilistic polynomial time algorithm <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
+<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{RSAinv}_{\mathscr{A},
+GenRSA}(n)=1]\leq \varepsilon(n)\)</span>.</p>
 </div>
-<p>The RSA Assumption is the assumption that there exists a GenRSA algorithm relative to which the RSA problem is hard. Note that GenRSA can be constructed from GenModulus.</p>
-<h3 id="RSA-and-Factoring"><a href="#RSA-and-Factoring" class="headerlink" title="RSA and Factoring"></a>RSA and Factoring</h3><p>The hardness of RSA problem could be <strong>reduced</strong> to the hardness of factoring problem, which is to say, one could efficiently solve RSA problem if he could efficiently solve factoring problem. </p>
-<p>Assume there exists an efficient algorithm $\mathscr{A}$ that could factorize $N$ into two distinct primes $p,q$, then we could construct an efficient $\mathscr{A}&#39;$ that could solve RSA problem.</p>
+<p>The RSA Assumption is the assumption that there exists a GenRSA
+algorithm relative to which the RSA problem is hard. Note that GenRSA
+can be constructed from GenModulus.</p>
+<h3 id="rsa-and-factoring">RSA and Factoring</h3>
+<p>The hardness of RSA problem could be <strong>reduced</strong> to the
+hardness of factoring problem, which is to say, one could efficiently
+solve RSA problem if he could efficiently solve factoring problem.</p>
+<p>Assume there exists an efficient algorithm <span class="math inline">\(\mathscr{A}\)</span> that could factorize <span class="math inline">\(N\)</span> into two distinct primes <span class="math inline">\(p,q\)</span>, then we could construct an efficient
+<span class="math inline">\(\mathscr{A}&#39;\)</span> that could solve
+RSA problem.</p>
 <ul>
-<li>$\mathscr{A}&#39;$ runs $\mathscr{A}(N)$ and obtain two <strong>distinct odd primes</strong> $p,q$ that $N=pq$.</li>
-<li>$\mathscr{A}&#39;$ simply computes $\varphi(N)=(p-1)(q-1)$.</li>
-<li>$\mathscr{A}&#39;$ computes $d\equiv e^{-1}\pmod{\varphi(N)}$ with extended Euclidean algorithm.</li>
-<li>$\mathscr{A}&#39;$ could compute $y^{1/e}$ mod $N$ efficiently by computing $y^d$ mod $N$.</li>
+<li><span class="math inline">\(\mathscr{A}&#39;\)</span> runs <span class="math inline">\(\mathscr{A}(N)\)</span> and obtain two
+<strong>distinct odd primes</strong> <span class="math inline">\(p,q\)</span> that <span class="math inline">\(N=pq\)</span>.</li>
+<li><span class="math inline">\(\mathscr{A}&#39;\)</span> simply
+computes <span class="math inline">\(\varphi(N)=(p-1)(q-1)\)</span>.</li>
+<li><span class="math inline">\(\mathscr{A}&#39;\)</span> computes <span class="math inline">\(d\equiv e^{-1}\pmod{\varphi(N)}\)</span> with
+extended Euclidean algorithm.</li>
+<li><span class="math inline">\(\mathscr{A}&#39;\)</span> could compute
+<span class="math inline">\(y^{1/e}\)</span> mod <span class="math inline">\(N\)</span> efficiently by computing <span class="math inline">\(y^d\)</span> mod <span class="math inline">\(N\)</span>.</li>
 </ul>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
-<p>RSA 问题本质上是<strong>求模意义下的 $e$ 次方根</strong>。注意 RSA 问题中的模数 $N$ 是两个不同的大奇质数 $p,q$ 之积。</p>
-<p>RSA 问题的巧妙之处在于，利用群的 closure 性质与费马小定理可得，<strong>模意义下的 $e$ 次方根与模意义下的 $d$ 次方幂是等价的</strong>；其中 $\gcd(e, \varphi(N))=1$, $d\equiv e^{-1} \pmod{\varphi(N)}$. 也就是说，如果敌手得知 $\varphi(N)$，那么他就能通过计算得出 $d$，从而轻松解决 RSA 问题。</p>
-<p>然而得知 $\varphi(N)$ 也是<strong>困难的</strong>；这由 Factoring problem 的困难性保证。对于只有两个质因数 $p,q$ 的模数 $N$, $\varphi(N)=\varphi(pq)=\varphi(p)\varphi(q)=(p-1)(q-1)$。所以，得到 $\varphi(N)$ 的前提是成功将 $N$ 分解为 $p,q$。 </p>
-<p>著名的 RSA 公钥加密就应用了这一性质：在该加密中，公钥 $pk=e$, 私钥 $sk=d$。加密 $Enc_{pk}(m)=m^e$，解密 $Dec_{sk}(c)=c^d$ (均在 mod $N$ 意义下)。RSA 问题的困难性保证了任意不持有私钥的敌手无法由密文 $c=m^e$ 破解消息 $m$ (即，得到 $c$ 在模 $N$ 意义下的 $e$ 次方根)。</p>
+<p>RSA 问题本质上是<strong>求模意义下的 <span class="math inline">\(e\)</span> 次方根</strong>。注意 RSA 问题中的模数
+<span class="math inline">\(N\)</span> 是两个不同的大奇质数 <span class="math inline">\(p,q\)</span> 之积。</p>
+<p>RSA 问题的巧妙之处在于，利用群的 closure
+性质与费马小定理可得，<strong>模意义下的 <span class="math inline">\(e\)</span> 次方根与模意义下的 <span class="math inline">\(d\)</span> 次方幂是等价的</strong>；其中 <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>, <span class="math inline">\(d\equiv e^{-1} \pmod{\varphi(N)}\)</span>.
+也就是说，如果敌手得知 <span class="math inline">\(\varphi(N)\)</span>，那么他就能通过计算得出 <span class="math inline">\(d\)</span>，从而轻松解决 RSA 问题。</p>
+<p>然而得知 <span class="math inline">\(\varphi(N)\)</span>
+也是<strong>困难的</strong>；这由 Factoring problem
+的困难性保证。对于只有两个质因数 <span class="math inline">\(p,q\)</span> 的模数 <span class="math inline">\(N\)</span>, <span class="math inline">\(\varphi(N)=\varphi(pq)=\varphi(p)\varphi(q)=(p-1)(q-1)\)</span>。所以，得到
+<span class="math inline">\(\varphi(N)\)</span> 的前提是成功将 <span class="math inline">\(N\)</span> 分解为 <span class="math inline">\(p,q\)</span>。</p>
+<p>著名的 RSA 公钥加密就应用了这一性质：在该加密中，公钥 <span class="math inline">\(pk=e\)</span>, 私钥 <span class="math inline">\(sk=d\)</span>。加密 <span class="math inline">\(Enc_{pk}(m)=m^e\)</span>，解密 <span class="math inline">\(Dec_{sk}(c)=c^d\)</span> (均在 mod <span class="math inline">\(N\)</span> 意义下)。RSA
+问题的困难性保证了任意不持有私钥的敌手无法由密文 <span class="math inline">\(c=m^e\)</span> 破解消息 <span class="math inline">\(m\)</span> (即，得到 <span class="math inline">\(c\)</span> 在模 <span class="math inline">\(N\)</span> 意义下的 <span class="math inline">\(e\)</span> 次方根)。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Discrete-Logarithm-Problem"><a href="#Discrete-Logarithm-Problem" class="headerlink" title="Discrete Logarithm Problem"></a>Discrete Logarithm Problem</h2><p>Fix a <strong>cyclic</strong> group $\mathbb{G}$ of order $q$, and generator $g\in\mathbb{G}$. We know that $\{g^0,g^1,...,g^{q-1}\}=\mathbb{G}$.</p>
-<p>Equilently, for every $h\in\mathbb{G}$, there is a unique $x\in \mathbb{Z}_q$, such that $g^x=h$. We define $\log_g{h}$ to be this $x$. This is the <strong>discrete logarithm</strong> of $h$ with respect to $g$ in the group $\mathbb{G}$.</p>
-<div class="note info no-icon"><p><strong>Discrete Logarithm</strong> problem in $\mathbb{G}$: Given $g\in \mathbb{G}$ and <u><strong>uniform</strong></u> $h\in \mathbb{G}$, compute $\log_g{h}$. </p>
+<h2 id="discrete-logarithm-problem">Discrete Logarithm Problem</h2>
+<p>Fix a <strong>cyclic</strong> group <span class="math inline">\(\mathbb{G}\)</span> of order <span class="math inline">\(q\)</span>, and generator <span class="math inline">\(g\in\mathbb{G}\)</span>. We know that <span class="math inline">\(\{g^0,g^1,...,g^{q-1}\}=\mathbb{G}\)</span>.</p>
+<p>Equilently, for every <span class="math inline">\(h\in\mathbb{G}\)</span>, there is a unique <span class="math inline">\(x\in \mathbb{Z}_q\)</span>, such that <span class="math inline">\(g^x=h\)</span>. We define <span class="math inline">\(\log_g{h}\)</span> to be this <span class="math inline">\(x\)</span>. This is the <strong>discrete
+logarithm</strong> of <span class="math inline">\(h\)</span> with
+respect to <span class="math inline">\(g\)</span> in the group <span class="math inline">\(\mathbb{G}\)</span>.</p>
+<div class="note info no-icon"><p><strong>Discrete Logarithm</strong> problem in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in \mathbb{G}\)</span> and
+<u><strong>uniform</strong></u> <span class="math inline">\(h\in
+\mathbb{G}\)</span>, compute <span class="math inline">\(\log_g{h}\)</span>.</p>
 </div>
-<h3 id="Discrete-Logarithm-Experiment"><a href="#Discrete-Logarithm-Experiment" class="headerlink" title="Discrete-Logarithm Experiment"></a>Discrete-Logarithm Experiment</h3><p>Similarly, we have the discrete-logarithm experiment $\mathtt{DLog}_{\mathscr{A}, \mathscr{G}} (n)$ where $\mathscr{G}$ is an efficient group-generation algorithm that, on input $1^n$, outputs a cyclic group $\mathbb{G}$, its order $q$, and a generator $g$.</p>
-<p>Adversary $\mathscr{A}$ with $\mathbb{G},q,g$ and a <u><strong>uniform</strong></u> $h\in\mathbb{G}$ needs to efficiently compute correponding $x$.</p>
-<div class="note info no-icon"><p>Definition. RSA problem is hard relative to $\mathscr{G}$ if for all probabilistic polynomial time algorithm $\mathscr{A}$, there exists a negligible $\varepsilon(n)$ that $\Pr[\mathtt{DLog}_{\mathscr{A}, \mathscr{G}}(n)=1]\leq \varepsilon(n)$.</p>
+<h3 id="discrete-logarithm-experiment">Discrete-Logarithm
+Experiment</h3>
+<p>Similarly, we have the discrete-logarithm experiment <span class="math inline">\(\mathtt{DLog}_{\mathscr{A}, \mathscr{G}}
+(n)\)</span> where <span class="math inline">\(\mathscr{G}\)</span> is
+an efficient group-generation algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs a cyclic group <span class="math inline">\(\mathbb{G}\)</span>, its order <span class="math inline">\(q\)</span>, and a generator <span class="math inline">\(g\)</span>.</p>
+<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(\mathbb{G},q,g\)</span> and a
+<u><strong>uniform</strong></u> <span class="math inline">\(h\in\mathbb{G}\)</span> needs to efficiently
+compute correponding <span class="math inline">\(x\)</span>.</p>
+<div class="note info no-icon"><p>Definition. RSA problem is hard relative to <span class="math inline">\(\mathscr{G}\)</span> if for all probabilistic
+polynomial time algorithm <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
+<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{DLog}_{\mathscr{A},
+\mathscr{G}}(n)=1]\leq \varepsilon(n)\)</span>.</p>
 </div>
-<p>The Discrete Logarithm Assumption is the assumption that there exists a group-generation algorithm $\mathscr{G}$ relative to which the Discrete Logarithm problem is hard.</p>
+<p>The Discrete Logarithm Assumption is the assumption that there exists
+a group-generation algorithm <span class="math inline">\(\mathscr{G}\)</span> relative to which the
+Discrete Logarithm problem is hard.</p>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
-<p>离散对数问题本质上是<strong>模意义下的对数运算</strong>。另外还需要注意一点，无论是 RSA 实验还是离散对数实验，对敌手的<strong>挑战 (challenge)</strong> 都是<strong>均匀随机 (uniform)</strong> 的。</p>
-<p>其实，RSA 问题 (模意义下的开次方运算) 与离散问题 (模意义下的对数运算) 均可以视为幂运算 $h=g^x$ 的<strong>逆运算</strong>：RSA 问题给出指数 $x$，要求由 $h$ 计算底数 $g=h^{1/x}$；而离散对数问题给出底数 $g$，要求由 $h$ 计算指数 $x=\log_g h$。</p>
+<p>离散对数问题本质上是<strong>模意义下的对数运算</strong>。另外还需要注意一点，无论是
+RSA 实验还是离散对数实验，对敌手的<strong>挑战 (challenge)</strong>
+都是<strong>均匀随机 (uniform)</strong> 的。</p>
+<p>其实，RSA 问题 (模意义下的开次方运算) 与离散问题 (模意义下的对数运算)
+均可以视为幂运算 <span class="math inline">\(h=g^x\)</span>
+的<strong>逆运算</strong>：RSA 问题给出指数 <span class="math inline">\(x\)</span>，要求由 <span class="math inline">\(h\)</span> 计算底数 <span class="math inline">\(g=h^{1/x}\)</span>；而离散对数问题给出底数 <span class="math inline">\(g\)</span>，要求由 <span class="math inline">\(h\)</span> 计算指数 <span class="math inline">\(x=\log_g h\)</span>。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Diffie-Hellman-Problem"><a href="#Diffie-Hellman-Problem" class="headerlink" title="Diffie-Hellman Problem"></a>Diffie-Hellman Problem</h2><p>Fix cyclic group $\mathbb{G}$ of order $q$, and generator $g\in\mathbb{G}$.</p>
-<p>Given elements $h_1,h_2\in \mathbb{G}$, define Diiffie-Hellman function $DH_g(h_1,h_2)=g^{\log_g h_1\cdot\log_g h_2}$. That is, if $h_1=g^{x_1}$, $h_2=g^{x_2}$, then $DH_g(h_1,h_2)=g^{x_1\cdot x_2}$.</p>
-<div class="note info no-icon"><p>Computational Diffie-Hellman (CDH) in $\mathbb{G}$: Given $g\in \mathbb{G}$, and <u><strong>uniform</strong></u> $h_1,h_2\in\mathbb{G}$, compute $DH_g(h_1,h_2)$.</p>
-<p>Decisional Diffie-Hellman (DDH) in $\mathbb{G}$: Given $g\in\mathbb{G}$, and <u><strong>uniform</strong></u> $h_1,h_2\in\mathbb{G}$, <strong>distinguish</strong> $DH_g(h_1,h_2)$ from a <u><strong>uniform</strong></u> group element $h&#39;\in \mathbb{G}$.</p>
+<h2 id="diffie-hellman-problem">Diffie-Hellman Problem</h2>
+<p>Fix cyclic group <span class="math inline">\(\mathbb{G}\)</span> of
+order <span class="math inline">\(q\)</span>, and generator <span class="math inline">\(g\in\mathbb{G}\)</span>.</p>
+<p>Given elements <span class="math inline">\(h_1,h_2\in
+\mathbb{G}\)</span>, define Diiffie-Hellman function <span class="math inline">\(DH_g(h_1,h_2)=g^{\log_g h_1\cdot\log_g
+h_2}\)</span>. That is, if <span class="math inline">\(h_1=g^{x_1}\)</span>, <span class="math inline">\(h_2=g^{x_2}\)</span>, then <span class="math inline">\(DH_g(h_1,h_2)=g^{x_1\cdot x_2}\)</span>.</p>
+<div class="note info no-icon"><p>Computational Diffie-Hellman (CDH) in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in \mathbb{G}\)</span>, and
+<u><strong>uniform</strong></u> <span class="math inline">\(h_1,h_2\in\mathbb{G}\)</span>, compute <span class="math inline">\(DH_g(h_1,h_2)\)</span>.</p>
+<p>Decisional Diffie-Hellman (DDH) in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in\mathbb{G}\)</span>, and
+<u><strong>uniform</strong></u> <span class="math inline">\(h_1,h_2\in\mathbb{G}\)</span>,
+<strong>distinguish</strong> <span class="math inline">\(DH_g(h_1,h_2)\)</span> from a
+<u><strong>uniform</strong></u> group element <span class="math inline">\(h&#39;\in \mathbb{G}\)</span>.</p>
 </div>
-<p>CDH and DDH experiments could be constructed similarly so they are not covered here.</p>
-<p>It is easy to see that if one could solve Discrete Logarithm problem, he could also solve CDH problem; and if one could solve CDH problem, he could also solve DDH problem. </p>
-<p><strong>So DLog $\to$ CDH $\to$ DDH, the assumption is getting stronger and stronger, </strong> which is to say, if one could NOT solve DDH problem, it would be <strong>impossible</strong> for him to solve CDH or DLog problem. </p>
+<p>CDH and DDH experiments could be constructed similarly so they are
+not covered here.</p>
+<p>It is easy to see that if one could solve Discrete Logarithm problem,
+he could also solve CDH problem; and if one could solve CDH problem, he
+could also solve DDH problem.</p>
+<p><strong>So DLog <span class="math inline">\(\to\)</span> CDH <span class="math inline">\(\to\)</span> DDH, the assumption is getting
+stronger and stronger, </strong> which is to say, if one could NOT solve
+DDH problem, it would be <strong>impossible</strong> for him to solve
+CDH or DLog problem.</p>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
-<p>Diffie-Hellman 问题的困难性是由离散对数问题的困难性保证的。至于为什么要定义这样一个函数，是由于 Diffie-Hellman 问题定义了<strong>两个可以暴露的量</strong> $h_1,h_2$。当 Alice 与 Bob 之间需要进行多次信息传输时，利用 Diffie-Hellman 问题的困难性可以很好的隐藏秘密信息。</p>
-<p>以著名的 <strong>Diffie-Hellman Key-exchange Protocol (密钥交换协议)</strong> 为例：Alice 选择某个 $x_1$，并向 Bob 发送 $h_1=g^{x_1}$；而 Bob 选择某个 $x_2$，并向 Alice 发送 $h_2=g^{x_2}$。这样，Bob 与 Alice 双方都可以计算出密钥 $k=g^{x_1x_2}=h_1^{x_2}=h_2^{x_1}$，密钥交换成功。而 Diffie-Hellman 问题的困难性保证窃听到 transcript $h_1,h_2$ 的敌手无法据此求出 $k=DH_g(h_1,h_2)$.</p>
+<p>Diffie-Hellman
+问题的困难性是由离散对数问题的困难性保证的。至于为什么要定义这样一个函数，是由于
+Diffie-Hellman 问题定义了<strong>两个可以暴露的量</strong> <span class="math inline">\(h_1,h_2\)</span>。当 Alice 与 Bob
+之间需要进行多次信息传输时，利用 Diffie-Hellman
+问题的困难性可以很好的隐藏秘密信息。</p>
+<p>以著名的 <strong>Diffie-Hellman Key-exchange Protocol
+(密钥交换协议)</strong> 为例：Alice 选择某个 <span class="math inline">\(x_1\)</span>，并向 Bob 发送 <span class="math inline">\(h_1=g^{x_1}\)</span>；而 Bob 选择某个 <span class="math inline">\(x_2\)</span>，并向 Alice 发送 <span class="math inline">\(h_2=g^{x_2}\)</span>。这样，Bob 与 Alice
+双方都可以计算出密钥 <span class="math inline">\(k=g^{x_1x_2}=h_1^{x_2}=h_2^{x_1}\)</span>，密钥交换成功。而
+Diffie-Hellman 问题的困难性保证窃听到 transcript <span class="math inline">\(h_1,h_2\)</span> 的敌手无法据此求出 <span class="math inline">\(k=DH_g(h_1,h_2)\)</span>.</p>
 </blockquote>
 <p><br></p>
-<h2 id="One-Way-Function"><a href="#One-Way-Function" class="headerlink" title="One-Way Function"></a>One-Way Function</h2><p>One-Way Functions are a critical cryptographic primitive, that is both necessary and sufficient for private-key encryption and MACs. <strong>Informally</strong> speaking, a function $f$ is one-way if it is <strong>easy to compute but hard to invert</strong>.</p>
-<p>We formally define &quot;hard to invert&quot; with the inverting experiment $\mathtt{Invert}_{\mathscr{A}, f}(n)$.</p>
-<h3 id="The-Inverting-Experiment"><a href="#The-Inverting-Experiment" class="headerlink" title="The Inverting Experiment"></a>The Inverting Experiment</h3><ul>
-<li>Challenger $\mathscr{C}$ choose <u><strong>uniform</strong></u> $x\in\{0,1\}^n$, and compute $y:=f(x)$.</li>
-<li>Adversary $\mathscr{A}$ is given $1^n$ and $y$ as inputs. $\mathscr{A}$ outputs $x&#39;$.</li>
-<li>$\mathscr{A}$ succeeds and the experiment evaluates to $1$ if and only if $f(x&#39;)=y$.</li>
-</ul>
-<p>Note that the <strong>preimage</strong> $x&#39;$ does NOT neccessarily have to equal $x$, as long as $f(x&#39;)=y$.</p>
-<div class="note info no-icon"><p>Definition. A function $f:\{0,1\}^{*}\to \{0,1\}^{*}$ is <strong>one-way</strong> if the following two conditions hold:</p>
+<h2 id="one-way-function">One-Way Function</h2>
+<p>One-Way Functions are a critical cryptographic primitive, that is
+both necessary and sufficient for private-key encryption and MACs.
+<strong>Informally</strong> speaking, a function <span class="math inline">\(f\)</span> is one-way if it is <strong>easy to
+compute but hard to invert</strong>.</p>
+<p>We formally define "hard to invert" with the inverting experiment
+<span class="math inline">\(\mathtt{Invert}_{\mathscr{A},
+f}(n)\)</span>.</p>
+<h3 id="the-inverting-experiment">The Inverting Experiment</h3>
 <ul>
-<li>(<strong>Easy to compute</strong>): There is a polynomial-time algorithm that on input $x$ outputs $f(x)$.</li>
-<li>(<strong>Hard to invert</strong>): For all PPT algorithm $\mathscr{A}$ there is a negligible function $\varepsilon(n)$ such that: $\Pr[\mathtt{Invert}_{\mathscr{A}. f}(n)=1]\leq \varepsilon(n)$.</li>
+<li>Challenger <span class="math inline">\(\mathscr{C}\)</span> choose
+<u><strong>uniform</strong></u> <span class="math inline">\(x\in\{0,1\}^n\)</span>, and compute <span class="math inline">\(y:=f(x)\)</span>.</li>
+<li>Adversary <span class="math inline">\(\mathscr{A}\)</span> is given
+<span class="math inline">\(1^n\)</span> and <span class="math inline">\(y\)</span> as inputs. <span class="math inline">\(\mathscr{A}\)</span> outputs <span class="math inline">\(x&#39;\)</span>.</li>
+<li><span class="math inline">\(\mathscr{A}\)</span> succeeds and the
+experiment evaluates to <span class="math inline">\(1\)</span> if and
+only if <span class="math inline">\(f(x&#39;)=y\)</span>.</li>
 </ul>
-</div>
-<h3 id="One-Way-Functions-Based-on-Assumptions"><a href="#One-Way-Functions-Based-on-Assumptions" class="headerlink" title="One-Way Functions Based on Assumptions"></a>One-Way Functions Based on Assumptions</h3><p>We could construct one-way functions based on the above four assumptions (factoring assumption, RSA assumption, discrete logarithm assumption, Diffie-Hellman assumption). </p>
-<p>We illustrate this by using <strong>factoring assumption</strong> to construct a one-way function.</p>
-<p>Given $1^n$ and GenModulus, define the (deterministic) function $f_{Gen}$ as follows:</p>
+<p>Note that the <strong>preimage</strong> <span class="math inline">\(x&#39;\)</span> does NOT neccessarily have to
+equal <span class="math inline">\(x\)</span>, as long as <span class="math inline">\(f(x&#39;)=y\)</span>.</p>
+<div class="note info no-icon"><p>Definition. A function <span class="math inline">\(f:\{0,1\}^{\*}\to
+\{0,1\}^{\*}\)</span> is <strong>one-way</strong> if the following two
+conditions hold:</p>
 <ul>
-<li>Input: A random tage: string $x$ of length $n$</li>
-<li>Output: Integer $N$.</li>
-<li>Compute $(N,p,q):=GenModulus(1^n;x)$ and return $N$.</li>
+<li>(<strong>Easy to compute</strong>): There is a polynomial-time
+algorithm that on input <span class="math inline">\(x\)</span> outputs
+<span class="math inline">\(f(x)\)</span>.</li>
+<li>(<strong>Hard to invert</strong>): For all PPT algorithm <span class="math inline">\(\mathscr{A}\)</span> there is a negligible
+function <span class="math inline">\(\varepsilon(n)\)</span> such that:
+<span class="math inline">\(\Pr[\mathtt{Invert}_{\mathscr{A}.
+f}(n)=1]\leq \varepsilon(n)\)</span>.</li>
 </ul>
-<div class="note info no-icon"><p>Theorem. If the Factoring problem is hard relative to GenModulus, then $f_{Gen}$ is one-way.</p>
 </div>
-<h3 id="Hard-Core-Predicates"><a href="#Hard-Core-Predicates" class="headerlink" title="Hard-Core Predicates"></a>Hard-Core Predicates</h3><p>For a one-way function $f$, it does not exist any PPT adversary that could efficiently invert it. However, the <strong>partial information</strong> of the preimage may be easily revealed.</p>
-<p>Consider the function $f:\{0,1\}^{2n}\to \{0,1\}^{2n}$ and one-way function $g:\{0,1\}^n\to \{0,1\}^n$. We could define $f(x,y)=g(x)||y$. Since $g$ is one-way, it is trivial that $f$ is also one-way. However, it is easy to know the last $n$ bits of the preimage are exactly the last $n$ bits of $f(x,y)$.</p>
-<p>Though $f$ is one-way, half of the information about the preimage is revealed.</p>
-<p>We define hard-core predicate $hc$ of a one-way function as <strong>the bit that could NEVER be revealed.</strong> Informally speaking, $hc(x)$ is <strong>a bit</strong> that is efficiently computable given $x$, but hard to compute given $f(x)$.</p>
-<div class="note info no-icon"><p>Definition. A function $hc:\{0,1\}^{*}\to\{0,1\}$ is a hard-core predicate of a function $f$ if: </p>
+<h3 id="one-way-functions-based-on-assumptions">One-Way Functions Based
+on Assumptions</h3>
+<p>We could construct one-way functions based on the above four
+assumptions (factoring assumption, RSA assumption, discrete logarithm
+assumption, Diffie-Hellman assumption).</p>
+<p>We illustrate this by using <strong>factoring assumption</strong> to
+construct a one-way function.</p>
+<p>Given <span class="math inline">\(1^n\)</span> and GenModulus, define
+the (deterministic) function <span class="math inline">\(f_{Gen}\)</span> as follows:</p>
+<ul>
+<li>Input: A random tage: string <span class="math inline">\(x\)</span>
+of length <span class="math inline">\(n\)</span></li>
+<li>Output: Integer <span class="math inline">\(N\)</span>.</li>
+<li>Compute <span class="math inline">\((N,p,q):=GenModulus(1^n;x)\)</span> and return
+<span class="math inline">\(N\)</span>.</li>
+</ul>
+<div class="note info no-icon"><p>Theorem. If the Factoring problem is hard relative to GenModulus,
+then <span class="math inline">\(f_{Gen}\)</span> is one-way.</p>
+</div>
+<h3 id="hard-core-predicates">Hard-Core Predicates</h3>
+<p>For a one-way function <span class="math inline">\(f\)</span>, it
+does not exist any PPT adversary that could efficiently invert it.
+However, the <strong>partial information</strong> of the preimage may be
+easily revealed.</p>
+<p>Consider the function <span class="math inline">\(f:\{0,1\}^{2n}\to
+\{0,1\}^{2n}\)</span> and one-way function <span class="math inline">\(g:\{0,1\}^n\to \{0,1\}^n\)</span>. We could define
+<span class="math inline">\(f(x,y)=g(x)||y\)</span>. Since <span class="math inline">\(g\)</span> is one-way, it is trivial that <span class="math inline">\(f\)</span> is also one-way. However, it is easy to
+know the last <span class="math inline">\(n\)</span> bits of the
+preimage are exactly the last <span class="math inline">\(n\)</span>
+bits of <span class="math inline">\(f(x,y)\)</span>.</p>
+<p>Though <span class="math inline">\(f\)</span> is one-way, half of the
+information about the preimage is revealed.</p>
+<p>We define hard-core predicate <span class="math inline">\(hc\)</span>
+of a one-way function as <strong>the bit that could NEVER be
+revealed.</strong> Informally speaking, <span class="math inline">\(hc(x)\)</span> is <strong>a bit</strong> that is
+efficiently computable given <span class="math inline">\(x\)</span>, but
+hard to compute given <span class="math inline">\(f(x)\)</span>.</p>
+<div class="note info no-icon"><p>Definition. A function <span class="math inline">\(hc:\{0,1\}^{\*}\to\{0,1\}\)</span> is a hard-core
+predicate of a function <span class="math inline">\(f\)</span> if:</p>
 <ul>
 <li>hc can be computed in polynomial time.</li>
-<li>For every probabilistic polynomial-time algorithm $\mathscr{A}$ there is a negligible function $\varepsilon(n)$ such that $\Pr_{x\leftarrow \{0,1\}^n}[\mathscr{A}(1^n,f(x))=hc(x)]\leq 1/2+\varepsilon(n)$.</li>
+<li>For every probabilistic polynomial-time algorithm <span class="math inline">\(\mathscr{A}\)</span> there is a negligible
+function <span class="math inline">\(\varepsilon(n)\)</span> such that
+<span class="math inline">\(\Pr_{x\leftarrow
+\{0,1\}^n}[\mathscr{A}(1^n,f(x))=hc(x)]\leq
+1/2+\varepsilon(n)\)</span>.</li>
 </ul>
 </div>
-<p><strong>A hard-core predicate for the RSA problem is the least significant bit.</strong> That is to say, compute $lsb(x)$ given $y=[x^e\mod{N}]$ is hard.</p>
+<p><strong>A hard-core predicate for the RSA problem is the least
+significant bit.</strong> That is to say, compute <span class="math inline">\(lsb(x)\)</span> given <span class="math inline">\(y=[x^e\mod{N}]\)</span> is hard.</p>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
-<p>做了这么长的铺垫，终于来到了单向函数 (one-way function) 的介绍。我觉得单向函数是密码学中最重要的概念之一，它的定义体现了密码学的核心思想—— <strong>Easy to compute, hard to invert.</strong></p>
-<p>首先来谈谈它的存在性。之前介绍的三个数学难题 (hard problems) 都很符合单向函数的定义；Factoring problem，质数相乘容易，质因数分解难；RSA problem，模意义下幂运算简单，开方运算难；Discrete Logarithm problem，模意义下幂运算简单，对数运算难；因此，由这些难题的猜想 (assumptions) 构造单向函数再自然不过。</p>
-<p>最后谈谈它的意义。密码学中，加密方案 (encryption)，消息验证码 (MAC)，数字签名 (digital signature) 等加密学原语 (cryptographic primitives) 本质上是一个单向函数构建的过程。更具体一点说，是一个 <u><strong>单向陷门函数 (trapdoor one-way function)</strong></u> 的构建。所谓<strong>陷门 (trapdoor)</strong> 是指，存在某个 $z$ 使得计算原像 $x=f^{-1}(y)$ 简单，则该 $z$ 称为函数的陷门。</p>
-<p>一个单向陷门函数有以下性质：(1) 单向性 (2) 存在陷门。这是否和某些原语的构造十分相似？以公钥加密  (或是 CPA 安全的私钥加密) 为例，加密消息 $m$ 得到密文 $c$ 很容易：$Enc_{pk}(m)\to c$ (公钥 $pk$ 公开)；而由密文 $c$ 解密得到原文 $m$ 却很困难。此为<strong>单向性 (one-way)</strong>。而倘若知道私钥 $sk$，由密文 $c$ 解密得到原文 $m$ 的过程就非常简单：$Dec_{sk}(c)\to m$。因此，私钥 $sk$ 是加密函数 $Enc_{pk}$ 的<strong>陷门 (trapdoor)</strong>。</p>
+<p>做了这么长的铺垫，终于来到了单向函数 (one-way function)
+的介绍。我觉得单向函数是密码学中最重要的概念之一，它的定义体现了密码学的核心思想——
+<strong>Easy to compute, hard to invert.</strong></p>
+<p>首先来谈谈它的存在性。之前介绍的三个数学难题 (hard problems)
+都很符合单向函数的定义；Factoring
+problem，质数相乘容易，质因数分解难；RSA
+problem，模意义下幂运算简单，开方运算难；Discrete Logarithm
+problem，模意义下幂运算简单，对数运算难；因此，由这些难题的猜想
+(assumptions) 构造单向函数再自然不过。</p>
+<p>最后谈谈它的意义。密码学中，加密方案 (encryption)，消息验证码
+(MAC)，数字签名 (digital signature) 等加密学原语 (cryptographic
+primitives) 本质上是一个单向函数构建的过程。更具体一点说，是一个
+<u><strong>单向陷门函数 (trapdoor one-way function)</strong></u>
+的构建。所谓<strong>陷门 (trapdoor)</strong> 是指，存在某个 <span class="math inline">\(z\)</span> 使得计算原像 <span class="math inline">\(x=f^{-1}(y)\)</span> 简单，则该 <span class="math inline">\(z\)</span> 称为函数的陷门。</p>
+<p>一个单向陷门函数有以下性质：(1) 单向性 (2)
+存在陷门。这是否和某些原语的构造十分相似？以公钥加密 (或是 CPA
+安全的私钥加密) 为例，加密消息 <span class="math inline">\(m\)</span>
+得到密文 <span class="math inline">\(c\)</span> 很容易：<span class="math inline">\(Enc_{pk}(m)\to c\)</span> (公钥 <span class="math inline">\(pk\)</span> 公开)；而由密文 <span class="math inline">\(c\)</span> 解密得到原文 <span class="math inline">\(m\)</span> 却很困难。此为<strong>单向性
+(one-way)</strong>。而倘若知道私钥 <span class="math inline">\(sk\)</span>，由密文 <span class="math inline">\(c\)</span> 解密得到原文 <span class="math inline">\(m\)</span> 的过程就非常简单：<span class="math inline">\(Dec_{sk}(c)\to m\)</span>。因此，私钥 <span class="math inline">\(sk\)</span> 是加密函数 <span class="math inline">\(Enc_{pk}\)</span> 的<strong>陷门
+(trapdoor)</strong>。</p>
 </blockquote>
-<p> <br></p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning"><p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
 </div>
-<p>Course info:<br>Code: COMP3357, Lecturer: Dr. Ravi. Ramanathan, TA: Zhang Chengru</p>
-<p>Course textbook:<br><em>Introduction to Modern Cryptography (2nd edition)</em>, Katz, J. &amp; Lindell, Y., (2015), CRC Press, <a target="_blank" rel="noopener" href="https://ebookcentral.proquest.com/lib/HKUHK/detail.action?docID=1619504">view</a></p>
+<p>Course info:</p>
+<p>Code: COMP3357, Lecturer: Dr. Ravi. Ramanathan, TA: Zhang Chengru</p>
+<p>Course textbook:</p>
+<p><em>Introduction to Modern Cryptography (2nd edition)</em>, Katz, J.
+&amp; Lindell, Y., (2015), CRC Press, <a target="_blank" rel="noopener" href="https://ebookcentral.proquest.com/lib/HKUHK/detail.action?docID=1619504">view</a></p>
 
     </div>
 
@@ -649,7 +840,7 @@
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
 <script src="/js/third-party/math/mathjax.js"></script>
 
 

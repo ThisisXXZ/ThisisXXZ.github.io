@@ -167,7 +167,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Problem-Description"><span class="nav-number">1.</span> <span class="nav-text">Problem Description</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tutorial"><span class="nav-number">2.</span> <span class="nav-text">Tutorial</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-Implementation"><span class="nav-number">3.</span> <span class="nav-text">Code Implementation</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#problem-description"><span class="nav-number">1.</span> <span class="nav-text">Problem Description</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial"><span class="nav-number">2.</span> <span class="nav-text">Tutorial</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#code-implementation"><span class="nav-number">3.</span> <span class="nav-text">Code Implementation</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -343,31 +343,57 @@
     <div class="post-body" itemprop="articleBody"><p>题目来自 Codeforces Round #878 (Div.3) F。<a target="_blank" rel="noopener" href="https://codeforces.com/contest/1840/problem/F">link</a></p>
 <span id="more"></span>
 <p><br></p>
-<div class="note warning"><p>&emsp; This article provides a <strong>feasible</strong> solution to a certain competitive programming problem.<br>&emsp; If you have better solutions, feel free to share with me!</p>
+<div class="note warning"><p>  This article provides a <strong>feasible</strong> solution to a
+certain competitive programming problem.   If you have better solutions,
+feel free to share with me!</p>
 </div>
 <p><br></p>
-<h2 id="Problem-Description"><a href="#Problem-Description" class="headerlink" title="Problem Description"></a>Problem Description</h2><p>在 $t=0$ 秒，玩家在 $(0,0)$。玩家的目的地在右下角 $(n,m)$ $(1\leq n\cdot m\leq 10^4)$。每一秒，玩家可以：(1) 向右移动 (2) 向下移动 (3) 原地不动。</p>
-<p>除此之外，有  $r$ ($1\leq r \leq 100$) 个轨道炮，第 $i$ 个轨道炮将在 $t=t_i$ 秒对第 $p_i$ 行<strong>或</strong>第 $q_i$ 列进行打击。</p>
-<p>玩家由 $(0,0)$ 活着到达 $(n,m)$，<strong>至少</strong>需要多少秒？若不可能活着到达目的地，输出 $-1$。</p>
-<p> <br></p>
-<h2 id="Tutorial"><a href="#Tutorial" class="headerlink" title="Tutorial"></a>Tutorial</h2><p>只打了 $O(nmt)$ 的暴力 DP，其实看到数据规模后就应该想到正确的解法应该是 $O(nmr)$ 的……</p>
-<p>如果玩家<strong>不能选择原地不动</strong>，那么 DP 的设计相对比较简单：$dp[x][y]$ 代表玩家<strong>是否</strong>能活着到达 $(x,y)$。若 $dp[x][y]=1$，则活着到达 $(x,y)$ 的最少时间为 $x+y$；否则无法活着到达 $(x,y)$。</p>
-<p>如果在第 $t=x+y$ 秒存在某个轨道炮的攻击范围覆盖到坐标 $(x,y)$，则 $dp[x][y]=0$；否则进行状态转移 $dp[x][y]=dp[x-1][y] \lor dp[x][y-1]$。</p>
+<h2 id="problem-description">Problem Description</h2>
+<p>在 <span class="math inline">\(t=0\)</span> 秒，玩家在 <span class="math inline">\((0,0)\)</span>。玩家的目的地在右下角 <span class="math inline">\((n,m)\)</span> <span class="math inline">\((1\leq
+n\cdot m\leq 10^4)\)</span>。每一秒，玩家可以：(1) 向右移动 (2) 向下移动
+(3) 原地不动。</p>
+<p>除此之外，有 <span class="math inline">\(r\)</span> (<span class="math inline">\(1\leq r \leq 100\)</span>) 个轨道炮，第 <span class="math inline">\(i\)</span> 个轨道炮将在 <span class="math inline">\(t=t_i\)</span> 秒对第 <span class="math inline">\(p_i\)</span> 行<strong>或</strong>第 <span class="math inline">\(q_i\)</span> 列进行打击。</p>
+<p>玩家由 <span class="math inline">\((0,0)\)</span> 活着到达 <span class="math inline">\((n,m)\)</span>，<strong>至少</strong>需要多少秒？若不可能活着到达目的地，输出
+<span class="math inline">\(-1\)</span>。</p>
+<p><br></p>
+<h2 id="tutorial">Tutorial</h2>
+<p>只打了 <span class="math inline">\(O(nmt)\)</span> 的暴力
+DP，其实看到数据规模后就应该想到正确的解法应该是 <span class="math inline">\(O(nmr)\)</span> 的……</p>
+<p>如果玩家<strong>不能选择原地不动</strong>，那么 DP
+的设计相对比较简单：<span class="math inline">\(dp[x][y]\)</span>
+代表玩家<strong>是否</strong>能活着到达 <span class="math inline">\((x,y)\)</span>。若 <span class="math inline">\(dp[x][y]=1\)</span>，则活着到达 <span class="math inline">\((x,y)\)</span> 的最少时间为 <span class="math inline">\(x+y\)</span>；否则无法活着到达 <span class="math inline">\((x,y)\)</span>。</p>
+<p>如果在第 <span class="math inline">\(t=x+y\)</span>
+秒存在某个轨道炮的攻击范围覆盖到坐标 <span class="math inline">\((x,y)\)</span>，则 <span class="math inline">\(dp[x][y]=0\)</span>；否则进行状态转移 <span class="math inline">\(dp[x][y]=dp[x-1][y] \lor dp[x][y-1]\)</span>。</p>
 <p>接下来考虑玩家可以选择原地不动的情况。</p>
-<p>首先观察到一个事实，<u><strong>若存在一条从 $(0,0)$ 到 $(n,m)$ 的合法轨迹，那么玩家选择原地不动的次数不会超过 $r$</strong></u>。无论是向右还是向下，它们均能对「到达目的地」作出贡献，而选择原地不动则不行；选择原地不动的唯一理由是为了「躲避轨道炮」。在最极端的情况下，对于每次轨道炮袭击，玩家均选择留在安全的原地进行躲避，此时玩家选择原地不动的次数也才达到 $r$；超过 $r$ 次的原地不动是没有意义的。</p>
-<p>另外，我们将注意到玩家原地不动的次数越少，其到达 $(n,m)$ 的时间越短。结合上述事实有结论，玩家若能成功到达 $(n,m)$，其到达 $(n,m)$ 的时间不会超过 $n+m+r$。</p>
-<p>基于这个结论，我们对上面提到的 DP 方案进行改进，<strong>增加一维状态</strong>标记到达 $(x,y)$ 选择原地不动的次数。 $dp[x][y][z]$ 代表玩家原地不动了 $z$ 次，是否能活着到达 $(x,y)$。若 $dp[x][y][z]=1$，则原地不动 $z$ 次活着到达 $(x,y)$ 的最少时间为 $x+y+z$；否则无法在原地不动 $z$ 次的情况下活着到达 $(x,y)$。</p>
-<p>如果在第 $t=x+y+z$ 秒存在某个轨道炮的攻击范围覆盖到坐标 $(x,y)$，则 $dp[x][y][z]=0$；否则进行状态转移 $dp[x][y][z]=dp[x-1][y][z]\lor dp[x][y-1][z] \lor dp[x][y][z-1]$。</p>
-<p>总状态数 $nmr=10^4\cdot 100=10^6$，绰绰有余。</p>
+<p>首先观察到一个事实，<u><strong>若存在一条从 <span class="math inline">\((0,0)\)</span> 到 <span class="math inline">\((n,m)\)</span>
+的合法轨迹，那么玩家选择原地不动的次数不会超过 <span class="math inline">\(r\)</span></strong></u>。无论是向右还是向下，它们均能对「到达目的地」作出贡献，而选择原地不动则不行；选择原地不动的唯一理由是为了「躲避轨道炮」。在最极端的情况下，对于每次轨道炮袭击，玩家均选择留在安全的原地进行躲避，此时玩家选择原地不动的次数也才达到
+<span class="math inline">\(r\)</span>；超过 <span class="math inline">\(r\)</span> 次的原地不动是没有意义的。</p>
+<p>另外，我们将注意到玩家原地不动的次数越少，其到达 <span class="math inline">\((n,m)\)</span>
+的时间越短。结合上述事实有结论，玩家若能成功到达 <span class="math inline">\((n,m)\)</span>，其到达 <span class="math inline">\((n,m)\)</span> 的时间不会超过 <span class="math inline">\(n+m+r\)</span>。</p>
+<p>基于这个结论，我们对上面提到的 DP
+方案进行改进，<strong>增加一维状态</strong>标记到达 <span class="math inline">\((x,y)\)</span> 选择原地不动的次数。 <span class="math inline">\(dp[x][y][z]\)</span> 代表玩家原地不动了 <span class="math inline">\(z\)</span> 次，是否能活着到达 <span class="math inline">\((x,y)\)</span>。若 <span class="math inline">\(dp[x][y][z]=1\)</span>，则原地不动 <span class="math inline">\(z\)</span> 次活着到达 <span class="math inline">\((x,y)\)</span> 的最少时间为 <span class="math inline">\(x+y+z\)</span>；否则无法在原地不动 <span class="math inline">\(z\)</span> 次的情况下活着到达 <span class="math inline">\((x,y)\)</span>。</p>
+<p>如果在第 <span class="math inline">\(t=x+y+z\)</span>
+秒存在某个轨道炮的攻击范围覆盖到坐标 <span class="math inline">\((x,y)\)</span>，则 <span class="math inline">\(dp[x][y][z]=0\)</span>；否则进行状态转移 <span class="math inline">\(dp[x][y][z]=dp[x-1][y][z]\lor dp[x][y-1][z] \lor
+dp[x][y][z-1]\)</span>。</p>
+<p>总状态数 <span class="math inline">\(nmr=10^4\cdot
+100=10^6\)</span>，绰绰有余。</p>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
-<p>本题可以等价为这样一个问题：给定 $n,m$，在一个<strong>三维空间</strong>里，玩家需要由 $(0,0,0)$ 到达 $(n,m,z)$；存在轨道炮在特定的时间攻击平面 $x=p$ 或 $y=q$。求最小的可以活着到达的 $z$ 坐标。</p>
-<p>$z$ 坐标代表的是原地不动的次数，但它也是<strong>唯一一个决定了时间的变量</strong>。这是因为由 $x=0,y=0$ 到达 $x=n,y=m$ 所需的时间是固定的 $n+m$。玩家选择原地不动，相当于其向 $z$ 轴往上移动了一个单位。</p>
+<p>本题可以等价为这样一个问题：给定 <span class="math inline">\(n,m\)</span>，在一个<strong>三维空间</strong>里，玩家需要由
+<span class="math inline">\((0,0,0)\)</span> 到达 <span class="math inline">\((n,m,z)\)</span>；存在轨道炮在特定的时间攻击平面
+<span class="math inline">\(x=p\)</span> 或 <span class="math inline">\(y=q\)</span>。求最小的可以活着到达的 <span class="math inline">\(z\)</span> 坐标。</p>
+<p><span class="math inline">\(z\)</span>
+坐标代表的是原地不动的次数，但它也是<strong>唯一一个决定了时间的变量</strong>。这是因为由
+<span class="math inline">\(x=0,y=0\)</span> 到达 <span class="math inline">\(x=n,y=m\)</span> 所需的时间是固定的 <span class="math inline">\(n+m\)</span>。玩家选择原地不动，相当于其向 <span class="math inline">\(z\)</span> 轴往上移动了一个单位。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Code-Implementation"><a href="#Code-Implementation" class="headerlink" title="Code Implementation"></a>Code Implementation</h2><p>读入的数据很多，不开快读会 TLE。懒得写快读，解除 cin 同步后也过了。</p>
-<p>注意对轨道炮的处理，使用的是辅助数组 <code>die</code>。不是很符合直觉的处理方式，但是理解了「玩家原地不动的次数不会超过 $r$」这一事实后就很好懂了。</p>
+<h2 id="code-implementation">Code Implementation</h2>
+<p>读入的数据很多，不开快读会 TLE。懒得写快读，解除 cin
+同步后也过了。</p>
+<p>注意对轨道炮的处理，使用的是辅助数组
+<code>die</code>。不是很符合直觉的处理方式，但是理解了「玩家原地不动的次数不会超过
+<span class="math inline">\(r\)</span>」这一事实后就很好懂了。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    ios_base::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="number">0</span>); cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> T;</span><br><span class="line">    cin &gt;&gt; T;</span><br><span class="line">    <span class="keyword">while</span> (T--) &#123;</span><br><span class="line">        <span class="type">int</span> n, m, r;</span><br><span class="line">        cin &gt;&gt; n &gt;&gt; m &gt;&gt; r;</span><br><span class="line"></span><br><span class="line">        <span class="type">bool</span> die[n + <span class="number">1</span>][m + <span class="number">1</span>][r + <span class="number">1</span>];   </span><br><span class="line">        <span class="comment">// auxilary array: die[x][y][z] means if not moving for z times</span></span><br><span class="line">        <span class="comment">//                 character will or will not be attacked in (x, y)</span></span><br><span class="line">        <span class="built_in">memset</span>(die, <span class="number">0</span>, <span class="keyword">sizeof</span> die);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= r; ++i) &#123;</span><br><span class="line">            <span class="type">int</span> t, d, p;</span><br><span class="line">            cin &gt;&gt; t &gt;&gt; d &gt;&gt; p;</span><br><span class="line">            <span class="keyword">if</span> (d == <span class="number">1</span>) &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> col = <span class="number">0</span>; col &lt;= m; ++col) &#123;</span><br><span class="line">                    <span class="type">int</span> z = t - p - col;</span><br><span class="line">                    <span class="keyword">if</span> (z &gt;= <span class="number">0</span> &amp;&amp; z &lt;= r)</span><br><span class="line">                        die[p][col][z] = <span class="literal">true</span>;    </span><br><span class="line">                        <span class="comment">// die[x][y][z] is true only when x+y+z=t_i for some railgun t_i</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (d == <span class="number">2</span>) &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> row = <span class="number">0</span>; row &lt;= n; ++row) &#123;</span><br><span class="line">                    <span class="type">int</span> z = t - row - p;</span><br><span class="line">                    <span class="keyword">if</span> (z &gt;= <span class="number">0</span> &amp;&amp; z &lt;= r)</span><br><span class="line">                        die[row][p][z] = <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">bool</span> dp[n + <span class="number">1</span>][m + <span class="number">1</span>][r + <span class="number">1</span>];</span><br><span class="line">        <span class="comment">// dp array: dp[x][y][z] means if not moving for z times</span></span><br><span class="line">        <span class="comment">//           character will or will not successfully reach (x, y)</span></span><br><span class="line">        <span class="built_in">memset</span>(dp, <span class="number">0</span>, <span class="keyword">sizeof</span> dp);</span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt;= m; ++j) &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> z = <span class="number">0</span>; z &lt;= r; ++z) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (!die[i][j][z]) &#123;</span><br><span class="line">                        <span class="keyword">if</span> (i &gt; <span class="number">0</span>)</span><br><span class="line">                            dp[i][j][z] |= dp[i - <span class="number">1</span>][j][z];</span><br><span class="line">                        <span class="keyword">if</span> (j &gt; <span class="number">0</span>)</span><br><span class="line">                            dp[i][j][z] |= dp[i][j - <span class="number">1</span>][z];</span><br><span class="line">                        <span class="keyword">if</span> (z &gt; <span class="number">0</span>)</span><br><span class="line">                            dp[i][j][z] |= dp[i][j][z - <span class="number">1</span>];</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> ans = <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> z = r; z &gt;= <span class="number">0</span>; --z) &#123;</span><br><span class="line">            <span class="keyword">if</span> (dp[n][m][z])</span><br><span class="line">                ans = n + m + z;</span><br><span class="line">        &#125;</span><br><span class="line">        cout &lt;&lt; ans &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
 <!-- flag of hidden posts -->
@@ -521,7 +547,7 @@
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
 <script src="/js/third-party/math/mathjax.js"></script>
 
 

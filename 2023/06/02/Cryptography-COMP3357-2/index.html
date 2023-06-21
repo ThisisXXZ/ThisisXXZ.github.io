@@ -23,15 +23,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="COMP3357 digest 的 P2 部分 (P1 部分在这里，P3 部分在这里)，主要介绍群论 (group theory)，数论 (number theory) 的相关知识以及它们在 cryptography 中的应用。 该部分的内容主要是为了 P3 部分做铺垫：P3 中的困难问题 (hard problems) 与单向函数 (one-way function) 的构建与这一节里提到的数论">
+    <meta name="description" content="COMP3357 digest 的 P2 部分 (P1 部分在这里，P3 部分在这里)，主要介绍群论 (group theory)，数论 (number theory) 的相关知识以及它们在 cryptography 中的应用。 该部分的内容主要是为了 P3 部分做铺垫：P3 中的困难问题 (hard problems) 与单向函数 (one-way function) 的构建与这一节">
 <meta property="og:type" content="article">
 <meta property="og:title" content="COMP3357 notes P2">
 <meta property="og:url" content="https://www.thisisxxz.com/2023/06/02/Cryptography-COMP3357-2/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="COMP3357 digest 的 P2 部分 (P1 部分在这里，P3 部分在这里)，主要介绍群论 (group theory)，数论 (number theory) 的相关知识以及它们在 cryptography 中的应用。 该部分的内容主要是为了 P3 部分做铺垫：P3 中的困难问题 (hard problems) 与单向函数 (one-way function) 的构建与这一节里提到的数论">
+<meta property="og:description" content="COMP3357 digest 的 P2 部分 (P1 部分在这里，P3 部分在这里)，主要介绍群论 (group theory)，数论 (number theory) 的相关知识以及它们在 cryptography 中的应用。 该部分的内容主要是为了 P3 部分做铺垫：P3 中的困难问题 (hard problems) 与单向函数 (one-way function) 的构建与这一节">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-06-02T07:56:06.000Z">
-<meta property="article:modified_time" content="2023-06-17T15:06:40.192Z">
+<meta property="article:modified_time" content="2023-06-21T10:33:59.439Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="cryptography">
 <meta property="article:tag" content="course notes">
@@ -169,7 +169,10 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Multiplicative-Inverse"><span class="nav-number">1.</span> <span class="nav-text">Multiplicative Inverse</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Euler-39-s-Totient-Function"><span class="nav-number">2.</span> <span class="nav-text">Euler&#39;s Totient Function</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation-Linear-Sieve"><span class="nav-number">2.1.</span> <span class="nav-text">Code Implementation: Linear Sieve</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Euler-39-s-Theorem"><span class="nav-number">2.2.</span> <span class="nav-text">Euler&#39;s Theorem</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Extended-Euclidean-Algorithm-eGCD"><span class="nav-number">3.</span> <span class="nav-text">Extended Euclidean Algorithm (eGCD)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation"><span class="nav-number">3.1.</span> <span class="nav-text">Code Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-eGCD-to-get-Inverse"><span class="nav-number">3.2.</span> <span class="nav-text">Using eGCD to get Inverse</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chinese-Remainder-Theorem-CRT"><span class="nav-number">4.</span> <span class="nav-text">Chinese Remainder Theorem (CRT)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Implementation-1"><span class="nav-number">4.1.</span> <span class="nav-text">Code Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Quadratic-Residue"><span class="nav-number">5.</span> <span class="nav-text">Quadratic Residue</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Legendre-Symbol"><span class="nav-number">5.1.</span> <span class="nav-text">Legendre Symbol</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Euler-39-s-Criterion"><span class="nav-number">5.2.</span> <span class="nav-text">Euler&#39;s Criterion</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Group-Theory-Introduction"><span class="nav-number">6.</span> <span class="nav-text">Group Theory: Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Subgroups"><span class="nav-number">6.1.</span> <span class="nav-text">Subgroups</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Modulo-Multiplication-Group"><span class="nav-number">6.2.</span> <span class="nav-text">Modulo Multiplication Group</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fermat-39-s-Little-Theorem"><span class="nav-number">7.</span> <span class="nav-text">Fermat&#39;s Little Theorem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Corollary-1"><span class="nav-number">7.1.</span> <span class="nav-text">Corollary 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Corollary-2"><span class="nav-number">7.2.</span> <span class="nav-text">Corollary 2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cyclic-Groups-and-Generators"><span class="nav-number">8.</span> <span class="nav-text">Cyclic Groups and Generators</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#multiplicative-inverse"><span class="nav-number">1.</span> <span class="nav-text">Multiplicative Inverse</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#eulers-totient-function"><span class="nav-number">2.</span> <span class="nav-text">Euler&#39;s Totient Function</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#code-implementation-linear-sieve"><span class="nav-number">2.1.</span> <span class="nav-text">Code Implementation: Linear
+Sieve</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#eulers-theorem"><span class="nav-number">2.2.</span> <span class="nav-text">Euler&#39;s Theorem</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#extended-euclidean-algorithm-egcd"><span class="nav-number">3.</span> <span class="nav-text">Extended Euclidean Algorithm
+(eGCD)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#code-implementation"><span class="nav-number">3.1.</span> <span class="nav-text">Code Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#using-egcd-to-get-inverse"><span class="nav-number">3.2.</span> <span class="nav-text">Using eGCD to get Inverse</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chinese-remainder-theorem-crt"><span class="nav-number">4.</span> <span class="nav-text">Chinese Remainder Theorem
+(CRT)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#code-implementation-1"><span class="nav-number">4.1.</span> <span class="nav-text">Code Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#quadratic-residue"><span class="nav-number">5.</span> <span class="nav-text">Quadratic Residue</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#legendre-symbol"><span class="nav-number">5.1.</span> <span class="nav-text">Legendre Symbol</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#group-theory-introduction"><span class="nav-number">6.</span> <span class="nav-text">Group Theory: Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#subgroups"><span class="nav-number">6.1.</span> <span class="nav-text">Subgroups</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#modulo-multiplication-group"><span class="nav-number">6.2.</span> <span class="nav-text">Modulo Multiplication Group</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fermats-little-theorem"><span class="nav-number">7.</span> <span class="nav-text">Fermat&#39;s Little Theorem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#corollary-1"><span class="nav-number">7.1.</span> <span class="nav-text">Corollary 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#corollary-2"><span class="nav-number">7.2.</span> <span class="nav-text">Corollary 2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cyclic-groups-and-generators"><span class="nav-number">8.</span> <span class="nav-text">Cyclic Groups and Generators</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -307,7 +310,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-06-17 23:06:40" itemprop="dateModified" datetime="2023-06-17T23:06:40+08:00">2023-06-17</time>
+      <time title="Modified: 2023-06-21 18:33:59" itemprop="dateModified" datetime="2023-06-21T18:33:59+08:00">2023-06-21</time>
     </span>
 
   <span class="post-meta-item">
@@ -342,21 +345,45 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>COMP3357 digest 的 P2 部分 (P1 部分在<a target="_blank" rel="noopener" href="https://thisisxxz.github.io/2023/05/25/Cryptography-COMP3357/">这里</a>，P3 部分在<a target="_blank" rel="noopener" href="https://thisisxxz.github.io/2023/06/05/Cryptography-COMP3357-3/">这里</a>)，主要介绍群论 (group theory)，数论 (number theory) 的相关知识以及它们在 cryptography 中的应用。</p>
-<p>该部分的内容主要是为了 P3 部分做铺垫：P3 中的困难问题 (hard problems) 与单向函数 (one-way function) 的构建与这一节里提到的数论/群论知识存在紧密的联系。</p>
+    <div class="post-body" itemprop="articleBody"><p>COMP3357 digest 的 P2 部分 (P1 部分在<a target="_blank" rel="noopener" href="https://thisisxxz.github.io/2023/05/25/Cryptography-COMP3357/">这里</a>，P3
+部分在<a target="_blank" rel="noopener" href="https://thisisxxz.github.io/2023/06/05/Cryptography-COMP3357-3/">这里</a>)，主要介绍群论
+(group theory)，数论 (number theory) 的相关知识以及它们在 cryptography
+中的应用。</p>
+<p>该部分的内容主要是为了 P3 部分做铺垫：P3 中的困难问题 (hard problems)
+与单向函数 (one-way function)
+的构建与这一节里提到的数论/群论知识存在紧密的联系。</p>
 <span id="more"></span>
-<p>同样，与 CnBlogs 中的笔记不同，这里不会详细的记载每个相关的知识点；只会尝试简略地总结一些能让未来的自己也会感到有趣，巧妙的内容 (Eureka!)。</p>
+<p>同样，与 CnBlogs
+中的笔记不同，这里不会详细的记载每个相关的知识点；只会尝试简略地总结一些能让未来的自己也会感到有趣，巧妙的内容
+(Eureka!)。</p>
 <p><br></p>
-<div class="note warning"><p>&emsp; This article is a self-administered course note.<br>&emsp; It will <strong>NOT</strong> cover any exam or assignment related content.</p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
 </div>
 <p><br></p>
-<h2 id="Multiplicative-Inverse"><a href="#Multiplicative-Inverse" class="headerlink" title="Multiplicative Inverse"></a>Multiplicative Inverse</h2><div class="note info no-icon"><p>Definition. If for a given integer $b$, there exists an integer $c$ such that $bc=1\mod{N}$, we say that $b$ is <strong>invertible</strong> modulo $N$, and call $c$ a <strong>multiplicative inverse</strong> of $b$ modulo $N$.</p>
+<h2 id="multiplicative-inverse">Multiplicative Inverse</h2>
+<div class="note info no-icon"><p>Definition. If for a given integer <span class="math inline">\(b\)</span>, there exists an integer <span class="math inline">\(c\)</span> such that <span class="math inline">\(bc=1\mod{N}\)</span>, we say that <span class="math inline">\(b\)</span> is <strong>invertible</strong> modulo
+<span class="math inline">\(N\)</span>, and call <span class="math inline">\(c\)</span> a <strong>multiplicative
+inverse</strong> of <span class="math inline">\(b\)</span> modulo <span class="math inline">\(N\)</span>.</p>
 </div>
-<p>The multiplicative inverse is <strong>NOT</strong> unique. For an invertible $b$, if $c$ is an inverse of $b$, every $x$ congruent with $c$ modulo $N$ is also an inverse of $b$. ($x\equiv c\mod{N}$). We use $b^{-1}$ to denote the inverse of $b$ that $b^{-1}\in\{1,2,...N-1\}$.</p>
-<div class="note info no-icon"><p>Theorem. Let $b,N$ be integers, with $b\geq 1$, and $N&gt;1$. Then $b$ is <strong>invertible</strong> modulo $N$ if and only if  $b$ is <strong>relatively prime</strong> to $N$. Note that integers $b,N$ are relatively prime (or coprime) means $\gcd(b,N)=1$.</p>
+<p>The multiplicative inverse is <strong>NOT</strong> unique. For an
+invertible <span class="math inline">\(b\)</span>, if <span class="math inline">\(c\)</span> is an inverse of <span class="math inline">\(b\)</span>, every <span class="math inline">\(x\)</span> congruent with <span class="math inline">\(c\)</span> modulo <span class="math inline">\(N\)</span> is also an inverse of <span class="math inline">\(b\)</span>. (<span class="math inline">\(x\equiv
+c\mod{N}\)</span>). We use <span class="math inline">\(b^{-1}\)</span>
+to denote the inverse of <span class="math inline">\(b\)</span> that
+<span class="math inline">\(b^{-1}\in\{1,2,...N-1\}\)</span>.</p>
+<div class="note info no-icon"><p>Theorem. Let <span class="math inline">\(b,N\)</span> be integers,
+with <span class="math inline">\(b\geq 1\)</span>, and <span class="math inline">\(N&gt;1\)</span>. Then <span class="math inline">\(b\)</span> is <strong>invertible</strong> modulo
+<span class="math inline">\(N\)</span> if and only if <span class="math inline">\(b\)</span> is <strong>relatively prime</strong> to
+<span class="math inline">\(N\)</span>. Note that integers <span class="math inline">\(b,N\)</span> are relatively prime (or coprime)
+means <span class="math inline">\(\gcd(b,N)=1\)</span>.</p>
 </div>
-<p>Therefore, for a prime $p$, every $b\in \{1,2,...p-1\}$ is <strong>invertible</strong> modulo $p$. </p>
-<p>The above theorem could be proved by applying <strong>Bezout&#39;s identity: </strong> it states that for every positive integer $a,b$, there exists a pair of integers $\langle X,Y \rangle$ that $Xa+Yb=\gcd(a,b)$.</p>
+<p>Therefore, for a prime <span class="math inline">\(p\)</span>, every
+<span class="math inline">\(b\in \{1,2,...p-1\}\)</span> is
+<strong>invertible</strong> modulo <span class="math inline">\(p\)</span>.</p>
+<p>The above theorem could be proved by applying <strong>Bezout's
+identity: </strong> it states that for every positive integer <span class="math inline">\(a,b\)</span>, there exists a pair of integers
+<span class="math inline">\(\langle X,Y \rangle\)</span> that <span class="math inline">\(Xa+Yb=\gcd(a,b)\)</span>.</p>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
@@ -364,185 +391,371 @@
 <p>求逆元的常见方法：扩展欧几里得算法，欧拉定理，费马小定理。这些方法在接下来都会进行介绍。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Euler-39-s-Totient-Function"><a href="#Euler-39-s-Totient-Function" class="headerlink" title="Euler&#39;s Totient Function"></a>Euler&#39;s Totient Function</h2><div class="note info no-icon"><p>Definition. Euler&#39;s Totient Function $\varphi(N)$ is defined as the number of <strong>positive integers</strong> $\leq N$ that are <strong>relatively prime</strong> to $N$, where $1$ is counted as being relatively prime to all integers.</p>
+<h2 id="eulers-totient-function">Euler's Totient Function</h2>
+<div class="note info no-icon"><p>Definition. Euler's Totient Function <span class="math inline">\(\varphi(N)\)</span> is defined as the number of
+<strong>positive integers</strong> <span class="math inline">\(\leq
+N\)</span> that are <strong>relatively prime</strong> to <span class="math inline">\(N\)</span>, where <span class="math inline">\(1\)</span> is counted as being relatively prime to
+all integers.</p>
 </div>
-<p>The general case of Euler&#39;s Totient is $\varphi(n)=n\Pi_{p|n}(1-\frac{1}{p})=n(1-\frac{1}{p_1})(1-\frac{1}{p_2})...(1-\frac{1}{p_r})$. This is essentially the <strong>Inclusion-Exclusion principle</strong>. </p>
-<h3 id="Code-Implementation-Linear-Sieve"><a href="#Code-Implementation-Linear-Sieve" class="headerlink" title="Code Implementation: Linear Sieve"></a>Code Implementation: Linear Sieve</h3><p>To calculate a specific totient of $n$, we could design a trivial $O(n\log n)$ algorithm based on the above formula. However, there exists a sieve algorithm that could calculate totients of number $1$ to $n$ in linear time $O(n)$. Below is the code in C++:</p>
+<p>The general case of Euler's Totient is <span class="math inline">\(\varphi(n)=n\Pi_{p|n}(1-\frac{1}{p})=n(1-\frac{1}{p_1})(1-\frac{1}{p_2})...(1-\frac{1}{p_r})\)</span>.
+This is essentially the <strong>Inclusion-Exclusion
+principle</strong>.</p>
+<h3 id="code-implementation-linear-sieve">Code Implementation: Linear
+Sieve</h3>
+<p>To calculate a specific totient of <span class="math inline">\(n\)</span>, we could design a trivial <span class="math inline">\(O(n\log n)\)</span> algorithm based on the above
+formula. However, there exists a sieve algorithm that could calculate
+totients of number <span class="math inline">\(1\)</span> to <span class="math inline">\(n\)</span> in linear time <span class="math inline">\(O(n)\)</span>. Below is the code in C++:</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// the Euler sieve</span></span><br><span class="line"><span class="comment">// bool array: is_prime, int array: prime, phi</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sieve</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; N; ++i)    is_prime[i] = <span class="number">1</span>;</span><br><span class="line">    cnt = <span class="number">0</span>;</span><br><span class="line">    is_prime[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">    phi[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= N; ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (is_prime[i]) &#123;</span><br><span class="line">            prime[++cnt] = i;</span><br><span class="line">            phi[i] = i - <span class="number">1</span>;     <span class="comment">// for a prime p, phi[p] = p - 1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= cnt &amp;&amp; i * prime[j] &lt;= N; ++j) &#123;</span><br><span class="line">            is_prime[i * prime[j]] = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">if</span> (i % prime[j])</span><br><span class="line">                phi[i * prime[j]] = phi[i] * phi[prime[j]];</span><br><span class="line">               <span class="keyword">else</span> &#123;</span><br><span class="line">                phi[i * prime[j]] = phi[i] * prime[j];</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Reference &amp; Explanation: <a target="_blank" rel="noopener" href="https://oi-wiki.org/math/number-theory/sieve/#%E7%AD%9B%E6%B3%95%E6%B1%82%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0">(OI Wiki) Linear Sieve for Euler&#39;s totient function</a></p>
-<h3 id="Euler-39-s-Theorem"><a href="#Euler-39-s-Theorem" class="headerlink" title="Euler&#39;s Theorem"></a>Euler&#39;s Theorem</h3><div class="note info no-icon"><p>Theorem. Let $n$ be a positive integer, and let $a$ be an integer that is <strong>relatively prime</strong> to $n$. Then $a^{\varphi(n)}\equiv 1\pmod{n}$, where $\varphi(n)$ is Euler&#39;s totient function of $n$.</p>
+<p>Reference &amp; Explanation: <a target="_blank" rel="noopener" href="https://oi-wiki.org/math/number-theory/sieve/#%E7%AD%9B%E6%B3%95%E6%B1%82%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0">(OI
+Wiki) Linear Sieve for Euler's totient function</a></p>
+<h3 id="eulers-theorem">Euler's Theorem</h3>
+<div class="note info no-icon"><p>Theorem. Let <span class="math inline">\(n\)</span> be a positive
+integer, and let <span class="math inline">\(a\)</span> be an integer
+that is <strong>relatively prime</strong> to <span class="math inline">\(n\)</span>. Then <span class="math inline">\(a^{\varphi(n)}\equiv 1\pmod{n}\)</span>, where
+<span class="math inline">\(\varphi(n)\)</span> is Euler's totient
+function of <span class="math inline">\(n\)</span>.</p>
 </div>
-<p>Since $\gcd(a,n)=1$, $a$ is invertible modulo $n$. According to Euler&#39;s Theorem, $a^{\varphi(n)}\equiv 1\pmod{n}$. Therefore $a\times a^{\varphi(n)-1}\equiv 1\pmod{n}$. $a^{\varphi(n)-1}$ is a <strong>multiplicative inverse</strong> of $a$ modulo $n$. </p>
-<p>An <strong>informal</strong> proof. (need the knowledge of $\mathbb{Z}_n^{*}$, <strong>multiplicative group</strong> of integers modulo $n$). For $a\in\mathbb{Z}_n^{*}$, $\{r_1,r_2,...r_{\varphi(n)}\}=(\mathbb{Z}/n)^{*}=\{ar_1,ar_2,...ar_{\varphi(n)}\}$. Therefore $r_1r_2...r_{\varphi(n)}\equiv (ar_1)(ar_2)...(ar_{\varphi(n)})$, which reduces to $1\equiv a^{\varphi(n)}$. This cancellation is allowed since all $r_i$ have multiplicative inverses modulo $n$. </p>
-<p>Reference &amp; Explanation: <a target="_blank" rel="noopener" href="https://brilliant.org/wiki/eulers-theorem/#proofs-of-the-theorem">(Brilliant Math Wiki) Proof of Euler&#39;s Theorem</a></p>
+<p>Since <span class="math inline">\(\gcd(a,n)=1\)</span>, <span class="math inline">\(a\)</span> is invertible modulo <span class="math inline">\(n\)</span>. According to Euler's Theorem, <span class="math inline">\(a^{\varphi(n)}\equiv 1\pmod{n}\)</span>. Therefore
+<span class="math inline">\(a\times a^{\varphi(n)-1}\equiv
+1\pmod{n}\)</span>. <span class="math inline">\(a^{\varphi(n)-1}\)</span> is a
+<strong>multiplicative inverse</strong> of <span class="math inline">\(a\)</span> modulo <span class="math inline">\(n\)</span>.</p>
+<p>An <strong>informal</strong> proof. (need the knowledge of <span class="math inline">\(\mathbb{Z}_n^{*}\)</span>, <strong>multiplicative
+group</strong> of integers modulo <span class="math inline">\(n\)</span>).</p>
+<p>For <span class="math inline">\(a\in\mathbb{Z}_n^{*}\)</span>, <span class="math inline">\(\{r_1,r_2,...r_{\varphi(n)}\}=(\mathbb{Z}/n)^{*}=\{ar_1,ar_2,...ar_{\varphi(n)}\}\)</span>.</p>
+<p>Therefore <span class="math inline">\(r_1r_2...r_{\varphi(n)}\equiv
+(ar_1)(ar_2)...(ar_{\varphi(n)})\)</span>, which reduces to <span class="math inline">\(1\equiv a^{\varphi(n)}\)</span>. This cancellation
+is allowed since all <span class="math inline">\(r_i\)</span> have
+multiplicative inverses modulo <span class="math inline">\(n\)</span>.</p>
+<p>Reference &amp; Explanation: <a target="_blank" rel="noopener" href="https://brilliant.org/wiki/eulers-theorem/#proofs-of-the-theorem">(Brilliant
+Math Wiki) Proof of Euler's Theorem</a></p>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
-<p>欧拉函数也接触了很长一段时间了，刻在 DNA 里的 $\varphi * \mathbf{1}=\mathbf{Id}$。</p>
-<p>这里主要想讲下关于欧拉函数的一般公式：$\varphi(n)=n\Pi_{p|n}(1-\frac{1}{p})$。本质上这是一个<strong>容斥原理</strong>的应用。</p>
-<p>举个例子就容易理解了：假设 $n$ 只有两个质因子 $p_1,p_2$，那么展开上式可得 $\varphi(n)=n-\frac{n}{p_1}-\frac{n}{p_2}+\frac{n}{p_1p_2}$. 用自然语言描述，即在 $1-n$ 中与 $n$ 互质的数的个数为 $n$ 减去是 $p_1$ 倍数的数的个数，再减去是 $p_2$ 倍数的数的个数。此时，是 $p_1p_2$ 倍数的数将会被<strong>重复</strong>减去两次；根据容斥原理，我们将多减的个数重新加回来，因此最后再加上是 $p_1p_2$ 倍数的数的个数。</p>
-<p>关于欧拉函数线性筛算法的设计也十分巧妙，它是建立在质数线性筛的基础上的。具体可见 OI Wiki 中的相关解释，讲的很清楚。</p>
+<p>欧拉函数也接触了很长一段时间了，刻在 DNA 里的 <span class="math inline">\(\varphi * \mathbf{1}=\mathbf{Id}\)</span>。</p>
+<p>这里主要想讲下关于欧拉函数的一般公式：<span class="math inline">\(\varphi(n)=n\Pi_{p|n}(1-\frac{1}{p})\)</span>。本质上这是一个<strong>容斥原理</strong>的应用。</p>
+<p>举个例子就容易理解了：假设 <span class="math inline">\(n\)</span>
+只有两个质因子 <span class="math inline">\(p_1,p_2\)</span>，那么展开上式可得 <span class="math inline">\(\varphi(n)=n-\frac{n}{p_1}-\frac{n}{p_2}+\frac{n}{p_1p_2}\)</span>.
+用自然语言描述，即在 <span class="math inline">\(1-n\)</span> 中与 <span class="math inline">\(n\)</span> 互质的数的个数为 <span class="math inline">\(n\)</span> 减去是 <span class="math inline">\(p_1\)</span> 倍数的数的个数，再减去是 <span class="math inline">\(p_2\)</span> 倍数的数的个数。此时，是 <span class="math inline">\(p_1p_2\)</span>
+倍数的数将会被<strong>重复</strong>减去两次；根据容斥原理，我们将多减的个数重新加回来，因此最后再加上是
+<span class="math inline">\(p_1p_2\)</span> 倍数的数的个数。</p>
+<p>关于欧拉函数线性筛算法的设计也十分巧妙，它是建立在质数线性筛的基础上的。具体可见
+OI Wiki 中的相关解释，讲的很清楚。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Extended-Euclidean-Algorithm-eGCD"><a href="#Extended-Euclidean-Algorithm-eGCD" class="headerlink" title="Extended Euclidean Algorithm (eGCD)"></a>Extended Euclidean Algorithm (eGCD)</h2><div class="note info no-icon"><p>Euclidean Algorithm (辗转相除法) is one of the oldest and most widely known algorithms. It is a $O(\log n)$ method of computing the <strong>greatest common divisor</strong> (GCD) of two integers $a,b$.</p>
+<h2 id="extended-euclidean-algorithm-egcd">Extended Euclidean Algorithm
+(eGCD)</h2>
+<div class="note info no-icon"><p>Euclidean Algorithm (辗转相除法) is one of the oldest and most widely
+known algorithms. It is a <span class="math inline">\(O(\log n)\)</span>
+method of computing the <strong>greatest common divisor</strong> (GCD)
+of two integers <span class="math inline">\(a,b\)</span>.</p>
 </div>
-<p>According to <strong>Bezout&#39;s Identity</strong>, there exists integers $X$ and $Y$ that $Xa+Yb=\gcd(a,b)$ given $a,b$. The <strong>extended</strong> Euclidean algorithm is the method of computing such $X$ and $Y$.</p>
+<p>According to <strong>Bezout's Identity</strong>, there exists
+integers <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> that <span class="math inline">\(Xa+Yb=\gcd(a,b)\)</span> given <span class="math inline">\(a,b\)</span>. The <strong>extended</strong>
+Euclidean algorithm is the method of computing such <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>.</p>
 <p>Assuming two adjacent levels in the GCD recursive process:</p>
-<div class="table-container">
 <table>
 <thead>
-<tr>
-<th style="text-align:center">current $X$</th>
-<th style="text-align:center">current $Y$</th>
-<th style="text-align:center">current $a$</th>
-<th style="text-align:center">current $b$</th>
+<tr class="header">
+<th style="text-align: center;">current <span class="math inline">\(X\)</span></th>
+<th style="text-align: center;">current <span class="math inline">\(Y\)</span></th>
+<th style="text-align: center;">current <span class="math inline">\(a\)</span></th>
+<th style="text-align: center;">current <span class="math inline">\(b\)</span></th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:center">unknown $X$</td>
-<td style="text-align:center">unknown $Y$</td>
-<td style="text-align:center">$a$</td>
-<td style="text-align:center">$b$</td>
+<tr class="odd">
+<td style="text-align: center;">unknown <span class="math inline">\(X\)</span></td>
+<td style="text-align: center;">unknown <span class="math inline">\(Y\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(a\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(b\)</span></td>
 </tr>
-<tr>
-<td style="text-align:center">known $X&#39;$</td>
-<td style="text-align:center">known $Y&#39;$</td>
-<td style="text-align:center">$b$</td>
-<td style="text-align:center">$a\% b$</td>
+<tr class="even">
+<td style="text-align: center;">known <span class="math inline">\(X&#39;\)</span></td>
+<td style="text-align: center;">known <span class="math inline">\(Y&#39;\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(b\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(a\%
+b\)</span></td>
 </tr>
 </tbody>
 </table>
-</div>
-<script type="math/tex; mode=display">
+<p><span class="math display">\[
 \begin{aligned}
-Xa+Yb&=X'b+Y'(a\% b) \\
-Xa+Yb&=X'b+Y'(a-\lfloor \frac{a}{b}\rfloor b) \\
-Xa+Yb&=Y'a+(X'-Y'\lfloor \frac{a}{b} \rfloor)b \\
-\end{aligned}</script><p>Therefore $X=Y&#39;, Y=X&#39;-Y&#39;\lfloor \frac{a}{b} \rfloor$</p>
-<h3 id="Code-Implementation"><a href="#Code-Implementation" class="headerlink" title="Code Implementation"></a>Code Implementation</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">exgcd</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span>&amp; x, <span class="type">int</span>&amp; y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (b == <span class="number">0</span>) &#123;</span><br><span class="line">        x = <span class="number">1</span>, y = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">return</span> a;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> gcd = <span class="built_in">exgcd</span>(b, a % b, x, y); </span><br><span class="line">    <span class="type">int</span> _x = x;</span><br><span class="line">    x = y, y = _x - y * a / b;       <span class="comment">// from the above equities</span></span><br><span class="line">    <span class="keyword">return</span> gcd;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Using-eGCD-to-get-Inverse"><a href="#Using-eGCD-to-get-Inverse" class="headerlink" title="Using eGCD to get Inverse"></a>Using eGCD to get Inverse</h3><p>Given $b,N$, if $\gcd(b,N)=1$, $b$ is <strong>invertible</strong> modulo $N$. We could apply eGCD algorithm to find <strong>multiplicative inverse</strong> of $b$ modulo $N$. </p>
-<p>Run the above function <code>exgcd(b,N,x,y)</code>, we could obtain $x$ and $y$ that $xb+yN=\gcd(b,N)=1$. Therefore $xb\equiv 1 \pmod{N}$. $x$ is a multiplicative inverse of $b$ modulo $N$. </p>
+Xa+Yb&amp;=X&#39;b+Y&#39;(a\% b) \\
+Xa+Yb&amp;=X&#39;b+Y&#39;(a-\lfloor \frac{a}{b}\rfloor b) \\
+Xa+Yb&amp;=Y&#39;a+(X&#39;-Y&#39;\lfloor \frac{a}{b} \rfloor)b \\
+\end{aligned}
+\]</span></p>
+<p>Therefore <span class="math inline">\(X=Y&#39;,
+Y=X&#39;-Y&#39;\lfloor \frac{a}{b} \rfloor\)</span>.</p>
+<h3 id="code-implementation">Code Implementation</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">exgcd</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span>&amp; x, <span class="type">int</span>&amp; y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (b == <span class="number">0</span>) &#123;</span><br><span class="line">        x = <span class="number">1</span>, y = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">return</span> a;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> gcd = <span class="built_in">exgcd</span>(b, a % b, x, y); </span><br><span class="line">    <span class="type">int</span> _x = x;</span><br><span class="line">    x = y, y = _x - y * a / b;       <span class="comment">// from the above equities</span></span><br><span class="line">    <span class="keyword">return</span> gcd;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="using-egcd-to-get-inverse">Using eGCD to get Inverse</h3>
+<p>Given <span class="math inline">\(b,N\)</span>, if <span class="math inline">\(\gcd(b,N)=1\)</span>, <span class="math inline">\(b\)</span> is <strong>invertible</strong> modulo
+<span class="math inline">\(N\)</span>. We could apply eGCD algorithm to
+find <strong>multiplicative inverse</strong> of <span class="math inline">\(b\)</span> modulo <span class="math inline">\(N\)</span>.</p>
+<p>Run the above function <code>exgcd(b,N,x,y)</code>, we could obtain
+<span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> that <span class="math inline">\(xb+yN=\gcd(b,N)=1\)</span>. Therefore <span class="math inline">\(xb\equiv 1 \pmod{N}\)</span>. <span class="math inline">\(x\)</span> is a multiplicative inverse of <span class="math inline">\(b\)</span> modulo <span class="math inline">\(N\)</span>.</p>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
 <p>不得不感叹聪明的人与时代无关。这一这么古老的算法也花了我一段时间去弄懂。</p>
-<p>无论是 GCD 还是 exGCD，其核心在于<strong>欧几里得公式</strong> $\gcd(a,b)=\gcd(b,a\%b)$. exGCD 只是在这一基础上结合了裴蜀定理递推计算对应的 $x$ 和 $y$。</p>
-<p>这里提供一个非正式的证明：首先是一个基本事实：对于互质的 $\langle k_1,k_2 \rangle$，$\langle k_1\% k_2, k_2\rangle$ 也一定互质。这一为了方便用群论的知识做个解释：$\gcd(k_1,k_2)=1$, 所以 $k_1 \in (\mathbb{Z}/k_2)^{*}$。自然 $k_1\% k_2 \in (\mathbb{Z}/k_2)^{*}$，所以 $\gcd(k_1\% k_2,k_2)=1$。</p>
-<p>那么对于任意正整数 $a,b$，设 $d=\gcd(a,b)$，则有 $a=k_1d, b=k_2d$，且 $\gcd(k_1,k_2)=1$. 那么 $a\%b=a-\lfloor \frac{a}{b} \rfloor b=a-\lfloor \frac{k_1}{k_2} \rfloor b=k_1d- \lfloor \frac{k_1}{k_2} \rfloor k_2d=(k_1\% k_2)d$。根据上面的事实，我们有 $\gcd(k_2,k_1\% k_2)=1$，所以 $\gcd(b, a\%b)=d\gcd(k_2, k_1\% k_2)=d$。</p>
+<p>无论是 GCD 还是 exGCD，其核心在于<strong>欧几里得公式</strong> <span class="math inline">\(\gcd(a,b)=\gcd(b,a\%b)\)</span>. exGCD
+只是在这一基础上结合了裴蜀定理递推计算对应的 <span class="math inline">\(x\)</span> 和 <span class="math inline">\(y\)</span>。</p>
+<p>这里提供一个非正式的证明：首先是一个基本事实：对于互质的 <span class="math inline">\(\langle k_1,k_2 \rangle\)</span>，<span class="math inline">\(\langle k_1\% k_2, k_2\rangle\)</span>
+也一定互质。这一为了方便用群论的知识做个解释：<span class="math inline">\(\gcd(k_1,k_2)=1\)</span>, 所以 <span class="math inline">\(k_1 \in (\mathbb{Z}/k_2)^{*}\)</span>。自然 <span class="math inline">\(k_1\% k_2 \in (\mathbb{Z}/k_2)^{*}\)</span>，所以
+<span class="math inline">\(\gcd(k_1\% k_2,k_2)=1\)</span>。</p>
+<p>那么对于任意正整数 <span class="math inline">\(a,b\)</span>，设 <span class="math inline">\(d=\gcd(a,b)\)</span>，则有 <span class="math inline">\(a=k_1d, b=k_2d\)</span>，且 <span class="math inline">\(\gcd(k_1,k_2)=1\)</span>. 那么 <span class="math inline">\(a\%b=a-\lfloor \frac{a}{b} \rfloor b=a-\lfloor
+\frac{k_1}{k_2} \rfloor b=k_1d- \lfloor \frac{k_1}{k_2} \rfloor
+k_2d=(k_1\% k_2)d\)</span>。根据上面的事实，我们有 <span class="math inline">\(\gcd(k_2,k_1\% k_2)=1\)</span>，所以 <span class="math inline">\(\gcd(b, a\%b)=d\gcd(k_2, k_1\%
+k_2)=d\)</span>。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Chinese-Remainder-Theorem-CRT"><a href="#Chinese-Remainder-Theorem-CRT" class="headerlink" title="Chinese Remainder Theorem (CRT)"></a>Chinese Remainder Theorem (CRT)</h2><blockquote class="blockquote-center">
-<p>今有物不知其数，三三数之剩二，五五数之剩三，七七数之剩二，问物几何？ —— <em>孙子算经</em></p>
+<h2 id="chinese-remainder-theorem-crt">Chinese Remainder Theorem
+(CRT)</h2>
+<blockquote class="blockquote-center">
+<p>今有物不知其数，三三数之剩二，五五数之剩三，七七数之剩二，问物几何？
+—— <em>孙子算经</em></p>
 
-</blockquote> 
-<div class="note info no-icon"><p>The Chinese remainder theorem (CRT) is a theorem which gives a unique solution to a <strong>simultaneous linear congruences with coprime moduli</strong>. In its basic form, the CRT will determine a number $p$ that, when divided by some given <strong>divisors</strong>, leaves <strong>given remainders</strong>.</p>
+</blockquote>
+<div class="note info no-icon"><p>The Chinese remainder theorem (CRT) is a theorem which gives a unique
+solution to a <strong>simultaneous linear congruences with coprime
+moduli</strong>. In its basic form, the CRT will determine a number
+<span class="math inline">\(p\)</span> that, when divided by some given
+<strong>divisors</strong>, leaves <strong>given remainders</strong>.</p>
 </div>
-<p>If $m_1,...,m_k$ are <strong>pairwise coprime</strong>, i.e., $\gcd(m_i,m_j)=1$ for $i\neq j$, then the following system</p>
-<script type="math/tex; mode=display">
+<p>If <span class="math inline">\(m_1,...,m_k\)</span> are
+<strong>pairwise coprime</strong>, i.e., <span class="math inline">\(\gcd(m_i,m_j)=1\)</span> for <span class="math inline">\(i\neq j\)</span>, then the following system <span class="math display">\[
 \begin{cases}
     \ x\equiv a_1 \pmod{m_1} \\
     \ x\equiv a_2 \pmod{m_2} \\
     \ ..., \\
     \ x\equiv a_k \pmod{m_k}
-\end{cases}</script><p>has <strong>exactly one solution in the sense of module $M=\Pi_{i=1}^k m_i$</strong> for any $a_1,a_2,...,a_k\in \mathbb{Z}$.</p>
-<p>We define $M_i=M/m_i$ and $t_i\equiv M_i^{-1}\pmod{m_i}$, then the solution to this congruences is $x\equiv \sum_{i=1}^k a_iM_it_i \pmod{M}$. Note that $x$ is <strong>unique</strong> modulo $M$.</p>
-<p>The proof of correctness and uniqueness of CRT: <a target="_blank" rel="noopener" href="https://www.cnblogs.com/VeniVidiVici/p/17280855.html">My CnBlogs</a> or <a target="_blank" rel="noopener" href="https://oi-wiki.org/math/number-theory/crt/#%E8%AF%81%E6%98%8E">OI Wiki-CRT</a></p>
-<h3 id="Code-Implementation-1"><a href="#Code-Implementation-1" class="headerlink" title="Code Implementation"></a>Code Implementation</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">long</span> <span class="type">long</span> <span class="title">CRT</span><span class="params">(<span class="type">int</span> k, <span class="type">long</span> <span class="type">long</span>* a, <span class="type">long</span> <span class="type">long</span>* m)</span> </span>&#123;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> M = <span class="number">1</span>, ans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= k; ++i)</span><br><span class="line">        M = M * m[i];</span><br><span class="line">       <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= k; ++i) &#123;</span><br><span class="line">        <span class="type">long</span> <span class="type">long</span> Mi = M / m[i], ti, _;</span><br><span class="line">        <span class="built_in">exgcd</span>(Mi, m[i], ti, _); <span class="comment">// get inverse: ti * Mi mod m[i] = 1</span></span><br><span class="line">        ans = (ans + a[i] * Mi % M * ti % M) % M;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (ans % M + M) % M;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+\end{cases}
+\]</span> has <strong>exactly one solution in the sense of module <span class="math inline">\(M=\Pi_{i=1}^k m_i\)</span></strong> for any <span class="math inline">\(a_1,a_2,...,a_k\in \mathbb{Z}\)</span>.</p>
+<p>We define <span class="math inline">\(M_i=M/m_i\)</span> and <span class="math inline">\(t_i\equiv M_i^{-1}\pmod{m_i}\)</span>, then the
+solution to this congruences is <span class="math inline">\(x\equiv
+\sum_{i=1}^k a_iM_it_i \pmod{M}\)</span>. Note that <span class="math inline">\(x\)</span> is <strong>unique</strong> modulo <span class="math inline">\(M\)</span>.</p>
+<p>The proof of correctness and uniqueness of CRT: <a target="_blank" rel="noopener" href="https://www.cnblogs.com/VeniVidiVici/p/17280855.html">My
+CnBlogs</a> or <a target="_blank" rel="noopener" href="https://oi-wiki.org/math/number-theory/crt/#%E8%AF%81%E6%98%8E">OI
+Wiki-CRT</a></p>
+<h3 id="code-implementation-1">Code Implementation</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">long</span> <span class="type">long</span> <span class="title">CRT</span><span class="params">(<span class="type">int</span> k, <span class="type">long</span> <span class="type">long</span>* a, <span class="type">long</span> <span class="type">long</span>* m)</span> </span>&#123;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> M = <span class="number">1</span>, ans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= k; ++i)</span><br><span class="line">        M = M * m[i];</span><br><span class="line">       <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= k; ++i) &#123;</span><br><span class="line">        <span class="type">long</span> <span class="type">long</span> Mi = M / m[i], ti, _;</span><br><span class="line">        <span class="built_in">exgcd</span>(Mi, m[i], ti, _); <span class="comment">// get inverse: ti * Mi mod m[i] = 1</span></span><br><span class="line">        ans = (ans + a[i] * Mi % M * ti % M) % M;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (ans % M + M) % M;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
 <p>数论的定理多如牛毛，在众多熟悉或不熟悉的外国名字中看到一个「中国」剩余定理还是非常之亲切的。</p>
-<p>CRT 提供了互质模数的线性同余方程组的解。在密码学中 CRT 经常被运用于简化模意义下求幂的运算。具体来说，对于合数模数 $M$ 且 $\gcd(M,a)\neq 1$ 的情况，可以应用 CRT 简化 $a^e\mod{M}$ 的计算。此外，CRT 还能用于加速 <strong>RSA 的解密过程 (RSA decryption)</strong>。</p>
-<script type="math/tex; mode=display">
-m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} \end{cases} \Rightarrow \begin{cases} m\equiv (c\mod p)^{d\mod{(p-1)}}\mod{p}\\ m\equiv (c\mod q)^{d\mod{(q - 1)}}\mod{q} \end{cases}</script><p>Bob (Receiver) 是知道 $N$ 的两个 factor $p$ 与 $q$ 的，因此其先将朴素的解密过程转化为这一线性同余方程组，并应用 CRT 得到方程的解，也即消息 $m$。这一解密方式比直接计算 $c^d\mod{N}$ 快了 <strong>$4$ 倍</strong>左右。</p>
-<p>P.S. RSA 问题是一个著名的困难问题 (hard problems)，我将会在 P3 中进行介绍。</p>
+<p>CRT 提供了互质模数的线性同余方程组的解。在密码学中 CRT
+经常被运用于简化模意义下求幂的运算。具体来说，对于合数模数 <span class="math inline">\(M\)</span> 且 <span class="math inline">\(\gcd(M,a)\neq 1\)</span> 的情况，可以应用 CRT 简化
+<span class="math inline">\(a^e\mod{M}\)</span> 的计算。此外，CRT
+还能用于加速 <strong>RSA 的解密过程 (RSA decryption)</strong>。 <span class="math display">\[
+m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d
+\mod{q} \end{cases} \Rightarrow \begin{cases} m\equiv (c\mod
+p)^{d\mod{(p-1)}}\mod{p}\\ m\equiv (c\mod q)^{d\mod{(q - 1)}}\mod{q}
+\end{cases}
+\]</span> Bob (Receiver) 是知道 <span class="math inline">\(N\)</span>
+的两个 factor <span class="math inline">\(p\)</span> 与 <span class="math inline">\(q\)</span>
+的，因此其先将朴素的解密过程转化为这一线性同余方程组，并应用 CRT
+得到方程的解，也即消息 <span class="math inline">\(m\)</span>。这一解密方式比直接计算 <span class="math inline">\(c^d\mod{N}\)</span> 快了 <strong><span class="math inline">\(4\)</span> 倍</strong>左右。</p>
+<p>P.S. RSA 问题是一个著名的困难问题 (hard problems)，我将会在 P3
+中进行介绍。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Quadratic-Residue"><a href="#Quadratic-Residue" class="headerlink" title="Quadratic Residue"></a>Quadratic Residue</h2><div class="note info no-icon"><p>If there is an integer $0&lt;x&lt;p$ such that $x^2\equiv a\pmod{p}$. We call $a$ a <strong>quadratic residue</strong> modulo $p$. Otherwise (such $x$ doesn&#39;t exist), we call $a$ a <strong>quadratic nonresidue</strong> modulo $p$.</p>
-<p>Note that $p \nmid a$ to exclude the trivial cases $x=0$.</p>
+<h2 id="quadratic-residue">Quadratic Residue</h2>
+<div class="note info no-icon"><p>If there is an integer <span class="math inline">\(0&lt;x&lt;p\)</span> such that <span class="math inline">\(x^2\equiv a\pmod{p}\)</span>. We call <span class="math inline">\(a\)</span> a <strong>quadratic residue</strong>
+modulo <span class="math inline">\(p\)</span>. Otherwise (such <span class="math inline">\(x\)</span> doesn't exist), we call <span class="math inline">\(a\)</span> a <strong>quadratic nonresidue</strong>
+modulo <span class="math inline">\(p\)</span>.</p>
+<p>Note that <span class="math inline">\(p \nmid a\)</span> to exclude
+the trivial cases <span class="math inline">\(x=0\)</span>.</p>
 </div>
-<p>The quadratic residue problem requires us to solve the congrence $x^2\equiv a\pmod{p}$. Essentially it is to <strong>find the square root</strong> of $a$ in the sense of modulo $p$. Usually, the moduli $p$ is an <strong>odd prime</strong>.</p>
-<h3 id="Legendre-Symbol"><a href="#Legendre-Symbol" class="headerlink" title="Legendre Symbol"></a>Legendre Symbol</h3><p>The legendre symbol is a <strong>number theoretic function</strong> $(\frac{a}{p})$ which is defined to be equal to $\pm 1$ depending on whether $a$ is a quadratic residue modulo $p$. </p>
-<script type="math/tex; mode=display">
-(\frac{a}{p})=(a|p)=\begin{cases} \ 0, \ if \ \ p|a \\ \  1, \ if \ a \ is \ a \ quadratic \ residue \ modulo \ p \\ -1 , \ if \ a \ is \ a \ quadratic \ nonresidue \ modulo \ p \end{cases}</script><h3 id="Euler-39-s-Criterion"><a href="#Euler-39-s-Criterion" class="headerlink" title="Euler&#39;s Criterion"></a>Euler&#39;s Criterion</h3><div class="note info no-icon"><p>For an odd prime $p$ and $p \nmid a$, the Legendre symbol $(\frac{a}{p})\equiv a^{(p-1)/2} \pmod{p}$.</p>
+<p>The quadratic residue problem requires us to solve the congrence
+<span class="math inline">\(x^2\equiv a\pmod{p}\)</span>. Essentially it
+is to <strong>find the square root</strong> of <span class="math inline">\(a\)</span> in the sense of modulo <span class="math inline">\(p\)</span>. Usually, the moduli <span class="math inline">\(p\)</span> is an <strong>odd prime</strong>.</p>
+<h3 id="legendre-symbol">Legendre Symbol</h3>
+<p>The legendre symbol is a <strong>number theoretic function</strong>
+<span class="math inline">\((\frac{a}{p})\)</span> which is defined to
+be equal to <span class="math inline">\(\pm 1\)</span> depending on
+whether <span class="math inline">\(a\)</span> is a quadratic residue
+modulo <span class="math inline">\(p\)</span>. <span class="math display">\[
+(\frac{a}{p})=(a|p)=\begin{cases} \ 0, \ if \ \ p|a \\ \  1, \ if \ a \
+is \ a \ quadratic \ residue \ modulo \ p \\ -1 , \ if \ a \ is \ a \
+quadratic \ nonresidue \ modulo \ p \end{cases}
+\]</span></p>
+<p>### Euler's Criterion</p>
+<div class="note info no-icon"><p>For an odd prime <span class="math inline">\(p\)</span> and <span class="math inline">\(p \nmid a\)</span>, the Legendre symbol <span class="math inline">\((\frac{a}{p})\equiv a^{(p-1)/2}
+\pmod{p}\)</span>.</p>
 </div>
-<p>For an odd prime $p$ and $p \nmid a$, according to Euler&#39;s critetion, we could determine whether $a$ is a quadratic residue modulo $p$ by checking whether $a^{(p-1)/2}\mod{p}$ equals to $1$ or not.</p>
+<p>For an odd prime <span class="math inline">\(p\)</span> and <span class="math inline">\(p \nmid a\)</span>, according to Euler's
+critetion, we could determine whether <span class="math inline">\(a\)</span> is a quadratic residue modulo <span class="math inline">\(p\)</span> by checking whether <span class="math inline">\(a^{(p-1)/2}\mod{p}\)</span> equals to <span class="math inline">\(1\)</span> or not.</p>
 <p>See the prove <a target="_blank" rel="noopener" href="https://oi-wiki.org/math/number-theory/residue/#%E5%A5%87%E7%B4%A0%E6%95%B0%E7%9A%84%E4%BA%8C%E6%AC%A1%E5%89%A9%E4%BD%99">here</a>.</p>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
 <p>虽然在本课程中关于二次剩余问题的内容只是浅尝辄止，但我觉得还是非常有必要将其单独拿出来进行介绍，因为这个问题的研究在数论上占有举足轻重的地位。</p>
-<p>二次剩余问题本质上是<strong>模意义下的开根问题</strong>，实际上是 RSA 问题的铺垫：RSA 问题本质上是模意义下的开 $e$ 次根问题。因此，当 $e=2$ 时，RSA 问题与二次剩余问题等价。</p>
+<p>二次剩余问题本质上是<strong>模意义下的开根问题</strong>，实际上是 RSA
+问题的铺垫：RSA 问题本质上是模意义下的开 <span class="math inline">\(e\)</span> 次根问题。因此，当 <span class="math inline">\(e=2\)</span> 时，RSA 问题与二次剩余问题等价。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Group-Theory-Introduction"><a href="#Group-Theory-Introduction" class="headerlink" title="Group Theory: Introduction"></a>Group Theory: Introduction</h2><div class="note info no-icon"><p><strong>Group theory</strong> is the study of groups. Groups are <strong>sets</strong> equipped with an <strong>operation</strong> that satisfies certain basic properties. They are closure, identity, inverse, and associativity.</p>
+<h2 id="group-theory-introduction">Group Theory: Introduction</h2>
+<div class="note info no-icon"><p><strong>Group theory</strong> is the study of groups. Groups are
+<strong>sets</strong> equipped with an <strong>operation</strong> that
+satisfies certain basic properties. They are closure, identity, inverse,
+and associativity.</p>
 </div>
-<p>Set $\mathbb{G}$ and a <strong>binary operation</strong> $\circ$ defined on $\mathbb{G}$ that:</p>
+<p>Set <span class="math inline">\(\mathbb{G}\)</span> and a
+<strong>binary operation</strong> <span class="math inline">\(\circ\)</span> defined on <span class="math inline">\(\mathbb{G}\)</span> that:</p>
 <ul>
-<li>Closure: For all $g_1,g_2\in \mathbb{G}$, it holds that $g_1 \circ g_2\in \mathbb{G}$</li>
-<li>Identity: There exists an <strong>identity element</strong> $e\in \mathbb{G}$ s.t. $e\circ g=g=g \circ e$ for all $g\in \mathbb{G}$</li>
-<li>Inverse: For every element $g\in \mathbb{G}$ there exists an inverse element $h\in \mathbb{G}$ s.t. $g\circ h=e=h\circ g$</li>
-<li>Associativity: For all $g_1,g_2,g_3\in\mathbb{G}$, $g_1\circ (g_2\circ g_3)=(g_1\circ g_2)\circ g_3$</li>
+<li>Closure: For all <span class="math inline">\(g_1,g_2\in
+\mathbb{G}\)</span>, it holds that <span class="math inline">\(g_1 \circ
+g_2\in \mathbb{G}\)</span></li>
+<li>Identity: There exists an <strong>identity element</strong> <span class="math inline">\(e\in \mathbb{G}\)</span> s.t. <span class="math inline">\(e\circ g=g=g \circ e\)</span> for all <span class="math inline">\(g\in \mathbb{G}\)</span></li>
+<li>Inverse: For every element <span class="math inline">\(g\in
+\mathbb{G}\)</span> there exists an inverse element <span class="math inline">\(h\in \mathbb{G}\)</span> s.t. <span class="math inline">\(g\circ h=e=h\circ g\)</span></li>
+<li>Associativity: For all <span class="math inline">\(g_1,g_2,g_3\in\mathbb{G}\)</span>, <span class="math inline">\(g_1\circ (g_2\circ g_3)=(g_1\circ g_2)\circ
+g_3\)</span></li>
 </ul>
-<p><strong>Order</strong> of a finite group $\mathbb{G}$, denoted $|\mathbb{G}|$, is the number of elements in $\mathbb{G}$.</p>
-<p>If group $\mathbb{G}$ is an <strong>Abelian group</strong>, it will satisfiy the additionally <strong>commutativity</strong>: For all $g_1,g_2\in\mathbb{G}$, $g_1\circ g_2=g_2\circ g_1$.</p>
-<h3 id="Subgroups"><a href="#Subgroups" class="headerlink" title="Subgroups"></a>Subgroups</h3><div class="note info no-icon"><p>Definition. If $\mathbb{G}$ is a group, a set $\mathbb{H}\subseteq \mathbb{G}$ is a <strong>subgroup</strong> of $\mathbb{G}$ if $\mathbb{H}$ itself forms a group <strong>under the same operation</strong>. $\mathbb{H}$ is a <strong>strict</strong> subgroup of $\mathbb{G}$ if $\mathbb{H} \neq \mathbb{G}$.</p>
+<p><strong>Order</strong> of a finite group <span class="math inline">\(\mathbb{G}\)</span>, denoted <span class="math inline">\(|\mathbb{G}|\)</span>, is the number of elements
+in <span class="math inline">\(\mathbb{G}\)</span>.</p>
+<p>If group <span class="math inline">\(\mathbb{G}\)</span> is an
+<strong>Abelian group</strong>, it will satisfiy the additionally
+<strong>commutativity</strong>: For all <span class="math inline">\(g_1,g_2\in\mathbb{G}\)</span>, <span class="math inline">\(g_1\circ g_2=g_2\circ g_1\)</span>.</p>
+<h3 id="subgroups">Subgroups</h3>
+<div class="note info no-icon"><p>Definition. If <span class="math inline">\(\mathbb{G}\)</span> is a
+group, a set <span class="math inline">\(\mathbb{H}\subseteq
+\mathbb{G}\)</span> is a <strong>subgroup</strong> of <span class="math inline">\(\mathbb{G}\)</span> if <span class="math inline">\(\mathbb{H}\)</span> itself forms a group
+<strong>under the same operation</strong>. <span class="math inline">\(\mathbb{H}\)</span> is a <strong>strict</strong>
+subgroup of <span class="math inline">\(\mathbb{G}\)</span> if <span class="math inline">\(\mathbb{H} \neq \mathbb{G}\)</span>.</p>
 </div>
-<p>Note that every group $\mathbb{G}$ always has the <strong>trivial subgroups</strong> $\mathbb{G}$ and $\{e\}$.</p>
-<h3 id="Modulo-Multiplication-Group"><a href="#Modulo-Multiplication-Group" class="headerlink" title="Modulo Multiplication Group"></a>Modulo Multiplication Group</h3><div class="note info no-icon"><p>A modulo multiplication group $(\mathbb{Z}/n)^{*}$ is a finite group of <strong>residue classes</strong> prime to $n$ under <strong>multiplication mod</strong> $n$. $(\mathbb{Z}/n)^{*}$ is <strong>Abelian</strong> of group order $\varphi(n)$, where $\varphi(n)$ is the <strong>totient function</strong>. </p>
+<p>Note that every group <span class="math inline">\(\mathbb{G}\)</span>
+always has the <strong>trivial subgroups</strong> <span class="math inline">\(\mathbb{G}\)</span> and <span class="math inline">\(\{e\}\)</span>.</p>
+<h3 id="modulo-multiplication-group">Modulo Multiplication Group</h3>
+<div class="note info no-icon"><p>A modulo multiplication group <span class="math inline">\((\mathbb{Z}/n)^{*}\)</span> is a finite group of
+<strong>residue classes</strong> prime to <span class="math inline">\(n\)</span> under <strong>multiplication
+mod</strong> <span class="math inline">\(n\)</span>. <span class="math inline">\((\mathbb{Z}/n)^{*}\)</span> is
+<strong>Abelian</strong> of group order <span class="math inline">\(\varphi(n)\)</span>, where <span class="math inline">\(\varphi(n)\)</span> is the <strong>totient
+function</strong>.</p>
 </div>
-<p>The multiplicative group of integers modulo $n$, $(\mathbb{Z}/n)^{*}$, is very worth researching. $(\mathbb{Z}/n)^{*}:=$ <strong>invertible</strong> elements in $\{1,2,...n-1\}$ under multiplication modulo $n:=$ $\{b\in \{1,...,n-1\}|\gcd(b,n)=1 \}$. Therefore $|(\mathbb{Z}/n)^{*}|=\varphi(n)$. If $n$ is prime (which is usually denoted $p$), $|(\mathbb{Z}/p)^{*}|=p-1$.</p>
-<p>$(\mathbb{Z}/n)^{*}$ is also denoted $\mathbb{Z}^{*}_n$.</p>
+<p>The multiplicative group of integers modulo <span class="math inline">\(n\)</span>, <span class="math inline">\((\mathbb{Z}/n)^{*}\)</span>, is very worth
+researching.</p>
+<p><span class="math inline">\((\mathbb{Z}/n)^{*}:=\)</span>
+<strong>invertible</strong> elements in <span class="math inline">\(\{1,2,...n-1\}\)</span> <span class="math inline">\(:=\)</span> <span class="math inline">\(\{b\in
+\{1,...,n-1\}|\gcd(b,n)=1 \}\)</span>.</p>
+<p>Therefore <span class="math inline">\(|(\mathbb{Z}/n)^{*}|=\varphi(n)\)</span>. If <span class="math inline">\(n\)</span> is prime (which is usually denoted
+<span class="math inline">\(p\)</span>), <span class="math inline">\(|(\mathbb{Z}/p)^{*}|=p-1\)</span>.</p>
+<p><span class="math inline">\((\mathbb{Z}/n)^{*}\)</span> is also
+denoted <span class="math inline">\(\mathbb{Z}^{*}_n\)</span>.</p>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
-<p>群论虽然是第一次接触学习，但它的定义与相关的一些定理意外的容易理解 (遵循直觉)。 可能是由于 &quot;群&quot; 这一概念在日常生活中已经渗透得很深，以致于抽象成为数学模型后也有较强的既视感。</p>
-<p>这里想要重点提一下<strong>整数模 $n$ 乘法群</strong> $(\mathbb{Z}/n)^{*}$，这是一个很重要的群。对于它的研究起源于对模 $n$ 剩余类 (residue classes) 的研究。我们知道，对于模 $n$ 剩余类 $\{0,1,2,...,n-1\}$，若群运算 (group operation) 是加法 $+$，剩余类能够很自然的形成一个群 $(\mathbb{Z}/n)^{+}$。然而，若我们将群运算设为乘法 $\times$，剩余类并不能形成一个群。这是因为群性质要求<strong>每个群元素都具有逆元</strong> (inverse)；而在模 $n$ 剩余类中，只有与 $n$ 互质的群元素才有逆元。因此，我们将与 $n$ 不互质的元素剔除，剩下的就是整数模 $n$ 乘法群 $(\mathbb{Z}/n)^{*}$ 了。</p>
+<p>群论虽然是第一次接触学习，但它的定义与相关的一些定理意外的容易理解
+(遵循直觉)。 可能是由于 "群"
+这一概念在日常生活中已经渗透得很深，以致于抽象成为数学模型后也有较强的既视感。</p>
+<p>这里想要重点提一下<strong>整数模 <span class="math inline">\(n\)</span> 乘法群</strong> <span class="math inline">\((\mathbb{Z}/n)^{*}\)</span>，这是一个很重要的群。对于它的研究起源于对模
+<span class="math inline">\(n\)</span> 剩余类 (residue classes)
+的研究。我们知道，对于模 <span class="math inline">\(n\)</span> 剩余类
+<span class="math inline">\(\{0,1,2,...,n-1\}\)</span>，若群运算 (group
+operation) 是加法 <span class="math inline">\(+\)</span>，剩余类能够很自然的形成一个群 <span class="math inline">\((\mathbb{Z}/n)^{+}\)</span>。然而，若我们将群运算设为乘法
+<span class="math inline">\(\times\)</span>，剩余类并不能形成一个群。这是因为群性质要求<strong>每个群元素都具有逆元</strong>
+(inverse)；而在模 <span class="math inline">\(n\)</span>
+剩余类中，只有与 <span class="math inline">\(n\)</span>
+互质的群元素才有逆元。因此，我们将与 <span class="math inline">\(n\)</span> 不互质的元素剔除，剩下的就是整数模
+<span class="math inline">\(n\)</span> 乘法群 <span class="math inline">\((\mathbb{Z}/n)^{*}\)</span> 了。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Fermat-39-s-Little-Theorem"><a href="#Fermat-39-s-Little-Theorem" class="headerlink" title="Fermat&#39;s Little Theorem"></a>Fermat&#39;s Little Theorem</h2><div class="note info no-icon"><p>Theorem. Let $\mathbb{G}$ be a finite group of order $m=|\mathbb{G}|$. Then for any $g\in \mathbb{G}$, it holds that $g^m=1$.</p>
+<h2 id="fermats-little-theorem">Fermat's Little Theorem</h2>
+<div class="note info no-icon"><p>Theorem. Let <span class="math inline">\(\mathbb{G}\)</span> be a
+finite group of order <span class="math inline">\(m=|\mathbb{G}|\)</span>. Then for any <span class="math inline">\(g\in \mathbb{G}\)</span>, it holds that <span class="math inline">\(g^m=1\)</span>.</p>
 </div>
-<p>Proof. $\mathbb{G}=\{g_1,g_2,...,g_m\}$, $g\in \mathbb{G}$. $g_i\neq g_j$ for all $i,j$, therefore $gg_i\neq gg_j$ for all $i,j$. Therefore with the <strong>closure</strong> property of the group $\mathbb{G}$, $\{gg_1,gg_2,...gg_m\}$ is a <strong>permutation</strong> of $\{g_1,g_2,...,g_m\}$. Then we have $(gg_1)(gg_2)...(gg_m)=g_1g_2...g_m$, which could be reduced to $g^m=1$.</p>
-<p>We could see the <strong>similarity</strong> between the proof of Fermat&#39;s little theorem and Euler&#39;s theorem. In fact, <u><strong>Fermat&#39;s little theorem is the general form of Euler&#39;s theorem</strong></u>. Let $\mathbb{G}$ be the modulo multiplication group $(\mathbb{Z}/n)^{*}$, one could derive the Euler&#39;s theorem.</p>
-<h3 id="Corollary-1"><a href="#Corollary-1" class="headerlink" title="Corollary 1"></a>Corollary 1</h3><div class="note info no-icon"><p>Corollary (Fermat&#39;s Little Theorem). Let $\mathbb{G}$ be a finite group of order $m$. Then for any $g\in \mathbb{G}$, and any integer $x$, we have $g^x=g^{[x\mod m]}$.</p>
+<p>Proof. <span class="math inline">\(\mathbb{G}=\{g_1,g_2,...,g_m\}\)</span>, <span class="math inline">\(g\in \mathbb{G}\)</span>. <span class="math inline">\(g_i\neq g_j\)</span> for all <span class="math inline">\(i,j\)</span>, therefore <span class="math inline">\(gg_i\neq gg_j\)</span> for all <span class="math inline">\(i,j\)</span>. With the <strong>closure</strong>
+property of the group <span class="math inline">\(\mathbb{G}\)</span>,
+<span class="math inline">\(\{gg_1,gg_2,...gg_m\}\)</span> is a
+<strong>permutation</strong> of <span class="math inline">\(\{g_1,g_2,...,g_m\}\)</span>. Then we have <span class="math inline">\((gg_1)(gg_2)...(gg_m)=g_1g_2...g_m\)</span>, which
+could be reduced to <span class="math inline">\(g^m=1\)</span>.</p>
+<p>We could see the <strong>similarity</strong> between the proof of
+Fermat's little theorem and Euler's theorem. In fact,
+<u><strong>Fermat's little theorem is the general form of Euler's
+theorem</strong></u>. Let <span class="math inline">\(\mathbb{G}\)</span> be the modulo multiplication
+group <span class="math inline">\((\mathbb{Z}/n)^{*}\)</span>, one could
+derive the Euler's theorem.</p>
+<h3 id="corollary-1">Corollary 1</h3>
+<div class="note info no-icon"><p>Corollary (Fermat's Little Theorem). Let <span class="math inline">\(\mathbb{G}\)</span> be a finite group of order
+<span class="math inline">\(m\)</span>. Then for any <span class="math inline">\(g\in \mathbb{G}\)</span>, and any integer <span class="math inline">\(x\)</span>, we have <span class="math inline">\(g^x=g^{[x\mod m]}\)</span>.</p>
 </div>
-<p>Many exponents calculation could be simplified using this corollary. </p>
-<p>For example, if computing $5^{1000}\mod 11$, we could see $5\in (\mathbb{Z}/11)^{*}$ since $\gcd(5,11)=1$. Applying the above corollary $5^{1000}\mod{11}=5^{[1000\mod \varphi(11)]}\mod{11}=5^{[1000\mod{10}]}\mod{11}=1$.</p>
-<h3 id="Corollary-2"><a href="#Corollary-2" class="headerlink" title="Corollary 2"></a>Corollary 2</h3><div class="note info no-icon"><p>Corollary (Fermat&#39;s Little Theorem). Let $\mathbb{G}$ be a finite group of order $m$. Let $e&gt;0$ be an integer, and define the function, $f_e:\mathbb{G}\to \mathbb{G}$ by $f_e(g)=g^e$.</p>
+<p>Many exponents calculation could be simplified using this
+corollary.</p>
+<p>For example, if computing <span class="math inline">\(5^{1000}\mod
+11\)</span>, we could see <span class="math inline">\(5\in
+(\mathbb{Z}/11)^{*}\)</span> since <span class="math inline">\(\gcd(5,11)=1\)</span>. Therefore <span class="math inline">\(5^{1000}\mod{11}=5^{[1000\mod
+\varphi(11)]}\mod{11}=5^{[1000\mod{10}]}\mod{11}=1\)</span>.</p>
+<h3 id="corollary-2">Corollary 2</h3>
+<div class="note info no-icon"><p>Corollary (Fermat's Little Theorem). Let <span class="math inline">\(\mathbb{G}\)</span> be a finite group of order
+<span class="math inline">\(m\)</span>. Let <span class="math inline">\(e&gt;0\)</span> be an integer, and define the
+function, <span class="math inline">\(f_e:\mathbb{G}\to
+\mathbb{G}\)</span> by <span class="math inline">\(f_e(g)=g^e\)</span>.</p>
 <ul>
-<li>If $\gcd(e,m)=1$, then $f_e$ is a <strong>permutation</strong>, i.e., a <strong>bijection</strong>.</li>
-<li>Moreover, if $d=e^{-1}\mod{m}$, then $f_d$ is the inverse of $f_e$.</li>
+<li>If <span class="math inline">\(\gcd(e,m)=1\)</span>, then <span class="math inline">\(f_e\)</span> is a <strong>permutation</strong>,
+i.e., a <strong>bijection</strong>.</li>
+<li>Moreover, if <span class="math inline">\(d=e^{-1}\mod{m}\)</span>,
+then <span class="math inline">\(f_d\)</span> is the inverse of <span class="math inline">\(f_e\)</span>.</li>
 </ul>
 </div>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
-<p>注意，我们这里介绍的是费马小定理的<strong>群论表述</strong>；事实上，其拥有一个更为广为人知的数学表述。对于任意整数 $a$, 质数 $p$，有 $a^{p}\equiv a\pmod{p}$。</p>
-<p>当 $\gcd(a,p)=1$ 时，我们能够由此推导出欧拉定理。</p>
-<p>当 $\gcd(a,p)\neq 1$ 时，由于 $p$ 是质数，$a$ 一定是 $p$ 的倍数 $p|a$. 那么显然此时 $a^p \equiv a \equiv 0\pmod{p}$.</p>
+<p>注意，我们这里介绍的是费马小定理的<strong>群论表述</strong>；事实上，其拥有一个更为广为人知的数学表述。对于任意整数
+<span class="math inline">\(a\)</span>, 质数 <span class="math inline">\(p\)</span>，有 <span class="math inline">\(a^{p}\equiv a\pmod{p}\)</span>。</p>
+<p>当 <span class="math inline">\(\gcd(a,p)=1\)</span>
+时，我们能够由此推导出欧拉定理。</p>
+<p>当 <span class="math inline">\(\gcd(a,p)\neq 1\)</span> 时，由于
+<span class="math inline">\(p\)</span> 是质数，<span class="math inline">\(a\)</span> 一定是 <span class="math inline">\(p\)</span> 的倍数 <span class="math inline">\(p|a\)</span>. 那么显然此时 <span class="math inline">\(a^p \equiv a \equiv 0\pmod{p}\)</span>.</p>
 </blockquote>
 <p><br></p>
-<h2 id="Cyclic-Groups-and-Generators"><a href="#Cyclic-Groups-and-Generators" class="headerlink" title="Cyclic Groups and Generators"></a>Cyclic Groups and Generators</h2><p>Before stepping into the definition of <strong>cyclic groups</strong>, we introduce the definition of <strong>order of a group element</strong>. </p>
-<div class="note info no-icon"><p>Definition. <strong>The order of a group element</strong> $g\in \mathbb{G}$ is the <strong>smallest positive integer</strong> $r$ such that $g^r=1$, and is denoted by $ord(g)$.</p>
+<h2 id="cyclic-groups-and-generators">Cyclic Groups and Generators</h2>
+<p>Before stepping into the definition of <strong>cyclic
+groups</strong>, we introduce the definition of <strong>order of a group
+element</strong>.</p>
+<div class="note info no-icon"><p>Definition. <strong>The order of a group element</strong> <span class="math inline">\(g\in \mathbb{G}\)</span> is the <strong>smallest
+positive integer</strong> <span class="math inline">\(r\)</span> such
+that <span class="math inline">\(g^r=1\)</span>, and is denoted by <span class="math inline">\(ord(g)\)</span>.</p>
 </div>
-<p>Note the distinction between the two concepts <strong>the order of a group</strong> and <strong>the order of a group element</strong>.</p>
-<div class="note info no-icon"><p>Definition. If an element $g\in \mathbb{G}$ has order $|\mathbb{G}|$, then $\mathbb{G}$ is a <strong>cyclic group</strong> and can be denoted by $\mathbb{G}=\langle g \rangle$. We call $g$ the <strong>generator</strong> of $\mathbb{G}$.</p>
+<p>Note the distinction between the two concepts <strong>the order of a
+group</strong> and <strong>the order of a group element</strong>.</p>
+<div class="note info no-icon"><p>Definition. If an element <span class="math inline">\(g\in
+\mathbb{G}\)</span> has order <span class="math inline">\(|\mathbb{G}|\)</span>, then <span class="math inline">\(\mathbb{G}\)</span> is a <strong>cyclic
+group</strong> and can be denoted by <span class="math inline">\(\mathbb{G}=\langle g \rangle\)</span>. We call
+<span class="math inline">\(g\)</span> the <strong>generator</strong> of
+<span class="math inline">\(\mathbb{G}\)</span>.</p>
 </div>
-<p>Therefore, if $\mathbb{G}$ is a <strong>cyclic group</strong> and $|\mathbb{G}|=m$, there must exists a <strong>generator</strong> $g\in\mathbb{G}$ that could generate the whole group by constantly multiplying itself, i.e., $\{g, g^2, ..., g^m\}=\mathbb{G}$.</p>
+<p>Therefore, if <span class="math inline">\(\mathbb{G}\)</span> is a
+<strong>cyclic group</strong> and <span class="math inline">\(|\mathbb{G}|=m\)</span>, there must exists a
+<strong>generator</strong> <span class="math inline">\(g\in\mathbb{G}\)</span> that could generate the
+whole group by constantly multiplying itself, i.e., <span class="math inline">\(\{g, g^2, ..., g^m\}=\mathbb{G}\)</span>.</p>
 <p><br></p>
 <blockquote>
 <p>Eureka moment!</p>
-<p>之前搞 OI 的时候在数论里学习到了<strong>原根 (primitive root)</strong> 的概念，然而并不是很明白。到大学学到生成元 (generator) 的概念突然有了醍醐灌顶之感。实际上，<strong>原根和生成元的概念是一体两面。</strong></p>
-<p><strong>若一个正整数 $m$ 有原根 $g$，那么就意味着群 $(\mathbb{Z}/m)^{*}$ 是一个循环群，且它的生成元为 $g$。</strong></p>
-<p>正整数 $m$ 有原根 (群 $(\mathbb{Z}/m)^{*}$ 为循环群) 的<strong>充要条件</strong>为：它能表达为下列形式之一 $2,4,p^n,2p^n$，其中 $p$ 为奇素数。且若 $m$ 有原根，其原根的个数为 $\varphi(\varphi(m))$。部分证明 ($m$ 为质数) 见我的 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/VeniVidiVici/p/17214675.html">CnBlogs: 循环群</a>；这里还提到，任意<strong>质数阶群 (group of prime order) 一定是循环群</strong>。</p>
+<p>之前搞 OI 的时候在数论里学习到了<strong>原根 (primitive
+root)</strong> 的概念，然而并不是很明白。到大学学到生成元 (generator)
+的概念突然有了醍醐灌顶之感。实际上，<strong>原根和生成元的概念是一体两面。</strong></p>
+<p><strong>若一个正整数 <span class="math inline">\(m\)</span> 有原根
+<span class="math inline">\(g\)</span>，那么就意味着群 <span class="math inline">\((\mathbb{Z}/m)^{*}\)</span>
+是一个循环群，且它的生成元为 <span class="math inline">\(g\)</span>。</strong></p>
+<p>正整数 <span class="math inline">\(m\)</span> 有原根 (群 <span class="math inline">\((\mathbb{Z}/m)^{*}\)</span> 为循环群)
+的<strong>充要条件</strong>为：它能表达为下列形式之一 <span class="math inline">\(2,4,p^n,2p^n\)</span>，其中 <span class="math inline">\(p\)</span> 为奇素数。且若 <span class="math inline">\(m\)</span> 有原根，其原根的个数为 <span class="math inline">\(\varphi(\varphi(m))\)</span>。部分证明 (<span class="math inline">\(m\)</span> 为质数) 见我的 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/VeniVidiVici/p/17214675.html">CnBlogs:
+循环群</a>；这里还提到，任意<strong>质数阶群 (group of prime order)
+一定是循环群</strong>。</p>
 </blockquote>
 <p><br></p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><div class="note warning"><p>&emsp; This article is a self-administered course note.<br>&emsp; References in the article are from corresponding course materials if not specified.</p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
 </div>
-<p>Course info:<br>Code: COMP3357, Lecturer: Dr. Ravi. Ramanathan, TA: Zhang Chengru</p>
-<p>Course textbook:<br><em>Introduction to Modern Cryptography (2nd edition)</em>, Katz, J. &amp; Lindell, Y., (2015), CRC Press, <a target="_blank" rel="noopener" href="https://ebookcentral.proquest.com/lib/HKUHK/detail.action?docID=1619504">view</a></p>
-<p>Math content:<br><a target="_blank" rel="noopener" href="https://oi-wiki.org/">OI Wiki</a>, <a target="_blank" rel="noopener" href="https://brilliant.org/">Brilliant Math Wiki</a>, <a target="_blank" rel="noopener" href="https://mathworld.wolfram.com/">Wolframe MathWorld</a>.</p>
+<p>Course info:</p>
+<p>Code: COMP3357, Lecturer: Dr. Ravi. Ramanathan, TA: Zhang Chengru</p>
+<p>Course textbook:</p>
+<p><em>Introduction to Modern Cryptography (2nd edition)</em>, Katz, J.
+&amp; Lindell, Y., (2015), CRC Press, <a target="_blank" rel="noopener" href="https://ebookcentral.proquest.com/lib/HKUHK/detail.action?docID=1619504">view</a></p>
+<p>Math content:</p>
+<p><a target="_blank" rel="noopener" href="https://oi-wiki.org/">OI Wiki</a>, <a target="_blank" rel="noopener" href="https://brilliant.org/">Brilliant Math Wiki</a>, <a target="_blank" rel="noopener" href="https://mathworld.wolfram.com/">Wolframe MathWorld</a>.</p>
 
     </div>
 
@@ -708,7 +921,7 @@ m=c^d\mod{N} \Rightarrow \begin{cases} m\equiv c^d\mod{p} \\m\equiv c^d \mod{q} 
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
 <script src="/js/third-party/math/mathjax.js"></script>
 
 

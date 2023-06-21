@@ -168,7 +168,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Problem-Description"><span class="nav-number">1.</span> <span class="nav-text">Problem Description</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tutorial"><span class="nav-number">2.</span> <span class="nav-text">Tutorial</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-Implementation"><span class="nav-number">3.</span> <span class="nav-text">Code Implementation</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#problem-description"><span class="nav-number">1.</span> <span class="nav-text">Problem Description</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial"><span class="nav-number">2.</span> <span class="nav-text">Tutorial</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#code-implementation"><span class="nav-number">3.</span> <span class="nav-text">Code Implementation</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -344,25 +344,50 @@
     <div class="post-body" itemprop="articleBody"><p>题目来自 Codeforces Educational Round #150 (Div.2) E。<a target="_blank" rel="noopener" href="https://codeforces.com/contest/1841/problem/E">link</a></p>
 <span id="more"></span>
 <p><br></p>
-<div class="note warning"><p>&emsp; This article provides a <strong>feasible</strong> solution to a certain competitive programming problem.<br>&emsp; If you have better solutions, feel free to share with me!</p>
+<div class="note warning"><p>  This article provides a <strong>feasible</strong> solution to a
+certain competitive programming problem.   If you have better solutions,
+feel free to share with me!</p>
 </div>
 <p><br></p>
-<h2 id="Problem-Description"><a href="#Problem-Description" class="headerlink" title="Problem Description"></a>Problem Description</h2><p>原题题面讲的有点复杂，这里采用 <a target="_blank" rel="noopener" href="https://space.bilibili.com/206214">@灵茶山艾府</a> 的翻译：</p>
-<p>给出一个 $n\times n$ 的矩阵，第 $i$ <strong>列</strong>的前 $a_i$ <strong>行</strong>是白色，其余行是黑色 (初始局面)。要求从中选出至多 $m$ 个白色格子，再将剩余的格子涂黑。</p>
-<p>长为 $x$ 的水平连续白色格子对答案的贡献是 $x-1$，求答案的最大值。</p>
+<h2 id="problem-description">Problem Description</h2>
+<p>原题题面讲的有点复杂，这里采用 <a target="_blank" rel="noopener" href="https://space.bilibili.com/206214"><span class="citation" data-cites="灵茶山艾府">@灵茶山艾府</span></a> 的翻译：</p>
+<p>给出一个 <span class="math inline">\(n\times n\)</span> 的矩阵，第
+<span class="math inline">\(i\)</span> <strong>列</strong>的前 <span class="math inline">\(a_i\)</span>
+<strong>行</strong>是白色，其余行是黑色 (初始局面)。要求从中选出至多
+<span class="math inline">\(m\)</span>
+个白色格子，再将剩余的格子涂黑。</p>
+<p>长为 <span class="math inline">\(x\)</span>
+的水平连续白色格子对答案的贡献是 <span class="math inline">\(x-1\)</span>，求答案的最大值。</p>
 <p><br></p>
-<h2 id="Tutorial"><a href="#Tutorial" class="headerlink" title="Tutorial"></a>Tutorial</h2><p>选择一个长度为 $k$ 的水平连续段对答案的贡献为 $k-1$。若选择了 $s$ 段，答案为 $\sum_{i=1}^s (k_i-1)=m-s$。最大化答案意味着最小化选择的段数 $s$。</p>
-<p>若要使选择的段数 $s$ 最小，我们需要尽量选择<strong>最长</strong>的段。问题转化为在初始局面中找到这些最长的水平连续段。在矩阵中连续段的数量是 $O(n^2)$ 级别的，使用暴力显然行不通。</p>
-<p>考虑维护 $cnt_i$，表示长度为 $i$ 的连续段的个数。对于一个初始的全白矩阵，$cnt_n=n$。</p>
-<p>考虑加入<strong>一列</strong>高度为 $a_i$ 的黑色段对 $cnt$ 的影响：首先，$a_i$ 个长度为 $n$ 的连续段会被隔开，$cnt_n=n-a_i$；同时，两种新长度的连续段将会被创造，(左侧) $cnt_{i-1}=a_i$，(右侧) $cnt_{n-i}=a_i$。 </p>
-<p>根据分治原则，易发现<strong>由高到低</strong>处理黑色列是最合适的：这样能够保证每次加入一个黑色列，对 $cnt$ 的维护方法始终一致，即 <strong>1. 移除特定长度的连续段 2. 加入(至多)两种新长度的连续段。</strong></p>
-<p>设当前黑色列的高度为 $v$，位于第 $i$ 列，其左边界为第 $pre$ 列，右边界为第 $suf$ 列。由于我们由高到低进行处理，其左边界与右边界列一定不比它低。那么 $cnt_{suf-pre-1}$ 减小 $v$，$cnt_{i-pre-1}$ 与 $cnt_{suf-i-1}$ 增加 $v$。</p>
-<p>此时问题转化为动态维护某一列左右的边界，用一个 set 即可实现。set 初始插入 $0$ 与 $n+1$ 作为边界哨兵。</p>
-<p>当所有列都成功加入后，我们得到了初始局面下的 $cnt$ 数组。那么答案就呼之欲出了：由 $n$ 到 $1$ 倒序枚举长度，尽量选择当前最长的连续段用来填充 $m$，并计算所用的连续段数量 $s$。答案即为 $m-s$。</p>
+<h2 id="tutorial">Tutorial</h2>
+<p>选择一个长度为 <span class="math inline">\(k\)</span>
+的水平连续段对答案的贡献为 <span class="math inline">\(k-1\)</span>。若选择了 <span class="math inline">\(s\)</span> 段，答案为 <span class="math inline">\(\sum_{i=1}^s
+(k_i-1)=m-s\)</span>。最大化答案意味着最小化选择的段数 <span class="math inline">\(s\)</span>。</p>
+<p>若要使选择的段数 <span class="math inline">\(s\)</span>
+最小，我们需要尽量选择<strong>最长</strong>的段。问题转化为在初始局面中找到这些最长的水平连续段。在矩阵中连续段的数量是
+<span class="math inline">\(O(n^2)\)</span>
+级别的，使用暴力显然行不通。</p>
+<p>考虑维护 <span class="math inline">\(cnt_i\)</span>，表示长度为 <span class="math inline">\(i\)</span>
+的连续段的个数。对于一个初始的全白矩阵，<span class="math inline">\(cnt_n=n\)</span>。</p>
+<p>考虑加入<strong>一列</strong>高度为 <span class="math inline">\(a_i\)</span> 的黑色段对 <span class="math inline">\(cnt\)</span> 的影响：首先，<span class="math inline">\(a_i\)</span> 个长度为 <span class="math inline">\(n\)</span> 的连续段会被隔开，<span class="math inline">\(cnt_n=n-a_i\)</span>；同时，两种新长度的连续段将会被创造，(左侧)
+<span class="math inline">\(cnt_{i-1}=a_i\)</span>，(右侧) <span class="math inline">\(cnt_{n-i}=a_i\)</span>。</p>
+<p>根据分治原则，易发现<strong>由高到低</strong>处理黑色列是最合适的：这样能够保证每次加入一个黑色列，对
+<span class="math inline">\(cnt\)</span> 的维护方法始终一致，即
+<strong>1. 移除特定长度的连续段 2.
+加入(至多)两种新长度的连续段。</strong></p>
+<p>设当前黑色列的高度为 <span class="math inline">\(v\)</span>，位于第
+<span class="math inline">\(i\)</span> 列，其左边界为第 <span class="math inline">\(pre\)</span> 列，右边界为第 <span class="math inline">\(suf\)</span>
+列。由于我们由高到低进行处理，其左边界与右边界列一定不比它低。那么 <span class="math inline">\(cnt_{suf-pre-1}\)</span> 减小 <span class="math inline">\(v\)</span>，<span class="math inline">\(cnt_{i-pre-1}\)</span> 与 <span class="math inline">\(cnt_{suf-i-1}\)</span> 增加 <span class="math inline">\(v\)</span>。</p>
+<p>此时问题转化为动态维护某一列左右的边界，用一个 set 即可实现。set
+初始插入 <span class="math inline">\(0\)</span> 与 <span class="math inline">\(n+1\)</span> 作为边界哨兵。</p>
+<p>当所有列都成功加入后，我们得到了初始局面下的 <span class="math inline">\(cnt\)</span> 数组。那么答案就呼之欲出了：由 <span class="math inline">\(n\)</span> 到 <span class="math inline">\(1\)</span>
+倒序枚举长度，尽量选择当前最长的连续段用来填充 <span class="math inline">\(m\)</span>，并计算所用的连续段数量 <span class="math inline">\(s\)</span>。答案即为 <span class="math inline">\(m-s\)</span>。</p>
 <p><br></p>
-<h2 id="Code-Implementation"><a href="#Code-Implementation" class="headerlink" title="Code Implementation"></a>Code Implementation</h2><p>得到 $cnt$ 数组后倒序填充 $m$ 求答案的过程还有点小坑，记得讨论代码中标注的情况 (*)</p>
+<h2 id="code-implementation">Code Implementation</h2>
+<p>得到 <span class="math inline">\(cnt\)</span> 数组后倒序填充 <span class="math inline">\(m\)</span>
+求答案的过程还有点小坑，记得讨论代码中标注的情况 (*)</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;set&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_N = <span class="number">2e5</span> + <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">column</span> &#123;</span><br><span class="line">    <span class="type">int</span> ind, val;</span><br><span class="line">    <span class="type">bool</span> <span class="keyword">operator</span> &lt; (<span class="type">const</span> column&amp; x) <span class="type">const</span> &#123; <span class="keyword">return</span> ind &lt; x.ind; &#125;</span><br><span class="line">&#125; col[MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="type">long</span> <span class="type">long</span> cnt[MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">cmp</span><span class="params">(column&amp; x, column&amp; y)</span> </span>&#123; <span class="keyword">return</span> x.val &gt; y.val;  &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    ios_base::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="number">0</span>); cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> t;</span><br><span class="line">    cin &gt;&gt; t;</span><br><span class="line">    <span class="keyword">while</span> (t--) &#123;</span><br><span class="line">        <span class="type">int</span> n;</span><br><span class="line">        <span class="type">long</span> <span class="type">long</span> m;</span><br><span class="line">        cin &gt;&gt; n;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">            col[i].ind = i;</span><br><span class="line">            cin &gt;&gt; col[i].val;</span><br><span class="line">            cnt[i] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        cin &gt;&gt; m;</span><br><span class="line">        <span class="built_in">sort</span>(col + <span class="number">1</span>, col + n + <span class="number">1</span>, cmp);</span><br><span class="line">        </span><br><span class="line">        set&lt;column&gt; st;</span><br><span class="line">        st.<span class="built_in">insert</span>(column&#123;<span class="number">0</span>, n&#125;);</span><br><span class="line">        st.<span class="built_in">insert</span>(column&#123;n + <span class="number">1</span>, n&#125;);</span><br><span class="line"></span><br><span class="line">        cnt[n] = n;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">            set&lt;column&gt;::iterator it = st.<span class="built_in">insert</span>(col[i]).first;</span><br><span class="line">            --it;</span><br><span class="line">            <span class="type">int</span> pre_ind = it-&gt;ind;</span><br><span class="line">            ++it, ++it;</span><br><span class="line">            <span class="type">int</span> suf_ind = it-&gt;ind;</span><br><span class="line">            <span class="type">int</span> cur_ind = col[i].ind, cur_val = col[i].val;</span><br><span class="line">            cnt[suf_ind - pre_ind - <span class="number">1</span>] -= cur_val;</span><br><span class="line">            cnt[cur_ind - pre_ind - <span class="number">1</span>] += cur_val;</span><br><span class="line">            cnt[suf_ind - cur_ind - <span class="number">1</span>] += cur_val;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//        for (int i = 1; i &lt;= n; ++i) cout &lt;&lt; i &lt;&lt; &quot; &quot; &lt;&lt; cnt[i] &lt;&lt; endl;</span></span><br><span class="line"></span><br><span class="line">        <span class="type">long</span> <span class="type">long</span> s = <span class="number">0</span>, tmp_m = m;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = n; i &gt;= <span class="number">1</span>; --i) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!cnt[i])    <span class="keyword">continue</span>;</span><br><span class="line">            <span class="type">long</span> <span class="type">long</span> cur_s = <span class="built_in">min</span>(cnt[i], tmp_m / i);</span><br><span class="line">            tmp_m -= cur_s * i;</span><br><span class="line">            s += cur_s;</span><br><span class="line">            <span class="keyword">if</span> (!tmp_m) <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">if</span> (cur_s &lt; cnt[i] &amp;&amp; tmp_m &lt; i) &#123;    <span class="comment">// *</span></span><br><span class="line">                s++;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        cout &lt;&lt; m - s &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><br> </p>
+<p><br></p>
 <!-- flag of hidden posts -->
     </div>
 
@@ -515,7 +540,7 @@
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
 <script src="/js/third-party/math/mathjax.js"></script>
 
 

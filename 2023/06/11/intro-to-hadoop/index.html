@@ -23,12 +23,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="这是课程 Introduction to Big Data with Spark and Hadoop 笔记的 P2 部分，主要介绍大数据处理框架 Hadoop 及其生态。本文的重点将落在 MapReduce, HDFS, Hive 与 HBase 这四个重要组件上。 P1 部分在这里，简单的介绍了大数据的定义。">
+    <meta name="description" content="这是课程 Introduction to Big Data with Spark and Hadoop 笔记的 P2 部分，主要介绍大数据处理框架 Hadoop 及其生态。本文的重点将落在 MapReduce, HDFS, Hive 与 HBase 这四个重要组件上。 P1 部分在这里，简单的介绍了大数据的定义。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Big Data notes P2 - Hadoop Ecosystem">
 <meta property="og:url" content="https://www.thisisxxz.com/2023/06/11/intro-to-hadoop/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="这是课程 Introduction to Big Data with Spark and Hadoop 笔记的 P2 部分，主要介绍大数据处理框架 Hadoop 及其生态。本文的重点将落在 MapReduce, HDFS, Hive 与 HBase 这四个重要组件上。 P1 部分在这里，简单的介绍了大数据的定义。">
+<meta property="og:description" content="这是课程 Introduction to Big Data with Spark and Hadoop 笔记的 P2 部分，主要介绍大数据处理框架 Hadoop 及其生态。本文的重点将落在 MapReduce, HDFS, Hive 与 HBase 这四个重要组件上。 P1 部分在这里，简单的介绍了大数据的定义。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/06/11/intro-to-hadoop/mapreduce.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/06/11/intro-to-hadoop/hive.png">
@@ -172,7 +172,8 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#What-is-Hadoop"><span class="nav-number">1.</span> <span class="nav-text">What is Hadoop?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hadoop-Core-Components"><span class="nav-number">2.</span> <span class="nav-text">Hadoop Core Components</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hadoop-Ecosystem"><span class="nav-number">3.</span> <span class="nav-text">Hadoop Ecosystem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction-to-MapReduce"><span class="nav-number">4.</span> <span class="nav-text">Introduction to MapReduce</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction-to-HDFS"><span class="nav-number">5.</span> <span class="nav-text">Introduction to HDFS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction-to-Hive"><span class="nav-number">6.</span> <span class="nav-text">Introduction to Hive</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction-to-HBase"><span class="nav-number">7.</span> <span class="nav-text">Introduction to HBase</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference-and-Related-Reading"><span class="nav-number">8.</span> <span class="nav-text">Reference and Related Reading</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#what-is-hadoop"><span class="nav-number">1.</span> <span class="nav-text">What is Hadoop?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hadoop-core-components"><span class="nav-number">2.</span> <span class="nav-text">Hadoop Core Components</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hadoop-ecosystem"><span class="nav-number">3.</span> <span class="nav-text">Hadoop Ecosystem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction-to-mapreduce"><span class="nav-number">4.</span> <span class="nav-text">Introduction to MapReduce</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction-to-hdfs"><span class="nav-number">5.</span> <span class="nav-text">Introduction to HDFS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction-to-hive"><span class="nav-number">6.</span> <span class="nav-text">Introduction to Hive</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction-to-hbase"><span class="nav-number">7.</span> <span class="nav-text">Introduction to HBase</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference-and-related-reading"><span class="nav-number">8.</span> <span class="nav-text">Reference and Related
+Reading</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -345,12 +346,21 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>这是课程 <a target="_blank" rel="noopener" href="https://www.coursera.org/learn/introduction-to-big-data-with-spark-hadoop/home/">Introduction to Big Data with Spark and Hadoop</a> 笔记的 P2 部分，主要介绍大数据处理框架 Hadoop 及其生态。本文的重点将落在 MapReduce, HDFS, Hive 与 HBase 这四个重要组件上。</p>
+    <div class="post-body" itemprop="articleBody"><p>这是课程 <a target="_blank" rel="noopener" href="https://www.coursera.org/learn/introduction-to-big-data-with-spark-hadoop/home/">Introduction
+to Big Data with Spark and Hadoop</a> 笔记的 P2
+部分，主要介绍大数据处理框架 Hadoop 及其生态。本文的重点将落在
+MapReduce, HDFS, Hive 与 HBase 这四个重要组件上。</p>
 <p>P1 部分在<a href="https://www.thisisxxz.com/2023/06/11/intro-to-bigdata/">这里</a>，简单的介绍了大数据的定义。</p>
 <span id="more"></span>
-<p>这一系列课程在 Hadoop 与 Spark 之间明显偏向于 Spark， Apache Spark 占据了 week 3 开始的绝大部分篇幅。在此先按下不表，等有需要时可以从这节课的 week 3 开始了解 Spark。</p>
+<p>这一系列课程在 Hadoop 与 Spark 之间明显偏向于 Spark， Apache Spark
+占据了 week 3
+开始的绝大部分篇幅。在此先按下不表，等有需要时可以从这节课的 week 3
+开始了解 Spark。</p>
 <p><br></p>
-<h2 id="What-is-Hadoop"><a href="#What-is-Hadoop" class="headerlink" title="What is Hadoop?"></a>What is Hadoop?</h2><p>Hadoop is an open-source framework used to process enormous data sets. It is one of the most popular Big Data technologies. The charateristics of Hadoop are as follows: </p>
+<h2 id="what-is-hadoop">What is Hadoop?</h2>
+<p>Hadoop is an open-source framework used to process enormous data
+sets. It is one of the most popular Big Data technologies. The
+charateristics of Hadoop are as follows:</p>
 <ul>
 <li>Set of open-source programs and procedures</li>
 <li>Used for processing large amount of data (in terabytes)</li>
@@ -358,115 +368,190 @@
 <li>Handles parallel jobs or processes</li>
 </ul>
 <p><br></p>
-<h2 id="Hadoop-Core-Components"><a href="#Hadoop-Core-Components" class="headerlink" title="Hadoop Core Components"></a>Hadoop Core Components</h2><p>There are four core components of Hadoop framework, namely:</p>
+<h2 id="hadoop-core-components">Hadoop Core Components</h2>
+<p>There are four core components of Hadoop framework, namely:</p>
 <ul>
-<li>Hadoop Common: the collection of utilities and libraries that support other Hadoop modules</li>
-<li>Hadoop Distributed File System (<strong>HDFS</strong>): handles and stores large data in cluster scale</li>
-<li><strong>MapReduce</strong>: Hadoop&#39;s processing unit, processes Big Data by splitting it into smaller units</li>
-<li>Yet Another Resource Negotiator (<strong>YARN</strong>): resource manager across clusters</li>
+<li>Hadoop Common: the collection of utilities and libraries that
+support other Hadoop modules</li>
+<li>Hadoop Distributed File System (<strong>HDFS</strong>): handles and
+stores large data in cluster scale</li>
+<li><strong>MapReduce</strong>: Hadoop's processing unit, processes Big
+Data by splitting it into smaller units</li>
+<li>Yet Another Resource Negotiator (<strong>YARN</strong>): resource
+manager across clusters</li>
 </ul>
-<p>MapReduce is the <strong>first</strong> method used to query data stored in HDFS. There are now other systems such as <strong>Hive</strong> and <strong>Pig</strong>. </p>
+<p>MapReduce is the <strong>first</strong> method used to query data
+stored in HDFS. There are now other systems such as
+<strong>Hive</strong> and <strong>Pig</strong>.</p>
 <p><br></p>
-<h2 id="Hadoop-Ecosystem"><a href="#Hadoop-Ecosystem" class="headerlink" title="Hadoop Ecosystem"></a>Hadoop Ecosystem</h2><p>The Hadoop Ecosystem consists of four stages, which are <u><strong>ingest, store, process &amp; analyze, and access</strong></u>. There are other tools besides Hadoop core components associated with each stage.</p>
+<h2 id="hadoop-ecosystem">Hadoop Ecosystem</h2>
+<p>The Hadoop Ecosystem consists of four stages, which are
+<u><strong>ingest, store, process &amp; analyze, and
+access</strong></u>. There are other tools besides Hadoop core
+components associated with each stage.</p>
 <ul>
 <li><p>Ingest Data</p>
-<p><strong>Flume</strong>: collects, aggregates and transfer big data.<br>Sqoop: designed to transfer data between relational database system and Hadoop.</p>
-</li>
+<p><strong>Flume</strong>: collects, aggregates and transfer big data.
+Sqoop: designed to transfer data between relational database system and
+Hadoop.</p></li>
 <li><p>Store Data</p>
-<p><strong>HBase</strong>: non-relational database that runs on top of HDFS. It stores data as indexes to allow for random and faster access to data.</p>
-</li>
+<p><strong>HBase</strong>: non-relational database that runs on top of
+HDFS. It stores data as indexes to allow for random and faster access to
+data.</p></li>
 <li><p>Process &amp; Analyze Data</p>
-<p><strong>Pig</strong>: analyzes large amount of data, operates on the <strong>client side</strong> of a cluster.<br><strong>Hive</strong>: used for creating reports, operates on the <strong>server side</strong> of a cluster.</p>
-</li>
+<p><strong>Pig</strong>: analyzes large amount of data, operates on the
+<strong>client side</strong> of a cluster. <strong>Hive</strong>: used
+for creating reports, operates on the <strong>server side</strong> of a
+cluster.</p></li>
 <li><p>Access Data</p>
-<p>Impala: scalable and easy to use platform for everyone.<br>Hue: stands for Hadoop user experience.</p>
-</li>
+<p>Impala: scalable and easy to use platform for everyone. Hue: stands
+for Hadoop user experience.</p></li>
 </ul>
 <p><br></p>
-<h2 id="Introduction-to-MapReduce"><a href="#Introduction-to-MapReduce" class="headerlink" title="Introduction to MapReduce"></a>Introduction to MapReduce</h2><p>MapReduce is a programming model used in Hadoop for <strong>distributed computing</strong>. It is mostly coded in Java. (it can also be coded in C++, Python, Ruby and R)</p>
-<p>MapReduce consists of a Map task and a Reduce task. Mapper processes data into <u><strong>key-value pairs</strong></u>, sorts and organizes the data, then Reducer <strong>aggregates and computes</strong> a set of result, producing the final output. MapReduce keeps track of its task by creating <strong>unique keys</strong>.</p>
-<p><img src="/2023/06/11/intro-to-hadoop/mapreduce.png" alt="MapReduce processing a name list"></p>
-<p>MapReduce stimulates <strong>parallel computing</strong>, and is flexible for all data types.</p>
-<p> <br></p>
-<h2 id="Introduction-to-HDFS"><a href="#Introduction-to-HDFS" class="headerlink" title="Introduction to HDFS"></a>Introduction to HDFS</h2><p>Hadoop Distributed File System (HDFS) is the storage layer of Hadoop. </p>
-<p>HDFS splits the files into <strong>blocks</strong>, creates replicas of the blocks, and stores them on different machines. It uses a <strong>command line interface</strong> to interact with Hadoop.</p>
+<h2 id="introduction-to-mapreduce">Introduction to MapReduce</h2>
+<p>MapReduce is a programming model used in Hadoop for
+<strong>distributed computing</strong>. It is mostly coded in Java. (it
+can also be coded in C++, Python, Ruby and R)</p>
+<p>MapReduce consists of a Map task and a Reduce task. Mapper processes
+data into <u><strong>key-value pairs</strong></u>, sorts and organizes
+the data, then Reducer <strong>aggregates and computes</strong> a set of
+result, producing the final output. MapReduce keeps track of its task by
+creating <strong>unique keys</strong>.</p>
+<figure>
+<img src="/2023/06/11/intro-to-hadoop/mapreduce.png" alt="MapReduce processing a name list">
+<figcaption aria-hidden="true">MapReduce processing a name
+list</figcaption>
+</figure>
+<p>MapReduce stimulates <strong>parallel computing</strong>, and is
+flexible for all data types.</p>
+<p><br></p>
+<h2 id="introduction-to-hdfs">Introduction to HDFS</h2>
+<p>Hadoop Distributed File System (HDFS) is the storage layer of
+Hadoop.</p>
+<p>HDFS splits the files into <strong>blocks</strong>, creates replicas
+of the blocks, and stores them on different machines. It uses a
+<strong>command line interface</strong> to interact with Hadoop.</p>
 <p>The key features of HDFS are as follows:</p>
 <ul>
 <li>Cost efficient. The storage hardware is not expensive.</li>
-<li>Large amounts of data. HDFS stores up to <strong>petabytes</strong> of data.</li>
-<li><strong>Replication</strong>. HDFS makes copies of blocks on multiple machines.</li>
-<li><strong>Fault tolerant</strong>. If one machine crashed, a copy of data could be found and work continues.</li>
-<li>Scalable. One cluster can be scaled into hundreds of <strong>nodes</strong>.</li>
-<li><strong>Write-once-read-many</strong> operations. It means you can <strong>NOT</strong> edit an existing files but can append new data to them.</li>
+<li>Large amounts of data. HDFS stores up to <strong>petabytes</strong>
+of data.</li>
+<li><strong>Replication</strong>. HDFS makes copies of blocks on
+multiple machines.</li>
+<li><strong>Fault tolerant</strong>. If one machine crashed, a copy of
+data could be found and work continues.</li>
+<li>Scalable. One cluster can be scaled into hundreds of
+<strong>nodes</strong>.</li>
+<li><strong>Write-once-read-many</strong> operations. It means you can
+<strong>NOT</strong> edit an existing files but can append new data to
+them.</li>
 </ul>
 <p>Replication guarentees the fault tolerance of HDFS.</p>
 <div class="note info no-icon"><p>Concepts.</p>
-<p><strong>Blocks</strong>: Minimum amount of data that can be read of written. Fault tolerance provided.<br><strong>Nodes</strong>: Single system which is responsible to store and process data. </p>
+<p><strong>Blocks</strong>: Minimum amount of data that can be read of
+written. Fault tolerance provided. <strong>Nodes</strong>: Single system
+which is responsible to store and process data.</p>
 <ul>
-<li>Primary/Name nodes: Regulates file access to clients and assigns tasks to secondary nodes.</li>
-<li>Secondary/Data nodes: Executes the instructions from primary nodes.</li>
+<li>Primary/Name nodes: Regulates file access to clients and assigns
+tasks to secondary nodes.</li>
+<li>Secondary/Data nodes: Executes the instructions from primary
+nodes.</li>
 </ul>
 </div>
 <p><br></p>
-<h2 id="Introduction-to-Hive"><a href="#Introduction-to-Hive" class="headerlink" title="Introduction to Hive"></a>Introduction to Hive</h2><p>Hive is a <strong>data warehouse software</strong> within Hadoop that is designed for reading, writing and managing <strong>tabular-type datasets</strong> and data analysis. </p>
+<h2 id="introduction-to-hive">Introduction to Hive</h2>
+<p>Hive is a <strong>data warehouse software</strong> within Hadoop that
+is designed for reading, writing and managing <strong>tabular-type
+datasets</strong> and data analysis.</p>
 <ul>
 <li>It is scalable, fast, and easy to use.</li>
-<li>Hive works very similar to traditional Relational Database Management System (RDBMS). Hive Query Language (HiveQL) is also <strong>inspired by SQL</strong>.</li>
+<li>Hive works very similar to traditional Relational Database
+Management System (RDBMS). Hive Query Language (HiveQL) is also
+<strong>inspired by SQL</strong>.</li>
 </ul>
 <div class="note info no-icon"><p>Concepts.</p>
-<p><strong>Data warehouse</strong>: stores historical data from different sources for analyzing and extracting.</p>
-<p><strong>Relational Database Management System (RDBMS)</strong>: stores data in a <strong>structured format tabular form</strong>. Structured Query Language (SQL) is most used in RDBMS.</p>
+<p><strong>Data warehouse</strong>: stores historical data from
+different sources for analyzing and extracting.</p>
+<p><strong>Relational Database Management System (RDBMS)</strong>:
+stores data in a <strong>structured format tabular form</strong>.
+Structured Query Language (SQL) is most used in RDBMS.</p>
 </div>
-<p>Hive architecture consists of Hive Client, Hive Services and Hive Storage &amp; Computing.</p>
-<p><img src="/2023/06/11/intro-to-hadoop/hive.png" alt="Hive Architecture"></p>
+<p>Hive architecture consists of Hive Client, Hive Services and Hive
+Storage &amp; Computing.</p>
+<figure>
+<img src="/2023/06/11/intro-to-hadoop/hive.png" alt="Hive Architecture">
+<figcaption aria-hidden="true">Hive Architecture</figcaption>
+</figure>
 <ul>
-<li>Hive Clients: allows JDBC/ODBC-based applications to connect to Hive.</li>
+<li>Hive Clients: allows JDBC/ODBC-based applications to connect to
+Hive.</li>
 <li>Hive Services: receives queries, splits and executes tasks.</li>
-<li>Hive Storage &amp; Computing: connects to HDFS for storage or Hadoop clusters for computing. </li>
+<li>Hive Storage &amp; Computing: connects to HDFS for storage or Hadoop
+clusters for computing.</li>
 </ul>
 <p><br></p>
-<h2 id="Introduction-to-HBase"><a href="#Introduction-to-HBase" class="headerlink" title="Introduction to HBase"></a>Introduction to HBase</h2><p>HBase is a column-oriented non-relational database management system <strong>running on top of HDFS</strong>. It provides a fault-tolerant way of storing sparse datasets.</p>
-<p>HBase is always used for <strong>write-heavy applications</strong>: It has flexible column schema and provides <strong>consistent read and write</strong> with easy-to-use Java API for client access.</p>
-<p>HBase and HDFS are both used for storing Big Data. However, there are differences between them.</p>
-<div class="table-container">
+<h2 id="introduction-to-hbase">Introduction to HBase</h2>
+<p>HBase is a column-oriented non-relational database management system
+<strong>running on top of HDFS</strong>. It provides a fault-tolerant
+way of storing sparse datasets.</p>
+<p>HBase is always used for <strong>write-heavy applications</strong>:
+It has flexible column schema and provides <strong>consistent read and
+write</strong> with easy-to-use Java API for client access.</p>
+<p>HBase and HDFS are both used for storing Big Data. However, there are
+differences between them.</p>
 <table>
+<colgroup>
+<col style="width: 46%">
+<col style="width: 53%">
+</colgroup>
 <thead>
-<tr>
+<tr class="header">
 <th>HBase</th>
 <th>HDFS</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>stores data in forms of columns and rows in a table</td>
 <td>stores data in a distributed manner across different nodes</td>
 </tr>
-<tr>
+<tr class="even">
 <td><u><strong>allows dynamic changes</strong></u></td>
-<td>has rigid architecture that doesn&#39;t allow changes</td>
+<td>has rigid architecture that doesn't allow changes</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>allows random reads and writes</td>
 <td>write once and read many times</td>
 </tr>
-<tr>
+<tr class="even">
 <td>stores and processer Big Data</td>
 <td>only for storing Big Data</td>
 </tr>
 </tbody>
 </table>
-</div>
-<p>HBase architecture consists of HMaster, region servers, region, Zookeeper and HDFS.</p>
-<p><img src="/2023/06/11/intro-to-hadoop/hbase.png" alt="HBase architecture"></p>
+<p>HBase architecture consists of HMaster, region servers, region,
+Zookeeper and HDFS.</p>
+<figure>
+<img src="/2023/06/11/intro-to-hadoop/hbase.png" alt="HBase architecture">
+<figcaption aria-hidden="true">HBase architecture</figcaption>
+</figure>
 <ul>
-<li>HMaster: monitors and assigns regions to region servers, manages changes made to schema.</li>
-<li>Region Servers: manages regions and <strong>communicates directly with clients</strong>.</li>
-<li>Region: <strong>smallest unit of HBase cluster</strong>. contains HFile ad Memstore.</li>
-<li>Zookeeper: maintains healthy links between nodes and provides distributed synchronization.</li>
+<li>HMaster: monitors and assigns regions to region servers, manages
+changes made to schema.</li>
+<li>Region Servers: manages regions and <strong>communicates directly
+with clients</strong>.</li>
+<li>Region: <strong>smallest unit of HBase cluster</strong>. contains
+HFile ad Memstore.</li>
+<li>Zookeeper: maintains healthy links between nodes and provides
+distributed synchronization.</li>
 <li>HDFS: provides basic distributed storage for HBase.</li>
 </ul>
 <p><br></p>
-<h2 id="Reference-and-Related-Reading"><a href="#Reference-and-Related-Reading" class="headerlink" title="Reference and Related Reading"></a>Reference and Related Reading</h2><p>Coursera <a target="_blank" rel="noopener" href="https://www.coursera.org/learn/introduction-to-big-data-with-spark-hadoop/home/welcome">Introduction to Big Data with Spark and Hadoop</a> provided by IBM. week 2 material.</p>
+<h2 id="reference-and-related-reading">Reference and Related
+Reading</h2>
+<p>Coursera <a target="_blank" rel="noopener" href="https://www.coursera.org/learn/introduction-to-big-data-with-spark-hadoop/home/welcome">Introduction
+to Big Data with Spark and Hadoop</a> provided by IBM. week 2
+material.</p>
 <p>Related Reading (In Chinese, 写的真的很好)</p>
 <ul>
 <li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/35942305">知乎-如何进入大数据领域，学习路线是什么？</a></li>
@@ -637,7 +722,7 @@
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
 <script src="/js/third-party/math/mathjax.js"></script>
 
 
