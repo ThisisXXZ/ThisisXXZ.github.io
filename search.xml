@@ -1,352 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>COMP3357 notes P3</title>
-    <url>/2023/06/05/Cryptography-COMP3357-3/</url>
-    <content><![CDATA[<p>COMP3357 digest 的 P3 部分 (P1 部分在<a href="https://thisisxxz.github.io/2023/05/25/Cryptography-COMP3357/">这里</a>，P2
-部分在<a href="https://thisisxxz.github.io/2023/06/02/Cryptography-COMP3357-2/">这里</a>)，主要介绍密码学中的几个困难问题
-(hard problems) 与一个重要的 cryptographic primitive: 单向函数 (one-way
-function).</p>
-<p>这一 Part 涉及到的困难问题 (Factoring problem, RSA problem, Discrete
-Logarithm problem, Diffie-Hellman problem) 的构建与 P2
-中的数论，群论知识密切相关，注意参考。</p>
-<span id="more"></span>
-<p>同样，与 CnBlogs
-中的笔记不同，这里不会详细的记载每个相关的知识点；只会尝试简略地总结一些能让未来的自己也会感到有趣，巧妙的内容
-(Eureka!)。</p>
-<p><br></p>
-<div class="note warning"><p>  This article is a self-administered course note.</p>
-<p>  It will <strong>NOT</strong> cover any exam or assignment related
-content.</p>
-</div>
-<p><br></p>
-<h2 id="hardness-of-mathematical-problems">Hardness of Mathematical
-Problems</h2>
-<p>When discussing <strong>hardness</strong> of mathematical problems
-with input some integer <span class="math inline">\(N\)</span>, we study
-asymptotics in terms of the <strong>input length</strong>.</p>
-<p>Integer <span class="math inline">\(N\)</span> will be assumed to be
-represented in binary. The <strong>running time</strong> of an algorithm
-taking as input an integer <span class="math inline">\(N\)</span> is
-measured in terms of <span class="math inline">\(||N||\)</span>, the
-length of the binary representation of <span class="math inline">\(N\)</span>.</p>
-<p>Note that <span class="math inline">\(||N||=\lfloor \log N
-\rfloor+1\)</span>.</p>
-<div class="note info no-icon"><p>A problem is considered to be <strong>easy</strong> if the running
-time of its algorithm is <strong>polynomial</strong> in <span class="math inline">\(||N||\)</span>.</p>
-</div>
-<p><br></p>
-<blockquote>
-<p>Eureka moment!</p>
-<p>这里对数学问题困难性 (hardness) 的定义是建立在算法数论 (algorithmic
-number theory) 的视角上的。</p>
-<p>实际上，这个概念更贴近计算机领域而不是纯数学领域。如果从算法时间复杂度的角度来定义，就好理解多了：一个时间复杂度为
-<span class="math inline">\(O(\mathtt{poly}(n))\)</span>
-的算法是<strong>高效 (efficient)</strong> 的，对应的问题是<strong>简单
-(easy)</strong> 的。而时间复杂度为 <span class="math inline">\(O(\mathtt{exp}(n))\)</span> 的算法是<strong>低效
-(inefficient)</strong> 的，对应的问题是<strong>困难 (hard)</strong>
-的。</p>
-</blockquote>
-<p><br></p>
-<h2 id="factoring-problem">Factoring Problem</h2>
-<p>Factoring could be viewed as the inverse operation of multiplication.
-Multiplying two primes <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> as <span class="math inline">\(N=p\times q\)</span> is <strong>easy</strong>,
-while factorizing <span class="math inline">\(N\)</span> to derive <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> is <strong>hard</strong>.</p>
-<div class="note info no-icon"><p>Factoring the product of two primes: Given <span class="math inline">\(N=pq\)</span>, where <span class="math inline">\(p,q\)</span> are primes, find <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span>.</p>
-</div>
-<h3 id="factoring-experiment">Factoring Experiment</h3>
-<p>Cryptographically, the hardness of the factoring problem is indicated
-by the <strong>factoring experiment</strong> <span class="math inline">\(\mathtt{Factor}_{\mathscr{A},
-Genmodulus}(n)\)</span>, where GenModulus is an <strong>efficient
-(polynomial-time)</strong> algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs <span class="math inline">\((N,p,q)\)</span> where <span class="math inline">\(N=pq\)</span>, and <span class="math inline">\(p,q\)</span> are <span class="math inline">\(n\)</span>-bit primes except with negligible
-probability.</p>
-<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(N\)</span> needs to efficiently compute the
-corresponding <span class="math inline">\(p,q\)</span>.</p>
-<div class="note info no-icon"><p>Definition. Factoring is hard relative to GenModulus if for all
-<strong>probabilistic polynomial-time algorithm</strong> <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
-<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{Factor}_{\mathscr{A},
-GenModulus}(n)=1]\leq \varepsilon(n)\)</span>.</p>
-</div>
-<p><strong>The Factoring Assumption</strong> is the assumption that
-there exists a GenModulus relative to which factoring is hard.</p>
-<p><br></p>
-<blockquote>
-<p>Eureka moment!</p>
-<p>这里对数学问题困难性的定义又与上面的算法数论 (algorithmic number
-theory)
-或计算机科学领域的定义不同，是以<strong>实验</strong>来描述的。是不是很有加密学的特色？</p>
-<p>这里还要注意一个概念：<strong>密码学假设
-(assumption)</strong>，它将某个数学问题的困难性归约到实验中的一个高效
-(efficient) 算法的存在性上。对于大数质因数分解问题 (Factoring
-problem)，其困难性被某个高效的 GenModulus 算法的存在保证。</p>
-</blockquote>
-<p><br></p>
-<h2 id="rsa-problem">RSA Problem</h2>
-<p>Given a modulus <span class="math inline">\(N\)</span> and integer
-<span class="math inline">\(e&gt;2\)</span>, such that <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>.</p>
-<p>By the Corollary 2 of the Fermat's Little Theorem (see it in P2), we
-know that exponentiation to the <span class="math inline">\(e\)</span>-th power mod <span class="math inline">\(N\)</span> is a <strong>permutation</strong> on
-<span class="math inline">\((\mathbb{Z}/N)^{\*}\)</span>;</p>
-<p>For any <span class="math inline">\(y\in
-(\mathbb{Z}/N)^{\*}\)</span>, let <span class="math inline">\([y^{1/e}
-\mod{N}]\)</span> be the unique element which yields <span class="math inline">\(y\)</span> when raised to the <span class="math inline">\(e\)</span>-th power mod <span class="math inline">\(N\)</span>, i.e., <strong>the <span class="math inline">\(e\)</span>-th root of <span class="math inline">\(y\)</span> mod <span class="math inline">\(N\)</span></strong>.</p>
-<p>If <span class="math inline">\(e\cdot d\equiv
-1\pmod{\varphi(N)}\)</span>, then raising to the <span class="math inline">\(d\)</span>-th power is the
-<strong>inverse</strong> of raising to the <span class="math inline">\(e\)</span>-th power, that is, for any <span class="math inline">\(g\in (\mathbb{Z}/N)^{\*}\)</span>, <span class="math inline">\((g^e)^d \equiv g\pmod{N}\)</span>. Therefore, if
-<span class="math inline">\(y=g^e\)</span>, <span class="math inline">\(y^{1/e}=g=y^d\pmod{N}\)</span>.</p>
-<div class="note info no-icon"><p>RSA problem is essentially finding <span class="math inline">\(e\)</span>-th root of <span class="math inline">\(y\)</span> mod <span class="math inline">\(N\)</span>: Given <span class="math inline">\(N,e,y\)</span>, compute <span class="math inline">\([y^{1/e}\mod{N}]\)</span>. Note that <span class="math inline">\(e&gt;2\)</span> and <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>, <span class="math inline">\(\gcd(y, N)=1\)</span>.</p>
-</div>
-<h3 id="rsa-experiment">RSA Experiment</h3>
-<p>Similarly, we have the RSA experiment <span class="math inline">\(\mathtt{RSA}\)</span>-<span class="math inline">\(\mathtt{inv}_{\mathscr{A}, GenRSA}(n)\)</span>,
-where GenRSA is an efficient algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs a modulus <span class="math inline">\(N\)</span> that is the product of two <span class="math inline">\(n\)</span>-bit primes <span class="math inline">\(p,q\)</span>, as well as integers <span class="math inline">\(e,d&gt;0\)</span> with <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span> and <span class="math inline">\(ed\equiv 1\pmod{\varphi(N)}\)</span>.</p>
-<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(N,e\)</span> and a <u><strong>uniform</strong></u>
-<span class="math inline">\(y\in (\mathbb{Z}/N)^{\*}\)</span> needs to
-efficiently compute the corresponding <span class="math inline">\(x\)</span>.</p>
-<div class="note info no-icon"><p>Definition. RSA problem is hard relative to GenRSA if for all
-probabilistic polynomial time algorithm <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
-<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{RSAinv}_{\mathscr{A},
-GenRSA}(n)=1]\leq \varepsilon(n)\)</span>.</p>
-</div>
-<p>The RSA Assumption is the assumption that there exists a GenRSA
-algorithm relative to which the RSA problem is hard. Note that GenRSA
-can be constructed from GenModulus.</p>
-<h3 id="rsa-and-factoring">RSA and Factoring</h3>
-<p>The hardness of RSA problem could be <strong>reduced</strong> to the
-hardness of factoring problem, which is to say, one could efficiently
-solve RSA problem if he could efficiently solve factoring problem.</p>
-<p>Assume there exists an efficient algorithm <span class="math inline">\(\mathscr{A}\)</span> that could factorize <span class="math inline">\(N\)</span> into two distinct primes <span class="math inline">\(p,q\)</span>, then we could construct an efficient
-<span class="math inline">\(\mathscr{A}&#39;\)</span> that could solve
-RSA problem.</p>
-<ul>
-<li><span class="math inline">\(\mathscr{A}&#39;\)</span> runs <span class="math inline">\(\mathscr{A}(N)\)</span> and obtain two
-<strong>distinct odd primes</strong> <span class="math inline">\(p,q\)</span> that <span class="math inline">\(N=pq\)</span>.</li>
-<li><span class="math inline">\(\mathscr{A}&#39;\)</span> simply
-computes <span class="math inline">\(\varphi(N)=(p-1)(q-1)\)</span>.</li>
-<li><span class="math inline">\(\mathscr{A}&#39;\)</span> computes <span class="math inline">\(d\equiv e^{-1}\pmod{\varphi(N)}\)</span> with
-extended Euclidean algorithm.</li>
-<li><span class="math inline">\(\mathscr{A}&#39;\)</span> could compute
-<span class="math inline">\(y^{1/e}\)</span> mod <span class="math inline">\(N\)</span> efficiently by computing <span class="math inline">\(y^d\)</span> mod <span class="math inline">\(N\)</span>.</li>
-</ul>
-<p><br></p>
-<blockquote>
-<p>Eureka moment!</p>
-<p>RSA 问题本质上是<strong>求模意义下的 <span class="math inline">\(e\)</span> 次方根</strong>。注意 RSA 问题中的模数
-<span class="math inline">\(N\)</span> 是两个不同的大奇质数 <span class="math inline">\(p,q\)</span> 之积。</p>
-<p>RSA 问题的巧妙之处在于，利用群的 closure
-性质与费马小定理可得，<strong>模意义下的 <span class="math inline">\(e\)</span> 次方根与模意义下的 <span class="math inline">\(d\)</span> 次方幂是等价的</strong>；其中 <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>, <span class="math inline">\(d\equiv e^{-1} \pmod{\varphi(N)}\)</span>.
-也就是说，如果敌手得知 <span class="math inline">\(\varphi(N)\)</span>，那么他就能通过计算得出 <span class="math inline">\(d\)</span>，从而轻松解决 RSA 问题。</p>
-<p>然而得知 <span class="math inline">\(\varphi(N)\)</span>
-也是<strong>困难的</strong>；这由 Factoring problem
-的困难性保证。对于只有两个质因数 <span class="math inline">\(p,q\)</span> 的模数 <span class="math inline">\(N\)</span>, <span class="math inline">\(\varphi(N)=\varphi(pq)=\varphi(p)\varphi(q)=(p-1)(q-1)\)</span>。所以，得到
-<span class="math inline">\(\varphi(N)\)</span> 的前提是成功将 <span class="math inline">\(N\)</span> 分解为 <span class="math inline">\(p,q\)</span>。</p>
-<p>著名的 RSA 公钥加密就应用了这一性质：在该加密中，公钥 <span class="math inline">\(pk=e\)</span>, 私钥 <span class="math inline">\(sk=d\)</span>。加密 <span class="math inline">\(Enc_{pk}(m)=m^e\)</span>，解密 <span class="math inline">\(Dec_{sk}(c)=c^d\)</span> (均在 mod <span class="math inline">\(N\)</span> 意义下)。RSA
-问题的困难性保证了任意不持有私钥的敌手无法由密文 <span class="math inline">\(c=m^e\)</span> 破解消息 <span class="math inline">\(m\)</span> (即，得到 <span class="math inline">\(c\)</span> 在模 <span class="math inline">\(N\)</span> 意义下的 <span class="math inline">\(e\)</span> 次方根)。</p>
-</blockquote>
-<p><br></p>
-<h2 id="discrete-logarithm-problem">Discrete Logarithm Problem</h2>
-<p>Fix a <strong>cyclic</strong> group <span class="math inline">\(\mathbb{G}\)</span> of order <span class="math inline">\(q\)</span>, and generator <span class="math inline">\(g\in\mathbb{G}\)</span>. We know that <span class="math inline">\(\{g^0,g^1,...,g^{q-1}\}=\mathbb{G}\)</span>.</p>
-<p>Equilently, for every <span class="math inline">\(h\in\mathbb{G}\)</span>, there is a unique <span class="math inline">\(x\in \mathbb{Z}_q\)</span>, such that <span class="math inline">\(g^x=h\)</span>. We define <span class="math inline">\(\log_g{h}\)</span> to be this <span class="math inline">\(x\)</span>. This is the <strong>discrete
-logarithm</strong> of <span class="math inline">\(h\)</span> with
-respect to <span class="math inline">\(g\)</span> in the group <span class="math inline">\(\mathbb{G}\)</span>.</p>
-<div class="note info no-icon"><p><strong>Discrete Logarithm</strong> problem in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in \mathbb{G}\)</span> and
-<u><strong>uniform</strong></u> <span class="math inline">\(h\in
-\mathbb{G}\)</span>, compute <span class="math inline">\(\log_g{h}\)</span>.</p>
-</div>
-<h3 id="discrete-logarithm-experiment">Discrete-Logarithm
-Experiment</h3>
-<p>Similarly, we have the discrete-logarithm experiment <span class="math inline">\(\mathtt{DLog}_{\mathscr{A}, \mathscr{G}}
-(n)\)</span> where <span class="math inline">\(\mathscr{G}\)</span> is
-an efficient group-generation algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs a cyclic group <span class="math inline">\(\mathbb{G}\)</span>, its order <span class="math inline">\(q\)</span>, and a generator <span class="math inline">\(g\)</span>.</p>
-<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(\mathbb{G},q,g\)</span> and a
-<u><strong>uniform</strong></u> <span class="math inline">\(h\in\mathbb{G}\)</span> needs to efficiently
-compute correponding <span class="math inline">\(x\)</span>.</p>
-<div class="note info no-icon"><p>Definition. RSA problem is hard relative to <span class="math inline">\(\mathscr{G}\)</span> if for all probabilistic
-polynomial time algorithm <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
-<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{DLog}_{\mathscr{A},
-\mathscr{G}}(n)=1]\leq \varepsilon(n)\)</span>.</p>
-</div>
-<p>The Discrete Logarithm Assumption is the assumption that there exists
-a group-generation algorithm <span class="math inline">\(\mathscr{G}\)</span> relative to which the
-Discrete Logarithm problem is hard.</p>
-<p><br></p>
-<blockquote>
-<p>Eureka moment!</p>
-<p>离散对数问题本质上是<strong>模意义下的对数运算</strong>。另外还需要注意一点，无论是
-RSA 实验还是离散对数实验，对敌手的<strong>挑战 (challenge)</strong>
-都是<strong>均匀随机 (uniform)</strong> 的。</p>
-<p>其实，RSA 问题 (模意义下的开次方运算) 与离散问题 (模意义下的对数运算)
-均可以视为幂运算 <span class="math inline">\(h=g^x\)</span>
-的<strong>逆运算</strong>：RSA 问题给出指数 <span class="math inline">\(x\)</span>，要求由 <span class="math inline">\(h\)</span> 计算底数 <span class="math inline">\(g=h^{1/x}\)</span>；而离散对数问题给出底数 <span class="math inline">\(g\)</span>，要求由 <span class="math inline">\(h\)</span> 计算指数 <span class="math inline">\(x=\log_g h\)</span>。</p>
-</blockquote>
-<p><br></p>
-<h2 id="diffie-hellman-problem">Diffie-Hellman Problem</h2>
-<p>Fix cyclic group <span class="math inline">\(\mathbb{G}\)</span> of
-order <span class="math inline">\(q\)</span>, and generator <span class="math inline">\(g\in\mathbb{G}\)</span>.</p>
-<p>Given elements <span class="math inline">\(h_1,h_2\in
-\mathbb{G}\)</span>, define Diiffie-Hellman function <span class="math inline">\(DH_g(h_1,h_2)=g^{\log_g h_1\cdot\log_g
-h_2}\)</span>. That is, if <span class="math inline">\(h_1=g^{x_1}\)</span>, <span class="math inline">\(h_2=g^{x_2}\)</span>, then <span class="math inline">\(DH_g(h_1,h_2)=g^{x_1\cdot x_2}\)</span>.</p>
-<div class="note info no-icon"><p>Computational Diffie-Hellman (CDH) in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in \mathbb{G}\)</span>, and
-<u><strong>uniform</strong></u> <span class="math inline">\(h_1,h_2\in\mathbb{G}\)</span>, compute <span class="math inline">\(DH_g(h_1,h_2)\)</span>.</p>
-<p>Decisional Diffie-Hellman (DDH) in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in\mathbb{G}\)</span>, and
-<u><strong>uniform</strong></u> <span class="math inline">\(h_1,h_2\in\mathbb{G}\)</span>,
-<strong>distinguish</strong> <span class="math inline">\(DH_g(h_1,h_2)\)</span> from a
-<u><strong>uniform</strong></u> group element <span class="math inline">\(h&#39;\in \mathbb{G}\)</span>.</p>
-</div>
-<p>CDH and DDH experiments could be constructed similarly so they are
-not covered here.</p>
-<p>It is easy to see that if one could solve Discrete Logarithm problem,
-he could also solve CDH problem; and if one could solve CDH problem, he
-could also solve DDH problem.</p>
-<p><strong>So DLog <span class="math inline">\(\to\)</span> CDH <span class="math inline">\(\to\)</span> DDH, the assumption is getting
-stronger and stronger, </strong> which is to say, if one could NOT solve
-DDH problem, it would be <strong>impossible</strong> for him to solve
-CDH or DLog problem.</p>
-<p><br></p>
-<blockquote>
-<p>Eureka moment!</p>
-<p>Diffie-Hellman
-问题的困难性是由离散对数问题的困难性保证的。至于为什么要定义这样一个函数，是由于
-Diffie-Hellman 问题定义了<strong>两个可以暴露的量</strong> <span class="math inline">\(h_1,h_2\)</span>。当 Alice 与 Bob
-之间需要进行多次信息传输时，利用 Diffie-Hellman
-问题的困难性可以很好的隐藏秘密信息。</p>
-<p>以著名的 <strong>Diffie-Hellman Key-exchange Protocol
-(密钥交换协议)</strong> 为例：Alice 选择某个 <span class="math inline">\(x_1\)</span>，并向 Bob 发送 <span class="math inline">\(h_1=g^{x_1}\)</span>；而 Bob 选择某个 <span class="math inline">\(x_2\)</span>，并向 Alice 发送 <span class="math inline">\(h_2=g^{x_2}\)</span>。这样，Bob 与 Alice
-双方都可以计算出密钥 <span class="math inline">\(k=g^{x_1x_2}=h_1^{x_2}=h_2^{x_1}\)</span>，密钥交换成功。而
-Diffie-Hellman 问题的困难性保证窃听到 transcript <span class="math inline">\(h_1,h_2\)</span> 的敌手无法据此求出 <span class="math inline">\(k=DH_g(h_1,h_2)\)</span>.</p>
-</blockquote>
-<p><br></p>
-<h2 id="one-way-function">One-Way Function</h2>
-<p>One-Way Functions are a critical cryptographic primitive, that is
-both necessary and sufficient for private-key encryption and MACs.
-<strong>Informally</strong> speaking, a function <span class="math inline">\(f\)</span> is one-way if it is <strong>easy to
-compute but hard to invert</strong>.</p>
-<p>We formally define "hard to invert" with the inverting experiment
-<span class="math inline">\(\mathtt{Invert}_{\mathscr{A},
-f}(n)\)</span>.</p>
-<h3 id="the-inverting-experiment">The Inverting Experiment</h3>
-<ul>
-<li>Challenger <span class="math inline">\(\mathscr{C}\)</span> choose
-<u><strong>uniform</strong></u> <span class="math inline">\(x\in\{0,1\}^n\)</span>, and compute <span class="math inline">\(y:=f(x)\)</span>.</li>
-<li>Adversary <span class="math inline">\(\mathscr{A}\)</span> is given
-<span class="math inline">\(1^n\)</span> and <span class="math inline">\(y\)</span> as inputs. <span class="math inline">\(\mathscr{A}\)</span> outputs <span class="math inline">\(x&#39;\)</span>.</li>
-<li><span class="math inline">\(\mathscr{A}\)</span> succeeds and the
-experiment evaluates to <span class="math inline">\(1\)</span> if and
-only if <span class="math inline">\(f(x&#39;)=y\)</span>.</li>
-</ul>
-<p>Note that the <strong>preimage</strong> <span class="math inline">\(x&#39;\)</span> does NOT neccessarily have to
-equal <span class="math inline">\(x\)</span>, as long as <span class="math inline">\(f(x&#39;)=y\)</span>.</p>
-<div class="note info no-icon"><p>Definition. A function <span class="math inline">\(f:\{0,1\}^{\*}\to
-\{0,1\}^{\*}\)</span> is <strong>one-way</strong> if the following two
-conditions hold:</p>
-<ul>
-<li>(<strong>Easy to compute</strong>): There is a polynomial-time
-algorithm that on input <span class="math inline">\(x\)</span> outputs
-<span class="math inline">\(f(x)\)</span>.</li>
-<li>(<strong>Hard to invert</strong>): For all PPT algorithm <span class="math inline">\(\mathscr{A}\)</span> there is a negligible
-function <span class="math inline">\(\varepsilon(n)\)</span> such that:
-<span class="math inline">\(\Pr[\mathtt{Invert}_{\mathscr{A}.
-f}(n)=1]\leq \varepsilon(n)\)</span>.</li>
-</ul>
-</div>
-<h3 id="one-way-functions-based-on-assumptions">One-Way Functions Based
-on Assumptions</h3>
-<p>We could construct one-way functions based on the above four
-assumptions (factoring assumption, RSA assumption, discrete logarithm
-assumption, Diffie-Hellman assumption).</p>
-<p>We illustrate this by using <strong>factoring assumption</strong> to
-construct a one-way function.</p>
-<p>Given <span class="math inline">\(1^n\)</span> and GenModulus, define
-the (deterministic) function <span class="math inline">\(f_{Gen}\)</span> as follows:</p>
-<ul>
-<li>Input: A random tage: string <span class="math inline">\(x\)</span>
-of length <span class="math inline">\(n\)</span></li>
-<li>Output: Integer <span class="math inline">\(N\)</span>.</li>
-<li>Compute <span class="math inline">\((N,p,q):=GenModulus(1^n;x)\)</span> and return
-<span class="math inline">\(N\)</span>.</li>
-</ul>
-<div class="note info no-icon"><p>Theorem. If the Factoring problem is hard relative to GenModulus,
-then <span class="math inline">\(f_{Gen}\)</span> is one-way.</p>
-</div>
-<h3 id="hard-core-predicates">Hard-Core Predicates</h3>
-<p>For a one-way function <span class="math inline">\(f\)</span>, it
-does not exist any PPT adversary that could efficiently invert it.
-However, the <strong>partial information</strong> of the preimage may be
-easily revealed.</p>
-<p>Consider the function <span class="math inline">\(f:\{0,1\}^{2n}\to
-\{0,1\}^{2n}\)</span> and one-way function <span class="math inline">\(g:\{0,1\}^n\to \{0,1\}^n\)</span>. We could define
-<span class="math inline">\(f(x,y)=g(x)||y\)</span>. Since <span class="math inline">\(g\)</span> is one-way, it is trivial that <span class="math inline">\(f\)</span> is also one-way. However, it is easy to
-know the last <span class="math inline">\(n\)</span> bits of the
-preimage are exactly the last <span class="math inline">\(n\)</span>
-bits of <span class="math inline">\(f(x,y)\)</span>.</p>
-<p>Though <span class="math inline">\(f\)</span> is one-way, half of the
-information about the preimage is revealed.</p>
-<p>We define hard-core predicate <span class="math inline">\(hc\)</span>
-of a one-way function as <strong>the bit that could NEVER be
-revealed.</strong> Informally speaking, <span class="math inline">\(hc(x)\)</span> is <strong>a bit</strong> that is
-efficiently computable given <span class="math inline">\(x\)</span>, but
-hard to compute given <span class="math inline">\(f(x)\)</span>.</p>
-<div class="note info no-icon"><p>Definition. A function <span class="math inline">\(hc:\{0,1\}^{\*}\to\{0,1\}\)</span> is a hard-core
-predicate of a function <span class="math inline">\(f\)</span> if:</p>
-<ul>
-<li>hc can be computed in polynomial time.</li>
-<li>For every probabilistic polynomial-time algorithm <span class="math inline">\(\mathscr{A}\)</span> there is a negligible
-function <span class="math inline">\(\varepsilon(n)\)</span> such that
-<span class="math inline">\(\Pr_{x\leftarrow
-\{0,1\}^n}[\mathscr{A}(1^n,f(x))=hc(x)]\leq
-1/2+\varepsilon(n)\)</span>.</li>
-</ul>
-</div>
-<p><strong>A hard-core predicate for the RSA problem is the least
-significant bit.</strong> That is to say, compute <span class="math inline">\(lsb(x)\)</span> given <span class="math inline">\(y=[x^e\mod{N}]\)</span> is hard.</p>
-<p><br></p>
-<blockquote>
-<p>Eureka moment!</p>
-<p>做了这么长的铺垫，终于来到了单向函数 (one-way function)
-的介绍。我觉得单向函数是密码学中最重要的概念之一，它的定义体现了密码学的核心思想——
-<strong>Easy to compute, hard to invert.</strong></p>
-<p>首先来谈谈它的存在性。之前介绍的三个数学难题 (hard problems)
-都很符合单向函数的定义；Factoring
-problem，质数相乘容易，质因数分解难；RSA
-problem，模意义下幂运算简单，开方运算难；Discrete Logarithm
-problem，模意义下幂运算简单，对数运算难；因此，由这些难题的猜想
-(assumptions) 构造单向函数再自然不过。</p>
-<p>最后谈谈它的意义。密码学中，加密方案 (encryption)，消息验证码
-(MAC)，数字签名 (digital signature) 等加密学原语 (cryptographic
-primitives) 本质上是一个单向函数构建的过程。更具体一点说，是一个
-<u><strong>单向陷门函数 (trapdoor one-way function)</strong></u>
-的构建。所谓<strong>陷门 (trapdoor)</strong> 是指，存在某个 <span class="math inline">\(z\)</span> 使得计算原像 <span class="math inline">\(x=f^{-1}(y)\)</span> 简单，则该 <span class="math inline">\(z\)</span> 称为函数的陷门。</p>
-<p>一个单向陷门函数有以下性质：(1) 单向性 (2)
-存在陷门。这是否和某些原语的构造十分相似？以公钥加密 (或是 CPA
-安全的私钥加密) 为例，加密消息 <span class="math inline">\(m\)</span>
-得到密文 <span class="math inline">\(c\)</span> 很容易：<span class="math inline">\(Enc_{pk}(m)\to c\)</span> (公钥 <span class="math inline">\(pk\)</span> 公开)；而由密文 <span class="math inline">\(c\)</span> 解密得到原文 <span class="math inline">\(m\)</span> 却很困难。此为<strong>单向性
-(one-way)</strong>。而倘若知道私钥 <span class="math inline">\(sk\)</span>，由密文 <span class="math inline">\(c\)</span> 解密得到原文 <span class="math inline">\(m\)</span> 的过程就非常简单：<span class="math inline">\(Dec_{sk}(c)\to m\)</span>。因此，私钥 <span class="math inline">\(sk\)</span> 是加密函数 <span class="math inline">\(Enc_{pk}\)</span> 的<strong>陷门
-(trapdoor)</strong>。</p>
-</blockquote>
-<p><br></p>
-<h2 id="reference">Reference</h2>
-<div class="note warning"><p>  This article is a self-administered course note.</p>
-<p>  References in the article are from corresponding course materials
-if not specified.</p>
-</div>
-<p>Course info:</p>
-<p>Code: COMP3357, Lecturer: Dr. Ravi. Ramanathan, TA: Zhang Chengru</p>
-<p>Course textbook:</p>
-<p><em>Introduction to Modern Cryptography (2nd edition)</em>, Katz, J.
-&amp; Lindell, Y., (2015), CRC Press, <a href="https://ebookcentral.proquest.com/lib/HKUHK/detail.action?docID=1619504">view</a></p>
-]]></content>
-      <categories>
-        <category>notes</category>
-        <category>courses</category>
-        <category>Cryptography, HKU</category>
-      </categories>
-      <tags>
-        <tag>cryptography</tag>
-        <tag>course notes</tag>
-        <tag>hard problems</tag>
-        <tag>one-way function</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>COMP3357 notes P2</title>
     <url>/2023/06/02/Cryptography-COMP3357-2/</url>
     <content><![CDATA[<p>COMP3357 digest 的 P2 部分 (P1 部分在<a href="https://thisisxxz.github.io/2023/05/25/Cryptography-COMP3357/">这里</a>，P3
@@ -771,6 +425,435 @@ if not specified.</p>
         <tag>course notes</tag>
         <tag>group theory</tag>
         <tag>number theory</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>COMP3357 notes P3</title>
+    <url>/2023/06/05/Cryptography-COMP3357-3/</url>
+    <content><![CDATA[<p>COMP3357 digest 的 P3 部分 (P1 部分在<a href="https://thisisxxz.github.io/2023/05/25/Cryptography-COMP3357/">这里</a>，P2
+部分在<a href="https://thisisxxz.github.io/2023/06/02/Cryptography-COMP3357-2/">这里</a>)，主要介绍密码学中的几个困难问题
+(hard problems) 与一个重要的 cryptographic primitive: 单向函数 (one-way
+function).</p>
+<p>这一 Part 涉及到的困难问题 (Factoring problem, RSA problem, Discrete
+Logarithm problem, Diffie-Hellman problem) 的构建与 P2
+中的数论，群论知识密切相关，注意参考。</p>
+<span id="more"></span>
+<p>同样，与 CnBlogs
+中的笔记不同，这里不会详细的记载每个相关的知识点；只会尝试简略地总结一些能让未来的自己也会感到有趣，巧妙的内容
+(Eureka!)。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="hardness-of-mathematical-problems">Hardness of Mathematical
+Problems</h2>
+<p>When discussing <strong>hardness</strong> of mathematical problems
+with input some integer <span class="math inline">\(N\)</span>, we study
+asymptotics in terms of the <strong>input length</strong>.</p>
+<p>Integer <span class="math inline">\(N\)</span> will be assumed to be
+represented in binary. The <strong>running time</strong> of an algorithm
+taking as input an integer <span class="math inline">\(N\)</span> is
+measured in terms of <span class="math inline">\(||N||\)</span>, the
+length of the binary representation of <span class="math inline">\(N\)</span>.</p>
+<p>Note that <span class="math inline">\(||N||=\lfloor \log N
+\rfloor+1\)</span>.</p>
+<div class="note info no-icon"><p>A problem is considered to be <strong>easy</strong> if the running
+time of its algorithm is <strong>polynomial</strong> in <span class="math inline">\(||N||\)</span>.</p>
+</div>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>这里对数学问题困难性 (hardness) 的定义是建立在算法数论 (algorithmic
+number theory) 的视角上的。</p>
+<p>实际上，这个概念更贴近计算机领域而不是纯数学领域。如果从算法时间复杂度的角度来定义，就好理解多了：一个时间复杂度为
+<span class="math inline">\(O(\mathtt{poly}(n))\)</span>
+的算法是<strong>高效 (efficient)</strong> 的，对应的问题是<strong>简单
+(easy)</strong> 的。而时间复杂度为 <span class="math inline">\(O(\mathtt{exp}(n))\)</span> 的算法是<strong>低效
+(inefficient)</strong> 的，对应的问题是<strong>困难 (hard)</strong>
+的。</p>
+</blockquote>
+<p><br></p>
+<h2 id="factoring-problem">Factoring Problem</h2>
+<p>Factoring could be viewed as the inverse operation of multiplication.
+Multiplying two primes <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> as <span class="math inline">\(N=p\times q\)</span> is <strong>easy</strong>,
+while factorizing <span class="math inline">\(N\)</span> to derive <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> is <strong>hard</strong>.</p>
+<div class="note info no-icon"><p>Factoring the product of two primes: Given <span class="math inline">\(N=pq\)</span>, where <span class="math inline">\(p,q\)</span> are primes, find <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span>.</p>
+</div>
+<h3 id="factoring-experiment">Factoring Experiment</h3>
+<p>Cryptographically, the hardness of the factoring problem is indicated
+by the <strong>factoring experiment</strong> <span class="math inline">\(\mathtt{Factor}_{\mathscr{A},
+Genmodulus}(n)\)</span>, where GenModulus is an <strong>efficient
+(polynomial-time)</strong> algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs <span class="math inline">\((N,p,q)\)</span> where <span class="math inline">\(N=pq\)</span>, and <span class="math inline">\(p,q\)</span> are <span class="math inline">\(n\)</span>-bit primes except with negligible
+probability.</p>
+<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(N\)</span> needs to efficiently compute the
+corresponding <span class="math inline">\(p,q\)</span>.</p>
+<div class="note info no-icon"><p>Definition. Factoring is hard relative to GenModulus if for all
+<strong>probabilistic polynomial-time algorithm</strong> <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
+<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{Factor}_{\mathscr{A},
+GenModulus}(n)=1]\leq \varepsilon(n)\)</span>.</p>
+</div>
+<p><strong>The Factoring Assumption</strong> is the assumption that
+there exists a GenModulus relative to which factoring is hard.</p>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>这里对数学问题困难性的定义又与上面的算法数论 (algorithmic number
+theory)
+或计算机科学领域的定义不同，是以<strong>实验</strong>来描述的。是不是很有加密学的特色？</p>
+<p>这里还要注意一个概念：<strong>密码学假设
+(assumption)</strong>，它将某个数学问题的困难性归约到实验中的一个高效
+(efficient) 算法的存在性上。对于大数质因数分解问题 (Factoring
+problem)，其困难性被某个高效的 GenModulus 算法的存在保证。</p>
+</blockquote>
+<p><br></p>
+<h2 id="rsa-problem">RSA Problem</h2>
+<p>Given a modulus <span class="math inline">\(N\)</span> and integer
+<span class="math inline">\(e&gt;2\)</span>, such that <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>.</p>
+<p>By the Corollary 2 of the Fermat's Little Theorem (see it in P2), we
+know that exponentiation to the <span class="math inline">\(e\)</span>-th power mod <span class="math inline">\(N\)</span> is a <strong>permutation</strong> on
+<span class="math inline">\((\mathbb{Z}/N)^{\*}\)</span>;</p>
+<p>For any <span class="math inline">\(y\in
+(\mathbb{Z}/N)^{\*}\)</span>, let <span class="math inline">\([y^{1/e}
+\mod{N}]\)</span> be the unique element which yields <span class="math inline">\(y\)</span> when raised to the <span class="math inline">\(e\)</span>-th power mod <span class="math inline">\(N\)</span>, i.e., <strong>the <span class="math inline">\(e\)</span>-th root of <span class="math inline">\(y\)</span> mod <span class="math inline">\(N\)</span></strong>.</p>
+<p>If <span class="math inline">\(e\cdot d\equiv
+1\pmod{\varphi(N)}\)</span>, then raising to the <span class="math inline">\(d\)</span>-th power is the
+<strong>inverse</strong> of raising to the <span class="math inline">\(e\)</span>-th power, that is, for any <span class="math inline">\(g\in (\mathbb{Z}/N)^{\*}\)</span>, <span class="math inline">\((g^e)^d \equiv g\pmod{N}\)</span>. Therefore, if
+<span class="math inline">\(y=g^e\)</span>, <span class="math inline">\(y^{1/e}=g=y^d\pmod{N}\)</span>.</p>
+<div class="note info no-icon"><p>RSA problem is essentially finding <span class="math inline">\(e\)</span>-th root of <span class="math inline">\(y\)</span> mod <span class="math inline">\(N\)</span>: Given <span class="math inline">\(N,e,y\)</span>, compute <span class="math inline">\([y^{1/e}\mod{N}]\)</span>. Note that <span class="math inline">\(e&gt;2\)</span> and <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>, <span class="math inline">\(\gcd(y, N)=1\)</span>.</p>
+</div>
+<h3 id="rsa-experiment">RSA Experiment</h3>
+<p>Similarly, we have the RSA experiment <span class="math inline">\(\mathtt{RSA}\)</span>-<span class="math inline">\(\mathtt{inv}_{\mathscr{A}, GenRSA}(n)\)</span>,
+where GenRSA is an efficient algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs a modulus <span class="math inline">\(N\)</span> that is the product of two <span class="math inline">\(n\)</span>-bit primes <span class="math inline">\(p,q\)</span>, as well as integers <span class="math inline">\(e,d&gt;0\)</span> with <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span> and <span class="math inline">\(ed\equiv 1\pmod{\varphi(N)}\)</span>.</p>
+<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(N,e\)</span> and a <u><strong>uniform</strong></u>
+<span class="math inline">\(y\in (\mathbb{Z}/N)^{\*}\)</span> needs to
+efficiently compute the corresponding <span class="math inline">\(x\)</span>.</p>
+<div class="note info no-icon"><p>Definition. RSA problem is hard relative to GenRSA if for all
+probabilistic polynomial time algorithm <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
+<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{RSAinv}_{\mathscr{A},
+GenRSA}(n)=1]\leq \varepsilon(n)\)</span>.</p>
+</div>
+<p>The RSA Assumption is the assumption that there exists a GenRSA
+algorithm relative to which the RSA problem is hard. Note that GenRSA
+can be constructed from GenModulus.</p>
+<h3 id="rsa-and-factoring">RSA and Factoring</h3>
+<p>The hardness of RSA problem could be <strong>reduced</strong> to the
+hardness of factoring problem, which is to say, one could efficiently
+solve RSA problem if he could efficiently solve factoring problem.</p>
+<p>Assume there exists an efficient algorithm <span class="math inline">\(\mathscr{A}\)</span> that could factorize <span class="math inline">\(N\)</span> into two distinct primes <span class="math inline">\(p,q\)</span>, then we could construct an efficient
+<span class="math inline">\(\mathscr{A}&#39;\)</span> that could solve
+RSA problem.</p>
+<ul>
+<li><span class="math inline">\(\mathscr{A}&#39;\)</span> runs <span class="math inline">\(\mathscr{A}(N)\)</span> and obtain two
+<strong>distinct odd primes</strong> <span class="math inline">\(p,q\)</span> that <span class="math inline">\(N=pq\)</span>.</li>
+<li><span class="math inline">\(\mathscr{A}&#39;\)</span> simply
+computes <span class="math inline">\(\varphi(N)=(p-1)(q-1)\)</span>.</li>
+<li><span class="math inline">\(\mathscr{A}&#39;\)</span> computes <span class="math inline">\(d\equiv e^{-1}\pmod{\varphi(N)}\)</span> with
+extended Euclidean algorithm.</li>
+<li><span class="math inline">\(\mathscr{A}&#39;\)</span> could compute
+<span class="math inline">\(y^{1/e}\)</span> mod <span class="math inline">\(N\)</span> efficiently by computing <span class="math inline">\(y^d\)</span> mod <span class="math inline">\(N\)</span>.</li>
+</ul>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>RSA 问题本质上是<strong>求模意义下的 <span class="math inline">\(e\)</span> 次方根</strong>。注意 RSA 问题中的模数
+<span class="math inline">\(N\)</span> 是两个不同的大奇质数 <span class="math inline">\(p,q\)</span> 之积。</p>
+<p>RSA 问题的巧妙之处在于，利用群的 closure
+性质与费马小定理可得，<strong>模意义下的 <span class="math inline">\(e\)</span> 次方根与模意义下的 <span class="math inline">\(d\)</span> 次方幂是等价的</strong>；其中 <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>, <span class="math inline">\(d\equiv e^{-1} \pmod{\varphi(N)}\)</span>.
+也就是说，如果敌手得知 <span class="math inline">\(\varphi(N)\)</span>，那么他就能通过计算得出 <span class="math inline">\(d\)</span>，从而轻松解决 RSA 问题。</p>
+<p>然而得知 <span class="math inline">\(\varphi(N)\)</span>
+也是<strong>困难的</strong>；这由 Factoring problem
+的困难性保证。对于只有两个质因数 <span class="math inline">\(p,q\)</span> 的模数 <span class="math inline">\(N\)</span>, <span class="math inline">\(\varphi(N)=\varphi(pq)=\varphi(p)\varphi(q)=(p-1)(q-1)\)</span>。所以，得到
+<span class="math inline">\(\varphi(N)\)</span> 的前提是成功将 <span class="math inline">\(N\)</span> 分解为 <span class="math inline">\(p,q\)</span>。</p>
+<p>著名的 RSA 公钥加密就应用了这一性质：在该加密中，公钥 <span class="math inline">\(pk=e\)</span>, 私钥 <span class="math inline">\(sk=d\)</span>。加密 <span class="math inline">\(Enc_{pk}(m)=m^e\)</span>，解密 <span class="math inline">\(Dec_{sk}(c)=c^d\)</span> (均在 mod <span class="math inline">\(N\)</span> 意义下)。RSA
+问题的困难性保证了任意不持有私钥的敌手无法由密文 <span class="math inline">\(c=m^e\)</span> 破解消息 <span class="math inline">\(m\)</span> (即，得到 <span class="math inline">\(c\)</span> 在模 <span class="math inline">\(N\)</span> 意义下的 <span class="math inline">\(e\)</span> 次方根)。</p>
+</blockquote>
+<p><br></p>
+<h2 id="discrete-logarithm-problem">Discrete Logarithm Problem</h2>
+<p>Fix a <strong>cyclic</strong> group <span class="math inline">\(\mathbb{G}\)</span> of order <span class="math inline">\(q\)</span>, and generator <span class="math inline">\(g\in\mathbb{G}\)</span>. We know that <span class="math inline">\(\{g^0,g^1,...,g^{q-1}\}=\mathbb{G}\)</span>.</p>
+<p>Equilently, for every <span class="math inline">\(h\in\mathbb{G}\)</span>, there is a unique <span class="math inline">\(x\in \mathbb{Z}_q\)</span>, such that <span class="math inline">\(g^x=h\)</span>. We define <span class="math inline">\(\log_g{h}\)</span> to be this <span class="math inline">\(x\)</span>. This is the <strong>discrete
+logarithm</strong> of <span class="math inline">\(h\)</span> with
+respect to <span class="math inline">\(g\)</span> in the group <span class="math inline">\(\mathbb{G}\)</span>.</p>
+<div class="note info no-icon"><p><strong>Discrete Logarithm</strong> problem in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in \mathbb{G}\)</span> and
+<u><strong>uniform</strong></u> <span class="math inline">\(h\in
+\mathbb{G}\)</span>, compute <span class="math inline">\(\log_g{h}\)</span>.</p>
+</div>
+<h3 id="discrete-logarithm-experiment">Discrete-Logarithm
+Experiment</h3>
+<p>Similarly, we have the discrete-logarithm experiment <span class="math inline">\(\mathtt{DLog}_{\mathscr{A}, \mathscr{G}}
+(n)\)</span> where <span class="math inline">\(\mathscr{G}\)</span> is
+an efficient group-generation algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs a cyclic group <span class="math inline">\(\mathbb{G}\)</span>, its order <span class="math inline">\(q\)</span>, and a generator <span class="math inline">\(g\)</span>.</p>
+<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(\mathbb{G},q,g\)</span> and a
+<u><strong>uniform</strong></u> <span class="math inline">\(h\in\mathbb{G}\)</span> needs to efficiently
+compute correponding <span class="math inline">\(x\)</span>.</p>
+<div class="note info no-icon"><p>Definition. RSA problem is hard relative to <span class="math inline">\(\mathscr{G}\)</span> if for all probabilistic
+polynomial time algorithm <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
+<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{DLog}_{\mathscr{A},
+\mathscr{G}}(n)=1]\leq \varepsilon(n)\)</span>.</p>
+</div>
+<p>The Discrete Logarithm Assumption is the assumption that there exists
+a group-generation algorithm <span class="math inline">\(\mathscr{G}\)</span> relative to which the
+Discrete Logarithm problem is hard.</p>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>离散对数问题本质上是<strong>模意义下的对数运算</strong>。另外还需要注意一点，无论是
+RSA 实验还是离散对数实验，对敌手的<strong>挑战 (challenge)</strong>
+都是<strong>均匀随机 (uniform)</strong> 的。</p>
+<p>其实，RSA 问题 (模意义下的开次方运算) 与离散问题 (模意义下的对数运算)
+均可以视为幂运算 <span class="math inline">\(h=g^x\)</span>
+的<strong>逆运算</strong>：RSA 问题给出指数 <span class="math inline">\(x\)</span>，要求由 <span class="math inline">\(h\)</span> 计算底数 <span class="math inline">\(g=h^{1/x}\)</span>；而离散对数问题给出底数 <span class="math inline">\(g\)</span>，要求由 <span class="math inline">\(h\)</span> 计算指数 <span class="math inline">\(x=\log_g h\)</span>。</p>
+</blockquote>
+<p><br></p>
+<h2 id="diffie-hellman-problem">Diffie-Hellman Problem</h2>
+<p>Fix cyclic group <span class="math inline">\(\mathbb{G}\)</span> of
+order <span class="math inline">\(q\)</span>, and generator <span class="math inline">\(g\in\mathbb{G}\)</span>.</p>
+<p>Given elements <span class="math inline">\(h_1,h_2\in
+\mathbb{G}\)</span>, define Diiffie-Hellman function <span class="math inline">\(DH_g(h_1,h_2)=g^{\log_g h_1\cdot\log_g
+h_2}\)</span>. That is, if <span class="math inline">\(h_1=g^{x_1}\)</span>, <span class="math inline">\(h_2=g^{x_2}\)</span>, then <span class="math inline">\(DH_g(h_1,h_2)=g^{x_1\cdot x_2}\)</span>.</p>
+<div class="note info no-icon"><p>Computational Diffie-Hellman (CDH) in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in \mathbb{G}\)</span>, and
+<u><strong>uniform</strong></u> <span class="math inline">\(h_1,h_2\in\mathbb{G}\)</span>, compute <span class="math inline">\(DH_g(h_1,h_2)\)</span>.</p>
+<p>Decisional Diffie-Hellman (DDH) in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in\mathbb{G}\)</span>, and
+<u><strong>uniform</strong></u> <span class="math inline">\(h_1,h_2\in\mathbb{G}\)</span>,
+<strong>distinguish</strong> <span class="math inline">\(DH_g(h_1,h_2)\)</span> from a
+<u><strong>uniform</strong></u> group element <span class="math inline">\(h&#39;\in \mathbb{G}\)</span>.</p>
+</div>
+<p>CDH and DDH experiments could be constructed similarly so they are
+not covered here.</p>
+<p>It is easy to see that if one could solve Discrete Logarithm problem,
+he could also solve CDH problem; and if one could solve CDH problem, he
+could also solve DDH problem.</p>
+<p><strong>So DLog <span class="math inline">\(\to\)</span> CDH <span class="math inline">\(\to\)</span> DDH, the assumption is getting
+stronger and stronger, </strong> which is to say, if one could NOT solve
+DDH problem, it would be <strong>impossible</strong> for him to solve
+CDH or DLog problem.</p>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>Diffie-Hellman
+问题的困难性是由离散对数问题的困难性保证的。至于为什么要定义这样一个函数，是由于
+Diffie-Hellman 问题定义了<strong>两个可以暴露的量</strong> <span class="math inline">\(h_1,h_2\)</span>。当 Alice 与 Bob
+之间需要进行多次信息传输时，利用 Diffie-Hellman
+问题的困难性可以很好的隐藏秘密信息。</p>
+<p>以著名的 <strong>Diffie-Hellman Key-exchange Protocol
+(密钥交换协议)</strong> 为例：Alice 选择某个 <span class="math inline">\(x_1\)</span>，并向 Bob 发送 <span class="math inline">\(h_1=g^{x_1}\)</span>；而 Bob 选择某个 <span class="math inline">\(x_2\)</span>，并向 Alice 发送 <span class="math inline">\(h_2=g^{x_2}\)</span>。这样，Bob 与 Alice
+双方都可以计算出密钥 <span class="math inline">\(k=g^{x_1x_2}=h_1^{x_2}=h_2^{x_1}\)</span>，密钥交换成功。而
+Diffie-Hellman 问题的困难性保证窃听到 transcript <span class="math inline">\(h_1,h_2\)</span> 的敌手无法据此求出 <span class="math inline">\(k=DH_g(h_1,h_2)\)</span>.</p>
+</blockquote>
+<p><br></p>
+<h2 id="one-way-function">One-Way Function</h2>
+<p>One-Way Functions are a critical cryptographic primitive, that is
+both necessary and sufficient for private-key encryption and MACs.
+<strong>Informally</strong> speaking, a function <span class="math inline">\(f\)</span> is one-way if it is <strong>easy to
+compute but hard to invert</strong>.</p>
+<p>We formally define "hard to invert" with the inverting experiment
+<span class="math inline">\(\mathtt{Invert}_{\mathscr{A},
+f}(n)\)</span>.</p>
+<h3 id="the-inverting-experiment">The Inverting Experiment</h3>
+<ul>
+<li>Challenger <span class="math inline">\(\mathscr{C}\)</span> choose
+<u><strong>uniform</strong></u> <span class="math inline">\(x\in\{0,1\}^n\)</span>, and compute <span class="math inline">\(y:=f(x)\)</span>.</li>
+<li>Adversary <span class="math inline">\(\mathscr{A}\)</span> is given
+<span class="math inline">\(1^n\)</span> and <span class="math inline">\(y\)</span> as inputs. <span class="math inline">\(\mathscr{A}\)</span> outputs <span class="math inline">\(x&#39;\)</span>.</li>
+<li><span class="math inline">\(\mathscr{A}\)</span> succeeds and the
+experiment evaluates to <span class="math inline">\(1\)</span> if and
+only if <span class="math inline">\(f(x&#39;)=y\)</span>.</li>
+</ul>
+<p>Note that the <strong>preimage</strong> <span class="math inline">\(x&#39;\)</span> does NOT neccessarily have to
+equal <span class="math inline">\(x\)</span>, as long as <span class="math inline">\(f(x&#39;)=y\)</span>.</p>
+<div class="note info no-icon"><p>Definition. A function <span class="math inline">\(f:\{0,1\}^{\*}\to
+\{0,1\}^{\*}\)</span> is <strong>one-way</strong> if the following two
+conditions hold:</p>
+<ul>
+<li>(<strong>Easy to compute</strong>): There is a polynomial-time
+algorithm that on input <span class="math inline">\(x\)</span> outputs
+<span class="math inline">\(f(x)\)</span>.</li>
+<li>(<strong>Hard to invert</strong>): For all PPT algorithm <span class="math inline">\(\mathscr{A}\)</span> there is a negligible
+function <span class="math inline">\(\varepsilon(n)\)</span> such that:
+<span class="math inline">\(\Pr[\mathtt{Invert}_{\mathscr{A}.
+f}(n)=1]\leq \varepsilon(n)\)</span>.</li>
+</ul>
+</div>
+<h3 id="one-way-functions-based-on-assumptions">One-Way Functions Based
+on Assumptions</h3>
+<p>We could construct one-way functions based on the above four
+assumptions (factoring assumption, RSA assumption, discrete logarithm
+assumption, Diffie-Hellman assumption).</p>
+<p>We illustrate this by using <strong>factoring assumption</strong> to
+construct a one-way function.</p>
+<p>Given <span class="math inline">\(1^n\)</span> and GenModulus, define
+the (deterministic) function <span class="math inline">\(f_{Gen}\)</span> as follows:</p>
+<ul>
+<li>Input: A random tage: string <span class="math inline">\(x\)</span>
+of length <span class="math inline">\(n\)</span></li>
+<li>Output: Integer <span class="math inline">\(N\)</span>.</li>
+<li>Compute <span class="math inline">\((N,p,q):=GenModulus(1^n;x)\)</span> and return
+<span class="math inline">\(N\)</span>.</li>
+</ul>
+<div class="note info no-icon"><p>Theorem. If the Factoring problem is hard relative to GenModulus,
+then <span class="math inline">\(f_{Gen}\)</span> is one-way.</p>
+</div>
+<h3 id="hard-core-predicates">Hard-Core Predicates</h3>
+<p>For a one-way function <span class="math inline">\(f\)</span>, it
+does not exist any PPT adversary that could efficiently invert it.
+However, the <strong>partial information</strong> of the preimage may be
+easily revealed.</p>
+<p>Consider the function <span class="math inline">\(f:\{0,1\}^{2n}\to
+\{0,1\}^{2n}\)</span> and one-way function <span class="math inline">\(g:\{0,1\}^n\to \{0,1\}^n\)</span>. We could define
+<span class="math inline">\(f(x,y)=g(x)||y\)</span>. Since <span class="math inline">\(g\)</span> is one-way, it is trivial that <span class="math inline">\(f\)</span> is also one-way. However, it is easy to
+know the last <span class="math inline">\(n\)</span> bits of the
+preimage are exactly the last <span class="math inline">\(n\)</span>
+bits of <span class="math inline">\(f(x,y)\)</span>.</p>
+<p>Though <span class="math inline">\(f\)</span> is one-way, half of the
+information about the preimage is revealed.</p>
+<p>We define hard-core predicate <span class="math inline">\(hc\)</span>
+of a one-way function as <strong>the bit that could NEVER be
+revealed.</strong> Informally speaking, <span class="math inline">\(hc(x)\)</span> is <strong>a bit</strong> that is
+efficiently computable given <span class="math inline">\(x\)</span>, but
+hard to compute given <span class="math inline">\(f(x)\)</span>.</p>
+<div class="note info no-icon"><p>Definition. A function <span class="math inline">\(hc:\{0,1\}^{\*}\to\{0,1\}\)</span> is a hard-core
+predicate of a function <span class="math inline">\(f\)</span> if:</p>
+<ul>
+<li>hc can be computed in polynomial time.</li>
+<li>For every probabilistic polynomial-time algorithm <span class="math inline">\(\mathscr{A}\)</span> there is a negligible
+function <span class="math inline">\(\varepsilon(n)\)</span> such that
+<span class="math inline">\(\Pr_{x\leftarrow
+\{0,1\}^n}[\mathscr{A}(1^n,f(x))=hc(x)]\leq
+1/2+\varepsilon(n)\)</span>.</li>
+</ul>
+</div>
+<p><strong>A hard-core predicate for the RSA problem is the least
+significant bit.</strong> That is to say, compute <span class="math inline">\(lsb(x)\)</span> given <span class="math inline">\(y=[x^e\mod{N}]\)</span> is hard.</p>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>做了这么长的铺垫，终于来到了单向函数 (one-way function)
+的介绍。我觉得单向函数是密码学中最重要的概念之一，它的定义体现了密码学的核心思想——
+<strong>Easy to compute, hard to invert.</strong></p>
+<p>首先来谈谈它的存在性。之前介绍的三个数学难题 (hard problems)
+都很符合单向函数的定义；Factoring
+problem，质数相乘容易，质因数分解难；RSA
+problem，模意义下幂运算简单，开方运算难；Discrete Logarithm
+problem，模意义下幂运算简单，对数运算难；因此，由这些难题的猜想
+(assumptions) 构造单向函数再自然不过。</p>
+<p>最后谈谈它的意义。密码学中，加密方案 (encryption)，消息验证码
+(MAC)，数字签名 (digital signature) 等加密学原语 (cryptographic
+primitives) 本质上是一个单向函数构建的过程。更具体一点说，是一个
+<u><strong>单向陷门函数 (trapdoor one-way function)</strong></u>
+的构建。所谓<strong>陷门 (trapdoor)</strong> 是指，存在某个 <span class="math inline">\(z\)</span> 使得计算原像 <span class="math inline">\(x=f^{-1}(y)\)</span> 简单，则该 <span class="math inline">\(z\)</span> 称为函数的陷门。</p>
+<p>一个单向陷门函数有以下性质：(1) 单向性 (2)
+存在陷门。这是否和某些原语的构造十分相似？以公钥加密 (或是 CPA
+安全的私钥加密) 为例，加密消息 <span class="math inline">\(m\)</span>
+得到密文 <span class="math inline">\(c\)</span> 很容易：<span class="math inline">\(Enc_{pk}(m)\to c\)</span> (公钥 <span class="math inline">\(pk\)</span> 公开)；而由密文 <span class="math inline">\(c\)</span> 解密得到原文 <span class="math inline">\(m\)</span> 却很困难。此为<strong>单向性
+(one-way)</strong>。而倘若知道私钥 <span class="math inline">\(sk\)</span>，由密文 <span class="math inline">\(c\)</span> 解密得到原文 <span class="math inline">\(m\)</span> 的过程就非常简单：<span class="math inline">\(Dec_{sk}(c)\to m\)</span>。因此，私钥 <span class="math inline">\(sk\)</span> 是加密函数 <span class="math inline">\(Enc_{pk}\)</span> 的<strong>陷门
+(trapdoor)</strong>。</p>
+</blockquote>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p>Code: COMP3357, Lecturer: Dr. Ravi. Ramanathan, TA: Zhang Chengru</p>
+<p>Course textbook:</p>
+<p><em>Introduction to Modern Cryptography (2nd edition)</em>, Katz, J.
+&amp; Lindell, Y., (2015), CRC Press, <a href="https://ebookcentral.proquest.com/lib/HKUHK/detail.action?docID=1619504">view</a></p>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>courses</category>
+        <category>Cryptography, HKU</category>
+      </categories>
+      <tags>
+        <tag>cryptography</tag>
+        <tag>course notes</tag>
+        <tag>hard problems</tag>
+        <tag>one-way function</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Competitive Programming 复健计划</title>
+    <url>/2023/06/07/OI-rehab-plan/</url>
+    <content><![CDATA[<blockquote>
+<p># 沉淀 # 被卡 long long 毁了我的 OI 梦 # 多元卓越也是强基 # 两年
+NOIp，不会打线段树 # 逸夫楼，我想你了 # 各自努力顶峰相见 # 若 acm
+有战，召必回！<del># 送外卖也算进大厂 # 码农烧烤</del></p>
+</blockquote>
+<p>下学期有点参加 ICPC
+的想法，趁这个暑假复健下，免得菜到校内选拔都过不了；在这里小做一下记录。</p>
+<span id="more"></span>
+<p>暂时打算以做 Codeforces div2 和 div3 的题为主
+(太菜了)，如果遇到有意思 (不会) 的题会单独开贴写一写。</p>
+<p><br></p>
+<h3 id="cf-round-878-div.3">CF Round #878 (Div.3)</h3>
+<p><a href="https://codeforces.com/contest/1840">link</a>。切了 A-E
+五道题。其实思路出来的很快，但是代码总有一些细节上的错误，可见我实现能力还是比较捞。稍微有点技巧的是
+E 题，需要每次 <span class="math inline">\(O(1)\)</span>
+动态维护两字符串之间的差异量 <code>diff</code> (类似于滑动窗口)。</p>
+<p>F 与 G 题比较难；F 题似乎是一个 DP，没想出来 (DP 苦手)；G
+题没来得及看，但切掉的人也非常少，AC Hard Version 的到现在都只有 48
+个。到时候把这两道题补一补。</p>
+<p>另外 CF 的比赛时间对 CN 真的不友好，做到半夜脑袋都昏昏沉沉的。</p>
+<p>补题记录：</p>
+<ul>
+<li><p><a href="https://thisisxxz.com/2023/06/07/CF878T6/">CF #878
+<em>Problem F</em> Railgun</a></p></li>
+<li><p><a href="https://thisisxxz.com/2023/06/08/CF878T7/">CF #878
+<em>Problem G</em> In Search of Truth</a></p></li>
+</ul>
+<p>自己没看标程补完了！爽！F 题和 G 题都挺有意思的，感觉 F
+题努力想一想也能想出来。</p>
+<p><br></p>
+<h3 id="cf-educational-round-149-div.2">CF Educational Round #149
+(Div.2)</h3>
+<p><a href="https://codeforces.com/contest/1837">link</a>。vp，做了 A-D
+四道题。基本上都是贪心，码量很小。E 题是个组合数学题，稍微复杂点
+(难度是橙)，考试结束以后才做出来。没有
+1A，交了三次才过，但是做出来还是很有成就感的。只要想到规模减半的子问题模型，思路就很简单了。</p>
+<p>具体来说，在当前问题规模为 <span class="math inline">\(2^k\)</span>
+的情况下，我们分别安排第 <span class="math inline">\([1,2^{k-1}]\)</span> 队的相对顺序与第 <span class="math inline">\([2^{k-1}+1,2^k]\)</span> 队的相对顺序，使得第
+<span class="math inline">\([2^{k-1}+1,2^k]\)</span>
+队全部在这一轮被淘汰，并计算组合方案。第 <span class="math inline">\([1,2^{k-1}]\)</span> 队的相对顺序是一个规模为
+<span class="math inline">\(2^{k-1}\)</span> 的子问题；而第 <span class="math inline">\([2^{k-1}+1,2^k]\)</span> 队的相对顺序则是一个
+trivial 的组合数学问题。</p>
+<p>F 题似乎是二分答案，但是怎么选择最优的 <span class="math inline">\(k\)</span>
+个问题没什么头绪。如果想不出来就记录一下。(OK 懒得想了)</p>
+<p>这次 vp 也暴露出我的问题：切送分题的速度实在是太慢了。在 ICPC
+这种对手速与脑速要求都很高的比赛规则下，这个问题挺致命的。只能多写一些尽量克服这个缺点吧。</p>
+<ul>
+<li><a href="http://thisisxxz.com/2023/06/09/CFE149T6/">CF Educational
+Round #149 <em>Problem F</em> Editorial for Two</a></li>
+</ul>
+<p><br></p>
+<h3 id="cf-educational-round-150-div.2">CF Educational Round #150
+(Div.2)</h3>
+<p><a href="https://codeforces.com/contest/1841">link</a>。我好菜 😿卡在
+C 了，明明看起来很简单。看评论区大部分也是在 C 折戟了。A 和 B
+这次倒是做的很快，15 min
+做完了，一个贪心一个简单规律。好伤心！明天把剩下的题补一补。</p>
+<p>补题的时候发现，D 题是一个很套路的 DP，如果先打 D
+就好了。通过这次要吸取教训，过了 30 min
+没想出来就去看下一题，不要死磕到底。(不过作为训练这样也是可以的吧？大概？)</p>
+<ul>
+<li><a href="https://www.thisisxxz.com/2023/06/13/CFE150T3/">CF
+Educational Round #150 <em>Problem C</em> Ranom Numbers</a></li>
+<li><a href="https://www.thisisxxz.com/2023/06/13/CFE150T4/">CF
+Educational Round #150 <em>Problem D</em> Pairs of Segments</a></li>
+<li><a href="https://www.thisisxxz.com/2023/06/13/CFE150T5/">CF
+Educational Round #150 <em>Problem E</em> Fill the Matrix</a></li>
+</ul>
+<p>做完了以后发现这三道题都很好，看来 Div.2 挺适合我的。</p>
+<p><br></p>
+]]></content>
+      <categories>
+        <category>logs</category>
+      </categories>
+      <tags>
+        <tag>programming</tag>
+        <tag>plan</tag>
+        <tag>log</tag>
       </tags>
   </entry>
   <entry>
@@ -1251,86 +1334,204 @@ if not specified.</p>
       </tags>
   </entry>
   <entry>
-    <title>Competitive Programming 复健计划</title>
-    <url>/2023/06/07/OI-rehab-plan/</url>
-    <content><![CDATA[<blockquote>
-<p># 沉淀 # 被卡 long long 毁了我的 OI 梦 # 多元卓越也是强基 # 两年
-NOIp，不会打线段树 # 逸夫楼，我想你了 # 各自努力顶峰相见 # 若 acm
-有战，召必回！<del># 送外卖也算进大厂 # 码农烧烤</del></p>
-</blockquote>
-<p>下学期有点参加 ICPC
-的想法，趁这个暑假复健下，免得菜到校内选拔都过不了；在这里小做一下记录。</p>
+    <title>Algorithms, Part 3, Princeton University</title>
+    <url>/2023/06/18/algo-princeton-p3/</url>
+    <content><![CDATA[<p>这是 <a href="https://thisisxxz.com/categories/notes/courses/Algorithms-Princeton/">Algorithms
+I &amp; II, Princeton</a> 系列笔记的 P3 部分。零基础接触
+Java，就从这门课开始吧！这篇笔记将会记录课程中覆盖到的关于 Java
+的各类语言知识。</p>
 <span id="more"></span>
-<p>暂时打算以做 Codeforces div2 和 div3 的题为主
-(太菜了)，如果遇到有意思 (不会) 的题会单独开贴写一写。</p>
+<p>Java 的语法和 C++
+还是挺像的，想要入门并不困难。因此这里将主要记录一些<strong>不一样的东西</strong>......！</p>
 <p><br></p>
-<h3 id="cf-round-878-div.3">CF Round #878 (Div.3)</h3>
-<p><a href="https://codeforces.com/contest/1840">link</a>。切了 A-E
-五道题。其实思路出来的很快，但是代码总有一些细节上的错误，可见我实现能力还是比较捞。稍微有点技巧的是
-E 题，需要每次 <span class="math inline">\(O(1)\)</span>
-动态维护两字符串之间的差异量 <code>diff</code> (类似于滑动窗口)。</p>
-<p>F 与 G 题比较难；F 题似乎是一个 DP，没想出来 (DP 苦手)；G
-题没来得及看，但切掉的人也非常少，AC Hard Version 的到现在都只有 48
-个。到时候把这两道题补一补。</p>
-<p>另外 CF 的比赛时间对 CN 真的不友好，做到半夜脑袋都昏昏沉沉的。</p>
-<p>补题记录：</p>
+<h2 id="generics">Generics</h2>
+<p>Suppose we've implemented a data structure
+<code>StackOfStrings</code>, what could we do if the clients also want
+<code>StackOfURLs</code>, <code>StackOfInts</code>,
+<code>StackOfVans</code>...?</p>
 <ul>
-<li><p><a href="https://thisisxxz.com/2023/06/07/CF878T6/">CF #878
-<em>Problem F</em> Railgun</a></p></li>
-<li><p><a href="https://thisisxxz.com/2023/06/08/CF878T7/">CF #878
-<em>Problem G</em> In Search of Truth</a></p></li>
+<li><p>Attempt 1. Implement a seperate stack class for each type. (<span class="math inline">\(\times\)</span>)</p></li>
+<li><p><strong>Attempt 2. Implement a stack with items of type
+<code>Object</code></strong>. See codes below:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">StackOfObjects</span> <span class="variable">s</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StackOfObjects</span>();</span><br><span class="line"><span class="type">Apple</span>  <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Apple</span>();</span><br><span class="line"><span class="type">Orange</span> <span class="variable">b</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Orange</span>();</span><br><span class="line">s.push(a);</span><br><span class="line">s.push(b);</span><br><span class="line">a = (Apple) (s.pop());            <span class="comment">// error-prone: this will cause run-time error!</span></span><br></pre></td></tr></table></figure>
+<p>The type <code>Object</code> could be seen as the base class in C++.
+<code>Apple</code> and <code>Orange</code> are derived classes. However,
+this requires <strong>casting</strong> in client, which may cause
+<strong>run-time error</strong> if types mismatch.</p></li>
+<li><p><strong>Attempt 3. Applying Java generics</strong>. See codes
+below:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Stack&lt;Apple&gt; s = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;Apple&gt;();</span><br><span class="line"><span class="type">Apple</span>  <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Apple</span>();</span><br><span class="line"><span class="type">Orange</span> <span class="variable">b</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Orange</span>();</span><br><span class="line">s.push(a);</span><br><span class="line">s.push(b);                        <span class="comment">// compile-time error happens!</span></span><br><span class="line">a = s.pop();</span><br></pre></td></tr></table></figure>
+<p>Using Java generics avoid casting in client and could discover type
+dismatch errors <strong>at compile-time instead of
+run-time</strong>.</p></li>
 </ul>
-<p>自己没看标程补完了！爽！F 题和 G 题都挺有意思的，感觉 F
-题努力想一想也能想出来。</p>
+<div class="note info no-icon"><p>Guiding principles. <strong>Welcome compile-time errors; avoid
+run-time errors.</strong></p>
+</div>
+<p>Note that Java does <strong>NOT</strong> support <strong>generic
+array</strong>. To achieve this, proper casting is needed:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> Item[] s;</span><br><span class="line">...</span><br><span class="line">    s = <span class="keyword">new</span> <span class="title class_">Item</span>[capacity];              <span class="comment">// Wrong! Java doesn&#x27;t support generic array</span></span><br><span class="line">    s = (Item[]) <span class="keyword">new</span> <span class="title class_">Object</span>[capacity];   <span class="comment">// Acceptable. the &quot;ugly&quot; cast</span></span><br><span class="line"><span class="comment">// Even with casting, Java will warn you for &quot;unchecked cast&quot;</span></span><br></pre></td></tr></table></figure>
+<p>Q. What to do about <strong>primitive types</strong>?</p>
+<p>To create a generic stack with primitive types like <code>int</code>,
+we use the corresponding <strong>wrapper types</strong>. Note that Java
+supports <strong>autoboxing</strong> which allows <strong>automatic
+cast</strong> between a primitive type and its wrapper.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Stack&lt;Integer&gt; s = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;Integer&gt;();</span><br><span class="line">s.push(<span class="number">17</span>);       <span class="comment">// s.push(Integer.valueOf(17));</span></span><br><span class="line"><span class="type">int</span> <span class="variable">a</span> <span class="operator">=</span> s.pop();  <span class="comment">// int a = s.pop().IntValue();</span></span><br></pre></td></tr></table></figure>
 <p><br></p>
-<h3 id="cf-educational-round-149-div.2">CF Educational Round #149
-(Div.2)</h3>
-<p><a href="https://codeforces.com/contest/1837">link</a>。vp，做了 A-D
-四道题。基本上都是贪心，码量很小。E 题是个组合数学题，稍微复杂点
-(难度是橙)，考试结束以后才做出来。没有
-1A，交了三次才过，但是做出来还是很有成就感的。只要想到规模减半的子问题模型，思路就很简单了。</p>
-<p>具体来说，在当前问题规模为 <span class="math inline">\(2^k\)</span>
-的情况下，我们分别安排第 <span class="math inline">\([1,2^{k-1}]\)</span> 队的相对顺序与第 <span class="math inline">\([2^{k-1}+1,2^k]\)</span> 队的相对顺序，使得第
-<span class="math inline">\([2^{k-1}+1,2^k]\)</span>
-队全部在这一轮被淘汰，并计算组合方案。第 <span class="math inline">\([1,2^{k-1}]\)</span> 队的相对顺序是一个规模为
-<span class="math inline">\(2^{k-1}\)</span> 的子问题；而第 <span class="math inline">\([2^{k-1}+1,2^k]\)</span> 队的相对顺序则是一个
-trivial 的组合数学问题。</p>
-<p>F 题似乎是二分答案，但是怎么选择最优的 <span class="math inline">\(k\)</span>
-个问题没什么头绪。如果想不出来就记录一下。(OK 懒得想了)</p>
-<p>这次 vp 也暴露出我的问题：切送分题的速度实在是太慢了。在 ICPC
-这种对手速与脑速要求都很高的比赛规则下，这个问题挺致命的。只能多写一些尽量克服这个缺点吧。</p>
-<ul>
-<li><a href="http://thisisxxz.com/2023/06/09/CFE149T6/">CF Educational
-Round #149 <em>Problem F</em> Editorial for Two</a></li>
-</ul>
+<blockquote>
+<p>学到这里，我发现 Java 的泛型 (generics) 与 C++ 中的类模板 (templates)
+很相似，就连定义的语法都同样采用 diamond operator
+<code>&lt;&gt;</code>。上网搜索发现，Java 的泛型 (即 attempt 3)
+本质上是上文中 attempt 2 的语法糖。这也是为什么 Java
+的泛型又被称作<strong>类型参数化 (type parameterization)</strong>。</p>
+<p>具体来说，在 Java 中，两个泛型栈实例 <code>Stack&lt;Apple&gt;</code>
+与 <code>Stack&lt;Orange&gt;</code> 将共享 <code>Stack</code>
+类的静态变量；而在 C++ 中则不会，这两个模板栈属于完全不同的类。</p>
+</blockquote>
 <p><br></p>
-<h3 id="cf-educational-round-150-div.2">CF Educational Round #150
-(Div.2)</h3>
-<p><a href="https://codeforces.com/contest/1841">link</a>。我好菜 😿卡在
-C 了，明明看起来很简单。看评论区大部分也是在 C 折戟了。A 和 B
-这次倒是做的很快，15 min
-做完了，一个贪心一个简单规律。好伤心！明天把剩下的题补一补。</p>
-<p>补题的时候发现，D 题是一个很套路的 DP，如果先打 D
-就好了。通过这次要吸取教训，过了 30 min
-没想出来就去看下一题，不要死磕到底。(不过作为训练这样也是可以的吧？大概？)</p>
+<h2 id="iterator-interface">Iterator Interface</h2>
+<p>By implementing the <code>java.lang.Iterable</code> interface, we
+could support <strong>iteration</strong> over data structure items by
+clients, without revealing the internal representation of the data
+structure.</p>
+<p>There are <strong>two interfaces</strong> that we need to implement
+in our data structure:</p>
 <ul>
-<li><a href="https://www.thisisxxz.com/2023/06/13/CFE150T3/">CF
-Educational Round #150 <em>Problem C</em> Ranom Numbers</a></li>
-<li><a href="https://www.thisisxxz.com/2023/06/13/CFE150T4/">CF
-Educational Round #150 <em>Problem D</em> Pairs of Segments</a></li>
-<li><a href="https://www.thisisxxz.com/2023/06/13/CFE150T5/">CF
-Educational Round #150 <em>Problem E</em> Fill the Matrix</a></li>
+<li><p><code>Iterable</code> : Has a method that returns an
+<code>Iterator</code>.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Iterable</span>&lt;Item&gt; &#123;</span><br><span class="line">    Iterator&lt;Item&gt; <span class="title function_">iterator</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>Iterator</code>: Has methods <code>hasNext()</code> and
+<code>next()</code>.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Iterator</span>&lt;Item&gt; &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span>;</span><br><span class="line">    Item <span class="title function_">next</span><span class="params">()</span>;</span><br><span class="line">    <span class="comment">// optional: void remove(); </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ul>
-<p>做完了以后发现这三道题都很好，看来 Div.2 挺适合我的。</p>
+<p>If the above two interfaces are properly implemented, Java supports
+elegant client code (<strong>"foreach" statement</strong>) for
+interating items in your data structures.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// foreach statement code (shorthand):</span></span><br><span class="line"><span class="keyword">for</span> (String s : stack)    StdOut.println(s);</span><br><span class="line"></span><br><span class="line"><span class="comment">// equivalent code (longhand):</span></span><br><span class="line">Iterator&lt;String&gt; i = stack.iterator();</span><br><span class="line"><span class="keyword">while</span> (i.hasNext()) &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> i.next();</span><br><span class="line">    StdOut.println(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Here is a sample code on how to implement a <strong>reverse
+iterator</strong> for an array-based stack.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Iterator;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Stack</span>&lt;Item&gt; <span class="keyword">implements</span> <span class="title class_">Iterable</span>&lt;Item&gt; &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">public</span> Iterator&lt;Item&gt; <span class="title function_">iterator</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ReverseArrayIterator</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">ReverseArrayIterator</span> <span class="keyword">implements</span> <span class="title class_">Iterator</span>&lt;Item&gt; &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> N;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span> &#123; <span class="keyword">return</span> i &gt; <span class="number">0</span>;  &#125;</span><br><span class="line">        <span class="keyword">public</span> Item <span class="title function_">next</span><span class="params">()</span>       &#123; <span class="keyword">return</span> s[--i]; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="comparable-interface">Comparable Interface</h2>
+<p>Implementing the <code>Comparable</code> interface allows us to sort
+<strong>any</strong> type of data.</p>
+<p>For a simple <strong>sort client</strong>:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> Integer.parseInt(args[<span class="number">0</span>]);</span><br><span class="line">        Student[] stu = <span class="keyword">new</span> <span class="title class_">Student</span>[n];</span><br><span class="line">        Insertion.sort(stu);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; ++i)</span><br><span class="line">            StdOut.println(stu[i].getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>We need to implement the <code>Comparable</code> interface in class
+<code>Student</code> as a callback.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Comparable</span>&lt;Item&gt; &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(Item that)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>In particular, the object implementation requires to implement the
+<code>compareTo</code> method.</p>
+<p>Note that the <code>compareTo</code> method should follow the
+<strong>total order</strong>.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> <span class="keyword">implements</span> <span class="title class_">Comparable</span>&lt;Student&gt; &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(Student that)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.grades &lt; that.grades)</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.grades &gt; that.grades)</span><br><span class="line">            <span class="keyword">return</span> +<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="note info no-icon"><p>A <u><strong>total order</strong></u> is a binary relation <span class="math inline">\(\leq\)</span> that satisfies:</p>
+<ul>
+<li>Antisymmetry: if <span class="math inline">\(v\leq w\)</span> and
+<span class="math inline">\(w\leq v\)</span>, then <span class="math inline">\(v=w\)</span>.</li>
+<li>Transitivity: if <span class="math inline">\(v\leq w\)</span> and
+<span class="math inline">\(w\leq x\)</span>, then <span class="math inline">\(v\leq x\)</span>.</li>
+<li>Totality: either <span class="math inline">\(v\leq w\)</span> or
+<span class="math inline">\(w\leq v\)</span> or both.</li>
+</ul>
+</div>
+<p>Finally, we implement the sorting algorithm. The key point is that
+there should be <strong>NO dependence</strong> on <code>Student</code>
+data type.</p>
+<p>For convenience, two useful sorting abstractions <code>less</code>
+and <code>exch</code> are introduced.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Insertion</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> a.length;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i; j &gt; <span class="number">0</span>; --j) &#123;</span><br><span class="line">                <span class="keyword">if</span> (a[j].compareTo(a[j - <span class="number">1</span>]) &lt; <span class="number">0</span>)</span><br><span class="line">                    exch(a, j, j - <span class="number">1</span>);</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">less</span><span class="params">(Comparable v, Comparable w)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> v.compareTo(w) &lt; <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">exch</span><span class="params">(Comparable[] a, <span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;</span><br><span class="line">        <span class="type">Comparable</span> <span class="variable">swap</span> <span class="operator">=</span> a[i];</span><br><span class="line">        a[i] = a[j];</span><br><span class="line">        a[j] = swap;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isSorted</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt; a.length; ++i)</span><br><span class="line">            <span class="keyword">if</span> (less(a[i], a[i - <span class="number">1</span>]))    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="assertion-statement">Assertion Statement</h2>
+<p>Assertion is the statement to <strong>test assumptions</strong> about
+the program.</p>
+<ul>
+<li>Helps detect <strong>logic</strong> bugs.</li>
+<li>Documents code.</li>
+</ul>
+<p>Java assert statement throws an exception unless boolean condition is
+true.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">assert</span> <span class="title function_">isSorted</span><span class="params">(a, lo, hi)</span>;</span><br><span class="line"><span class="comment">// if a[lo]...a[hi] is not sorted, throws an exception</span></span><br></pre></td></tr></table></figure>
+<p>Java assert statement could be enabled or disabled <strong>at
+runtime</strong>. <span class="math inline">\(\Rightarrow\)</span> No
+cost in production code.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">java -ea MyProgram    // <span class="built_in">enable</span> assertions</span><br><span class="line">java -da MyProgram    // <span class="built_in">disable</span> assertions (default)</span><br></pre></td></tr></table></figure>
+<p>Note that assertions are better used to check <strong>internal
+invariants</strong>; do <strong>NOT</strong> use for external argument
+checking.</p>
+<p><br></p>
+<h2 id="comparator-interface">Comparator Interface</h2>
+<p>We have introduced <code>Comparable</code> interface in the previous
+section; It is usually implemented with a type's <strong>natural
+order</strong>.</p>
+<p>However, when we want to sort using one or more <strong>alternate
+orders</strong> (must be a <strong>total order</strong>), we need to
+implement the <code>Comparator</code> interface.</p>
+<figure>
+<img src="/2023/06/18/algo-princeton-p3/orders.png" alt="natural order and alternate orders of letter-string">
+<figcaption aria-hidden="true">natural order and alternate orders of
+letter-string</figcaption>
+</figure>
+<p>See the following <strong>Java system sort</strong> clients:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String[] a;</span><br><span class="line">...</span><br><span class="line">Arrays.sort(a);        <span class="comment">// uses natural order defined in Comparable interface</span></span><br><span class="line">...</span><br><span class="line">Arrays.sort(a, String.CASE_INSENCITIVE_ORDER);</span><br><span class="line">Arrays.sort(a, Collator.getInstance(<span class="keyword">new</span> <span class="title class_">Locale</span>(<span class="string">&quot;es&quot;</span>)));</span><br><span class="line">Arrays.sort(a, <span class="keyword">new</span> <span class="title class_">BritshPhoneBookOrder</span>());</span><br></pre></td></tr></table></figure>
+<p>Note that the second argument passed into <code>Arrays.sort()</code>
+is a <code>Comparator</code> object.</p>
+<p>To create such objects, we need to implement <code>Comparator</code>
+interface in the corresponding class:</p>
+<ul>
+<li>Define a <strong>(nested) class</strong> that implements the
+<code>Comparator</code> interface.</li>
+<li>Implement the <code>compare()</code> method.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Comparator&lt;Student&gt; BY_NAME    = <span class="keyword">new</span> <span class="title class_">ByName</span>();</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Comparator&lt;Student&gt; BY_SECTION = <span class="keyword">new</span> <span class="title class_">BySection</span>();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> section;</span><br><span class="line">    ...</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ByName</span> <span class="keyword">implements</span> <span class="title class_">Comparator</span>&lt;Student&gt; &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compare</span><span class="params">(Student v, Student w)</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> v.name.compareTo(w.name);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">BySection</span> <span class="keyword">implements</span> <span class="title class_">Comparator</span>&lt;Student&gt; &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compare</span><span class="params">(Student v, Student w)</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> v.section - w.section;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+<p>If we want to support comparators in our own sort
+implementations:</p>
+<ul>
+<li>Use <code>Object</code> instead of <code>Comparable</code>.</li>
+<li>Pass <code>Comparator</code> to <code>sort()</code> and
+<code>less()</code> and use it in <code>less()</code>.</li>
+</ul>
+<p>Here is a sample code of insertion sort using a Comparator.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Object[] a, Comparator comparator)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> a.length;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i; j &gt; <span class="number">0</span> &amp;&amp; less(comparator, a[j], a[j - <span class="number">1</span>]); --j)</span><br><span class="line">            exch(a, j, j - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">less</span><span class="params">(Comparator c, Object v, Object w)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> c.compare(v, w) &lt; <span class="number">0</span>;    <span class="comment">// compare() is used here in less()</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">exch</span><span class="params">(Object[] a, <span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;    <span class="comment">// no need to pass comparator in</span></span><br><span class="line">    <span class="type">Object</span> <span class="variable">swap</span> <span class="operator">=</span> a[i]; a[i] = a[j]; a[j] = swap;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="java-language-style">Java Language Style</h2>
+<p>这门课的 projects 设计实在是太良心了，在评分反馈里居然还包含 style
+check！难以想象教职员们为课程的准备倾注了多少心血……至少我从来没有见过有一门课的评分标准里还包含
+coding style。</p>
+<ol type="1">
+<li>The instance variable name must start with <strong>a lowercase
+letter and use camelCase</strong>.</li>
+<li>Remove unused import statements.</li>
+<li>Typecast (类型转换) must <strong>be followed by a
+whitespace</strong>.</li>
+<li>Define constructors after static and instance variables but before
+methods.</li>
+<li>Define constant variables to hold the constants used more than
+once.</li>
+</ol>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.   References in
+the article are from corresponding course materials if not
+specified.</p>
+</div>
+<p>Course info:</p>
+<p><a href="https://www.coursera.org/learn/algorithms-part1">Algorithms,
+Part 1, Princeton University</a>. Lecturer: Robert Sedgewick &amp; Kevin
+Wayne.</p>
+<p>Course textbook:</p>
+<p><em>Algorithms (4th edition)</em>, Sedgewick, R. &amp; Wayne, K.,
+(2011), Addison-Wesley Professional, <a href="https://algs4.cs.princeton.edu/home/">view</a></p>
 <p><br></p>
 ]]></content>
       <categories>
-        <category>logs</category>
+        <category>notes</category>
+        <category>courses</category>
+        <category>Algorithms, Princeton</category>
       </categories>
       <tags>
-        <tag>programming</tag>
-        <tag>plan</tag>
-        <tag>log</tag>
+        <tag>course notes</tag>
+        <tag>Java</tag>
       </tags>
   </entry>
   <entry>
@@ -1812,207 +2013,6 @@ Wayne.</p>
       <tags>
         <tag>course notes</tag>
         <tag>algorithm</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Algorithms, Part 3, Princeton University</title>
-    <url>/2023/06/18/algo-princeton-p3/</url>
-    <content><![CDATA[<p>这是 <a href="https://thisisxxz.com/categories/notes/courses/Algorithms-Princeton/">Algorithms
-I &amp; II, Princeton</a> 系列笔记的 P3 部分。零基础接触
-Java，就从这门课开始吧！这篇笔记将会记录课程中覆盖到的关于 Java
-的各类语言知识。</p>
-<span id="more"></span>
-<p>Java 的语法和 C++
-还是挺像的，想要入门并不困难。因此这里将主要记录一些<strong>不一样的东西</strong>......！</p>
-<p><br></p>
-<h2 id="generics">Generics</h2>
-<p>Suppose we've implemented a data structure
-<code>StackOfStrings</code>, what could we do if the clients also want
-<code>StackOfURLs</code>, <code>StackOfInts</code>,
-<code>StackOfVans</code>...?</p>
-<ul>
-<li><p>Attempt 1. Implement a seperate stack class for each type. (<span class="math inline">\(\times\)</span>)</p></li>
-<li><p><strong>Attempt 2. Implement a stack with items of type
-<code>Object</code></strong>. See codes below:</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">StackOfObjects</span> <span class="variable">s</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StackOfObjects</span>();</span><br><span class="line"><span class="type">Apple</span>  <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Apple</span>();</span><br><span class="line"><span class="type">Orange</span> <span class="variable">b</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Orange</span>();</span><br><span class="line">s.push(a);</span><br><span class="line">s.push(b);</span><br><span class="line">a = (Apple) (s.pop());            <span class="comment">// error-prone: this will cause run-time error!</span></span><br></pre></td></tr></table></figure>
-<p>The type <code>Object</code> could be seen as the base class in C++.
-<code>Apple</code> and <code>Orange</code> are derived classes. However,
-this requires <strong>casting</strong> in client, which may cause
-<strong>run-time error</strong> if types mismatch.</p></li>
-<li><p><strong>Attempt 3. Applying Java generics</strong>. See codes
-below:</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Stack&lt;Apple&gt; s = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;Apple&gt;();</span><br><span class="line"><span class="type">Apple</span>  <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Apple</span>();</span><br><span class="line"><span class="type">Orange</span> <span class="variable">b</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Orange</span>();</span><br><span class="line">s.push(a);</span><br><span class="line">s.push(b);                        <span class="comment">// compile-time error happens!</span></span><br><span class="line">a = s.pop();</span><br></pre></td></tr></table></figure>
-<p>Using Java generics avoid casting in client and could discover type
-dismatch errors <strong>at compile-time instead of
-run-time</strong>.</p></li>
-</ul>
-<div class="note info no-icon"><p>Guiding principles. <strong>Welcome compile-time errors; avoid
-run-time errors.</strong></p>
-</div>
-<p>Note that Java does <strong>NOT</strong> support <strong>generic
-array</strong>. To achieve this, proper casting is needed:</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> Item[] s;</span><br><span class="line">...</span><br><span class="line">    s = <span class="keyword">new</span> <span class="title class_">Item</span>[capacity];              <span class="comment">// Wrong! Java doesn&#x27;t support generic array</span></span><br><span class="line">    s = (Item[]) <span class="keyword">new</span> <span class="title class_">Object</span>[capacity];   <span class="comment">// Acceptable. the &quot;ugly&quot; cast</span></span><br><span class="line"><span class="comment">// Even with casting, Java will warn you for &quot;unchecked cast&quot;</span></span><br></pre></td></tr></table></figure>
-<p>Q. What to do about <strong>primitive types</strong>?</p>
-<p>To create a generic stack with primitive types like <code>int</code>,
-we use the corresponding <strong>wrapper types</strong>. Note that Java
-supports <strong>autoboxing</strong> which allows <strong>automatic
-cast</strong> between a primitive type and its wrapper.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Stack&lt;Integer&gt; s = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;Integer&gt;();</span><br><span class="line">s.push(<span class="number">17</span>);       <span class="comment">// s.push(Integer.valueOf(17));</span></span><br><span class="line"><span class="type">int</span> <span class="variable">a</span> <span class="operator">=</span> s.pop();  <span class="comment">// int a = s.pop().IntValue();</span></span><br></pre></td></tr></table></figure>
-<p><br></p>
-<blockquote>
-<p>学到这里，我发现 Java 的泛型 (generics) 与 C++ 中的类模板 (templates)
-很相似，就连定义的语法都同样采用 diamond operator
-<code>&lt;&gt;</code>。上网搜索发现，Java 的泛型 (即 attempt 3)
-本质上是上文中 attempt 2 的语法糖。这也是为什么 Java
-的泛型又被称作<strong>类型参数化 (type parameterization)</strong>。</p>
-<p>具体来说，在 Java 中，两个泛型栈实例 <code>Stack&lt;Apple&gt;</code>
-与 <code>Stack&lt;Orange&gt;</code> 将共享 <code>Stack</code>
-类的静态变量；而在 C++ 中则不会，这两个模板栈属于完全不同的类。</p>
-</blockquote>
-<p><br></p>
-<h2 id="iterator-interface">Iterator Interface</h2>
-<p>By implementing the <code>java.lang.Iterable</code> interface, we
-could support <strong>iteration</strong> over data structure items by
-clients, without revealing the internal representation of the data
-structure.</p>
-<p>There are <strong>two interfaces</strong> that we need to implement
-in our data structure:</p>
-<ul>
-<li><p><code>Iterable</code> : Has a method that returns an
-<code>Iterator</code>.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Iterable</span>&lt;Item&gt; &#123;</span><br><span class="line">    Iterator&lt;Item&gt; <span class="title function_">iterator</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li><p><code>Iterator</code>: Has methods <code>hasNext()</code> and
-<code>next()</code>.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Iterator</span>&lt;Item&gt; &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span>;</span><br><span class="line">    Item <span class="title function_">next</span><span class="params">()</span>;</span><br><span class="line">    <span class="comment">// optional: void remove(); </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-<p>If the above two interfaces are properly implemented, Java supports
-elegant client code (<strong>"foreach" statement</strong>) for
-interating items in your data structures.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// foreach statement code (shorthand):</span></span><br><span class="line"><span class="keyword">for</span> (String s : stack)    StdOut.println(s);</span><br><span class="line"></span><br><span class="line"><span class="comment">// equivalent code (longhand):</span></span><br><span class="line">Iterator&lt;String&gt; i = stack.iterator();</span><br><span class="line"><span class="keyword">while</span> (i.hasNext()) &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> i.next();</span><br><span class="line">    StdOut.println(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Here is a sample code on how to implement a <strong>reverse
-iterator</strong> for an array-based stack.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Iterator;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Stack</span>&lt;Item&gt; <span class="keyword">implements</span> <span class="title class_">Iterable</span>&lt;Item&gt; &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">public</span> Iterator&lt;Item&gt; <span class="title function_">iterator</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ReverseArrayIterator</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">ReverseArrayIterator</span> <span class="keyword">implements</span> <span class="title class_">Iterator</span>&lt;Item&gt; &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> N;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span> &#123; <span class="keyword">return</span> i &gt; <span class="number">0</span>;  &#125;</span><br><span class="line">        <span class="keyword">public</span> Item <span class="title function_">next</span><span class="params">()</span>       &#123; <span class="keyword">return</span> s[--i]; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><br></p>
-<h2 id="comparable-interface">Comparable Interface</h2>
-<p>Implementing the <code>Comparable</code> interface allows us to sort
-<strong>any</strong> type of data.</p>
-<p>For a simple <strong>sort client</strong>:</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> Integer.parseInt(args[<span class="number">0</span>]);</span><br><span class="line">        Student[] stu = <span class="keyword">new</span> <span class="title class_">Student</span>[n];</span><br><span class="line">        Insertion.sort(stu);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; ++i)</span><br><span class="line">            StdOut.println(stu[i].getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>We need to implement the <code>Comparable</code> interface in class
-<code>Student</code> as a callback.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Comparable</span>&lt;Item&gt; &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(Item that)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>In particular, the object implementation requires to implement the
-<code>compareTo</code> method.</p>
-<p>Note that the <code>compareTo</code> method should follow the
-<strong>total order</strong>.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> <span class="keyword">implements</span> <span class="title class_">Comparable</span>&lt;Student&gt; &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(Student that)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.grades &lt; that.grades)</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.grades &gt; that.grades)</span><br><span class="line">            <span class="keyword">return</span> +<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<div class="note info no-icon"><p>A <u><strong>total order</strong></u> is a binary relation <span class="math inline">\(\leq\)</span> that satisfies:</p>
-<ul>
-<li>Antisymmetry: if <span class="math inline">\(v\leq w\)</span> and
-<span class="math inline">\(w\leq v\)</span>, then <span class="math inline">\(v=w\)</span>.</li>
-<li>Transitivity: if <span class="math inline">\(v\leq w\)</span> and
-<span class="math inline">\(w\leq x\)</span>, then <span class="math inline">\(v\leq x\)</span>.</li>
-<li>Totality: either <span class="math inline">\(v\leq w\)</span> or
-<span class="math inline">\(w\leq v\)</span> or both.</li>
-</ul>
-</div>
-<p>Finally, we implement the sorting algorithm. The key point is that
-there should be <strong>NO dependence</strong> on <code>Student</code>
-data type.</p>
-<p>For convenience, two useful sorting abstractions <code>less</code>
-and <code>exch</code> are introduced.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Insertion</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> a.length;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i; j &gt; <span class="number">0</span>; --j) &#123;</span><br><span class="line">                <span class="keyword">if</span> (a[j].compareTo(a[j - <span class="number">1</span>]) &lt; <span class="number">0</span>)</span><br><span class="line">                    exch(a, j, j - <span class="number">1</span>);</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">less</span><span class="params">(Comparable v, Comparable w)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> v.compareTo(w) &lt; <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">exch</span><span class="params">(Comparable[] a, <span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;</span><br><span class="line">        <span class="type">Comparable</span> <span class="variable">swap</span> <span class="operator">=</span> a[i];</span><br><span class="line">        a[i] = a[j];</span><br><span class="line">        a[j] = swap;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isSorted</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt; a.length; ++i)</span><br><span class="line">            <span class="keyword">if</span> (less(a[i], a[i - <span class="number">1</span>]))    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><br></p>
-<h2 id="assertion-statement">Assertion Statement</h2>
-<p>Assertion is the statement to <strong>test assumptions</strong> about
-the program.</p>
-<ul>
-<li>Helps detect <strong>logic</strong> bugs.</li>
-<li>Documents code.</li>
-</ul>
-<p>Java assert statement throws an exception unless boolean condition is
-true.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">assert</span> <span class="title function_">isSorted</span><span class="params">(a, lo, hi)</span>;</span><br><span class="line"><span class="comment">// if a[lo]...a[hi] is not sorted, throws an exception</span></span><br></pre></td></tr></table></figure>
-<p>Java assert statement could be enabled or disabled <strong>at
-runtime</strong>. <span class="math inline">\(\Rightarrow\)</span> No
-cost in production code.</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">java -ea MyProgram    // <span class="built_in">enable</span> assertions</span><br><span class="line">java -da MyProgram    // <span class="built_in">disable</span> assertions (default)</span><br></pre></td></tr></table></figure>
-<p>Note that assertions are better used to check <strong>internal
-invariants</strong>; do <strong>NOT</strong> use for external argument
-checking.</p>
-<p><br></p>
-<h2 id="comparator-interface">Comparator Interface</h2>
-<p>We have introduced <code>Comparable</code> interface in the previous
-section; It is usually implemented with a type's <strong>natural
-order</strong>.</p>
-<p>However, when we want to sort using one or more <strong>alternate
-orders</strong> (must be a <strong>total order</strong>), we need to
-implement the <code>Comparator</code> interface.</p>
-<figure>
-<img src="/2023/06/18/algo-princeton-p3/orders.png" alt="natural order and alternate orders of letter-string">
-<figcaption aria-hidden="true">natural order and alternate orders of
-letter-string</figcaption>
-</figure>
-<p>See the following <strong>Java system sort</strong> clients:</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String[] a;</span><br><span class="line">...</span><br><span class="line">Arrays.sort(a);        <span class="comment">// uses natural order defined in Comparable interface</span></span><br><span class="line">...</span><br><span class="line">Arrays.sort(a, String.CASE_INSENCITIVE_ORDER);</span><br><span class="line">Arrays.sort(a, Collator.getInstance(<span class="keyword">new</span> <span class="title class_">Locale</span>(<span class="string">&quot;es&quot;</span>)));</span><br><span class="line">Arrays.sort(a, <span class="keyword">new</span> <span class="title class_">BritshPhoneBookOrder</span>());</span><br></pre></td></tr></table></figure>
-<p>Note that the second argument passed into <code>Arrays.sort()</code>
-is a <code>Comparator</code> object.</p>
-<p>To create such objects, we need to implement <code>Comparator</code>
-interface in the corresponding class:</p>
-<ul>
-<li>Define a <strong>(nested) class</strong> that implements the
-<code>Comparator</code> interface.</li>
-<li>Implement the <code>compare()</code> method.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Comparator&lt;Student&gt; BY_NAME    = <span class="keyword">new</span> <span class="title class_">ByName</span>();</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Comparator&lt;Student&gt; BY_SECTION = <span class="keyword">new</span> <span class="title class_">BySection</span>();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> section;</span><br><span class="line">    ...</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ByName</span> <span class="keyword">implements</span> <span class="title class_">Comparator</span>&lt;Student&gt; &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compare</span><span class="params">(Student v, Student w)</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> v.name.compareTo(w.name);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">BySection</span> <span class="keyword">implements</span> <span class="title class_">Comparator</span>&lt;Student&gt; &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compare</span><span class="params">(Student v, Student w)</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> v.section - w.section;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
-<p>If we want to support comparators in our own sort
-implementations:</p>
-<ul>
-<li>Use <code>Object</code> instead of <code>Comparable</code>.</li>
-<li>Pass <code>Comparator</code> to <code>sort()</code> and
-<code>less()</code> and use it in <code>less()</code>.</li>
-</ul>
-<p>Here is a sample code of insertion sort using a Comparator.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Object[] a, Comparator comparator)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> a.length;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i; j &gt; <span class="number">0</span> &amp;&amp; less(comparator, a[j], a[j - <span class="number">1</span>]); --j)</span><br><span class="line">            exch(a, j, j - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">less</span><span class="params">(Comparator c, Object v, Object w)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> c.compare(v, w) &lt; <span class="number">0</span>;    <span class="comment">// compare() is used here in less()</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">exch</span><span class="params">(Object[] a, <span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;    <span class="comment">// no need to pass comparator in</span></span><br><span class="line">    <span class="type">Object</span> <span class="variable">swap</span> <span class="operator">=</span> a[i]; a[i] = a[j]; a[j] = swap;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><br></p>
-<h2 id="java-language-style">Java Language Style</h2>
-<p>这门课的 projects 设计实在是太良心了，在评分反馈里居然还包含 style
-check！难以想象教职员们为课程的准备倾注了多少心血……至少我从来没有见过有一门课的评分标准里还包含
-coding style。</p>
-<ol type="1">
-<li>The instance variable name must start with <strong>a lowercase
-letter and use camelCase</strong>.</li>
-<li>Remove unused import statements.</li>
-<li>Typecast (类型转换) must <strong>be followed by a
-whitespace</strong>.</li>
-<li>Define constructors after static and instance variables but before
-methods.</li>
-<li>Define constant variables to hold the constants used more than
-once.</li>
-</ol>
-<p><br></p>
-<h2 id="reference">Reference</h2>
-<div class="note warning"><p>  This article is a self-administered course note.   References in
-the article are from corresponding course materials if not
-specified.</p>
-</div>
-<p>Course info:</p>
-<p><a href="https://www.coursera.org/learn/algorithms-part1">Algorithms,
-Part 1, Princeton University</a>. Lecturer: Robert Sedgewick &amp; Kevin
-Wayne.</p>
-<p>Course textbook:</p>
-<p><em>Algorithms (4th edition)</em>, Sedgewick, R. &amp; Wayne, K.,
-(2011), Addison-Wesley Professional, <a href="https://algs4.cs.princeton.edu/home/">view</a></p>
-<p><br></p>
-]]></content>
-      <categories>
-        <category>notes</category>
-        <category>courses</category>
-        <category>Algorithms, Princeton</category>
-      </categories>
-      <tags>
-        <tag>course notes</tag>
-        <tag>Java</tag>
       </tags>
   </entry>
   <entry>
@@ -2751,6 +2751,190 @@ notes here</a>.</p></li>
       </tags>
   </entry>
   <entry>
+    <title>向世界发起叛逆 - 简评女神异闻录5 (Persona 5)</title>
+    <url>/2023/05/30/persona-5/</url>
+    <content><![CDATA[<p>第一篇评论，献给有 “天下第一” 之称的
+P5。这也是我走出确诊克罗恩病的阴霾，回归正常学习生活后玩到的第一个游戏。在主图结束完一天充实的学习后，坐地铁回到窄小的出租屋，打开
+P5R 继续和怪盗团伙伴的冒险——这种日子定义为 “幸福” 毫不为过。再加上主角
+Joker
+也是乘地铁上下学，上堂读书落堂偷心；游戏和日常的巧合带给我一种奇妙的代入感
+(<del>其实就是中二病犯了</del>)。</p>
+<p>谨以这篇评论纪念 P5R 这三个月来带给我的感动。</p>
+<span id="more"></span>
+<p><br></p>
+<figure>
+<img src="/2023/05/30/persona-5/achievements.png" alt="全成就军火展示">
+<figcaption aria-hidden="true">全成就军火展示</figcaption>
+</figure>
+<p><br></p>
+<div class="note warning"><p>    <strong>Spoiler Alert!</strong></p>
+<p>    This article may contain *spoilers*.</p>
+</div>
+<p><br></p>
+<h2 id="这是一场叛逆">这是一场叛逆</h2>
+<blockquote class="blockquote-center">
+<p>感谢在成为大人的必经之路上，还能给我一场逃避的梦。 —— Steam comment
+from Lestatice</p>
+
+</blockquote>
+<p>纵观 P
+系列主角团，<strong>几乎</strong>所有成员都是处于后青春期的高中学生。ATLUS
+也将女神异闻录系列定义为<strong>青春 RPG</strong>。</p>
+<p>青春期是人整个生命阶段中的一个重要时期。一方面，它是美好的，蓬勃的，是“早上八九点钟的太阳”；而另一方面，青少年的人格逐渐完善，自我意识开始觉醒：他们要求得到与「大人们」平等的地位，希望自己的人格得到尊重。与此同时，青春期也是一个人初窥到社会不公的时期：对世界童话般的认知逐渐崩塌，取而代之的是震惊和错愕——世间的不平事实在太多，而肯站出来的人又太少。<strong>为什么没人愿意伸张正义？</strong>这是<strong>独属于青春期的疑问</strong>。</p>
+<p>面对这个赤诚的疑问，「大人们」不愿，也不敢回答。</p>
+<p>关心他们的大人们在一瞬间中看到了过去的自己，却也只能委婉的留下一句“不要多管闲事”；</p>
+<figure>
+<img src="/2023/05/30/persona-5/odona1.png" alt="&quot;我收留你的原因也许是看到了过去的自己&quot;">
+<figcaption aria-hidden="true">"我收留你的原因也许是看到了过去的自己"</figcaption>
+</figure>
+<p>而「堕落的大人们」(クズなおとな)
+不仅对这个问题嗤之以鼻，还将他们的行为定义为<strong>叛逆</strong>。</p>
+<figure>
+<img src="/2023/05/30/persona-5/odona2.png" alt="相信每个人都听过这句话">
+<figcaption aria-hidden="true">相信每个人都听过这句话</figcaption>
+</figure>
+<p>仔细想想，叛逆这一词是多么的傲慢！它是大人视角的，以驯服为标准的说辞：换个角度看，对于受到不公对待的青少年来说，叛逆是他们最正常不过的诉求。</p>
+<p>我们的主角
+Joker，正是在目睹同伴受到死亡威胁与自身遭遇不公的双重刺激下，发生了「人格面具」(persona，ペルソナ)
+的觉醒：接下来，他将与建立起深厚羁绊的同伴们华丽地开启一场对「堕落的大人们」的终极叛逆……</p>
+<p><br></p>
+<h2 id="失去容身之所的问题学生们">失去容身之所的问题学生们</h2>
+<p><em>热血高校</em>，<em>麻辣教师
+GTO</em>，<em>垫底辣妹</em>……日本人似乎对“问题学生”情有独钟：这些作品大多信奉并传达这样一种观点：“不良少年”们的本性并不坏，他们只是「<strong>失去了容身之所</strong>」而已。甚至，相较于那些用功读书的人，不良少年们对社会的不公义更为敏感，反应更为激烈。</p>
+<p>「<strong>容身之所</strong>」(<strong>居場所</strong>，いばしょ)
+究竟是什么？这是个很典型的日式词汇，如果要在中文里找一个词来对应的话，我觉得应该是指所谓
+“<strong>内心的归宿</strong>”。对不良少年们来说，内在上，他们由于受到某些打击失去了目标，从而变得迷茫；外在上，他们很难从家人，朋友，教师等重要角色处获得引导与慰藉。</p>
+<figure>
+<img src="/2023/05/30/persona-5/yiibashio.png" alt="龙司是最典型的不良少年">
+<figcaption aria-hidden="true">龙司是最典型的不良少年</figcaption>
+</figure>
+<p>这些失去「容身之所」的少年们，很容易聚在一起抱团取暖，互相支持鼓励；与此同时，他们也需要一个<strong>信念</strong>。而这一信念，决定了他们的未来。90
+年代风靡一时的香港 <em>古惑仔</em>
+系列电影，讲述的其实也是一群失去「容身之所」的少年。在没有 persona
+与天鹅绒房间的现实世界，他们选择了“行古惑”，入黑道。即使他们之间的兄弟情谊是那样的令人感动，最后也逃不过血流遍地的悲惨结局。</p>
+<p>好在我们的主角团是一群善良的人，又拥有 persona
+的神奇力量，他们选择了以 “<strong>不对有困难的人视而不见</strong>”
+作为自己的信念。怪盗团这一身份，不仅解决了他们当下面临的危机，也成为了支撑他们前进的精神源泉。即使最后不免分道扬镳，这个独特的羁绊也使得他们不再迷茫，永远获得了自己的「容身之所」。</p>
+<figure>
+<img src="/2023/05/30/persona-5/foundation.jpg" alt="怪盗团成立纪念">
+<figcaption aria-hidden="true">怪盗团成立纪念</figcaption>
+</figure>
+<h3 id="开拓的战车坂本龙司">开拓的战车：坂本龙司</h3>
+<p>作为初始四人 (三人一猫) 组之一，好兄弟龙司是从开始陪伴 Joker
+到最后的人。他的性格可以说是标准的男二模板：讲义气，冲动，大大咧咧，有勇无谋，还有点好色；在怪盗团中也一直作为被吐槽的对象。</p>
+<p>虽然初始人设普通，但龙司在整个游戏中的改变和成长却可以称得上是最令人瞩目
+(之一)
+的。在他表面的性格背后还隐藏着许多其他的东西——而发现这一切的正是主角
+Joker。Joker
+和怪盗团为这个原不良少年带来了信念，而他也向怪盗团回报以自己热烈的心。秀尽学园门口异世界
+APP 命运般的开启，令这辆生锈的<strong>战车</strong> (The Chariot)
+重新开始了奔跑。</p>
+<p>事实上，大家所诟病较多的龙司的缺点几乎从未造成过什么重大的后果。虽然做事冲动，但是却有着<strong>超高的行动力</strong>，是
+Joker
+的左膀右臂；虽然经常被说有勇无谋，但他同时也是怪盗团中最<strong>敢想敢做</strong>的人；虽然有点好色，但面对女生却意外的有<strong>绅士风度</strong>；对杏作出的“下头”举动建立在他们早就相识的基础上，更近似于无伤大雅的玩笑。此外，他也是全团中最关心，最信赖
+Joker
+的人。作为怪盗团的<strong>冲锋队长</strong>，龙司将战车<strong>热烈莽撞</strong>的个性展现的淋漓尽致。</p>
+<p><strong>那么，龙司的问题到底出在哪里？</strong></p>
+<p>自始至终，龙司一直秉承着这样一个信念：<strong>要不断的令大人物悔改，使怪盗团的名气越来越高</strong>。他认为只有站在高处，才能给受到压迫的人带来希望；做不被大众所认识的无名英雄，并不能从根本上解决问题。</p>
+<figure>
+<img src="/2023/05/30/persona-5/ryuji1.png" alt="与其躲在暗处，不如成为烟花">
+<figcaption aria-hidden="true">与其躲在暗处，不如成为烟花</figcaption>
+</figure>
+<p>这一想法是正确的：事实上，怪盗团也一直朝着这个方向前进，因此才能得到大众的支持击败伪神。然而在此之前，随着怪盗团取得一个又一个胜利，人气越来越高，龙司的心境也发生了微妙的变化。在不知不觉间，龙司想要怪盗团名扬天下的「理由」由“<strong>帮助有困难的人</strong>”变为了“<strong>自己</strong>”……</p>
+<p>值得注意的是，与三岛不同，龙司的转变并非出于虚荣：与看起来不同，<strong>龙司从来不是一个虚荣的人</strong>。虽然常说要利用怪盗团的身份泡妞，但那终究只是口嗨而已；在金城悔改后，怪盗团众人得到了金城的秘宝——一箱子的大钞。而此时龙司的愿望居然只是以后顿顿可以吃“猪肉味增汤套餐”；当发现钞票是假的之后，龙司
+(以及怪盗团全员)
+的反应又如何？他释怀地笑了。大家都笑了。而这，不可能是一个贪慕虚荣的人会有的反应。</p>
+<p>与其他成员相比，在遇到怪盗团之前，龙司是最接近<strong>一无所有</strong>的。没有朋友，没有未来，没有信念，剩下的只有对母亲和田径社社员的愧疚，和对鸭志田的仇恨。被夺走「容身之所」的他，只能眼睁睁的看着自己一步步沉沦。怪盗团的出现对他而言无疑是一种救赎，也正因如此，他比任何人都不希望怪盗团停止活动。怪盗团给予了他希望，也逐渐成为了他的「<strong>执念</strong>」。为了怪盗团能够继续，无论付出什么代价都是必要的，否则“至今积累起来的东西，就全部完蛋了”。迷路的战车，就这样跌入了陷阱。</p>
+<figure>
+<img src="/2023/05/30/persona-5/ryuji2.png" alt="怪盗团真的是为了“满足期待”而诞生的吗？">
+<figcaption aria-hidden="true">怪盗团真的是为了“满足期待”而诞生的吗？</figcaption>
+</figure>
+<p>随着时间推移，巨大的阴谋浮出水面，当初主张改心奥村邦和的龙司才发现自己令怪盗团陷入了多么严重的危机。自己明明是想让怪盗团变得更好，又为什么会跌入对手的圈套呢？在无孔不入的国家机器面前，龙司第一次感受到了自己的无力。悔恨和不甘心由心底涌出，化作一声声无济于事的怒吼。</p>
+<p>到这里，他才真正意识到自己所做的一切并不是为了遇到困难的人，而是可笑的<strong>自我满足</strong>；不知不觉间，自己竟然丢失了最宝贵的<strong>初心</strong>。对怪盗团的忠诚，反而成了枷锁。当晚，充满愧疚的他找
+Joker
+谈心：“不知道什么时候，我变得得意忘形了。想着只要为了正义，什么都可以做，这样和我们一直以来对付的那些人根本没有区别。”</p>
+<p>龙司呀龙司，难道你还没有觉察到吗？就算怪盗团解散，你也再不是「一无所有」了。和伙伴们并肩战斗建立起的<strong>羁绊</strong>，是不会消失的啊！不如说，只要初心未改，无论是否展开活动，无论大家是否还能聚在一起，怪盗团就永远不会解散！</p>
+<p>明白了这一点的战车，重新上路了。无论是接下来对狮童，伪神的讨伐，还是第三学期和丸喜的战斗，龙司都立下了赫赫战功。这是因为，他已经找到了自己<strong>真正想要守护的东西</strong>。</p>
+<figure>
+<img src="/2023/05/30/persona-5/ryuji3.jpg" alt="伪神讨伐前，不再迷茫的龙司">
+<figcaption aria-hidden="true">伪神讨伐前，不再迷茫的龙司</figcaption>
+</figure>
+<h3 id="反叛的女教皇新岛真">反叛的女教皇：新岛真</h3>
+<p>鸭志田悔改事件的第二天，一位英气勃勃的女学生走进了校长办公室。她来这里是为了接下一个任务：调查有关心之怪盗团的传闻。校长信任她的能力，允诺事件平息之后将大学的保送名额分配给她。</p>
+<p>实际上，就算没有校长的推荐，成绩优异的她也完全能凭自己的实力赢得名额；而应承这件事的原因，在于校长有意无意的暗示：「你的姐姐也很优秀啊，年纪轻轻就当上了检察官。……你如果在学校惹上麻烦，姐姐可能也会受到影响吧。」</p>
+<p><strong>姐姐新岛冴，是真的「容身之所」所在；但她同时也是亲手夺走真「容身之所」的人。</strong></p>
+<p><br></p>
+<h2 id="不可爱也不迷人的反派角色们">不可爱也不迷人的反派角色们</h2>
+<p>不得不说，P5 中的反派角色们 (鸭志田，斑目，金城，奥村，狮童)
+的<strong>脸谱化</strong>比较严重。他们代表的是一种纯粹的恶，仿佛天生就是为了被怪盗团改心而存在。</p>
+<p>这种少年-大人，正义-邪恶的简单二元对立虽然增加了玩家在游玩时的情感共鸣，但也不免使得反派的塑造过于<strong>扁平</strong>。作为名义上最终
+boss
+的日本首相竞选人狮童正义，完全没有最强反派的架势，不仅当街猥亵妇女，电梯插队，还不惜动用私权陷害一个<del>普通日本</del>高中生，属实是有些平易近人了。</p>
+<figure>
+<img src="/2023/05/30/persona-5/shito.png" alt="哥你认真的？">
+<figcaption aria-hidden="true">哥你认真的？</figcaption>
+</figure>
+<p>唯一一个稍微值得称道的塑造是祐介的师傅，大画伯斑目一流斋。开场时的演技过于精湛
+(与杏形成了鲜明对比)
+以致作为玩家的我一度都产生了些许动摇。并且，在后续祐介 coop
+的剧情中，斑目的老朋友川锅提到，在过去，斑目曾因为小祐介发高烧而急得到处奔走。如果只是将祐介视作一颗仅供自己支配的摇钱树，又怎会如此上心？</p>
+<p>宫殿里的暗影 (shadow)
+毫无疑问暴露了人内心中最黑暗，最被欲望所浸染的部分，所以他们所说的话才那么的令人深恶痛绝。然而，人心是难辨黑白的，希望与欲望是并蒂的：在全国画展上认识到这一点的祐介，大概也能以新的心情面对被自己亲手改心的，如同父亲一般的“师傅”了。</p>
+<h3 id="逆位的正义明智吾郎">逆位的正义：明智吾郎</h3>
+<p>明智吾郎大概是全篇中<strong>争议最大</strong>的一个角色了。一般来说，争议大的角色往往有着较立体的塑造；然而我觉得明智的塑造可以说是
+P5 (特别是 P5R) 中的一大败笔。可以看出制作组想要塑造一个与 Joker
+对立的反派角色，并且衍生出一段侦探怪盗相爱相杀的王道剧情；可惜笔力不够，起到的只有反效果。</p>
+<p>虽然同为失去「容身之所」的 persona
+掌控者，明智的<strong>信念</strong>居然是“帮助抛弃自己的爹坐上首相宝座后再毁掉他”；这一段话我打出来都觉得难绷。这一无厘头的复仇方式不仅极大的破坏了前期塑造出的高智商侦探人设，在<strong>思想高度</strong>上也根本无法与怪盗团匹敌，自然而然就支撑不起其与怪盗团对立的地位了。注意，Joker
+的信念从来不是“向狮童复仇”
+或是“洗清自己的冤屈”，而是“帮助有困难的人们”；若想塑造一个和 Joker
+角色对立的反派，至少在信念上不能产生明显的差距。在这一点上，丸喜明显更加适合取代明智的地位。</p>
+<p>不提这些，明智还是导致双叶母亲与春父亲死亡的直接凶手；这使得任何方式的洗白都显得无比苍白。而怪盗团居然如此轻易就原谅了明智，这也间接使得怪盗团的人设产生了崩坏。</p>
+<h3 id="无私的织梦者丸喜拓人">无私的织梦者：丸喜拓人</h3>
+<blockquote class="blockquote-center">
+<p>自由不能以彻底放弃自由为代价。 —— 密尔 <em>论自由</em></p>
+
+</blockquote>
+<p>P5R
+中新增的两个角色，心理老师丸喜拓人与学妹芳泽堇，在第三学期登上主场。丸喜老师是一个塑造的很好的角色，以其命名的假结局丸喜结局也发人深省。</p>
+<p>初看丸喜结局，一切都是那么的美好：Joker
+留在了卢布朗，龙司在田径部挥洒汗水，杏也再也不用面对挚友轻生的痛苦。斑目一直都是德艺双馨的大画伯，带领祐介追求真正的美。连摩尔加纳也如愿以偿，获得了人类之身。而得到最大“救赎”的还是剩下三个成员：真与春的父亲都回到了她们的身边，仿佛从来没有离去过；双叶的母亲也回到“现实”，与双叶、惣治郎组成了真正的家庭。</p>
+<figure>
+<img src="/2023/05/30/persona-5/futaba.jpg" alt="你忍心夺走这个笑容吗？">
+<figcaption aria-hidden="true">你忍心夺走这个笑容吗？</figcaption>
+</figure>
+<p>得到这一切的代价是真正的现实被扭曲，怪盗团之间的羁绊不复存在：曾经并肩作战的回忆一并被抹杀，之所以相互还认识靠的只是各自残留的心愿。丸喜为怪盗团的每一位成员编织了最“完美”的「容身之所」，取走了他们自己<strong>奋力抗争</strong>得到的「容身之所」。</p>
+<p><strong>这一切，值得吗？</strong></p>
+<p>网络上对于丸喜结局的批驳，大多集中在逻辑层面：首先，在攻略丸喜殿堂时可以发现，丸喜对除怪盗团之外普罗大众的愿望的处理其实十分潦草：这是由于丸喜终究只是一个人，无法对所有人进行深刻了解；其次，每个人的愿望之间存在冲突，如果不对其他人的愿望<strong>擅自进行更改</strong>，就不能真正意义上的实现所有人的愿望。</p>
+<p>若我们抛开这一切逻辑上的谬误，想象一个全知全能的丸喜神：祂需要你让渡“<strong>自己克服挑战</strong>”的权利，或是牺牲“<strong>自己克服挑战</strong>”的回忆，来换取一个百分百幸福的，即使可能不是原来的自己所期望的美好未来。你会选择心甘情愿的接受吗？</p>
+<p>在进行游戏时，「我」毫不犹豫的选择了反抗：这是因为<strong>叛逆</strong>是
+Joker 的性格，也是怪盗团的灵魂，更是整个 P
+系列的主题所在。虽然非自己所愿，怪盗团的其他团员们忘记了过去的自己，抛弃了羁绊，这无疑是一种<strong>背叛</strong>；而作为玩家的「我」自然不能令
+Joker 失望。</p>
+<p><strong>然而作为普通人，生活在现实世界中的「我」呢？</strong></p>
+<p>犹豫了一会，我想<strong>目前</strong>我的答案是<strong>否</strong>；这是因为在我仅仅
+20
+年的人生历程中，还未曾遇到过任何足以让我痛苦或者遗憾终生的事件。与多数人相比，目前的我无疑是幸运的。</p>
+<p>然而未来谁也说不准。感叹着“太可怕了，我可受不了”的王子，最后也承受了沦为乞丐的苦难。如果我也面临着像双叶与春那样与重要的人分别的命运
+(呸呸呸大吉利是)，到那时，我还能充满底气的拒绝祂的提议吗？</p>
+<p>我不敢想下去。</p>
+<p><br></p>
+<h2 id="怪盗万事屋协助者们">怪盗万事屋：协助者们</h2>
+<p><br></p>
+<h2 id="止步还是超越伪神与民众">止步还是超越？伪神与民众</h2>
+<p><br></p>
+]]></content>
+      <categories>
+        <category>reviews</category>
+        <category>game</category>
+      </categories>
+      <tags>
+        <tag>review</tag>
+        <tag>JRPG</tag>
+        <tag>Atlus</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ncurses 库学习笔记</title>
     <url>/2023/04/14/ncurses-study/</url>
     <content><![CDATA[<p>这次 ENGG1340 课程的 group project 是设计并实现一个 <strong>text-base
@@ -2939,190 +3123,6 @@ scr_dump</a></li>
       <tags>
         <tag>ncurses</tag>
         <tag>library</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>向世界发起叛逆 - 简评女神异闻录5 (Persona 5)</title>
-    <url>/2023/05/30/persona-5/</url>
-    <content><![CDATA[<p>第一篇评论，献给有 “天下第一” 之称的
-P5。这也是我走出确诊克罗恩病的阴霾，回归正常学习生活后玩到的第一个游戏。在主图结束完一天充实的学习后，坐地铁回到窄小的出租屋，打开
-P5R 继续和怪盗团伙伴的冒险——这种日子定义为 “幸福” 毫不为过。再加上主角
-Joker
-也是乘地铁上下学，上堂读书落堂偷心；游戏和日常的巧合带给我一种奇妙的代入感
-(<del>其实就是中二病犯了</del>)。</p>
-<p>谨以这篇评论纪念 P5R 这三个月来带给我的感动。</p>
-<span id="more"></span>
-<p><br></p>
-<figure>
-<img src="/2023/05/30/persona-5/achievements.png" alt="全成就军火展示">
-<figcaption aria-hidden="true">全成就军火展示</figcaption>
-</figure>
-<p><br></p>
-<div class="note warning"><p>    <strong>Spoiler Alert!</strong></p>
-<p>    This article may contain *spoilers*.</p>
-</div>
-<p><br></p>
-<h2 id="这是一场叛逆">这是一场叛逆</h2>
-<blockquote class="blockquote-center">
-<p>感谢在成为大人的必经之路上，还能给我一场逃避的梦。 —— Steam comment
-from Lestatice</p>
-
-</blockquote>
-<p>纵观 P
-系列主角团，<strong>几乎</strong>所有成员都是处于后青春期的高中学生。ATLUS
-也将女神异闻录系列定义为<strong>青春 RPG</strong>。</p>
-<p>青春期是人整个生命阶段中的一个重要时期。一方面，它是美好的，蓬勃的，是“早上八九点钟的太阳”；而另一方面，青少年的人格逐渐完善，自我意识开始觉醒：他们要求得到与「大人们」平等的地位，希望自己的人格得到尊重。与此同时，青春期也是一个人初窥到社会不公的时期：对世界童话般的认知逐渐崩塌，取而代之的是震惊和错愕——世间的不平事实在太多，而肯站出来的人又太少。<strong>为什么没人愿意伸张正义？</strong>这是<strong>独属于青春期的疑问</strong>。</p>
-<p>面对这个赤诚的疑问，「大人们」不愿，也不敢回答。</p>
-<p>关心他们的大人们在一瞬间中看到了过去的自己，却也只能委婉的留下一句“不要多管闲事”；</p>
-<figure>
-<img src="/2023/05/30/persona-5/odona1.png" alt="&quot;我收留你的原因也许是看到了过去的自己&quot;">
-<figcaption aria-hidden="true">"我收留你的原因也许是看到了过去的自己"</figcaption>
-</figure>
-<p>而「堕落的大人们」(クズなおとな)
-不仅对这个问题嗤之以鼻，还将他们的行为定义为<strong>叛逆</strong>。</p>
-<figure>
-<img src="/2023/05/30/persona-5/odona2.png" alt="相信每个人都听过这句话">
-<figcaption aria-hidden="true">相信每个人都听过这句话</figcaption>
-</figure>
-<p>仔细想想，叛逆这一词是多么的傲慢！它是大人视角的，以驯服为标准的说辞：换个角度看，对于受到不公对待的青少年来说，叛逆是他们最正常不过的诉求。</p>
-<p>我们的主角
-Joker，正是在目睹同伴受到死亡威胁与自身遭遇不公的双重刺激下，发生了「人格面具」(persona，ペルソナ)
-的觉醒：接下来，他将与建立起深厚羁绊的同伴们华丽地开启一场对「堕落的大人们」的终极叛逆……</p>
-<p><br></p>
-<h2 id="失去容身之所的问题学生们">失去容身之所的问题学生们</h2>
-<p><em>热血高校</em>，<em>麻辣教师
-GTO</em>，<em>垫底辣妹</em>……日本人似乎对“问题学生”情有独钟：这些作品大多信奉并传达这样一种观点：“不良少年”们的本性并不坏，他们只是「<strong>失去了容身之所</strong>」而已。甚至，相较于那些用功读书的人，不良少年们对社会的不公义更为敏感，反应更为激烈。</p>
-<p>「<strong>容身之所</strong>」(<strong>居場所</strong>，いばしょ)
-究竟是什么？这是个很典型的日式词汇，如果要在中文里找一个词来对应的话，我觉得应该是指所谓
-“<strong>内心的归宿</strong>”。对不良少年们来说，内在上，他们由于受到某些打击失去了目标，从而变得迷茫；外在上，他们很难从家人，朋友，教师等重要角色处获得引导与慰藉。</p>
-<figure>
-<img src="/2023/05/30/persona-5/yiibashio.png" alt="龙司是最典型的不良少年">
-<figcaption aria-hidden="true">龙司是最典型的不良少年</figcaption>
-</figure>
-<p>这些失去「容身之所」的少年们，很容易聚在一起抱团取暖，互相支持鼓励；与此同时，他们也需要一个<strong>信念</strong>。而这一信念，决定了他们的未来。90
-年代风靡一时的香港 <em>古惑仔</em>
-系列电影，讲述的其实也是一群失去「容身之所」的少年。在没有 persona
-与天鹅绒房间的现实世界，他们选择了“行古惑”，入黑道。即使他们之间的兄弟情谊是那样的令人感动，最后也逃不过血流遍地的悲惨结局。</p>
-<p>好在我们的主角团是一群善良的人，又拥有 persona
-的神奇力量，他们选择了以 “<strong>不对有困难的人视而不见</strong>”
-作为自己的信念。怪盗团这一身份，不仅解决了他们当下面临的危机，也成为了支撑他们前进的精神源泉。即使最后不免分道扬镳，这个独特的羁绊也使得他们不再迷茫，永远获得了自己的「容身之所」。</p>
-<figure>
-<img src="/2023/05/30/persona-5/foundation.jpg" alt="怪盗团成立纪念">
-<figcaption aria-hidden="true">怪盗团成立纪念</figcaption>
-</figure>
-<h3 id="开拓的战车坂本龙司">开拓的战车：坂本龙司</h3>
-<p>作为初始四人 (三人一猫) 组之一，好兄弟龙司是从开始陪伴 Joker
-到最后的人。他的性格可以说是标准的男二模板：讲义气，冲动，大大咧咧，有勇无谋，还有点好色；在怪盗团中也一直作为被吐槽的对象。</p>
-<p>虽然初始人设普通，但龙司在整个游戏中的改变和成长却可以称得上是最令人瞩目
-(之一)
-的。在他表面的性格背后还隐藏着许多其他的东西——而发现这一切的正是主角
-Joker。Joker
-和怪盗团为这个原不良少年带来了信念，而他也向怪盗团回报以自己热烈的心。秀尽学园门口异世界
-APP 命运般的开启，令这辆生锈的<strong>战车</strong> (The Chariot)
-重新开始了奔跑。</p>
-<p>事实上，大家所诟病较多的龙司的缺点几乎从未造成过什么重大的后果。虽然做事冲动，但是却有着<strong>超高的行动力</strong>，是
-Joker
-的左膀右臂；虽然经常被说有勇无谋，但他同时也是怪盗团中最<strong>敢想敢做</strong>的人；虽然有点好色，但面对女生却意外的有<strong>绅士风度</strong>；对杏作出的“下头”举动建立在他们早就相识的基础上，更近似于无伤大雅的玩笑。此外，他也是全团中最关心，最信赖
-Joker
-的人。作为怪盗团的<strong>冲锋队长</strong>，龙司将战车<strong>热烈莽撞</strong>的个性展现的淋漓尽致。</p>
-<p><strong>那么，龙司的问题到底出在哪里？</strong></p>
-<p>自始至终，龙司一直秉承着这样一个信念：<strong>要不断的令大人物悔改，使怪盗团的名气越来越高</strong>。他认为只有站在高处，才能给受到压迫的人带来希望；做不被大众所认识的无名英雄，并不能从根本上解决问题。</p>
-<figure>
-<img src="/2023/05/30/persona-5/ryuji1.png" alt="与其躲在暗处，不如成为烟花">
-<figcaption aria-hidden="true">与其躲在暗处，不如成为烟花</figcaption>
-</figure>
-<p>这一想法是正确的：事实上，怪盗团也一直朝着这个方向前进，因此才能得到大众的支持击败伪神。然而在此之前，随着怪盗团取得一个又一个胜利，人气越来越高，龙司的心境也发生了微妙的变化。在不知不觉间，龙司想要怪盗团名扬天下的「理由」由“<strong>帮助有困难的人</strong>”变为了“<strong>自己</strong>”……</p>
-<p>值得注意的是，与三岛不同，龙司的转变并非出于虚荣：与看起来不同，<strong>龙司从来不是一个虚荣的人</strong>。虽然常说要利用怪盗团的身份泡妞，但那终究只是口嗨而已；在金城悔改后，怪盗团众人得到了金城的秘宝——一箱子的大钞。而此时龙司的愿望居然只是以后顿顿可以吃“猪肉味增汤套餐”；当发现钞票是假的之后，龙司
-(以及怪盗团全员)
-的反应又如何？他释怀地笑了。大家都笑了。而这，不可能是一个贪慕虚荣的人会有的反应。</p>
-<p>与其他成员相比，在遇到怪盗团之前，龙司是最接近<strong>一无所有</strong>的。没有朋友，没有未来，没有信念，剩下的只有对母亲和田径社社员的愧疚，和对鸭志田的仇恨。被夺走「容身之所」的他，只能眼睁睁的看着自己一步步沉沦。怪盗团的出现对他而言无疑是一种救赎，也正因如此，他比任何人都不希望怪盗团停止活动。怪盗团给予了他希望，也逐渐成为了他的「<strong>执念</strong>」。为了怪盗团能够继续，无论付出什么代价都是必要的，否则“至今积累起来的东西，就全部完蛋了”。迷路的战车，就这样跌入了陷阱。</p>
-<figure>
-<img src="/2023/05/30/persona-5/ryuji2.png" alt="怪盗团真的是为了“满足期待”而诞生的吗？">
-<figcaption aria-hidden="true">怪盗团真的是为了“满足期待”而诞生的吗？</figcaption>
-</figure>
-<p>随着时间推移，巨大的阴谋浮出水面，当初主张改心奥村邦和的龙司才发现自己令怪盗团陷入了多么严重的危机。自己明明是想让怪盗团变得更好，又为什么会跌入对手的圈套呢？在无孔不入的国家机器面前，龙司第一次感受到了自己的无力。悔恨和不甘心由心底涌出，化作一声声无济于事的怒吼。</p>
-<p>到这里，他才真正意识到自己所做的一切并不是为了遇到困难的人，而是可笑的<strong>自我满足</strong>；不知不觉间，自己竟然丢失了最宝贵的<strong>初心</strong>。对怪盗团的忠诚，反而成了枷锁。当晚，充满愧疚的他找
-Joker
-谈心：“不知道什么时候，我变得得意忘形了。想着只要为了正义，什么都可以做，这样和我们一直以来对付的那些人根本没有区别。”</p>
-<p>龙司呀龙司，难道你还没有觉察到吗？就算怪盗团解散，你也再不是「一无所有」了。和伙伴们并肩战斗建立起的<strong>羁绊</strong>，是不会消失的啊！不如说，只要初心未改，无论是否展开活动，无论大家是否还能聚在一起，怪盗团就永远不会解散！</p>
-<p>明白了这一点的战车，重新上路了。无论是接下来对狮童，伪神的讨伐，还是第三学期和丸喜的战斗，龙司都立下了赫赫战功。这是因为，他已经找到了自己<strong>真正想要守护的东西</strong>。</p>
-<figure>
-<img src="/2023/05/30/persona-5/ryuji3.jpg" alt="伪神讨伐前，不再迷茫的龙司">
-<figcaption aria-hidden="true">伪神讨伐前，不再迷茫的龙司</figcaption>
-</figure>
-<h3 id="反叛的女教皇新岛真">反叛的女教皇：新岛真</h3>
-<p>鸭志田悔改事件的第二天，一位英气勃勃的女学生走进了校长办公室。她来这里是为了接下一个任务：调查有关心之怪盗团的传闻。校长信任她的能力，允诺事件平息之后将大学的保送名额分配给她。</p>
-<p>实际上，就算没有校长的推荐，成绩优异的她也完全能凭自己的实力赢得名额；而应承这件事的原因，在于校长有意无意的暗示：「你的姐姐也很优秀啊，年纪轻轻就当上了检察官。……你如果在学校惹上麻烦，姐姐可能也会受到影响吧。」</p>
-<p><strong>姐姐新岛冴，是真的「容身之所」所在；但她同时也是亲手夺走真「容身之所」的人。</strong></p>
-<p><br></p>
-<h2 id="不可爱也不迷人的反派角色们">不可爱也不迷人的反派角色们</h2>
-<p>不得不说，P5 中的反派角色们 (鸭志田，斑目，金城，奥村，狮童)
-的<strong>脸谱化</strong>比较严重。他们代表的是一种纯粹的恶，仿佛天生就是为了被怪盗团改心而存在。</p>
-<p>这种少年-大人，正义-邪恶的简单二元对立虽然增加了玩家在游玩时的情感共鸣，但也不免使得反派的塑造过于<strong>扁平</strong>。作为名义上最终
-boss
-的日本首相竞选人狮童正义，完全没有最强反派的架势，不仅当街猥亵妇女，电梯插队，还不惜动用私权陷害一个<del>普通日本</del>高中生，属实是有些平易近人了。</p>
-<figure>
-<img src="/2023/05/30/persona-5/shito.png" alt="哥你认真的？">
-<figcaption aria-hidden="true">哥你认真的？</figcaption>
-</figure>
-<p>唯一一个稍微值得称道的塑造是祐介的师傅，大画伯斑目一流斋。开场时的演技过于精湛
-(与杏形成了鲜明对比)
-以致作为玩家的我一度都产生了些许动摇。并且，在后续祐介 coop
-的剧情中，斑目的老朋友川锅提到，在过去，斑目曾因为小祐介发高烧而急得到处奔走。如果只是将祐介视作一颗仅供自己支配的摇钱树，又怎会如此上心？</p>
-<p>宫殿里的暗影 (shadow)
-毫无疑问暴露了人内心中最黑暗，最被欲望所浸染的部分，所以他们所说的话才那么的令人深恶痛绝。然而，人心是难辨黑白的，希望与欲望是并蒂的：在全国画展上认识到这一点的祐介，大概也能以新的心情面对被自己亲手改心的，如同父亲一般的“师傅”了。</p>
-<h3 id="逆位的正义明智吾郎">逆位的正义：明智吾郎</h3>
-<p>明智吾郎大概是全篇中<strong>争议最大</strong>的一个角色了。一般来说，争议大的角色往往有着较立体的塑造；然而我觉得明智的塑造可以说是
-P5 (特别是 P5R) 中的一大败笔。可以看出制作组想要塑造一个与 Joker
-对立的反派角色，并且衍生出一段侦探怪盗相爱相杀的王道剧情；可惜笔力不够，起到的只有反效果。</p>
-<p>虽然同为失去「容身之所」的 persona
-掌控者，明智的<strong>信念</strong>居然是“帮助抛弃自己的爹坐上首相宝座后再毁掉他”；这一段话我打出来都觉得难绷。这一无厘头的复仇方式不仅极大的破坏了前期塑造出的高智商侦探人设，在<strong>思想高度</strong>上也根本无法与怪盗团匹敌，自然而然就支撑不起其与怪盗团对立的地位了。注意，Joker
-的信念从来不是“向狮童复仇”
-或是“洗清自己的冤屈”，而是“帮助有困难的人们”；若想塑造一个和 Joker
-角色对立的反派，至少在信念上不能产生明显的差距。在这一点上，丸喜明显更加适合取代明智的地位。</p>
-<p>不提这些，明智还是导致双叶母亲与春父亲死亡的直接凶手；这使得任何方式的洗白都显得无比苍白。而怪盗团居然如此轻易就原谅了明智，这也间接使得怪盗团的人设产生了崩坏。</p>
-<h3 id="无私的织梦者丸喜拓人">无私的织梦者：丸喜拓人</h3>
-<blockquote class="blockquote-center">
-<p>自由不能以彻底放弃自由为代价。 —— 密尔 <em>论自由</em></p>
-
-</blockquote>
-<p>P5R
-中新增的两个角色，心理老师丸喜拓人与学妹芳泽堇，在第三学期登上主场。丸喜老师是一个塑造的很好的角色，以其命名的假结局丸喜结局也发人深省。</p>
-<p>初看丸喜结局，一切都是那么的美好：Joker
-留在了卢布朗，龙司在田径部挥洒汗水，杏也再也不用面对挚友轻生的痛苦。斑目一直都是德艺双馨的大画伯，带领祐介追求真正的美。连摩尔加纳也如愿以偿，获得了人类之身。而得到最大“救赎”的还是剩下三个成员：真与春的父亲都回到了她们的身边，仿佛从来没有离去过；双叶的母亲也回到“现实”，与双叶、惣治郎组成了真正的家庭。</p>
-<figure>
-<img src="/2023/05/30/persona-5/futaba.jpg" alt="你忍心夺走这个笑容吗？">
-<figcaption aria-hidden="true">你忍心夺走这个笑容吗？</figcaption>
-</figure>
-<p>得到这一切的代价是真正的现实被扭曲，怪盗团之间的羁绊不复存在：曾经并肩作战的回忆一并被抹杀，之所以相互还认识靠的只是各自残留的心愿。丸喜为怪盗团的每一位成员编织了最“完美”的「容身之所」，取走了他们自己<strong>奋力抗争</strong>得到的「容身之所」。</p>
-<p><strong>这一切，值得吗？</strong></p>
-<p>网络上对于丸喜结局的批驳，大多集中在逻辑层面：首先，在攻略丸喜殿堂时可以发现，丸喜对除怪盗团之外普罗大众的愿望的处理其实十分潦草：这是由于丸喜终究只是一个人，无法对所有人进行深刻了解；其次，每个人的愿望之间存在冲突，如果不对其他人的愿望<strong>擅自进行更改</strong>，就不能真正意义上的实现所有人的愿望。</p>
-<p>若我们抛开这一切逻辑上的谬误，想象一个全知全能的丸喜神：祂需要你让渡“<strong>自己克服挑战</strong>”的权利，或是牺牲“<strong>自己克服挑战</strong>”的回忆，来换取一个百分百幸福的，即使可能不是原来的自己所期望的美好未来。你会选择心甘情愿的接受吗？</p>
-<p>在进行游戏时，「我」毫不犹豫的选择了反抗：这是因为<strong>叛逆</strong>是
-Joker 的性格，也是怪盗团的灵魂，更是整个 P
-系列的主题所在。虽然非自己所愿，怪盗团的其他团员们忘记了过去的自己，抛弃了羁绊，这无疑是一种<strong>背叛</strong>；而作为玩家的「我」自然不能令
-Joker 失望。</p>
-<p><strong>然而作为普通人，生活在现实世界中的「我」呢？</strong></p>
-<p>犹豫了一会，我想<strong>目前</strong>我的答案是<strong>否</strong>；这是因为在我仅仅
-20
-年的人生历程中，还未曾遇到过任何足以让我痛苦或者遗憾终生的事件。与多数人相比，目前的我无疑是幸运的。</p>
-<p>然而未来谁也说不准。感叹着“太可怕了，我可受不了”的王子，最后也承受了沦为乞丐的苦难。如果我也面临着像双叶与春那样与重要的人分别的命运
-(呸呸呸大吉利是)，到那时，我还能充满底气的拒绝祂的提议吗？</p>
-<p>我不敢想下去。</p>
-<p><br></p>
-<h2 id="怪盗万事屋协助者们">怪盗万事屋：协助者们</h2>
-<p><br></p>
-<h2 id="止步还是超越伪神与民众">止步还是超越？伪神与民众</h2>
-<p><br></p>
-]]></content>
-      <categories>
-        <category>reviews</category>
-        <category>game</category>
-      </categories>
-      <tags>
-        <tag>review</tag>
-        <tag>JRPG</tag>
-        <tag>Atlus</tag>
       </tags>
   </entry>
   <entry>
