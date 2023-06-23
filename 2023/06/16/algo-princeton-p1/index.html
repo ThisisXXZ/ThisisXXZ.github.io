@@ -25,25 +25,18 @@
 
     <meta name="description" content="For me, great algorithms are the poetry of computation. — Donald Knuth   Presented by Robert Sedgwick &amp; Kevin Wayne，普林斯顿大名鼎鼎的算法课程，在 Coursera 上接近满分的评价：这么多 buff 加身的神课，不认真刷一下都对不起我自己。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Algorithms, Part 1, Princeton University">
+<meta property="og:title" content="Algorithms, Princeton University, P1 - Data Structures">
 <meta property="og:url" content="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
 <meta property="og:description" content="For me, great algorithms are the poetry of computation. — Donald Knuth   Presented by Robert Sedgwick &amp; Kevin Wayne，普林斯顿大名鼎鼎的算法课程，在 Coursera 上接近满分的评价：这么多 buff 加身的神课，不认真刷一下都对不起我自己。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/weighted.png">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/cost-model.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/resize.png">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/hsort.png">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/mergesort.png">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/tree.png">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/pointers.png">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/duplicates.png">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/3partition.png">
 <meta property="article:published_time" content="2023-06-16T15:27:57.000Z">
-<meta property="article:modified_time" content="2023-06-22T14:44:16.056Z">
+<meta property="article:modified_time" content="2023-06-23T15:48:32.611Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="course notes">
-<meta property="article:tag" content="algorithm">
+<meta property="article:tag" content="data structure">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/weighted.png">
 
@@ -52,10 +45,10 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/","path":"2023/06/16/algo-princeton-p1/","title":"Algorithms, Part 1, Princeton University"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/","path":"2023/06/16/algo-princeton-p1/","title":"Algorithms, Princeton University, P1 - Data Structures"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Algorithms, Part 1, Princeton University | ThisisXXZ's Blog</title>
+<title>Algorithms, Princeton University, P1 - Data Structures | ThisisXXZ's Blog</title>
   
 
 
@@ -178,10 +171,9 @@
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#union-find"><span class="nav-number">1.</span> <span class="nav-text">Union-Find</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#problem-model-dynamic-connectivity"><span class="nav-number">1.1.</span> <span class="nav-text">Problem Model: Dynamic
-Connectivity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#improvements"><span class="nav-number">1.2.</span> <span class="nav-text">Improvements</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#code-implementation"><span class="nav-number">1.3.</span> <span class="nav-text">Code Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#analysis-of-algorithms"><span class="nav-number">2.</span> <span class="nav-text">Analysis of Algorithms</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mathematical-models"><span class="nav-number">2.1.</span> <span class="nav-text">Mathematical Models</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#order-of-growth-classifications"><span class="nav-number">2.2.</span> <span class="nav-text">Order-of-Growth
-Classifications</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#commonly-used-notations"><span class="nav-number">2.3.</span> <span class="nav-text">Commonly Used Notations</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stack-queue"><span class="nav-number">3.</span> <span class="nav-text">Stack &amp; Queue</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#resizing-array-implementation"><span class="nav-number">3.1.</span> <span class="nav-text">Resizing-Array
-Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linked-lists-versus-resizing-arrays"><span class="nav-number">3.2.</span> <span class="nav-text">Linked Lists Versus
-Resizing Arrays</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#code-implementation-1"><span class="nav-number">3.3.</span> <span class="nav-text">Code Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#elementary-sorts"><span class="nav-number">4.</span> <span class="nav-text">Elementary Sorts</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#selection-sort"><span class="nav-number">4.1.</span> <span class="nav-text">Selection Sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#insertion-sort"><span class="nav-number">4.2.</span> <span class="nav-text">Insertion Sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shellsort"><span class="nav-number">4.3.</span> <span class="nav-text">Shellsort</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#merge-sort"><span class="nav-number">5.</span> <span class="nav-text">Merge Sort</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#code-implementation-2"><span class="nav-number">5.1.</span> <span class="nav-text">Code Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#practical-improvements"><span class="nav-number">5.2.</span> <span class="nav-text">Practical Improvements</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#complexity-of-sorting"><span class="nav-number">6.</span> <span class="nav-text">Complexity of Sorting</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#decision-tree"><span class="nav-number">6.1.</span> <span class="nav-text">Decision Tree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lower-bound-for-sorting"><span class="nav-number">6.2.</span> <span class="nav-text">Lower Bound for Sorting</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#quick-sort"><span class="nav-number">7.</span> <span class="nav-text">Quick Sort</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#partition"><span class="nav-number">7.1.</span> <span class="nav-text">Partition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shuffle"><span class="nav-number">7.2.</span> <span class="nav-text">Shuffle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#way-partitioning"><span class="nav-number">7.3.</span> <span class="nav-text">3-way Partitioning</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">8.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Connectivity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#improvements"><span class="nav-number">1.2.</span> <span class="nav-text">Improvements</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#code-implementation"><span class="nav-number">1.3.</span> <span class="nav-text">Code Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stack-queue"><span class="nav-number">2.</span> <span class="nav-text">Stack &amp; Queue</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#resizing-array-implementation"><span class="nav-number">2.1.</span> <span class="nav-text">Resizing-Array
+Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linked-lists-versus-resizing-arrays"><span class="nav-number">2.2.</span> <span class="nav-text">Linked Lists Versus
+Resizing Arrays</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#code-implementation-1"><span class="nav-number">2.3.</span> <span class="nav-text">Code Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -198,7 +190,7 @@ Resizing Arrays</span></a></li><li class="nav-item nav-level-3"><a class="nav-li
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -209,7 +201,7 @@ Resizing Arrays</span></a></li><li class="nav-item nav-level-3"><a class="nav-li
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-count">39</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -294,12 +286,12 @@ Resizing Arrays</span></a></li><li class="nav-item nav-level-3"><a class="nav-li
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Algorithms, Part 1, Princeton University | ThisisXXZ's Blog">
+      <meta itemprop="name" content="Algorithms, Princeton University, P1 - Data Structures | ThisisXXZ's Blog">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Algorithms, Part 1, Princeton University
+          Algorithms, Princeton University, P1 - Data Structures
         </h1>
 
         <div class="post-meta-container">
@@ -319,7 +311,7 @@ Resizing Arrays</span></a></li><li class="nav-item nav-level-3"><a class="nav-li
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-06-22 22:44:16" itemprop="dateModified" datetime="2023-06-22T22:44:16+08:00">2023-06-22</time>
+      <time title="Modified: 2023-06-23 23:48:32" itemprop="dateModified" datetime="2023-06-23T23:48:32+08:00">2023-06-23</time>
     </span>
 
   <span class="post-meta-item">
@@ -370,8 +362,15 @@ buff 加身的神课，不认真刷一下都对不起我自己。</p>
 <li>这门课有 10 个超高质量的
 Projects，实际问题背景，丰富的测试样例，竟然还配有教授<strong>工业级别高效实现</strong>的源码！即使抄下来做板子都是十分宝贵的收获。</li>
 </ul>
-<p>笔记分为 3 Parts：P1 与 P2 分别对应课程设计中的 I 与 II。而 P3
-则侧重于我在这门课中学到的 Java 知识。</p>
+<p>由于本课大纲并没有一个比较明显的顺序，我擅自对课程内容进行了一个简单的归类，分别对应<a target="_blank" rel="noopener" href="https://thisisxxz.com/categories/notes/courses/Algorithms-Princeton/">笔记</a>中的：</p>
+<ul>
+<li>P1 (Data Structures)</li>
+<li>P2 (Algorithmic Concepts)</li>
+<li>P3 (Sorting)</li>
+<li>P4 (Java Language)</li>
+<li>P5 (Grapg &amp; Tree)</li>
+<li>P6 (Interview Questions).</li>
+</ul>
 <p>另，本课程 projects 的代码实现存放在 <a target="_blank" rel="noopener" href="https://github.com/ThisisXXZ/Algorithms-Princeton">ThisisXXZ/Algorithms-Princeton
 - GitHub</a> 中，仅供参考。</p>
 <p><br></p>
@@ -434,117 +433,6 @@ root.</p>
 <p>Weighted quick-union with path compression: <strong>in practice,
 WQUPC is linear</strong>.</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UF</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span>[] parent;    <span class="comment">// parant[i] = parent of i</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">byte</span>[] rank;     <span class="comment">// we apply union by rank here (never more than 31)</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> count;       <span class="comment">// numbers of connected components</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">UF</span><span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (n &lt; <span class="number">0</span>)    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>();</span><br><span class="line">        count = n;</span><br><span class="line">        parant = <span class="keyword">new</span> <span class="title class_">int</span>[n];</span><br><span class="line">        rank = <span class="keyword">new</span> <span class="title class_">byte</span>[n];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">            parent[i] = i;</span><br><span class="line">            rank[i] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">find</span><span class="params">(<span class="type">int</span> p)</span> &#123;</span><br><span class="line">        validate(p);</span><br><span class="line">        <span class="keyword">while</span> (p != parent[p]) &#123;</span><br><span class="line">            parent[p] = parent[parent[p]];    <span class="comment">// path compression by halving</span></span><br><span class="line">            p = parent[p];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> p;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">count</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">connected</span><span class="params">(<span class="type">int</span> p, <span class="type">int</span> q)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> find(p) == find(q);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">union</span><span class="params">(<span class="type">int</span> p, <span class="type">int</span> q)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">rootP</span> <span class="operator">=</span> find(p);</span><br><span class="line">        <span class="type">int</span> <span class="variable">rootQ</span> <span class="operator">=</span> find(q);</span><br><span class="line">        <span class="keyword">if</span> (rootP == rootQ)    <span class="keyword">return</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span>      (rank[rootP] &lt; rank[rootQ])    parent[rootP] = rootQ;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (rank[rootP] &gt; rank[rootQ])    parent[rootQ] = rootP;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            parent[rootQ] = rootP;</span><br><span class="line">            ++rank[rootP];</span><br><span class="line">        &#125;</span><br><span class="line">        --count;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">validate</span><span class="params">(<span class="type">int</span> p)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> parent.length;</span><br><span class="line">        <span class="keyword">if</span> (p &lt; <span class="number">0</span> || p &gt;= n) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Index is not between 0 and &quot;</span> + (n-<span class="number">1</span>));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> StdIn.readInt();</span><br><span class="line">        <span class="type">UF</span> <span class="variable">uf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UF</span>(n);</span><br><span class="line">        <span class="keyword">while</span> (!StdIn.isEmpty()) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">p</span> <span class="operator">=</span> StdIn.readInt();</span><br><span class="line">            <span class="type">int</span> <span class="variable">q</span> <span class="operator">=</span> StdIn.readInt();</span><br><span class="line">            <span class="keyword">if</span> (uf.find(p) == uf.find(q))    <span class="keyword">continue</span>;</span><br><span class="line">            uf.union(p, q);</span><br><span class="line">            StdOut.println(p + <span class="string">&quot; &quot;</span> + q);</span><br><span class="line">        &#125;</span><br><span class="line">        StdOut.println(uf.count() + <span class="string">&quot; components&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><br></p>
-<h2 id="analysis-of-algorithms">Analysis of Algorithms</h2>
-<p>学到这里才发现之前用 Big-Oh notation <span class="math inline">\(O(n)\)</span>
-描述时间复杂度是一个常见的误区……！</p>
-<h3 id="mathematical-models">Mathematical Models</h3>
-<p>The <strong>total running time</strong> of an algorithm is
-<strong>the sum of cost <span class="math inline">\(\times\)</span>
-frequency for all operations</strong>. In principle, we could always
-develop an accurate mathematical models for a particular algorithm.</p>
-<p>However, taking exactly all operations into consideration seems too
-<strong>tedious</strong>.</p>
-<p><strong>Simplification 1: cost model</strong></p>
-<div class="note info no-icon"><p>Cost model. Use some basic operations as a <strong>proxy</strong> for
-running time.</p>
-</div>
-<p>When a proper cost model is chosen, other operations could be
-ignored.</p>
-<figure>
-<img src="/2023/06/16/algo-princeton-p1/cost-model.png" alt="choose the operation with the highest frequency as the cost model">
-<figcaption aria-hidden="true">choose the operation with the highest
-frequency as the cost model</figcaption>
-</figure>
-<p><strong>Simplification 2: tilde notation</strong></p>
-<p>We use tilde notation <span class="math inline">\(\sim\)</span> to
-estimate running time (or memory) as a function of input size <span class="math inline">\(N\)</span>. It will <strong>ignore all lower-order
-terms</strong>.</p>
-<ul>
-<li>When <span class="math inline">\(N\)</span> is large, lower-order
-terms are negligible.</li>
-<li>When <span class="math inline">\(N\)</span> is small, we simply
-don't care.</li>
-</ul>
-<p>Technically, <span class="math inline">\(f(N)\sim g(N)\)</span> means
-<span class="math inline">\(\lim_{N\to\infty}
-\frac{f(N)}{g(N)}=1\)</span>.</p>
-<h3 id="order-of-growth-classifications">Order-of-Growth
-Classifications</h3>
-<div class="note info no-icon"><p>Good news. the small set of functions <span class="math inline">\(1,\log N,N,N\log N,N^2,N^3\)</span> and <span class="math inline">\(2^N\)</span> suffices to describe order-of-growth
-of typical algorithms.</p>
-</div>
-<p>Here are the common order-of-growth classifications:</p>
-<ul>
-<li>constant <span class="math inline">\(1\)</span>: statement</li>
-<li>logarithmic <span class="math inline">\(\log N\)</span>: divide in
-half</li>
-<li>linear <span class="math inline">\(N\)</span>: loop</li>
-<li><strong>linearithmic</strong> <span class="math inline">\(N\log
-N\)</span>: divide and conquer</li>
-<li>quadratic <span class="math inline">\(N^2\)</span>: double
-loops</li>
-<li>cubic <span class="math inline">\(N^3\)</span>: triple loops</li>
-<li>exponential <span class="math inline">\(2^N\)</span>: exhaustive
-search</li>
-</ul>
-<p>Typically, <strong>better order of growth <span class="math inline">\(\to\)</span> faster in practice</strong>.</p>
-<h3 id="commonly-used-notations">Commonly Used Notations</h3>
-<table>
-<colgroup>
-<col style="width: 32%">
-<col style="width: 35%">
-<col style="width: 32%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: center;">notation</th>
-<th style="text-align: center;">provides</th>
-<th style="text-align: center;">used to</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">Tilde <span class="math inline">\(\sim\)</span></td>
-<td style="text-align: center;">leading term</td>
-<td style="text-align: center;">provide approximate model</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">Big Theta <span class="math inline">\(\Theta(\cdot)\)</span></td>
-<td style="text-align: center;">asymptotic growth rate</td>
-<td style="text-align: center;">classify algorithms</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">Big Oh <span class="math inline">\(O(\cdot)\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\Theta(\cdot)\)</span> and smaller</td>
-<td style="text-align: center;">develop upper bounds</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">Big Omega <span class="math inline">\(\Omega(\cdot)\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(\Theta(\cdot)\)</span> and larger</td>
-<td style="text-align: center;">develop lower bounds</td>
-</tr>
-</tbody>
-</table>
-<div class="note info no-icon"><p>Common mistake. Interpreting big-Oh as an approximate model.</p>
-</div>
-<p>Example: 1-SUM problem <span class="math inline">\(=\)</span> "<em>Is
-there a 0 in the array?</em>"</p>
-<ul>
-<li><p>Upper bound. <strong>A specific algorithm</strong>.</p>
-<p>Brute-force algorithm for 1-SUM: Look at every array entry. Running
-time of the optimal algorithm for 1-SUM is <span class="math inline">\(O(N)\)</span>.</p></li>
-<li><p>Lower bound. <strong>Proof that no algorithm can do
-better</strong>.</p>
-<p>Have to examine all <span class="math inline">\(N\)</span> entries
-(any unexamined one might be <span class="math inline">\(0\)</span>).
-Running time of the optimal algorithm for 1-SUM is <span class="math inline">\(\Omega(N)\)</span>.</p></li>
-</ul>
-<p>If for a specific problem, upper bound <span class="math inline">\(O(N)=\)</span> lower bound <span class="math inline">\(\Omega(N)\)</span>, we say there exists an
-<strong>optimal algorithm</strong> with <span class="math inline">\(\Theta(N)\)</span> running time.</p>
-<p>Algorithm design aims to <strong>reduce the gap</strong> between
-upper bound <span class="math inline">\(O(N)\)</span> and lower bound
-<span class="math inline">\(\Omega(N)\)</span>.</p>
 <p><br></p>
 <h2 id="stack-queue">Stack &amp; Queue</h2>
 <p>No need to give a detailed introduction on these two famous data
@@ -617,301 +505,6 @@ links.</td>
 queue.</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ResizingArrayQueue</span>&lt;Item&gt; <span class="keyword">implements</span> <span class="title class_">Iterable</span>&lt;Item&gt; &#123;</span><br><span class="line">    <span class="comment">// initial capacity of underlying resizing array</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">INIT_CAPACITY</span> <span class="operator">=</span> <span class="number">8</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Item[] q;       <span class="comment">// queue elements</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> n;          <span class="comment">// number of elements on queue</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> first;      <span class="comment">// index of first element of queue</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> last;       <span class="comment">// index of next available slot</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Initializes an empty queue.</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ResizingArrayQueue</span><span class="params">()</span> &#123;</span><br><span class="line">        q = (Item[]) <span class="keyword">new</span> <span class="title class_">Object</span>[INIT_CAPACITY];</span><br><span class="line">        n = <span class="number">0</span>;</span><br><span class="line">        first = <span class="number">0</span>;</span><br><span class="line">        last = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// return true if this queue is empty; false otherwise</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isEmpty</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> n == <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Returns the number of items in this queue.</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">size</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> n;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// resize the underlying array</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">resize</span><span class="params">(<span class="type">int</span> capacity)</span> &#123;</span><br><span class="line">        <span class="keyword">assert</span> capacity &gt;= n;</span><br><span class="line">        Item[] copy = (Item[]) <span class="keyword">new</span> <span class="title class_">Object</span>[capacity];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            copy[i] = q[(first + i) % q.length];</span><br><span class="line">        &#125;</span><br><span class="line">        q = copy;</span><br><span class="line">        first = <span class="number">0</span>;</span><br><span class="line">        last  = n;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Adds the item to this queue.</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">enqueue</span><span class="params">(Item item)</span> &#123;</span><br><span class="line">        <span class="comment">// double size of array if necessary and recopy to front of array</span></span><br><span class="line">        <span class="keyword">if</span> (n == q.length) resize(<span class="number">2</span>*q.length);   <span class="comment">// double size of array if necessary</span></span><br><span class="line">        q[last++] = item;                        <span class="comment">// add item</span></span><br><span class="line">        <span class="keyword">if</span> (last == q.length) last = <span class="number">0</span>;          <span class="comment">// wrap-around</span></span><br><span class="line">        n++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Removes and returns the item on this queue that was least recently added.</span></span><br><span class="line">    <span class="keyword">public</span> Item <span class="title function_">dequeue</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (isEmpty()) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NoSuchElementException</span>(<span class="string">&quot;Queue underflow&quot;</span>);</span><br><span class="line">        <span class="type">Item</span> <span class="variable">item</span> <span class="operator">=</span> q[first];</span><br><span class="line">        q[first] = <span class="literal">null</span>;                            <span class="comment">// to avoid loitering</span></span><br><span class="line">        n--;</span><br><span class="line">        first++;</span><br><span class="line">        <span class="keyword">if</span> (first == q.length) first = <span class="number">0</span>;           <span class="comment">// wrap-around</span></span><br><span class="line">        <span class="comment">// shrink size of array if necessary</span></span><br><span class="line">        <span class="keyword">if</span> (n &gt; <span class="number">0</span> &amp;&amp; n == q.length/<span class="number">4</span>) resize(q.length/<span class="number">2</span>);</span><br><span class="line">        <span class="keyword">return</span> item;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Returns the item least recently added to this queue.</span></span><br><span class="line">    <span class="keyword">public</span> Item <span class="title function_">peek</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (isEmpty()) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NoSuchElementException</span>(<span class="string">&quot;Queue underflow&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> q[first];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Iterator&lt;Item&gt; <span class="title function_">iterator</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ArrayIterator</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// an array iterator, from first to last-1</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">ArrayIterator</span> <span class="keyword">implements</span> <span class="title class_">Iterator</span>&lt;Item&gt; &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> i &lt; n;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> Item <span class="title function_">next</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (!hasNext()) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NoSuchElementException</span>();</span><br><span class="line">            <span class="type">Item</span> <span class="variable">item</span> <span class="operator">=</span> q[(i + first) % q.length];</span><br><span class="line">            i++;</span><br><span class="line">            <span class="keyword">return</span> item;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        ResizingArrayQueue&lt;String&gt; queue = <span class="keyword">new</span> <span class="title class_">ResizingArrayQueue</span>&lt;String&gt;();</span><br><span class="line">        <span class="keyword">while</span> (!StdIn.isEmpty()) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">item</span> <span class="operator">=</span> StdIn.readString();</span><br><span class="line">            <span class="keyword">if</span> (!item.equals(<span class="string">&quot;-&quot;</span>)) queue.enqueue(item);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (!queue.isEmpty()) StdOut.print(queue.dequeue() + <span class="string">&quot; &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        StdOut.println(<span class="string">&quot;(&quot;</span> + queue.size() + <span class="string">&quot; left on queue)&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
-<h2 id="elementary-sorts">Elementary Sorts</h2>
-<p>这一节真的获益良多，对 <span class="math inline">\(\sim N^2\)</span>
-的基础排序算法 (插排，希尔排序) 有了新的认识。之前一直觉得有快排就够了
-(<del>N
-方的排序算法是什么臭鱼烂虾</del>)，学了这一小节后才发现自己之前是多么傲慢。这些算法里蕴含的排序思想，和无数计算机科学家
-(包括教授 Sedgewick)
-尝试改进优化所做的努力，都是非常难能可贵的东西。</p>
-<p>排序算法在 Java 中的实现离不开 <code>Comparable</code>
-接口。有关这部分的内容 (包括下文所用到的 <code>less</code> 与
-<code>exch</code> 辅助方法) 将在 P3 中进行记录。</p>
-<h3 id="selection-sort">Selection Sort</h3>
-<p>In iteration <span class="math inline">\(i\)</span>, find index <span class="math inline">\(min\)</span> of smallest remaining entry. Then
-swap <span class="math inline">\(a_i\)</span> and <span class="math inline">\(a_{min}\)</span>.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> a.length;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">min</span> <span class="operator">=</span> i;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i + <span class="number">1</span>; j &lt; N; ++j)</span><br><span class="line">            <span class="keyword">if</span> (less(a[j], a[min]))</span><br><span class="line">                min = j;</span><br><span class="line">        exch(a, i, min);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<div class="note info no-icon"><p>Proposition. Selection sort uses <span class="math inline">\(0+1+...+(N-1)\sim N^2/2\)</span> compares and
-<span class="math inline">\(N\)</span> exchanges.</p>
-<p>The running time is intensive to input: <strong>it takes quadratic
-time even if input is sorted.</strong></p>
-</div>
-<p><strong>Knuth's shuffle</strong> is structurally similar to selection
-sort. It is used to generate random shuffles.</p>
-<h3 id="insertion-sort">Insertion Sort</h3>
-<p>In iteration <span class="math inline">\(i\)</span>, swap <span class="math inline">\(a_i\)</span> with each <strong>larger</strong>
-entry to its left.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> a.length;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i; j &gt; <span class="number">0</span>; --j) &#123;</span><br><span class="line">            <span class="keyword">if</span> (less(a[j], a[j - <span class="number">1</span>]))</span><br><span class="line">                exch(a, j, j - <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Insertion sort is <strong>NOT</strong> intensive to input.</p>
-<ul>
-<li>Best case. ascending arrays: it makes <span class="math inline">\(N-1\)</span> compares and <span class="math inline">\(0\)</span> exchanges.</li>
-<li>Worst case. descending arrays: it makes <span class="math inline">\(\sim \frac{1}{2}N^2\)</span> compares and <span class="math inline">\(\sim \frac{1}{2}N^2\)</span> exchanges.</li>
-</ul>
-<p>Note that <u>for <strong>partially-sorted arrays</strong>, insertion
-sort runs <strong>in linear time</strong>.</u></p>
-<p>This is because number of exchanges equals the number of inversions,
-and numbers of compares <span class="math inline">\(=\)</span> exchanges
-<span class="math inline">\(+(N-1)\)</span>.</p>
-<div class="note info no-icon"><p>Def 1. An <strong>inversion</strong> is a pair of keys that are out
-of order.</p>
-<p>Def 2. An array is <strong>partially sorted</strong> if the number of
-<strong>inversions</strong> is <span class="math inline">\(\leq
-cN\)</span>.</p>
-</div>
-<h3 id="shellsort">Shellsort</h3>
-<p>Idea. Move entries more than one position at a time by <strong><span class="math inline">\(h\)</span>-sorting</strong> the array.</p>
-<figure>
-<img src="/2023/06/16/algo-princeton-p1/hsort.png" alt="an h-sorted array is h interleaved sorted subsequences">
-<figcaption aria-hidden="true">an <span class="math inline">\(h\)</span>-sorted array is <span class="math inline">\(h\)</span> interleaved sorted
-subsequences</figcaption>
-</figure>
-<div class="note info no-icon"><p>Shellsort. [Shell 1959] <strong>Repeatedly</strong> <span class="math inline">\(h\)</span>-sort the array with a
-<strong>decreasing</strong> sequence of values of <span class="math inline">\(h\)</span>.</p>
-</div>
-<p>We use <strong>insertion sort</strong> with stride length <span class="math inline">\(h\)</span> to <span class="math inline">\(h\)</span>-sort an array. why choosing insertion
-sort:</p>
-<ul>
-<li>Big increments <span class="math inline">\(\to\)</span> small
-subarray.</li>
-<li>Small increments <span class="math inline">\(\to\)</span> nearly in
-order. (insertion sort is fast when array is partially sorted)</li>
-</ul>
-<p>Note the fact that a <span class="math inline">\(g\)</span>-sorted
-array remains <span class="math inline">\(g\)</span>-sorted after <span class="math inline">\(h\)</span>-sorting it.</p>
-<p>An <strong>efficient</strong> shellsort scheme depends on a proper
-<strong>increment sequence</strong>.</p>
-<ul>
-<li><span class="math inline">\(3x+1\)</span>. (most commonly used)
-<span class="math inline">\(1,4,13,40,121,364,...\)</span></li>
-<li>Sedgewick. (tough to beat in empirical studies) <span class="math inline">\(1,5,19,41,109,...\)</span></li>
-</ul>
-<div class="note info no-icon"><p>The worst-case number of compares used by shellsort with the <span class="math inline">\(3x+1\)</span> increments is <span class="math inline">\(O(N^{3/2})\)</span>.</p>
-</div>
-<p>However, accurate model for shellsort has <strong>NOT</strong> yet
-been discovered. Maybe some better increment sequences are still left
-for discover......!</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Shell</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> a.length;</span><br><span class="line">        </span><br><span class="line">        <span class="type">int</span> <span class="variable">h</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (h &lt; N/<span class="number">3</span>)    h = <span class="number">3</span> * h + <span class="number">1</span>;     <span class="comment">// generate 3x+1 increment sequence</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span> (h &gt;= <span class="number">1</span>) &#123;                      <span class="comment">// h-insertion sort</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> h; i &lt; N; ++i) &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i; j &gt;= h &amp;&amp; less(a[j], a[j - h]); j -= h)</span><br><span class="line">                    exch(a, j, j - h);</span><br><span class="line">            &#125;</span><br><span class="line">            h /= <span class="number">3</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Also note that though shellsort uses insertion sort to <span class="math inline">\(h\)</span>-sort the array, it is <strong>NOT
-stable</strong>.</p>
-<div class="note info no-icon"><p>A <strong>stable</strong> sort preserves the relative order of items
-with equal keys.</p>
-</div>
-<p>Insertion sort and merge sort are stable; Selection sort and
-shellsort are not.</p>
-<p><br></p>
-<h2 id="merge-sort">Merge Sort</h2>
-<p>Basic idea of mergesort is <strong>divide-and-conquer
-paradigm</strong>.</p>
-<ul>
-<li>Divide array into two halves.</li>
-<li><strong>Recursively</strong> sort each half.</li>
-<li>Merge two sorted halves using two pointers.</li>
-</ul>
-<p>In empirical analysis of merge sort, # compares is denoted by <span class="math inline">\(C(N)\)</span>, # array accesses is denoted by
-<span class="math inline">\(A(N)\)</span>. It is proven that <span class="math inline">\(C(N)\leq N\lg N\)</span> and <span class="math inline">\(A(N)\leq 6N\lg N\)</span> for any array of size
-<span class="math inline">\(N\)</span>.</p>
-<figure>
-<img src="/2023/06/16/algo-princeton-p1/mergesort.png" alt="divide-and-conquer recurrence">
-<figcaption aria-hidden="true">divide-and-conquer
-recurrence</figcaption>
-</figure>
-<div class="note info no-icon"><p>Proposition. if <span class="math inline">\(D(N)=2D(N/2)+N\)</span>
-for <span class="math inline">\(N&gt;1\)</span>, with <span class="math inline">\(D(1)=0\)</span>, then <span class="math inline">\(D(N)=N\lg N\)</span>.</p>
-</div>
-<p>We prove this by <strong>induction</strong> with base case <span class="math inline">\(N=1\)</span> and inductive hypothesis <span class="math inline">\(D(N)=N\lg N\)</span>. The goal is to show that
-<span class="math inline">\(D(2N)=(2N)\lg(2N)\)</span>. <span class="math display">\[
-\begin{aligned}
-D(2N)&amp;=2D(N)+2N \\
-&amp;= 2N\lg N+2N \\
-&amp;= 2N(\lg(2N) - 1)+2N \\
-&amp;= 2N\lg (2N)
-\end{aligned}
-\]</span></p>
-<p>Mergesort uses extra space proportional to <span class="math inline">\(N\)</span>, which means it is <strong>NOT
-in-place</strong>.</p>
-<div class="note info no-icon"><p>Definition. A sorting algorithm is <strong>in-place</strong> if it
-uses <span class="math inline">\(\leq c\log N\)</span> extra memory.</p>
-<p>Examples. Insertion sort, selection sort, shellsort.</p>
-</div>
-<h3 id="code-implementation-2">Code Implementation</h3>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Merge</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">merge</span><span class="params">(Comparable[] a, Comparable[] aux, <span class="type">int</span> lo, <span class="type">int</span> mid, <span class="type">int</span> hi)</span> &#123;</span><br><span class="line">        <span class="keyword">assert</span> <span class="title function_">isSorted</span><span class="params">(a, lo, mid)</span>;</span><br><span class="line">        <span class="keyword">assert</span> <span class="title function_">isSorted</span><span class="params">(a, mid + <span class="number">1</span>, hi)</span>;</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> lo; k &lt;= hi; ++k)	aux[k] = a[k];</span><br><span class="line">        <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> lo, j = mid + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> lo; k &lt;= hi; ++k) &#123;</span><br><span class="line">            <span class="keyword">if</span> (i &gt; mid)                     a[k] = aux[j++];</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (j &gt; hi)                 a[k] = aux[i++];</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (less(aux[j], aux[i]))   a[k] = aux[j++];</span><br><span class="line">            <span class="keyword">else</span>                             a[k] = aux[i++];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">assert</span> <span class="title function_">isSorted</span><span class="params">(a, lo, hi)</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Recursive version</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a, Comparable[] aux, <span class="type">int</span> lo, <span class="type">int</span> hi)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (hi &lt;= lo)    <span class="keyword">return</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> lo + (hi - lo) / <span class="number">2</span>;</span><br><span class="line">        sort(a, aux, lo, mid);</span><br><span class="line">        sort(a, aux, mid + <span class="number">1</span>, hi);</span><br><span class="line">        merge(a, aux, lo, mid, hi);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">        aux = <span class="keyword">new</span> <span class="title class_">Comparable</span>[a.length];</span><br><span class="line">        sort(a, aux, <span class="number">0</span>, a.length - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Non-recursive bottom-up version</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> a.length;</span><br><span class="line">        Comparable[] aux = <span class="keyword">new</span> <span class="title class_">Comparable</span>[N];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">sz</span> <span class="operator">=</span> <span class="number">1</span>; sz &lt; N; sz &lt;&lt;= <span class="number">1</span>)</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">lo</span> <span class="operator">=</span> <span class="number">0</span>; lo &lt; N - sz; lo += sz+sz)</span><br><span class="line">                merge(a, aux, lo, lo + sz - <span class="number">1</span>, Math.min(lo + sz + sz - <span class="number">1</span>, N - <span class="number">1</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="practical-improvements">Practical Improvements</h3>
-<ul>
-<li><p>Use <strong>insertion sort</strong> for small subarrays.</p>
-<p>Mergesort has too much <strong>overhead</strong> for tiny subarrays.
-Cutoff to insertion sort for <span class="math inline">\(\approx
-7\)</span> items.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a, Comparable[] aux, <span class="type">int</span> lo, <span class="type">int</span> hi)</span> &#123;</span><br><span class="line">+   <span class="keyword">if</span> (hi &lt;= lo + CUTOFF - <span class="number">1</span>) &#123;</span><br><span class="line">+       Insertion.sort(a, lo, hi);</span><br><span class="line">+       <span class="keyword">return</span>;</span><br><span class="line">+   &#125;</span><br><span class="line">    <span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> lo + (hi - lo) / <span class="number">2</span>;</span><br><span class="line">    sort(a, aux, lo, mid);</span><br><span class="line">    sort(a, aux, mid + <span class="number">1</span>, hi);</span><br><span class="line">    merge(a, aux, lo, mid, hi);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li><p><strong>STOP</strong> if already sorted. (especially helpful for
-partially-ordered arrays.)</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a, Comparable[] aux, <span class="type">int</span> lo, <span class="type">int</span> hi)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (hi &lt;= lo)    <span class="keyword">return</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> lo + (hi - lo) / <span class="number">2</span>;</span><br><span class="line">    sort(a, aux, lo, mid);</span><br><span class="line">    sort(a, aux, mid + <span class="number">1</span>, hi);</span><br><span class="line">+   <span class="keyword">if</span> (!less(a[mid + <span class="number">1</span>], a[mid]))    <span class="keyword">return</span>;</span><br><span class="line">    merge(a, aux, lo, mid, hi);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li><p>Eliminate the copy to the auxiliary array.</p>
-<p>Save time (not space) by switching the role of input and auxiliary
-array in each recursive call.</p></li>
-</ul>
-<p><br></p>
-<h2 id="complexity-of-sorting">Complexity of Sorting</h2>
-<p><strong>Computational complexity</strong> is a framework to study
-efficiency of algorithms for solving a particular problem <span class="math inline">\(X\)</span>. It consists of five components:</p>
-<ul>
-<li>Model of computation. Allowable operations.</li>
-<li>Cost model. Operation count(s).</li>
-<li>Upper bound. Cost guarantee provided by <strong>some</strong>
-algorithms for <span class="math inline">\(X\)</span>.</li>
-<li>Lower bound. Proven limit on cost guarantee by <strong>all</strong>
-algorithms for <span class="math inline">\(X\)</span>.</li>
-<li>Optimal algorithm. Algorithm with best possible cost guarantee for
-<span class="math inline">\(X\)</span>.</li>
-</ul>
-<p>We model the complexity of sorting problem as follows:</p>
-<ul>
-<li>Model of computation. <strong>Decision trees</strong>.</li>
-<li>Cost model. <strong># compares</strong>.</li>
-<li>Upper bound. <span class="math inline">\(\sim N\lg N\)</span> from
-mergesort.</li>
-<li>Lower bound. ?</li>
-<li>Optimal algorithm. ?</li>
-</ul>
-<h3 id="decision-tree">Decision Tree</h3>
-<p>Decision trees for compare-base sorting algorithms can access
-information only through compare.</p>
-<figure>
-<img src="/2023/06/16/algo-princeton-p1/tree.png" alt="comparable decision tree for 3 distinct items">
-<figcaption aria-hidden="true">comparable decision tree for 3 distinct
-items</figcaption>
-</figure>
-<p>Note that the height of the tree <span class="math inline">\(h\)</span> <span class="math inline">\(=\)</span>
-the worst-case number of compares, and <strong>at least</strong> each
-leaf corresponds to a possible ordering of elements.</p>
-<h3 id="lower-bound-for-sorting">Lower Bound for Sorting</h3>
-<div class="note info no-icon"><p>Proposition. Any compare-base sorting algorithm <strong>must use at
-least <span class="math inline">\(\sim N\lg N\)</span> compares</strong>
-in the worst case.</p>
-</div>
-<p>We prove this by establishing an inequality based on the number of
-leaves of decision tree.</p>
-<ul>
-<li>Binary tree of height <span class="math inline">\(h\)</span> has at
-most <span class="math inline">\(2^h\)</span> leaves. # leaves <span class="math inline">\(\leq 2^h\)</span>.</li>
-<li><span class="math inline">\(N!\)</span> different orderings <span class="math inline">\(\to\)</span> at least <span class="math inline">\(N!\)</span> leaves. # leaves <span class="math inline">\(\geq N!\)</span>.</li>
-<li>Worst case dictated by <strong>height</strong> <span class="math inline">\(h\)</span> of decision tree.</li>
-</ul>
-<p><span class="math inline">\(2^h\geq\)</span> # leaves <span class="math inline">\(\geq N!\Rightarrow h\geq \lg(N!)\)</span>.
-According to the <strong>Stirling's formula</strong>, <span class="math inline">\(\lg(N!)\sim N\lg N\)</span>.</p>
-<p>The lower bound of sorting problem is thus determined by <span class="math inline">\(h\geq \sim N\lg N\)</span>.</p>
-<p>We could see that the upper bound and the lower bound overlap each
-other <span class="math inline">\((\sim N\lg N)\)</span>. Therefore, we
-could say that <strong>mergesort is an optimal algorithm</strong> for
-compare-base sorting problem.</p>
-<p>Note that quicksort (stay tuned) is <strong>NOT</strong> optimal: it
-needs <span class="math inline">\(\sim\frac{1}{2}N^2\)</span> compares
-in the worst case.</p>
-<p><br></p>
-<h2 id="quick-sort">Quick Sort</h2>
-<p>Quick sort is <strong>practically (NOT empirically)</strong> the
-fastest sorting algorithm. It has three processes:</p>
-<ul>
-<li><strong>Shuffle</strong> the array.</li>
-<li><strong>Partition</strong> so that, for some <span class="math inline">\(j\)</span>
-<ul>
-<li>entry <span class="math inline">\(a_j\)</span> is in place</li>
-<li><strong>No larger</strong> entry to the left of <span class="math inline">\(j\)</span></li>
-<li><strong>No smaller</strong> entry to the right of <span class="math inline">\(j\)</span></li>
-</ul></li>
-<li><strong>Sort</strong> each piece recursively.</li>
-</ul>
-<h3 id="partition">Partition</h3>
-<p><strong>Partition</strong> is the essence of quick sort. It finally
-produces an <strong>in-place index</strong> <span class="math inline">\(j\)</span> so that no larger entry to the left of
-<span class="math inline">\(j\)</span> and no smaller entry to the right
-of <span class="math inline">\(j\)</span>.</p>
-<p>To achieve this, we maintain two pointers <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> as follows:</p>
-<ul>
-<li>Scan <span class="math inline">\(i\)</span> from left to right so
-long as <code>a[i] &lt; a[lo]</code>.</li>
-<li>Scan <span class="math inline">\(j\)</span> from right to left so
-long as <code>a[j] &gt; a[lo]</code>.</li>
-<li>Exchange <code>a[i]</code> with <code>a[j]</code>.</li>
-</ul>
-<p>Repeat until <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> pointers cross. When it happens,
-exchange <code>a[lo]</code> with <code>a[j]</code>.</p>
-<figure>
-<img src="/2023/06/16/algo-princeton-p1/pointers.png" alt="Partition process in range [lo, hi]">
-<figcaption aria-hidden="true">Partition process in range [lo,
-hi]</figcaption>
-</figure>
-<p>See the Java code for partitioning below:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">partition</span><span class="params">(Comparable[] a, <span class="type">int</span> lo, <span class="type">int</span> hi)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> lo, j = hi + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="keyword">while</span> (less(a[++i], a[lo]))    <span class="comment">// stop on equal keys</span></span><br><span class="line">            <span class="keyword">if</span> (i == hi)    <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">while</span> (less(a[lo], a[--j]))    <span class="comment">// stop on equal keys</span></span><br><span class="line">            <span class="keyword">if</span> (j == lo)    <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">if</span> (i &gt;= j)    <span class="keyword">break</span>;</span><br><span class="line">        exch(a, i, j);</span><br><span class="line">    &#125;</span><br><span class="line">    exch(a, lo, j);     <span class="comment">// now j is in place with the partitioning item a[lo]</span></span><br><span class="line">    <span class="keyword">return</span> j;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<div class="note info no-icon"><p>Counter-intuitively, when duplicates are present, it is better to
-<strong>stop on keys equal to the partitioning item's key</strong>.</p>
-</div>
-<figure>
-<img src="/2023/06/16/algo-princeton-p1/duplicates.png" alt="stop on equal keys: uses &lt; instead of \leq in the condition">
-<figcaption aria-hidden="true">stop on equal keys: uses <span class="math inline">\(&lt;\)</span> instead of <span class="math inline">\(\leq\)</span> in the condition</figcaption>
-</figure>
-<p>Considering an array with all entries having the same key; in this
-case, algorithm <strong>goes quadratic</strong> unless partitioning
-stops on equal keys.</p>
-<p>Stopping on equal keys guarantees <span class="math inline">\(\sim
-N\lg{N}\)</span> compares when all keys are equal.</p>
-<p>However, a more desirable consequence should be that all items equal
-to the partitioning item are in place. Stay tuned for the <strong>3-way
-partitioning technique</strong>.</p>
-<h3 id="shuffle">Shuffle</h3>
-<div class="note info no-icon"><p>Randomly shuffling the array probabilistically guarantee against the
-<strong>worst case</strong>.</p>
-</div>
-<p>The worst case happens when <strong>the array is sorted</strong> (key
-is already in order). This will cost quadratic number of compares: <span class="math inline">\(N+(N-1)+...+1\sim \frac{1}{2}N^2\)</span>.</p>
-<p>However, giving the array a random shuffle could make the probability
-of the worst case happening <strong>negligible</strong>. It is based on
-a math model that can be validated with experiments.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Quick</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">partition</span><span class="params">(Comparable[] a, <span class="type">int</span> lo, <span class="type">int</span> hi)</span> </span><br><span class="line">    &#123; <span class="comment">/* see previous partition code */</span> &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">        StdRandom.shuffle(a);</span><br><span class="line">        sort(a, <span class="number">0</span>, a.length - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a, <span class="type">int</span> lo, <span class="type">int</span> hi)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (hi &lt;= lo)    <span class="keyword">return</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> partition(a, lo, hi);</span><br><span class="line">        sort(a, lo, j - <span class="number">1</span>);</span><br><span class="line">        sort(a, j + <span class="number">1</span>, hi);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>The average number of compares to quicksort an array of <span class="math inline">\(N\)</span> <strong>distinct keys</strong> is <span class="math inline">\(\sim 1.39N\lg{N}\)</span>, and the average number
-of exchange is <span class="math inline">\(\sim \frac{1}{3}N\lg
-N\)</span>.</p>
-<p>Though quicksort has 39% more compares than mergesort, it is
-<strong>faster in practice</strong> because of less data movement.</p>
-<h3 id="way-partitioning">3-way Partitioning</h3>
-<p>3-way partitioning (3-way quicksort) improves traditional quicksort
-<strong>in presence of duplicate keys</strong>.</p>
-<ul>
-<li>It put all items equal to the partitioning item <strong>in
-place</strong>.</li>
-<li>It reduces running time from linearithmic to linear <strong>in broad
-class of applications</strong>.</li>
-</ul>
-<p>3-way quicksort partition array into three parts that:</p>
-<ul>
-<li>Entries between <span class="math inline">\(lt\)</span> and <span class="math inline">\(gt\)</span> equal to partition item <span class="math inline">\(v\)</span>.</li>
-<li>No larger entries to left of <span class="math inline">\(lt\)</span>.</li>
-<li>No smaller entries to right of <span class="math inline">\(gt\)</span>.</li>
-</ul>
-<p>To achieve this, we maintain three pointers <span class="math inline">\(lt\)</span>, <span class="math inline">\(gt\)</span>, and <span class="math inline">\(i\)</span> as follows:</p>
-<p>Let <span class="math inline">\(v\)</span> be partitioning item <span class="math inline">\(a_{lo}\)</span>, scanning <span class="math inline">\(i\)</span> from left to right.</p>
-<ul>
-<li><code>a[i]  &lt; v</code>: exchange <code>a[lt]</code> with
-<code>a[i]</code>; increment both <code>lt</code> and
-<code>i</code></li>
-<li><code>a[i]  &gt; v</code>: exchange <code>a[gt]</code> with
-<code>a[i]</code>; decrement <code>gt</code></li>
-<li><code>a[i] == v</code>: increment <code>i</code></li>
-</ul>
-<p>Repeat until <span class="math inline">\(i\)</span> and <span class="math inline">\(gt\)</span> pointers cross.</p>
-<figure>
-<img src="/2023/06/16/algo-princeton-p1/3partition.png" alt="3-way partition process in range [lo, hi]">
-<figcaption aria-hidden="true">3-way partition process in range [lo,
-hi]</figcaption>
-</figure>
-<p>See the Java code for 3-way partitioning below; it's much simpler
-than traditional one above:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a, <span class="type">int</span> lo, <span class="type">int</span> hi)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (hi &lt;= lo)    <span class="keyword">return</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">lt</span> <span class="operator">=</span> lo, gt = hi;</span><br><span class="line">    <span class="type">Comparable</span> <span class="variable">v</span> <span class="operator">=</span> a[lo];</span><br><span class="line">    <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> lo;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= gt) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">cmp</span> <span class="operator">=</span> a[i].compareTo(v);</span><br><span class="line">        <span class="keyword">if</span>      (cmp &lt; <span class="number">0</span>)    exch(a, lt++, i++);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (cmp &gt; <span class="number">0</span>)    exch(a, i, gt--);</span><br><span class="line">        <span class="keyword">else</span>                 i++; </span><br><span class="line">    &#125;</span><br><span class="line">    sort(a, lo, lt - <span class="number">1</span>);</span><br><span class="line">    sort(a, gt + <span class="number">1</span>, hi);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>It is proven that 3-way quick sort needs only (linear) <span class="math inline">\(N\)</span> compares when in <strong>best
-case</strong>, but it still needs (quadratic) <span class="math inline">\(\frac{1}{2}N^2\)</span> compares in <strong>worst
-case</strong>.</p>
-<p><br></p>
-<p>(Selection problem adapted from quick sort algorithm.)</p>
-<p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
@@ -962,13 +555,13 @@ Wayne.</p>
   </li>
   <li class="post-copyright-link">
       <strong>Post link: </strong>
-      <a href="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/" title="Algorithms, Part 1, Princeton University">https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/</a>
+      <a href="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/" title="Algorithms, Princeton University, P1 - Data Structures">https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/</a>
       <!--copy buttom-->
       <span class="copy-path" title="Click to copy markdown-style reference"
       ><i
         style="cursor: pointer"
         class="fa fa-clipboard"
-        data-clipboard-text="[XXZ's Blog | Algorithms, Part 1, Princeton University](https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/)"
+        data-clipboard-text="[XXZ's Blog | Algorithms, Princeton University, P1 - Data Structures](https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/)"
         aria-label="Markdown-style reference is now on your clipboard"
       ></i
     ></span>
@@ -1005,7 +598,7 @@ Wayne.</p>
     </div>
           <div class="post-tags">
               <a href="/tags/course-notes/" rel="tag"><i class="fa fa-tag"></i> course notes</a>
-              <a href="/tags/algorithm/" rel="tag"><i class="fa fa-tag"></i> algorithm</a>
+              <a href="/tags/data-structure/" rel="tag"><i class="fa fa-tag"></i> data structure</a>
           </div>
 
         
@@ -1017,8 +610,8 @@ Wayne.</p>
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/06/18/algo-princeton-p3/" rel="next" title="Algorithms, Part 3, Princeton University">
-                  Algorithms, Part 3, Princeton University <i class="fa fa-chevron-right"></i>
+                <a href="/2023/06/17/algo-princeton-p2/" rel="next" title="Algorithms, Princeton University, P2 - Algorithmic Concepts">
+                  Algorithms, Princeton University, P2 - Algorithmic Concepts <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>

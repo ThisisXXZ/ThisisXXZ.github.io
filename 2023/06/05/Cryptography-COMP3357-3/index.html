@@ -31,7 +31,7 @@
 <meta property="og:description" content="COMP3357 digest 的 P3 部分 (P1 部分在这里，P2 部分在这里)，主要介绍密码学中的几个困难问题 (hard problems) 与一个重要的 cryptographic primitive: 单向函数 (one-way function). 这一 Part 涉及到的困难问题 (Factoring problem, RSA problem, Discrete Log">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-06-04T16:04:22.000Z">
-<meta property="article:modified_time" content="2023-06-21T10:34:07.596Z">
+<meta property="article:modified_time" content="2023-06-23T14:48:27.693Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="cryptography">
 <meta property="article:tag" content="course notes">
@@ -189,7 +189,7 @@ on Assumptions</span></a></li><li class="nav-item nav-level-3"><a class="nav-lin
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -200,7 +200,7 @@ on Assumptions</span></a></li><li class="nav-item nav-level-3"><a class="nav-lin
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-count">39</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -310,7 +310,7 @@ on Assumptions</span></a></li><li class="nav-item nav-level-3"><a class="nav-lin
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-06-21 18:34:07" itemprop="dateModified" datetime="2023-06-21T18:34:07+08:00">2023-06-21</time>
+      <time title="Modified: 2023-06-23 22:48:27" itemprop="dateModified" datetime="2023-06-23T22:48:27+08:00">2023-06-23</time>
     </span>
 
   <span class="post-meta-item">
@@ -428,13 +428,14 @@ problem)，其困难性被某个高效的 GenModulus 算法的存在保证。</p
 <span class="math inline">\(e&gt;2\)</span>, such that <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>.</p>
 <p>By the Corollary 2 of the Fermat's Little Theorem (see it in P2), we
 know that exponentiation to the <span class="math inline">\(e\)</span>-th power mod <span class="math inline">\(N\)</span> is a <strong>permutation</strong> on
-<span class="math inline">\((\mathbb{Z}/N)^{\*}\)</span>;</p>
-<p>For any <span class="math inline">\(y\in
-(\mathbb{Z}/N)^{\*}\)</span>, let <span class="math inline">\([y^{1/e}
-\mod{N}]\)</span> be the unique element which yields <span class="math inline">\(y\)</span> when raised to the <span class="math inline">\(e\)</span>-th power mod <span class="math inline">\(N\)</span>, i.e., <strong>the <span class="math inline">\(e\)</span>-th root of <span class="math inline">\(y\)</span> mod <span class="math inline">\(N\)</span></strong>.</p>
+<span class="math inline">\((\mathbb{Z}/N)^{*}\)</span>;</p>
+<p>For any <span class="math inline">\(y\in (\mathbb{Z}/N)^{*}\)</span>,
+let <span class="math inline">\([y^{1/e} \mod{N}]\)</span> be the unique
+element which yields <span class="math inline">\(y\)</span> when raised
+to the <span class="math inline">\(e\)</span>-th power mod <span class="math inline">\(N\)</span>, i.e., <strong>the <span class="math inline">\(e\)</span>-th root of <span class="math inline">\(y\)</span> mod <span class="math inline">\(N\)</span></strong>.</p>
 <p>If <span class="math inline">\(e\cdot d\equiv
 1\pmod{\varphi(N)}\)</span>, then raising to the <span class="math inline">\(d\)</span>-th power is the
-<strong>inverse</strong> of raising to the <span class="math inline">\(e\)</span>-th power, that is, for any <span class="math inline">\(g\in (\mathbb{Z}/N)^{\*}\)</span>, <span class="math inline">\((g^e)^d \equiv g\pmod{N}\)</span>. Therefore, if
+<strong>inverse</strong> of raising to the <span class="math inline">\(e\)</span>-th power, that is, for any <span class="math inline">\(g\in (\mathbb{Z}/N)^{*}\)</span>, <span class="math inline">\((g^e)^d \equiv g\pmod{N}\)</span>. Therefore, if
 <span class="math inline">\(y=g^e\)</span>, <span class="math inline">\(y^{1/e}=g=y^d\pmod{N}\)</span>.</p>
 <div class="note info no-icon"><p>RSA problem is essentially finding <span class="math inline">\(e\)</span>-th root of <span class="math inline">\(y\)</span> mod <span class="math inline">\(N\)</span>: Given <span class="math inline">\(N,e,y\)</span>, compute <span class="math inline">\([y^{1/e}\mod{N}]\)</span>. Note that <span class="math inline">\(e&gt;2\)</span> and <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>, <span class="math inline">\(\gcd(y, N)=1\)</span>.</p>
 </div>
@@ -442,7 +443,7 @@ know that exponentiation to the <span class="math inline">\(e\)</span>-th power 
 <p>Similarly, we have the RSA experiment <span class="math inline">\(\mathtt{RSA}\)</span>-<span class="math inline">\(\mathtt{inv}_{\mathscr{A}, GenRSA}(n)\)</span>,
 where GenRSA is an efficient algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs a modulus <span class="math inline">\(N\)</span> that is the product of two <span class="math inline">\(n\)</span>-bit primes <span class="math inline">\(p,q\)</span>, as well as integers <span class="math inline">\(e,d&gt;0\)</span> with <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span> and <span class="math inline">\(ed\equiv 1\pmod{\varphi(N)}\)</span>.</p>
 <p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(N,e\)</span> and a <u><strong>uniform</strong></u>
-<span class="math inline">\(y\in (\mathbb{Z}/N)^{\*}\)</span> needs to
+<span class="math inline">\(y\in (\mathbb{Z}/N)^{*}\)</span> needs to
 efficiently compute the corresponding <span class="math inline">\(x\)</span>.</p>
 <div class="note info no-icon"><p>Definition. RSA problem is hard relative to GenRSA if for all
 probabilistic polynomial time algorithm <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
@@ -577,8 +578,8 @@ only if <span class="math inline">\(f(x&#39;)=y\)</span>.</li>
 </ul>
 <p>Note that the <strong>preimage</strong> <span class="math inline">\(x&#39;\)</span> does NOT neccessarily have to
 equal <span class="math inline">\(x\)</span>, as long as <span class="math inline">\(f(x&#39;)=y\)</span>.</p>
-<div class="note info no-icon"><p>Definition. A function <span class="math inline">\(f:\{0,1\}^{\*}\to
-\{0,1\}^{\*}\)</span> is <strong>one-way</strong> if the following two
+<div class="note info no-icon"><p>Definition. A function <span class="math inline">\(f:\{0,1\}^{*}\to
+\{0,1\}^{*}\)</span> is <strong>one-way</strong> if the following two
 conditions hold:</p>
 <ul>
 <li>(<strong>Easy to compute</strong>): There is a polynomial-time
@@ -627,7 +628,7 @@ of a one-way function as <strong>the bit that could NEVER be
 revealed.</strong> Informally speaking, <span class="math inline">\(hc(x)\)</span> is <strong>a bit</strong> that is
 efficiently computable given <span class="math inline">\(x\)</span>, but
 hard to compute given <span class="math inline">\(f(x)\)</span>.</p>
-<div class="note info no-icon"><p>Definition. A function <span class="math inline">\(hc:\{0,1\}^{\*}\to\{0,1\}\)</span> is a hard-core
+<div class="note info no-icon"><p>Definition. A function <span class="math inline">\(hc:\{0,1\}^{*}\to\{0,1\}\)</span> is a hard-core
 predicate of a function <span class="math inline">\(f\)</span> if:</p>
 <ul>
 <li>hc can be computed in polynomial time.</li>
