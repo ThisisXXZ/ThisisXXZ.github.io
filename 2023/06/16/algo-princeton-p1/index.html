@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/resize.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/06/16/algo-princeton-p1/binarytree.png">
 <meta property="article:published_time" content="2023-06-16T15:27:57.000Z">
-<meta property="article:modified_time" content="2023-06-25T03:07:05.234Z">
+<meta property="article:modified_time" content="2023-06-26T04:16:33.943Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="course notes">
 <meta property="article:tag" content="data structure">
@@ -174,7 +174,7 @@
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#union-find"><span class="nav-number">1.</span> <span class="nav-text">Union-Find</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#problem-model-dynamic-connectivity"><span class="nav-number">1.1.</span> <span class="nav-text">Problem Model: Dynamic
 Connectivity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#improvements"><span class="nav-number">1.2.</span> <span class="nav-text">Improvements</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#code-implementation"><span class="nav-number">1.3.</span> <span class="nav-text">Code Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stack-queue"><span class="nav-number">2.</span> <span class="nav-text">Stack &amp; Queue</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#resizing-array-implementation"><span class="nav-number">2.1.</span> <span class="nav-text">Resizing-Array
 Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linked-lists-versus-resizing-arrays"><span class="nav-number">2.2.</span> <span class="nav-text">Linked Lists Versus
-Resizing Arrays</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#code-implementation-1"><span class="nav-number">2.3.</span> <span class="nav-text">Code Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#binary-heap"><span class="nav-number">3.</span> <span class="nav-text">Binary Heap</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#complete-binary-tree"><span class="nav-number">3.1.</span> <span class="nav-text">Complete Binary Tree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#heap-properties"><span class="nav-number">3.2.</span> <span class="nav-text">Heap Properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#promotion-and-insertion"><span class="nav-number">3.3.</span> <span class="nav-text">Promotion and Insertion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#demotion-and-deletion"><span class="nav-number">3.4.</span> <span class="nav-text">Demotion and Deletion</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#priority-queues"><span class="nav-number">4.</span> <span class="nav-text">Priority Queues</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Resizing Arrays</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#code-implementation-1"><span class="nav-number">2.3.</span> <span class="nav-text">Code Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#binary-heap"><span class="nav-number">3.</span> <span class="nav-text">Binary Heap</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#complete-binary-tree"><span class="nav-number">3.1.</span> <span class="nav-text">Complete Binary Tree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#heap-properties"><span class="nav-number">3.2.</span> <span class="nav-text">Heap Properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#promotion-and-insertion"><span class="nav-number">3.3.</span> <span class="nav-text">Promotion and Insertion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#demotion-and-deletion"><span class="nav-number">3.4.</span> <span class="nav-text">Demotion and Deletion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#construction"><span class="nav-number">3.5.</span> <span class="nav-text">Construction</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#priority-queues"><span class="nav-number">4.</span> <span class="nav-text">Priority Queues</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -564,6 +564,29 @@ gets promoted.</p>
 root with the node <strong>at end</strong>, then sink it down. It will
 cost at most <span class="math inline">\(2\lg N\)</span> compares.</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Key <span class="title function_">delMax</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">Key</span> <span class="variable">max</span> <span class="operator">=</span> pq[<span class="number">1</span>];</span><br><span class="line">    exch(<span class="number">1</span>, N--);</span><br><span class="line">    sink(<span class="number">1</span>);</span><br><span class="line">    pq[N + <span class="number">1</span>] = <span class="literal">null</span>;    <span class="comment">// prevent loitering</span></span><br><span class="line">    <span class="keyword">return</span> max;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="construction">Construction</h3>
+<p>A trivial way to build a heap given <span class="math inline">\(N\)</span> keys is to <strong>insert them one by
+one</strong> into an empty heap. However, this will cost <span class="math inline">\(\sim N\log{N}\)</span> compares and exchanges.</p>
+<p>In fact, there is a bottom-up linear-time method to construct a heap
+out of <span class="math inline">\(N\)</span> keys.</p>
+<p>For a node with links to left <strong>subheap</strong> and right
+<strong>subheap</strong>, we <u><strong>heapify</strong></u> the node by
+sinking it down. Therefore, from the <strong>last second</strong> level,
+we heapify the nodes level by level.</p>
+<p>The reason why we start from the last second level is that
+<strong>every single node is a subheap of size <span class="math inline">\(1\)</span>.</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Note that it is a 1-based indexing</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> N/<span class="number">2</span>; k &gt;= <span class="number">1</span>; --k) </span><br><span class="line">    sink(a, k, N);</span><br><span class="line"><span class="comment">// Reverse traverse: We could heapify a node only if its two sons are both heaps</span></span><br></pre></td></tr></table></figure>
+<div class="note info no-icon"><p>Proposition. <strong>Bottom-up</strong> heap construction uses
+(linear) <span class="math inline">\(\leq 2N\)</span> compares and
+exchanges.</p>
+</div>
+<p>Assume <span class="math inline">\(S\)</span> is the total number of
+compares and exchanges. Note that the number of compares and exchanges
+when heapifying (sinking down) a node is <strong>proportional to the its
+height</strong> <span class="math inline">\(h\)</span>.</p>
+<p><span class="math inline">\(S=2^0h+2^1(h-1)+2^2(h-2)+...+2^k(h-k)+...+2^{h-1}=2^{h+1}-h-2\)</span>.
+The height of heap is <span class="math inline">\(h=\log{n}\)</span>,
+thus <span class="math inline">\(S=\sim N\)</span>.</p>
 <p><br></p>
 <h2 id="priority-queues">Priority Queues</h2>
 <p>We've introduced several <strong>collections</strong>. They all

@@ -443,6 +443,33 @@ implementations:</p>
 <p>Here is a sample code of insertion sort using a Comparator.</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Object[] a, Comparator comparator)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> a.length;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i; j &gt; <span class="number">0</span> &amp;&amp; less(comparator, a[j], a[j - <span class="number">1</span>]); --j)</span><br><span class="line">            exch(a, j, j - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">less</span><span class="params">(Comparator c, Object v, Object w)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> c.compare(v, w) &lt; <span class="number">0</span>;    <span class="comment">// compare() is used here in less()</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">exch</span><span class="params">(Object[] a, <span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;    <span class="comment">// no need to pass comparator in</span></span><br><span class="line">    <span class="type">Object</span> <span class="variable">swap</span> <span class="operator">=</span> a[i]; a[i] = a[j]; a[j] = swap;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
+<h2 id="immutability">Immutability</h2>
+<blockquote class="blockquote-center">
+<p>Classes should be immutable unless there's a very good reason to make
+them mutable.</p>
+<p>—— Joshua Bloch (Java architect)</p>
+
+</blockquote>
+<p>If we make a data type <strong>immutable</strong>, it means we can't
+change the data type value once created.</p>
+<p>To achieve immutability in Java, we need to:</p>
+<ul>
+<li><code>final</code> in class definition: make sure the class
+<strong>can't override</strong> instance methods.</li>
+<li><code>final</code> in instance variables: make all instance
+variables <strong>private and final</strong>.</li>
+<li>make <strong>defensive copy</strong> of mutable instance variables
+in constructor.</li>
+<li>make sure all instance methods don't change instance variables.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">Vector</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> N;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">double</span>[] data;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Vector</span><span class="params">(<span class="type">double</span>[] data)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.N = data.length;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">            <span class="built_in">this</span>.data[i] = data[i];    <span class="comment">// make defensive copy</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ... <span class="comment">// instance methods don&#x27;t change instance variables</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Advantages of immutability.</p>
+<ul>
+<li>Simplifies debugging.</li>
+<li>Safer in presence of hostile code.</li>
+<li>Simplifies concurrent programming.</li>
+</ul>
+<p><br></p>
 <h2 id="java-language-style">Java Language Style</h2>
 <p>这门课的 projects 设计实在是太良心了，在评分反馈里居然还包含 style
 check！难以想象教职员们为课程的准备倾注了多少心血……至少我从来没有见过有一门课的评分标准里还包含
@@ -450,6 +477,8 @@ coding style。</p>
 <ol type="1">
 <li>The instance variable name must start with <strong>a lowercase
 letter and use camelCase</strong>.</li>
+<li>The class name must start with <strong>a uppercase letter and use
+CamelCase</strong>.</li>
 <li>Remove unused import statements.</li>
 <li>Typecast (类型转换) must <strong>be followed by a
 whitespace</strong>.</li>
@@ -853,29 +882,12 @@ N\log{N}\)</span> 算法。</p>
 <p>The basic plan for in-place heap sort.</p>
 <ul>
 <li>Construct a max-heap with all <span class="math inline">\(N\)</span>
-keys.</li>
-<li>Repeatedly remove the maximum key.</li>
+keys. (<strong>linear-time</strong> bottom-up heap construction)</li>
+<li>Repeatedly remove the maximum key.
+(<strong>linearithmic-time</strong> sorting down process)</li>
 </ul>
-<div class="note info no-icon"><p>Proposition. <strong>Bottom-up</strong> heap construction uses
-(linear) <span class="math inline">\(\leq 2N\)</span> compares and
-exchanges.</p>
-</div>
-<p>Instead of building heap by inserting items one by one <span class="math inline">\((\sim N\log{N})\)</span>, there is a linear-time
-bottom-up construction method.</p>
-<p>For a node with links to left <strong>subheap</strong> and right
-<strong>subheap</strong>, we heapify the node by sinking it down.
-Therefore, from the <strong>last second</strong> level, we heapify the
-nodes level by level.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Note that it is a 1-based indexing</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> N/<span class="number">2</span>; k &gt;= <span class="number">1</span>; --k) </span><br><span class="line">    sink(a, k, N);</span><br><span class="line"><span class="comment">// Reverse traverse: We could heapify a node only if its two sons are both heaps</span></span><br></pre></td></tr></table></figure>
-<p>Assume <span class="math inline">\(S\)</span> is the total number of
-compares and exchanges. Note that # compares and exchanges when
-heapifying a node is <strong>proportional to the its height</strong>
-<span class="math inline">\(h\)</span>. Therefore,</p>
-<p><span class="math inline">\(S=2^0h+2^1(h-1)+2^2(h-2)+...+2^k(h-k)+...+2^{h-1}=2^{h+1}-h-2\)</span>.
-The height of heap is <span class="math inline">\(h=\log{n}\)</span>,
-thus <span class="math inline">\(S=\sim N\)</span>.</p>
-<p>See the complete Java code (with sorting down process) below:</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Heap</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> a.length;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> N/<span class="number">2</span>; k &gt;= <span class="number">1</span>; --k)    <span class="comment">// heapify</span></span><br><span class="line">            sink(a, k, N);</span><br><span class="line">        <span class="keyword">while</span> (N &gt; <span class="number">1</span>) &#123;         <span class="comment">// sorting down</span></span><br><span class="line">            exch(a, <span class="number">1</span>, N);</span><br><span class="line">            sink(a, <span class="number">1</span>, --N);    <span class="comment">// Leave in array instead of nulling out</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sink</span><span class="params">(Comparable[] a, <span class="type">int</span> k, <span class="type">int</span> N)</span> &#123; <span class="comment">/* as before */</span> &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">less</span><span class="params">(Comparable[] a, <span class="type">int</span> i, <span class="type">int</span> j)</span> &#123; <span class="comment">/* as before */</span> &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">exch</span><span class="params">(Comparable[] a, <span class="type">int</span> i, <span class="type">int</span> j)</span> &#123; <span class="comment">/* as before */</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>See the complete Java code below:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Heap</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> a.length;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> N/<span class="number">2</span>; k &gt;= <span class="number">1</span>; --k)    <span class="comment">// construction</span></span><br><span class="line">            sink(a, k, N);</span><br><span class="line">        <span class="keyword">while</span> (N &gt; <span class="number">1</span>) &#123;         <span class="comment">// sorting down</span></span><br><span class="line">            exch(a, <span class="number">1</span>, N);</span><br><span class="line">            sink(a, <span class="number">1</span>, --N);    <span class="comment">// Leave in array instead of nulling out</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sink</span><span class="params">(Comparable[] a, <span class="type">int</span> k, <span class="type">int</span> N)</span> &#123; <span class="comment">/* as before */</span> &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">less</span><span class="params">(Comparable[] a, <span class="type">int</span> i, <span class="type">int</span> j)</span> &#123; <span class="comment">/* as before */</span> &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">exch</span><span class="params">(Comparable[] a, <span class="type">int</span> i, <span class="type">int</span> j)</span> &#123; <span class="comment">/* as before */</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <div class="note info no-icon"><p>Proposition. Heapsort uses (linearithmic) <span class="math inline">\(\leq 2N\lg{N}\)</span> compares and exchanges.</p>
 </div>
 <p>The significance of heap sort. <strong>In-place</strong> sorting
@@ -1042,8 +1054,6 @@ Running time of the optimal algorithm for 1-SUM is <span class="math inline">\(\
 <p>Algorithm design aims to <strong>reduce the gap</strong> between
 upper bound <span class="math inline">\(O(N)\)</span> and lower bound
 <span class="math inline">\(\Omega(N)\)</span>.</p>
-<p><br></p>
-<h2 id="event-driven-simulation">Event-Driven Simulation</h2>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
@@ -1296,6 +1306,29 @@ gets promoted.</p>
 root with the node <strong>at end</strong>, then sink it down. It will
 cost at most <span class="math inline">\(2\lg N\)</span> compares.</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> Key <span class="title function_">delMax</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">Key</span> <span class="variable">max</span> <span class="operator">=</span> pq[<span class="number">1</span>];</span><br><span class="line">    exch(<span class="number">1</span>, N--);</span><br><span class="line">    sink(<span class="number">1</span>);</span><br><span class="line">    pq[N + <span class="number">1</span>] = <span class="literal">null</span>;    <span class="comment">// prevent loitering</span></span><br><span class="line">    <span class="keyword">return</span> max;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="construction">Construction</h3>
+<p>A trivial way to build a heap given <span class="math inline">\(N\)</span> keys is to <strong>insert them one by
+one</strong> into an empty heap. However, this will cost <span class="math inline">\(\sim N\log{N}\)</span> compares and exchanges.</p>
+<p>In fact, there is a bottom-up linear-time method to construct a heap
+out of <span class="math inline">\(N\)</span> keys.</p>
+<p>For a node with links to left <strong>subheap</strong> and right
+<strong>subheap</strong>, we <u><strong>heapify</strong></u> the node by
+sinking it down. Therefore, from the <strong>last second</strong> level,
+we heapify the nodes level by level.</p>
+<p>The reason why we start from the last second level is that
+<strong>every single node is a subheap of size <span class="math inline">\(1\)</span>.</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Note that it is a 1-based indexing</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> N/<span class="number">2</span>; k &gt;= <span class="number">1</span>; --k) </span><br><span class="line">    sink(a, k, N);</span><br><span class="line"><span class="comment">// Reverse traverse: We could heapify a node only if its two sons are both heaps</span></span><br></pre></td></tr></table></figure>
+<div class="note info no-icon"><p>Proposition. <strong>Bottom-up</strong> heap construction uses
+(linear) <span class="math inline">\(\leq 2N\)</span> compares and
+exchanges.</p>
+</div>
+<p>Assume <span class="math inline">\(S\)</span> is the total number of
+compares and exchanges. Note that the number of compares and exchanges
+when heapifying (sinking down) a node is <strong>proportional to the its
+height</strong> <span class="math inline">\(h\)</span>.</p>
+<p><span class="math inline">\(S=2^0h+2^1(h-1)+2^2(h-2)+...+2^k(h-k)+...+2^{h-1}=2^{h+1}-h-2\)</span>.
+The height of heap is <span class="math inline">\(h=\log{n}\)</span>,
+thus <span class="math inline">\(S=\sim N\)</span>.</p>
 <p><br></p>
 <h2 id="priority-queues">Priority Queues</h2>
 <p>We've introduced several <strong>collections</strong>. They all
