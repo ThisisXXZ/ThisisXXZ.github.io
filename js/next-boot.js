@@ -33,6 +33,9 @@ NexT.boot.registerEvents = function() {
 
 NexT.boot.refresh = function() {
 
+  // 添加一行代码
+  codeUnfold();
+
   /**
    * Register JS handlers by condition option.
    * Need to add config option in Front-End at 'scripts/helpers/next-config.js' file.
