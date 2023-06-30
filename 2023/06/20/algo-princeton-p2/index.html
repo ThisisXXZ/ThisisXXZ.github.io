@@ -38,8 +38,9 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2023/06/20/algo-princeton-p2/pointers.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/06/20/algo-princeton-p2/duplicates.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/06/20/algo-princeton-p2/3partition.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/06/20/algo-princeton-p2/intervalSearch.png">
 <meta property="article:published_time" content="2023-06-20T04:10:04.000Z">
-<meta property="article:modified_time" content="2023-06-30T05:51:11.056Z">
+<meta property="article:modified_time" content="2023-06-30T14:52:55.333Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="course notes">
 <meta property="article:tag" content="sort">
@@ -178,7 +179,7 @@
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#union-find"><span class="nav-number">1.</span> <span class="nav-text">Union-Find</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#problem-model-dynamic-connectivity"><span class="nav-number">1.1.</span> <span class="nav-text">Problem Model: Dynamic
 Connectivity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#improvements"><span class="nav-number">1.2.</span> <span class="nav-text">Improvements</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#code-implementation"><span class="nav-number">1.3.</span> <span class="nav-text">Code Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#analysis-of-algorithms"><span class="nav-number">2.</span> <span class="nav-text">Analysis of Algorithms</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mathematical-models"><span class="nav-number">2.1.</span> <span class="nav-text">Mathematical Models</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#order-of-growth-classifications"><span class="nav-number">2.2.</span> <span class="nav-text">Order-of-Growth
-Classifications</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#commonly-used-notations"><span class="nav-number">2.3.</span> <span class="nav-text">Commonly Used Notations</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#elementary-sorts"><span class="nav-number">3.</span> <span class="nav-text">Elementary Sorts</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#selection-sort"><span class="nav-number">3.1.</span> <span class="nav-text">Selection Sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#insertion-sort"><span class="nav-number">3.2.</span> <span class="nav-text">Insertion Sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shellsort"><span class="nav-number">3.3.</span> <span class="nav-text">Shellsort</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#merge-sort"><span class="nav-number">4.</span> <span class="nav-text">Merge Sort</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#code-implementation-1"><span class="nav-number">4.1.</span> <span class="nav-text">Code Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#practical-improvements"><span class="nav-number">4.2.</span> <span class="nav-text">Practical Improvements</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#complexity-of-sorting"><span class="nav-number">5.</span> <span class="nav-text">Complexity of Sorting</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#decision-tree"><span class="nav-number">5.1.</span> <span class="nav-text">Decision Tree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lower-bound-for-sorting"><span class="nav-number">5.2.</span> <span class="nav-text">Lower Bound for Sorting</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#quick-sort"><span class="nav-number">6.</span> <span class="nav-text">Quick Sort</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#partition"><span class="nav-number">6.1.</span> <span class="nav-text">Partition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shuffle"><span class="nav-number">6.2.</span> <span class="nav-text">Shuffle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#way-partitioning"><span class="nav-number">6.3.</span> <span class="nav-text">3-way Partitioning</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#quick-select"><span class="nav-number">7.</span> <span class="nav-text">Quick Select</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#heap-sort"><span class="nav-number">8.</span> <span class="nav-text">Heap Sort</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Classifications</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#commonly-used-notations"><span class="nav-number">2.3.</span> <span class="nav-text">Commonly Used Notations</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#elementary-sorts"><span class="nav-number">3.</span> <span class="nav-text">Elementary Sorts</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#selection-sort"><span class="nav-number">3.1.</span> <span class="nav-text">Selection Sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#insertion-sort"><span class="nav-number">3.2.</span> <span class="nav-text">Insertion Sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shellsort"><span class="nav-number">3.3.</span> <span class="nav-text">Shellsort</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#merge-sort"><span class="nav-number">4.</span> <span class="nav-text">Merge Sort</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#code-implementation-1"><span class="nav-number">4.1.</span> <span class="nav-text">Code Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#practical-improvements"><span class="nav-number">4.2.</span> <span class="nav-text">Practical Improvements</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#complexity-of-sorting"><span class="nav-number">5.</span> <span class="nav-text">Complexity of Sorting</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#decision-tree"><span class="nav-number">5.1.</span> <span class="nav-text">Decision Tree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lower-bound-for-sorting"><span class="nav-number">5.2.</span> <span class="nav-text">Lower Bound for Sorting</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#quick-sort"><span class="nav-number">6.</span> <span class="nav-text">Quick Sort</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#partition"><span class="nav-number">6.1.</span> <span class="nav-text">Partition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shuffle"><span class="nav-number">6.2.</span> <span class="nav-text">Shuffle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#way-partitioning"><span class="nav-number">6.3.</span> <span class="nav-text">3-way Partitioning</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#quick-select"><span class="nav-number">7.</span> <span class="nav-text">Quick Select</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#heap-sort"><span class="nav-number">8.</span> <span class="nav-text">Heap Sort</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#d-geometric-search"><span class="nav-number">9.</span> <span class="nav-text">1d Geometric Search</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#d-range-search"><span class="nav-number">9.1.</span> <span class="nav-text">1d Range Search</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#d-interval-search"><span class="nav-number">9.2.</span> <span class="nav-text">1d Interval Search</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sweep-line-algorithm"><span class="nav-number">10.</span> <span class="nav-text">Sweep-Line Algorithm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">11.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -907,6 +908,75 @@ possible with high constants, not pratical)</li>
 <li>Makes poor use of cache memory.</li>
 <li><strong>Not stable</strong>.</li>
 </ul>
+<p><br></p>
+<h2 id="d-geometric-search">1d Geometric Search</h2>
+<blockquote>
+<p>在学习二叉搜索树与平衡树之后，我们将介绍其在图形化搜索中的重要应用。这一节包括了：</p>
+<ul>
+<li>1d range search: 基本数据是点，搜索区间 <code>[lo,hi]</code>
+中包含的点。</li>
+<li>1d interval search: 基本数据是区间，搜索区间 <code>[lo,hi]</code>
+所相交的所有区间。</li>
+</ul>
+</blockquote>
+<h3 id="d-range-search">1d Range Search</h3>
+<p>Geometric interpretation:</p>
+<ul>
+<li>Keys are point on a <strong>line</strong>.</li>
+<li>Count/find points in a given <strong>1d interval</strong>.</li>
+</ul>
+<p>Build a BST out of the given keys (points).</p>
+<ul>
+<li>count [<span class="math inline">\(\sim \log{N}\)</span>]. return
+<code>rank(hi)-rank(lo)+1</code>.</li>
+<li>find [<span class="math inline">\(\sim\log{N}+R\)</span>].
+<ul>
+<li>Recursively find all keys in left subtree (if any could fall in
+range).</li>
+<li>Check key in current node.</li>
+<li>Recursively find all keys in right subtree (if any could fall in
+range).</li>
+</ul></li>
+</ul>
+<p><span class="math inline">\(N\)</span> is the total number of points,
+<span class="math inline">\(R\)</span> is the matching points in a
+single search.</p>
+<h3 id="d-interval-search">1d Interval Search</h3>
+<p>Create a BST, where each node stores an interval <span class="math inline">\((lo, hi)\)</span>.</p>
+<ul>
+<li>Use left endpoint as BST key.</li>
+<li>Store <strong>max endpoint</strong> in subtree rooted at node.</li>
+</ul>
+<figure>
+<img data-src="intervalSearch.png" alt="A BST created this way is called interval search trees">
+<figcaption aria-hidden="true">A BST created this way is called interval
+search trees</figcaption>
+</figure>
+<p>To search for intervals that intersects query interval <span class="math inline">\((lo, hi)\)</span>:</p>
+<ul>
+<li>Check the interval in current node.</li>
+<li>If interval in node intersects query interval:
+<ul>
+<li>Recursively search all intervals in left subtree.</li>
+<li>Recursively search all intervals in right subtree.</li>
+</ul></li>
+<li>If interval in node <strong>doesn't</strong> intersects query
+interval: (# see proof below)
+<ul>
+<li>If left subtree is null, go right.</li>
+<li>Else if max endpoint in left subtree is less than <span class="math inline">\(lo\)</span>, go right.</li>
+<li>Else go left.</li>
+</ul></li>
+</ul>
+<p>A tricky case: If the current interval doesn't intersect and search
+goes <strong>left</strong>, then there is <strong>either an intersection
+in left subtree or no intersections at all</strong>.</p>
+<p>Pf. (#) We assume the interval with the max endpoint is
+<code>[c, max]</code>. no intersections in left subtree <span class="math inline">\(\to\)</span> <span class="math inline">\(lo&lt;hi&lt;c\)</span> <span class="math inline">\(\to\)</span> no intersections in right.</p>
+<p>The order of growth of running time for <span class="math inline">\(N\)</span> intervals is <span class="math inline">\(\sim R\log{N}\)</span> in average. It is better to
+use a red-black RST to guarantee performance.</p>
+<p><br></p>
+<h2 id="sweep-line-algorithm">Sweep-Line Algorithm</h2>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>

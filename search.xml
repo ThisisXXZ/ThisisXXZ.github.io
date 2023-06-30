@@ -1213,6 +1213,75 @@ possible with high constants, not pratical)</li>
 <li><strong>Not stable</strong>.</li>
 </ul>
 <p><br></p>
+<h2 id="d-geometric-search">1d Geometric Search</h2>
+<blockquote>
+<p>在学习二叉搜索树与平衡树之后，我们将介绍其在图形化搜索中的重要应用。这一节包括了：</p>
+<ul>
+<li>1d range search: 基本数据是点，搜索区间 <code>[lo,hi]</code>
+中包含的点。</li>
+<li>1d interval search: 基本数据是区间，搜索区间 <code>[lo,hi]</code>
+所相交的所有区间。</li>
+</ul>
+</blockquote>
+<h3 id="d-range-search">1d Range Search</h3>
+<p>Geometric interpretation:</p>
+<ul>
+<li>Keys are point on a <strong>line</strong>.</li>
+<li>Count/find points in a given <strong>1d interval</strong>.</li>
+</ul>
+<p>Build a BST out of the given keys (points).</p>
+<ul>
+<li>count [<span class="math inline">\(\sim \log{N}\)</span>]. return
+<code>rank(hi)-rank(lo)+1</code>.</li>
+<li>find [<span class="math inline">\(\sim\log{N}+R\)</span>].
+<ul>
+<li>Recursively find all keys in left subtree (if any could fall in
+range).</li>
+<li>Check key in current node.</li>
+<li>Recursively find all keys in right subtree (if any could fall in
+range).</li>
+</ul></li>
+</ul>
+<p><span class="math inline">\(N\)</span> is the total number of points,
+<span class="math inline">\(R\)</span> is the matching points in a
+single search.</p>
+<h3 id="d-interval-search">1d Interval Search</h3>
+<p>Create a BST, where each node stores an interval <span class="math inline">\((lo, hi)\)</span>.</p>
+<ul>
+<li>Use left endpoint as BST key.</li>
+<li>Store <strong>max endpoint</strong> in subtree rooted at node.</li>
+</ul>
+<figure>
+<img data-src="intervalSearch.png" alt="A BST created this way is called interval search trees">
+<figcaption aria-hidden="true">A BST created this way is called interval
+search trees</figcaption>
+</figure>
+<p>To search for intervals that intersects query interval <span class="math inline">\((lo, hi)\)</span>:</p>
+<ul>
+<li>Check the interval in current node.</li>
+<li>If interval in node intersects query interval:
+<ul>
+<li>Recursively search all intervals in left subtree.</li>
+<li>Recursively search all intervals in right subtree.</li>
+</ul></li>
+<li>If interval in node <strong>doesn't</strong> intersects query
+interval: (# see proof below)
+<ul>
+<li>If left subtree is null, go right.</li>
+<li>Else if max endpoint in left subtree is less than <span class="math inline">\(lo\)</span>, go right.</li>
+<li>Else go left.</li>
+</ul></li>
+</ul>
+<p>A tricky case: If the current interval doesn't intersect and search
+goes <strong>left</strong>, then there is <strong>either an intersection
+in left subtree or no intersections at all</strong>.</p>
+<p>Pf. (#) We assume the interval with the max endpoint is
+<code>[c, max]</code>. no intersections in left subtree <span class="math inline">\(\to\)</span> <span class="math inline">\(lo&lt;hi&lt;c\)</span> <span class="math inline">\(\to\)</span> no intersections in right.</p>
+<p>The order of growth of running time for <span class="math inline">\(N\)</span> intervals is <span class="math inline">\(\sim R\log{N}\)</span> in average. It is better to
+use a red-black RST to guarantee performance.</p>
+<p><br></p>
+<h2 id="sweep-line-algorithm">Sweep-Line Algorithm</h2>
+<p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
