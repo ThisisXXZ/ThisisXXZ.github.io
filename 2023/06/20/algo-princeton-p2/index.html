@@ -39,8 +39,10 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2023/06/20/algo-princeton-p2/duplicates.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/06/20/algo-princeton-p2/3partition.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/06/20/algo-princeton-p2/intervalSearch.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/06/20/algo-princeton-p2/sweepline1.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/06/20/algo-princeton-p2/sweepline2.png">
 <meta property="article:published_time" content="2023-06-20T04:10:04.000Z">
-<meta property="article:modified_time" content="2023-06-30T14:52:55.333Z">
+<meta property="article:modified_time" content="2023-07-01T02:16:09.747Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="course notes">
 <meta property="article:tag" content="sort">
@@ -977,6 +979,52 @@ in left subtree or no intersections at all</strong>.</p>
 use a red-black RST to guarantee performance.</p>
 <p><br></p>
 <h2 id="sweep-line-algorithm">Sweep-Line Algorithm</h2>
+<p>Sweep-line algorithm coverts.</p>
+<ul>
+<li>Orthogonal line segment intersection problem <span class="math inline">\(\to\)</span> 1d range search.</li>
+<li>Orthogonal rectangle intersection problem <span class="math inline">\(\to\)</span> 1d interval search</li>
+</ul>
+<p><strong>Orthogonal line segment intersection</strong>.</p>
+<p>Given <span class="math inline">\(N\)</span> horizontal and vertical
+line segments, find all intersections. (non-degeneracy assumption: all
+x- and y-coordinates are distinct).</p>
+<p>To solve this, we maintain a <strong>sweep vertical line</strong>
+from left to right.</p>
+<ul>
+<li>x-coordinates define events. [<span class="math inline">\(N\log{N}\)</span>]</li>
+<li>horizontal segment (left endpoint): insert y-coordinate into BST.
+[<span class="math inline">\(N\log{N}\)</span>]</li>
+<li>horizontal segment (right endpoint): remove y-coordinate from BST.
+[<span class="math inline">\(N\log{N}\)</span>]</li>
+<li>vertical segment: <strong>range search</strong> for interval of
+y-endpoints. [<span class="math inline">\(N\log{N}+R\)</span>]</li>
+</ul>
+<p>Note that <span class="math inline">\(R\)</span> refers to the number
+of intersections.</p>
+<figure>
+<img data-src="sweepline1.png" alt="Sweep line reduces 2d line segment intersection to 1d range search">
+<figcaption aria-hidden="true">Sweep line reduces 2d line segment
+intersection to 1d range search</figcaption>
+</figure>
+<p><strong>Orthogonal rectangle intersection.</strong></p>
+<p>Find all intersections among a set of <span class="math inline">\(N\)</span> orthogonal rectangles. (non-degeneracy
+assumption: all x- and y-coordinates are distinct)</p>
+<p>To solve this, we maintain a <strong>sweep vertical</strong> line
+from left to right.</p>
+<ul>
+<li>x-coordinate of left and right endpoints define events. [<span class="math inline">\(N\log{N}\)</span>]</li>
+<li>Maintain set of rectangles that intersect the sweep line in an
+<strong>interval search tree</strong> using y-intervals of rectangle.
+[<span class="math inline">\(N\log{N}+R\log{N}\)</span>]</li>
+<li>Left endpoint: interval search for y-interval of rectangle; insert
+y-interval. [<span class="math inline">\(N\log{N}\)</span>]</li>
+<li>Right endpoint: remove y-interval. [<span class="math inline">\(N\log{N}\)</span>]</li>
+</ul>
+<figure>
+<img data-src="sweepline2.png" alt="Sweep line reduces 2d orthogonal rectangle intersection to 1d interval search">
+<figcaption aria-hidden="true">Sweep line reduces 2d orthogonal
+rectangle intersection to 1d interval search</figcaption>
+</figure>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
