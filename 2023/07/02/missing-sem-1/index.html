@@ -23,30 +23,29 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="实习？社会实践！  三个月的暑假太长，无事可做，妈妈提起让我去她们单位的技术部长长见识，遂同意。然而去了总得帮人家做点事吧，于是想方设法的了解到了一些项目的信息。然后我就稍微有点后悔了。">
+    <meta name="description" content="“计算机教育缺失的一课”，MIT 别出心裁开设的这门课将会介绍非常重要但是却鲜少在大学 CS curriculum 中 cover 的知识与工具，例如 Shell script，Vim，命令行环境，Git，ssh 等等。course motivation 中这么说 (有点汗颜，这说的不就是我吗)：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Big Data notes P1 - Introduction to Big Data">
-<meta property="og:url" content="https://www.thisisxxz.com/2023/06/11/intro-to-bigdata/index.html">
+<meta property="og:title" content="The Missing Semester of Your CS Education, MIT - the Shell">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/07/02/missing-sem-1/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="实习？社会实践！  三个月的暑假太长，无事可做，妈妈提起让我去她们单位的技术部长长见识，遂同意。然而去了总得帮人家做点事吧，于是想方设法的了解到了一些项目的信息。然后我就稍微有点后悔了。">
+<meta property="og:description" content="“计算机教育缺失的一课”，MIT 别出心裁开设的这门课将会介绍非常重要但是却鲜少在大学 CS curriculum 中 cover 的知识与工具，例如 Shell script，Vim，命令行环境，Git，ssh 等等。course motivation 中这么说 (有点汗颜，这说的不就是我吗)：">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/06/11/intro-to-bigdata/stack.png">
-<meta property="article:published_time" content="2023-06-11T05:05:40.000Z">
-<meta property="article:modified_time" content="2023-06-11T15:46:20.761Z">
+<meta property="article:published_time" content="2023-07-02T13:33:36.000Z">
+<meta property="article:modified_time" content="2023-07-02T14:30:08.113Z">
 <meta property="article:author" content="XXZ">
-<meta property="article:tag" content="big data">
+<meta property="article:tag" content="shell command">
+<meta property="article:tag" content="shell script">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.thisisxxz.com/2023/06/11/intro-to-bigdata/stack.png">
 
 
-<link rel="canonical" href="https://www.thisisxxz.com/2023/06/11/intro-to-bigdata/">
+<link rel="canonical" href="https://www.thisisxxz.com/2023/07/02/missing-sem-1/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/06/11/intro-to-bigdata/","path":"2023/06/11/intro-to-bigdata/","title":"Big Data notes P1 - Introduction to Big Data"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/07/02/missing-sem-1/","path":"2023/07/02/missing-sem-1/","title":"The Missing Semester of Your CS Education, MIT - the Shell"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Big Data notes P1 - Introduction to Big Data | ThisisXXZ's Blog</title>
+<title>The Missing Semester of Your CS Education, MIT - the Shell | ThisisXXZ's Blog</title>
   
 
 
@@ -168,8 +167,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#what-is-big-data"><span class="nav-number">1.</span> <span class="nav-text">What is Big Data?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#big-data-versus-small-data"><span class="nav-number">1.1.</span> <span class="nav-text">Big Data Versus Small Data</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#big-data-characteristics-4vs"><span class="nav-number">1.2.</span> <span class="nav-text">Big Data Characteristics:
-4V&#39;s</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#parallel-processing"><span class="nav-number">2.</span> <span class="nav-text">Parallel Processing</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#data-scaling"><span class="nav-number">2.1.</span> <span class="nav-text">Data Scaling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fault-tolerance"><span class="nav-number">2.2.</span> <span class="nav-text">Fault Tolerance</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#big-data-tools-and-ecosystem"><span class="nav-number">3.</span> <span class="nav-text">Big Data Tools and Ecosystem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">1.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -267,7 +265,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/06/11/intro-to-bigdata/">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/07/02/missing-sem-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
@@ -280,12 +278,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Big Data notes P1 - Introduction to Big Data | ThisisXXZ's Blog">
+      <meta itemprop="name" content="The Missing Semester of Your CS Education, MIT - the Shell | ThisisXXZ's Blog">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Big Data notes P1 - Introduction to Big Data
+          The Missing Semester of Your CS Education, MIT - the Shell
         </h1>
 
         <div class="post-meta-container">
@@ -298,7 +296,7 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2023-06-11 13:05:40" itemprop="dateCreated datePublished" datetime="2023-06-11T13:05:40+08:00">2023-06-11</time>
+      <time title="Created: 2023-07-02 21:33:36" itemprop="dateCreated datePublished" datetime="2023-07-02T21:33:36+08:00">2023-07-02</time>
     </span>
 
   <span class="post-meta-item">
@@ -333,153 +331,38 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><blockquote>
-<p>实习？社会实践！</p>
-</blockquote>
-<p>三个月的暑假太长，无事可做，妈妈提起让我去她们单位的技术部长长见识，遂同意。然而去了总得帮人家做点事吧，于是想方设法的了解到了一些项目的信息。然后我就稍微有点后悔了。</p>
+    <div class="post-body" itemprop="articleBody"><p>“计算机教育缺失的一课”，MIT
+别出心裁开设的这门课将会介绍非常重要但是却鲜少在大学 CS curriculum 中
+cover 的知识与工具，例如 Shell script，Vim，命令行环境，Git，ssh
+等等。course motivation 中这么说
+(<del>有点汗颜，这说的不就是我吗</del>)：</p>
 <span id="more"></span>
-<figure>
-<img data-src="stack.png" alt="什么b东西？">
-<figcaption aria-hidden="true">什么b东西？</figcaption>
-</figure>
-<p>这是一个有关大数据的项目。为了了解计科更多不同的方向，为职业规划做准备；同时也为了不拖别人的后腿，打算在正式去参观之前学习一下到底<strong>何为大数据</strong>。(至少把这些名词的意义搞懂)</p>
-<p>这里选择 Coursera 上由 IBM 提供的 <a target="_blank" rel="noopener" href="https://www.coursera.org/learn/introduction-to-big-data-with-spark-hadoop/home/welcome">Introduction
-to Big Data with Spark and Hadoop</a>
-(旁听就行了，不交冤枉钱)。质量不错，对于初学者来说是一个很好的介绍课程，就是全程
-AI dubbing 听的人有点昏昏欲睡...</p>
-<p>笔记分为两 part，P1 (本文) 简单的介绍大数据的定义，<a href="https://www.thisisxxz.com/2023/06/11/intro-to-hadoop/">P2</a> 介绍
-大数据处理框架 Hadoop 及其生态系统。</p>
+<blockquote>
+<p>... Yet many of us utilize only a small fraction of those tools; we
+only know enough magical incantations by rote to get by, and
+<strong>blindly copy-paste commands from the Internet</strong> when we
+get stuck.</p>
+</blockquote>
+<p>硬要说的话，ENGG1340
+中介绍了一部分相关的内容，但是远远不够。所以学习一下这门课还是很有必要的；并且，这门课
+workload 不大，当作暑校期间的小零食也不错。</p>
 <p><br></p>
-<h2 id="what-is-big-data">What is Big Data?</h2>
-<h3 id="big-data-versus-small-data">Big Data Versus Small Data</h3>
-<p>To understand what big data is, we need to compare it with
-<strong>small data</strong>.</p>
-<table>
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Small Data</th>
-<th style="text-align: left;">Big Data</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">small enough for human inference</td>
-<td style="text-align: left;">needs processing for human assumption</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><strong>structured</strong> data stored in
-known forms such as<code>JSON</code> and <code>SML</code></td>
-<td style="text-align: left;">could be structured, semi-structured or
-unstructured</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">accumulated slowly</td>
-<td style="text-align: left;">generated in large volumes, arrives
-continuously at enormous speed from multiple sources</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">mostly located in storage system with in
-Enterprises or data centers</td>
-<td style="text-align: left;">distributed on the <strong>cloud</strong>
-and server farms</td>
-</tr>
-</tbody>
-</table>
-<div class="note info no-icon"><p>Examples. <strong>Structured data</strong>: personal ID, address,
-phone number. <strong>Semi-structured data</strong>: social media posts
-with hash tags <code>#</code>. <strong>Unstructured data</strong>:
-pictures, videos.</p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
 </div>
-<h3 id="big-data-characteristics-4vs">Big Data Characteristics:
-4V's</h3>
-<ul>
-<li><strong>V</strong>elocity: Big Data is being generated extremely
-<strong>fast</strong>, and the process <strong>NEVER
-stops</strong>.</li>
-<li><strong>V</strong>olume: the amount of Big Data generated is
-vast.</li>
-<li><strong>V</strong>ariety: Big Data is extremely diversified.</li>
-<li><strong>V</strong>eracity: the quality, origin, and conformity to
-facts and accuracy of the data.</li>
-</ul>
 <p><br></p>
-<h2 id="parallel-processing">Parallel Processing</h2>
-<p>Big Data needs parallel processing (in contrast to linear processing)
-due to capacity issues.</p>
-<p>In parallelism, the problem statement is broken into <strong>a set of
-executable instructions</strong>. They are then distributed to multiple
-<strong>execution nodes</strong> of equal processing power and are
-executed in parallel.</p>
-<ul>
-<li>Efficiency. Reducing processing time and memory.</li>
-<li>Flexibility. Execution nodes can be added or removed when
-required.</li>
-<li>Robustness. Errors can be fixed and executed locally
-<strong>independent</strong> of other instructions.</li>
-</ul>
-<h3 id="data-scaling">Data Scaling</h3>
-<p>Data scaling is a technique to manage, store, and process the
-overflow of data.</p>
-<ul>
-<li>Scaling up: increasing the capacity of a <strong>single
-node</strong>.</li>
-<li>Scaling out (horizontally): adding additional nodes with the same
-capacity until the problem is tractable. The most commonly used data
-scaling strategy.</li>
-</ul>
-<p>The individual nodes arranged horizontally are called a
-<strong>computing cluster</strong>. The computing clusters can solve
-problems that are known as "<strong>embarrassingly parallel</strong>"
-calculations.</p>
-<div class="note info no-icon"><p><strong>Embarrassingly parallel (or perfectly parallel)</strong>
-problems are the kind of workloads that can be easily divided and run
-independently of one another. If one process fails, it has NO impact on
-the others and can easily be rerun.</p>
-</div>
-<p>However, sorting a large data set adds significant complexity to the
-process, which makes the problem "<strong>not so easy
-parallel</strong>". Therefore the multiple computations must coordinate
-with one another because each process needs to be aware of of the state
-of its peer processes.</p>
-<p>Basically, <u><strong>we are asking a cluster of computers to behave
-as a single computer.</strong></u> This requires sending messages across
-a network to each other or writing them into a <strong>file
-system</strong> that is accessible to all processes on the cluster.</p>
-<h3 id="fault-tolerance">Fault Tolerance</h3>
-<p>Fault tolerance enables a system to continue operating properly in
-the event of the failure of some of its components.</p>
-<p>This works for <strong>Hadoop primary data storage system
-(HDFS)</strong> and other similar storage systems. Clearly, it is an
-extraordinarily complex maintenance process, but the Hadoop file system
-is a robust and time-tested framework, it can be reliable to 99.9%.</p>
-<p><br></p>
-<h2 id="big-data-tools-and-ecosystem">Big Data Tools and Ecosystem</h2>
-<p>There are six main components of Big Data tools, namely:</p>
-<ul>
-<li><strong>Programming tools</strong>: R, Java, Python, SQL, Scala,
-Julia...</li>
-<li><strong>Data Technologies</strong>: Hadoop, HDFS, Spark, MapReduce,
-Cloudera, Databricks...</li>
-<li>Analytic and Visualization tools</li>
-<li>Business Intelligence: Cognos, Pracle, PowerBI...</li>
-<li>Cloud providers: Oracle, IBM...</li>
-<li><strong>NoSQL databases</strong>: HBase, MongoDB, CouchDB,
-Cassandra, Redis</li>
-</ul>
-<p>We will mainly focus on <strong>data technologies</strong>, which
-allows enterprises to capture, process and share structured and
-unstructured data at any scale and in any format. They leverage
-high-performance, parallel Big Data processing.</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
-<p>Coursera <a target="_blank" rel="noopener" href="https://www.coursera.org/learn/introduction-to-big-data-with-spark-hadoop/home/welcome">Introduction
-to Big Data with Spark and Hadoop</a> provided by IBM. week 1
-material.</p>
-<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p>MIT Open Learning. The Missing Semester of Your CS Education.</p>
+<p>Course source:</p>
+<p><a target="_blank" rel="noopener" href="https://missing.csail.mit.edu/">The Missing Semester of Your
+CS Education</a>.</p>
 
     </div>
 
@@ -517,13 +400,13 @@ material.</p>
   </li>
   <li class="post-copyright-link">
       <strong>Post link: </strong>
-      <a href="https://www.thisisxxz.com/2023/06/11/intro-to-bigdata/" title="Big Data notes P1 - Introduction to Big Data">https://www.thisisxxz.com/2023/06/11/intro-to-bigdata/</a>
+      <a href="https://www.thisisxxz.com/2023/07/02/missing-sem-1/" title="The Missing Semester of Your CS Education, MIT - the Shell">https://www.thisisxxz.com/2023/07/02/missing-sem-1/</a>
       <!--copy buttom-->
       <span class="copy-path" title="Click to copy markdown-style reference"
       ><i
         style="cursor: pointer"
         class="fa fa-clipboard"
-        data-clipboard-text="[XXZ's Blog | Big Data notes P1 - Introduction to Big Data](https://www.thisisxxz.com/2023/06/11/intro-to-bigdata/)"
+        data-clipboard-text="[XXZ's Blog | The Missing Semester of Your CS Education, MIT - the Shell](https://www.thisisxxz.com/2023/07/02/missing-sem-1/)"
         aria-label="Markdown-style reference is now on your clipboard"
       ></i
     ></span>
@@ -559,21 +442,19 @@ material.</p>
       </div>
     </div>
           <div class="post-tags">
-              <a href="/tags/big-data/" rel="tag"><i class="fa fa-tag"></i> big data</a>
+              <a href="/tags/shell-command/" rel="tag"><i class="fa fa-tag"></i> shell command</a>
+              <a href="/tags/shell-script/" rel="tag"><i class="fa fa-tag"></i> shell script</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2023/06/10/OI-rehab-plan/" rel="prev" title="Competitive Programming 复健计划">
-                  <i class="fa fa-chevron-left"></i> Competitive Programming 复健计划
+                <a href="/2023/06/29/persona5-review/" rel="prev" title="写在通关 Persona 5 之后">
+                  <i class="fa fa-chevron-left"></i> 写在通关 Persona 5 之后
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/06/11/intro-to-hadoop/" rel="next" title="Big Data notes P2 - Hadoop Ecosystem">
-                  Big Data notes P2 - Hadoop Ecosystem <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
@@ -659,7 +540,7 @@ material.</p>
       new needShareButton('#needsharebutton-postbottom', pbOptions);
   </script>
 
-<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/06/11/intro-to-bigdata/"}</script>
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/07/02/missing-sem-1/"}</script>
 <script>
 document.addEventListener('page:loaded', () => {
   NexT.utils.loadComments(CONFIG.valine.el)
