@@ -305,6 +305,225 @@ workload 不大，当作暑校期间的小零食也不错。</p>
 content.</p>
 </div>
 <p><br></p>
+<h2 id="what-is-the-shell">What is the Shell?</h2>
+<ul>
+<li>Graphical use interfaces (GUIs).</li>
+<li>Voice interfaces.</li>
+<li>AR/VR.</li>
+</ul>
+<p>Great for 80% of use-cases, but they are often restricted in what
+they allow you to do.</p>
+<p>To take full advantage of the tools your computer provides, we have
+to go old-school and drop down to a textual interface: Ths Shell. In
+this lecture, we will focus on Bourne Again Shell ("bash").</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">missing:~$ echo hello</span><br><span class="line">hello</span><br><span class="line">missing:~$ </span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>terminal.</strong></p></li>
+<li><p><u><strong>prompt</strong></u>.</p>
+<p>The main textual interface to the shell. It tells you are on the
+machine <code>missing</code> and your <strong>current working
+directory</strong> is <code>~</code> (short for "home"). The
+<code>$</code> tells you that you are NOT the <strong>root
+user</strong>.</p></li>
+<li><p><strong>command.</strong></p>
+<p>Execute the program <code>echo</code> with the argument
+<code>hello</code>. The shell parses the command by splitting it by
+whitespace, and then runs the program indicated by the first word,
+supplying each subsequent word as an argument that the program can
+access.</p></li>
+</ul>
+<p>How does the shell know where to find the built-in programs like
+<code>date</code> and <code>echo</code>?</p>
+<ul>
+<li>The shell is asked to execute a command.</li>
+<li>If the command doesn't match one of its programming keywords, it
+consults an <u><strong>environment variable</strong></u> called
+<code>$PATH</code> that lists which directories the shell should search
+for programs when it is given a command.</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">missing:~$ <span class="built_in">echo</span> <span class="variable">$PATH</span></span><br><span class="line">/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</span><br><span class="line">missing:~$ <span class="built_in">which</span> <span class="built_in">echo</span></span><br><span class="line">/bin/echo</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="navigating-in-the-shell">Navigating in the Shell</h2>
+<p>The path <code>/</code> is the <strong>root</strong> of the file
+system.</p>
+<ul>
+<li>A path that starts with <code>/</code> is called an
+<u><strong>absolute path</strong></u>.</li>
+<li>Any other path is a <u><strong>relative path</strong></u> relative
+to the current working directory.</li>
+</ul>
+<p>Command <code>cd</code> could take both absolute path and relative
+path as arguments.</p>
+<ul>
+<li><code>/</code>: root directory.</li>
+<li><code>~</code>: home directory.</li>
+<li><code>.</code>: current directory.</li>
+<li><code>..</code>: parent directory.</li>
+</ul>
+<p><br></p>
+<h2 id="connecting-programs">Connecting Programs</h2>
+<p>In the shell, programs have two primary "streams" associated with
+them: their input stream and output stream. When the program tries to
+read input, it reads from the input stream, and when it prints
+something, it prints to its output stream.</p>
+<p>Normally, a program's <strong>standard input and output</strong> are
+both your terminal. That is, your keyboard as input and your screen as
+output. However, we can also rewire those stream.</p>
+<ul>
+<li><code>command &lt; file</code>, <code>command &gt; file</code>:
+rewire the input/output streams of a program to file.</li>
+<li><code>command &gt;&gt; file</code>: rewire the output streams of a
+program to <strong>append to</strong> a file.</li>
+<li><code>command1 | command2</code>: the use of
+<u><strong>pipes</strong></u> lets you "chain" programs such that the
+output of one is the input of another.</li>
+</ul>
+<p><br></p>
+<h2 id="root-user">Root User</h2>
+<p>On most Unix-like systems, one use is special: the "root" user. It is
+above (almost) all access restrictions, and can create, read, update,
+and delete <strong>any</strong> file in the system.</p>
+<p>You will not usually log into your system as the root use though,
+since it's too easy to accidentally break something. Instead, you will
+be using the <code>sudo</code> command. As its name implies, it lets you
+"do" something as "su" (short for "super user", or "root").</p>
+<p>One thing you need to be root in order to do is writing to the
+<code>sysfs</code> file system mounted under <code>/sys</code>.
+<code>sysfs</code> exposes a number of <strong>kernel parameters as
+files</strong>, so that you can easily reconfigure the kernel on the fly
+without speacialized tools.</p>
+<p>For example, by writing a value into the file in directory
+<code>/sys/class/backlight</code>, we can change the screen brightness.
+The first instinct might be to do something like:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo find -L /sys/class/backlight -maxdepth 2 -name <span class="string">&#x27;*brightness*&#x27;</span></span><br><span class="line">/sys/class/backlight/thinkpad_screen/brightness</span><br><span class="line">$ <span class="built_in">cd</span> /sys/class/backlight/thinkpad_screen</span><br><span class="line">$ sudo <span class="built_in">echo</span> 3 &gt; brightness</span><br><span class="line">An error occurred <span class="keyword">while</span> redirecting file <span class="string">&#x27;brightness&#x27;</span></span><br><span class="line">open: Permission denied</span><br></pre></td></tr></table></figure>
+<p>This error may come as a surprise. After all, we ran the command with
+<code>sudo</code>!</p>
+<p>This is an important thing to know about the shell. <strong>Operation
+like <code>|</code>, <code>&gt;</code>, and <code>&lt;</code> are done
+by the shell, not by the indivisual program.</strong></p>
+<p>In the case above, the shell (which is authenticated just as your
+user) tries to open the brightness file for writing, before setting that
+as <code>sudo echo</code>'s output, but is prevented from doing so since
+the shell does not run as root.</p>
+<p>There are two solutions for this problem.</p>
+<ul>
+<li>Use <code>sudo su</code> command to effectively get a shell as the
+super user. You will find that the <code>$</code> in prompt changes to
+<code>#</code> (super user). In this mode, simply run
+<code>echo 3 &gt; brightness</code>.</li>
+<li>Run <code>echo 3 | sudo tee brightness</code>. Since the
+<code>tee</code> program is the one to open the <code>/sys</code> file
+for writing, and it is running as root, the permissions will work
+out.</li>
+</ul>
+<p><br></p>
+<h2 id="shell-scripting">Shell Scripting</h2>
+<p>So far we've seen how to execute commands in the shell and pipe them
+together. However, in many scenarios you will want to perform <strong>a
+series of commands</strong> and make use of control flow expressions
+like conditionals or loops.</p>
+<p>Most shells have their own scripting language with variables, control
+flow and its own syntax. What makes shell scripting different from other
+scriptng programming language is that it is optimized for performing
+shell-related tasks.</p>
+<h3 id="variables-and-functions">Variables and Functions</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">foo=bar;</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$foo</span>&quot;</span></span><br><span class="line"><span class="comment"># prints bar</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;$foo&#x27;</span></span><br><span class="line"><span class="comment"># prints $foo</span></span><br></pre></td></tr></table></figure>
+<p>Note that <code>foo = bar</code> will not work since it is
+interpreted as calling the <code>foo</code> program with arguments
+<code>=</code> and <code>bar</code>. In general, in shell scripts
+<strong>the space character will perform argument
+splitting</strong>.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># filename: mcd</span></span><br><span class="line"><span class="function"><span class="title">mcd</span></span>() &#123;</span><br><span class="line">    <span class="built_in">mkdir</span> -p <span class="string">&quot;<span class="variable">$1</span>&quot;</span></span><br><span class="line">    <span class="built_in">cd</span> <span class="string">&quot;<span class="variable">$1</span>&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Bash has functions that take arguments and can operate with them. The
+above is an example of a function that creates a directory and
+<code>cd</code> into it.</p>
+<p>Here <code>$1</code> is the first argument to the script/function.
+Bash uses a variety of special variables to refer to arguments, error
+codes, and other relevant variables.</p>
+<ul>
+<li><code>$0</code> - Name of the script. (command)</li>
+<li><code>$1</code> to <code>$9</code> - Arguments to the script.
+<code>$1</code> is the first argument and so on.</li>
+<li><code>$@</code> - All the arguments.</li>
+<li><code>$#</code> - Number of arguments.</li>
+<li><code>$?</code> - <strong>Return code</strong> of the previous
+command.</li>
+<li><code>$$</code> - Process identification code (PID) for the current
+script.</li>
+<li><code>$_</code> - Last argument from the last command.</li>
+</ul>
+<p>When a bash function is defined, you could <strong>loaded</strong> it
+into the shell environment with the command <code>source</code>, so you
+could later run it like any other built-in programs.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">XXZ:~$ <span class="built_in">source</span> mcd</span><br><span class="line">XXZ:~$ mcd mcd_test</span><br><span class="line">XXZ:~/mcd_test$</span><br></pre></td></tr></table></figure>
+<h3 id="returnexit-code">Return/Exit Code</h3>
+<p>Commands will often return output using <code>STDOUT</code>, errors
+through <code>STDERR</code>, and a Return Code to report errors in a
+more script-friendly manner. <strong>A value of 0 usually means
+everything went OK; anything different from 0 means an error
+occurred.</strong></p>
+<p>Exit codes can be used to <strong>conditionally</strong> execute
+commands using <code>&amp;&amp;</code> (and operator) and
+<code>||</code> (or operator), both of which are
+<strong>short-circuiting operators</strong>. Commands can also be
+separated within the same line using a semicolon <code>;</code>.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="literal">false</span> || <span class="built_in">echo</span> <span class="string">&quot;Oops, fail&quot;</span></span><br><span class="line"><span class="comment"># Oops, fail</span></span><br><span class="line"></span><br><span class="line"><span class="literal">true</span> || <span class="built_in">echo</span> <span class="string">&quot;Will not be printed&quot;</span></span><br><span class="line"><span class="comment"># </span></span><br><span class="line"></span><br><span class="line"><span class="literal">true</span> &amp;&amp; <span class="string">&quot;Things went well&quot;</span></span><br><span class="line"><span class="comment"># Things went well</span></span><br><span class="line"></span><br><span class="line"><span class="literal">false</span> &amp;&amp; <span class="built_in">echo</span> <span class="string">&quot;Will not be printed&quot;</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="literal">false</span> ; <span class="built_in">echo</span> <span class="string">&quot;This will always run&quot;</span></span><br><span class="line"><span class="comment"># This will always run</span></span><br></pre></td></tr></table></figure>
+<h3 id="substitution">Substitution</h3>
+<ul>
+<li><strong>Variable substitution.</strong> Whenever you place
+<code>"$var"</code>, it will expand the variable <code>var</code> and
+substitute it in place as a string.</li>
+<li><strong>Command substitution.</strong> Whenever you place
+<code>$(CMD)</code>, it will execute <code>CMD</code>, get the output of
+the command and substitute it in place.</li>
+<li><strong>Process substitution.</strong> <code>&lt;(CMD)</code> will
+execute <code>CMD</code> and place the output in a temporary file and
+substitute the <code>&lt;()</code> with that file's name. This is useful
+when commands <strong>expect values to be passed by file instead of by
+STDIN</strong>.</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Starting program at <span class="subst">$(date)</span>&quot;</span> <span class="comment"># Date will be substituted</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Running program <span class="variable">$0</span> with <span class="variable">$#</span> arguments with pid $$&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> <span class="string">&quot;<span class="variable">$@</span>&quot;</span>; <span class="keyword">do</span></span><br><span class="line">    grep foobar <span class="string">&quot;<span class="variable">$file</span>&quot;</span> &gt; /dev/null 2&gt; /dev/null</span><br><span class="line">    <span class="comment"># when pattern is not found, grep has exit status 1</span></span><br><span class="line">    <span class="comment"># we redirect STDOUT and STDERR to a null register since we do not care about them</span></span><br><span class="line">    <span class="keyword">if</span> [[ $? -ne 0 ]]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;File <span class="variable">$file</span> does not have any foobar, adding one&quot;</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;# foobar&quot;</span> &gt;&gt; <span class="string">&quot;<span class="variable">$file</span>&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>The above exampke will iterate through the arguments we provide,
+<code>grep</code> for the string <code>foobar</code>. and append it to
+the file as a comment if it's not found.</p>
+<h3 id="shell-globbing">Shell Globbing</h3>
+<p>When launching scripts with similar arguments, we could use
+<strong>shell globbing</strong> technique to expand expressions by
+carrying out filename expansion.</p>
+<ul>
+<li>Wildcards. Use <code>?</code> and <code>*</code> to match one or any
+amount of characters repectively.</li>
+<li>Curly braces <code>&#123;&#125;</code>. Whenever you have a common substring
+in a series of commands, you can use curly braces for bash to expand
+this automatically.</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">convert image.&#123;png, jpg&#125;</span><br><span class="line"><span class="comment"># will expand to</span></span><br><span class="line">convert image.png image.jpg</span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> /path/project/&#123;foo,bar,baz&#125;.sh /newpath</span><br><span class="line"><span class="comment"># will expand to</span></span><br><span class="line"><span class="built_in">cp</span> /path/project/foo /path/project/bar /path/project/baz /newpath</span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> *&#123;.py,.sh&#125; folder</span><br><span class="line"><span class="comment"># will move all *.py and *.sh files</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">mkdir</span> foo bar</span><br><span class="line"><span class="built_in">touch</span> &#123;foo,bar&#125;/&#123;a..h&#125;</span><br><span class="line"><span class="comment"># This creates files foo/a, foo/b, ..., foo/h, bar/a, bar/b, ..., bar/h</span></span><br><span class="line"><span class="built_in">touch</span> foo/x foo/y</span><br><span class="line">diff &lt;(<span class="built_in">ls</span> foo) &lt;(<span class="built_in">ls</span> bar)</span><br><span class="line"><span class="comment"># Outputs</span></span><br><span class="line"><span class="comment"># &lt; x</span></span><br><span class="line"><span class="comment"># ---</span></span><br><span class="line"><span class="comment"># &gt; y</span></span><br></pre></td></tr></table></figure>
+<h3 id="shebang">Shebang</h3>
+<p>Scripts <strong>need not necessarily be written in bash</strong> to
+be called from the terminal. For instance, here's a simple Python script
+that outputs its arguments in reversed order.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/local/bin/python</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">for</span> arg <span class="keyword">in</span> <span class="built_in">reversed</span>(sys.argv[<span class="number">1</span>:]):</span><br><span class="line">    <span class="built_in">print</span>(arg)</span><br></pre></td></tr></table></figure>
+<p>The <strong>shebang</strong> line at the top of the script tells the
+kernel to execute this script with a python intepreter instead of a
+shell command. It is good practice to write shebang lines using the
+<code>env</code> command that will resolve to wherever the command lives
+in the system, increasing the portability of the script.</p>
+<p>To resolve the location, <code>env</code> will make use of the
+<code>PATH</code> environment variable. For this example the shebang
+line would look like <code>#!usr/bin/env python</code>.</p>
+<p>Differences between shell functions and scripts:</p>
+<ul>
+<li><strong>Functions have to be in the same language as the
+shell</strong>, while scripts can be written in any language. This is
+why including a shebang for scripts is important.</li>
+<li>Functions are executed in the current shell environment whereas
+scripts execute in their own process. Therefore <strong>functions can
+modify environment variables</strong>, e.g. change your current
+directory, whereas scripts can't.</li>
+<li>Functions are loaded once when their definition is read. Scripts are
+loaded every time they are executed.</li>
+</ul>
+<h2 id="shell-tools">Shell Tools</h2>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
