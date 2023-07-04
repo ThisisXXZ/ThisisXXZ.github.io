@@ -276,9 +276,171 @@ Educational Round #150 <em>Problem E</em> Fill the Matrix</a></li>
         <category>logs</category>
       </categories>
       <tags>
-        <tag>programming</tag>
         <tag>plan</tag>
         <tag>log</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>关于 Shell 输入输出重定向的研究</title>
+    <url>/2023/07/04/shell-rewire-stream/</url>
+    <content><![CDATA[<p>Linux 的输入输出流有三类：</p>
+<ul>
+<li><code>STDIN</code>：标准输入流，文件描述符为 0。</li>
+<li><code>STDOUT</code>：标准输出流，文件描述符为 1。</li>
+<li><code>STDERR</code>：标准错误输出流，文件描述符为 2。</li>
+</ul>
+<span id="more"></span>
+<p>默认情况下，<code>STDIN</code> 由键盘读入，<code>STDOUT</code> 与
+<code>STDERR</code> 均输出到屏幕上。</p>
+<p><br></p>
+<h2 id="problem-1---rewire-streams">Problem 1 - rewire streams</h2>
+<p>普通的输入输出重定向就不介绍了，无非是遵循
+<code>command &lt; fileIn &gt; fileOut 2&gt; fileErr</code>
+的格式。令我产生疑惑的是 Missing Semester
+第二课中课后作业中提到的这样一个程序 <code>number.sh</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line">n=$(( RANDOM % <span class="number">100</span> ))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [[ n -eq 42]]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Something went wrong&quot;</span></span><br><span class="line">    &gt;&amp;2 <span class="built_in">echo</span> <span class="string">&quot;The error was using magic numbers&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Everything went according to plan&quot;</span></span><br></pre></td></tr></table></figure>
+<p>在这里，<code>&gt;&amp;2</code> 是什么意思？</p>
+<p>由于出现了
+<code>&amp;</code>，我首先联想到的是这样一个例子：<code>command &gt; file 2&gt;&amp;1</code>。这一命令将会在文件
+<code>file</code> 中同时写入命令 <code>command</code>
+的输出信息与错误信息。这是如何做到的呢？在研究的过程中，我发现了许多之前不曾注意过的知识盲区。</p>
+<ul>
+<li><p><code>&amp;</code> 的作用：<code>&amp;</code>
+纯粹是为了强调其之后的数字是一个文件标识符而不是文件名。<code>2&gt;1</code>
+代表将 <code>STDERR</code> 重定向至一个名为 <code>1</code> 的文件中；而
+<code>2&gt;&amp;1</code> 代表将 <code>STDERR</code> 重定向至
+<code>STDOUT</code>。除此之外，当 <code>&amp;</code>
+出现在重定向符的左侧时，其表示<strong>全部重定向</strong>；例如，<code>./test.sh &amp;&gt; tmp</code>
+代表将 <code>test.sh</code> 的标准输出流与标准错误流全部重定向至
+<code>tmp</code> 文件。</p></li>
+<li><p>注意，<code>command 1&gt;file 2&gt;file</code> 与
+<code>command 1&gt;file 2&gt;&amp;1</code>
+并不是等价的。若使用前者，标准错误流与标准输出流会因抢占
+<code>file</code>
+文件的管道而出现乱码，缺失，覆盖的现象。所以当我们想将多个流重定向至同一个文件时，一定要使用
+<code>&amp;</code> 进行流间的重定向。</p></li>
+<li><p>标准输入输出的缺省：我们会注意到重定向符号 <code>&lt;</code> 与
+<code>&gt;</code> 的左侧有时是没有标识符的。事实上，<code>&lt;...</code>
+与 <code>0&lt;...</code> 是等价的，<code>&gt;...</code> 与
+<code>1&gt;...</code> 是等价的。</p></li>
+<li><p><strong>一切皆是文件</strong>：之前我一直认为标准流与屏幕/键盘的关系是这样的：键盘“指向”
+<code>STDIN</code>，<code>STDOUT</code> 与 <code>STDERR</code>
+“指向”屏幕。这是一个很自然的想法，因为我们潜意识中认为屏幕与键盘属于硬件，是应用端的一部分。但我在实践中找到了很多无法用这个想法解释的问题。</p>
+<p>查阅资料后我发现，<strong>标准输入流对应屏幕本身，标准输出流与标准错误流对应键盘本身</strong>。这是因为<strong>万物皆文件</strong>是
+Unix/Linux 的基本哲学之一。在 Linux
+系统中，即使不是文件，也以文件的形式来管理；例如所有的硬件设备，进程，套接字等都抽象成文件，使用统一的用户接口。</p></li>
+<li><p>有序性：流的重定向是<strong>按照输入顺序一步一步执行</strong>的。命令
+<code>command &gt; file 2&gt;&amp;1</code>
+可以达到预期的效果；首先将标准输出流重定向至文件
+<code>file</code>，再将标准错误流重定向至标准输出流，即文件
+<code>file</code>；这样实现了标准输出流与标准错误流均重定向至
+<code>file</code>。</p>
+<p>而调转顺序，<code>command 2&gt;&amp;1 1&gt;file</code>
+则会出现错误；首先将标准错误流重定向至标准输出流，即屏幕，这一步实际上并没有作出任何改变。第二步将标准输出流重定向至文件
+<code>file</code>。这样的写法无法令标准错误流重定向至文件
+<code>file</code>。</p></li>
+</ul>
+<p>有了以上知识之后，我们就能理解 <code>&gt;&amp;2</code> 的含义了。它是
+<code>1&gt;&amp;2</code> 的省略写法，代表着将 <code>echo</code>
+命令的标准输出流重定向至标准错误流。而这一句 <code>echo</code>
+命令是整个 <code>number.sh</code> 脚本的一部分，我们不妨直接理解为将该句
+<code>echo</code> 命令的标准输出流重定向至 <code>number.sh</code>
+的标准错误流。</p>
+<p>所以，当 <span class="math inline">\(n=42\)</span> 时：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># the result is based on the assumption that n=42</span></span><br><span class="line">$ ./number.sh</span><br><span class="line">Something went wrong</span><br><span class="line">The error was using magic numbers</span><br><span class="line">$ ./number.sh 2&gt;tmp</span><br><span class="line">Something went wrong</span><br><span class="line">$ <span class="built_in">cat</span> tmp</span><br><span class="line">The error was using magic numbers</span><br></pre></td></tr></table></figure>
+<p>这里顺便贴一下完整的题目与答案：</p>
+<blockquote>
+<p>Say you have a command that fails rarely. In order to debug it you
+need to capture its output but it can be time consuming to get a failure
+run. Write a bash script that runs the following script until it fails
+and captures its standard output and error streams to files and prints
+everything at the end. Bonus points if you can also report how many runs
+it took for the script to fail.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line">cnt=0</span><br><span class="line"><span class="keyword">while</span> <span class="literal">true</span>; <span class="keyword">do</span></span><br><span class="line">    ./number.sh &amp;&gt; tmp</span><br><span class="line">    <span class="keyword">if</span> [[ <span class="string">&quot;$?&quot;</span> -ne 0 ]]</span><br><span class="line">    <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">break</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    cnt=$[cnt+1]</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;the number of runs: <span class="variable">$cnt</span>&quot;</span></span><br><span class="line"><span class="built_in">cat</span> tmp</span><br></pre></td></tr></table></figure>
+<p>注意到这里使用 <code>&amp;&gt;</code>
+进行全部重定向：<code>number.sh</code>
+的标准输出流与标准错误流都将重定向至 <code>tmp</code> 文件中。</p>
+<p><br></p>
+<h2 id="problem-2---pipes-and-xargs">Problem 2 - pipes and xargs</h2>
+<p>这是 Missing Semester 第二课课后作业的另一个问题，也加深了我对用管道
+pipe 对 shell 输入输出进行重定向的认识。题目原文如下：</p>
+<blockquote>
+<p>As you have seen so far commands will take input from both arguments
+and STDIN. When piping commands, we are connecting STDOUT to STDIN, but
+some commands like <code>tar</code> take inputs from arguments. To
+bridge this disconnect there's the <code>xargs</code> command which will
+execute a command using STDIN as arguments. For example
+<code>ls | xargs rm</code> will delete the files in the current
+directory.</p>
+<p>Your task is to write a command that recursively finds all HTML files
+in the folder and makes up a zip with them. Note that your command
+should work even if the files have spaces.</p>
+</blockquote>
+<p>记得当初在学 ENGG1340
+时被这个问题困扰了很久，现在才彻底弄清楚。有些命令从标准输入流
+<code>STDIN</code>
+中获取输入，有些从参数中指定的文件获取输入，而有些两者都支持。</p>
+<p>以我们熟悉的 <code>cat</code>
+命令为例：它连接参数中指定的文件并输出到标准输出流 <code>STDOUT</code>
+中。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> <span class="built_in">test</span></span><br><span class="line">Hibike!</span><br></pre></td></tr></table></figure>
+<p>事实上，<code>cat</code> 也能从标准输入流 <code>STDIN</code>
+中获取输入；在下面这个例子中，我们使用 pipe <code>|</code> 将
+<code>echo</code> 命令的标准输出流连接至 <code>cat</code>
+命令的标准输入流。即使没有指定文件参数，<code>cat</code>
+也能正常输出结果到屏幕。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;Euphonium&quot;</span> | <span class="built_in">cat</span></span><br><span class="line">Euphonium</span><br></pre></td></tr></table></figure>
+<p>我们知道，<code>cat</code> 也能连接两个文件中的字符串并将其输出到
+<code>STDOUT</code>
+中；但是下例中命令的效果却没有达到预期。也就是说，<code>cat</code>
+即使在 <code>STDIN</code>
+非空的情况下，也会<strong>优先</strong>从文件参数中获取输入。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;Euphonium&quot;</span> | <span class="built_in">cat</span> <span class="built_in">test</span></span><br><span class="line">Hibike!</span><br></pre></td></tr></table></figure>
+<p>如何解决这一问题？我们使用参数
+<code>-</code>：大多数命令都存在这样一个参数 <code>-</code>
+，其表示从标准输入 <code>STDIN</code>
+中进行读取。记得当时未老师教了我这个方法，不过我当时只是知其然而不知其所以然。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;Euphonium&quot;</span> | <span class="built_in">cat</span> - <span class="built_in">test</span></span><br><span class="line">Euphonium Hibike!</span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;Euphonium&quot;</span> | <span class="built_in">cat</span> <span class="built_in">test</span> -</span><br><span class="line">Hibike! Euphonium</span><br></pre></td></tr></table></figure>
+<p>再例如，使用 <code>-</code> 参数，<code>grep</code>
+命令也能够同时处理文件参数与 <code>STDIN</code> 中的输入：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;kumiko&quot;</span> | grep <span class="string">&quot;ik&quot;</span> - <span class="built_in">test</span></span><br><span class="line">(standard input):kumiko</span><br><span class="line"><span class="built_in">test</span>:Hibike!</span><br></pre></td></tr></table></figure>
+<p>可以看到，大多数命令一般先在命令行参数中读取要处理的内容，如果找不到则默认从标准输入流中读取。而参数
+<code>-</code>
+的利用使得命令可以将标准输入流中的内容当作命令行参数进行处理。但是说到底这还是取决于<strong>命令的内部实现</strong>；比如
+<code>rm</code>
+命令无论如何都只能删除命令行参数中指定的文件，而不从标准输入流中获取处理内容。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;test&quot;</span> | <span class="built_in">rm</span> -f</span><br><span class="line">$ <span class="built_in">ls</span></span><br><span class="line"><span class="built_in">test</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;test&quot;</span> | <span class="built_in">rm</span> -f -</span><br><span class="line">$ <span class="built_in">ls</span></span><br><span class="line"><span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+<p>但是有时我们的脚本需要类似 <code>echo "test" | rm -f</code>
+这样的效果，这是一个很常见的需求，即删除标准输入流中指定的内容。解决方法有两种：</p>
+<ul>
+<li>拼接字符串得到命令：例如，<code>rm -f $(echo "test")</code>。这样的实现可以接受，但是多少有点尴尬。</li>
+<li>使用 <code>xargs</code>
+命令：<code>echo "test" | xargs rm -f</code>。</li>
+</ul>
+<p><code>xargs</code> 命令就是为了解决这个问题而诞生的；它将其标准输入流
+<code>STDIN</code> 中的内容以空白符号 (包括空格，Tab，换行符等)
+分割成若干个后当作命令行参数传递给其后的命令并运行。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> test1 test2</span><br><span class="line">Hibike!</span><br><span class="line">Euphonium</span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;test1 test2&quot;</span> | xargs <span class="built_in">cat</span></span><br><span class="line">Hibike!</span><br><span class="line">Euphonium</span><br></pre></td></tr></table></figure>
+<p>有了这些知识之后，解决上面的问题就比较简单了：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">find . -name <span class="string">&quot;*.html&quot;</span> -print0 | xargs -0 zip -r html.zip</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://missing.csail.mit.edu/2020/shell-tools/">Missing
+Semester of Your CS Education: Lecture 2</a>.</li>
+<li><a href="https://zhuanlan.zhihu.com/p/146563077">xiaofanwudi -
+notes</a>.</li>
+<li><a href="https://www.cnblogs.com/wangqiguo/p/6464234.html">薰衣草的旋律 -
+xargs 详解</a>.</li>
+</ul>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>programming</category>
+      </categories>
+      <tags>
+        <tag>shell</tag>
       </tags>
   </entry>
   <entry>
@@ -523,7 +685,49 @@ directory, whereas scripts can't.</li>
 <li>Functions are loaded once when their definition is read. Scripts are
 loaded every time they are executed.</li>
 </ul>
+<p><br></p>
 <h2 id="shell-tools">Shell Tools</h2>
+<ol type="1">
+<li>Shell check.<br>
+</li>
+<li>Finding how to use commands.
+<ul>
+<li>Command with <code>-h</code> or <code>--help</code>.</li>
+<li>Manual page command <code>man</code>.</li>
+<li><strong>TLDR pages</strong> are a nifty solution that focuses on
+<strong>giving example use cases</strong>.</li>
+</ul></li>
+<li>Finding files using command <code>file</code>.
+<ul>
+<li>recursively search for files matching some criteria.</li>
+<li>perform actions over files that match your query.</li>
+<li>A user-friendlier alternative <code>fd</code>.</li>
+</ul></li>
+<li>Finding code.
+<ul>
+<li>Command <code>grep</code> with flags <code>-C</code>,
+<code>-v</code>, <code>-R</code>.</li>
+<li>Alternative <code>ack</code>, <code>ag</code> and
+<code>rg</code>.</li>
+</ul></li>
+<li>Finding shell commands.
+<ul>
+<li>Command <code>history</code> will let you access your shell history.
+Ex. `<code>history | grep find</code> will print commands that contain
+the substring "find".</li>
+<li>General-purpose fuzzy finder <code>fzf</code>.</li>
+<li>history-based autosuggestions.</li>
+</ul></li>
+<li>Directory navigation.
+<ul>
+<li><code>fasd</code> and <code>autojump</code>, ranks directories and
+files by <em>frecency</em>, that is, by both <em>frequency</em> and
+<em>recency</em>.</li>
+<li>directory structure: <code>tree</code>, <code>broot</code>.</li>
+</ul></li>
+</ol>
+<p><a href="https://missing.csail.mit.edu/2020/shell-tools/">More
+detailed introduction</a>.</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
@@ -542,8 +746,8 @@ CS Education</a>.</p>
         <category>Missing Semester, MIT</category>
       </categories>
       <tags>
-        <tag>shell command</tag>
-        <tag>shell script</tag>
+        <tag>course notes</tag>
+        <tag>shell</tag>
       </tags>
   </entry>
   <entry>
@@ -4569,9 +4773,7 @@ C 非常相似。贴一段 shell script 程序感受一下:</p>
         <category>programming</category>
       </categories>
       <tags>
-        <tag>programming</tag>
-        <tag>shell command</tag>
-        <tag>shell script</tag>
+        <tag>shell</tag>
       </tags>
   </entry>
   <entry>
