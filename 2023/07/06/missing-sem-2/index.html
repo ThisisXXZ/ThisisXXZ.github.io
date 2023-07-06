@@ -23,34 +23,27 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="这是课程 Introduction to Big Data with Spark and Hadoop 笔记的 P2 部分，主要介绍大数据处理框架 Hadoop 及其生态。本文的重点将落在 MapReduce, HDFS, Hive 与 HBase 这四个重要组件上。 P1 部分在这里，简单的介绍了大数据的定义。">
+    <meta name="description" content="ENGG1340 shell 命令部分的加强版。老师通过一个例子就深入浅出的展示了 grep, sort, uniq, sed, awk 等命令强大的数据处理能力。之前自学了一点 sed 与 awk 使得我能够迅速的掌握这一节的内容，所以笔记相对来说会比较简单；See here for more detailed introduction on command sed and awk">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Big Data notes P2 - Hadoop Ecosystem">
-<meta property="og:url" content="https://www.thisisxxz.com/2023/06/11/intro-to-hadoop/index.html">
+<meta property="og:title" content="The Missing Semester of Your CS Education - Data Wrangling">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/07/06/missing-sem-2/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="这是课程 Introduction to Big Data with Spark and Hadoop 笔记的 P2 部分，主要介绍大数据处理框架 Hadoop 及其生态。本文的重点将落在 MapReduce, HDFS, Hive 与 HBase 这四个重要组件上。 P1 部分在这里，简单的介绍了大数据的定义。">
+<meta property="og:description" content="ENGG1340 shell 命令部分的加强版。老师通过一个例子就深入浅出的展示了 grep, sort, uniq, sed, awk 等命令强大的数据处理能力。之前自学了一点 sed 与 awk 使得我能够迅速的掌握这一节的内容，所以笔记相对来说会比较简单；See here for more detailed introduction on command sed and awk">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/06/11/intro-to-hadoop/mapreduce.png">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/06/11/intro-to-hadoop/hive.png">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/06/11/intro-to-hadoop/hbase.png">
-<meta property="article:published_time" content="2023-06-11T12:35:15.000Z">
-<meta property="article:modified_time" content="2023-06-12T08:05:50.866Z">
+<meta property="article:published_time" content="2023-07-06T12:32:38.000Z">
+<meta property="article:modified_time" content="2023-07-06T14:29:53.849Z">
 <meta property="article:author" content="XXZ">
-<meta property="article:tag" content="Hadoop">
-<meta property="article:tag" content="HDFS">
-<meta property="article:tag" content="Hive">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.thisisxxz.com/2023/06/11/intro-to-hadoop/mapreduce.png">
 
 
-<link rel="canonical" href="https://www.thisisxxz.com/2023/06/11/intro-to-hadoop/">
+<link rel="canonical" href="https://www.thisisxxz.com/2023/07/06/missing-sem-2/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/06/11/intro-to-hadoop/","path":"2023/06/11/intro-to-hadoop/","title":"Big Data notes P2 - Hadoop Ecosystem"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/07/06/missing-sem-2/","path":"2023/07/06/missing-sem-2/","title":"The Missing Semester of Your CS Education - Data Wrangling"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Big Data notes P2 - Hadoop Ecosystem | ThisisXXZ's Blog</title>
+<title>The Missing Semester of Your CS Education - Data Wrangling | ThisisXXZ's Blog</title>
   
 
 
@@ -172,8 +165,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#what-is-hadoop"><span class="nav-number">1.</span> <span class="nav-text">What is Hadoop?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hadoop-core-components"><span class="nav-number">2.</span> <span class="nav-text">Hadoop Core Components</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hadoop-ecosystem"><span class="nav-number">3.</span> <span class="nav-text">Hadoop Ecosystem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction-to-mapreduce"><span class="nav-number">4.</span> <span class="nav-text">Introduction to MapReduce</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction-to-hdfs"><span class="nav-number">5.</span> <span class="nav-text">Introduction to HDFS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction-to-hive"><span class="nav-number">6.</span> <span class="nav-text">Introduction to Hive</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction-to-hbase"><span class="nav-number">7.</span> <span class="nav-text">Introduction to HBase</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference-and-related-reading"><span class="nav-number">8.</span> <span class="nav-text">Reference and Related
-Reading</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#basic-regex-for-sed"><span class="nav-number">1.</span> <span class="nav-text">Basic regex for sed</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#further-data-wrangling"><span class="nav-number">2.</span> <span class="nav-text">Further Data Wrangling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -271,7 +263,7 @@ Reading</span></a></li></ol></div>
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/06/11/intro-to-hadoop/">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/07/06/missing-sem-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
@@ -284,12 +276,12 @@ Reading</span></a></li></ol></div>
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Big Data notes P2 - Hadoop Ecosystem | ThisisXXZ's Blog">
+      <meta itemprop="name" content="The Missing Semester of Your CS Education - Data Wrangling | ThisisXXZ's Blog">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Big Data notes P2 - Hadoop Ecosystem
+          The Missing Semester of Your CS Education - Data Wrangling
         </h1>
 
         <div class="post-meta-container">
@@ -302,7 +294,7 @@ Reading</span></a></li></ol></div>
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2023-06-11 20:35:15" itemprop="dateCreated datePublished" datetime="2023-06-11T20:35:15+08:00">2023-06-11</time>
+      <time title="Created: 2023-07-06 20:32:38" itemprop="dateCreated datePublished" datetime="2023-07-06T20:32:38+08:00">2023-07-06</time>
     </span>
 
   <span class="post-meta-item">
@@ -337,218 +329,95 @@ Reading</span></a></li></ol></div>
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>这是课程 <a target="_blank" rel="noopener" href="https://www.coursera.org/learn/introduction-to-big-data-with-spark-hadoop/home/">Introduction
-to Big Data with Spark and Hadoop</a> 笔记的 P2
-部分，主要介绍大数据处理框架 Hadoop 及其生态。本文的重点将落在
-MapReduce, HDFS, Hive 与 HBase 这四个重要组件上。</p>
-<p>P1 部分在<a href="https://www.thisisxxz.com/2023/06/11/intro-to-bigdata/">这里</a>，简单的介绍了大数据的定义。</p>
+    <div class="post-body" itemprop="articleBody"><p>ENGG1340 shell 命令部分的加强版。老师通过一个例子就深入浅出的展示了
+<code>grep</code>, <code>sort</code>, <code>uniq</code>,
+<code>sed</code>, <code>awk</code>
+等命令强大的数据处理能力。之前自学了一点 <code>sed</code> 与
+<code>awk</code>
+使得我能够迅速的掌握这一节的内容，所以笔记相对来说会比较简单；See <a target="_blank" rel="noopener" href="http://localhost:4000/2023/05/05/shell-command/">here</a> for more
+detailed introduction on command <code>sed</code> and
+<code>awk</code>.</p>
 <span id="more"></span>
-<p>这一系列课程在 Hadoop 与 Spark 之间明显偏向于 Spark， Apache Spark
-占据了 week 3
-开始的绝大部分篇幅。在此先按下不表，等有需要时可以从这节课的 week 3
-开始了解 Spark。</p>
 <p><br></p>
-<h2 id="what-is-hadoop">What is Hadoop?</h2>
-<p>Hadoop is an open-source framework used to process enormous data
-sets. It is one of the most popular Big Data technologies. The
-charateristics of Hadoop are as follows:</p>
-<ul>
-<li>Set of open-source programs and procedures</li>
-<li>Used for processing large amount of data (in terabytes)</li>
-<li>Servers run applications on clusters</li>
-<li>Handles parallel jobs or processes</li>
-</ul>
-<p><br></p>
-<h2 id="hadoop-core-components">Hadoop Core Components</h2>
-<p>There are four core components of Hadoop framework, namely:</p>
-<ul>
-<li>Hadoop Common: the collection of utilities and libraries that
-support other Hadoop modules</li>
-<li>Hadoop Distributed File System (<strong>HDFS</strong>): handles and
-stores large data in cluster scale</li>
-<li><strong>MapReduce</strong>: Hadoop's processing unit, processes Big
-Data by splitting it into smaller units</li>
-<li>Yet Another Resource Negotiator (<strong>YARN</strong>): resource
-manager across clusters</li>
-</ul>
-<p>MapReduce is the <strong>first</strong> method used to query data
-stored in HDFS. There are now other systems such as
-<strong>Hive</strong> and <strong>Pig</strong>.</p>
-<p><br></p>
-<h2 id="hadoop-ecosystem">Hadoop Ecosystem</h2>
-<p>The Hadoop Ecosystem consists of four stages, which are
-<u><strong>ingest, store, process &amp; analyze, and
-access</strong></u>. There are other tools besides Hadoop core
-components associated with each stage.</p>
-<ul>
-<li><p>Ingest Data</p>
-<p><strong>Flume</strong>: collects, aggregates and transfer big data.
-Sqoop: designed to transfer data between relational database system and
-Hadoop.</p></li>
-<li><p>Store Data</p>
-<p><strong>HBase</strong>: non-relational database that runs on top of
-HDFS. It stores data as indexes to allow for random and faster access to
-data.</p></li>
-<li><p>Process &amp; Analyze Data</p>
-<p><strong>Pig</strong>: analyzes large amount of data, operates on the
-<strong>client side</strong> of a cluster. <strong>Hive</strong>: used
-for creating reports, operates on the <strong>server side</strong> of a
-cluster.</p></li>
-<li><p>Access Data</p>
-<p>Impala: scalable and easy to use platform for everyone. Hue: stands
-for Hadoop user experience.</p></li>
-</ul>
-<p><br></p>
-<h2 id="introduction-to-mapreduce">Introduction to MapReduce</h2>
-<p>MapReduce is a programming model used in Hadoop for
-<strong>distributed computing</strong>. It is mostly coded in Java. (it
-can also be coded in C++, Python, Ruby and R)</p>
-<p>MapReduce consists of a Map task and a Reduce task. Mapper processes
-data into <u><strong>key-value pairs</strong></u>, sorts and organizes
-the data, then Reducer <strong>aggregates and computes</strong> a set of
-result, producing the final output. MapReduce keeps track of its task by
-creating <strong>unique keys</strong>.</p>
-<figure>
-<img data-src="mapreduce.png" alt="MapReduce processing a name list">
-<figcaption aria-hidden="true">MapReduce processing a name
-list</figcaption>
-</figure>
-<p>MapReduce stimulates <strong>parallel computing</strong>, and is
-flexible for all data types.</p>
-<p><br></p>
-<h2 id="introduction-to-hdfs">Introduction to HDFS</h2>
-<p>Hadoop Distributed File System (HDFS) is the storage layer of
-Hadoop.</p>
-<p>HDFS splits the files into <strong>blocks</strong>, creates replicas
-of the blocks, and stores them on different machines. It uses a
-<strong>command line interface</strong> to interact with Hadoop.</p>
-<p>The key features of HDFS are as follows:</p>
-<ul>
-<li>Cost efficient. The storage hardware is not expensive.</li>
-<li>Large amounts of data. HDFS stores up to <strong>petabytes</strong>
-of data.</li>
-<li><strong>Replication</strong>. HDFS makes copies of blocks on
-multiple machines.</li>
-<li><strong>Fault tolerant</strong>. If one machine crashed, a copy of
-data could be found and work continues.</li>
-<li>Scalable. One cluster can be scaled into hundreds of
-<strong>nodes</strong>.</li>
-<li><strong>Write-once-read-many</strong> operations. It means you can
-<strong>NOT</strong> edit an existing files but can append new data to
-them.</li>
-</ul>
-<p>Replication guarentees the fault tolerance of HDFS.</p>
-<div class="note info no-icon"><p>Concepts.</p>
-<p><strong>Blocks</strong>: Minimum amount of data that can be read of
-written. Fault tolerance provided. <strong>Nodes</strong>: Single system
-which is responsible to store and process data.</p>
-<ul>
-<li>Primary/Name nodes: Regulates file access to clients and assigns
-tasks to secondary nodes.</li>
-<li>Secondary/Data nodes: Executes the instructions from primary
-nodes.</li>
-</ul>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
 </div>
 <p><br></p>
-<h2 id="introduction-to-hive">Introduction to Hive</h2>
-<p>Hive is a <strong>data warehouse software</strong> within Hadoop that
-is designed for reading, writing and managing <strong>tabular-type
-datasets</strong> and data analysis.</p>
+<p>这一堂课的全部流程基于对某个 ssh
+示例日志文件的处理；只需要一行命令，就能从海量的日志数据中提取到有价值的内容。结合
+R 语言等数据处理语言，甚至还能够迅速生成各种直观的统计图。</p>
+<p>假设我们只关心被拒绝连接的用户；经过
+<code>grep "Disconnected from"</code> 后的原始数据格式如下：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">Jan 13 14:59:08 thesquareplanet.com sshd[25047]: Disconnected from invalid user guest 58.26.43.39 port 47900 [preauth]</span><br><span class="line">Jan 13 15:00:14 thesquareplanet.com sshd[25062]: Disconnected from invalid user postgres 190.187.67.67 port 50091 [preauth]</span><br><span class="line">Jan 13 15:00:23 thesquareplanet.com sshd[25065]: Disconnected from authenticating user ftp_test 156.236.72.23 port 54404</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>在原始数据中，我们可以观察到大量的重复 pattern； <code>sed</code>
+命令可以识别这一 pattern 并<strong>替换 (substitute)</strong>
+无用的数据前缀：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ ssh myserver journalctl</span><br><span class="line">| grep sshd</span><br><span class="line">| grep <span class="string">&quot;Disconnected from&quot;</span></span><br><span class="line">| sed <span class="string">&#x27;s/.*Disconnected from //&#x27;</span></span><br><span class="line">invalid user guest 58.26.43.39 port 47900 [preauth]</span><br><span class="line">invalid user postgres 190.187.67.67 port 50091 [preauth]</span><br><span class="line">authenticating user ftp_test 156.236.72.23 port 54404</span><br></pre></td></tr></table></figure>
+<p><code>sed</code> 命令的最基础用法为
+<code>sed 's/REGEX/SUBSTITUTION/'</code>。<code>REGEX</code>
+是目标模式的正则表达式，<code>SUBSTITUTION</code>
+是替换匹配模式的文本。注意到 <code>sed s</code> 命令的语法与 vim
+搜索&amp;替换命令的语法十分相似。</p>
+<p><br></p>
+<h2 id="basic-regex-for-sed">Basic regex for sed</h2>
+<p>Regular expressions are usually (though not always) surrounded by
+<code>/</code>. Most ASCII characters just carry their normal meaning,
+but some characters have special matching behavior.</p>
 <ul>
-<li>It is scalable, fast, and easy to use.</li>
-<li>Hive works very similar to traditional Relational Database
-Management System (RDBMS). Hive Query Language (HiveQL) is also
-<strong>inspired by SQL</strong>.</li>
+<li><code>.</code> means "any single character" except newline.</li>
+<li><code>*</code> zero or more of the preceding match.</li>
+<li><code>+</code> one or more of the preceding match.</li>
+<li><code>[abc]</code> any one character of <code>a</code>,
+<code>b</code>, and <code>c</code>.</li>
+<li><code>(RX1|RX2)</code> either something that matches
+<code>RX1</code> or <code>RX2</code>.</li>
+<li><code>^</code> the start of the line.</li>
+<li><code>$</code> the end of the line.</li>
 </ul>
-<div class="note info no-icon"><p>Concepts.</p>
-<p><strong>Data warehouse</strong>: stores historical data from
-different sources for analyzing and extracting.</p>
-<p><strong>Relational Database Management System (RDBMS)</strong>:
-stores data in a <strong>structured format tabular form</strong>.
-Structured Query Language (SQL) is most used in RDBMS.</p>
+<p><code>sed</code>'s regular expressions are somewhat weired, and will
+require you to put a <code>\</code> before most of
+<strong>these</strong> to give them their special meaning. Or you can
+pass <code>-E</code>.</p>
+<p>现在看到之前的例子
+<code>/.*Disconnected from /</code>，我们会发现当用户名本身为
+<code>Disconnected from</code> 时， 结果不符合预期：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> malicious_login</span><br><span class="line">Jan 17 03:13:00 thesquareplanet.com sshd[2631]: Disconnected from invalid user Disconnected from 46.97.239.16 port 55920 [preauth]</span><br><span class="line">$ <span class="built_in">cat</span> malicious_login | sed <span class="string">&#x27;s/.*Disconnected from //&#x27;</span></span><br><span class="line">46.97.239.16 port 55920 [preauth]</span><br></pre></td></tr></table></figure>
+<p>想要保留的用户名被 <code>sed</code> 命令替换成了 null。这是由于
+<code>sed</code>
+命令的匹配策略是<strong>贪心的</strong>；它总是匹配尽可能多的文本进行替换。在一些正则表达式实现中，我们可以在
+<code>*</code> 或 <code>+</code> 后添加 <code>?</code>
+后缀将匹配策略改为 non-greedy 的，例如 perl 的命令行模式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">perl -pe <span class="string">&#x27;s/.*?Disconnected from //&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>可惜的是 <code>sed</code>
+命令并不支持这个写法。为了解决这个问题，也同时为之后提取用户名做准备，我们尝试使用
+<code>sed</code> 的正则表达式匹配整行数据：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">| sed -E <span class="string">&#x27;s/.*Disconnected from (invalid |authenticating )?user .* [0-9.]+ port [0-9]+( \[preauth\])?$//&#x27;</span> </span><br></pre></td></tr></table></figure>
+<p>剩下的问题是，如何从匹配的正则表达式中保留我们需要的数据——用户名。解决方案是使用正则中自带的
+<strong>"capture group" (捕获组)</strong> feature。</p>
+<div class="note info no-icon"><p>Any text matched by a regex surrounded by parentheses <code>()</code>
+is stored in a <strong>numbered capture group</strong>. These are
+available in the substitution as <code>\1</code>, <code>\2</code>,
+<code>\3</code>, etc.</p>
 </div>
-<p>Hive architecture consists of Hive Client, Hive Services and Hive
-Storage &amp; Computing.</p>
-<figure>
-<img data-src="hive.png" alt="Hive Architecture">
-<figcaption aria-hidden="true">Hive Architecture</figcaption>
-</figure>
-<ul>
-<li>Hive Clients: allows JDBC/ODBC-based applications to connect to
-Hive.</li>
-<li>Hive Services: receives queries, splits and executes tasks.</li>
-<li>Hive Storage &amp; Computing: connects to HDFS for storage or Hadoop
-clusters for computing.</li>
-</ul>
+<p>使用小括号 <code>()</code>
+“捕获”用户名之后，我们成功得到了需要的数据。注意用户名对应的捕获组
+<code>(.*)</code> 是整个正则表达式中的第二个捕获组，所以我们用
+<code>\2</code> 进行指代。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ ssh myserver hournalctl</span><br><span class="line">| grep sshd</span><br><span class="line">| grep <span class="string">&quot;Disconnected from&quot;</span></span><br><span class="line">| sed -E <span class="string">&#x27;s/.*Disconnected from (invalid |authenticating )?user (.*) [0-9.]+ port [0-9]+( \[preauth\])?$/\2/&#x27;</span></span><br><span class="line">...</span><br><span class="line">guest</span><br><span class="line">postgres</span><br><span class="line">ftp_test</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 <p><br></p>
-<h2 id="introduction-to-hbase">Introduction to HBase</h2>
-<p>HBase is a column-oriented non-relational database management system
-<strong>running on top of HDFS</strong>. It provides a fault-tolerant
-way of storing sparse datasets.</p>
-<p>HBase is always used for <strong>write-heavy applications</strong>:
-It has flexible column schema and provides <strong>consistent read and
-write</strong> with easy-to-use Java API for client access.</p>
-<p>HBase and HDFS are both used for storing Big Data. However, there are
-differences between them.</p>
-<table>
-<colgroup>
-<col style="width: 46%">
-<col style="width: 53%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>HBase</th>
-<th>HDFS</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>stores data in forms of columns and rows in a table</td>
-<td>stores data in a distributed manner across different nodes</td>
-</tr>
-<tr class="even">
-<td><u><strong>allows dynamic changes</strong></u></td>
-<td>has rigid architecture that doesn't allow changes</td>
-</tr>
-<tr class="odd">
-<td>allows random reads and writes</td>
-<td>write once and read many times</td>
-</tr>
-<tr class="even">
-<td>stores and processer Big Data</td>
-<td>only for storing Big Data</td>
-</tr>
-</tbody>
-</table>
-<p>HBase architecture consists of HMaster, region servers, region,
-Zookeeper and HDFS.</p>
-<figure>
-<img data-src="hbase.png" alt="HBase architecture">
-<figcaption aria-hidden="true">HBase architecture</figcaption>
-</figure>
-<ul>
-<li>HMaster: monitors and assigns regions to region servers, manages
-changes made to schema.</li>
-<li>Region Servers: manages regions and <strong>communicates directly
-with clients</strong>.</li>
-<li>Region: <strong>smallest unit of HBase cluster</strong>. contains
-HFile ad Memstore.</li>
-<li>Zookeeper: maintains healthy links between nodes and provides
-distributed synchronization.</li>
-<li>HDFS: provides basic distributed storage for HBase.</li>
-</ul>
+<h2 id="further-data-wrangling">Further Data Wrangling</h2>
 <p><br></p>
-<h2 id="reference-and-related-reading">Reference and Related
-Reading</h2>
-<p>Coursera <a target="_blank" rel="noopener" href="https://www.coursera.org/learn/introduction-to-big-data-with-spark-hadoop/home/welcome">Introduction
-to Big Data with Spark and Hadoop</a> provided by IBM. week 2
-material.</p>
-<p>Related Reading (In Chinese, 写的真的很好)</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/35942305">知乎-如何进入大数据领域，学习路线是什么？</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/27974418/answer/38965760">知乎-如何用形象的比喻描述大数据的技术生态？</a></li>
-</ul>
-<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p>MIT Open Learning. The Missing Semester of Your CS Education.</p>
+<p>Course resource:</p>
+<p><a target="_blank" rel="noopener" href="https://missing.csail.mit.edu/">The Missing Semester of Your
+CS Education</a>.</p>
 
     </div>
 
@@ -586,13 +455,13 @@ material.</p>
   </li>
   <li class="post-copyright-link">
       <strong>Post link: </strong>
-      <a href="https://www.thisisxxz.com/2023/06/11/intro-to-hadoop/" title="Big Data notes P2 - Hadoop Ecosystem">https://www.thisisxxz.com/2023/06/11/intro-to-hadoop/</a>
+      <a href="https://www.thisisxxz.com/2023/07/06/missing-sem-2/" title="The Missing Semester of Your CS Education - Data Wrangling">https://www.thisisxxz.com/2023/07/06/missing-sem-2/</a>
       <!--copy buttom-->
       <span class="copy-path" title="Click to copy markdown-style reference"
       ><i
         style="cursor: pointer"
         class="fa fa-clipboard"
-        data-clipboard-text="[XXZ's Blog | Big Data notes P2 - Hadoop Ecosystem](https://www.thisisxxz.com/2023/06/11/intro-to-hadoop/)"
+        data-clipboard-text="[XXZ's Blog | The Missing Semester of Your CS Education - Data Wrangling](https://www.thisisxxz.com/2023/07/06/missing-sem-2/)"
         aria-label="Markdown-style reference is now on your clipboard"
       ></i
     ></span>
@@ -627,24 +496,16 @@ material.</p>
         </span>
       </div>
     </div>
-          <div class="post-tags">
-              <a href="/tags/Hadoop/" rel="tag"><i class="fa fa-tag"></i> Hadoop</a>
-              <a href="/tags/HDFS/" rel="tag"><i class="fa fa-tag"></i> HDFS</a>
-              <a href="/tags/Hive/" rel="tag"><i class="fa fa-tag"></i> Hive</a>
-          </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2023/06/11/intro-to-bigdata/" rel="prev" title="Big Data notes P1 - Introduction to Big Data">
-                  <i class="fa fa-chevron-left"></i> Big Data notes P1 - Introduction to Big Data
+                <a href="/2023/07/04/shell-rewire-stream/" rel="prev" title="关于 Shell 输入输出重定向的研究">
+                  <i class="fa fa-chevron-left"></i> 关于 Shell 输入输出重定向的研究
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/06/16/algo-princeton-p1/" rel="next" title="Algorithms I, Princeton University, P1">
-                  Algorithms I, Princeton University, P1 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
@@ -730,7 +591,7 @@ material.</p>
       new needShareButton('#needsharebutton-postbottom', pbOptions);
   </script>
 
-<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/06/11/intro-to-hadoop/"}</script>
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/07/06/missing-sem-2/"}</script>
 <script>
 document.addEventListener('page:loaded', () => {
   NexT.utils.loadComments(CONFIG.valine.el)
