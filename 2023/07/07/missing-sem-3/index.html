@@ -31,7 +31,7 @@
 <meta property="og:description" content="不得不说，我个人认为 Anish 是三位老师中讲得最好的一个。这节课上他展示的问题几乎全部是我在初入门 git 时遇到过的坑；真是相见恨晚啊！不过在有 Git 使用经验的前提下来上这一小节体验也很不错，使我对 Git 优美的底层逻辑有了更深入的认识。  Anish: While an ugly interface has to be memorized, a beautiful de">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-07-07T13:36:00.000Z">
-<meta property="article:modified_time" content="2023-07-08T11:57:41.369Z">
+<meta property="article:modified_time" content="2023-07-08T14:02:02.371Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="course notes">
 <meta property="article:tag" content="git">
@@ -454,42 +454,52 @@ a DAG. (即 commit DAG！)</li>
 dotfiles 的经典例子之一。</p>
 <p><br></p>
 <h2 id="branching-and-merging">Branching and Merging</h2>
-<p>git 中的 branch 概念并不像一开始看上去那么 intuitive；它与 references
-的概念息息相关。</p>
+<p>Git 中的 branch 概念并不像看上去那么 intuitive；对于一段抽象的 commit
+branch，我们对其进行命名 (比如 <code>master</code>,
+<code>bugFix</code>...)，这些 branch name 就是 branch 的符号引用 (branch
+reference)，通常指向其所代表的 branch 中的 latest
+commit。所以<strong>本质上来说，branch 就是指向某个 commit
+的指针</strong>。</p>
+<p>另外一个重要的概念是 <code>HEAD</code> reference: 它与 branch
+reference 有着微妙的定义上的不同；<code>HEAD</code>
+是一个<strong>对当前所在分支的符号引用</strong>——也就是指向你正在其基础上进行工作的
+commit。</p>
 <ul>
-<li><code>HEAD</code> reference 指向目前所在的
-commit；我们所作的操作大部分都是基于 <code>HEAD</code> 而言的。</li>
-<li>每个 branch 都有一个对应的 reference，该 reference 一定指向这个
-branch 的 latest commit。最经典的例子是默认的 <code>master</code>
-branch：<code>master</code> reference 始终指向 <code>master</code>
-branch 的 latest commit。</li>
-<li>当从 <code>HEAD</code> 新建一个 branch 时，与 branch name 同名的
-reference 将自动产生，并且其指向该 branch 的 latest commit (即
-<code>HEAD</code> 指向的 commit)。</li>
-<li>当 <code>HEAD</code> 指向的 commit <strong>不被任何 branch reference
-指向时</strong> (即其指向的 commit 并不是任何 branch 的 latest
-commit)，这样的 <code>HEAD</code> 被称为<strong>游离
-<code>HEAD</code></strong>。从游离 <code>HEAD</code> 提交 commit
-是不被允许的。</li>
+<li><code>HEAD</code> 总是指向当前 branch 上的 latest commit。</li>
+<li>通常情况下，<code>HEAD</code> 是指向某个 branch reference 的 (比如
+<code>master</code>)。在提交 commit 时，branch reference
+的状态发生了改变，而这一变化通过 <code>HEAD</code>
+的改变而变得可见。</li>
+<li>当 <code>HEAD</code> 指向的是某个具体的 commit，而不是 branch
+reference 时，我们称其为<strong>游离的 (detached)</strong>
+<code>HEAD</code> 。由游离的 <code>HEAD</code> 提交 commit
+是被禁止的。</li>
+</ul>
+<p>一定要理解抽象的 commit branch 与 branch name/reference
+的联系：branch name/reference 指向抽象 commit branch 的 latest
+branch。当我们说 <code>HEAD</code> 指向某个 branch 时，要注意：</p>
+<ul>
+<li>workflow 上，我们切换到了整个 project 中的一条 branch
+上进行工作。</li>
+<li>本质上， <code>HEAD</code> 指向了该 branch 对应的 branch
+reference。</li>
 </ul>
 <p>有了上面的 foundations 之后，理解接下来有关 branching 与 merging
 的命令就比较简单了。</p>
 <ul>
 <li><code>git branch</code>：显示所有 branches。</li>
 <li><code>git branch &lt;name&gt;</code>：由当前 (<code>HEAD</code>)
-新建一个 branch。注意，虽然此时 <code>HEAD</code> 将与新建 branch 的
-reference 指向同一个 commit，但是 <code>HEAD</code>
-并<strong>没有</strong>切换到该新建的 branch 上！这意味着如果由
-<code>HEAD</code> 提交新的 commit，新建 branch 并不会被延长。</li>
+新建一个 branch。注意，这并<strong>不会</strong>改变 <code>HEAD</code>
+指向的 branch。</li>
 <li><code>git checkout &lt;revision&gt;</code>：很有用，但也很危险的命令；它将改变
 <code>HEAD</code> 指向的 commit，并使得工作区的文件与 <code>HEAD</code>
 所指向的 commit
 进行同步。这很大概率上会使得<strong>工作区的文件发生改变</strong>。
 <ul>
 <li><code>git checkout &lt;address&gt;</code>：<code>HEAD</code>
-将会指向该哈希值地址对应的
-commit。<code>git checkout &lt;name&gt;</code>：<code>HEAD</code>
-将会指向对应 branch reference 所指向的 commit。</li>
+将会指向该哈希值地址对应的 commit。</li>
+<li><code>git checkout &lt;name&gt;</code>：<code>HEAD</code>
+将会指向对应的 branch。</li>
 <li><code>git checkout -b &lt;name&gt;</code>：新建一个 branch 并令
 <code>HEAD</code> 指向它。相当于 <code>git branch &lt;name&gt;</code>
 后执行 <code>git checkout &lt;name&gt;</code>。</li>
@@ -498,8 +508,8 @@ commit。<code>git checkout &lt;name&gt;</code>：<code>HEAD</code>
 </ul></li>
 <li><code>git merge &lt;revision&gt;</code>：将参数中指定的 branch
 合并进入当前 branch (<code>HEAD</code> 指向的 branch)。一般来说，我们先
-<code>git checkout master</code> 再将其他的 branch 合并入 master branch
-中。如果被合并的 branch 是 master branch 的直接后继，这样的合并称为
+<code>git checkout master</code> 再将其他的 branch 合并入 master
+中。如果被合并的 branch 是 master 的直接后继，这样的合并称为
 <strong>fast-forward：它不会提交任何额外的 commit</strong>。
 <ul>
 <li><code>git merge --abort</code>：中止合并并恢复到合并之前的状态。</li>
@@ -507,8 +517,8 @@ commit。<code>git checkout &lt;name&gt;</code>：<code>HEAD</code>
 <li><code>git mergetool</code>：使用其他工具 (例如 vimdiff)
 来解决<strong>合并冲突</strong>。</li>
 <li><code>git rebase</code>：将某个 branch 上的所有修改都移至另一个
-branch 上。使用 <code>rebase</code>
-进行合并能够使得提交历史是线性的，显得更加整洁。见 <a target="_blank" rel="noopener" href="https://git-scm.com/book/zh/v2/Git-%E5%88%86%E6%94%AF-%E5%8F%98%E5%9F%BA">Git
+branch 上。使用 <code>rebase</code> 进行合并能够创造更线性的 commit
+history；即使它们本来是并行开发的。见 <a target="_blank" rel="noopener" href="https://git-scm.com/book/zh/v2/Git-%E5%88%86%E6%94%AF-%E5%8F%98%E5%9F%BA">Git
 官方文档的变基实例</a>。</li>
 </ul>
 <p><br></p>
@@ -554,7 +564,7 @@ if not specified.</p>
 <ul>
 <li><p><a target="_blank" rel="noopener" href="https://git-scm.com/">Git Scm: Distributed is the New
 Centralized</a>.</p></li>
-<li><p>(checked) <a target="_blank" rel="noopener" href="https://learngitbranching.js.org/?locale=zh_CN">Learn Git
+<li><p>(checked and <strong>HIGHLY RECOMMENDED</strong>) <a target="_blank" rel="noopener" href="https://learngitbranching.js.org/?locale=zh_CN">Learn Git
 Branch</a>.</p></li>
 </ul>
 <p>Course info:</p>
