@@ -4548,7 +4548,15 @@ history；即使它们本来是并行开发的。见 <a href="https://git-scm.co
 <h2 id="remotes">Remotes</h2>
 <p>以上我们所介绍的命令都是基于本地 repo 而言的。然而 Git
 之所以如此普及，一方面在于<strong>版本控制</strong>的强大，另一方面在于，共享同一个远程
-repo 使得<strong>并行开发</strong>成为了可能。</p>
+repo 使得<strong>并行开发</strong>成为了可能。远程 repo
+的概念其实并不复杂：它只是你的<strong>本地 repo
+在远程的拷贝</strong>——通过互联网，你可以与其进行通信，增加或者获取提交记录。</p>
+<p>另外一个重要的概念是远程 branch；与本地 branch
+一致，它本质上也是一个指向某个 commit 的指针，反映<strong>远程 repo
+(在最后一次与其通信后) 的状态</strong>。切换到某个远程 branch
+时，<code>HEAD</code> 自动进入游离状态；这是因为 Git 禁止直接对远程
+branch 进行操作。我们必须在本地完成工作，使用 <code>push</code>
+等命令才能更新远程 branch。</p>
 <ul>
 <li><code>git remote</code>：列出该 repo 对应的所有远程 repo。</li>
 <li><code>git remote add &lt;name&gt; &lt;url&gt;</code>：为该 repo
