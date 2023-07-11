@@ -149,6 +149,152 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
+    <title>The Missing Semester of CS Education, MIT - Metaprogramming</title>
+    <url>/2023/07/11/missing-sem-4/</url>
+    <content><![CDATA[<blockquote>
+<p>Metaprogramming is the best collective term we could come up with for
+the set of things that are more about <em>process</em> than they are
+about writing code or working efficiently.</p>
+</blockquote>
+<p>对于元编程这个概念，我们可以理解为作用在程序之上的程序 (programs that
+operate on programs)。这一节将主要介绍构建系统，依赖管理与持续集成。</p>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="build-system">Build System</h2>
+<p>在之前对 build system 已经有相当的认识了；<code>Make</code>
+就是一个著名的 build system。在 <code>Makefile</code>
+中，我们需要声明一系列的 <em>directives</em>，它包括：</p>
+<ul>
+<li>targets.</li>
+<li>dependencies.</li>
+<li>rules.</li>
+</ul>
+<p><code>make</code> 将会根据声明的 directives 按照 dependency hierarchy
+逐步生成 targets。这一过程被称为 <em>build process</em>。当
+<code>make</code> 缺省参数时，它默认将第一个 directive 中的 target 作为
+final target 进行生成。</p>
+<p><code>make</code> 另一个优秀的特性是，它能保证<strong>每次生成 target
+时所执行的命令数最少</strong>。这是因为它采取了这样的贪心策略：当某个
+target 的所有 dependencies 都是最新的时 (通过比较 target 与 dependencies
+的最后修改时间)，无需执行 rules 中的命令。</p>
+<p><code>make</code> 只是众多 build system 中最普通，最 low-level
+的一个。根据 project 的类型与规模，有许多 build system 可供采用，例如
+<code>CMake</code>, <code>ninja</code>,
+<code>Bazel</code>。然而它们的内核都是相似的，离不开上述三种元素的声明。</p>
+<p><br></p>
+<h2 id="dependency-management">Dependency Management</h2>
+<p>Build system 更多的是控制一个 project <strong>内部</strong>的 build
+process；但从更宏观的角度来看，某个 project 很有可能会以另外的 projects
+作为依赖项。这些依赖项可能是某些 installed programs (如
+<code>python</code>)，系统包 (如 <code>openssl</code>) 或语言中的库 (如
+<code>ncurses</code>)。</p>
+<p>常见的做法是通过一个 <em>repository</em> 来集中存储某个 project
+大量的依赖项，并且提供便利的下载机制。比如 Ubuntu 的 package
+repositories (我们通过 <code>apt</code> 进行访问)，<code>NodeJs</code>
+的 <code>npm</code> ，<code>Python</code> 的 <code>PyPi</code>
+等等。</p>
+<p>我们常常遇到<strong>版本不兼容</strong>的问题；大多数情况下这是软件和它的依赖项版本产生冲突导致的。类似
+<code>npm</code>，<code>PyPi</code> 这样被很多软件所依赖的 project
+会发布<strong>版本号 (version number)</strong>，这种机制称为
+<strong>versioning</strong>。</p>
+<p>最常见的<strong>版本语义 (semantic versioning)</strong>，例如
+<code>8.1.3</code> 或者 <code>64.1.20192004</code>，由左到右分别是 major
+version，minor version 与 patch version。</p>
+<ul>
+<li>If a new release does NOT change the API, increase the patch
+version.</li>
+<li>If you <em>add</em> to your API in a
+<strong>backwards-compatible</strong> way, increase the minor
+version.</li>
+<li>If you change the API in a <strong>non-backwards-compatible</strong>
+way, increase the major version.</li>
+</ul>
+<p>若 project <em>A</em> 初始依赖 project <em>B</em> 的版本
+<code>v1</code>，版本语义保证 <em>B</em> 的任何与 <code>v1</code> 的
+major version 相同且 &gt; <code>v1</code> 的版本都能够与 <em>A</em>
+兼容。例如，基于 Python 3.5 编写的代码能在 Python 3.7
+环境下运行；但不一定能在 Python 3.4 环境下运行；更不一定能在 Python 4
+环境下运行。</p>
+<p>在依赖管理系统中，我们常常能见到一种特殊的文件：<strong>lock
+files</strong>。lock file 能够加速开发周期，使 project
+始终基于其中指定的依赖项版本进行构建；并且对于用户来说，它也提供了一定的安全保证。</p>
+<div class="note info no-icon"><p>A lock file lists the exact version you are <em>currently</em>
+depending on of each dependency.</p>
+</div>
+<p>一个更极端的做法称为 <strong>vendoring</strong>, 即 copying all the
+code of your dependencies into the
+project。这给予了我们对依赖项的完全掌控权力；我们甚至能自主修改其中的代码。然而这样做的代价是失去了
+versioning 带来的便利。</p>
+<p><br></p>
+<h2 id="continuous-integration-system">Continuous Integration
+System</h2>
+<p>Continuous integration (持续集成)，或 CI，其一个不正式的定义为 "stuff
+that runs whenever your code changes"。例如，每当有人向 project 中 push
+了代码，你希望对代码进行 stylecheck，或是对整个 project 跑一次 test
+suite 等等。这一需求在一些大 project 中很常见。</p>
+<p>目前比较流行的 CI 系统有 Travis CI, Azure Pipelines 与 Github
+Actions。</p>
+<p>我们十分熟悉的 dependabot 就是一个简单的 CI 服务：它定时检查 project
+依赖项的更新情况，当依赖项存在更新的版本时，它向 project 提出一个 pr
+作为提示。</p>
+<p>本博客所基于的 GitHub pages 也是一个 CI 服务：当我们写好 markdown
+格式的博文并且 push 到主分支时，GitHub pages
+将通过指定的静态网页生成框架 (Hexo, Jekyll 等) 生成 HTML 文件并部署到
+<code>github.io</code> domain
+上。这使得撰写并发布博文的操作变得非常简单：我们只需要执行 push
+操作，剩下的交给 CI。</p>
+<p>与 build system 相似，你需要在 repo 中存储一个
+<strong>"recipe"</strong>，指定 CI 在发生哪些变动时 (trigger) 对 project
+执行哪些操作 (action)。当指定的事件发生时，CI
+将启动一个<strong>虚拟环境</strong>，对 project 执行你在 recipe
+中指定的操作，然后记录并存储结果。</p>
+<p><br></p>
+<h2 id="test-briefing">Test Briefing</h2>
+<p>我们经常听到一个词 “测试套件” (test
+suite)，它是一系列测试的总称。那么，对于一个 project，有哪几种常见的
+test 类型呢？</p>
+<ul>
+<li>Test suite: 一系列测试的总称。</li>
+<li>Unit test: a "micro-test" that tests a <strong>specific
+feature</strong> in isolation.</li>
+<li>Integration test: a "macro-test" that runs a larger part of the
+system to check that different feature or components work
+<em>together</em>.</li>
+<li>Regression test: a test that implements a particular pattern that
+<em>previously</em> caused a bug to ensure that the bug does not
+resurface. (在修复完某个 bug 后，向测试套件中添加一个回归测试)</li>
+<li>Mocking: to replace a function, module, or type with a fake
+implementation to avoid testing unrelated functionality. (比如，通过
+overwrite 的形式 mock network 或 mock the disk)</li>
+</ul>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p>MIT Open Learning. The Missing Semester of Your CS Education.</p>
+<p>Course resource:</p>
+<p><a href="https://missing.csail.mit.edu/">The Missing Semester of Your
+CS Education</a>.</p>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>courses</category>
+        <category>Missing Semester, MIT</category>
+      </categories>
+      <tags>
+        <tag>course notes</tag>
+        <tag>make</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>在平江东山寺</title>
     <url>/2023/07/10/moment-230708/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -165,8 +311,8 @@ NexT.Pisces。</strong></p>
 <figcaption aria-hidden="true">是日已过</figcaption>
 </figure>
 <figure>
-<img data-src="2.jpg" alt="命亦随灭">
-<figcaption aria-hidden="true">命亦随灭</figcaption>
+<img data-src="2.jpg" alt="命亦随减">
+<figcaption aria-hidden="true">命亦随减</figcaption>
 </figure>
 <figure>
 <img data-src="3.jpg" alt="如少水鱼">
@@ -193,7 +339,7 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
-    <title>The Missing Semester of Your CS Education, MIT - Version Control</title>
+    <title>The Missing Semester of CS Education, MIT - Version Control</title>
     <url>/2023/07/07/missing-sem-3/</url>
     <content><![CDATA[<p>不得不说，我个人认为 Anish
 是三位老师中讲得最好的一个。这节课上他展示的问题几乎全部是我在初入门 Git
@@ -456,7 +602,7 @@ CS Education</a>.</p>
       </tags>
   </entry>
   <entry>
-    <title>The Missing Semester of Your CS Education, MIT - Data Wrangling</title>
+    <title>The Missing Semester of CS Education, MIT - Data Wrangling</title>
     <url>/2023/07/06/missing-sem-2/</url>
     <content><![CDATA[<p>ENGG1340 shell 命令部分的加强版。老师通过一个例子就深入浅出的展示了
 <code>grep</code>, <code>sort</code>, <code>uniq</code>,
@@ -794,7 +940,7 @@ xargs 详解</a>.</li>
       </tags>
   </entry>
   <entry>
-    <title>The Missing Semester of Your CS Education, MIT - the Shell</title>
+    <title>The Missing Semester of CS Education, MIT - the Shell</title>
     <url>/2023/07/02/missing-sem-1/</url>
     <content><![CDATA[<p>“计算机教育缺失的一课”，MIT
 别出心裁开设的这门课将会介绍非常重要但是却鲜少在大学 CS curriculum 中
