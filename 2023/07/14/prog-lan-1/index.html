@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.font.im/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CSitka+Heading:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="毫无疑问的神课，不愧于 Coursera 上接近满分的评价。Dan Grossman 教授显然对 PL 领域十分 passionate 并且有很深的造诣，在上课的过程中都能感受到他的热情和对课程倾注的心血。 这门课介绍了 PL 中的很多基本概念，尤其强调函数式编程的设计哲学；对我来说确实是一个全新的范畴。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Programming Languages, UW, Part A">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/07/14/prog-lan-1/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="毫无疑问的神课，不愧于 Coursera 上接近满分的评价。Dan Grossman 教授显然对 PL 领域十分 passionate 并且有很深的造诣，在上课的过程中都能感受到他的热情和对课程倾注的心血。 这门课介绍了 PL 中的很多基本概念，尤其强调函数式编程的设计哲学；对我来说确实是一个全新的范畴。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-07-14T07:19:13.000Z">
+<meta property="article:modified_time" content="2023-07-14T08:57:30.257Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="PL">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2023/07/14/prog-lan-1/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/07/14/prog-lan-1/","path":"2023/07/14/prog-lan-1/","title":"Programming Languages, UW, Part A"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Programming Languages, UW, Part A | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">23</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">33</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ml-basics"><span class="nav-number">1.</span> <span class="nav-text">ML Basics</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#variable-bindings"><span class="nav-number">1.1.</span> <span class="nav-text">Variable Bindings</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#function-bindings"><span class="nav-number">1.2.</span> <span class="nav-text">Function Bindings</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#function-call"><span class="nav-number">1.3.</span> <span class="nav-text">Function Call</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#first-class-function"><span class="nav-number">2.</span> <span class="nav-text">First-Class Function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#anonymous-function"><span class="nav-number">3.</span> <span class="nav-text">Anonymous Function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#currying"><span class="nav-number">4.</span> <span class="nav-text">Currying</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lexical-scope"><span class="nav-number">5.</span> <span class="nav-text">Lexical Scope</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#environments-and-closures"><span class="nav-number">6.</span> <span class="nav-text">Environments and Closures</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#type-inference"><span class="nav-number">7.</span> <span class="nav-text">Type Inference</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">8.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine's Blog</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/07/14/prog-lan-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Programming Languages, UW, Part A | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Programming Languages, UW, Part A
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-07-14 15:19:13" itemprop="dateCreated datePublished" datetime="2023-07-14T15:19:13+08:00">2023-07-14</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>毫无疑问的神课，不愧于 Coursera 上接近满分的评价。Dan Grossman
+教授显然对 PL 领域十分 passionate
+并且有很深的造诣，在上课的过程中都能感受到他的热情和对课程倾注的心血。</p>
+<p>这门课介绍了 PL
+中的很多基本概念，尤其强调函数式编程的设计哲学；对我来说确实是一个全新的范畴。</p>
+<span id="more"></span>
+<blockquote>
+<p>Part A is a <em>precisely specified</em> introduction to functional
+programming built up piece-by-piece, using Standard ML as an
+example.</p>
+</blockquote>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="ml-basics">ML Basics</h2>
+<div class="note info no-icon"><p>An ML program is a sequence of <em>bindings</em>.</p>
+</div>
+<p>绑定 (binding) 与我们熟悉的赋值语句 (assignment statement)
+尽管形式相似，却有着本质的不同：最主要的区别在于 bindings 是
+<em>immutable</em> 的，而 assignment statement 支持以赋值的形式 mutate
+变量的值。</p>
+<ul>
+<li>Each binding gets <em>type-checked</em> and (assume it type-checks)
+then <em>evaluated</em>.</li>
+<li>What <em>type</em> of a binding has depends on a <em>static
+environment</em> or <em>context</em>, which is roughly the types of the
+preceding bindings.</li>
+<li>How a binding is evaluated depends on a <em>dynamic environment</em>
+or just <em>environment</em>, which is roughly the values of the
+preceding bindings.</li>
+</ul>
+<p>这也就是说，if <code>x</code> maps to some value <code>v</code> in
+some environment, it will forever map to <code>v</code> in that
+environment. There is NO assignment statement that changes
+<code>x</code> to map to a different value. 尽管你可以在之后引入新的
+binding 来 <em>shadows</em> <code>x</code>，但这并不会改变之前的环境中
+<code>x</code> 与 <code>v</code> 对应的事实。</p>
+<p>接下来，我们看看 ML 如何处理 variable bindings 与 function
+bindings。</p>
+<h3 id="variable-bindings">Variable Bindings</h3>
+<p>variable binding 的语法 (syntax) 如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">var</span> <span class="variable">x</span> <span class="operator">=</span> e;</span><br></pre></td></tr></table></figure>
+<p><code>e</code> 是一个表达式 (expression)；注意表达式与值 (value)
+之间的区别：A <em>value</em> is an expression that "has no more
+computation to do". Therefore, all values are expressions, but not all
+expressions are values.</p>
+<ul>
+<li>We use current static environment to type-check <code>e</code>, and
+(if it type-checks) add <code>x : t</code> back to the static
+environment where <code>t</code> is the type of <code>e</code>.</li>
+<li>We use current dynamic environment to evaluate <code>e</code>, and
+(if it type-checks) add <code>x = v</code> back to the dynamic
+environment where <code>v</code> is the value of <code>e</code>.</li>
+</ul>
+<h3 id="function-bindings">Function Bindings</h3>
+<p>function binding 的语法如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fun <span class="title function_">x0</span> <span class="params">(x1:t1, ..., xn:tn)</span> = e</span><br></pre></td></tr></table></figure>
+<p>Binding <code>x0</code> takes arguments <code>x1, ..., xn</code> of
+types <code>t1, ..., tn</code> and has an expression <code>e</code> for
+its body.</p>
+<p><strong>Type-checking:</strong></p>
+<ul>
+<li>Type-check the body <code>e</code> in a static environment that (in
+addition to all the earlier binding) maps <code>x1</code> to
+<code>t1</code>, ... <code>xn</code> to <code>tn</code> and
+<code>x0</code> to <code>t1 * ... * tn -&gt; t</code>. Since
+<code>x0</code> is in the environment, we can make <em>recursive</em>
+function calls, i.e., <strong>a function definition can use
+itself.</strong></li>
+<li>For the function binding to type-check, body <code>e</code> must
+have the type <code>t</code>, i.e., the result type of
+<code>x0</code>.</li>
+<li>If the function binding type-checks,
+<code>x0 : t1 * ... * tn -&gt; t</code> is added to the static
+environment. Note that the arguments are not added to the top-level
+static environment.</li>
+</ul>
+<p>Note that <code>t</code> is never wrote down: it is up to the
+type-checker to figure out what <code>t</code> should be such that using
+it for the result type of <code>x0</code> makes everything work out.
+This is called <em>type inference</em>.</p>
+<p><strong>Evaluation: </strong></p>
+<p>function bindings 的 evaluation 就比较 trivial 了，这是因为在 ML
+中，<em>A function is a value.</em></p>
+<p>我们仅仅需要将 <code>x0</code> 加入 current dynamic environment
+即可。As expected for recursion, <code>x0</code> is in the dynamic
+environment in the function body and for subsequent bindings.</p>
+<h3 id="function-call">Function Call</h3>
+<p>function binding 的存在是为了支持 function calls。它的语法如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">e0 (e1,...,en)</span><br></pre></td></tr></table></figure>
+<p><strong>Typing rules:</strong></p>
+<p>若 <code>e0</code> 的类型为 <code>t1 * ... * tn -&gt; t</code> 且
+<code>ei</code> 的类型为 <code>tn</code>，则整个函数调用的类型为
+<code>t</code>.</p>
+<p><strong>Evaluation rules:</strong></p>
+<p>我们使用<strong>调用处的环境 (environment at the point of the
+call)</strong> 来 evaluate <code>e0</code> to <code>v0</code>,
+<code>e1</code> to <code>v1</code>, ..., <code>en</code> to
+<code>vn</code>. 若 <code>v0</code> 是函数，则函数调用是 type-checked
+的。</p>
+<p>接下来，我们使用<strong>定义处的环境 (environment where the function
+is defined)</strong> extends 函数参数形成的 bindings
+<code>x1 = v1, ..., xn = vn</code> 来 evaluate 函数体。</p>
+<p><br></p>
+<h2 id="first-class-function">First-Class Function</h2>
+<div class="note info no-icon"><p>By <em>first-class</em> we mean that functions can be computed,
+passed, stored, etc. wherever other values can be computed passed
+stored, etc.</p>
+</div>
+<p>在函数式编程体系中，函数也是第一等公民：这是因为 All functions are
+values。函数就像所有其他类型的值一样，可以作为 <em>higher-order</em>
+函数的参数，返回值，甚至可以被存储。</p>
+<p>函数的 first-class 性质使得 function closure
+的概念被提出，并进一步催生了匿名函数 (anonymous function)，高阶函数
+(higher-order function)，函数的 combination，callback 与 currying
+等机制。</p>
+<p>一些典型的函数比如 <code>map</code>, <code>filter</code>,
+<code>fold</code> 等在函数式编程体系中可以很方便的实现。</p>
+<div class="note info no-icon"><p>The term <em>higher-order function</em> refers to the function that
+takes or returns other functions.</p>
+</div>
+<p>到底什么是<strong>函数式编程 (functional
+programming)</strong>？实际上，对此并没有一个准确的定义。但一般来说，函数式编程语言有以下特点：</p>
+<ul>
+<li>函数是第一等公民：using functions as values.</li>
+<li>NOT using mutable data in most or all cases.</li>
+<li>函数式编程鼓励使用递归 (recursive)
+与递归数据结构。(支持尾递归优化)</li>
+<li>函数式编程中的 function 最贴近数学中对函数的原始定义。</li>
+<li>使用 <em>laziness</em> 的特性。</li>
+</ul>
+<p><br></p>
+<h2 id="anonymous-function">Anonymous Function</h2>
+<p>匿名函数是没有名字的函数，因此其可以很方便的作为其他函数的参数或者返回值。但无名也使得它<strong>无法进行递归</strong>；见之前
+function binding 的相关介绍：只有当函数有名字 <code>x0</code>
+时，才能将其加入环境以实现后续的递归。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="type">fn</span> <span class="variable">x</span> <span class="operator">=</span>&gt; e)</span><br></pre></td></tr></table></figure>
+<p>我们可以把关键字 <code>fun</code> 视为 <em>syntactic
+sugar</em>：下面这两个表达其实是一致的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">fun</span> <span class="variable">x</span> <span class="operator">=</span> e</span><br><span class="line"><span class="type">val</span> <span class="variable">x</span> <span class="operator">=</span> <span class="type">fn</span> <span class="variable">x</span> <span class="operator">=</span>&gt; e</span><br></pre></td></tr></table></figure>
+<p>在使用匿名函数时，要注意避免 unnecessary function wrapping：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">fun <span class="title function_">nth_tail_poor</span> <span class="params">(n, x)</span> = n_times((<span class="type">fn</span> <span class="variable">y</span> <span class="operator">=</span>&gt; tl y), n, x)</span><br><span class="line">fun <span class="title function_">nth_tail_neat</span> <span class="params">(n, x)</span> = n_times(tl, n, x)</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="currying">Currying</h2>
+<p>在 ML
+中，<strong>每一个函数只有一个参数</strong>；多参数函数的形参本质上是一个包含多个变量的
+tuple。</p>
+<p>然而除此之外，有另一种方式可以实现所谓的多参数，那就是函数的
+currying。即，通过匿名函数的嵌套实现类多参数函数结构，再通过语法糖进行等价转换。</p>
+<p>注意第三条语句是第二条语句的 <em>syntactic
+sugar</em>，三个函数的作用完全相同。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fun <span class="title function_">p</span><span class="params">(x, y, z)</span> = e</span><br><span class="line"><span class="type">fun</span> <span class="variable">curry_p</span> <span class="operator">=</span> <span class="type">fn</span> <span class="variable">x</span> <span class="operator">=</span>&gt; <span class="type">fn</span> <span class="variable">y</span> <span class="operator">=</span>&gt; <span class="type">fn</span> <span class="variable">z</span> <span class="operator">=</span>&gt; e</span><br><span class="line">fun curry_p2 x <span class="type">y</span> <span class="variable">z</span> <span class="operator">=</span> e</span><br></pre></td></tr></table></figure>
+<p>通过 currying，我们还能实现函数的部分化应用 (partial
+application)，从而消除 redundant arguments。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">fun curry_p x <span class="type">y</span> <span class="variable">z</span> <span class="operator">=</span> ... z</span><br><span class="line">fun partial_curry_p <span class="type">x</span> <span class="variable">y</span> <span class="operator">=</span> ...</span><br></pre></td></tr></table></figure>
+<p>基于 tuple 实现的多参数函数可以与 currying 多参数函数相互转换。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">fun uncurry f <span class="type">x</span> <span class="variable">y</span> <span class="operator">=</span> f(x, y)</span><br><span class="line">fun curry <span class="title function_">f</span> <span class="params">(x, y)</span> = f x y</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="lexical-scope">Lexical Scope</h2>
+<p>在 ML 中，函数的 evaluation 遵循这样一条铁律 (之前在 function binding
+部分中也介绍过)：</p>
+<div class="note info no-icon"><p><strong>The body of a function</strong> is evaluated in the
+environment where the function is <em>defined</em>, not the environment
+where the function is <em>called</em>.</p>
+</div>
+<p>也就是说，函数体的 evaluation 依赖的是函数各个函数 bindings
+与<strong>被定义时</strong>的环境。我们通过一个 silly example
+来认识这一点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">val</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">1</span></span><br><span class="line">fun <span class="type">f</span> <span class="variable">y</span> <span class="operator">=</span> x + y</span><br><span class="line"><span class="type">val</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">2</span></span><br><span class="line"><span class="type">val</span> <span class="variable">y</span> <span class="operator">=</span> <span class="number">3</span></span><br><span class="line"><span class="type">val</span> <span class="variable">z</span> <span class="operator">=</span> f (x+y)</span><br></pre></td></tr></table></figure>
+<p>变量 <code>z</code> 的值是 6，而不是 5。在调用函数 <code>f</code>
+的环境中，<code>x</code> 的值为 2，<code>y</code> 的值为
+3，因此函数的参数 evaluates to 5。而在 evaluate
+函数体时，我们参照的是函数 <code>f</code> 定义时的环境：在那里
+<code>x</code> 还未被 <em>shadow</em>，其值为 1。而参数 <code>y</code>
+又与 5 绑定，最后计算出来的值为 1 + 5 = 6。</p>
+<p>这样的 semantics，就是<strong>词法作用域 lexical
+scope</strong>。比较来说，函数体与参数均在调用处的环境被 evaluate
+的机制更加符合直觉，这种与 lexical scope 对立的 semantics
+称为<strong>动态作用域 dynamic scope</strong>。</p>
+<p>早期的编程语言大多是遵循 dynamic scope
+的，但是很快程序员就发现了其致命问题：变量的 <em>shadowing</em>
+常常会与这一机制产生冲突。一个最典型的例子如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">var</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">3</span></span><br><span class="line"><span class="type">fun</span> <span class="variable">f</span> <span class="operator">=</span> x + <span class="number">1</span> </span><br><span class="line"><span class="type">var</span> <span class="variable">x</span> <span class="operator">=</span> <span class="string">&quot;hello&quot;</span></span><br><span class="line"><span class="type">var</span> <span class="variable">y</span> <span class="operator">=</span> f</span><br></pre></td></tr></table></figure>
+<p>这一程序是 type-checked 的：<code>x : int</code>,
+<code>f : null -&gt; int</code>, <code>x (shadow) : string</code>,
+<code>y : int</code>；但在 dynamic scope 中，y = 3 +
+"hello"，这破坏了类型一致性。而在 lexical scope
+中这一程序则不会出现问题。</p>
+<p>dynamic scope 还会导致许多其他的问题 (见
+section3sum)，因此现在的绝大多数语言默认都采用 lexical scope 来作为函数
+evaluation 的准则。但 dynamic scope 并没有完全消失：</p>
+<ul>
+<li>少数语言 (如 Racket) 仍然提供对 dynamic scope 的支持。</li>
+<li>一些特殊的编程 feature (如 exception) 遵循的是 dynamic scope。</li>
+</ul>
+<div class="note info no-icon"><p>When an exception is raised, evaluation has to look up which handle
+expression should be evaluated. This "look up" is done using the
+<strong>dynamic call stack</strong>, with no regard for the lexical
+sturcture of the program.</p>
+</div>
+<p><br></p>
+<h2 id="environments-and-closures">Environments and Closures</h2>
+<p>我们一直强调在函数式编程中，All functions are
+values。那么这个“值”具体是什么呢？</p>
+<ul>
+<li>the <em>code</em> for the function.</li>
+<li>the <em>environment</em> that was current <em>when we created the
+function</em>.</li>
+</ul>
+<p>也就是说，function value 包括 <em>code</em> 与定义时的
+<em>environment</em> 两部分；这个 <em>pair</em> 被称为函数闭包
+<em>function closure</em> 或者闭包
+<em>closure</em>。闭包的定义也是符合词法作用域 lexical scope 的。</p>
+<p>我们不能单独访问 <em>pair</em> 中的任意一部分，对于 function
+value，我们能够执行的操作只有调用 call。这其实也是一种
+encapsulation。我们能够发现，<strong>the closure overall is closed —— it
+has everything it needs to produce a function result given a function
+argument.</strong></p>
+<p>举个例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">var</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">3</span></span><br><span class="line"><span class="type">fun</span> <span class="variable">f</span> <span class="operator">=</span> x + <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>the binding <code>fun f y = x + y</code> bound <code>f</code> to a
+closure.</p>
+<ul>
+<li>the code part is the function <code>fn y =&gt; x + y</code>.</li>
+<li>the environment part maps <code>x</code> to 1.</li>
+</ul>
+<p>在函数 <code>f</code> 闭包创建以后，无论在哪调用 <code>f</code>
+最终返回的值都是 4。闭包保证了 evaluate
+该函数的环境与调用它时的环境完全隔绝：这是对闭包的另一种理解。</p>
+<p>注意，lexical scope 词法作用域是目前大多数编程语言遵循的
+semantics；然而 closure 并不是所有语言都具有的；closure 是 function 的
+value，因此其在函数式编程语言中是最常见的。</p>
+<p><br></p>
+<h2 id="type-inference">Type Inference</h2>
+<p>type inference 是 ML 一个十分优雅的特性。在我接触过的所有
+(极其有限的) 语言中从未见过这个 feature。</p>
+<p>Java, C, ML 都是 <em>statically typed languages</em>
+(静态类型语言)。</p>
+<div class="note info no-icon"><p>Statically typed languages. Every binding has a type that is
+determined at <strong>compile-time</strong>; The type-checker is a
+compile-time procedure that either accepts or rejects a program.</p>
+</div>
+<p>与之相对的是 <em>dynamically typed language</em>，例如 Racket, Ruby,
+Python。动态类型语言在运行时才会确定 bindings
+的类型；因此在这些语言中类型错误是一种 run-time error 而非 compile-time
+error。</p>
+<p>与 Java 和 C 又不同，ML 的类型是隐式 (<em>implicitly typed</em>)
+的，即我们几乎不需要声明 binding 的类型。这个 feature
+真的非常的厉害，它使得：</p>
+<ul>
+<li>binding 声明的流程大大简化；我们可以完全把类型的问题抛在一边。</li>
+<li>多态类型 (polymorphic datatypes) 与参数多态 (parametric
+polymorphism) 可以很轻易地实现。</li>
+</ul>
+<p>这样做的代价就是，ML 的 type-checker
+远比其他显式类型语言的复杂。在程序员不具体声明 binding
+类型的前提下，type-checker 需要根据代码与 bindings
+之间的关系<strong>推断 (infer)</strong> 出所有可能的 <em>type
+annotations</em>。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p>Course textbook:</p>
+
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2023/07/14/prog-lan-1/" title="Programming Languages, UW, Part A">https://www.thisisxxz.com/2023/07/14/prog-lan-1/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | Programming Languages, UW, Part A](https://www.thisisxxz.com/2023/07/14/prog-lan-1/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/PL/" rel="tag"><i class="fa fa-tag"></i> PL</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/07/11/missing-sem-4/" rel="prev" title="The Missing Semester of CS Education, MIT - Metaprogramming">
+                  <i class="fa fa-chevron-left"></i> The Missing Semester of CS Education, MIT - Metaprogramming
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/07/14/prog-lan-1/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "你给我回来！";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "谁允许你进来的？";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -428,6 +428,351 @@ if not specified.</p>
       </tags>
   </entry>
   <entry>
+    <title>COMP3357 notes P3 - Hard Problems</title>
+    <url>/2023/06/05/Cryptography-COMP3357-3/</url>
+    <content><![CDATA[<p>COMP3357 digest 的 P3 部分 (P1 部分在<a href="https://thisisxxz.github.io/2023/05/25/Cryptography-COMP3357/">这里</a>，P2
+部分在<a href="https://thisisxxz.github.io/2023/06/02/Cryptography-COMP3357-2/">这里</a>)，主要介绍密码学中的几个困难问题
+(hard problems) 与一个重要的 cryptographic primitive: 单向函数 (one-way
+function).</p>
+<p>这一 Part 涉及到的困难问题 (Factoring problem, RSA problem, Discrete
+Logarithm problem, Diffie-Hellman problem) 的构建与 P2
+中的数论，群论知识密切相关，注意参考。</p>
+<span id="more"></span>
+<p>同样，与 CnBlogs
+中的笔记不同，这里不会详细的记载每个相关的知识点；只会尝试简略地总结一些能让未来的自己也会感到有趣，巧妙的内容
+(Eureka!)。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="hardness-of-mathematical-problems">Hardness of Mathematical
+Problems</h2>
+<p>When discussing <strong>hardness</strong> of mathematical problems
+with input some integer <span class="math inline">\(N\)</span>, we study
+asymptotics in terms of the <strong>input length</strong>.</p>
+<p>Integer <span class="math inline">\(N\)</span> will be assumed to be
+represented in binary. The <strong>running time</strong> of an algorithm
+taking as input an integer <span class="math inline">\(N\)</span> is
+measured in terms of <span class="math inline">\(||N||\)</span>, the
+length of the binary representation of <span class="math inline">\(N\)</span>.</p>
+<p>Note that <span class="math inline">\(||N||=\lfloor \log N
+\rfloor+1\)</span>.</p>
+<div class="note info no-icon"><p>A problem is considered to be <strong>easy</strong> if the running
+time of its algorithm is <strong>polynomial</strong> in <span class="math inline">\(||N||\)</span>.</p>
+</div>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>这里对数学问题困难性 (hardness) 的定义是建立在算法数论 (algorithmic
+number theory) 的视角上的。</p>
+<p>实际上，这个概念更贴近计算机领域而不是纯数学领域。如果从算法时间复杂度的角度来定义，就好理解多了：一个时间复杂度为
+<span class="math inline">\(O(\mathtt{poly}(n))\)</span>
+的算法是<strong>高效 (efficient)</strong> 的，对应的问题是<strong>简单
+(easy)</strong> 的。而时间复杂度为 <span class="math inline">\(O(\mathtt{exp}(n))\)</span> 的算法是<strong>低效
+(inefficient)</strong> 的，对应的问题是<strong>困难 (hard)</strong>
+的。</p>
+</blockquote>
+<p><br></p>
+<h2 id="factoring-problem">Factoring Problem</h2>
+<p>Factoring could be viewed as the inverse operation of multiplication.
+Multiplying two primes <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> as <span class="math inline">\(N=p\times q\)</span> is <strong>easy</strong>,
+while factorizing <span class="math inline">\(N\)</span> to derive <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> is <strong>hard</strong>.</p>
+<div class="note info no-icon"><p>Factoring the product of two primes: Given <span class="math inline">\(N=pq\)</span>, where <span class="math inline">\(p,q\)</span> are primes, find <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span>.</p>
+</div>
+<h3 id="factoring-experiment">Factoring Experiment</h3>
+<p>Cryptographically, the hardness of the factoring problem is indicated
+by the <strong>factoring experiment</strong> <span class="math inline">\(\mathtt{Factor}_{\mathscr{A},
+Genmodulus}(n)\)</span>, where GenModulus is an <strong>efficient
+(polynomial-time)</strong> algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs <span class="math inline">\((N,p,q)\)</span> where <span class="math inline">\(N=pq\)</span>, and <span class="math inline">\(p,q\)</span> are <span class="math inline">\(n\)</span>-bit primes except with negligible
+probability.</p>
+<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(N\)</span> needs to efficiently compute the
+corresponding <span class="math inline">\(p,q\)</span>.</p>
+<div class="note info no-icon"><p>Definition. Factoring is hard relative to GenModulus if for all
+<strong>probabilistic polynomial-time algorithm</strong> <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
+<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{Factor}_{\mathscr{A},
+GenModulus}(n)=1]\leq \varepsilon(n)\)</span>.</p>
+</div>
+<p><strong>The Factoring Assumption</strong> is the assumption that
+there exists a GenModulus relative to which factoring is hard.</p>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>这里对数学问题困难性的定义又与上面的算法数论 (algorithmic number
+theory)
+或计算机科学领域的定义不同，是以<strong>实验</strong>来描述的。是不是很有加密学的特色？</p>
+<p>这里还要注意一个概念：<strong>密码学假设
+(assumption)</strong>，它将某个数学问题的困难性归约到实验中的一个高效
+(efficient) 算法的存在性上。对于大数质因数分解问题 (Factoring
+problem)，其困难性被某个高效的 GenModulus 算法的存在保证。</p>
+</blockquote>
+<p><br></p>
+<h2 id="rsa-problem">RSA Problem</h2>
+<p>Given a modulus <span class="math inline">\(N\)</span> and integer
+<span class="math inline">\(e&gt;2\)</span>, such that <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>.</p>
+<p>By the Corollary 2 of the Fermat's Little Theorem (see it in P2), we
+know that exponentiation to the <span class="math inline">\(e\)</span>-th power mod <span class="math inline">\(N\)</span> is a <strong>permutation</strong> on
+<span class="math inline">\((\mathbb{Z}/N)^{*}\)</span>;</p>
+<p>For any <span class="math inline">\(y\in (\mathbb{Z}/N)^{*}\)</span>,
+let <span class="math inline">\([y^{1/e} \mod{N}]\)</span> be the unique
+element which yields <span class="math inline">\(y\)</span> when raised
+to the <span class="math inline">\(e\)</span>-th power mod <span class="math inline">\(N\)</span>, i.e., <strong>the <span class="math inline">\(e\)</span>-th root of <span class="math inline">\(y\)</span> mod <span class="math inline">\(N\)</span></strong>.</p>
+<p>If <span class="math inline">\(e\cdot d\equiv
+1\pmod{\varphi(N)}\)</span>, then raising to the <span class="math inline">\(d\)</span>-th power is the
+<strong>inverse</strong> of raising to the <span class="math inline">\(e\)</span>-th power, that is, for any <span class="math inline">\(g\in (\mathbb{Z}/N)^{*}\)</span>, <span class="math inline">\((g^e)^d \equiv g\pmod{N}\)</span>. Therefore, if
+<span class="math inline">\(y=g^e\)</span>, <span class="math inline">\(y^{1/e}=g=y^d\pmod{N}\)</span>.</p>
+<div class="note info no-icon"><p>RSA problem is essentially finding <span class="math inline">\(e\)</span>-th root of <span class="math inline">\(y\)</span> mod <span class="math inline">\(N\)</span>: Given <span class="math inline">\(N,e,y\)</span>, compute <span class="math inline">\([y^{1/e}\mod{N}]\)</span>. Note that <span class="math inline">\(e&gt;2\)</span> and <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>, <span class="math inline">\(\gcd(y, N)=1\)</span>.</p>
+</div>
+<h3 id="rsa-experiment">RSA Experiment</h3>
+<p>Similarly, we have the RSA experiment <span class="math inline">\(\mathtt{RSA}\)</span>-<span class="math inline">\(\mathtt{inv}_{\mathscr{A}, GenRSA}(n)\)</span>,
+where GenRSA is an efficient algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs a modulus <span class="math inline">\(N\)</span> that is the product of two <span class="math inline">\(n\)</span>-bit primes <span class="math inline">\(p,q\)</span>, as well as integers <span class="math inline">\(e,d&gt;0\)</span> with <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span> and <span class="math inline">\(ed\equiv 1\pmod{\varphi(N)}\)</span>.</p>
+<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(N,e\)</span> and a <u><strong>uniform</strong></u>
+<span class="math inline">\(y\in (\mathbb{Z}/N)^{*}\)</span> needs to
+efficiently compute the corresponding <span class="math inline">\(x\)</span>.</p>
+<div class="note info no-icon"><p>Definition. RSA problem is hard relative to GenRSA if for all
+probabilistic polynomial time algorithm <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
+<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{RSAinv}_{\mathscr{A},
+GenRSA}(n)=1]\leq \varepsilon(n)\)</span>.</p>
+</div>
+<p>The RSA Assumption is the assumption that there exists a GenRSA
+algorithm relative to which the RSA problem is hard. Note that GenRSA
+can be constructed from GenModulus.</p>
+<h3 id="rsa-and-factoring">RSA and Factoring</h3>
+<p>The hardness of RSA problem could be <strong>reduced</strong> to the
+hardness of factoring problem, which is to say, one could efficiently
+solve RSA problem if he could efficiently solve factoring problem.</p>
+<p>Assume there exists an efficient algorithm <span class="math inline">\(\mathscr{A}\)</span> that could factorize <span class="math inline">\(N\)</span> into two distinct primes <span class="math inline">\(p,q\)</span>, then we could construct an efficient
+<span class="math inline">\(\mathscr{A}&#39;\)</span> that could solve
+RSA problem.</p>
+<ul>
+<li><span class="math inline">\(\mathscr{A}&#39;\)</span> runs <span class="math inline">\(\mathscr{A}(N)\)</span> and obtain two
+<strong>distinct odd primes</strong> <span class="math inline">\(p,q\)</span> that <span class="math inline">\(N=pq\)</span>.</li>
+<li><span class="math inline">\(\mathscr{A}&#39;\)</span> simply
+computes <span class="math inline">\(\varphi(N)=(p-1)(q-1)\)</span>.</li>
+<li><span class="math inline">\(\mathscr{A}&#39;\)</span> computes <span class="math inline">\(d\equiv e^{-1}\pmod{\varphi(N)}\)</span> with
+extended Euclidean algorithm.</li>
+<li><span class="math inline">\(\mathscr{A}&#39;\)</span> could compute
+<span class="math inline">\(y^{1/e}\)</span> mod <span class="math inline">\(N\)</span> efficiently by computing <span class="math inline">\(y^d\)</span> mod <span class="math inline">\(N\)</span>.</li>
+</ul>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>RSA 问题本质上是<strong>求模意义下的 <span class="math inline">\(e\)</span> 次方根</strong>。注意 RSA 问题中的模数
+<span class="math inline">\(N\)</span> 是两个不同的大奇质数 <span class="math inline">\(p,q\)</span> 之积。</p>
+<p>RSA 问题的巧妙之处在于，利用群的 closure
+性质与费马小定理可得，<strong>模意义下的 <span class="math inline">\(e\)</span> 次方根与模意义下的 <span class="math inline">\(d\)</span> 次方幂是等价的</strong>；其中 <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>, <span class="math inline">\(d\equiv e^{-1} \pmod{\varphi(N)}\)</span>.
+也就是说，如果敌手得知 <span class="math inline">\(\varphi(N)\)</span>，那么他就能通过计算得出 <span class="math inline">\(d\)</span>，从而轻松解决 RSA 问题。</p>
+<p>然而得知 <span class="math inline">\(\varphi(N)\)</span>
+也是<strong>困难的</strong>；这由 Factoring problem
+的困难性保证。对于只有两个质因数 <span class="math inline">\(p,q\)</span> 的模数 <span class="math inline">\(N\)</span>, <span class="math inline">\(\varphi(N)=\varphi(pq)=\varphi(p)\varphi(q)=(p-1)(q-1)\)</span>。所以，得到
+<span class="math inline">\(\varphi(N)\)</span> 的前提是成功将 <span class="math inline">\(N\)</span> 分解为 <span class="math inline">\(p,q\)</span>。</p>
+<p>著名的 RSA 公钥加密就应用了这一性质：在该加密中，公钥 <span class="math inline">\(pk=e\)</span>, 私钥 <span class="math inline">\(sk=d\)</span>。加密 <span class="math inline">\(Enc_{pk}(m)=m^e\)</span>，解密 <span class="math inline">\(Dec_{sk}(c)=c^d\)</span> (均在 mod <span class="math inline">\(N\)</span> 意义下)。RSA
+问题的困难性保证了任意不持有私钥的敌手无法由密文 <span class="math inline">\(c=m^e\)</span> 破解消息 <span class="math inline">\(m\)</span> (即，得到 <span class="math inline">\(c\)</span> 在模 <span class="math inline">\(N\)</span> 意义下的 <span class="math inline">\(e\)</span> 次方根)。</p>
+</blockquote>
+<p><br></p>
+<h2 id="discrete-logarithm-problem">Discrete Logarithm Problem</h2>
+<p>Fix a <strong>cyclic</strong> group <span class="math inline">\(\mathbb{G}\)</span> of order <span class="math inline">\(q\)</span>, and generator <span class="math inline">\(g\in\mathbb{G}\)</span>. We know that <span class="math inline">\(\{g^0,g^1,...,g^{q-1}\}=\mathbb{G}\)</span>.</p>
+<p>Equilently, for every <span class="math inline">\(h\in\mathbb{G}\)</span>, there is a unique <span class="math inline">\(x\in \mathbb{Z}_q\)</span>, such that <span class="math inline">\(g^x=h\)</span>. We define <span class="math inline">\(\log_g{h}\)</span> to be this <span class="math inline">\(x\)</span>. This is the <strong>discrete
+logarithm</strong> of <span class="math inline">\(h\)</span> with
+respect to <span class="math inline">\(g\)</span> in the group <span class="math inline">\(\mathbb{G}\)</span>.</p>
+<div class="note info no-icon"><p><strong>Discrete Logarithm</strong> problem in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in \mathbb{G}\)</span> and
+<u><strong>uniform</strong></u> <span class="math inline">\(h\in
+\mathbb{G}\)</span>, compute <span class="math inline">\(\log_g{h}\)</span>.</p>
+</div>
+<h3 id="discrete-logarithm-experiment">Discrete-Logarithm
+Experiment</h3>
+<p>Similarly, we have the discrete-logarithm experiment <span class="math inline">\(\mathtt{DLog}_{\mathscr{A}, \mathscr{G}}
+(n)\)</span> where <span class="math inline">\(\mathscr{G}\)</span> is
+an efficient group-generation algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs a cyclic group <span class="math inline">\(\mathbb{G}\)</span>, its order <span class="math inline">\(q\)</span>, and a generator <span class="math inline">\(g\)</span>.</p>
+<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(\mathbb{G},q,g\)</span> and a
+<u><strong>uniform</strong></u> <span class="math inline">\(h\in\mathbb{G}\)</span> needs to efficiently
+compute correponding <span class="math inline">\(x\)</span>.</p>
+<div class="note info no-icon"><p>Definition. RSA problem is hard relative to <span class="math inline">\(\mathscr{G}\)</span> if for all probabilistic
+polynomial time algorithm <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
+<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{DLog}_{\mathscr{A},
+\mathscr{G}}(n)=1]\leq \varepsilon(n)\)</span>.</p>
+</div>
+<p>The Discrete Logarithm Assumption is the assumption that there exists
+a group-generation algorithm <span class="math inline">\(\mathscr{G}\)</span> relative to which the
+Discrete Logarithm problem is hard.</p>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>离散对数问题本质上是<strong>模意义下的对数运算</strong>。另外还需要注意一点，无论是
+RSA 实验还是离散对数实验，对敌手的<strong>挑战 (challenge)</strong>
+都是<strong>均匀随机 (uniform)</strong> 的。</p>
+<p>其实，RSA 问题 (模意义下的开次方运算) 与离散问题 (模意义下的对数运算)
+均可以视为幂运算 <span class="math inline">\(h=g^x\)</span>
+的<strong>逆运算</strong>：RSA 问题给出指数 <span class="math inline">\(x\)</span>，要求由 <span class="math inline">\(h\)</span> 计算底数 <span class="math inline">\(g=h^{1/x}\)</span>；而离散对数问题给出底数 <span class="math inline">\(g\)</span>，要求由 <span class="math inline">\(h\)</span> 计算指数 <span class="math inline">\(x=\log_g h\)</span>。</p>
+</blockquote>
+<p><br></p>
+<h2 id="diffie-hellman-problem">Diffie-Hellman Problem</h2>
+<p>Fix cyclic group <span class="math inline">\(\mathbb{G}\)</span> of
+order <span class="math inline">\(q\)</span>, and generator <span class="math inline">\(g\in\mathbb{G}\)</span>.</p>
+<p>Given elements <span class="math inline">\(h_1,h_2\in
+\mathbb{G}\)</span>, define Diiffie-Hellman function <span class="math inline">\(DH_g(h_1,h_2)=g^{\log_g h_1\cdot\log_g
+h_2}\)</span>. That is, if <span class="math inline">\(h_1=g^{x_1}\)</span>, <span class="math inline">\(h_2=g^{x_2}\)</span>, then <span class="math inline">\(DH_g(h_1,h_2)=g^{x_1\cdot x_2}\)</span>.</p>
+<div class="note info no-icon"><p>Computational Diffie-Hellman (CDH) in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in \mathbb{G}\)</span>, and
+<u><strong>uniform</strong></u> <span class="math inline">\(h_1,h_2\in\mathbb{G}\)</span>, compute <span class="math inline">\(DH_g(h_1,h_2)\)</span>.</p>
+<p>Decisional Diffie-Hellman (DDH) in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in\mathbb{G}\)</span>, and
+<u><strong>uniform</strong></u> <span class="math inline">\(h_1,h_2\in\mathbb{G}\)</span>,
+<strong>distinguish</strong> <span class="math inline">\(DH_g(h_1,h_2)\)</span> from a
+<u><strong>uniform</strong></u> group element <span class="math inline">\(h&#39;\in \mathbb{G}\)</span>.</p>
+</div>
+<p>CDH and DDH experiments could be constructed similarly so they are
+not covered here.</p>
+<p>It is easy to see that if one could solve Discrete Logarithm problem,
+he could also solve CDH problem; and if one could solve CDH problem, he
+could also solve DDH problem.</p>
+<p><strong>So DLog <span class="math inline">\(\to\)</span> CDH <span class="math inline">\(\to\)</span> DDH, the assumption is getting
+stronger and stronger, </strong> which is to say, if one could NOT solve
+DDH problem, it would be <strong>impossible</strong> for him to solve
+CDH or DLog problem.</p>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>Diffie-Hellman
+问题的困难性是由离散对数问题的困难性保证的。至于为什么要定义这样一个函数，是由于
+Diffie-Hellman 问题定义了<strong>两个可以暴露的量</strong> <span class="math inline">\(h_1,h_2\)</span>。当 Alice 与 Bob
+之间需要进行多次信息传输时，利用 Diffie-Hellman
+问题的困难性可以很好的隐藏秘密信息。</p>
+<p>以著名的 <strong>Diffie-Hellman Key-exchange Protocol
+(密钥交换协议)</strong> 为例：Alice 选择某个 <span class="math inline">\(x_1\)</span>，并向 Bob 发送 <span class="math inline">\(h_1=g^{x_1}\)</span>；而 Bob 选择某个 <span class="math inline">\(x_2\)</span>，并向 Alice 发送 <span class="math inline">\(h_2=g^{x_2}\)</span>。这样，Bob 与 Alice
+双方都可以计算出密钥 <span class="math inline">\(k=g^{x_1x_2}=h_1^{x_2}=h_2^{x_1}\)</span>，密钥交换成功。而
+Diffie-Hellman 问题的困难性保证窃听到 transcript <span class="math inline">\(h_1,h_2\)</span> 的敌手无法据此求出 <span class="math inline">\(k=DH_g(h_1,h_2)\)</span>.</p>
+</blockquote>
+<p><br></p>
+<h2 id="one-way-function">One-Way Function</h2>
+<p>One-Way Functions are a critical cryptographic primitive, that is
+both necessary and sufficient for private-key encryption and MACs.
+<strong>Informally</strong> speaking, a function <span class="math inline">\(f\)</span> is one-way if it is <strong>easy to
+compute but hard to invert</strong>.</p>
+<p>We formally define "hard to invert" with the inverting experiment
+<span class="math inline">\(\mathtt{Invert}_{\mathscr{A},
+f}(n)\)</span>.</p>
+<h3 id="the-inverting-experiment">The Inverting Experiment</h3>
+<ul>
+<li>Challenger <span class="math inline">\(\mathscr{C}\)</span> choose
+<u><strong>uniform</strong></u> <span class="math inline">\(x\in\{0,1\}^n\)</span>, and compute <span class="math inline">\(y:=f(x)\)</span>.</li>
+<li>Adversary <span class="math inline">\(\mathscr{A}\)</span> is given
+<span class="math inline">\(1^n\)</span> and <span class="math inline">\(y\)</span> as inputs. <span class="math inline">\(\mathscr{A}\)</span> outputs <span class="math inline">\(x&#39;\)</span>.</li>
+<li><span class="math inline">\(\mathscr{A}\)</span> succeeds and the
+experiment evaluates to <span class="math inline">\(1\)</span> if and
+only if <span class="math inline">\(f(x&#39;)=y\)</span>.</li>
+</ul>
+<p>Note that the <strong>preimage</strong> <span class="math inline">\(x&#39;\)</span> does NOT neccessarily have to
+equal <span class="math inline">\(x\)</span>, as long as <span class="math inline">\(f(x&#39;)=y\)</span>.</p>
+<div class="note info no-icon"><p>Definition. A function <span class="math inline">\(f:\{0,1\}^{*}\to
+\{0,1\}^{*}\)</span> is <strong>one-way</strong> if the following two
+conditions hold:</p>
+<ul>
+<li>(<strong>Easy to compute</strong>): There is a polynomial-time
+algorithm that on input <span class="math inline">\(x\)</span> outputs
+<span class="math inline">\(f(x)\)</span>.</li>
+<li>(<strong>Hard to invert</strong>): For all PPT algorithm <span class="math inline">\(\mathscr{A}\)</span> there is a negligible
+function <span class="math inline">\(\varepsilon(n)\)</span> such that:
+<span class="math inline">\(\Pr[\mathtt{Invert}_{\mathscr{A}.
+f}(n)=1]\leq \varepsilon(n)\)</span>.</li>
+</ul>
+</div>
+<h3 id="one-way-functions-based-on-assumptions">One-Way Functions Based
+on Assumptions</h3>
+<p>We could construct one-way functions based on the above four
+assumptions (factoring assumption, RSA assumption, discrete logarithm
+assumption, Diffie-Hellman assumption).</p>
+<p>We illustrate this by using <strong>factoring assumption</strong> to
+construct a one-way function.</p>
+<p>Given <span class="math inline">\(1^n\)</span> and GenModulus, define
+the (deterministic) function <span class="math inline">\(f_{Gen}\)</span> as follows:</p>
+<ul>
+<li>Input: A random tage: string <span class="math inline">\(x\)</span>
+of length <span class="math inline">\(n\)</span></li>
+<li>Output: Integer <span class="math inline">\(N\)</span>.</li>
+<li>Compute <span class="math inline">\((N,p,q):=GenModulus(1^n;x)\)</span> and return
+<span class="math inline">\(N\)</span>.</li>
+</ul>
+<div class="note info no-icon"><p>Theorem. If the Factoring problem is hard relative to GenModulus,
+then <span class="math inline">\(f_{Gen}\)</span> is one-way.</p>
+</div>
+<h3 id="hard-core-predicates">Hard-Core Predicates</h3>
+<p>For a one-way function <span class="math inline">\(f\)</span>, it
+does not exist any PPT adversary that could efficiently invert it.
+However, the <strong>partial information</strong> of the preimage may be
+easily revealed.</p>
+<p>Consider the function <span class="math inline">\(f:\{0,1\}^{2n}\to
+\{0,1\}^{2n}\)</span> and one-way function <span class="math inline">\(g:\{0,1\}^n\to \{0,1\}^n\)</span>. We could define
+<span class="math inline">\(f(x,y)=g(x)||y\)</span>. Since <span class="math inline">\(g\)</span> is one-way, it is trivial that <span class="math inline">\(f\)</span> is also one-way. However, it is easy to
+know the last <span class="math inline">\(n\)</span> bits of the
+preimage are exactly the last <span class="math inline">\(n\)</span>
+bits of <span class="math inline">\(f(x,y)\)</span>.</p>
+<p>Though <span class="math inline">\(f\)</span> is one-way, half of the
+information about the preimage is revealed.</p>
+<p>We define hard-core predicate <span class="math inline">\(hc\)</span>
+of a one-way function as <strong>the bit that could NEVER be
+revealed.</strong> Informally speaking, <span class="math inline">\(hc(x)\)</span> is <strong>a bit</strong> that is
+efficiently computable given <span class="math inline">\(x\)</span>, but
+hard to compute given <span class="math inline">\(f(x)\)</span>.</p>
+<div class="note info no-icon"><p>Definition. A function <span class="math inline">\(hc:\{0,1\}^{*}\to\{0,1\}\)</span> is a hard-core
+predicate of a function <span class="math inline">\(f\)</span> if:</p>
+<ul>
+<li>hc can be computed in polynomial time.</li>
+<li>For every probabilistic polynomial-time algorithm <span class="math inline">\(\mathscr{A}\)</span> there is a negligible
+function <span class="math inline">\(\varepsilon(n)\)</span> such that
+<span class="math inline">\(\Pr_{x\leftarrow
+\{0,1\}^n}[\mathscr{A}(1^n,f(x))=hc(x)]\leq
+1/2+\varepsilon(n)\)</span>.</li>
+</ul>
+</div>
+<p><strong>A hard-core predicate for the RSA problem is the least
+significant bit.</strong> That is to say, compute <span class="math inline">\(lsb(x)\)</span> given <span class="math inline">\(y=[x^e\mod{N}]\)</span> is hard.</p>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>做了这么长的铺垫，终于来到了单向函数 (one-way function)
+的介绍。我觉得单向函数是密码学中最重要的概念之一，它的定义体现了密码学的核心思想——
+<strong>Easy to compute, hard to invert.</strong></p>
+<p>首先来谈谈它的存在性。之前介绍的三个数学难题 (hard problems)
+都很符合单向函数的定义；Factoring
+problem，质数相乘容易，质因数分解难；RSA
+problem，模意义下幂运算简单，开方运算难；Discrete Logarithm
+problem，模意义下幂运算简单，对数运算难；因此，由这些难题的猜想
+(assumptions) 构造单向函数再自然不过。</p>
+<p>最后谈谈它的意义。密码学中，加密方案 (encryption)，消息验证码
+(MAC)，数字签名 (digital signature) 等加密学原语 (cryptographic
+primitives) 本质上是一个单向函数构建的过程。更具体一点说，是一个
+<u><strong>单向陷门函数 (trapdoor one-way function)</strong></u>
+的构建。所谓<strong>陷门 (trapdoor)</strong> 是指，存在某个 <span class="math inline">\(z\)</span> 使得计算原像 <span class="math inline">\(x=f^{-1}(y)\)</span> 简单，则该 <span class="math inline">\(z\)</span> 称为函数的陷门。</p>
+<p>一个单向陷门函数有以下性质：(1) 单向性 (2)
+存在陷门。这是否和某些原语的构造十分相似？以公钥加密 (或是 CPA
+安全的私钥加密) 为例，加密消息 <span class="math inline">\(m\)</span>
+得到密文 <span class="math inline">\(c\)</span> 很容易：<span class="math inline">\(Enc_{pk}(m)\to c\)</span> (公钥 <span class="math inline">\(pk\)</span> 公开)；而由密文 <span class="math inline">\(c\)</span> 解密得到原文 <span class="math inline">\(m\)</span> 却很困难。此为<strong>单向性
+(one-way)</strong>。而倘若知道私钥 <span class="math inline">\(sk\)</span>，由密文 <span class="math inline">\(c\)</span> 解密得到原文 <span class="math inline">\(m\)</span> 的过程就非常简单：<span class="math inline">\(Dec_{sk}(c)\to m\)</span>。因此，私钥 <span class="math inline">\(sk\)</span> 是加密函数 <span class="math inline">\(Enc_{pk}\)</span> 的<strong>陷门
+(trapdoor)</strong>。</p>
+</blockquote>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p>Code: COMP3357, Lecturer: Dr. Ravi. Ramanathan, TA: Zhang Chengru</p>
+<p>Course textbook:</p>
+<p><em>Introduction to Modern Cryptography (2nd edition)</em>, Katz, J.
+&amp; Lindell, Y., (2015), CRC Press, <a href="https://ebookcentral.proquest.com/lib/HKUHK/detail.action?docID=1619504">view</a></p>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>courses</category>
+        <category>Cryptography, HKU</category>
+      </categories>
+      <tags>
+        <tag>cryptography</tag>
+        <tag>course notes</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>COMP3357 notes P1 - Cryptographic Primitives</title>
     <url>/2023/06/02/Cryptography-COMP3357/</url>
     <content><![CDATA[<p>这一学期糊里糊涂选到了 CS 的高阶课
@@ -901,351 +1246,6 @@ if not specified.</p>
         <tag>cryptography</tag>
         <tag>course notes</tag>
         <tag>encryption</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>COMP3357 notes P3 - Hard Problems</title>
-    <url>/2023/06/05/Cryptography-COMP3357-3/</url>
-    <content><![CDATA[<p>COMP3357 digest 的 P3 部分 (P1 部分在<a href="https://thisisxxz.github.io/2023/05/25/Cryptography-COMP3357/">这里</a>，P2
-部分在<a href="https://thisisxxz.github.io/2023/06/02/Cryptography-COMP3357-2/">这里</a>)，主要介绍密码学中的几个困难问题
-(hard problems) 与一个重要的 cryptographic primitive: 单向函数 (one-way
-function).</p>
-<p>这一 Part 涉及到的困难问题 (Factoring problem, RSA problem, Discrete
-Logarithm problem, Diffie-Hellman problem) 的构建与 P2
-中的数论，群论知识密切相关，注意参考。</p>
-<span id="more"></span>
-<p>同样，与 CnBlogs
-中的笔记不同，这里不会详细的记载每个相关的知识点；只会尝试简略地总结一些能让未来的自己也会感到有趣，巧妙的内容
-(Eureka!)。</p>
-<p><br></p>
-<div class="note warning"><p>  This article is a self-administered course note.</p>
-<p>  It will <strong>NOT</strong> cover any exam or assignment related
-content.</p>
-</div>
-<p><br></p>
-<h2 id="hardness-of-mathematical-problems">Hardness of Mathematical
-Problems</h2>
-<p>When discussing <strong>hardness</strong> of mathematical problems
-with input some integer <span class="math inline">\(N\)</span>, we study
-asymptotics in terms of the <strong>input length</strong>.</p>
-<p>Integer <span class="math inline">\(N\)</span> will be assumed to be
-represented in binary. The <strong>running time</strong> of an algorithm
-taking as input an integer <span class="math inline">\(N\)</span> is
-measured in terms of <span class="math inline">\(||N||\)</span>, the
-length of the binary representation of <span class="math inline">\(N\)</span>.</p>
-<p>Note that <span class="math inline">\(||N||=\lfloor \log N
-\rfloor+1\)</span>.</p>
-<div class="note info no-icon"><p>A problem is considered to be <strong>easy</strong> if the running
-time of its algorithm is <strong>polynomial</strong> in <span class="math inline">\(||N||\)</span>.</p>
-</div>
-<p><br></p>
-<blockquote>
-<p>Eureka moment!</p>
-<p>这里对数学问题困难性 (hardness) 的定义是建立在算法数论 (algorithmic
-number theory) 的视角上的。</p>
-<p>实际上，这个概念更贴近计算机领域而不是纯数学领域。如果从算法时间复杂度的角度来定义，就好理解多了：一个时间复杂度为
-<span class="math inline">\(O(\mathtt{poly}(n))\)</span>
-的算法是<strong>高效 (efficient)</strong> 的，对应的问题是<strong>简单
-(easy)</strong> 的。而时间复杂度为 <span class="math inline">\(O(\mathtt{exp}(n))\)</span> 的算法是<strong>低效
-(inefficient)</strong> 的，对应的问题是<strong>困难 (hard)</strong>
-的。</p>
-</blockquote>
-<p><br></p>
-<h2 id="factoring-problem">Factoring Problem</h2>
-<p>Factoring could be viewed as the inverse operation of multiplication.
-Multiplying two primes <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> as <span class="math inline">\(N=p\times q\)</span> is <strong>easy</strong>,
-while factorizing <span class="math inline">\(N\)</span> to derive <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> is <strong>hard</strong>.</p>
-<div class="note info no-icon"><p>Factoring the product of two primes: Given <span class="math inline">\(N=pq\)</span>, where <span class="math inline">\(p,q\)</span> are primes, find <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span>.</p>
-</div>
-<h3 id="factoring-experiment">Factoring Experiment</h3>
-<p>Cryptographically, the hardness of the factoring problem is indicated
-by the <strong>factoring experiment</strong> <span class="math inline">\(\mathtt{Factor}_{\mathscr{A},
-Genmodulus}(n)\)</span>, where GenModulus is an <strong>efficient
-(polynomial-time)</strong> algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs <span class="math inline">\((N,p,q)\)</span> where <span class="math inline">\(N=pq\)</span>, and <span class="math inline">\(p,q\)</span> are <span class="math inline">\(n\)</span>-bit primes except with negligible
-probability.</p>
-<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(N\)</span> needs to efficiently compute the
-corresponding <span class="math inline">\(p,q\)</span>.</p>
-<div class="note info no-icon"><p>Definition. Factoring is hard relative to GenModulus if for all
-<strong>probabilistic polynomial-time algorithm</strong> <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
-<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{Factor}_{\mathscr{A},
-GenModulus}(n)=1]\leq \varepsilon(n)\)</span>.</p>
-</div>
-<p><strong>The Factoring Assumption</strong> is the assumption that
-there exists a GenModulus relative to which factoring is hard.</p>
-<p><br></p>
-<blockquote>
-<p>Eureka moment!</p>
-<p>这里对数学问题困难性的定义又与上面的算法数论 (algorithmic number
-theory)
-或计算机科学领域的定义不同，是以<strong>实验</strong>来描述的。是不是很有加密学的特色？</p>
-<p>这里还要注意一个概念：<strong>密码学假设
-(assumption)</strong>，它将某个数学问题的困难性归约到实验中的一个高效
-(efficient) 算法的存在性上。对于大数质因数分解问题 (Factoring
-problem)，其困难性被某个高效的 GenModulus 算法的存在保证。</p>
-</blockquote>
-<p><br></p>
-<h2 id="rsa-problem">RSA Problem</h2>
-<p>Given a modulus <span class="math inline">\(N\)</span> and integer
-<span class="math inline">\(e&gt;2\)</span>, such that <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>.</p>
-<p>By the Corollary 2 of the Fermat's Little Theorem (see it in P2), we
-know that exponentiation to the <span class="math inline">\(e\)</span>-th power mod <span class="math inline">\(N\)</span> is a <strong>permutation</strong> on
-<span class="math inline">\((\mathbb{Z}/N)^{*}\)</span>;</p>
-<p>For any <span class="math inline">\(y\in (\mathbb{Z}/N)^{*}\)</span>,
-let <span class="math inline">\([y^{1/e} \mod{N}]\)</span> be the unique
-element which yields <span class="math inline">\(y\)</span> when raised
-to the <span class="math inline">\(e\)</span>-th power mod <span class="math inline">\(N\)</span>, i.e., <strong>the <span class="math inline">\(e\)</span>-th root of <span class="math inline">\(y\)</span> mod <span class="math inline">\(N\)</span></strong>.</p>
-<p>If <span class="math inline">\(e\cdot d\equiv
-1\pmod{\varphi(N)}\)</span>, then raising to the <span class="math inline">\(d\)</span>-th power is the
-<strong>inverse</strong> of raising to the <span class="math inline">\(e\)</span>-th power, that is, for any <span class="math inline">\(g\in (\mathbb{Z}/N)^{*}\)</span>, <span class="math inline">\((g^e)^d \equiv g\pmod{N}\)</span>. Therefore, if
-<span class="math inline">\(y=g^e\)</span>, <span class="math inline">\(y^{1/e}=g=y^d\pmod{N}\)</span>.</p>
-<div class="note info no-icon"><p>RSA problem is essentially finding <span class="math inline">\(e\)</span>-th root of <span class="math inline">\(y\)</span> mod <span class="math inline">\(N\)</span>: Given <span class="math inline">\(N,e,y\)</span>, compute <span class="math inline">\([y^{1/e}\mod{N}]\)</span>. Note that <span class="math inline">\(e&gt;2\)</span> and <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>, <span class="math inline">\(\gcd(y, N)=1\)</span>.</p>
-</div>
-<h3 id="rsa-experiment">RSA Experiment</h3>
-<p>Similarly, we have the RSA experiment <span class="math inline">\(\mathtt{RSA}\)</span>-<span class="math inline">\(\mathtt{inv}_{\mathscr{A}, GenRSA}(n)\)</span>,
-where GenRSA is an efficient algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs a modulus <span class="math inline">\(N\)</span> that is the product of two <span class="math inline">\(n\)</span>-bit primes <span class="math inline">\(p,q\)</span>, as well as integers <span class="math inline">\(e,d&gt;0\)</span> with <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span> and <span class="math inline">\(ed\equiv 1\pmod{\varphi(N)}\)</span>.</p>
-<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(N,e\)</span> and a <u><strong>uniform</strong></u>
-<span class="math inline">\(y\in (\mathbb{Z}/N)^{*}\)</span> needs to
-efficiently compute the corresponding <span class="math inline">\(x\)</span>.</p>
-<div class="note info no-icon"><p>Definition. RSA problem is hard relative to GenRSA if for all
-probabilistic polynomial time algorithm <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
-<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{RSAinv}_{\mathscr{A},
-GenRSA}(n)=1]\leq \varepsilon(n)\)</span>.</p>
-</div>
-<p>The RSA Assumption is the assumption that there exists a GenRSA
-algorithm relative to which the RSA problem is hard. Note that GenRSA
-can be constructed from GenModulus.</p>
-<h3 id="rsa-and-factoring">RSA and Factoring</h3>
-<p>The hardness of RSA problem could be <strong>reduced</strong> to the
-hardness of factoring problem, which is to say, one could efficiently
-solve RSA problem if he could efficiently solve factoring problem.</p>
-<p>Assume there exists an efficient algorithm <span class="math inline">\(\mathscr{A}\)</span> that could factorize <span class="math inline">\(N\)</span> into two distinct primes <span class="math inline">\(p,q\)</span>, then we could construct an efficient
-<span class="math inline">\(\mathscr{A}&#39;\)</span> that could solve
-RSA problem.</p>
-<ul>
-<li><span class="math inline">\(\mathscr{A}&#39;\)</span> runs <span class="math inline">\(\mathscr{A}(N)\)</span> and obtain two
-<strong>distinct odd primes</strong> <span class="math inline">\(p,q\)</span> that <span class="math inline">\(N=pq\)</span>.</li>
-<li><span class="math inline">\(\mathscr{A}&#39;\)</span> simply
-computes <span class="math inline">\(\varphi(N)=(p-1)(q-1)\)</span>.</li>
-<li><span class="math inline">\(\mathscr{A}&#39;\)</span> computes <span class="math inline">\(d\equiv e^{-1}\pmod{\varphi(N)}\)</span> with
-extended Euclidean algorithm.</li>
-<li><span class="math inline">\(\mathscr{A}&#39;\)</span> could compute
-<span class="math inline">\(y^{1/e}\)</span> mod <span class="math inline">\(N\)</span> efficiently by computing <span class="math inline">\(y^d\)</span> mod <span class="math inline">\(N\)</span>.</li>
-</ul>
-<p><br></p>
-<blockquote>
-<p>Eureka moment!</p>
-<p>RSA 问题本质上是<strong>求模意义下的 <span class="math inline">\(e\)</span> 次方根</strong>。注意 RSA 问题中的模数
-<span class="math inline">\(N\)</span> 是两个不同的大奇质数 <span class="math inline">\(p,q\)</span> 之积。</p>
-<p>RSA 问题的巧妙之处在于，利用群的 closure
-性质与费马小定理可得，<strong>模意义下的 <span class="math inline">\(e\)</span> 次方根与模意义下的 <span class="math inline">\(d\)</span> 次方幂是等价的</strong>；其中 <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>, <span class="math inline">\(d\equiv e^{-1} \pmod{\varphi(N)}\)</span>.
-也就是说，如果敌手得知 <span class="math inline">\(\varphi(N)\)</span>，那么他就能通过计算得出 <span class="math inline">\(d\)</span>，从而轻松解决 RSA 问题。</p>
-<p>然而得知 <span class="math inline">\(\varphi(N)\)</span>
-也是<strong>困难的</strong>；这由 Factoring problem
-的困难性保证。对于只有两个质因数 <span class="math inline">\(p,q\)</span> 的模数 <span class="math inline">\(N\)</span>, <span class="math inline">\(\varphi(N)=\varphi(pq)=\varphi(p)\varphi(q)=(p-1)(q-1)\)</span>。所以，得到
-<span class="math inline">\(\varphi(N)\)</span> 的前提是成功将 <span class="math inline">\(N\)</span> 分解为 <span class="math inline">\(p,q\)</span>。</p>
-<p>著名的 RSA 公钥加密就应用了这一性质：在该加密中，公钥 <span class="math inline">\(pk=e\)</span>, 私钥 <span class="math inline">\(sk=d\)</span>。加密 <span class="math inline">\(Enc_{pk}(m)=m^e\)</span>，解密 <span class="math inline">\(Dec_{sk}(c)=c^d\)</span> (均在 mod <span class="math inline">\(N\)</span> 意义下)。RSA
-问题的困难性保证了任意不持有私钥的敌手无法由密文 <span class="math inline">\(c=m^e\)</span> 破解消息 <span class="math inline">\(m\)</span> (即，得到 <span class="math inline">\(c\)</span> 在模 <span class="math inline">\(N\)</span> 意义下的 <span class="math inline">\(e\)</span> 次方根)。</p>
-</blockquote>
-<p><br></p>
-<h2 id="discrete-logarithm-problem">Discrete Logarithm Problem</h2>
-<p>Fix a <strong>cyclic</strong> group <span class="math inline">\(\mathbb{G}\)</span> of order <span class="math inline">\(q\)</span>, and generator <span class="math inline">\(g\in\mathbb{G}\)</span>. We know that <span class="math inline">\(\{g^0,g^1,...,g^{q-1}\}=\mathbb{G}\)</span>.</p>
-<p>Equilently, for every <span class="math inline">\(h\in\mathbb{G}\)</span>, there is a unique <span class="math inline">\(x\in \mathbb{Z}_q\)</span>, such that <span class="math inline">\(g^x=h\)</span>. We define <span class="math inline">\(\log_g{h}\)</span> to be this <span class="math inline">\(x\)</span>. This is the <strong>discrete
-logarithm</strong> of <span class="math inline">\(h\)</span> with
-respect to <span class="math inline">\(g\)</span> in the group <span class="math inline">\(\mathbb{G}\)</span>.</p>
-<div class="note info no-icon"><p><strong>Discrete Logarithm</strong> problem in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in \mathbb{G}\)</span> and
-<u><strong>uniform</strong></u> <span class="math inline">\(h\in
-\mathbb{G}\)</span>, compute <span class="math inline">\(\log_g{h}\)</span>.</p>
-</div>
-<h3 id="discrete-logarithm-experiment">Discrete-Logarithm
-Experiment</h3>
-<p>Similarly, we have the discrete-logarithm experiment <span class="math inline">\(\mathtt{DLog}_{\mathscr{A}, \mathscr{G}}
-(n)\)</span> where <span class="math inline">\(\mathscr{G}\)</span> is
-an efficient group-generation algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs a cyclic group <span class="math inline">\(\mathbb{G}\)</span>, its order <span class="math inline">\(q\)</span>, and a generator <span class="math inline">\(g\)</span>.</p>
-<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(\mathbb{G},q,g\)</span> and a
-<u><strong>uniform</strong></u> <span class="math inline">\(h\in\mathbb{G}\)</span> needs to efficiently
-compute correponding <span class="math inline">\(x\)</span>.</p>
-<div class="note info no-icon"><p>Definition. RSA problem is hard relative to <span class="math inline">\(\mathscr{G}\)</span> if for all probabilistic
-polynomial time algorithm <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
-<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{DLog}_{\mathscr{A},
-\mathscr{G}}(n)=1]\leq \varepsilon(n)\)</span>.</p>
-</div>
-<p>The Discrete Logarithm Assumption is the assumption that there exists
-a group-generation algorithm <span class="math inline">\(\mathscr{G}\)</span> relative to which the
-Discrete Logarithm problem is hard.</p>
-<p><br></p>
-<blockquote>
-<p>Eureka moment!</p>
-<p>离散对数问题本质上是<strong>模意义下的对数运算</strong>。另外还需要注意一点，无论是
-RSA 实验还是离散对数实验，对敌手的<strong>挑战 (challenge)</strong>
-都是<strong>均匀随机 (uniform)</strong> 的。</p>
-<p>其实，RSA 问题 (模意义下的开次方运算) 与离散问题 (模意义下的对数运算)
-均可以视为幂运算 <span class="math inline">\(h=g^x\)</span>
-的<strong>逆运算</strong>：RSA 问题给出指数 <span class="math inline">\(x\)</span>，要求由 <span class="math inline">\(h\)</span> 计算底数 <span class="math inline">\(g=h^{1/x}\)</span>；而离散对数问题给出底数 <span class="math inline">\(g\)</span>，要求由 <span class="math inline">\(h\)</span> 计算指数 <span class="math inline">\(x=\log_g h\)</span>。</p>
-</blockquote>
-<p><br></p>
-<h2 id="diffie-hellman-problem">Diffie-Hellman Problem</h2>
-<p>Fix cyclic group <span class="math inline">\(\mathbb{G}\)</span> of
-order <span class="math inline">\(q\)</span>, and generator <span class="math inline">\(g\in\mathbb{G}\)</span>.</p>
-<p>Given elements <span class="math inline">\(h_1,h_2\in
-\mathbb{G}\)</span>, define Diiffie-Hellman function <span class="math inline">\(DH_g(h_1,h_2)=g^{\log_g h_1\cdot\log_g
-h_2}\)</span>. That is, if <span class="math inline">\(h_1=g^{x_1}\)</span>, <span class="math inline">\(h_2=g^{x_2}\)</span>, then <span class="math inline">\(DH_g(h_1,h_2)=g^{x_1\cdot x_2}\)</span>.</p>
-<div class="note info no-icon"><p>Computational Diffie-Hellman (CDH) in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in \mathbb{G}\)</span>, and
-<u><strong>uniform</strong></u> <span class="math inline">\(h_1,h_2\in\mathbb{G}\)</span>, compute <span class="math inline">\(DH_g(h_1,h_2)\)</span>.</p>
-<p>Decisional Diffie-Hellman (DDH) in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in\mathbb{G}\)</span>, and
-<u><strong>uniform</strong></u> <span class="math inline">\(h_1,h_2\in\mathbb{G}\)</span>,
-<strong>distinguish</strong> <span class="math inline">\(DH_g(h_1,h_2)\)</span> from a
-<u><strong>uniform</strong></u> group element <span class="math inline">\(h&#39;\in \mathbb{G}\)</span>.</p>
-</div>
-<p>CDH and DDH experiments could be constructed similarly so they are
-not covered here.</p>
-<p>It is easy to see that if one could solve Discrete Logarithm problem,
-he could also solve CDH problem; and if one could solve CDH problem, he
-could also solve DDH problem.</p>
-<p><strong>So DLog <span class="math inline">\(\to\)</span> CDH <span class="math inline">\(\to\)</span> DDH, the assumption is getting
-stronger and stronger, </strong> which is to say, if one could NOT solve
-DDH problem, it would be <strong>impossible</strong> for him to solve
-CDH or DLog problem.</p>
-<p><br></p>
-<blockquote>
-<p>Eureka moment!</p>
-<p>Diffie-Hellman
-问题的困难性是由离散对数问题的困难性保证的。至于为什么要定义这样一个函数，是由于
-Diffie-Hellman 问题定义了<strong>两个可以暴露的量</strong> <span class="math inline">\(h_1,h_2\)</span>。当 Alice 与 Bob
-之间需要进行多次信息传输时，利用 Diffie-Hellman
-问题的困难性可以很好的隐藏秘密信息。</p>
-<p>以著名的 <strong>Diffie-Hellman Key-exchange Protocol
-(密钥交换协议)</strong> 为例：Alice 选择某个 <span class="math inline">\(x_1\)</span>，并向 Bob 发送 <span class="math inline">\(h_1=g^{x_1}\)</span>；而 Bob 选择某个 <span class="math inline">\(x_2\)</span>，并向 Alice 发送 <span class="math inline">\(h_2=g^{x_2}\)</span>。这样，Bob 与 Alice
-双方都可以计算出密钥 <span class="math inline">\(k=g^{x_1x_2}=h_1^{x_2}=h_2^{x_1}\)</span>，密钥交换成功。而
-Diffie-Hellman 问题的困难性保证窃听到 transcript <span class="math inline">\(h_1,h_2\)</span> 的敌手无法据此求出 <span class="math inline">\(k=DH_g(h_1,h_2)\)</span>.</p>
-</blockquote>
-<p><br></p>
-<h2 id="one-way-function">One-Way Function</h2>
-<p>One-Way Functions are a critical cryptographic primitive, that is
-both necessary and sufficient for private-key encryption and MACs.
-<strong>Informally</strong> speaking, a function <span class="math inline">\(f\)</span> is one-way if it is <strong>easy to
-compute but hard to invert</strong>.</p>
-<p>We formally define "hard to invert" with the inverting experiment
-<span class="math inline">\(\mathtt{Invert}_{\mathscr{A},
-f}(n)\)</span>.</p>
-<h3 id="the-inverting-experiment">The Inverting Experiment</h3>
-<ul>
-<li>Challenger <span class="math inline">\(\mathscr{C}\)</span> choose
-<u><strong>uniform</strong></u> <span class="math inline">\(x\in\{0,1\}^n\)</span>, and compute <span class="math inline">\(y:=f(x)\)</span>.</li>
-<li>Adversary <span class="math inline">\(\mathscr{A}\)</span> is given
-<span class="math inline">\(1^n\)</span> and <span class="math inline">\(y\)</span> as inputs. <span class="math inline">\(\mathscr{A}\)</span> outputs <span class="math inline">\(x&#39;\)</span>.</li>
-<li><span class="math inline">\(\mathscr{A}\)</span> succeeds and the
-experiment evaluates to <span class="math inline">\(1\)</span> if and
-only if <span class="math inline">\(f(x&#39;)=y\)</span>.</li>
-</ul>
-<p>Note that the <strong>preimage</strong> <span class="math inline">\(x&#39;\)</span> does NOT neccessarily have to
-equal <span class="math inline">\(x\)</span>, as long as <span class="math inline">\(f(x&#39;)=y\)</span>.</p>
-<div class="note info no-icon"><p>Definition. A function <span class="math inline">\(f:\{0,1\}^{*}\to
-\{0,1\}^{*}\)</span> is <strong>one-way</strong> if the following two
-conditions hold:</p>
-<ul>
-<li>(<strong>Easy to compute</strong>): There is a polynomial-time
-algorithm that on input <span class="math inline">\(x\)</span> outputs
-<span class="math inline">\(f(x)\)</span>.</li>
-<li>(<strong>Hard to invert</strong>): For all PPT algorithm <span class="math inline">\(\mathscr{A}\)</span> there is a negligible
-function <span class="math inline">\(\varepsilon(n)\)</span> such that:
-<span class="math inline">\(\Pr[\mathtt{Invert}_{\mathscr{A}.
-f}(n)=1]\leq \varepsilon(n)\)</span>.</li>
-</ul>
-</div>
-<h3 id="one-way-functions-based-on-assumptions">One-Way Functions Based
-on Assumptions</h3>
-<p>We could construct one-way functions based on the above four
-assumptions (factoring assumption, RSA assumption, discrete logarithm
-assumption, Diffie-Hellman assumption).</p>
-<p>We illustrate this by using <strong>factoring assumption</strong> to
-construct a one-way function.</p>
-<p>Given <span class="math inline">\(1^n\)</span> and GenModulus, define
-the (deterministic) function <span class="math inline">\(f_{Gen}\)</span> as follows:</p>
-<ul>
-<li>Input: A random tage: string <span class="math inline">\(x\)</span>
-of length <span class="math inline">\(n\)</span></li>
-<li>Output: Integer <span class="math inline">\(N\)</span>.</li>
-<li>Compute <span class="math inline">\((N,p,q):=GenModulus(1^n;x)\)</span> and return
-<span class="math inline">\(N\)</span>.</li>
-</ul>
-<div class="note info no-icon"><p>Theorem. If the Factoring problem is hard relative to GenModulus,
-then <span class="math inline">\(f_{Gen}\)</span> is one-way.</p>
-</div>
-<h3 id="hard-core-predicates">Hard-Core Predicates</h3>
-<p>For a one-way function <span class="math inline">\(f\)</span>, it
-does not exist any PPT adversary that could efficiently invert it.
-However, the <strong>partial information</strong> of the preimage may be
-easily revealed.</p>
-<p>Consider the function <span class="math inline">\(f:\{0,1\}^{2n}\to
-\{0,1\}^{2n}\)</span> and one-way function <span class="math inline">\(g:\{0,1\}^n\to \{0,1\}^n\)</span>. We could define
-<span class="math inline">\(f(x,y)=g(x)||y\)</span>. Since <span class="math inline">\(g\)</span> is one-way, it is trivial that <span class="math inline">\(f\)</span> is also one-way. However, it is easy to
-know the last <span class="math inline">\(n\)</span> bits of the
-preimage are exactly the last <span class="math inline">\(n\)</span>
-bits of <span class="math inline">\(f(x,y)\)</span>.</p>
-<p>Though <span class="math inline">\(f\)</span> is one-way, half of the
-information about the preimage is revealed.</p>
-<p>We define hard-core predicate <span class="math inline">\(hc\)</span>
-of a one-way function as <strong>the bit that could NEVER be
-revealed.</strong> Informally speaking, <span class="math inline">\(hc(x)\)</span> is <strong>a bit</strong> that is
-efficiently computable given <span class="math inline">\(x\)</span>, but
-hard to compute given <span class="math inline">\(f(x)\)</span>.</p>
-<div class="note info no-icon"><p>Definition. A function <span class="math inline">\(hc:\{0,1\}^{*}\to\{0,1\}\)</span> is a hard-core
-predicate of a function <span class="math inline">\(f\)</span> if:</p>
-<ul>
-<li>hc can be computed in polynomial time.</li>
-<li>For every probabilistic polynomial-time algorithm <span class="math inline">\(\mathscr{A}\)</span> there is a negligible
-function <span class="math inline">\(\varepsilon(n)\)</span> such that
-<span class="math inline">\(\Pr_{x\leftarrow
-\{0,1\}^n}[\mathscr{A}(1^n,f(x))=hc(x)]\leq
-1/2+\varepsilon(n)\)</span>.</li>
-</ul>
-</div>
-<p><strong>A hard-core predicate for the RSA problem is the least
-significant bit.</strong> That is to say, compute <span class="math inline">\(lsb(x)\)</span> given <span class="math inline">\(y=[x^e\mod{N}]\)</span> is hard.</p>
-<p><br></p>
-<blockquote>
-<p>Eureka moment!</p>
-<p>做了这么长的铺垫，终于来到了单向函数 (one-way function)
-的介绍。我觉得单向函数是密码学中最重要的概念之一，它的定义体现了密码学的核心思想——
-<strong>Easy to compute, hard to invert.</strong></p>
-<p>首先来谈谈它的存在性。之前介绍的三个数学难题 (hard problems)
-都很符合单向函数的定义；Factoring
-problem，质数相乘容易，质因数分解难；RSA
-problem，模意义下幂运算简单，开方运算难；Discrete Logarithm
-problem，模意义下幂运算简单，对数运算难；因此，由这些难题的猜想
-(assumptions) 构造单向函数再自然不过。</p>
-<p>最后谈谈它的意义。密码学中，加密方案 (encryption)，消息验证码
-(MAC)，数字签名 (digital signature) 等加密学原语 (cryptographic
-primitives) 本质上是一个单向函数构建的过程。更具体一点说，是一个
-<u><strong>单向陷门函数 (trapdoor one-way function)</strong></u>
-的构建。所谓<strong>陷门 (trapdoor)</strong> 是指，存在某个 <span class="math inline">\(z\)</span> 使得计算原像 <span class="math inline">\(x=f^{-1}(y)\)</span> 简单，则该 <span class="math inline">\(z\)</span> 称为函数的陷门。</p>
-<p>一个单向陷门函数有以下性质：(1) 单向性 (2)
-存在陷门。这是否和某些原语的构造十分相似？以公钥加密 (或是 CPA
-安全的私钥加密) 为例，加密消息 <span class="math inline">\(m\)</span>
-得到密文 <span class="math inline">\(c\)</span> 很容易：<span class="math inline">\(Enc_{pk}(m)\to c\)</span> (公钥 <span class="math inline">\(pk\)</span> 公开)；而由密文 <span class="math inline">\(c\)</span> 解密得到原文 <span class="math inline">\(m\)</span> 却很困难。此为<strong>单向性
-(one-way)</strong>。而倘若知道私钥 <span class="math inline">\(sk\)</span>，由密文 <span class="math inline">\(c\)</span> 解密得到原文 <span class="math inline">\(m\)</span> 的过程就非常简单：<span class="math inline">\(Dec_{sk}(c)\to m\)</span>。因此，私钥 <span class="math inline">\(sk\)</span> 是加密函数 <span class="math inline">\(Enc_{pk}\)</span> 的<strong>陷门
-(trapdoor)</strong>。</p>
-</blockquote>
-<p><br></p>
-<h2 id="reference">Reference</h2>
-<div class="note warning"><p>  This article is a self-administered course note.</p>
-<p>  References in the article are from corresponding course materials
-if not specified.</p>
-</div>
-<p>Course info:</p>
-<p>Code: COMP3357, Lecturer: Dr. Ravi. Ramanathan, TA: Zhang Chengru</p>
-<p>Course textbook:</p>
-<p><em>Introduction to Modern Cryptography (2nd edition)</em>, Katz, J.
-&amp; Lindell, Y., (2015), CRC Press, <a href="https://ebookcentral.proquest.com/lib/HKUHK/detail.action?docID=1619504">view</a></p>
-]]></content>
-      <categories>
-        <category>notes</category>
-        <category>courses</category>
-        <category>Cryptography, HKU</category>
-      </categories>
-      <tags>
-        <tag>cryptography</tag>
-        <tag>course notes</tag>
       </tags>
   </entry>
   <entry>
@@ -3324,164 +3324,6 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
-    <title>Hexo blog 搭建笔记</title>
-    <url>/2023/05/24/hexo-blog-study/</url>
-    <content><![CDATA[<p><strong>Hello Hexo! Hello NexT! Hello GitHub Pages!</strong></p>
-<p>终于有一个完完全全属于自己的博客啦！弄完了以后很有成就感。</p>
-<span id="more"></span>
-<p>接下来会陆陆续续把博客园上的一些 post
-搬过来。当然博客园也不会停止更新，会将自己比较用心记的笔记同步在两边发布。</p>
-<p>在 Hexo
-发布的第一篇博客，就简短的记录一下搭建的过程中遇到的问题和解决办法吧。</p>
-<h2 id="hexo">Hexo</h2>
-<p>Hexo 是一个博客框架，它允许我们使用 markdown
-撰写文章。在写好之后，Hexo
-将解析文章并快速生成静态网页。它提供了超多的插件 plugin
-和接口，还有很多好看的博客 theme (最有名的应该就是我现在用的这一套
-NexT)。</p>
-<p>使用 Hexo 需要 <code>Node.js</code> 环境与
-<code>git</code>。在必备的应用安装完成之后可以使用 npm 包下载器安装 Hexo
-<code>npm install -g hexo-cli</code>。</p>
-<p>在选择的根目录中打开 git Bash，使用 <code>hexo init</code> 命令初始化
-Hexo 本地框架。初始化后根目录将会生成 (仅列出较为重要的)：</p>
-<ul>
-<li>source 文件夹：储存所有网页的源码 (markdown 文件)。其中的
-<code>_post</code> 文件夹储存的是 post 的源码</li>
-<li>themes 文件夹：储存 Hexo 主题。</li>
-<li>scaffolds 文件夹：储存若干自定义的
-<code>[layout]</code>，即生成网页时采用的模板。初始 <code>layout</code>
-有三种，分别是 draft, post 与 page。</li>
-<li>public 文件夹：储存所有由 source 中源码生成的静态网页文件 (html
-文件与 css 文件)。</li>
-<li><code>_config.yml</code> 文件：Hexo
-基础样式自定义文件，提供了许多接口。注意与 themes 中的
-<code>_config.yml</code> 文件相区分；后续的<strong>非侵入式</strong>
-Hexo 主题自定义过程中，这两个配置文件是最为重要的。</li>
-</ul>
-<p><br></p>
-<h2 id="github-pages">GitHub Pages</h2>
-<p>我们可以将 Hexo 远程部署在 GitHub Pages
-上，且后续可以绑定新的域名。</p>
-<p>在本地配置 git 之后 (生成 RSA 密钥后 SSH 连接到
-<code>git@github.com</code>)，创建一个名称为
-<code>[username].github.io</code>
-的仓库。<code>[username].github.io</code> 是 Hexo 博客的网址。</p>
-<p>安装 <code>hexo-deployer-git</code> 插件，更改
-<code>_config.yml</code> 配置后即可将 Hexo 一键部署到 GitHub Pages。</p>
-<p>本地 Hexo 根目录中的 <code>.deploy_git</code>
-文件夹将会储存在远端仓库中。</p>
-<p><br></p>
-<h2 id="hexo-command">Hexo Command</h2>
-<p>记录一下常用的 Hexo 命令。</p>
-<h3 id="new">new</h3>
-<p>使用 <code>hexo new [layout] &lt;title&gt;</code>
-命令新建一个网页。</p>
-<p><code>[layout]</code> 储存在 scaffolds 文件夹中，初始有 post, page,
-draft 三种。当该函数缺省时，默认采用 post layout</p>
-<p>若 <code>&lt;title&gt;</code> 包含空格，使用双引号括起来。</p>
-<ul>
-<li><code>hexo new post &lt;title&gt;</code> 新建一个 post。此时
-<code>source/_post</code> 中将会生成可供编辑的 markdown
-源码文件。新建文章时一般采用 post layout。</li>
-<li><code>hexo new page &lt;title&gt;</code> 新建一个 page。此时 source
-中将会生成对应的 page 文件夹，并在其中生成可供编辑的 markdown 源码文件
-(<code>source/[title]/index.md</code>)。新建页面 (如
-about，tags，categories) 时一般采用 page layout。</li>
-<li><code>hexo new draft &lt;title&gt;</code> 新建一个 draft。此时
-<code>source/_drafts</code> 中将会生成可供编辑的 markdown
-源码文件。新建草稿时采用 draft layout，并且可使用 publish 命令
-<code>hexo publish [layout] &lt;title&gt;</code> 将 draft 发布为正式的
-post。</li>
-</ul>
-<h3 id="generate">generate</h3>
-<p>使用 <code>hexo g</code> 命令生成静态文件 (即根据 source
-中的源码文件生成 public 中的静态网页文件)。</p>
-<h3 id="server">server</h3>
-<p>使用 <code>hexo s</code> 命令启动服务器。默认情况下，本地访问地址为
-<code>https://localhost:4000/</code> 。</p>
-<p>启动服务器后可以访问上述本地地址对博客进行预览。</p>
-<p>添加参数 <code>--debug</code> 在启动服务器后输出调试信息。</p>
-<h3 id="deploy">deploy</h3>
-<p>使用 <code>hexo d</code> 命令部署网站。</p>
-<p>若 Hexo 部署在 GitHub Pages 上，该命令会将本地的更改 push
-到远端仓库。</p>
-<p><code>hexo g -d</code> 与 <code>hexo d -g</code> 命令的意义相同：让
-Hexo 在生成静态文件后立即部署网站。</p>
-<h3 id="clean">clean</h3>
-<p>使用 <code>hexo clean</code> 命令清除所有缓存文件
-(<code>db.json</code>) 与已生成的静态网页 (public 文件夹)。</p>
-<p>当发现本地更改不生效时，常 <code>hexo clean</code> 后
-<code>hexo g</code> 刷新所有的静态网页文件。</p>
-<p>一个典型的发布新文章过程：</p>
-<ul>
-<li><code>hexo new post "hello-hexo"</code> 新建 post，对
-<code>source/_post</code> 中的对应 markdown 源码进行编辑。</li>
-<li><code>hexo g</code> 生成静态网页文件。</li>
-<li><code>hexo s --debug</code> 启动服务器，并访问
-<code>https://localhost:4000/</code>
-预览查看本地的更改是否成功应用。若发现更改未生效，<code>hexo clean</code>
-后 <code>hexo g</code>
-重新生成所有的静态网页文件。重复该步骤，找到问题直至预览到本地更改生效。</li>
-<li><code>hexo d</code> 部署网站，此时 post 将在
-<code>[username].github.io</code> 网址上发布。</li>
-</ul>
-<p><br></p>
-<h2 id="front-matter">Front-matter</h2>
-<p>Front-matter 是 markdown 源码最上方以 <code>---</code>
-分隔的区域，其规定了这个网页的各项属性。</p>
-<p>例：</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: Hexo study notes</span><br><span class="line">date: 2023-05-24 17:43:00</span><br><span class="line">tags:</span><br><span class="line"><span class="bullet">-</span> hexo</span><br><span class="line"><span class="bullet">-</span> blog</span><br><span class="line">categories:</span><br><span class="line"><span class="bullet">-</span> notes</span><br><span class="line"><span class="bullet">-</span> hexo</span><br><span class="line">mathjax: true</span><br><span class="line">top: 1</span><br><span class="line"><span class="section">comments: false</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
-<p>注意，这其中的一些 field
-并不是默认的，而是在安装了对应的插件后实现的功能。</p>
-<p>实现的过程就不一一介绍了，网上大把教程。</p>
-<h3 id="tags-and-categories">tags and categories</h3>
-<p>在启用这两个 fields 之前，需要启用<a href="https://theme-next.js.org/docs/theme-settings/custom-pages.html">自定义页面
-(custom pages)</a> tags 与 categories，之后就可以为文章添加 tags 与
-categories 了。</p>
-<p>注意对同一篇文章，tags 的关系是平行的，categories
-的关系是树形的。</p>
-<p>如上例，文章 <code>Hexo study notes</code> 的 tags 是
-<code>hexo</code> 与 <code>blog</code>，其所属的类别是
-<code>notes/hexo</code>。</p>
-<h3 id="mathjax">mathjax</h3>
-<p>使用 Hexo 默认的渲染引擎时，markdown 中使用 <code>$</code>
-符号括起来的数学公式解析会出现问题。根据这一<a href="https://zhuanlan.zhihu.com/p/108766968">教程</a>，我们安装
-<code>hexo-math</code> 插件使用 <code>MathJax/KaTex</code>
-渲染数学公式，并在每篇文章开头的 Front-matter 中启用 mathjax 引擎
-(<code>mathjax: true</code>)。</p>
-<h3 id="top">top</h3>
-<p>安装 <code>hexo-generator-index-pin-top</code>
-插件实现文章置顶功能。</p>
-<p>添加 top field
-来置顶文章：后面的数字代表置顶优先级。例：<code>top: 10</code>
-的文章将会被置于 <code>top: 1</code> 文章的上方。</p>
-<h3 id="comments">comments</h3>
-<p>本博客采用 valine 实现博客评论功能。缺省 comments
-field，评论区默认开启。</p>
-<p>若想关闭某些 post/page 的评论区，在对应的 front-matter 中添加 comment
-field 并设定为否 (<code>comments: false</code>)。</p>
-<p><br></p>
-<h2 id="reference">Reference</h2>
-<ol type="1">
-<li><p><a href="https://hexo.io/docs/index.html">Hexo official
-documents</a></p></li>
-<li><p><a href="https://theme-next.js.org/">NexT Theme for
-Hexo</a></p></li>
-<li><p><a href="http://yearito.cn/categories/%E6%8A%80%E6%9C%AF/%E5%8D%9A%E5%AE%A2/">yearito-Hexo美化</a></p></li>
-<li><p><a href="https://zhuanlan.zhihu.com/p/108766968">Hexo配置Mathjax渲染数学公式</a></p></li>
-<li><p><a href="https://blog.csdn.net/nineya_com/article/details/103394315">Hexo实现文章置顶功能</a></p></li>
-</ol>
-]]></content>
-      <categories>
-        <category>notes</category>
-        <category>desserts</category>
-      </categories>
-      <tags>
-        <tag>blog</tag>
-        <tag>hexo</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Big Data notes P1 - Introduction to Big Data</title>
     <url>/2023/06/11/intro-to-bigdata/</url>
     <content><![CDATA[<blockquote>
@@ -3637,6 +3479,164 @@ material.</p>
       </categories>
       <tags>
         <tag>big data</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hexo blog 搭建笔记</title>
+    <url>/2023/05/24/hexo-blog-study/</url>
+    <content><![CDATA[<p><strong>Hello Hexo! Hello NexT! Hello GitHub Pages!</strong></p>
+<p>终于有一个完完全全属于自己的博客啦！弄完了以后很有成就感。</p>
+<span id="more"></span>
+<p>接下来会陆陆续续把博客园上的一些 post
+搬过来。当然博客园也不会停止更新，会将自己比较用心记的笔记同步在两边发布。</p>
+<p>在 Hexo
+发布的第一篇博客，就简短的记录一下搭建的过程中遇到的问题和解决办法吧。</p>
+<h2 id="hexo">Hexo</h2>
+<p>Hexo 是一个博客框架，它允许我们使用 markdown
+撰写文章。在写好之后，Hexo
+将解析文章并快速生成静态网页。它提供了超多的插件 plugin
+和接口，还有很多好看的博客 theme (最有名的应该就是我现在用的这一套
+NexT)。</p>
+<p>使用 Hexo 需要 <code>Node.js</code> 环境与
+<code>git</code>。在必备的应用安装完成之后可以使用 npm 包下载器安装 Hexo
+<code>npm install -g hexo-cli</code>。</p>
+<p>在选择的根目录中打开 git Bash，使用 <code>hexo init</code> 命令初始化
+Hexo 本地框架。初始化后根目录将会生成 (仅列出较为重要的)：</p>
+<ul>
+<li>source 文件夹：储存所有网页的源码 (markdown 文件)。其中的
+<code>_post</code> 文件夹储存的是 post 的源码</li>
+<li>themes 文件夹：储存 Hexo 主题。</li>
+<li>scaffolds 文件夹：储存若干自定义的
+<code>[layout]</code>，即生成网页时采用的模板。初始 <code>layout</code>
+有三种，分别是 draft, post 与 page。</li>
+<li>public 文件夹：储存所有由 source 中源码生成的静态网页文件 (html
+文件与 css 文件)。</li>
+<li><code>_config.yml</code> 文件：Hexo
+基础样式自定义文件，提供了许多接口。注意与 themes 中的
+<code>_config.yml</code> 文件相区分；后续的<strong>非侵入式</strong>
+Hexo 主题自定义过程中，这两个配置文件是最为重要的。</li>
+</ul>
+<p><br></p>
+<h2 id="github-pages">GitHub Pages</h2>
+<p>我们可以将 Hexo 远程部署在 GitHub Pages
+上，且后续可以绑定新的域名。</p>
+<p>在本地配置 git 之后 (生成 RSA 密钥后 SSH 连接到
+<code>git@github.com</code>)，创建一个名称为
+<code>[username].github.io</code>
+的仓库。<code>[username].github.io</code> 是 Hexo 博客的网址。</p>
+<p>安装 <code>hexo-deployer-git</code> 插件，更改
+<code>_config.yml</code> 配置后即可将 Hexo 一键部署到 GitHub Pages。</p>
+<p>本地 Hexo 根目录中的 <code>.deploy_git</code>
+文件夹将会储存在远端仓库中。</p>
+<p><br></p>
+<h2 id="hexo-command">Hexo Command</h2>
+<p>记录一下常用的 Hexo 命令。</p>
+<h3 id="new">new</h3>
+<p>使用 <code>hexo new [layout] &lt;title&gt;</code>
+命令新建一个网页。</p>
+<p><code>[layout]</code> 储存在 scaffolds 文件夹中，初始有 post, page,
+draft 三种。当该函数缺省时，默认采用 post layout</p>
+<p>若 <code>&lt;title&gt;</code> 包含空格，使用双引号括起来。</p>
+<ul>
+<li><code>hexo new post &lt;title&gt;</code> 新建一个 post。此时
+<code>source/_post</code> 中将会生成可供编辑的 markdown
+源码文件。新建文章时一般采用 post layout。</li>
+<li><code>hexo new page &lt;title&gt;</code> 新建一个 page。此时 source
+中将会生成对应的 page 文件夹，并在其中生成可供编辑的 markdown 源码文件
+(<code>source/[title]/index.md</code>)。新建页面 (如
+about，tags，categories) 时一般采用 page layout。</li>
+<li><code>hexo new draft &lt;title&gt;</code> 新建一个 draft。此时
+<code>source/_drafts</code> 中将会生成可供编辑的 markdown
+源码文件。新建草稿时采用 draft layout，并且可使用 publish 命令
+<code>hexo publish [layout] &lt;title&gt;</code> 将 draft 发布为正式的
+post。</li>
+</ul>
+<h3 id="generate">generate</h3>
+<p>使用 <code>hexo g</code> 命令生成静态文件 (即根据 source
+中的源码文件生成 public 中的静态网页文件)。</p>
+<h3 id="server">server</h3>
+<p>使用 <code>hexo s</code> 命令启动服务器。默认情况下，本地访问地址为
+<code>https://localhost:4000/</code> 。</p>
+<p>启动服务器后可以访问上述本地地址对博客进行预览。</p>
+<p>添加参数 <code>--debug</code> 在启动服务器后输出调试信息。</p>
+<h3 id="deploy">deploy</h3>
+<p>使用 <code>hexo d</code> 命令部署网站。</p>
+<p>若 Hexo 部署在 GitHub Pages 上，该命令会将本地的更改 push
+到远端仓库。</p>
+<p><code>hexo g -d</code> 与 <code>hexo d -g</code> 命令的意义相同：让
+Hexo 在生成静态文件后立即部署网站。</p>
+<h3 id="clean">clean</h3>
+<p>使用 <code>hexo clean</code> 命令清除所有缓存文件
+(<code>db.json</code>) 与已生成的静态网页 (public 文件夹)。</p>
+<p>当发现本地更改不生效时，常 <code>hexo clean</code> 后
+<code>hexo g</code> 刷新所有的静态网页文件。</p>
+<p>一个典型的发布新文章过程：</p>
+<ul>
+<li><code>hexo new post "hello-hexo"</code> 新建 post，对
+<code>source/_post</code> 中的对应 markdown 源码进行编辑。</li>
+<li><code>hexo g</code> 生成静态网页文件。</li>
+<li><code>hexo s --debug</code> 启动服务器，并访问
+<code>https://localhost:4000/</code>
+预览查看本地的更改是否成功应用。若发现更改未生效，<code>hexo clean</code>
+后 <code>hexo g</code>
+重新生成所有的静态网页文件。重复该步骤，找到问题直至预览到本地更改生效。</li>
+<li><code>hexo d</code> 部署网站，此时 post 将在
+<code>[username].github.io</code> 网址上发布。</li>
+</ul>
+<p><br></p>
+<h2 id="front-matter">Front-matter</h2>
+<p>Front-matter 是 markdown 源码最上方以 <code>---</code>
+分隔的区域，其规定了这个网页的各项属性。</p>
+<p>例：</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: Hexo study notes</span><br><span class="line">date: 2023-05-24 17:43:00</span><br><span class="line">tags:</span><br><span class="line"><span class="bullet">-</span> hexo</span><br><span class="line"><span class="bullet">-</span> blog</span><br><span class="line">categories:</span><br><span class="line"><span class="bullet">-</span> notes</span><br><span class="line"><span class="bullet">-</span> hexo</span><br><span class="line">mathjax: true</span><br><span class="line">top: 1</span><br><span class="line"><span class="section">comments: false</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
+<p>注意，这其中的一些 field
+并不是默认的，而是在安装了对应的插件后实现的功能。</p>
+<p>实现的过程就不一一介绍了，网上大把教程。</p>
+<h3 id="tags-and-categories">tags and categories</h3>
+<p>在启用这两个 fields 之前，需要启用<a href="https://theme-next.js.org/docs/theme-settings/custom-pages.html">自定义页面
+(custom pages)</a> tags 与 categories，之后就可以为文章添加 tags 与
+categories 了。</p>
+<p>注意对同一篇文章，tags 的关系是平行的，categories
+的关系是树形的。</p>
+<p>如上例，文章 <code>Hexo study notes</code> 的 tags 是
+<code>hexo</code> 与 <code>blog</code>，其所属的类别是
+<code>notes/hexo</code>。</p>
+<h3 id="mathjax">mathjax</h3>
+<p>使用 Hexo 默认的渲染引擎时，markdown 中使用 <code>$</code>
+符号括起来的数学公式解析会出现问题。根据这一<a href="https://zhuanlan.zhihu.com/p/108766968">教程</a>，我们安装
+<code>hexo-math</code> 插件使用 <code>MathJax/KaTex</code>
+渲染数学公式，并在每篇文章开头的 Front-matter 中启用 mathjax 引擎
+(<code>mathjax: true</code>)。</p>
+<h3 id="top">top</h3>
+<p>安装 <code>hexo-generator-index-pin-top</code>
+插件实现文章置顶功能。</p>
+<p>添加 top field
+来置顶文章：后面的数字代表置顶优先级。例：<code>top: 10</code>
+的文章将会被置于 <code>top: 1</code> 文章的上方。</p>
+<h3 id="comments">comments</h3>
+<p>本博客采用 valine 实现博客评论功能。缺省 comments
+field，评论区默认开启。</p>
+<p>若想关闭某些 post/page 的评论区，在对应的 front-matter 中添加 comment
+field 并设定为否 (<code>comments: false</code>)。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<ol type="1">
+<li><p><a href="https://hexo.io/docs/index.html">Hexo official
+documents</a></p></li>
+<li><p><a href="https://theme-next.js.org/">NexT Theme for
+Hexo</a></p></li>
+<li><p><a href="http://yearito.cn/categories/%E6%8A%80%E6%9C%AF/%E5%8D%9A%E5%AE%A2/">yearito-Hexo美化</a></p></li>
+<li><p><a href="https://zhuanlan.zhihu.com/p/108766968">Hexo配置Mathjax渲染数学公式</a></p></li>
+<li><p><a href="https://blog.csdn.net/nineya_com/article/details/103394315">Hexo实现文章置顶功能</a></p></li>
+</ol>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>desserts</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -4348,6 +4348,152 @@ CS Education</a>.</p>
       </tags>
   </entry>
   <entry>
+    <title>The Missing Semester of CS Education, MIT - Metaprogramming</title>
+    <url>/2023/07/11/missing-sem-4/</url>
+    <content><![CDATA[<blockquote>
+<p>Metaprogramming is the best collective term we could come up with for
+the set of things that are more about <em>process</em> than they are
+about writing code or working efficiently.</p>
+</blockquote>
+<p>对于元编程这个概念，我们可以理解为作用在程序之上的程序 (programs that
+operate on programs)。这一节将主要介绍构建系统，依赖管理与持续集成。</p>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="build-system">Build System</h2>
+<p>在之前对 build system 已经有相当的认识了；<code>Make</code>
+就是一个著名的 build system。在 <code>Makefile</code>
+中，我们需要声明一系列的 <em>directives</em>，它包括：</p>
+<ul>
+<li>targets.</li>
+<li>dependencies.</li>
+<li>rules.</li>
+</ul>
+<p><code>make</code> 将会根据声明的 directives 按照 dependency hierarchy
+逐步生成 targets。这一过程被称为 <em>build process</em>。当
+<code>make</code> 缺省参数时，它默认将第一个 directive 中的 target 作为
+final target 进行生成。</p>
+<p><code>make</code> 另一个优秀的特性是，它能保证<strong>每次生成 target
+时所执行的命令数最少</strong>。这是因为它采取了这样的贪心策略：当某个
+target 的所有 dependencies 都是最新的时 (通过比较 target 与 dependencies
+的最后修改时间)，无需执行 rules 中的命令。</p>
+<p><code>make</code> 只是众多 build system 中最普通，最 low-level
+的一个。根据 project 的类型与规模，有许多 build system 可供采用，例如
+<code>CMake</code>, <code>ninja</code>,
+<code>Bazel</code>。然而它们的内核都是相似的，离不开上述三种元素的声明。</p>
+<p><br></p>
+<h2 id="dependency-management">Dependency Management</h2>
+<p>Build system 更多的是控制一个 project <strong>内部</strong>的 build
+process；但从更宏观的角度来看，某个 project 很有可能会以另外的 projects
+作为依赖项。这些依赖项可能是某些 installed programs (如
+<code>python</code>)，系统包 (如 <code>openssl</code>) 或语言中的库 (如
+<code>ncurses</code>)。</p>
+<p>常见的做法是通过一个 <em>repository</em> 来集中存储某个 project
+大量的依赖项，并且提供便利的下载机制。比如 Ubuntu 的 package
+repositories (我们通过 <code>apt</code> 进行访问)，<code>NodeJs</code>
+的 <code>npm</code> ，<code>Python</code> 的 <code>PyPi</code>
+等等。</p>
+<p>我们常常遇到<strong>版本不兼容</strong>的问题；大多数情况下这是软件和它的依赖项版本产生冲突导致的。类似
+<code>npm</code>，<code>PyPi</code> 这样被很多软件所依赖的 project
+会发布<strong>版本号 (version number)</strong>，这种机制称为
+<strong>versioning</strong>。</p>
+<p>最常见的<strong>版本语义 (semantic versioning)</strong>，例如
+<code>8.1.3</code> 或者 <code>64.1.20192004</code>，由左到右分别是 major
+version，minor version 与 patch version。</p>
+<ul>
+<li>If a new release does NOT change the API, increase the patch
+version.</li>
+<li>If you <em>add</em> to your API in a
+<strong>backwards-compatible</strong> way, increase the minor
+version.</li>
+<li>If you change the API in a <strong>non-backwards-compatible</strong>
+way, increase the major version.</li>
+</ul>
+<p>若 project <em>A</em> 初始依赖 project <em>B</em> 的版本
+<code>v1</code>，版本语义保证 <em>B</em> 的任何与 <code>v1</code> 的
+major version 相同且 &gt; <code>v1</code> 的版本都能够与 <em>A</em>
+兼容。例如，基于 Python 3.5 编写的代码能在 Python 3.7
+环境下运行；但不一定能在 Python 3.4 环境下运行；更不一定能在 Python 4
+环境下运行。</p>
+<p>在依赖管理系统中，我们常常能见到一种特殊的文件：<strong>lock
+files</strong>。lock file 能够加速开发周期，使 project
+始终基于其中指定的依赖项版本进行构建；并且对于用户来说，它也提供了一定的安全保证。</p>
+<div class="note info no-icon"><p>A lock file lists the exact version you are <em>currently</em>
+depending on of each dependency.</p>
+</div>
+<p>一个更极端的做法称为 <strong>vendoring</strong>, 即 copying all the
+code of your dependencies into the
+project。这给予了我们对依赖项的完全掌控权力；我们甚至能自主修改其中的代码。然而这样做的代价是失去了
+versioning 带来的便利。</p>
+<p><br></p>
+<h2 id="continuous-integration-system">Continuous Integration
+System</h2>
+<p>Continuous integration (持续集成)，或 CI，其一个不正式的定义为 "stuff
+that runs whenever your code changes"。例如，每当有人向 project 中 push
+了代码，你希望对代码进行 stylecheck，或是对整个 project 跑一次 test
+suite 等等。这一需求在一些大 project 中很常见。</p>
+<p>目前比较流行的 CI 系统有 Travis CI, Azure Pipelines 与 Github
+Actions。</p>
+<p>我们十分熟悉的 dependabot 就是一个简单的 CI 服务：它定时检查 project
+依赖项的更新情况，当依赖项存在更新的版本时，它向 project 提出一个 pr
+作为提示。</p>
+<p>本博客所基于的 GitHub pages 也是一个 CI 服务：当我们写好 markdown
+格式的博文并且 push 到主分支时，GitHub pages
+将通过指定的静态网页生成框架 (Hexo, Jekyll 等) 生成 HTML 文件并部署到
+<code>github.io</code> domain
+上。这使得撰写并发布博文的操作变得非常简单：我们只需要执行 push
+操作，剩下的交给 CI。</p>
+<p>与 build system 相似，你需要在 repo 中存储一个
+<strong>"recipe"</strong>，指定 CI 在发生哪些变动时 (trigger) 对 project
+执行哪些操作 (action)。当指定的事件发生时，CI
+将启动一个<strong>虚拟环境</strong>，对 project 执行你在 recipe
+中指定的操作，然后记录并存储结果。</p>
+<p><br></p>
+<h2 id="test-briefing">Test Briefing</h2>
+<p>我们经常听到一个词 “测试套件” (test
+suite)，它是一系列测试的总称。那么，对于一个 project，有哪几种常见的
+test 类型呢？</p>
+<ul>
+<li>Test suite: 一系列测试的总称。</li>
+<li>Unit test: a "micro-test" that tests a <strong>specific
+feature</strong> in isolation.</li>
+<li>Integration test: a "macro-test" that runs a larger part of the
+system to check that different feature or components work
+<em>together</em>.</li>
+<li>Regression test: a test that implements a particular pattern that
+<em>previously</em> caused a bug to ensure that the bug does not
+resurface. (在修复完某个 bug 后，向测试套件中添加一个回归测试)</li>
+<li>Mocking: to replace a function, module, or type with a fake
+implementation to avoid testing unrelated functionality. (比如，通过
+overwrite 的形式 mock network 或 mock the disk)</li>
+</ul>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p>MIT Open Learning. The Missing Semester of Your CS Education.</p>
+<p>Course resource:</p>
+<p><a href="https://missing.csail.mit.edu/">The Missing Semester of Your
+CS Education</a>.</p>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>courses</category>
+        <category>Missing Semester, MIT</category>
+      </categories>
+      <tags>
+        <tag>course notes</tag>
+        <tag>make</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>The Missing Semester of CS Education, MIT - Version Control</title>
     <url>/2023/07/07/missing-sem-3/</url>
     <content><![CDATA[<p>不得不说，我个人认为 Anish
@@ -4611,149 +4757,43 @@ CS Education</a>.</p>
       </tags>
   </entry>
   <entry>
-    <title>The Missing Semester of CS Education, MIT - Metaprogramming</title>
-    <url>/2023/07/11/missing-sem-4/</url>
-    <content><![CDATA[<blockquote>
-<p>Metaprogramming is the best collective term we could come up with for
-the set of things that are more about <em>process</em> than they are
-about writing code or working efficiently.</p>
+    <title>在神农公园</title>
+    <url>/2023/06/26/moment-230624/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+<p><strong>癸卯夏至。</strong></p>
+
 </blockquote>
-<p>对于元编程这个概念，我们可以理解为作用在程序之上的程序 (programs that
-operate on programs)。这一节将主要介绍构建系统，依赖管理与持续集成。</p>
+<center>
+<em>充满回忆和欢笑的游乐园；三个人的童年在这里交错。小心恐龙出没！</em>
+</center>
 <span id="more"></span>
 <p><br></p>
-<div class="note warning"><p>  This article is a self-administered course note.</p>
-<p>  It will <strong>NOT</strong> cover any exam or assignment related
-content.</p>
+<figure>
+<img data-src="1.jpg" alt="回忆碎片1">
+<figcaption aria-hidden="true">回忆碎片1</figcaption>
+</figure>
+<figure>
+<img data-src="2.jpg" alt="回忆碎片2">
+<figcaption aria-hidden="true">回忆碎片2</figcaption>
+</figure>
+<figure>
+<img data-src="3.jpg" alt="他的现在">
+<figcaption aria-hidden="true">他的现在</figcaption>
+</figure>
+<figure>
+<img data-src="4.jpg" alt="他的现在">
+<figcaption aria-hidden="true">他的现在</figcaption>
+</figure>
+<p><br></p>
+<div class="note success"><p>新成就：和爸爸陪小 per 一起去了神农公园。</p>
 </div>
 <p><br></p>
-<h2 id="build-system">Build System</h2>
-<p>在之前对 build system 已经有相当的认识了；<code>Make</code>
-就是一个著名的 build system。在 <code>Makefile</code>
-中，我们需要声明一系列的 <em>directives</em>，它包括：</p>
-<ul>
-<li>targets.</li>
-<li>dependencies.</li>
-<li>rules.</li>
-</ul>
-<p><code>make</code> 将会根据声明的 directives 按照 dependency hierarchy
-逐步生成 targets。这一过程被称为 <em>build process</em>。当
-<code>make</code> 缺省参数时，它默认将第一个 directive 中的 target 作为
-final target 进行生成。</p>
-<p><code>make</code> 另一个优秀的特性是，它能保证<strong>每次生成 target
-时所执行的命令数最少</strong>。这是因为它采取了这样的贪心策略：当某个
-target 的所有 dependencies 都是最新的时 (通过比较 target 与 dependencies
-的最后修改时间)，无需执行 rules 中的命令。</p>
-<p><code>make</code> 只是众多 build system 中最普通，最 low-level
-的一个。根据 project 的类型与规模，有许多 build system 可供采用，例如
-<code>CMake</code>, <code>ninja</code>,
-<code>Bazel</code>。然而它们的内核都是相似的，离不开上述三种元素的声明。</p>
-<p><br></p>
-<h2 id="dependency-management">Dependency Management</h2>
-<p>Build system 更多的是控制一个 project <strong>内部</strong>的 build
-process；但从更宏观的角度来看，某个 project 很有可能会以另外的 projects
-作为依赖项。这些依赖项可能是某些 installed programs (如
-<code>python</code>)，系统包 (如 <code>openssl</code>) 或语言中的库 (如
-<code>ncurses</code>)。</p>
-<p>常见的做法是通过一个 <em>repository</em> 来集中存储某个 project
-大量的依赖项，并且提供便利的下载机制。比如 Ubuntu 的 package
-repositories (我们通过 <code>apt</code> 进行访问)，<code>NodeJs</code>
-的 <code>npm</code> ，<code>Python</code> 的 <code>PyPi</code>
-等等。</p>
-<p>我们常常遇到<strong>版本不兼容</strong>的问题；大多数情况下这是软件和它的依赖项版本产生冲突导致的。类似
-<code>npm</code>，<code>PyPi</code> 这样被很多软件所依赖的 project
-会发布<strong>版本号 (version number)</strong>，这种机制称为
-<strong>versioning</strong>。</p>
-<p>最常见的<strong>版本语义 (semantic versioning)</strong>，例如
-<code>8.1.3</code> 或者 <code>64.1.20192004</code>，由左到右分别是 major
-version，minor version 与 patch version。</p>
-<ul>
-<li>If a new release does NOT change the API, increase the patch
-version.</li>
-<li>If you <em>add</em> to your API in a
-<strong>backwards-compatible</strong> way, increase the minor
-version.</li>
-<li>If you change the API in a <strong>non-backwards-compatible</strong>
-way, increase the major version.</li>
-</ul>
-<p>若 project <em>A</em> 初始依赖 project <em>B</em> 的版本
-<code>v1</code>，版本语义保证 <em>B</em> 的任何与 <code>v1</code> 的
-major version 相同且 &gt; <code>v1</code> 的版本都能够与 <em>A</em>
-兼容。例如，基于 Python 3.5 编写的代码能在 Python 3.7
-环境下运行；但不一定能在 Python 3.4 环境下运行；更不一定能在 Python 4
-环境下运行。</p>
-<p>在依赖管理系统中，我们常常能见到一种特殊的文件：<strong>lock
-files</strong>。lock file 能够加速开发周期，使 project
-始终基于其中指定的依赖项版本进行构建；并且对于用户来说，它也提供了一定的安全保证。</p>
-<div class="note info no-icon"><p>A lock file lists the exact version you are <em>currently</em>
-depending on of each dependency.</p>
-</div>
-<p>一个更极端的做法称为 <strong>vendoring</strong>, 即 copying all the
-code of your dependencies into the
-project。这给予了我们对依赖项的完全掌控权力；我们甚至能自主修改其中的代码。然而这样做的代价是失去了
-versioning 带来的便利。</p>
-<p><br></p>
-<h2 id="continuous-integration-system">Continuous Integration
-System</h2>
-<p>Continuous integration (持续集成)，或 CI，其一个不正式的定义为 "stuff
-that runs whenever your code changes"。例如，每当有人向 project 中 push
-了代码，你希望对代码进行 stylecheck，或是对整个 project 跑一次 test
-suite 等等。这一需求在一些大 project 中很常见。</p>
-<p>目前比较流行的 CI 系统有 Travis CI, Azure Pipelines 与 Github
-Actions。</p>
-<p>我们十分熟悉的 dependabot 就是一个简单的 CI 服务：它定时检查 project
-依赖项的更新情况，当依赖项存在更新的版本时，它向 project 提出一个 pr
-作为提示。</p>
-<p>本博客所基于的 GitHub pages 也是一个 CI 服务：当我们写好 markdown
-格式的博文并且 push 到主分支时，GitHub pages
-将通过指定的静态网页生成框架 (Hexo, Jekyll 等) 生成 HTML 文件并部署到
-<code>github.io</code> domain
-上。这使得撰写并发布博文的操作变得非常简单：我们只需要执行 push
-操作，剩下的交给 CI。</p>
-<p>与 build system 相似，你需要在 repo 中存储一个
-<strong>"recipe"</strong>，指定 CI 在发生哪些变动时 (trigger) 对 project
-执行哪些操作 (action)。当指定的事件发生时，CI
-将启动一个<strong>虚拟环境</strong>，对 project 执行你在 recipe
-中指定的操作，然后记录并存储结果。</p>
-<p><br></p>
-<h2 id="test-briefing">Test Briefing</h2>
-<p>我们经常听到一个词 “测试套件” (test
-suite)，它是一系列测试的总称。那么，对于一个 project，有哪几种常见的
-test 类型呢？</p>
-<ul>
-<li>Test suite: 一系列测试的总称。</li>
-<li>Unit test: a "micro-test" that tests a <strong>specific
-feature</strong> in isolation.</li>
-<li>Integration test: a "macro-test" that runs a larger part of the
-system to check that different feature or components work
-<em>together</em>.</li>
-<li>Regression test: a test that implements a particular pattern that
-<em>previously</em> caused a bug to ensure that the bug does not
-resurface. (在修复完某个 bug 后，向测试套件中添加一个回归测试)</li>
-<li>Mocking: to replace a function, module, or type with a fake
-implementation to avoid testing unrelated functionality. (比如，通过
-overwrite 的形式 mock network 或 mock the disk)</li>
-</ul>
-<p><br></p>
-<h2 id="reference">Reference</h2>
-<div class="note warning"><p>  This article is a self-administered course note.</p>
-<p>  References in the article are from corresponding course materials
-if not specified.</p>
-</div>
-<p>Course info:</p>
-<p>MIT Open Learning. The Missing Semester of Your CS Education.</p>
-<p>Course resource:</p>
-<p><a href="https://missing.csail.mit.edu/">The Missing Semester of Your
-CS Education</a>.</p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
-        <category>Missing Semester, MIT</category>
+        <category>achievements</category>
       </categories>
       <tags>
-        <tag>course notes</tag>
-        <tag>make</tag>
+        <tag>moment</tag>
       </tags>
   </entry>
   <entry>
@@ -4790,46 +4830,6 @@ CS Education</a>.</p>
 </figure>
 <p><br></p>
 <div class="note success"><p>新成就：在寺庙里抽一次签！</p>
-</div>
-<p><br></p>
-]]></content>
-      <categories>
-        <category>achievements</category>
-      </categories>
-      <tags>
-        <tag>moment</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在神农公园</title>
-    <url>/2023/06/26/moment-230624/</url>
-    <content><![CDATA[<blockquote class="blockquote-center">
-<p><strong>癸卯夏至。</strong></p>
-
-</blockquote>
-<center>
-<em>充满回忆和欢笑的游乐园；三个人的童年在这里交错。小心恐龙出没！</em>
-</center>
-<span id="more"></span>
-<p><br></p>
-<figure>
-<img data-src="1.jpg" alt="回忆碎片1">
-<figcaption aria-hidden="true">回忆碎片1</figcaption>
-</figure>
-<figure>
-<img data-src="2.jpg" alt="回忆碎片2">
-<figcaption aria-hidden="true">回忆碎片2</figcaption>
-</figure>
-<figure>
-<img data-src="3.jpg" alt="他的现在">
-<figcaption aria-hidden="true">他的现在</figcaption>
-</figure>
-<figure>
-<img data-src="4.jpg" alt="他的现在">
-<figcaption aria-hidden="true">他的现在</figcaption>
-</figure>
-<p><br></p>
-<div class="note success"><p>新成就：和爸爸陪小 per 一起去了神农公园。</p>
 </div>
 <p><br></p>
 ]]></content>
@@ -5120,6 +5120,289 @@ P5 曾经带给我的感动——毕竟，「吾即是汝，汝即是吾」。</
       </categories>
       <tags>
         <tag>JRPG</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Programming Languages, UW, Part A</title>
+    <url>/2023/07/14/prog-lan-1/</url>
+    <content><![CDATA[<p>毫无疑问的神课，不愧于 Coursera 上接近满分的评价。Dan Grossman
+教授显然对 PL 领域十分 passionate
+并且有很深的造诣，在上课的过程中都能感受到他的热情和对课程倾注的心血。</p>
+<p>这门课介绍了 PL
+中的很多基本概念，尤其强调函数式编程的设计哲学；对我来说确实是一个全新的范畴。</p>
+<span id="more"></span>
+<blockquote>
+<p>Part A is a <em>precisely specified</em> introduction to functional
+programming built up piece-by-piece, using Standard ML as an
+example.</p>
+</blockquote>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="ml-basics">ML Basics</h2>
+<div class="note info no-icon"><p>An ML program is a sequence of <em>bindings</em>.</p>
+</div>
+<p>绑定 (binding) 与我们熟悉的赋值语句 (assignment statement)
+尽管形式相似，却有着本质的不同：最主要的区别在于 bindings 是
+<em>immutable</em> 的，而 assignment statement 支持以赋值的形式 mutate
+变量的值。</p>
+<ul>
+<li>Each binding gets <em>type-checked</em> and (assume it type-checks)
+then <em>evaluated</em>.</li>
+<li>What <em>type</em> of a binding has depends on a <em>static
+environment</em> or <em>context</em>, which is roughly the types of the
+preceding bindings.</li>
+<li>How a binding is evaluated depends on a <em>dynamic environment</em>
+or just <em>environment</em>, which is roughly the values of the
+preceding bindings.</li>
+</ul>
+<p>这也就是说，if <code>x</code> maps to some value <code>v</code> in
+some environment, it will forever map to <code>v</code> in that
+environment. There is NO assignment statement that changes
+<code>x</code> to map to a different value. 尽管你可以在之后引入新的
+binding 来 <em>shadows</em> <code>x</code>，但这并不会改变之前的环境中
+<code>x</code> 与 <code>v</code> 对应的事实。</p>
+<p>接下来，我们看看 ML 如何处理 variable bindings 与 function
+bindings。</p>
+<h3 id="variable-bindings">Variable Bindings</h3>
+<p>variable binding 的语法 (syntax) 如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">var</span> <span class="variable">x</span> <span class="operator">=</span> e;</span><br></pre></td></tr></table></figure>
+<p><code>e</code> 是一个表达式 (expression)；注意表达式与值 (value)
+之间的区别：A <em>value</em> is an expression that "has no more
+computation to do". Therefore, all values are expressions, but not all
+expressions are values.</p>
+<ul>
+<li>We use current static environment to type-check <code>e</code>, and
+(if it type-checks) add <code>x : t</code> back to the static
+environment where <code>t</code> is the type of <code>e</code>.</li>
+<li>We use current dynamic environment to evaluate <code>e</code>, and
+(if it type-checks) add <code>x = v</code> back to the dynamic
+environment where <code>v</code> is the value of <code>e</code>.</li>
+</ul>
+<h3 id="function-bindings">Function Bindings</h3>
+<p>function binding 的语法如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">fun <span class="title function_">x0</span> <span class="params">(x1:t1, ..., xn:tn)</span> = e</span><br></pre></td></tr></table></figure>
+<p>Binding <code>x0</code> takes arguments <code>x1, ..., xn</code> of
+types <code>t1, ..., tn</code> and has an expression <code>e</code> for
+its body.</p>
+<p><strong>Type-checking:</strong></p>
+<ul>
+<li>Type-check the body <code>e</code> in a static environment that (in
+addition to all the earlier binding) maps <code>x1</code> to
+<code>t1</code>, ... <code>xn</code> to <code>tn</code> and
+<code>x0</code> to <code>t1 * ... * tn -&gt; t</code>. Since
+<code>x0</code> is in the environment, we can make <em>recursive</em>
+function calls, i.e., <strong>a function definition can use
+itself.</strong></li>
+<li>For the function binding to type-check, body <code>e</code> must
+have the type <code>t</code>, i.e., the result type of
+<code>x0</code>.</li>
+<li>If the function binding type-checks,
+<code>x0 : t1 * ... * tn -&gt; t</code> is added to the static
+environment. Note that the arguments are not added to the top-level
+static environment.</li>
+</ul>
+<p>Note that <code>t</code> is never wrote down: it is up to the
+type-checker to figure out what <code>t</code> should be such that using
+it for the result type of <code>x0</code> makes everything work out.
+This is called <em>type inference</em>.</p>
+<p><strong>Evaluation: </strong></p>
+<p>function bindings 的 evaluation 就比较 trivial 了，这是因为在 ML
+中，<em>A function is a value.</em></p>
+<p>我们仅仅需要将 <code>x0</code> 加入 current dynamic environment
+即可。As expected for recursion, <code>x0</code> is in the dynamic
+environment in the function body and for subsequent bindings.</p>
+<h3 id="function-call">Function Call</h3>
+<p>function binding 的存在是为了支持 function calls。它的语法如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">e0 (e1,...,en)</span><br></pre></td></tr></table></figure>
+<p><strong>Typing rules:</strong></p>
+<p>若 <code>e0</code> 的类型为 <code>t1 * ... * tn -&gt; t</code> 且
+<code>ei</code> 的类型为 <code>tn</code>，则整个函数调用的类型为
+<code>t</code>.</p>
+<p><strong>Evaluation rules:</strong></p>
+<p>我们使用<strong>调用处的环境 (environment at the point of the
+call)</strong> 来 evaluate <code>e0</code> to <code>v0</code>,
+<code>e1</code> to <code>v1</code>, ..., <code>en</code> to
+<code>vn</code>. 若 <code>v0</code> 是函数，则函数调用是 type-checked
+的。</p>
+<p>接下来，我们使用<strong>定义处的环境 (environment where the function
+is defined)</strong> extends 函数参数形成的 bindings
+<code>x1 = v1, ..., xn = vn</code> 来 evaluate 函数体。</p>
+<p><br></p>
+<h2 id="first-class-function">First-Class Function</h2>
+<div class="note info no-icon"><p>By <em>first-class</em> we mean that functions can be computed,
+passed, stored, etc. wherever other values can be computed passed
+stored, etc.</p>
+</div>
+<p>在函数式编程体系中，函数也是第一等公民：这是因为 All functions are
+values。函数就像所有其他类型的值一样，可以作为 <em>higher-order</em>
+函数的参数，返回值，甚至可以被存储。</p>
+<p>函数的 first-class 性质使得 function closure
+的概念被提出，并进一步催生了匿名函数 (anonymous function)，高阶函数
+(higher-order function)，函数的 combination，callback 与 currying
+等机制。</p>
+<p>一些典型的函数比如 <code>map</code>, <code>filter</code>,
+<code>fold</code> 等在函数式编程体系中可以很方便的实现。</p>
+<div class="note info no-icon"><p>The term <em>higher-order function</em> refers to the function that
+takes or returns other functions.</p>
+</div>
+<p>到底什么是<strong>函数式编程 (functional
+programming)</strong>？实际上，对此并没有一个准确的定义。但一般来说，函数式编程语言有以下特点：</p>
+<ul>
+<li>函数是第一等公民：using functions as values.</li>
+<li>NOT using mutable data in most or all cases.</li>
+<li>函数式编程鼓励使用递归 (recursive)
+与递归数据结构。(支持尾递归优化)</li>
+<li>函数式编程中的 function 最贴近数学中对函数的原始定义。</li>
+<li>使用 <em>laziness</em> 的特性。</li>
+</ul>
+<p><br></p>
+<h2 id="anonymous-function">Anonymous Function</h2>
+<p>匿名函数是没有名字的函数，因此其可以很方便的作为其他函数的参数或者返回值。但无名也使得它<strong>无法进行递归</strong>；见之前
+function binding 的相关介绍：只有当函数有名字 <code>x0</code>
+时，才能将其加入环境以实现后续的递归。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">(<span class="type">fn</span> <span class="variable">x</span> <span class="operator">=</span>&gt; e)</span><br></pre></td></tr></table></figure>
+<p>我们可以把关键字 <code>fun</code> 视为 <em>syntactic
+sugar</em>：下面这两个表达其实是一致的。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">fun</span> <span class="variable">x</span> <span class="operator">=</span> e</span><br><span class="line"><span class="type">val</span> <span class="variable">x</span> <span class="operator">=</span> <span class="type">fn</span> <span class="variable">x</span> <span class="operator">=</span>&gt; e</span><br></pre></td></tr></table></figure>
+<p>在使用匿名函数时，要注意避免 unnecessary function wrapping：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">fun <span class="title function_">nth_tail_poor</span> <span class="params">(n, x)</span> = n_times((<span class="type">fn</span> <span class="variable">y</span> <span class="operator">=</span>&gt; tl y), n, x)</span><br><span class="line">fun <span class="title function_">nth_tail_neat</span> <span class="params">(n, x)</span> = n_times(tl, n, x)</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="currying">Currying</h2>
+<p>在 ML
+中，<strong>每一个函数只有一个参数</strong>；多参数函数的形参本质上是一个包含多个变量的
+tuple。</p>
+<p>然而除此之外，有另一种方式可以实现所谓的多参数，那就是函数的
+currying。即，通过匿名函数的嵌套实现类多参数函数结构，再通过语法糖进行等价转换。</p>
+<p>注意第三条语句是第二条语句的 <em>syntactic
+sugar</em>，三个函数的作用完全相同。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">fun <span class="title function_">p</span><span class="params">(x, y, z)</span> = e</span><br><span class="line"><span class="type">fun</span> <span class="variable">curry_p</span> <span class="operator">=</span> <span class="type">fn</span> <span class="variable">x</span> <span class="operator">=</span>&gt; <span class="type">fn</span> <span class="variable">y</span> <span class="operator">=</span>&gt; <span class="type">fn</span> <span class="variable">z</span> <span class="operator">=</span>&gt; e</span><br><span class="line">fun curry_p2 x <span class="type">y</span> <span class="variable">z</span> <span class="operator">=</span> e</span><br></pre></td></tr></table></figure>
+<p>通过 currying，我们还能实现函数的部分化应用 (partial
+application)，从而消除 redundant arguments。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">fun curry_p x <span class="type">y</span> <span class="variable">z</span> <span class="operator">=</span> ... z</span><br><span class="line">fun partial_curry_p <span class="type">x</span> <span class="variable">y</span> <span class="operator">=</span> ...</span><br></pre></td></tr></table></figure>
+<p>基于 tuple 实现的多参数函数可以与 currying 多参数函数相互转换。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">fun uncurry f <span class="type">x</span> <span class="variable">y</span> <span class="operator">=</span> f(x, y)</span><br><span class="line">fun curry <span class="title function_">f</span> <span class="params">(x, y)</span> = f x y</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="lexical-scope">Lexical Scope</h2>
+<p>在 ML 中，函数的 evaluation 遵循这样一条铁律 (之前在 function binding
+部分中也介绍过)：</p>
+<div class="note info no-icon"><p><strong>The body of a function</strong> is evaluated in the
+environment where the function is <em>defined</em>, not the environment
+where the function is <em>called</em>.</p>
+</div>
+<p>也就是说，函数体的 evaluation 依赖的是函数各个函数 bindings
+与<strong>被定义时</strong>的环境。我们通过一个 silly example
+来认识这一点。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">val</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">1</span></span><br><span class="line">fun <span class="type">f</span> <span class="variable">y</span> <span class="operator">=</span> x + y</span><br><span class="line"><span class="type">val</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">2</span></span><br><span class="line"><span class="type">val</span> <span class="variable">y</span> <span class="operator">=</span> <span class="number">3</span></span><br><span class="line"><span class="type">val</span> <span class="variable">z</span> <span class="operator">=</span> f (x+y)</span><br></pre></td></tr></table></figure>
+<p>变量 <code>z</code> 的值是 6，而不是 5。在调用函数 <code>f</code>
+的环境中，<code>x</code> 的值为 2，<code>y</code> 的值为
+3，因此函数的参数 evaluates to 5。而在 evaluate
+函数体时，我们参照的是函数 <code>f</code> 定义时的环境：在那里
+<code>x</code> 还未被 <em>shadow</em>，其值为 1。而参数 <code>y</code>
+又与 5 绑定，最后计算出来的值为 1 + 5 = 6。</p>
+<p>这样的 semantics，就是<strong>词法作用域 lexical
+scope</strong>。比较来说，函数体与参数均在调用处的环境被 evaluate
+的机制更加符合直觉，这种与 lexical scope 对立的 semantics
+称为<strong>动态作用域 dynamic scope</strong>。</p>
+<p>早期的编程语言大多是遵循 dynamic scope
+的，但是很快程序员就发现了其致命问题：变量的 <em>shadowing</em>
+常常会与这一机制产生冲突。一个最典型的例子如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">var</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">3</span></span><br><span class="line"><span class="type">fun</span> <span class="variable">f</span> <span class="operator">=</span> x + <span class="number">1</span> </span><br><span class="line"><span class="type">var</span> <span class="variable">x</span> <span class="operator">=</span> <span class="string">&quot;hello&quot;</span></span><br><span class="line"><span class="type">var</span> <span class="variable">y</span> <span class="operator">=</span> f</span><br></pre></td></tr></table></figure>
+<p>这一程序是 type-checked 的：<code>x : int</code>,
+<code>f : null -&gt; int</code>, <code>x (shadow) : string</code>,
+<code>y : int</code>；但在 dynamic scope 中，y = 3 +
+"hello"，这破坏了类型一致性。而在 lexical scope
+中这一程序则不会出现问题。</p>
+<p>dynamic scope 还会导致许多其他的问题 (见
+section3sum)，因此现在的绝大多数语言默认都采用 lexical scope 来作为函数
+evaluation 的准则。但 dynamic scope 并没有完全消失：</p>
+<ul>
+<li>少数语言 (如 Racket) 仍然提供对 dynamic scope 的支持。</li>
+<li>一些特殊的编程 feature (如 exception) 遵循的是 dynamic scope。</li>
+</ul>
+<div class="note info no-icon"><p>When an exception is raised, evaluation has to look up which handle
+expression should be evaluated. This "look up" is done using the
+<strong>dynamic call stack</strong>, with no regard for the lexical
+sturcture of the program.</p>
+</div>
+<p><br></p>
+<h2 id="environments-and-closures">Environments and Closures</h2>
+<p>我们一直强调在函数式编程中，All functions are
+values。那么这个“值”具体是什么呢？</p>
+<ul>
+<li>the <em>code</em> for the function.</li>
+<li>the <em>environment</em> that was current <em>when we created the
+function</em>.</li>
+</ul>
+<p>也就是说，function value 包括 <em>code</em> 与定义时的
+<em>environment</em> 两部分；这个 <em>pair</em> 被称为函数闭包
+<em>function closure</em> 或者闭包
+<em>closure</em>。闭包的定义也是符合词法作用域 lexical scope 的。</p>
+<p>我们不能单独访问 <em>pair</em> 中的任意一部分，对于 function
+value，我们能够执行的操作只有调用 call。这其实也是一种
+encapsulation。我们能够发现，<strong>the closure overall is closed —— it
+has everything it needs to produce a function result given a function
+argument.</strong></p>
+<p>举个例子：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">var</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">3</span></span><br><span class="line"><span class="type">fun</span> <span class="variable">f</span> <span class="operator">=</span> x + <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>the binding <code>fun f y = x + y</code> bound <code>f</code> to a
+closure.</p>
+<ul>
+<li>the code part is the function <code>fn y =&gt; x + y</code>.</li>
+<li>the environment part maps <code>x</code> to 1.</li>
+</ul>
+<p>在函数 <code>f</code> 闭包创建以后，无论在哪调用 <code>f</code>
+最终返回的值都是 4。闭包保证了 evaluate
+该函数的环境与调用它时的环境完全隔绝：这是对闭包的另一种理解。</p>
+<p>注意，lexical scope 词法作用域是目前大多数编程语言遵循的
+semantics；然而 closure 并不是所有语言都具有的；closure 是 function 的
+value，因此其在函数式编程语言中是最常见的。</p>
+<p><br></p>
+<h2 id="type-inference">Type Inference</h2>
+<p>type inference 是 ML 一个十分优雅的特性。在我接触过的所有
+(极其有限的) 语言中从未见过这个 feature。</p>
+<p>Java, C, ML 都是 <em>statically typed languages</em>
+(静态类型语言)。</p>
+<div class="note info no-icon"><p>Statically typed languages. Every binding has a type that is
+determined at <strong>compile-time</strong>; The type-checker is a
+compile-time procedure that either accepts or rejects a program.</p>
+</div>
+<p>与之相对的是 <em>dynamically typed language</em>，例如 Racket, Ruby,
+Python。动态类型语言在运行时才会确定 bindings
+的类型；因此在这些语言中类型错误是一种 run-time error 而非 compile-time
+error。</p>
+<p>与 Java 和 C 又不同，ML 的类型是隐式 (<em>implicitly typed</em>)
+的，即我们几乎不需要声明 binding 的类型。这个 feature
+真的非常的厉害，它使得：</p>
+<ul>
+<li>binding 声明的流程大大简化；我们可以完全把类型的问题抛在一边。</li>
+<li>多态类型 (polymorphic datatypes) 与参数多态 (parametric
+polymorphism) 可以很轻易地实现。</li>
+</ul>
+<p>这样做的代价就是，ML 的 type-checker
+远比其他显式类型语言的复杂。在程序员不具体声明 binding
+类型的前提下，type-checker 需要根据代码与 bindings
+之间的关系<strong>推断 (infer)</strong> 出所有可能的 <em>type
+annotations</em>。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p>Course textbook:</p>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>courses</category>
+        <category>Programming Languages, UW</category>
+      </categories>
+      <tags>
+        <tag>PL</tag>
       </tags>
   </entry>
   <entry>
