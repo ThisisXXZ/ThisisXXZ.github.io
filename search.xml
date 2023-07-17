@@ -152,6 +152,243 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
+    <title>Programming Languages, UW, Part B-1</title>
+    <url>/2023/07/16/prog-lan-2/</url>
+    <content><![CDATA[<p>Part A 深入的介绍了 ML —— 一个优美的 static typed functional
+language. 接下来的 Part B 我们将会引入一个 <em>dynamic typed</em>
+functional
+language，Racket；在很早之前我就听说过这个语言独特的括号语法。</p>
+<p>这一节的一个很重要的主题应该是<strong>比较
+versus</strong>。我们将学习编程语言中几个很重要的 comparisons:</p>
+<ul>
+<li>compiler v.s. interpreter.</li>
+<li>ML v.s. Racket.</li>
+<li>static typing (与重要的 static checking 机制) v.s. dynamic
+typing.</li>
+</ul>
+<span id="more"></span>
+<p>Part B 的内容比较多，于是分为 Part B-1 与 Part B-2
+进行记录。第一部分将会介绍 Racket 语言基础与各种
+idioms，而第二部分专注于 static 与 dynamic typing 的比较。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="syntax-parentheses">Syntax &amp; Parentheses</h2>
+<blockquote>
+<p>Racket 脱胎于 Scheme，而 Scheme 是 LISP 的一个著名的 programming
+dialect。LISP
+语系都采用独特的完全用圆括号的前缀符号表示法，这一优美的语法使得其被称之为“上帝的编程语言”。</p>
+</blockquote>
+<p>Racket 中的语素仅仅有两种：</p>
+<ul>
+<li><em>atom</em>: 例如 <code>#t</code>, <code>#f</code>,
+<code>34</code>, <code>"hi"</code>, <code>null</code>
+等等。一种特别重要的 atom 被称为 identifier，它可能是：
+<ul>
+<li>variable: 例如 <code>x</code> 或
+<code>something-like-this!</code>.</li>
+<li><em>special form</em>: <code>define</code>, <code>lambda</code>,
+<code>if</code> 等等。(类比关键字)</li>
+</ul></li>
+<li>A sequence of things in parentheses
+<code>(t1 t2 ... tn)</code>.</li>
+</ul>
+<p>在一个括号序列中，第一个 atom 决定了其余元素的含义。</p>
+<ul>
+<li>第一个 atom 是某种 special form。举例来说，<code>(define ...)</code>
+means we have a <em>variable</em> definition or a <em>sugared version of
+function</em> definitions.</li>
+<li>第一个 atom 不是任何 special form。此时括号序列是一个 function
+call。</li>
+</ul>
+<p>对 Racket 的每一条语句，我们可以轻松的解析 <em>parsing</em>
+并建立对应的语法树。sequence 则代表一颗颗子树，子树的根为 sequence
+的第一个 atom。可以看出语法树的<strong>前序遍历</strong>对应的就是
+Racket 的程序结构。这样的结构使得 Racket 的语法是 <em>unambiguous</em>
+的，不用考虑优先级问题。</p>
+<div class="note info no-icon"><p>In Racket, <em>parentheses change the meaning of your program. You
+cannot add or remove them because you feel like it. They are NEVER
+optional or meaningless.</em></p>
+</div>
+<p>与其他语言不同，Racket
+中的括号有举足轻重的地位，不能随便增删。举例来说，<code>(e)</code> means
+evaluate <code>e</code> and call the resulting function with 0
+arguments. 所以 <code>(42)</code> 将会导致 run-time error。</p>
+<p><br></p>
+<h2 id="dynamic-typing">Dynamic Typing</h2>
+<p>Racket 是一个 dynamic typed language；也就是说，Racket does not use a
+static type system to reject programs before they run. 在 Racket
+中，一切类型错误都是 run-time error。</p>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> f (<span class="name"><span class="built_in">lambda</span></span> () (<span class="name"><span class="built_in">+</span></span> <span class="number">1</span> <span class="string">&quot;hello&quot;</span>)))</span><br></pre></td></tr></table></figure>
+<p>在 Racket 中，定义一个这样的函数不会出现任何错误。只有当调用它时
+<code>(f)</code>，Racket 才会弹出 <code>contract violation</code> 的
+run-time error。</p>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">list</span></span> <span class="number">2</span> (<span class="name"><span class="built_in">list</span></span> <span class="number">4</span> <span class="number">5</span>) (<span class="name"><span class="built_in">list</span></span> (<span class="name"><span class="built_in">list</span></span> <span class="number">1</span> <span class="number">2</span>) (<span class="name"><span class="built_in">list</span></span> <span class="number">6</span>)) <span class="number">19</span> (<span class="name"><span class="built_in">list</span></span> <span class="number">14</span> <span class="number">0</span>))</span><br></pre></td></tr></table></figure>
+<p>舍弃 static type system 带来的是更加灵活的语法：在 Racket
+中，定义拥有不同类型元素的 list 显得非常的 trivial；而这样的定义方式在
+ML 中会因为无法 type checked 而被 reject。</p>
+<p>非常自然的，we may want to compute something over such lists. Again
+this is no problem.
+举例来说，我们可以定义一个函数来计算该数据结构中所有数之和：</p>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">sum</span> xs)</span><br><span class="line">  (<span class="name"><span class="built_in">cond</span></span> [(<span class="name"><span class="built_in">null?</span></span> xs) <span class="number">0</span>]</span><br><span class="line">        [(<span class="name"><span class="built_in">number?</span></span> (<span class="name"><span class="built_in">car</span></span> xs)) (<span class="name"><span class="built_in">+</span></span> (<span class="name"><span class="built_in">car</span></span> xs) (<span class="name">sum</span> (<span class="name"><span class="built_in">cdr</span></span> xs)))]</span><br><span class="line">        [<span class="literal">#t</span> (<span class="name"><span class="built_in">+</span></span> (<span class="name">sum</span> (<span class="name"><span class="built_in">car</span></span> xs)) (<span class="name">sum</span> (<span class="name"><span class="built_in">cdr</span></span> xs)))]))</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="delayed-evaluation-thunks">Delayed Evaluation &amp; Thunks</h2>
+<p>A key semantic issue for a language construct is <em>when are its
+subexpressions evaluated.</em> 在 Racket (与包括 ML 的绝大多数语言)
+中，对于一个函数调用 <code>(e1 e2 ... en)</code>，我们先对参数
+<code>e2</code>, ... <code>en</code>
+进行求值再执行函数体中的内容。见下例：</p>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">my-if-bad</span> x y z) (<span class="name"><span class="built_in">if</span></span> x y z))</span><br></pre></td></tr></table></figure>
+<p>与直觉相反，<code>my-if-bad</code> 并不能完全替换
+<code>if</code>：这是因为作为函数的 <code>my-if-bad</code> 与作为
+special-form atom 的 <code>if</code> 有着完全不同的 rules for evaluating
+subexpressions.</p>
+<ul>
+<li><code>(my-if-bad e1 e2 e3)</code>，作为函数，当被调用时，需要对所有参数
+<code>e1</code>,<code>e2</code>,<code>e3</code> 进行求值。</li>
+<li><code>(if x y z)</code>，作为括号序列，<code>if</code> 的规则是先对
+<code>e1</code> 求值，如果结果为 true，则对 <code>e2</code> 求值。反之对
+<code>e3</code> 求值。也就是说，与函数不同，我们无需同时对
+<code>e2</code> 与 <code>e3</code> 进行求值。</li>
+</ul>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">factorial-wrong</span> x)</span><br><span class="line">  (<span class="name">my-if-bad</span> (<span class="name"><span class="built_in">=</span></span> x <span class="number">0</span>)</span><br><span class="line">             <span class="number">1</span></span><br><span class="line">             (<span class="name"><span class="built_in">*</span></span> x (<span class="name">factorial-wrong</span> (<span class="name"><span class="built_in">-</span></span> x <span class="number">1</span>)))))</span><br></pre></td></tr></table></figure>
+<p>我们使用 <code>my-if-bad</code> 来替换经典阶乘算法中的
+<code>if</code>：这个程序会因为无限递归而无法终止。原因是因为由于
+<code>my-if-bad</code> 是函数，无论 <code>x</code> 是否等于
+0，程序都会继续对函数体中的 <code>(factorial-wrong (-x 1))</code>
+进行求值。</p>
+<p>可以看出问题的关键在于<em>推迟对参数的求值</em>；我们可以利用
+function bodies are not evaluated until the function gets called
+这一特性来实现一个可行的 <code>my-if</code>：</p>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">my-if</span> x y z) (<span class="name"><span class="built_in">if</span></span> x (<span class="name">y</span>) (<span class="name">z</span>)))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">factorial</span> x)</span><br><span class="line">  (<span class="name">my-if</span> (<span class="name"><span class="built_in">=</span></span> x <span class="number">0</span>)</span><br><span class="line">         (<span class="name"><span class="built_in">lambda</span></span> () <span class="number">1</span>)</span><br><span class="line">         (<span class="name"><span class="built_in">lambda</span></span> () (<span class="name"><span class="built_in">*</span></span> x (<span class="name">factorial</span> (<span class="name"><span class="built_in">-</span></span> x <span class="number">1</span>)))))</span><br></pre></td></tr></table></figure>
+<p>将所有 <code>(if e1 e2 e3)</code> 替换成
+<code>(my-if e1 (lambda () e2) (lambda () e3))</code>。这样，使用
+<code>my-if</code> 函数定义的阶乘算法不会产生无限递归的错误。</p>
+<p>可以发现，由于我们用 <code>lambda</code> 创建无参匿名函数将
+<code>e2</code> 和 <code>e3</code> 包了起来，在调用 <code>my-if</code>
+时并不会对 <code>e2</code> 和 <code>e3</code> 进行求值。直到执行
+<code>my-if</code> 的函数体并对 either <code>y</code> or <code>z</code>
+进行调用时，我们才需要对 <code>e2</code> 或 <code>e3</code>
+其中之一进行求值。这一逻辑与 <code>if</code> 本质是相同的。</p>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><span class="line">e                            <span class="comment">; e will be evaluated immediately</span></span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> x (<span class="name"><span class="built_in">lambda</span></span> () e))     <span class="comment">; wrap e in a thunk</span></span><br><span class="line">(<span class="name">x</span>)                          <span class="comment">; e won&#x27;t be evaluated until x is called</span></span><br></pre></td></tr></table></figure>
+<p>利用 function bodies are not evaluated until the function gets called
+的特性，将表达式 <code>e</code> 封装在一个无参函数中推迟其求值的做法称为
+<em>delayed evaluation</em>。这个无参函数被称为 <em>thunk</em>。</p>
+<div class="note info no-icon"><p><em>thunk</em>.</p>
+<ul>
+<li>noun. the zero-argument function wrapping <code>e</code>.</li>
+<li>verb. we use "thunk the argument" to mean "use
+<code>lambda () e</code> instead of <code>e</code>" to delay the
+evaluation of <code>e</code>.</li>
+</ul>
+</div>
+<p>使用 thunk 进行表达式的延时求值是一个常见且强大的 functional
+programming idiom。这并不是 Racket 特有的 ——
+实际上这一部分完全可以在学习 ML 的时候进行介绍。</p>
+<p><br></p>
+<h2 id="mutable-bindings">Mutable Bindings</h2>
+<p>Racket 支持使用 assignment statement <code>set!</code> (set-bang) 来
+<em>mutate</em> bindings。</p>
+<p>注意区分 mutate 与 shadow：若 <code>x</code> 在环境中，使用
+<code>(set! x 13)</code> 将 <em>mutate</em> the binding so that
+<code>x</code> maps to the value 13. Doing so affects <em>all code</em>
+that has this <code>x</code> in its environment. 这也就是说，在 mutate
+<code>x</code> 之后，在所有的环境中 (而不仅仅是 mutate
+之后的环境)，<code>x</code> 都将与 13 对应。</p>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> b <span class="number">3</span>)</span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> f (<span class="name"><span class="built_in">lambda</span></span> (x) (<span class="name"><span class="built_in">*</span></span> <span class="number">1</span> (<span class="name"><span class="built_in">+</span></span> x b))))</span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> c (<span class="name"><span class="built_in">+</span></span> b <span class="number">4</span>))</span><br><span class="line">(<span class="name"><span class="built_in">set!</span></span> b <span class="number">5</span>)</span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> z (<span class="name">f</span> <span class="number">4</span>))</span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> w c)</span><br></pre></td></tr></table></figure>
+<p>在上例中，我们依次对 bindings 进行求值 (就和在 ML 中一样)：</p>
+<ul>
+<li><code>b</code> bound to 3.</li>
+<li><code>f</code> bound to <code>(lambda (x) (* 1 (+ x b)))</code>:
+正如之前强调的，在 <code>f</code> 被调用之前不会执行函数体。</li>
+<li><code>c</code>: 在环境中寻找 <code>b</code> =&gt; <code>b</code>
+bound to 3 =&gt; <code>c</code> bound to 7.</li>
+<li>mutate <code>b</code>: 此时在所有环境中 <code>b</code> bound to
+5.</li>
+<li><code>z</code>: 调用函数 <code>f</code> =&gt; 参数 <code>x</code>
+bound to 4 =&gt; 在环境中寻找 <code>b</code> =&gt; <code>b</code> bound
+to 5 =&gt; <code>z</code> bound to 9.</li>
+<li><code>w</code>: 在环境中寻找 <code>c</code> =&gt; <code>c</code>
+bound to 7 =&gt; <code>w</code> bound to 7.</li>
+</ul>
+<p>在 functional programming 中，使用 mutation 通常是非常 error-prone
+的。举例来说，可能函数 <code>f</code> 在定义时想要使用的是
+<code>b</code> 之前的值。然而 <code>b</code> 在之后发生了
+mutate，这时调用 <code>f</code> 结果会与预期不一致。</p>
+<div class="note info no-icon"><p>General technique in software development. <em>If something might get
+mutated and you need the old value, make a copy before mutation can
+occur.</em></p>
+</div>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> f</span><br><span class="line">  (<span class="name"><span class="built_in">let</span></span> ([<span class="name">b</span> b])</span><br><span class="line">    (<span class="name"><span class="built_in">lambda</span></span> (x) (<span class="name"><span class="built_in">*</span></span> <span class="number">1</span> (<span class="name"><span class="built_in">+</span></span> x b)))))</span><br></pre></td></tr></table></figure>
+<p>This code makes the <code>b</code> in the function body refer to a
+local <code>b</code> that is initialized to the global
+<code>b</code>.</p>
+<p><br></p>
+<h2 id="lazy-evaluation">Lazy Evaluation</h2>
+<p>在实际使用 thunk 的过程中，我们常常会遇到重复计算的情况：</p>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> my-mult x y-thunk</span><br><span class="line">  (<span class="name"><span class="built_in">cond</span></span> [(<span class="name"><span class="built_in">=</span></span> x <span class="number">0</span>) <span class="number">0</span>]</span><br><span class="line">        [(<span class="name"><span class="built_in">=</span></span> x <span class="number">1</span>) (<span class="name">y-thunk</span>)]</span><br><span class="line">        [<span class="literal">#t</span> (<span class="name"><span class="built_in">+</span></span> (<span class="name">y-thunk</span>) (<span class="name">my-mult</span> (<span class="name"><span class="built_in">-</span></span> x <span class="number">1</span>) y-thunk))]))</span><br></pre></td></tr></table></figure>
+<p>在这个递归实现的乘法函数中，每递归一层都需要调用一次
+<code>y-thunk</code>。一种可行的解决方案是，在调用函数时我们使用
+<code>let</code> 定义本地变量对调用 <code>y-thunk</code>
+的结果进行储存。</p>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><span class="line">(<span class="name">my-mult</span> x (<span class="name"><span class="built_in">lambda</span></span> () (<span class="name"><span class="built_in">+</span></span> <span class="number">3</span> <span class="number">4</span>)))                  <span class="comment">; ordinary call</span></span><br><span class="line">(<span class="name">my-mult</span> x (<span class="name"><span class="built_in">let</span></span> ([<span class="name">z</span> (<span class="name"><span class="built_in">+</span></span> <span class="number">3</span> <span class="number">4</span>)]) (<span class="name"><span class="built_in">lambda</span></span> () z)))    <span class="comment">; store the result in z</span></span><br><span class="line">(<span class="name">my-mult</span> x (<span class="name"><span class="built_in">lambda</span></span> () (<span class="name"><span class="built_in">let</span></span> ([<span class="name">z</span> (<span class="name"><span class="built_in">+</span></span> <span class="number">3</span> <span class="number">4</span>)]) z)))    <span class="comment">; wrong: the same as ordinary call</span></span><br></pre></td></tr></table></figure>
+<p>注意第三种写法是错误的；它本质上与第一种相同，因为在 <code>let</code>
+中计算的过程仍然被包含在 thunk 中。</p>
+<p>这种优化方式操作性不强。在这里我们介绍一个更普适的优化方案：<em>lazy-evaluation/call-by-need/promises.</em>
+惰性求值的基本思路是利用 mutation 来对 thunk
+进行记忆化，仅在需要时才对表达式进行求值。</p>
+<p>惰性求值 (lazy evaluation) 包含两个操作：delay 与 force：</p>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">my-delay</span> f)</span><br><span class="line">  (<span class="name">mcons</span> <span class="literal">#f</span> f))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">my-force</span> th)</span><br><span class="line">  (<span class="name"><span class="built_in">if</span></span> (<span class="name">mcar</span> th)</span><br><span class="line">      (<span class="name">mcdr</span> th)</span><br><span class="line">      (<span class="name"><span class="built_in">begin</span></span> (<span class="name">set-mcar!</span> th <span class="literal">#t</span>)</span><br><span class="line">             (<span class="name">set-mcdr!</span> th ((<span class="name">mcdr</span> th)))</span><br><span class="line">             (<span class="name">mcdr</span> th))))</span><br></pre></td></tr></table></figure>
+<ul>
+<li>delay: 对于 thunk <code>f</code>，delay 返回一个 pair。这个 pair
+被称为 <em>promise</em>。注意，在创建 promise 的过程中 thunk
+并没有被调用，所以表达式不会被计算。
+<ul>
+<li>first field 用来标记我们是否对 thunk <code>f</code>
+进行过求值。</li>
+<li>second field 初始存储 thunk <code>f</code> 本身。</li>
+</ul></li>
+<li>force: 替换朴素的 <code>(thunk)</code> 操作。查看 promise 的 first
+field，判断我们是否对 thunk <code>f</code> 进行过求值。
+<ul>
+<li>若为假，对 thunk <code>f</code> 进行求值并将 second field mutate
+为求值的结果；再将 first field 设为真。</li>
+<li>若为真，直接返回 second field 中储存的值。</li>
+</ul></li>
+</ul>
+<p>接下来我们利用惰性求值对上例进行优化：</p>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">my-mult</span> x y-promise)</span><br><span class="line">  (<span class="name"><span class="built_in">cond</span></span> [(<span class="name"><span class="built_in">=</span></span> x <span class="number">0</span>) <span class="number">0</span>]</span><br><span class="line">        [(<span class="name"><span class="built_in">=</span></span> x <span class="number">1</span>) (<span class="name">my-force</span> y-promise)]</span><br><span class="line">        [<span class="literal">#t</span> (<span class="name"><span class="built_in">+</span></span> (<span class="name">my-force</span> y-promise) (<span class="name">my-mult</span> (<span class="name"><span class="built_in">-</span></span> x <span class="number">1</span>) my-promise))]))</span><br><span class="line"></span><br><span class="line">(<span class="name">my-mult</span> e1 (<span class="name">my-delay</span> (<span class="name"><span class="built_in">lambda</span></span> () e2)))    <span class="comment">; calling</span></span><br></pre></td></tr></table></figure>
+<p>在一些编程语言例如 Haskell
+中，惰性求值被运用到所有的函数调用中：也就是说，对于所有的函数参数，我们要么从不对其进行求值，要么仅仅对其进行一次求值。这样的机制又被称为
+<em>call-by-need</em>。而传统的在函数体被执行之前保证对所有的函数参数进行求值的机制被称为
+<em>call-by-value</em>。</p>
+<p><br></p>
+<h2 id="stream">Stream</h2>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p><a href="https://www.coursera.org/learn/programming-languages-part-b">Programming
+Languages, Part B, University of Washington</a>, Lecturer: Professor Dan
+Grossman.</p>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>courses</category>
+        <category>Programming Languages, UW</category>
+      </categories>
+      <tags>
+        <tag>PL</tag>
+        <tag>Racket</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Programming Languages, UW, Part A</title>
     <url>/2023/07/14/prog-lan-1/</url>
     <content><![CDATA[<p>毫无疑问的神课，不愧于 Coursera 上接近满分的评价。Dan Grossman
@@ -434,7 +671,7 @@ problem</em>.</p>
 <p>对于某些 type system，不存在一个有效的 type inference
 能够同时满足以下三个条件：</p>
 <ul>
-<li>the inference process is <em>always terminates</em>.</li>
+<li>the inference process <em>always terminates</em>.</li>
 <li>the inference process always succeeds if inference is possible.</li>
 <li>the inference process always fails if inference is not
 possible.</li>
@@ -472,8 +709,7 @@ values can have polymorphic types.</li>
 <li><code>xs</code> has type <code>T1</code>. (参数)</li>
 <li><code>T1=T3 list</code>. (根据 <code>case...of</code> 的 pattern
 matching 得出)</li>
-<li><code>T2=int</code>. (函数返回值为 0 或是某个调用
-<code>length</code> 的结果)</li>
+<li><code>T2=int</code>. (函数返回值可以为 0)</li>
 <li><code>x</code> has type <code>T3</code> and <code>xs'</code> has
 type <code>T3 list</code>.</li>
 </ul>
