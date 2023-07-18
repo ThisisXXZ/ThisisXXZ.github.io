@@ -31,7 +31,7 @@
 <meta property="og:description" content="Part A 深入的介绍了 ML —— 一个优美的 static typed functional language. 接下来的 Part B 我们将会引入一个 dynamic typed functional language，Racket；在很早之前我就听说过这个语言独特的括号语法。 这一节的一个很重要的主题应该是比较 versus。我们将学习编程语言中几个很重要的 comparis">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-07-16T06:38:47.000Z">
-<meta property="article:modified_time" content="2023-07-17T13:48:33.054Z">
+<meta property="article:modified_time" content="2023-07-18T07:17:50.239Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="PL">
 <meta property="article:tag" content="Racket">
@@ -167,7 +167,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#syntax-parentheses"><span class="nav-number">1.</span> <span class="nav-text">Syntax &amp; Parentheses</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dynamic-typing"><span class="nav-number">2.</span> <span class="nav-text">Dynamic Typing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#delayed-evaluation-thunks"><span class="nav-number">3.</span> <span class="nav-text">Delayed Evaluation &amp; Thunks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mutable-bindings"><span class="nav-number">4.</span> <span class="nav-text">Mutable Bindings</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lazy-evaluation"><span class="nav-number">5.</span> <span class="nav-text">Lazy Evaluation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stream"><span class="nav-number">6.</span> <span class="nav-text">Stream</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#syntax-parentheses"><span class="nav-number">1.</span> <span class="nav-text">Syntax &amp; Parentheses</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dynamic-typing"><span class="nav-number">2.</span> <span class="nav-text">Dynamic Typing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#delayed-evaluation-thunks"><span class="nav-number">3.</span> <span class="nav-text">Delayed Evaluation &amp; Thunks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mutable-bindings"><span class="nav-number">4.</span> <span class="nav-text">Mutable Bindings</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lazy-evaluation"><span class="nav-number">5.</span> <span class="nav-text">Lazy Evaluation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#streams"><span class="nav-number">6.</span> <span class="nav-text">Streams</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#using-streams"><span class="nav-number">6.1.</span> <span class="nav-text">Using Streams</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#defining-streams"><span class="nav-number">6.2.</span> <span class="nav-text">Defining Streams</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -543,7 +543,58 @@ field，判断我们是否对 thunk <code>f</code> 进行过求值。
 <em>call-by-need</em>。而传统的在函数体被执行之前保证对所有的函数参数进行求值的机制被称为
 <em>call-by-value</em>。</p>
 <p><br></p>
-<h2 id="stream">Stream</h2>
+<h2 id="streams">Streams</h2>
+<div class="note info no-icon"><p>A stream is an infinite sequence of values.</p>
+</div>
+<p>We obviously cannot create such a sequence explicitly as it would
+literally take forever, but with <em>delayed evaluation</em> we can
+create the code that knows how to produce the infinite sequence.</p>
+<p>stream 是以 thunk 的形式表示的，当调用该 thunk 时将返回一个 pair
+<code>&lt;val, next-thunk&gt;</code>。其中，<code>val</code>
+为序列中当前元素的值，而 <code>next-thunk</code>
+为接下来的元素序列形成的 stream。</p>
+<blockquote>
+<p>无限序列由 <code>cons</code> 单元的嵌套结构表示，<code>cons</code>
+单元的 <code>car</code> 与 <code>cdr</code>
+分别为当前值与被延时求值的对象 (promise)。序列的后一个 <code>cons</code>
+单元通过求值 <code>cdr</code>
+部分产生。这个过程不断重复，从而形成无限序列。</p>
+</blockquote>
+<h3 id="using-streams">Using Streams</h3>
+<p><code>powers-of-two</code> 是 Racket 中的一个 built-in
+stream，它是一个由 2 的幂次方组成的无限值序列。注意 stream
+本质上是一个包含 pair 的 thunk；因此在取值之前需要进行调用。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; (<span class="name"><span class="built_in">car</span></span> (<span class="name">power-of-two</span>))</span><br><span class="line"><span class="number">2</span></span><br><span class="line">&gt; (<span class="name"><span class="built_in">car</span></span> (<span class="name"><span class="built_in">cdr</span></span> (<span class="name">power-of-two</span>)))</span><br><span class="line"><span class="number">4</span></span><br></pre></td></tr></table></figure>
+<p>自然的，我们想要定义函数 that operates over streams
+来获得某些信息。下面的 <code>number-until</code>
+函数将会计算满足条件的元素在给定 stream 中的位置。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">number-until</span> stream tester)</span><br><span class="line">  (<span class="name"><span class="built_in">letrec</span></span> ([<span class="name">f</span> (<span class="name"><span class="built_in">lambda</span></span> (stream ans)</span><br><span class="line">                (<span class="name"><span class="built_in">let</span></span> ([<span class="name">pr</span> (<span class="name">stream</span>)])</span><br><span class="line">                  (<span class="name"><span class="built_in">if</span></span> (<span class="name">tester</span> (<span class="name"><span class="built_in">car</span></span> pr))</span><br><span class="line">                      ans</span><br><span class="line">                      (<span class="name">f</span> (<span class="name"><span class="built_in">cdr</span></span> pr) (<span class="name"><span class="built_in">+</span></span> ans <span class="number">1</span>)))))])</span><br><span class="line">    (<span class="name">f</span> stream <span class="number">1</span>)))</span><br><span class="line"></span><br><span class="line">&gt; (<span class="name">number-until</span> powers-of-two (<span class="name"><span class="built_in">lambda</span></span> (x) (<span class="name"><span class="built_in">=</span></span> x <span class="number">16</span>)))</span><br><span class="line"><span class="number">4</span></span><br></pre></td></tr></table></figure>
+<h3 id="defining-streams">Defining Streams</h3>
+<p>按照 stream 的定义，我们尝试定义一个无限长的全 1 序列。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> ones (<span class="name"><span class="built_in">lambda</span></span> () (<span class="name"><span class="built_in">cons</span></span> <span class="number">1</span> (<span class="name"><span class="built_in">lambda</span></span> () (<span class="name"><span class="built_in">cons</span></span> <span class="number">1</span> ...)))))) <span class="comment">; infinite def. (not realistic)</span></span><br></pre></td></tr></table></figure>
+<p>这是一种朴素的无限定义；但我们能够很容易发现其中隐藏的递归规律：后面重复的部分就是
+<code>ones</code> 本身。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> ones (<span class="name"><span class="built_in">lambda</span></span> () (<span class="name"><span class="built_in">cons</span></span> <span class="number">1</span> ones)))                      <span class="comment">; correct def.</span></span><br></pre></td></tr></table></figure>
+<p>需要注意的是，对 stream 的定义，核心在于利用了延时求值 (delayed
+evaluation) 的 idiom。使用定义本身来进行定义，这被称作递归定义
+(recursive definition)。递归定义的完整性需要借助延时求值来保证。</p>
+<p>例如在上述定义中，我们在对 <code>ones</code> 的定义中使用了
+<code>ones</code> 本身，但由于 thunk
+的存在，主体部分的求值过程被延迟了，这保证了递归定义的完整性。如果不这样做的话
+(见下例)：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> ones (<span class="name"><span class="built_in">cons</span></span> <span class="number">1</span> ones))                                  <span class="comment">; wrong def.</span></span><br><span class="line"></span><br><span class="line">&gt; ones: undefined. cannot reference an identifier before its definition</span><br></pre></td></tr></table></figure>
+<p>由于没有 thunk 来对 <code>ones</code>
+定义的主体部分的求值过程进行延迟，程序在定义 <code>ones</code>
+的过程将立即对主体部分的递归定义进行求值，但它将会发现 <code>ones</code>
+的定义并未完成，于是 <code>undefined</code> 错误将会产生。</p>
+<p>接下来我们尝试自己定义一个 <code>powers-of-two</code>:</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> powers-of-two</span><br><span class="line">  (<span class="name"><span class="built_in">letrec</span></span> ([<span class="name">f</span> (<span class="name"><span class="built_in">lambda</span></span> (x) (<span class="name"><span class="built_in">cons</span></span> x (<span class="name"><span class="built_in">lambda</span></span> () (<span class="name">f</span> (<span class="name"><span class="built_in">*</span></span> x <span class="number">2</span>))))])</span><br><span class="line">              (<span class="name"><span class="built_in">lambda</span></span> () (<span class="name">f</span> <span class="number">2</span>))))</span><br></pre></td></tr></table></figure>
+<p>注意到在 stream 与 stream 操作函数的定义中，我们常常需要一个辅助函数
+<code>f</code>。在上例中，辅助函数 <code>f</code> 对于某个参数
+<code>x</code>，输出一个 pair <code>&lt;x, thunk&gt;</code>。其中 thunk
+包装的是 <code>f</code> 对于参数 <code>2x</code> 计算的结果；那么整个
+stream 就可以表示为 <code>(lambda () (f 2))</code>：一个封装
+<code>f(2)</code> 的 thunk。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
