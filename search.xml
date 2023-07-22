@@ -428,6 +428,351 @@ if not specified.</p>
       </tags>
   </entry>
   <entry>
+    <title>COMP3357 notes P3 - Hard Problems</title>
+    <url>/2023/06/05/Cryptography-COMP3357-3/</url>
+    <content><![CDATA[<p>COMP3357 digest 的 P3 部分 (P1 部分在<a href="https://thisisxxz.github.io/2023/05/25/Cryptography-COMP3357/">这里</a>，P2
+部分在<a href="https://thisisxxz.github.io/2023/06/02/Cryptography-COMP3357-2/">这里</a>)，主要介绍密码学中的几个困难问题
+(hard problems) 与一个重要的 cryptographic primitive: 单向函数 (one-way
+function).</p>
+<p>这一 Part 涉及到的困难问题 (Factoring problem, RSA problem, Discrete
+Logarithm problem, Diffie-Hellman problem) 的构建与 P2
+中的数论，群论知识密切相关，注意参考。</p>
+<span id="more"></span>
+<p>同样，与 CnBlogs
+中的笔记不同，这里不会详细的记载每个相关的知识点；只会尝试简略地总结一些能让未来的自己也会感到有趣，巧妙的内容
+(Eureka!)。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="hardness-of-mathematical-problems">Hardness of Mathematical
+Problems</h2>
+<p>When discussing <strong>hardness</strong> of mathematical problems
+with input some integer <span class="math inline">\(N\)</span>, we study
+asymptotics in terms of the <strong>input length</strong>.</p>
+<p>Integer <span class="math inline">\(N\)</span> will be assumed to be
+represented in binary. The <strong>running time</strong> of an algorithm
+taking as input an integer <span class="math inline">\(N\)</span> is
+measured in terms of <span class="math inline">\(||N||\)</span>, the
+length of the binary representation of <span class="math inline">\(N\)</span>.</p>
+<p>Note that <span class="math inline">\(||N||=\lfloor \log N
+\rfloor+1\)</span>.</p>
+<div class="note info no-icon"><p>A problem is considered to be <strong>easy</strong> if the running
+time of its algorithm is <strong>polynomial</strong> in <span class="math inline">\(||N||\)</span>.</p>
+</div>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>这里对数学问题困难性 (hardness) 的定义是建立在算法数论 (algorithmic
+number theory) 的视角上的。</p>
+<p>实际上，这个概念更贴近计算机领域而不是纯数学领域。如果从算法时间复杂度的角度来定义，就好理解多了：一个时间复杂度为
+<span class="math inline">\(O(\mathtt{poly}(n))\)</span>
+的算法是<strong>高效 (efficient)</strong> 的，对应的问题是<strong>简单
+(easy)</strong> 的。而时间复杂度为 <span class="math inline">\(O(\mathtt{exp}(n))\)</span> 的算法是<strong>低效
+(inefficient)</strong> 的，对应的问题是<strong>困难 (hard)</strong>
+的。</p>
+</blockquote>
+<p><br></p>
+<h2 id="factoring-problem">Factoring Problem</h2>
+<p>Factoring could be viewed as the inverse operation of multiplication.
+Multiplying two primes <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> as <span class="math inline">\(N=p\times q\)</span> is <strong>easy</strong>,
+while factorizing <span class="math inline">\(N\)</span> to derive <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> is <strong>hard</strong>.</p>
+<div class="note info no-icon"><p>Factoring the product of two primes: Given <span class="math inline">\(N=pq\)</span>, where <span class="math inline">\(p,q\)</span> are primes, find <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span>.</p>
+</div>
+<h3 id="factoring-experiment">Factoring Experiment</h3>
+<p>Cryptographically, the hardness of the factoring problem is indicated
+by the <strong>factoring experiment</strong> <span class="math inline">\(\mathtt{Factor}_{\mathscr{A},
+Genmodulus}(n)\)</span>, where GenModulus is an <strong>efficient
+(polynomial-time)</strong> algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs <span class="math inline">\((N,p,q)\)</span> where <span class="math inline">\(N=pq\)</span>, and <span class="math inline">\(p,q\)</span> are <span class="math inline">\(n\)</span>-bit primes except with negligible
+probability.</p>
+<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(N\)</span> needs to efficiently compute the
+corresponding <span class="math inline">\(p,q\)</span>.</p>
+<div class="note info no-icon"><p>Definition. Factoring is hard relative to GenModulus if for all
+<strong>probabilistic polynomial-time algorithm</strong> <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
+<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{Factor}_{\mathscr{A},
+GenModulus}(n)=1]\leq \varepsilon(n)\)</span>.</p>
+</div>
+<p><strong>The Factoring Assumption</strong> is the assumption that
+there exists a GenModulus relative to which factoring is hard.</p>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>这里对数学问题困难性的定义又与上面的算法数论 (algorithmic number
+theory)
+或计算机科学领域的定义不同，是以<strong>实验</strong>来描述的。是不是很有加密学的特色？</p>
+<p>这里还要注意一个概念：<strong>密码学假设
+(assumption)</strong>，它将某个数学问题的困难性归约到实验中的一个高效
+(efficient) 算法的存在性上。对于大数质因数分解问题 (Factoring
+problem)，其困难性被某个高效的 GenModulus 算法的存在保证。</p>
+</blockquote>
+<p><br></p>
+<h2 id="rsa-problem">RSA Problem</h2>
+<p>Given a modulus <span class="math inline">\(N\)</span> and integer
+<span class="math inline">\(e&gt;2\)</span>, such that <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>.</p>
+<p>By the Corollary 2 of the Fermat's Little Theorem (see it in P2), we
+know that exponentiation to the <span class="math inline">\(e\)</span>-th power mod <span class="math inline">\(N\)</span> is a <strong>permutation</strong> on
+<span class="math inline">\((\mathbb{Z}/N)^{*}\)</span>;</p>
+<p>For any <span class="math inline">\(y\in (\mathbb{Z}/N)^{*}\)</span>,
+let <span class="math inline">\([y^{1/e} \mod{N}]\)</span> be the unique
+element which yields <span class="math inline">\(y\)</span> when raised
+to the <span class="math inline">\(e\)</span>-th power mod <span class="math inline">\(N\)</span>, i.e., <strong>the <span class="math inline">\(e\)</span>-th root of <span class="math inline">\(y\)</span> mod <span class="math inline">\(N\)</span></strong>.</p>
+<p>If <span class="math inline">\(e\cdot d\equiv
+1\pmod{\varphi(N)}\)</span>, then raising to the <span class="math inline">\(d\)</span>-th power is the
+<strong>inverse</strong> of raising to the <span class="math inline">\(e\)</span>-th power, that is, for any <span class="math inline">\(g\in (\mathbb{Z}/N)^{*}\)</span>, <span class="math inline">\((g^e)^d \equiv g\pmod{N}\)</span>. Therefore, if
+<span class="math inline">\(y=g^e\)</span>, <span class="math inline">\(y^{1/e}=g=y^d\pmod{N}\)</span>.</p>
+<div class="note info no-icon"><p>RSA problem is essentially finding <span class="math inline">\(e\)</span>-th root of <span class="math inline">\(y\)</span> mod <span class="math inline">\(N\)</span>: Given <span class="math inline">\(N,e,y\)</span>, compute <span class="math inline">\([y^{1/e}\mod{N}]\)</span>. Note that <span class="math inline">\(e&gt;2\)</span> and <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>, <span class="math inline">\(\gcd(y, N)=1\)</span>.</p>
+</div>
+<h3 id="rsa-experiment">RSA Experiment</h3>
+<p>Similarly, we have the RSA experiment <span class="math inline">\(\mathtt{RSA}\)</span>-<span class="math inline">\(\mathtt{inv}_{\mathscr{A}, GenRSA}(n)\)</span>,
+where GenRSA is an efficient algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs a modulus <span class="math inline">\(N\)</span> that is the product of two <span class="math inline">\(n\)</span>-bit primes <span class="math inline">\(p,q\)</span>, as well as integers <span class="math inline">\(e,d&gt;0\)</span> with <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span> and <span class="math inline">\(ed\equiv 1\pmod{\varphi(N)}\)</span>.</p>
+<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(N,e\)</span> and a <u><strong>uniform</strong></u>
+<span class="math inline">\(y\in (\mathbb{Z}/N)^{*}\)</span> needs to
+efficiently compute the corresponding <span class="math inline">\(x\)</span>.</p>
+<div class="note info no-icon"><p>Definition. RSA problem is hard relative to GenRSA if for all
+probabilistic polynomial time algorithm <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
+<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{RSAinv}_{\mathscr{A},
+GenRSA}(n)=1]\leq \varepsilon(n)\)</span>.</p>
+</div>
+<p>The RSA Assumption is the assumption that there exists a GenRSA
+algorithm relative to which the RSA problem is hard. Note that GenRSA
+can be constructed from GenModulus.</p>
+<h3 id="rsa-and-factoring">RSA and Factoring</h3>
+<p>The hardness of RSA problem could be <strong>reduced</strong> to the
+hardness of factoring problem, which is to say, one could efficiently
+solve RSA problem if he could efficiently solve factoring problem.</p>
+<p>Assume there exists an efficient algorithm <span class="math inline">\(\mathscr{A}\)</span> that could factorize <span class="math inline">\(N\)</span> into two distinct primes <span class="math inline">\(p,q\)</span>, then we could construct an efficient
+<span class="math inline">\(\mathscr{A}&#39;\)</span> that could solve
+RSA problem.</p>
+<ul>
+<li><span class="math inline">\(\mathscr{A}&#39;\)</span> runs <span class="math inline">\(\mathscr{A}(N)\)</span> and obtain two
+<strong>distinct odd primes</strong> <span class="math inline">\(p,q\)</span> that <span class="math inline">\(N=pq\)</span>.</li>
+<li><span class="math inline">\(\mathscr{A}&#39;\)</span> simply
+computes <span class="math inline">\(\varphi(N)=(p-1)(q-1)\)</span>.</li>
+<li><span class="math inline">\(\mathscr{A}&#39;\)</span> computes <span class="math inline">\(d\equiv e^{-1}\pmod{\varphi(N)}\)</span> with
+extended Euclidean algorithm.</li>
+<li><span class="math inline">\(\mathscr{A}&#39;\)</span> could compute
+<span class="math inline">\(y^{1/e}\)</span> mod <span class="math inline">\(N\)</span> efficiently by computing <span class="math inline">\(y^d\)</span> mod <span class="math inline">\(N\)</span>.</li>
+</ul>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>RSA 问题本质上是<strong>求模意义下的 <span class="math inline">\(e\)</span> 次方根</strong>。注意 RSA 问题中的模数
+<span class="math inline">\(N\)</span> 是两个不同的大奇质数 <span class="math inline">\(p,q\)</span> 之积。</p>
+<p>RSA 问题的巧妙之处在于，利用群的 closure
+性质与费马小定理可得，<strong>模意义下的 <span class="math inline">\(e\)</span> 次方根与模意义下的 <span class="math inline">\(d\)</span> 次方幂是等价的</strong>；其中 <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>, <span class="math inline">\(d\equiv e^{-1} \pmod{\varphi(N)}\)</span>.
+也就是说，如果敌手得知 <span class="math inline">\(\varphi(N)\)</span>，那么他就能通过计算得出 <span class="math inline">\(d\)</span>，从而轻松解决 RSA 问题。</p>
+<p>然而得知 <span class="math inline">\(\varphi(N)\)</span>
+也是<strong>困难的</strong>；这由 Factoring problem
+的困难性保证。对于只有两个质因数 <span class="math inline">\(p,q\)</span> 的模数 <span class="math inline">\(N\)</span>, <span class="math inline">\(\varphi(N)=\varphi(pq)=\varphi(p)\varphi(q)=(p-1)(q-1)\)</span>。所以，得到
+<span class="math inline">\(\varphi(N)\)</span> 的前提是成功将 <span class="math inline">\(N\)</span> 分解为 <span class="math inline">\(p,q\)</span>。</p>
+<p>著名的 RSA 公钥加密就应用了这一性质：在该加密中，公钥 <span class="math inline">\(pk=e\)</span>, 私钥 <span class="math inline">\(sk=d\)</span>。加密 <span class="math inline">\(Enc_{pk}(m)=m^e\)</span>，解密 <span class="math inline">\(Dec_{sk}(c)=c^d\)</span> (均在 mod <span class="math inline">\(N\)</span> 意义下)。RSA
+问题的困难性保证了任意不持有私钥的敌手无法由密文 <span class="math inline">\(c=m^e\)</span> 破解消息 <span class="math inline">\(m\)</span> (即，得到 <span class="math inline">\(c\)</span> 在模 <span class="math inline">\(N\)</span> 意义下的 <span class="math inline">\(e\)</span> 次方根)。</p>
+</blockquote>
+<p><br></p>
+<h2 id="discrete-logarithm-problem">Discrete Logarithm Problem</h2>
+<p>Fix a <strong>cyclic</strong> group <span class="math inline">\(\mathbb{G}\)</span> of order <span class="math inline">\(q\)</span>, and generator <span class="math inline">\(g\in\mathbb{G}\)</span>. We know that <span class="math inline">\(\{g^0,g^1,...,g^{q-1}\}=\mathbb{G}\)</span>.</p>
+<p>Equilently, for every <span class="math inline">\(h\in\mathbb{G}\)</span>, there is a unique <span class="math inline">\(x\in \mathbb{Z}_q\)</span>, such that <span class="math inline">\(g^x=h\)</span>. We define <span class="math inline">\(\log_g{h}\)</span> to be this <span class="math inline">\(x\)</span>. This is the <strong>discrete
+logarithm</strong> of <span class="math inline">\(h\)</span> with
+respect to <span class="math inline">\(g\)</span> in the group <span class="math inline">\(\mathbb{G}\)</span>.</p>
+<div class="note info no-icon"><p><strong>Discrete Logarithm</strong> problem in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in \mathbb{G}\)</span> and
+<u><strong>uniform</strong></u> <span class="math inline">\(h\in
+\mathbb{G}\)</span>, compute <span class="math inline">\(\log_g{h}\)</span>.</p>
+</div>
+<h3 id="discrete-logarithm-experiment">Discrete-Logarithm
+Experiment</h3>
+<p>Similarly, we have the discrete-logarithm experiment <span class="math inline">\(\mathtt{DLog}_{\mathscr{A}, \mathscr{G}}
+(n)\)</span> where <span class="math inline">\(\mathscr{G}\)</span> is
+an efficient group-generation algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs a cyclic group <span class="math inline">\(\mathbb{G}\)</span>, its order <span class="math inline">\(q\)</span>, and a generator <span class="math inline">\(g\)</span>.</p>
+<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(\mathbb{G},q,g\)</span> and a
+<u><strong>uniform</strong></u> <span class="math inline">\(h\in\mathbb{G}\)</span> needs to efficiently
+compute correponding <span class="math inline">\(x\)</span>.</p>
+<div class="note info no-icon"><p>Definition. RSA problem is hard relative to <span class="math inline">\(\mathscr{G}\)</span> if for all probabilistic
+polynomial time algorithm <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
+<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{DLog}_{\mathscr{A},
+\mathscr{G}}(n)=1]\leq \varepsilon(n)\)</span>.</p>
+</div>
+<p>The Discrete Logarithm Assumption is the assumption that there exists
+a group-generation algorithm <span class="math inline">\(\mathscr{G}\)</span> relative to which the
+Discrete Logarithm problem is hard.</p>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>离散对数问题本质上是<strong>模意义下的对数运算</strong>。另外还需要注意一点，无论是
+RSA 实验还是离散对数实验，对敌手的<strong>挑战 (challenge)</strong>
+都是<strong>均匀随机 (uniform)</strong> 的。</p>
+<p>其实，RSA 问题 (模意义下的开次方运算) 与离散问题 (模意义下的对数运算)
+均可以视为幂运算 <span class="math inline">\(h=g^x\)</span>
+的<strong>逆运算</strong>：RSA 问题给出指数 <span class="math inline">\(x\)</span>，要求由 <span class="math inline">\(h\)</span> 计算底数 <span class="math inline">\(g=h^{1/x}\)</span>；而离散对数问题给出底数 <span class="math inline">\(g\)</span>，要求由 <span class="math inline">\(h\)</span> 计算指数 <span class="math inline">\(x=\log_g h\)</span>。</p>
+</blockquote>
+<p><br></p>
+<h2 id="diffie-hellman-problem">Diffie-Hellman Problem</h2>
+<p>Fix cyclic group <span class="math inline">\(\mathbb{G}\)</span> of
+order <span class="math inline">\(q\)</span>, and generator <span class="math inline">\(g\in\mathbb{G}\)</span>.</p>
+<p>Given elements <span class="math inline">\(h_1,h_2\in
+\mathbb{G}\)</span>, define Diiffie-Hellman function <span class="math inline">\(DH_g(h_1,h_2)=g^{\log_g h_1\cdot\log_g
+h_2}\)</span>. That is, if <span class="math inline">\(h_1=g^{x_1}\)</span>, <span class="math inline">\(h_2=g^{x_2}\)</span>, then <span class="math inline">\(DH_g(h_1,h_2)=g^{x_1\cdot x_2}\)</span>.</p>
+<div class="note info no-icon"><p>Computational Diffie-Hellman (CDH) in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in \mathbb{G}\)</span>, and
+<u><strong>uniform</strong></u> <span class="math inline">\(h_1,h_2\in\mathbb{G}\)</span>, compute <span class="math inline">\(DH_g(h_1,h_2)\)</span>.</p>
+<p>Decisional Diffie-Hellman (DDH) in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in\mathbb{G}\)</span>, and
+<u><strong>uniform</strong></u> <span class="math inline">\(h_1,h_2\in\mathbb{G}\)</span>,
+<strong>distinguish</strong> <span class="math inline">\(DH_g(h_1,h_2)\)</span> from a
+<u><strong>uniform</strong></u> group element <span class="math inline">\(h&#39;\in \mathbb{G}\)</span>.</p>
+</div>
+<p>CDH and DDH experiments could be constructed similarly so they are
+not covered here.</p>
+<p>It is easy to see that if one could solve Discrete Logarithm problem,
+he could also solve CDH problem; and if one could solve CDH problem, he
+could also solve DDH problem.</p>
+<p><strong>So DLog <span class="math inline">\(\to\)</span> CDH <span class="math inline">\(\to\)</span> DDH, the assumption is getting
+stronger and stronger, </strong> which is to say, if one could NOT solve
+DDH problem, it would be <strong>impossible</strong> for him to solve
+CDH or DLog problem.</p>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>Diffie-Hellman
+问题的困难性是由离散对数问题的困难性保证的。至于为什么要定义这样一个函数，是由于
+Diffie-Hellman 问题定义了<strong>两个可以暴露的量</strong> <span class="math inline">\(h_1,h_2\)</span>。当 Alice 与 Bob
+之间需要进行多次信息传输时，利用 Diffie-Hellman
+问题的困难性可以很好的隐藏秘密信息。</p>
+<p>以著名的 <strong>Diffie-Hellman Key-exchange Protocol
+(密钥交换协议)</strong> 为例：Alice 选择某个 <span class="math inline">\(x_1\)</span>，并向 Bob 发送 <span class="math inline">\(h_1=g^{x_1}\)</span>；而 Bob 选择某个 <span class="math inline">\(x_2\)</span>，并向 Alice 发送 <span class="math inline">\(h_2=g^{x_2}\)</span>。这样，Bob 与 Alice
+双方都可以计算出密钥 <span class="math inline">\(k=g^{x_1x_2}=h_1^{x_2}=h_2^{x_1}\)</span>，密钥交换成功。而
+Diffie-Hellman 问题的困难性保证窃听到 transcript <span class="math inline">\(h_1,h_2\)</span> 的敌手无法据此求出 <span class="math inline">\(k=DH_g(h_1,h_2)\)</span>.</p>
+</blockquote>
+<p><br></p>
+<h2 id="one-way-function">One-Way Function</h2>
+<p>One-Way Functions are a critical cryptographic primitive, that is
+both necessary and sufficient for private-key encryption and MACs.
+<strong>Informally</strong> speaking, a function <span class="math inline">\(f\)</span> is one-way if it is <strong>easy to
+compute but hard to invert</strong>.</p>
+<p>We formally define "hard to invert" with the inverting experiment
+<span class="math inline">\(\mathtt{Invert}_{\mathscr{A},
+f}(n)\)</span>.</p>
+<h3 id="the-inverting-experiment">The Inverting Experiment</h3>
+<ul>
+<li>Challenger <span class="math inline">\(\mathscr{C}\)</span> choose
+<u><strong>uniform</strong></u> <span class="math inline">\(x\in\{0,1\}^n\)</span>, and compute <span class="math inline">\(y:=f(x)\)</span>.</li>
+<li>Adversary <span class="math inline">\(\mathscr{A}\)</span> is given
+<span class="math inline">\(1^n\)</span> and <span class="math inline">\(y\)</span> as inputs. <span class="math inline">\(\mathscr{A}\)</span> outputs <span class="math inline">\(x&#39;\)</span>.</li>
+<li><span class="math inline">\(\mathscr{A}\)</span> succeeds and the
+experiment evaluates to <span class="math inline">\(1\)</span> if and
+only if <span class="math inline">\(f(x&#39;)=y\)</span>.</li>
+</ul>
+<p>Note that the <strong>preimage</strong> <span class="math inline">\(x&#39;\)</span> does NOT neccessarily have to
+equal <span class="math inline">\(x\)</span>, as long as <span class="math inline">\(f(x&#39;)=y\)</span>.</p>
+<div class="note info no-icon"><p>Definition. A function <span class="math inline">\(f:\{0,1\}^{*}\to
+\{0,1\}^{*}\)</span> is <strong>one-way</strong> if the following two
+conditions hold:</p>
+<ul>
+<li>(<strong>Easy to compute</strong>): There is a polynomial-time
+algorithm that on input <span class="math inline">\(x\)</span> outputs
+<span class="math inline">\(f(x)\)</span>.</li>
+<li>(<strong>Hard to invert</strong>): For all PPT algorithm <span class="math inline">\(\mathscr{A}\)</span> there is a negligible
+function <span class="math inline">\(\varepsilon(n)\)</span> such that:
+<span class="math inline">\(\Pr[\mathtt{Invert}_{\mathscr{A}.
+f}(n)=1]\leq \varepsilon(n)\)</span>.</li>
+</ul>
+</div>
+<h3 id="one-way-functions-based-on-assumptions">One-Way Functions Based
+on Assumptions</h3>
+<p>We could construct one-way functions based on the above four
+assumptions (factoring assumption, RSA assumption, discrete logarithm
+assumption, Diffie-Hellman assumption).</p>
+<p>We illustrate this by using <strong>factoring assumption</strong> to
+construct a one-way function.</p>
+<p>Given <span class="math inline">\(1^n\)</span> and GenModulus, define
+the (deterministic) function <span class="math inline">\(f_{Gen}\)</span> as follows:</p>
+<ul>
+<li>Input: A random tage: string <span class="math inline">\(x\)</span>
+of length <span class="math inline">\(n\)</span></li>
+<li>Output: Integer <span class="math inline">\(N\)</span>.</li>
+<li>Compute <span class="math inline">\((N,p,q):=GenModulus(1^n;x)\)</span> and return
+<span class="math inline">\(N\)</span>.</li>
+</ul>
+<div class="note info no-icon"><p>Theorem. If the Factoring problem is hard relative to GenModulus,
+then <span class="math inline">\(f_{Gen}\)</span> is one-way.</p>
+</div>
+<h3 id="hard-core-predicates">Hard-Core Predicates</h3>
+<p>For a one-way function <span class="math inline">\(f\)</span>, it
+does not exist any PPT adversary that could efficiently invert it.
+However, the <strong>partial information</strong> of the preimage may be
+easily revealed.</p>
+<p>Consider the function <span class="math inline">\(f:\{0,1\}^{2n}\to
+\{0,1\}^{2n}\)</span> and one-way function <span class="math inline">\(g:\{0,1\}^n\to \{0,1\}^n\)</span>. We could define
+<span class="math inline">\(f(x,y)=g(x)||y\)</span>. Since <span class="math inline">\(g\)</span> is one-way, it is trivial that <span class="math inline">\(f\)</span> is also one-way. However, it is easy to
+know the last <span class="math inline">\(n\)</span> bits of the
+preimage are exactly the last <span class="math inline">\(n\)</span>
+bits of <span class="math inline">\(f(x,y)\)</span>.</p>
+<p>Though <span class="math inline">\(f\)</span> is one-way, half of the
+information about the preimage is revealed.</p>
+<p>We define hard-core predicate <span class="math inline">\(hc\)</span>
+of a one-way function as <strong>the bit that could NEVER be
+revealed.</strong> Informally speaking, <span class="math inline">\(hc(x)\)</span> is <strong>a bit</strong> that is
+efficiently computable given <span class="math inline">\(x\)</span>, but
+hard to compute given <span class="math inline">\(f(x)\)</span>.</p>
+<div class="note info no-icon"><p>Definition. A function <span class="math inline">\(hc:\{0,1\}^{*}\to\{0,1\}\)</span> is a hard-core
+predicate of a function <span class="math inline">\(f\)</span> if:</p>
+<ul>
+<li>hc can be computed in polynomial time.</li>
+<li>For every probabilistic polynomial-time algorithm <span class="math inline">\(\mathscr{A}\)</span> there is a negligible
+function <span class="math inline">\(\varepsilon(n)\)</span> such that
+<span class="math inline">\(\Pr_{x\leftarrow
+\{0,1\}^n}[\mathscr{A}(1^n,f(x))=hc(x)]\leq
+1/2+\varepsilon(n)\)</span>.</li>
+</ul>
+</div>
+<p><strong>A hard-core predicate for the RSA problem is the least
+significant bit.</strong> That is to say, compute <span class="math inline">\(lsb(x)\)</span> given <span class="math inline">\(y=[x^e\mod{N}]\)</span> is hard.</p>
+<p><br></p>
+<blockquote>
+<p>Eureka moment!</p>
+<p>做了这么长的铺垫，终于来到了单向函数 (one-way function)
+的介绍。我觉得单向函数是密码学中最重要的概念之一，它的定义体现了密码学的核心思想——
+<strong>Easy to compute, hard to invert.</strong></p>
+<p>首先来谈谈它的存在性。之前介绍的三个数学难题 (hard problems)
+都很符合单向函数的定义；Factoring
+problem，质数相乘容易，质因数分解难；RSA
+problem，模意义下幂运算简单，开方运算难；Discrete Logarithm
+problem，模意义下幂运算简单，对数运算难；因此，由这些难题的猜想
+(assumptions) 构造单向函数再自然不过。</p>
+<p>最后谈谈它的意义。密码学中，加密方案 (encryption)，消息验证码
+(MAC)，数字签名 (digital signature) 等加密学原语 (cryptographic
+primitives) 本质上是一个单向函数构建的过程。更具体一点说，是一个
+<u><strong>单向陷门函数 (trapdoor one-way function)</strong></u>
+的构建。所谓<strong>陷门 (trapdoor)</strong> 是指，存在某个 <span class="math inline">\(z\)</span> 使得计算原像 <span class="math inline">\(x=f^{-1}(y)\)</span> 简单，则该 <span class="math inline">\(z\)</span> 称为函数的陷门。</p>
+<p>一个单向陷门函数有以下性质：(1) 单向性 (2)
+存在陷门。这是否和某些原语的构造十分相似？以公钥加密 (或是 CPA
+安全的私钥加密) 为例，加密消息 <span class="math inline">\(m\)</span>
+得到密文 <span class="math inline">\(c\)</span> 很容易：<span class="math inline">\(Enc_{pk}(m)\to c\)</span> (公钥 <span class="math inline">\(pk\)</span> 公开)；而由密文 <span class="math inline">\(c\)</span> 解密得到原文 <span class="math inline">\(m\)</span> 却很困难。此为<strong>单向性
+(one-way)</strong>。而倘若知道私钥 <span class="math inline">\(sk\)</span>，由密文 <span class="math inline">\(c\)</span> 解密得到原文 <span class="math inline">\(m\)</span> 的过程就非常简单：<span class="math inline">\(Dec_{sk}(c)\to m\)</span>。因此，私钥 <span class="math inline">\(sk\)</span> 是加密函数 <span class="math inline">\(Enc_{pk}\)</span> 的<strong>陷门
+(trapdoor)</strong>。</p>
+</blockquote>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p>Code: COMP3357, Lecturer: Dr. Ravi. Ramanathan, TA: Zhang Chengru</p>
+<p>Course textbook:</p>
+<p><em>Introduction to Modern Cryptography (2nd edition)</em>, Katz, J.
+&amp; Lindell, Y., (2015), CRC Press, <a href="https://ebookcentral.proquest.com/lib/HKUHK/detail.action?docID=1619504">view</a></p>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>courses</category>
+        <category>Cryptography, HKU</category>
+      </categories>
+      <tags>
+        <tag>cryptography</tag>
+        <tag>course notes</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>COMP3357 notes P1 - Cryptographic Primitives</title>
     <url>/2023/06/02/Cryptography-COMP3357/</url>
     <content><![CDATA[<p>这一学期糊里糊涂选到了 CS 的高阶课
@@ -901,351 +1246,6 @@ if not specified.</p>
         <tag>cryptography</tag>
         <tag>course notes</tag>
         <tag>encryption</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>COMP3357 notes P3 - Hard Problems</title>
-    <url>/2023/06/05/Cryptography-COMP3357-3/</url>
-    <content><![CDATA[<p>COMP3357 digest 的 P3 部分 (P1 部分在<a href="https://thisisxxz.github.io/2023/05/25/Cryptography-COMP3357/">这里</a>，P2
-部分在<a href="https://thisisxxz.github.io/2023/06/02/Cryptography-COMP3357-2/">这里</a>)，主要介绍密码学中的几个困难问题
-(hard problems) 与一个重要的 cryptographic primitive: 单向函数 (one-way
-function).</p>
-<p>这一 Part 涉及到的困难问题 (Factoring problem, RSA problem, Discrete
-Logarithm problem, Diffie-Hellman problem) 的构建与 P2
-中的数论，群论知识密切相关，注意参考。</p>
-<span id="more"></span>
-<p>同样，与 CnBlogs
-中的笔记不同，这里不会详细的记载每个相关的知识点；只会尝试简略地总结一些能让未来的自己也会感到有趣，巧妙的内容
-(Eureka!)。</p>
-<p><br></p>
-<div class="note warning"><p>  This article is a self-administered course note.</p>
-<p>  It will <strong>NOT</strong> cover any exam or assignment related
-content.</p>
-</div>
-<p><br></p>
-<h2 id="hardness-of-mathematical-problems">Hardness of Mathematical
-Problems</h2>
-<p>When discussing <strong>hardness</strong> of mathematical problems
-with input some integer <span class="math inline">\(N\)</span>, we study
-asymptotics in terms of the <strong>input length</strong>.</p>
-<p>Integer <span class="math inline">\(N\)</span> will be assumed to be
-represented in binary. The <strong>running time</strong> of an algorithm
-taking as input an integer <span class="math inline">\(N\)</span> is
-measured in terms of <span class="math inline">\(||N||\)</span>, the
-length of the binary representation of <span class="math inline">\(N\)</span>.</p>
-<p>Note that <span class="math inline">\(||N||=\lfloor \log N
-\rfloor+1\)</span>.</p>
-<div class="note info no-icon"><p>A problem is considered to be <strong>easy</strong> if the running
-time of its algorithm is <strong>polynomial</strong> in <span class="math inline">\(||N||\)</span>.</p>
-</div>
-<p><br></p>
-<blockquote>
-<p>Eureka moment!</p>
-<p>这里对数学问题困难性 (hardness) 的定义是建立在算法数论 (algorithmic
-number theory) 的视角上的。</p>
-<p>实际上，这个概念更贴近计算机领域而不是纯数学领域。如果从算法时间复杂度的角度来定义，就好理解多了：一个时间复杂度为
-<span class="math inline">\(O(\mathtt{poly}(n))\)</span>
-的算法是<strong>高效 (efficient)</strong> 的，对应的问题是<strong>简单
-(easy)</strong> 的。而时间复杂度为 <span class="math inline">\(O(\mathtt{exp}(n))\)</span> 的算法是<strong>低效
-(inefficient)</strong> 的，对应的问题是<strong>困难 (hard)</strong>
-的。</p>
-</blockquote>
-<p><br></p>
-<h2 id="factoring-problem">Factoring Problem</h2>
-<p>Factoring could be viewed as the inverse operation of multiplication.
-Multiplying two primes <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> as <span class="math inline">\(N=p\times q\)</span> is <strong>easy</strong>,
-while factorizing <span class="math inline">\(N\)</span> to derive <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> is <strong>hard</strong>.</p>
-<div class="note info no-icon"><p>Factoring the product of two primes: Given <span class="math inline">\(N=pq\)</span>, where <span class="math inline">\(p,q\)</span> are primes, find <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span>.</p>
-</div>
-<h3 id="factoring-experiment">Factoring Experiment</h3>
-<p>Cryptographically, the hardness of the factoring problem is indicated
-by the <strong>factoring experiment</strong> <span class="math inline">\(\mathtt{Factor}_{\mathscr{A},
-Genmodulus}(n)\)</span>, where GenModulus is an <strong>efficient
-(polynomial-time)</strong> algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs <span class="math inline">\((N,p,q)\)</span> where <span class="math inline">\(N=pq\)</span>, and <span class="math inline">\(p,q\)</span> are <span class="math inline">\(n\)</span>-bit primes except with negligible
-probability.</p>
-<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(N\)</span> needs to efficiently compute the
-corresponding <span class="math inline">\(p,q\)</span>.</p>
-<div class="note info no-icon"><p>Definition. Factoring is hard relative to GenModulus if for all
-<strong>probabilistic polynomial-time algorithm</strong> <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
-<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{Factor}_{\mathscr{A},
-GenModulus}(n)=1]\leq \varepsilon(n)\)</span>.</p>
-</div>
-<p><strong>The Factoring Assumption</strong> is the assumption that
-there exists a GenModulus relative to which factoring is hard.</p>
-<p><br></p>
-<blockquote>
-<p>Eureka moment!</p>
-<p>这里对数学问题困难性的定义又与上面的算法数论 (algorithmic number
-theory)
-或计算机科学领域的定义不同，是以<strong>实验</strong>来描述的。是不是很有加密学的特色？</p>
-<p>这里还要注意一个概念：<strong>密码学假设
-(assumption)</strong>，它将某个数学问题的困难性归约到实验中的一个高效
-(efficient) 算法的存在性上。对于大数质因数分解问题 (Factoring
-problem)，其困难性被某个高效的 GenModulus 算法的存在保证。</p>
-</blockquote>
-<p><br></p>
-<h2 id="rsa-problem">RSA Problem</h2>
-<p>Given a modulus <span class="math inline">\(N\)</span> and integer
-<span class="math inline">\(e&gt;2\)</span>, such that <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>.</p>
-<p>By the Corollary 2 of the Fermat's Little Theorem (see it in P2), we
-know that exponentiation to the <span class="math inline">\(e\)</span>-th power mod <span class="math inline">\(N\)</span> is a <strong>permutation</strong> on
-<span class="math inline">\((\mathbb{Z}/N)^{*}\)</span>;</p>
-<p>For any <span class="math inline">\(y\in (\mathbb{Z}/N)^{*}\)</span>,
-let <span class="math inline">\([y^{1/e} \mod{N}]\)</span> be the unique
-element which yields <span class="math inline">\(y\)</span> when raised
-to the <span class="math inline">\(e\)</span>-th power mod <span class="math inline">\(N\)</span>, i.e., <strong>the <span class="math inline">\(e\)</span>-th root of <span class="math inline">\(y\)</span> mod <span class="math inline">\(N\)</span></strong>.</p>
-<p>If <span class="math inline">\(e\cdot d\equiv
-1\pmod{\varphi(N)}\)</span>, then raising to the <span class="math inline">\(d\)</span>-th power is the
-<strong>inverse</strong> of raising to the <span class="math inline">\(e\)</span>-th power, that is, for any <span class="math inline">\(g\in (\mathbb{Z}/N)^{*}\)</span>, <span class="math inline">\((g^e)^d \equiv g\pmod{N}\)</span>. Therefore, if
-<span class="math inline">\(y=g^e\)</span>, <span class="math inline">\(y^{1/e}=g=y^d\pmod{N}\)</span>.</p>
-<div class="note info no-icon"><p>RSA problem is essentially finding <span class="math inline">\(e\)</span>-th root of <span class="math inline">\(y\)</span> mod <span class="math inline">\(N\)</span>: Given <span class="math inline">\(N,e,y\)</span>, compute <span class="math inline">\([y^{1/e}\mod{N}]\)</span>. Note that <span class="math inline">\(e&gt;2\)</span> and <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>, <span class="math inline">\(\gcd(y, N)=1\)</span>.</p>
-</div>
-<h3 id="rsa-experiment">RSA Experiment</h3>
-<p>Similarly, we have the RSA experiment <span class="math inline">\(\mathtt{RSA}\)</span>-<span class="math inline">\(\mathtt{inv}_{\mathscr{A}, GenRSA}(n)\)</span>,
-where GenRSA is an efficient algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs a modulus <span class="math inline">\(N\)</span> that is the product of two <span class="math inline">\(n\)</span>-bit primes <span class="math inline">\(p,q\)</span>, as well as integers <span class="math inline">\(e,d&gt;0\)</span> with <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span> and <span class="math inline">\(ed\equiv 1\pmod{\varphi(N)}\)</span>.</p>
-<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(N,e\)</span> and a <u><strong>uniform</strong></u>
-<span class="math inline">\(y\in (\mathbb{Z}/N)^{*}\)</span> needs to
-efficiently compute the corresponding <span class="math inline">\(x\)</span>.</p>
-<div class="note info no-icon"><p>Definition. RSA problem is hard relative to GenRSA if for all
-probabilistic polynomial time algorithm <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
-<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{RSAinv}_{\mathscr{A},
-GenRSA}(n)=1]\leq \varepsilon(n)\)</span>.</p>
-</div>
-<p>The RSA Assumption is the assumption that there exists a GenRSA
-algorithm relative to which the RSA problem is hard. Note that GenRSA
-can be constructed from GenModulus.</p>
-<h3 id="rsa-and-factoring">RSA and Factoring</h3>
-<p>The hardness of RSA problem could be <strong>reduced</strong> to the
-hardness of factoring problem, which is to say, one could efficiently
-solve RSA problem if he could efficiently solve factoring problem.</p>
-<p>Assume there exists an efficient algorithm <span class="math inline">\(\mathscr{A}\)</span> that could factorize <span class="math inline">\(N\)</span> into two distinct primes <span class="math inline">\(p,q\)</span>, then we could construct an efficient
-<span class="math inline">\(\mathscr{A}&#39;\)</span> that could solve
-RSA problem.</p>
-<ul>
-<li><span class="math inline">\(\mathscr{A}&#39;\)</span> runs <span class="math inline">\(\mathscr{A}(N)\)</span> and obtain two
-<strong>distinct odd primes</strong> <span class="math inline">\(p,q\)</span> that <span class="math inline">\(N=pq\)</span>.</li>
-<li><span class="math inline">\(\mathscr{A}&#39;\)</span> simply
-computes <span class="math inline">\(\varphi(N)=(p-1)(q-1)\)</span>.</li>
-<li><span class="math inline">\(\mathscr{A}&#39;\)</span> computes <span class="math inline">\(d\equiv e^{-1}\pmod{\varphi(N)}\)</span> with
-extended Euclidean algorithm.</li>
-<li><span class="math inline">\(\mathscr{A}&#39;\)</span> could compute
-<span class="math inline">\(y^{1/e}\)</span> mod <span class="math inline">\(N\)</span> efficiently by computing <span class="math inline">\(y^d\)</span> mod <span class="math inline">\(N\)</span>.</li>
-</ul>
-<p><br></p>
-<blockquote>
-<p>Eureka moment!</p>
-<p>RSA 问题本质上是<strong>求模意义下的 <span class="math inline">\(e\)</span> 次方根</strong>。注意 RSA 问题中的模数
-<span class="math inline">\(N\)</span> 是两个不同的大奇质数 <span class="math inline">\(p,q\)</span> 之积。</p>
-<p>RSA 问题的巧妙之处在于，利用群的 closure
-性质与费马小定理可得，<strong>模意义下的 <span class="math inline">\(e\)</span> 次方根与模意义下的 <span class="math inline">\(d\)</span> 次方幂是等价的</strong>；其中 <span class="math inline">\(\gcd(e, \varphi(N))=1\)</span>, <span class="math inline">\(d\equiv e^{-1} \pmod{\varphi(N)}\)</span>.
-也就是说，如果敌手得知 <span class="math inline">\(\varphi(N)\)</span>，那么他就能通过计算得出 <span class="math inline">\(d\)</span>，从而轻松解决 RSA 问题。</p>
-<p>然而得知 <span class="math inline">\(\varphi(N)\)</span>
-也是<strong>困难的</strong>；这由 Factoring problem
-的困难性保证。对于只有两个质因数 <span class="math inline">\(p,q\)</span> 的模数 <span class="math inline">\(N\)</span>, <span class="math inline">\(\varphi(N)=\varphi(pq)=\varphi(p)\varphi(q)=(p-1)(q-1)\)</span>。所以，得到
-<span class="math inline">\(\varphi(N)\)</span> 的前提是成功将 <span class="math inline">\(N\)</span> 分解为 <span class="math inline">\(p,q\)</span>。</p>
-<p>著名的 RSA 公钥加密就应用了这一性质：在该加密中，公钥 <span class="math inline">\(pk=e\)</span>, 私钥 <span class="math inline">\(sk=d\)</span>。加密 <span class="math inline">\(Enc_{pk}(m)=m^e\)</span>，解密 <span class="math inline">\(Dec_{sk}(c)=c^d\)</span> (均在 mod <span class="math inline">\(N\)</span> 意义下)。RSA
-问题的困难性保证了任意不持有私钥的敌手无法由密文 <span class="math inline">\(c=m^e\)</span> 破解消息 <span class="math inline">\(m\)</span> (即，得到 <span class="math inline">\(c\)</span> 在模 <span class="math inline">\(N\)</span> 意义下的 <span class="math inline">\(e\)</span> 次方根)。</p>
-</blockquote>
-<p><br></p>
-<h2 id="discrete-logarithm-problem">Discrete Logarithm Problem</h2>
-<p>Fix a <strong>cyclic</strong> group <span class="math inline">\(\mathbb{G}\)</span> of order <span class="math inline">\(q\)</span>, and generator <span class="math inline">\(g\in\mathbb{G}\)</span>. We know that <span class="math inline">\(\{g^0,g^1,...,g^{q-1}\}=\mathbb{G}\)</span>.</p>
-<p>Equilently, for every <span class="math inline">\(h\in\mathbb{G}\)</span>, there is a unique <span class="math inline">\(x\in \mathbb{Z}_q\)</span>, such that <span class="math inline">\(g^x=h\)</span>. We define <span class="math inline">\(\log_g{h}\)</span> to be this <span class="math inline">\(x\)</span>. This is the <strong>discrete
-logarithm</strong> of <span class="math inline">\(h\)</span> with
-respect to <span class="math inline">\(g\)</span> in the group <span class="math inline">\(\mathbb{G}\)</span>.</p>
-<div class="note info no-icon"><p><strong>Discrete Logarithm</strong> problem in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in \mathbb{G}\)</span> and
-<u><strong>uniform</strong></u> <span class="math inline">\(h\in
-\mathbb{G}\)</span>, compute <span class="math inline">\(\log_g{h}\)</span>.</p>
-</div>
-<h3 id="discrete-logarithm-experiment">Discrete-Logarithm
-Experiment</h3>
-<p>Similarly, we have the discrete-logarithm experiment <span class="math inline">\(\mathtt{DLog}_{\mathscr{A}, \mathscr{G}}
-(n)\)</span> where <span class="math inline">\(\mathscr{G}\)</span> is
-an efficient group-generation algorithm that, on input <span class="math inline">\(1^n\)</span>, outputs a cyclic group <span class="math inline">\(\mathbb{G}\)</span>, its order <span class="math inline">\(q\)</span>, and a generator <span class="math inline">\(g\)</span>.</p>
-<p>Adversary <span class="math inline">\(\mathscr{A}\)</span> with <span class="math inline">\(\mathbb{G},q,g\)</span> and a
-<u><strong>uniform</strong></u> <span class="math inline">\(h\in\mathbb{G}\)</span> needs to efficiently
-compute correponding <span class="math inline">\(x\)</span>.</p>
-<div class="note info no-icon"><p>Definition. RSA problem is hard relative to <span class="math inline">\(\mathscr{G}\)</span> if for all probabilistic
-polynomial time algorithm <span class="math inline">\(\mathscr{A}\)</span>, there exists a negligible
-<span class="math inline">\(\varepsilon(n)\)</span> that <span class="math inline">\(\Pr[\mathtt{DLog}_{\mathscr{A},
-\mathscr{G}}(n)=1]\leq \varepsilon(n)\)</span>.</p>
-</div>
-<p>The Discrete Logarithm Assumption is the assumption that there exists
-a group-generation algorithm <span class="math inline">\(\mathscr{G}\)</span> relative to which the
-Discrete Logarithm problem is hard.</p>
-<p><br></p>
-<blockquote>
-<p>Eureka moment!</p>
-<p>离散对数问题本质上是<strong>模意义下的对数运算</strong>。另外还需要注意一点，无论是
-RSA 实验还是离散对数实验，对敌手的<strong>挑战 (challenge)</strong>
-都是<strong>均匀随机 (uniform)</strong> 的。</p>
-<p>其实，RSA 问题 (模意义下的开次方运算) 与离散问题 (模意义下的对数运算)
-均可以视为幂运算 <span class="math inline">\(h=g^x\)</span>
-的<strong>逆运算</strong>：RSA 问题给出指数 <span class="math inline">\(x\)</span>，要求由 <span class="math inline">\(h\)</span> 计算底数 <span class="math inline">\(g=h^{1/x}\)</span>；而离散对数问题给出底数 <span class="math inline">\(g\)</span>，要求由 <span class="math inline">\(h\)</span> 计算指数 <span class="math inline">\(x=\log_g h\)</span>。</p>
-</blockquote>
-<p><br></p>
-<h2 id="diffie-hellman-problem">Diffie-Hellman Problem</h2>
-<p>Fix cyclic group <span class="math inline">\(\mathbb{G}\)</span> of
-order <span class="math inline">\(q\)</span>, and generator <span class="math inline">\(g\in\mathbb{G}\)</span>.</p>
-<p>Given elements <span class="math inline">\(h_1,h_2\in
-\mathbb{G}\)</span>, define Diiffie-Hellman function <span class="math inline">\(DH_g(h_1,h_2)=g^{\log_g h_1\cdot\log_g
-h_2}\)</span>. That is, if <span class="math inline">\(h_1=g^{x_1}\)</span>, <span class="math inline">\(h_2=g^{x_2}\)</span>, then <span class="math inline">\(DH_g(h_1,h_2)=g^{x_1\cdot x_2}\)</span>.</p>
-<div class="note info no-icon"><p>Computational Diffie-Hellman (CDH) in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in \mathbb{G}\)</span>, and
-<u><strong>uniform</strong></u> <span class="math inline">\(h_1,h_2\in\mathbb{G}\)</span>, compute <span class="math inline">\(DH_g(h_1,h_2)\)</span>.</p>
-<p>Decisional Diffie-Hellman (DDH) in <span class="math inline">\(\mathbb{G}\)</span>: Given <span class="math inline">\(g\in\mathbb{G}\)</span>, and
-<u><strong>uniform</strong></u> <span class="math inline">\(h_1,h_2\in\mathbb{G}\)</span>,
-<strong>distinguish</strong> <span class="math inline">\(DH_g(h_1,h_2)\)</span> from a
-<u><strong>uniform</strong></u> group element <span class="math inline">\(h&#39;\in \mathbb{G}\)</span>.</p>
-</div>
-<p>CDH and DDH experiments could be constructed similarly so they are
-not covered here.</p>
-<p>It is easy to see that if one could solve Discrete Logarithm problem,
-he could also solve CDH problem; and if one could solve CDH problem, he
-could also solve DDH problem.</p>
-<p><strong>So DLog <span class="math inline">\(\to\)</span> CDH <span class="math inline">\(\to\)</span> DDH, the assumption is getting
-stronger and stronger, </strong> which is to say, if one could NOT solve
-DDH problem, it would be <strong>impossible</strong> for him to solve
-CDH or DLog problem.</p>
-<p><br></p>
-<blockquote>
-<p>Eureka moment!</p>
-<p>Diffie-Hellman
-问题的困难性是由离散对数问题的困难性保证的。至于为什么要定义这样一个函数，是由于
-Diffie-Hellman 问题定义了<strong>两个可以暴露的量</strong> <span class="math inline">\(h_1,h_2\)</span>。当 Alice 与 Bob
-之间需要进行多次信息传输时，利用 Diffie-Hellman
-问题的困难性可以很好的隐藏秘密信息。</p>
-<p>以著名的 <strong>Diffie-Hellman Key-exchange Protocol
-(密钥交换协议)</strong> 为例：Alice 选择某个 <span class="math inline">\(x_1\)</span>，并向 Bob 发送 <span class="math inline">\(h_1=g^{x_1}\)</span>；而 Bob 选择某个 <span class="math inline">\(x_2\)</span>，并向 Alice 发送 <span class="math inline">\(h_2=g^{x_2}\)</span>。这样，Bob 与 Alice
-双方都可以计算出密钥 <span class="math inline">\(k=g^{x_1x_2}=h_1^{x_2}=h_2^{x_1}\)</span>，密钥交换成功。而
-Diffie-Hellman 问题的困难性保证窃听到 transcript <span class="math inline">\(h_1,h_2\)</span> 的敌手无法据此求出 <span class="math inline">\(k=DH_g(h_1,h_2)\)</span>.</p>
-</blockquote>
-<p><br></p>
-<h2 id="one-way-function">One-Way Function</h2>
-<p>One-Way Functions are a critical cryptographic primitive, that is
-both necessary and sufficient for private-key encryption and MACs.
-<strong>Informally</strong> speaking, a function <span class="math inline">\(f\)</span> is one-way if it is <strong>easy to
-compute but hard to invert</strong>.</p>
-<p>We formally define "hard to invert" with the inverting experiment
-<span class="math inline">\(\mathtt{Invert}_{\mathscr{A},
-f}(n)\)</span>.</p>
-<h3 id="the-inverting-experiment">The Inverting Experiment</h3>
-<ul>
-<li>Challenger <span class="math inline">\(\mathscr{C}\)</span> choose
-<u><strong>uniform</strong></u> <span class="math inline">\(x\in\{0,1\}^n\)</span>, and compute <span class="math inline">\(y:=f(x)\)</span>.</li>
-<li>Adversary <span class="math inline">\(\mathscr{A}\)</span> is given
-<span class="math inline">\(1^n\)</span> and <span class="math inline">\(y\)</span> as inputs. <span class="math inline">\(\mathscr{A}\)</span> outputs <span class="math inline">\(x&#39;\)</span>.</li>
-<li><span class="math inline">\(\mathscr{A}\)</span> succeeds and the
-experiment evaluates to <span class="math inline">\(1\)</span> if and
-only if <span class="math inline">\(f(x&#39;)=y\)</span>.</li>
-</ul>
-<p>Note that the <strong>preimage</strong> <span class="math inline">\(x&#39;\)</span> does NOT neccessarily have to
-equal <span class="math inline">\(x\)</span>, as long as <span class="math inline">\(f(x&#39;)=y\)</span>.</p>
-<div class="note info no-icon"><p>Definition. A function <span class="math inline">\(f:\{0,1\}^{*}\to
-\{0,1\}^{*}\)</span> is <strong>one-way</strong> if the following two
-conditions hold:</p>
-<ul>
-<li>(<strong>Easy to compute</strong>): There is a polynomial-time
-algorithm that on input <span class="math inline">\(x\)</span> outputs
-<span class="math inline">\(f(x)\)</span>.</li>
-<li>(<strong>Hard to invert</strong>): For all PPT algorithm <span class="math inline">\(\mathscr{A}\)</span> there is a negligible
-function <span class="math inline">\(\varepsilon(n)\)</span> such that:
-<span class="math inline">\(\Pr[\mathtt{Invert}_{\mathscr{A}.
-f}(n)=1]\leq \varepsilon(n)\)</span>.</li>
-</ul>
-</div>
-<h3 id="one-way-functions-based-on-assumptions">One-Way Functions Based
-on Assumptions</h3>
-<p>We could construct one-way functions based on the above four
-assumptions (factoring assumption, RSA assumption, discrete logarithm
-assumption, Diffie-Hellman assumption).</p>
-<p>We illustrate this by using <strong>factoring assumption</strong> to
-construct a one-way function.</p>
-<p>Given <span class="math inline">\(1^n\)</span> and GenModulus, define
-the (deterministic) function <span class="math inline">\(f_{Gen}\)</span> as follows:</p>
-<ul>
-<li>Input: A random tage: string <span class="math inline">\(x\)</span>
-of length <span class="math inline">\(n\)</span></li>
-<li>Output: Integer <span class="math inline">\(N\)</span>.</li>
-<li>Compute <span class="math inline">\((N,p,q):=GenModulus(1^n;x)\)</span> and return
-<span class="math inline">\(N\)</span>.</li>
-</ul>
-<div class="note info no-icon"><p>Theorem. If the Factoring problem is hard relative to GenModulus,
-then <span class="math inline">\(f_{Gen}\)</span> is one-way.</p>
-</div>
-<h3 id="hard-core-predicates">Hard-Core Predicates</h3>
-<p>For a one-way function <span class="math inline">\(f\)</span>, it
-does not exist any PPT adversary that could efficiently invert it.
-However, the <strong>partial information</strong> of the preimage may be
-easily revealed.</p>
-<p>Consider the function <span class="math inline">\(f:\{0,1\}^{2n}\to
-\{0,1\}^{2n}\)</span> and one-way function <span class="math inline">\(g:\{0,1\}^n\to \{0,1\}^n\)</span>. We could define
-<span class="math inline">\(f(x,y)=g(x)||y\)</span>. Since <span class="math inline">\(g\)</span> is one-way, it is trivial that <span class="math inline">\(f\)</span> is also one-way. However, it is easy to
-know the last <span class="math inline">\(n\)</span> bits of the
-preimage are exactly the last <span class="math inline">\(n\)</span>
-bits of <span class="math inline">\(f(x,y)\)</span>.</p>
-<p>Though <span class="math inline">\(f\)</span> is one-way, half of the
-information about the preimage is revealed.</p>
-<p>We define hard-core predicate <span class="math inline">\(hc\)</span>
-of a one-way function as <strong>the bit that could NEVER be
-revealed.</strong> Informally speaking, <span class="math inline">\(hc(x)\)</span> is <strong>a bit</strong> that is
-efficiently computable given <span class="math inline">\(x\)</span>, but
-hard to compute given <span class="math inline">\(f(x)\)</span>.</p>
-<div class="note info no-icon"><p>Definition. A function <span class="math inline">\(hc:\{0,1\}^{*}\to\{0,1\}\)</span> is a hard-core
-predicate of a function <span class="math inline">\(f\)</span> if:</p>
-<ul>
-<li>hc can be computed in polynomial time.</li>
-<li>For every probabilistic polynomial-time algorithm <span class="math inline">\(\mathscr{A}\)</span> there is a negligible
-function <span class="math inline">\(\varepsilon(n)\)</span> such that
-<span class="math inline">\(\Pr_{x\leftarrow
-\{0,1\}^n}[\mathscr{A}(1^n,f(x))=hc(x)]\leq
-1/2+\varepsilon(n)\)</span>.</li>
-</ul>
-</div>
-<p><strong>A hard-core predicate for the RSA problem is the least
-significant bit.</strong> That is to say, compute <span class="math inline">\(lsb(x)\)</span> given <span class="math inline">\(y=[x^e\mod{N}]\)</span> is hard.</p>
-<p><br></p>
-<blockquote>
-<p>Eureka moment!</p>
-<p>做了这么长的铺垫，终于来到了单向函数 (one-way function)
-的介绍。我觉得单向函数是密码学中最重要的概念之一，它的定义体现了密码学的核心思想——
-<strong>Easy to compute, hard to invert.</strong></p>
-<p>首先来谈谈它的存在性。之前介绍的三个数学难题 (hard problems)
-都很符合单向函数的定义；Factoring
-problem，质数相乘容易，质因数分解难；RSA
-problem，模意义下幂运算简单，开方运算难；Discrete Logarithm
-problem，模意义下幂运算简单，对数运算难；因此，由这些难题的猜想
-(assumptions) 构造单向函数再自然不过。</p>
-<p>最后谈谈它的意义。密码学中，加密方案 (encryption)，消息验证码
-(MAC)，数字签名 (digital signature) 等加密学原语 (cryptographic
-primitives) 本质上是一个单向函数构建的过程。更具体一点说，是一个
-<u><strong>单向陷门函数 (trapdoor one-way function)</strong></u>
-的构建。所谓<strong>陷门 (trapdoor)</strong> 是指，存在某个 <span class="math inline">\(z\)</span> 使得计算原像 <span class="math inline">\(x=f^{-1}(y)\)</span> 简单，则该 <span class="math inline">\(z\)</span> 称为函数的陷门。</p>
-<p>一个单向陷门函数有以下性质：(1) 单向性 (2)
-存在陷门。这是否和某些原语的构造十分相似？以公钥加密 (或是 CPA
-安全的私钥加密) 为例，加密消息 <span class="math inline">\(m\)</span>
-得到密文 <span class="math inline">\(c\)</span> 很容易：<span class="math inline">\(Enc_{pk}(m)\to c\)</span> (公钥 <span class="math inline">\(pk\)</span> 公开)；而由密文 <span class="math inline">\(c\)</span> 解密得到原文 <span class="math inline">\(m\)</span> 却很困难。此为<strong>单向性
-(one-way)</strong>。而倘若知道私钥 <span class="math inline">\(sk\)</span>，由密文 <span class="math inline">\(c\)</span> 解密得到原文 <span class="math inline">\(m\)</span> 的过程就非常简单：<span class="math inline">\(Dec_{sk}(c)\to m\)</span>。因此，私钥 <span class="math inline">\(sk\)</span> 是加密函数 <span class="math inline">\(Enc_{pk}\)</span> 的<strong>陷门
-(trapdoor)</strong>。</p>
-</blockquote>
-<p><br></p>
-<h2 id="reference">Reference</h2>
-<div class="note warning"><p>  This article is a self-administered course note.</p>
-<p>  References in the article are from corresponding course materials
-if not specified.</p>
-</div>
-<p>Course info:</p>
-<p>Code: COMP3357, Lecturer: Dr. Ravi. Ramanathan, TA: Zhang Chengru</p>
-<p>Course textbook:</p>
-<p><em>Introduction to Modern Cryptography (2nd edition)</em>, Katz, J.
-&amp; Lindell, Y., (2015), CRC Press, <a href="https://ebookcentral.proquest.com/lib/HKUHK/detail.action?docID=1619504">view</a></p>
-]]></content>
-      <categories>
-        <category>notes</category>
-        <category>courses</category>
-        <category>Cryptography, HKU</category>
-      </categories>
-      <tags>
-        <tag>cryptography</tag>
-        <tag>course notes</tag>
       </tags>
   </entry>
   <entry>
@@ -2866,313 +2866,6 @@ Wayne.</p>
       </tags>
   </entry>
   <entry>
-    <title>Algorithms I &amp; II, Princeton University, P4 - Java Language</title>
-    <url>/2023/06/23/algo-princeton-p4/</url>
-    <content><![CDATA[<p>这是 <a href="https://thisisxxz.com/categories/notes/courses/Algorithms-Princeton/">Algorithms
-I &amp; II, Princeton</a> 系列笔记的 P4 部分。零基础接触
-Java，就从这门课开始吧！这篇笔记将会记录课程中覆盖到的关于 Java
-的各类语言知识。</p>
-<span id="more"></span>
-<p>Java 的语法和 C++
-还是挺像的，想要入门并不困难。因此这里将主要记录一些<strong>不一样的东西</strong>......！</p>
-<p><br></p>
-<div class="note warning"><p>  This article is a self-administered course note.</p>
-<p>  It will <strong>NOT</strong> cover any exam or assignment related
-content.</p>
-</div>
-<p><br></p>
-<h2 id="generics">Generics</h2>
-<p>Suppose we've implemented a data structure
-<code>StackOfStrings</code>, what could we do if the clients also want
-<code>StackOfURLs</code>, <code>StackOfInts</code>,
-<code>StackOfVans</code>...?</p>
-<ul>
-<li><p>Attempt 1. Implement a seperate stack class for each type. (<span class="math inline">\(\times\)</span>)</p></li>
-<li><p><strong>Attempt 2. Implement a stack with items of type
-<code>Object</code></strong>. See codes below:</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">StackOfObjects</span> <span class="variable">s</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StackOfObjects</span>();</span><br><span class="line"><span class="type">Apple</span>  <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Apple</span>();</span><br><span class="line"><span class="type">Orange</span> <span class="variable">b</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Orange</span>();</span><br><span class="line">s.push(a);</span><br><span class="line">s.push(b);</span><br><span class="line">a = (Apple) (s.pop());            <span class="comment">// error-prone: this will cause run-time error!</span></span><br></pre></td></tr></table></figure>
-<p>The type <code>Object</code> could be seen as the base class in C++.
-<code>Apple</code> and <code>Orange</code> are derived classes. However,
-this requires <strong>casting</strong> in client, which may cause
-<strong>run-time error</strong> if types mismatch.</p></li>
-<li><p><strong>Attempt 3. Applying Java generics</strong>. See codes
-below:</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Stack&lt;Apple&gt; s = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;Apple&gt;();</span><br><span class="line"><span class="type">Apple</span>  <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Apple</span>();</span><br><span class="line"><span class="type">Orange</span> <span class="variable">b</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Orange</span>();</span><br><span class="line">s.push(a);</span><br><span class="line">s.push(b);                        <span class="comment">// compile-time error happens!</span></span><br><span class="line">a = s.pop();</span><br></pre></td></tr></table></figure>
-<p>Using Java generics avoid casting in client and could discover type
-dismatch errors <strong>at compile-time instead of
-run-time</strong>.</p></li>
-</ul>
-<div class="note info no-icon"><p>Guiding principles. <strong>Welcome compile-time errors; avoid
-run-time errors.</strong></p>
-</div>
-<p>Note that Java does <strong>NOT</strong> support <strong>generic
-array</strong>. To achieve this, proper casting is needed:</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> Item[] s;</span><br><span class="line">...</span><br><span class="line">    s = <span class="keyword">new</span> <span class="title class_">Item</span>[capacity];              <span class="comment">// Wrong! Java doesn&#x27;t support generic array</span></span><br><span class="line">    s = (Item[]) <span class="keyword">new</span> <span class="title class_">Object</span>[capacity];   <span class="comment">// Acceptable. the &quot;ugly&quot; cast</span></span><br><span class="line"><span class="comment">// Even with casting, Java will warn you for &quot;unchecked cast&quot;</span></span><br></pre></td></tr></table></figure>
-<p>Q. What to do about <strong>primitive types</strong>?</p>
-<p>To create a generic stack with primitive types like <code>int</code>,
-we use the corresponding <strong>wrapper types</strong>. Note that Java
-supports <strong>autoboxing</strong> which allows <strong>automatic
-cast</strong> between a primitive type and its wrapper.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Stack&lt;Integer&gt; s = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;Integer&gt;();</span><br><span class="line">s.push(<span class="number">17</span>);       <span class="comment">// s.push(Integer.valueOf(17));</span></span><br><span class="line"><span class="type">int</span> <span class="variable">a</span> <span class="operator">=</span> s.pop();  <span class="comment">// int a = s.pop().IntValue();</span></span><br></pre></td></tr></table></figure>
-<p><br></p>
-<blockquote>
-<p>学到这里，我发现 Java 的泛型 (generics) 与 C++ 中的类模板 (templates)
-很相似，就连定义的语法都同样采用 diamond operator
-<code>&lt;&gt;</code>。上网搜索发现，Java 的泛型 (即 attempt 3)
-本质上是上文中 attempt 2 的语法糖。这也是为什么 Java
-的泛型又被称作<strong>类型参数化 (type parameterization)</strong>。</p>
-<p>具体来说，在 Java 中，两个泛型栈实例 <code>Stack&lt;Apple&gt;</code>
-与 <code>Stack&lt;Orange&gt;</code> 将共享 <code>Stack</code>
-类的静态变量；而在 C++ 中则不会，这两个模板栈属于完全不同的类。</p>
-</blockquote>
-<p><br></p>
-<h2 id="iterator-interface">Iterator Interface</h2>
-<p>By implementing the <code>java.lang.Iterable</code> interface, we
-could support <strong>iteration</strong> over data structure items by
-clients, without revealing the internal representation of the data
-structure.</p>
-<p>There are <strong>two interfaces</strong> that we need to implement
-in our data structure:</p>
-<ul>
-<li><p><code>Iterable</code> : Has a method that returns an
-<code>Iterator</code>.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Iterable</span>&lt;Item&gt; &#123;</span><br><span class="line">    Iterator&lt;Item&gt; <span class="title function_">iterator</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li><p><code>Iterator</code>: Has methods <code>hasNext()</code> and
-<code>next()</code>.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Iterator</span>&lt;Item&gt; &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span>;</span><br><span class="line">    Item <span class="title function_">next</span><span class="params">()</span>;</span><br><span class="line">    <span class="comment">// optional: void remove(); </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-<p>If the above two interfaces are properly implemented, Java supports
-elegant client code (<strong>"foreach" statement</strong>) for
-interating items in your data structures.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// foreach statement code (shorthand):</span></span><br><span class="line"><span class="keyword">for</span> (String s : stack)    StdOut.println(s);</span><br><span class="line"></span><br><span class="line"><span class="comment">// equivalent code (longhand):</span></span><br><span class="line">Iterator&lt;String&gt; i = stack.iterator();</span><br><span class="line"><span class="keyword">while</span> (i.hasNext()) &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> i.next();</span><br><span class="line">    StdOut.println(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Here is a sample code on how to implement a <strong>reverse
-iterator</strong> for an array-based stack.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Iterator;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Stack</span>&lt;Item&gt; <span class="keyword">implements</span> <span class="title class_">Iterable</span>&lt;Item&gt; &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">public</span> Iterator&lt;Item&gt; <span class="title function_">iterator</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ReverseArrayIterator</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">ReverseArrayIterator</span> <span class="keyword">implements</span> <span class="title class_">Iterator</span>&lt;Item&gt; &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> N;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span> &#123; <span class="keyword">return</span> i &gt; <span class="number">0</span>;  &#125;</span><br><span class="line">        <span class="keyword">public</span> Item <span class="title function_">next</span><span class="params">()</span>       &#123; <span class="keyword">return</span> s[--i]; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><br></p>
-<h2 id="comparable-interface">Comparable Interface</h2>
-<p>Implementing the <code>Comparable</code> interface allows us to sort
-<strong>any</strong> type of data.</p>
-<p>For a simple <strong>sort client</strong>:</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> Integer.parseInt(args[<span class="number">0</span>]);</span><br><span class="line">        Student[] stu = <span class="keyword">new</span> <span class="title class_">Student</span>[n];</span><br><span class="line">        Insertion.sort(stu);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; ++i)</span><br><span class="line">            StdOut.println(stu[i].getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>We need to implement the <code>Comparable</code> interface in class
-<code>Student</code> as a callback.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Comparable</span>&lt;Item&gt; &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(Item that)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>In particular, the object implementation requires to implement the
-<code>compareTo</code> method.</p>
-<p>Note that the <code>compareTo</code> method should follow the
-<strong>total order</strong>.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> <span class="keyword">implements</span> <span class="title class_">Comparable</span>&lt;Student&gt; &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(Student that)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.grades &lt; that.grades)</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.grades &gt; that.grades)</span><br><span class="line">            <span class="keyword">return</span> +<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<div class="note info no-icon"><p>A <u><strong>total order</strong></u> is a binary relation <span class="math inline">\(\leq\)</span> that satisfies:</p>
-<ul>
-<li>Antisymmetry: if <span class="math inline">\(v\leq w\)</span> and
-<span class="math inline">\(w\leq v\)</span>, then <span class="math inline">\(v=w\)</span>.</li>
-<li>Transitivity: if <span class="math inline">\(v\leq w\)</span> and
-<span class="math inline">\(w\leq x\)</span>, then <span class="math inline">\(v\leq x\)</span>.</li>
-<li>Totality: either <span class="math inline">\(v\leq w\)</span> or
-<span class="math inline">\(w\leq v\)</span> or both.</li>
-</ul>
-</div>
-<p>Finally, we implement the sorting algorithm. The key point is that
-there should be <strong>NO dependence</strong> on <code>Student</code>
-data type.</p>
-<p>For convenience, two useful sorting abstractions <code>less</code>
-and <code>exch</code> are introduced.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Insertion</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> a.length;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i; j &gt; <span class="number">0</span>; --j) &#123;</span><br><span class="line">                <span class="keyword">if</span> (a[j].compareTo(a[j - <span class="number">1</span>]) &lt; <span class="number">0</span>)</span><br><span class="line">                    exch(a, j, j - <span class="number">1</span>);</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">less</span><span class="params">(Comparable v, Comparable w)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> v.compareTo(w) &lt; <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">exch</span><span class="params">(Comparable[] a, <span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;</span><br><span class="line">        <span class="type">Comparable</span> <span class="variable">swap</span> <span class="operator">=</span> a[i];</span><br><span class="line">        a[i] = a[j];</span><br><span class="line">        a[j] = swap;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isSorted</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt; a.length; ++i)</span><br><span class="line">            <span class="keyword">if</span> (less(a[i], a[i - <span class="number">1</span>]))    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><br></p>
-<h2 id="assertion-statement">Assertion Statement</h2>
-<p>Assertion is the statement to <strong>test assumptions</strong> about
-the program.</p>
-<ul>
-<li>Helps detect <strong>logic</strong> bugs.</li>
-<li>Documents code.</li>
-</ul>
-<p>Java assert statement throws an exception unless boolean condition is
-true.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">assert</span> <span class="title function_">isSorted</span><span class="params">(a, lo, hi)</span>;</span><br><span class="line"><span class="comment">// if a[lo]...a[hi] is not sorted, throws an exception</span></span><br></pre></td></tr></table></figure>
-<p>Java assert statement could be enabled or disabled <strong>at
-runtime</strong>. <span class="math inline">\(\Rightarrow\)</span> No
-cost in production code.</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">java -ea MyProgram    // <span class="built_in">enable</span> assertions</span><br><span class="line">java -da MyProgram    // <span class="built_in">disable</span> assertions (default)</span><br></pre></td></tr></table></figure>
-<p>Note that assertions are better used to check <strong>internal
-invariants</strong>; do <strong>NOT</strong> use for external argument
-checking.</p>
-<p><br></p>
-<h2 id="comparator-interface">Comparator Interface</h2>
-<p>We have introduced <code>Comparable</code> interface in the previous
-section; It is usually implemented with a type's <strong>natural
-order</strong>.</p>
-<p>However, when we want to sort using one or more <strong>alternate
-orders</strong> (must be a <strong>total order</strong>), we need to
-implement the <code>Comparator</code> interface.</p>
-<figure>
-<img data-src="orders.png" alt="natural order and alternate orders of letter-string">
-<figcaption aria-hidden="true">natural order and alternate orders of
-letter-string</figcaption>
-</figure>
-<p>See the following <strong>Java system sort</strong> clients:</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String[] a;</span><br><span class="line">...</span><br><span class="line">Arrays.sort(a);        <span class="comment">// uses natural order defined in Comparable interface</span></span><br><span class="line">...</span><br><span class="line">Arrays.sort(a, String.CASE_INSENCITIVE_ORDER);</span><br><span class="line">Arrays.sort(a, Collator.getInstance(<span class="keyword">new</span> <span class="title class_">Locale</span>(<span class="string">&quot;es&quot;</span>)));</span><br><span class="line">Arrays.sort(a, <span class="keyword">new</span> <span class="title class_">BritshPhoneBookOrder</span>());</span><br></pre></td></tr></table></figure>
-<p>Note that the second argument passed into <code>Arrays.sort()</code>
-is a <code>Comparator</code> object.</p>
-<p>To create such objects, we need to implement <code>Comparator</code>
-interface in the corresponding class:</p>
-<ul>
-<li>Define a <strong>(nested) class</strong> that implements the
-<code>Comparator</code> interface.</li>
-<li>Implement the <code>compare()</code> method.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Comparator&lt;Student&gt; BY_NAME    = <span class="keyword">new</span> <span class="title class_">ByName</span>();</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Comparator&lt;Student&gt; BY_SECTION = <span class="keyword">new</span> <span class="title class_">BySection</span>();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> section;</span><br><span class="line">    ...</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ByName</span> <span class="keyword">implements</span> <span class="title class_">Comparator</span>&lt;Student&gt; &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compare</span><span class="params">(Student v, Student w)</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> v.name.compareTo(w.name);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">BySection</span> <span class="keyword">implements</span> <span class="title class_">Comparator</span>&lt;Student&gt; &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compare</span><span class="params">(Student v, Student w)</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> v.section - w.section;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
-<p>If we want to support comparators in our own sort
-implementations:</p>
-<ul>
-<li>Use <code>Object</code> instead of <code>Comparable</code>.</li>
-<li>Pass <code>Comparator</code> to <code>sort()</code> and
-<code>less()</code> and use it in <code>less()</code>.</li>
-</ul>
-<p>Here is a sample code of insertion sort using a Comparator.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Object[] a, Comparator comparator)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> a.length;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i; j &gt; <span class="number">0</span> &amp;&amp; less(comparator, a[j], a[j - <span class="number">1</span>]); --j)</span><br><span class="line">            exch(a, j, j - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">less</span><span class="params">(Comparator c, Object v, Object w)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> c.compare(v, w) &lt; <span class="number">0</span>;    <span class="comment">// compare() is used here in less()</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">exch</span><span class="params">(Object[] a, <span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;    <span class="comment">// no need to pass comparator in</span></span><br><span class="line">    <span class="type">Object</span> <span class="variable">swap</span> <span class="operator">=</span> a[i]; a[i] = a[j]; a[j] = swap;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><br></p>
-<h2 id="immutability">Immutability</h2>
-<blockquote class="blockquote-center">
-<p>Classes should be immutable unless there's a very good reason to make
-them mutable.</p>
-<p>—— Joshua Bloch (Java architect)</p>
-
-</blockquote>
-<p>If we make a data type <strong>immutable</strong>, it means we can't
-change the data type value once created.</p>
-<p>To achieve immutability in Java, we need to:</p>
-<ul>
-<li><code>final</code> in class definition: make sure the class
-<strong>can't override</strong> instance methods.</li>
-<li><code>final</code> in instance variables: make all instance
-variables <strong>private and final</strong>.</li>
-<li>make <strong>defensive copy</strong> of mutable instance variables
-in constructor.</li>
-<li>make sure all instance methods don't change instance variables.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">Vector</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> N;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">double</span>[] data;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Vector</span><span class="params">(<span class="type">double</span>[] data)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.N = data.length;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">            <span class="built_in">this</span>.data[i] = data[i];    <span class="comment">// make defensive copy</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ... <span class="comment">// instance methods don&#x27;t change instance variables</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Advantages of immutability.</p>
-<ul>
-<li>Simplifies debugging.</li>
-<li>Safer in presence of hostile code.</li>
-<li>Simplifies concurrent programming.</li>
-</ul>
-<p><br></p>
-<h2 id="equality-test">Equality Test</h2>
-<p>All Java classes inherit a method <code>equals()</code>.</p>
-<p>For a user-defined type, it is typically unsafe to use
-<code>equals()</code> with inheritance as it may violate symmetry. So we
-need to overwrite <code>equals()</code> as a callback.</p>
-<div class="note info no-icon"><p>Java requirements. For any references x, y and z, the below
-<strong>equivalence relation</strong> must hold.</p>
-<ul>
-<li>Reflective. <code>x.equals(x)</code> is <code>true</code>.</li>
-<li>Symmetric. <code>x.equals(y)</code> iff
-<code>y.equals(x)</code>.</li>
-<li>Transitive. if <code>x.equals(y)</code> and
-<code>y.equals(z)</code>, then <code>x.equals(z)</code>.</li>
-<li>Non-null. <code>x.equals(null)</code> is <code>false</code>.</li>
-</ul>
-</div>
-<p><strong>Standard recipe</strong> of equals design for user-designed
-types is as follows:</p>
-<ul>
-<li>Optimization for reference equality. (<code>==</code>)</li>
-<li>Check against <code>null</code>.</li>
-<li>Check whether two objects are of the same type and cast.</li>
-<li>Compare each significant field.
-<ul>
-<li>if field is a primitive type, use <code>==</code>.</li>
-<li>if field is an object, use <code>equals()</code>. (thus apply rule
-recursively)</li>
-<li>if field is an array, apply to each entry. (lazy approaches: use
-<code>Arrays.equals(a,b)</code> or
-<code>Arrays.deepEquals(a,b)</code>)</li>
-</ul></li>
-</ul>
-<p>Best practices of equals design to <strong>improve
-efficiency</strong>.</p>
-<ul>
-<li>No need to use calculated fields that depent on other fields.</li>
-<li>Compare fields mostly likely to differ first.</li>
-<li>Make <code>compareTo()</code> consistent with <code>equals()</code>.
-(<code>x.equals(y)</code> iff <code>(x.compareTo(y) == 0)</code>)</li>
-</ul>
-<p>See an example equals design for the class <code>Date</code>.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">Date</span> <span class="keyword">implements</span> <span class="title class_">Comparable</span>&lt;Date&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> month;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> day;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> year;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object y)</span> &#123;         <span class="comment">// Note that argument type should be Object</span></span><br><span class="line">        <span class="keyword">if</span> (y == <span class="built_in">this</span>)    <span class="keyword">return</span> <span class="literal">true</span>;          <span class="comment">// optimize for reference equality</span></span><br><span class="line">        <span class="keyword">if</span> (y == <span class="literal">null</span>)    <span class="keyword">return</span> <span class="literal">false</span>;         <span class="comment">// check for null</span></span><br><span class="line">        <span class="keyword">if</span> (y.getClass() != <span class="built_in">this</span>.getClass())  <span class="comment">// objects must be in the same class</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="type">Date</span> <span class="variable">that</span> <span class="operator">=</span> (Date) y;                 <span class="comment">// cast</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.day   != that.day  )    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.month != that.month)    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.year  != that.year )    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><br></p>
-<h2 id="hash-function">Hash Function</h2>
-<p>All Java classes inherit a method <code>hashCode()</code>, which
-returns a 32-bit <code>int</code>.</p>
-<ul>
-<li>Requirement. If <code>x.equals(y)</code>, then
-<code>(x.hashCode() == y.hashCode())</code>.</li>
-<li>Highly desirable. If <code>!x.equals(y)</code>, then
-<code>(x.hashCode() != y.hashCode())</code>.</li>
-</ul>
-<div class="note info no-icon"><p>Horner's method. Use <span class="math inline">\(L\)</span>
-multiplies/adds to hash string of length <span class="math inline">\(L\)</span>.</p>
-</div>
-<p>Horner's method usually uses gen 31 to hash string of length <span class="math inline">\(L\)</span>: <span class="math inline">\(h=s_031^{L-1}+...s_{L-2}31^1+s_{L-1}31^0\)</span>.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Java library implementation</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">String</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">hash</span> <span class="operator">=</span> <span class="number">0</span>;    <span class="comment">// cache of hash code</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">char</span>[] s;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hashCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">h</span> <span class="operator">=</span> hash;</span><br><span class="line">        <span class="keyword">if</span> (h != <span class="number">0</span>)    <span class="keyword">return</span> h;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; length(); ++i)    hash = s[i] + (<span class="number">31</span> * hash);</span><br><span class="line">        hash = h;</span><br><span class="line">        <span class="keyword">return</span> h;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Standard recipe</strong> of hash code design for user-defined
-types is as follows:</p>
-<ul>
-<li>Combine each significant field using the <span class="math inline">\(31x+y\)</span> rule.</li>
-<li>If field is a primitive type, use wrapper type
-<code>hashCode()</code>.</li>
-<li>If field is null, return 0.</li>
-<li>If field is a reference type, use <code>hashCode()</code>. (thus
-applies rule recursively)</li>
-<li>If field is an array, apply to each entry. (lazy approach: use
-<code>Arrays.deepHashCode()</code>)</li>
-</ul>
-<p>This recipe works resonably well <strong>in practice</strong> and is
-widely used in Java libraries.</p>
-<p><br></p>
-<h2 id="java-language-style">Java Language Style</h2>
-<p>这门课的 projects 设计实在是太良心了，在评分反馈里居然还包含 style
-check！难以想象教职员们为课程的准备倾注了多少心血……至少我从来没有见过有一门课的评分标准里还包含
-coding style。</p>
-<ol type="1">
-<li>The instance variable name must start with <strong>a lowercase
-letter and use camelCase</strong>.</li>
-<li>The class name must start with <strong>a uppercase letter and use
-CamelCase</strong>.</li>
-<li>Remove unused import statements.</li>
-<li>Typecast (类型转换) must <strong>be followed by a
-whitespace</strong>.</li>
-<li>Define constructors after static and instance variables but before
-methods.</li>
-<li>Define constant variables to hold the constants used more than
-once.</li>
-</ol>
-<p><br></p>
-<h2 id="reference">Reference</h2>
-<div class="note warning"><p>  This article is a self-administered course note.</p>
-<p>  References in the article are from corresponding course materials
-if not specified.</p>
-</div>
-<p>Course info:</p>
-<p><a href="https://www.coursera.org/learn/algorithms-part1">Algorithms,
-Part 1, Princeton University</a>. Lecturer: Robert Sedgewick &amp; Kevin
-Wayne.</p>
-<p>Course textbook:</p>
-<p><em>Algorithms (4th edition)</em>, Sedgewick, R. &amp; Wayne, K.,
-(2011), Addison-Wesley Professional, <a href="https://algs4.cs.princeton.edu/home/">view</a></p>
-<p><br></p>
-]]></content>
-      <categories>
-        <category>notes</category>
-        <category>courses</category>
-        <category>Algorithms, Princeton</category>
-      </categories>
-      <tags>
-        <tag>course notes</tag>
-        <tag>Java</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Blog Update Logs</title>
     <url>/2023/06/01/blog-update-log/</url>
     <content><![CDATA[<p>本博客的更新日志。</p>
@@ -3479,6 +3172,313 @@ Hexo</a></p></li>
       <tags>
         <tag>blog</tag>
         <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Algorithms I &amp; II, Princeton University, P4 - Java Language</title>
+    <url>/2023/06/23/algo-princeton-p4/</url>
+    <content><![CDATA[<p>这是 <a href="https://thisisxxz.com/categories/notes/courses/Algorithms-Princeton/">Algorithms
+I &amp; II, Princeton</a> 系列笔记的 P4 部分。零基础接触
+Java，就从这门课开始吧！这篇笔记将会记录课程中覆盖到的关于 Java
+的各类语言知识。</p>
+<span id="more"></span>
+<p>Java 的语法和 C++
+还是挺像的，想要入门并不困难。因此这里将主要记录一些<strong>不一样的东西</strong>......！</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="generics">Generics</h2>
+<p>Suppose we've implemented a data structure
+<code>StackOfStrings</code>, what could we do if the clients also want
+<code>StackOfURLs</code>, <code>StackOfInts</code>,
+<code>StackOfVans</code>...?</p>
+<ul>
+<li><p>Attempt 1. Implement a seperate stack class for each type. (<span class="math inline">\(\times\)</span>)</p></li>
+<li><p><strong>Attempt 2. Implement a stack with items of type
+<code>Object</code></strong>. See codes below:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">StackOfObjects</span> <span class="variable">s</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StackOfObjects</span>();</span><br><span class="line"><span class="type">Apple</span>  <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Apple</span>();</span><br><span class="line"><span class="type">Orange</span> <span class="variable">b</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Orange</span>();</span><br><span class="line">s.push(a);</span><br><span class="line">s.push(b);</span><br><span class="line">a = (Apple) (s.pop());            <span class="comment">// error-prone: this will cause run-time error!</span></span><br></pre></td></tr></table></figure>
+<p>The type <code>Object</code> could be seen as the base class in C++.
+<code>Apple</code> and <code>Orange</code> are derived classes. However,
+this requires <strong>casting</strong> in client, which may cause
+<strong>run-time error</strong> if types mismatch.</p></li>
+<li><p><strong>Attempt 3. Applying Java generics</strong>. See codes
+below:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Stack&lt;Apple&gt; s = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;Apple&gt;();</span><br><span class="line"><span class="type">Apple</span>  <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Apple</span>();</span><br><span class="line"><span class="type">Orange</span> <span class="variable">b</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Orange</span>();</span><br><span class="line">s.push(a);</span><br><span class="line">s.push(b);                        <span class="comment">// compile-time error happens!</span></span><br><span class="line">a = s.pop();</span><br></pre></td></tr></table></figure>
+<p>Using Java generics avoid casting in client and could discover type
+dismatch errors <strong>at compile-time instead of
+run-time</strong>.</p></li>
+</ul>
+<div class="note info no-icon"><p>Guiding principles. <strong>Welcome compile-time errors; avoid
+run-time errors.</strong></p>
+</div>
+<p>Note that Java does <strong>NOT</strong> support <strong>generic
+array</strong>. To achieve this, proper casting is needed:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> Item[] s;</span><br><span class="line">...</span><br><span class="line">    s = <span class="keyword">new</span> <span class="title class_">Item</span>[capacity];              <span class="comment">// Wrong! Java doesn&#x27;t support generic array</span></span><br><span class="line">    s = (Item[]) <span class="keyword">new</span> <span class="title class_">Object</span>[capacity];   <span class="comment">// Acceptable. the &quot;ugly&quot; cast</span></span><br><span class="line"><span class="comment">// Even with casting, Java will warn you for &quot;unchecked cast&quot;</span></span><br></pre></td></tr></table></figure>
+<p>Q. What to do about <strong>primitive types</strong>?</p>
+<p>To create a generic stack with primitive types like <code>int</code>,
+we use the corresponding <strong>wrapper types</strong>. Note that Java
+supports <strong>autoboxing</strong> which allows <strong>automatic
+cast</strong> between a primitive type and its wrapper.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Stack&lt;Integer&gt; s = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;Integer&gt;();</span><br><span class="line">s.push(<span class="number">17</span>);       <span class="comment">// s.push(Integer.valueOf(17));</span></span><br><span class="line"><span class="type">int</span> <span class="variable">a</span> <span class="operator">=</span> s.pop();  <span class="comment">// int a = s.pop().IntValue();</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<blockquote>
+<p>学到这里，我发现 Java 的泛型 (generics) 与 C++ 中的类模板 (templates)
+很相似，就连定义的语法都同样采用 diamond operator
+<code>&lt;&gt;</code>。上网搜索发现，Java 的泛型 (即 attempt 3)
+本质上是上文中 attempt 2 的语法糖。这也是为什么 Java
+的泛型又被称作<strong>类型参数化 (type parameterization)</strong>。</p>
+<p>具体来说，在 Java 中，两个泛型栈实例 <code>Stack&lt;Apple&gt;</code>
+与 <code>Stack&lt;Orange&gt;</code> 将共享 <code>Stack</code>
+类的静态变量；而在 C++ 中则不会，这两个模板栈属于完全不同的类。</p>
+</blockquote>
+<p><br></p>
+<h2 id="iterator-interface">Iterator Interface</h2>
+<p>By implementing the <code>java.lang.Iterable</code> interface, we
+could support <strong>iteration</strong> over data structure items by
+clients, without revealing the internal representation of the data
+structure.</p>
+<p>There are <strong>two interfaces</strong> that we need to implement
+in our data structure:</p>
+<ul>
+<li><p><code>Iterable</code> : Has a method that returns an
+<code>Iterator</code>.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Iterable</span>&lt;Item&gt; &#123;</span><br><span class="line">    Iterator&lt;Item&gt; <span class="title function_">iterator</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>Iterator</code>: Has methods <code>hasNext()</code> and
+<code>next()</code>.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Iterator</span>&lt;Item&gt; &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span>;</span><br><span class="line">    Item <span class="title function_">next</span><span class="params">()</span>;</span><br><span class="line">    <span class="comment">// optional: void remove(); </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>If the above two interfaces are properly implemented, Java supports
+elegant client code (<strong>"foreach" statement</strong>) for
+interating items in your data structures.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// foreach statement code (shorthand):</span></span><br><span class="line"><span class="keyword">for</span> (String s : stack)    StdOut.println(s);</span><br><span class="line"></span><br><span class="line"><span class="comment">// equivalent code (longhand):</span></span><br><span class="line">Iterator&lt;String&gt; i = stack.iterator();</span><br><span class="line"><span class="keyword">while</span> (i.hasNext()) &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> i.next();</span><br><span class="line">    StdOut.println(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Here is a sample code on how to implement a <strong>reverse
+iterator</strong> for an array-based stack.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Iterator;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Stack</span>&lt;Item&gt; <span class="keyword">implements</span> <span class="title class_">Iterable</span>&lt;Item&gt; &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">public</span> Iterator&lt;Item&gt; <span class="title function_">iterator</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ReverseArrayIterator</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">ReverseArrayIterator</span> <span class="keyword">implements</span> <span class="title class_">Iterator</span>&lt;Item&gt; &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> N;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span> &#123; <span class="keyword">return</span> i &gt; <span class="number">0</span>;  &#125;</span><br><span class="line">        <span class="keyword">public</span> Item <span class="title function_">next</span><span class="params">()</span>       &#123; <span class="keyword">return</span> s[--i]; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="comparable-interface">Comparable Interface</h2>
+<p>Implementing the <code>Comparable</code> interface allows us to sort
+<strong>any</strong> type of data.</p>
+<p>For a simple <strong>sort client</strong>:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> Integer.parseInt(args[<span class="number">0</span>]);</span><br><span class="line">        Student[] stu = <span class="keyword">new</span> <span class="title class_">Student</span>[n];</span><br><span class="line">        Insertion.sort(stu);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; ++i)</span><br><span class="line">            StdOut.println(stu[i].getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>We need to implement the <code>Comparable</code> interface in class
+<code>Student</code> as a callback.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Comparable</span>&lt;Item&gt; &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(Item that)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>In particular, the object implementation requires to implement the
+<code>compareTo</code> method.</p>
+<p>Note that the <code>compareTo</code> method should follow the
+<strong>total order</strong>.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> <span class="keyword">implements</span> <span class="title class_">Comparable</span>&lt;Student&gt; &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(Student that)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.grades &lt; that.grades)</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.grades &gt; that.grades)</span><br><span class="line">            <span class="keyword">return</span> +<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="note info no-icon"><p>A <u><strong>total order</strong></u> is a binary relation <span class="math inline">\(\leq\)</span> that satisfies:</p>
+<ul>
+<li>Antisymmetry: if <span class="math inline">\(v\leq w\)</span> and
+<span class="math inline">\(w\leq v\)</span>, then <span class="math inline">\(v=w\)</span>.</li>
+<li>Transitivity: if <span class="math inline">\(v\leq w\)</span> and
+<span class="math inline">\(w\leq x\)</span>, then <span class="math inline">\(v\leq x\)</span>.</li>
+<li>Totality: either <span class="math inline">\(v\leq w\)</span> or
+<span class="math inline">\(w\leq v\)</span> or both.</li>
+</ul>
+</div>
+<p>Finally, we implement the sorting algorithm. The key point is that
+there should be <strong>NO dependence</strong> on <code>Student</code>
+data type.</p>
+<p>For convenience, two useful sorting abstractions <code>less</code>
+and <code>exch</code> are introduced.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Insertion</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> a.length;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i; j &gt; <span class="number">0</span>; --j) &#123;</span><br><span class="line">                <span class="keyword">if</span> (a[j].compareTo(a[j - <span class="number">1</span>]) &lt; <span class="number">0</span>)</span><br><span class="line">                    exch(a, j, j - <span class="number">1</span>);</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">less</span><span class="params">(Comparable v, Comparable w)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> v.compareTo(w) &lt; <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">exch</span><span class="params">(Comparable[] a, <span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;</span><br><span class="line">        <span class="type">Comparable</span> <span class="variable">swap</span> <span class="operator">=</span> a[i];</span><br><span class="line">        a[i] = a[j];</span><br><span class="line">        a[j] = swap;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isSorted</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt; a.length; ++i)</span><br><span class="line">            <span class="keyword">if</span> (less(a[i], a[i - <span class="number">1</span>]))    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="assertion-statement">Assertion Statement</h2>
+<p>Assertion is the statement to <strong>test assumptions</strong> about
+the program.</p>
+<ul>
+<li>Helps detect <strong>logic</strong> bugs.</li>
+<li>Documents code.</li>
+</ul>
+<p>Java assert statement throws an exception unless boolean condition is
+true.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">assert</span> <span class="title function_">isSorted</span><span class="params">(a, lo, hi)</span>;</span><br><span class="line"><span class="comment">// if a[lo]...a[hi] is not sorted, throws an exception</span></span><br></pre></td></tr></table></figure>
+<p>Java assert statement could be enabled or disabled <strong>at
+runtime</strong>. <span class="math inline">\(\Rightarrow\)</span> No
+cost in production code.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">java -ea MyProgram    // <span class="built_in">enable</span> assertions</span><br><span class="line">java -da MyProgram    // <span class="built_in">disable</span> assertions (default)</span><br></pre></td></tr></table></figure>
+<p>Note that assertions are better used to check <strong>internal
+invariants</strong>; do <strong>NOT</strong> use for external argument
+checking.</p>
+<p><br></p>
+<h2 id="comparator-interface">Comparator Interface</h2>
+<p>We have introduced <code>Comparable</code> interface in the previous
+section; It is usually implemented with a type's <strong>natural
+order</strong>.</p>
+<p>However, when we want to sort using one or more <strong>alternate
+orders</strong> (must be a <strong>total order</strong>), we need to
+implement the <code>Comparator</code> interface.</p>
+<figure>
+<img data-src="orders.png" alt="natural order and alternate orders of letter-string">
+<figcaption aria-hidden="true">natural order and alternate orders of
+letter-string</figcaption>
+</figure>
+<p>See the following <strong>Java system sort</strong> clients:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String[] a;</span><br><span class="line">...</span><br><span class="line">Arrays.sort(a);        <span class="comment">// uses natural order defined in Comparable interface</span></span><br><span class="line">...</span><br><span class="line">Arrays.sort(a, String.CASE_INSENCITIVE_ORDER);</span><br><span class="line">Arrays.sort(a, Collator.getInstance(<span class="keyword">new</span> <span class="title class_">Locale</span>(<span class="string">&quot;es&quot;</span>)));</span><br><span class="line">Arrays.sort(a, <span class="keyword">new</span> <span class="title class_">BritshPhoneBookOrder</span>());</span><br></pre></td></tr></table></figure>
+<p>Note that the second argument passed into <code>Arrays.sort()</code>
+is a <code>Comparator</code> object.</p>
+<p>To create such objects, we need to implement <code>Comparator</code>
+interface in the corresponding class:</p>
+<ul>
+<li>Define a <strong>(nested) class</strong> that implements the
+<code>Comparator</code> interface.</li>
+<li>Implement the <code>compare()</code> method.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Comparator&lt;Student&gt; BY_NAME    = <span class="keyword">new</span> <span class="title class_">ByName</span>();</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Comparator&lt;Student&gt; BY_SECTION = <span class="keyword">new</span> <span class="title class_">BySection</span>();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> section;</span><br><span class="line">    ...</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ByName</span> <span class="keyword">implements</span> <span class="title class_">Comparator</span>&lt;Student&gt; &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compare</span><span class="params">(Student v, Student w)</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> v.name.compareTo(w.name);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">BySection</span> <span class="keyword">implements</span> <span class="title class_">Comparator</span>&lt;Student&gt; &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compare</span><span class="params">(Student v, Student w)</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> v.section - w.section;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+<p>If we want to support comparators in our own sort
+implementations:</p>
+<ul>
+<li>Use <code>Object</code> instead of <code>Comparable</code>.</li>
+<li>Pass <code>Comparator</code> to <code>sort()</code> and
+<code>less()</code> and use it in <code>less()</code>.</li>
+</ul>
+<p>Here is a sample code of insertion sort using a Comparator.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Object[] a, Comparator comparator)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> a.length;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i; j &gt; <span class="number">0</span> &amp;&amp; less(comparator, a[j], a[j - <span class="number">1</span>]); --j)</span><br><span class="line">            exch(a, j, j - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">less</span><span class="params">(Comparator c, Object v, Object w)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> c.compare(v, w) &lt; <span class="number">0</span>;    <span class="comment">// compare() is used here in less()</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">exch</span><span class="params">(Object[] a, <span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;    <span class="comment">// no need to pass comparator in</span></span><br><span class="line">    <span class="type">Object</span> <span class="variable">swap</span> <span class="operator">=</span> a[i]; a[i] = a[j]; a[j] = swap;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="immutability">Immutability</h2>
+<blockquote class="blockquote-center">
+<p>Classes should be immutable unless there's a very good reason to make
+them mutable.</p>
+<p>—— Joshua Bloch (Java architect)</p>
+
+</blockquote>
+<p>If we make a data type <strong>immutable</strong>, it means we can't
+change the data type value once created.</p>
+<p>To achieve immutability in Java, we need to:</p>
+<ul>
+<li><code>final</code> in class definition: make sure the class
+<strong>can't override</strong> instance methods.</li>
+<li><code>final</code> in instance variables: make all instance
+variables <strong>private and final</strong>.</li>
+<li>make <strong>defensive copy</strong> of mutable instance variables
+in constructor.</li>
+<li>make sure all instance methods don't change instance variables.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">Vector</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> N;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">double</span>[] data;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Vector</span><span class="params">(<span class="type">double</span>[] data)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.N = data.length;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">            <span class="built_in">this</span>.data[i] = data[i];    <span class="comment">// make defensive copy</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ... <span class="comment">// instance methods don&#x27;t change instance variables</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Advantages of immutability.</p>
+<ul>
+<li>Simplifies debugging.</li>
+<li>Safer in presence of hostile code.</li>
+<li>Simplifies concurrent programming.</li>
+</ul>
+<p><br></p>
+<h2 id="equality-test">Equality Test</h2>
+<p>All Java classes inherit a method <code>equals()</code>.</p>
+<p>For a user-defined type, it is typically unsafe to use
+<code>equals()</code> with inheritance as it may violate symmetry. So we
+need to overwrite <code>equals()</code> as a callback.</p>
+<div class="note info no-icon"><p>Java requirements. For any references x, y and z, the below
+<strong>equivalence relation</strong> must hold.</p>
+<ul>
+<li>Reflective. <code>x.equals(x)</code> is <code>true</code>.</li>
+<li>Symmetric. <code>x.equals(y)</code> iff
+<code>y.equals(x)</code>.</li>
+<li>Transitive. if <code>x.equals(y)</code> and
+<code>y.equals(z)</code>, then <code>x.equals(z)</code>.</li>
+<li>Non-null. <code>x.equals(null)</code> is <code>false</code>.</li>
+</ul>
+</div>
+<p><strong>Standard recipe</strong> of equals design for user-designed
+types is as follows:</p>
+<ul>
+<li>Optimization for reference equality. (<code>==</code>)</li>
+<li>Check against <code>null</code>.</li>
+<li>Check whether two objects are of the same type and cast.</li>
+<li>Compare each significant field.
+<ul>
+<li>if field is a primitive type, use <code>==</code>.</li>
+<li>if field is an object, use <code>equals()</code>. (thus apply rule
+recursively)</li>
+<li>if field is an array, apply to each entry. (lazy approaches: use
+<code>Arrays.equals(a,b)</code> or
+<code>Arrays.deepEquals(a,b)</code>)</li>
+</ul></li>
+</ul>
+<p>Best practices of equals design to <strong>improve
+efficiency</strong>.</p>
+<ul>
+<li>No need to use calculated fields that depent on other fields.</li>
+<li>Compare fields mostly likely to differ first.</li>
+<li>Make <code>compareTo()</code> consistent with <code>equals()</code>.
+(<code>x.equals(y)</code> iff <code>(x.compareTo(y) == 0)</code>)</li>
+</ul>
+<p>See an example equals design for the class <code>Date</code>.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">Date</span> <span class="keyword">implements</span> <span class="title class_">Comparable</span>&lt;Date&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> month;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> day;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> year;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object y)</span> &#123;         <span class="comment">// Note that argument type should be Object</span></span><br><span class="line">        <span class="keyword">if</span> (y == <span class="built_in">this</span>)    <span class="keyword">return</span> <span class="literal">true</span>;          <span class="comment">// optimize for reference equality</span></span><br><span class="line">        <span class="keyword">if</span> (y == <span class="literal">null</span>)    <span class="keyword">return</span> <span class="literal">false</span>;         <span class="comment">// check for null</span></span><br><span class="line">        <span class="keyword">if</span> (y.getClass() != <span class="built_in">this</span>.getClass())  <span class="comment">// objects must be in the same class</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="type">Date</span> <span class="variable">that</span> <span class="operator">=</span> (Date) y;                 <span class="comment">// cast</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.day   != that.day  )    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.month != that.month)    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.year  != that.year )    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="hash-function">Hash Function</h2>
+<p>All Java classes inherit a method <code>hashCode()</code>, which
+returns a 32-bit <code>int</code>.</p>
+<ul>
+<li>Requirement. If <code>x.equals(y)</code>, then
+<code>(x.hashCode() == y.hashCode())</code>.</li>
+<li>Highly desirable. If <code>!x.equals(y)</code>, then
+<code>(x.hashCode() != y.hashCode())</code>.</li>
+</ul>
+<div class="note info no-icon"><p>Horner's method. Use <span class="math inline">\(L\)</span>
+multiplies/adds to hash string of length <span class="math inline">\(L\)</span>.</p>
+</div>
+<p>Horner's method usually uses gen 31 to hash string of length <span class="math inline">\(L\)</span>: <span class="math inline">\(h=s_031^{L-1}+...s_{L-2}31^1+s_{L-1}31^0\)</span>.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Java library implementation</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">String</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">hash</span> <span class="operator">=</span> <span class="number">0</span>;    <span class="comment">// cache of hash code</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">char</span>[] s;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hashCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">h</span> <span class="operator">=</span> hash;</span><br><span class="line">        <span class="keyword">if</span> (h != <span class="number">0</span>)    <span class="keyword">return</span> h;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; length(); ++i)    hash = s[i] + (<span class="number">31</span> * hash);</span><br><span class="line">        hash = h;</span><br><span class="line">        <span class="keyword">return</span> h;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Standard recipe</strong> of hash code design for user-defined
+types is as follows:</p>
+<ul>
+<li>Combine each significant field using the <span class="math inline">\(31x+y\)</span> rule.</li>
+<li>If field is a primitive type, use wrapper type
+<code>hashCode()</code>.</li>
+<li>If field is null, return 0.</li>
+<li>If field is a reference type, use <code>hashCode()</code>. (thus
+applies rule recursively)</li>
+<li>If field is an array, apply to each entry. (lazy approach: use
+<code>Arrays.deepHashCode()</code>)</li>
+</ul>
+<p>This recipe works resonably well <strong>in practice</strong> and is
+widely used in Java libraries.</p>
+<p><br></p>
+<h2 id="java-language-style">Java Language Style</h2>
+<p>这门课的 projects 设计实在是太良心了，在评分反馈里居然还包含 style
+check！难以想象教职员们为课程的准备倾注了多少心血……至少我从来没有见过有一门课的评分标准里还包含
+coding style。</p>
+<ol type="1">
+<li>The instance variable name must start with <strong>a lowercase
+letter and use camelCase</strong>.</li>
+<li>The class name must start with <strong>a uppercase letter and use
+CamelCase</strong>.</li>
+<li>Remove unused import statements.</li>
+<li>Typecast (类型转换) must <strong>be followed by a
+whitespace</strong>.</li>
+<li>Define constructors after static and instance variables but before
+methods.</li>
+<li>Define constant variables to hold the constants used more than
+once.</li>
+</ol>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p><a href="https://www.coursera.org/learn/algorithms-part1">Algorithms,
+Part 1, Princeton University</a>. Lecturer: Robert Sedgewick &amp; Kevin
+Wayne.</p>
+<p>Course textbook:</p>
+<p><em>Algorithms (4th edition)</em>, Sedgewick, R. &amp; Wayne, K.,
+(2011), Addison-Wesley Professional, <a href="https://algs4.cs.princeton.edu/home/">view</a></p>
+<p><br></p>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>courses</category>
+        <category>Algorithms, Princeton</category>
+      </categories>
+      <tags>
+        <tag>course notes</tag>
+        <tag>Java</tag>
       </tags>
   </entry>
   <entry>
@@ -3863,181 +3863,6 @@ material.</p>
       </tags>
   </entry>
   <entry>
-    <title>The Missing Semester of CS Education, MIT - Data Wrangling</title>
-    <url>/2023/07/06/missing-sem-2/</url>
-    <content><![CDATA[<p>ENGG1340 shell 命令部分的加强版。老师通过一个例子就深入浅出的展示了
-<code>grep</code>, <code>sort</code>, <code>uniq</code>,
-<code>sed</code>, <code>awk</code>
-等命令强大的数据处理能力。由于之前自学了一点 <code>sed</code> 与
-<code>awk</code>，这一节我理解的比较快，所以笔记相对来说会比较简单；See
-<a href="http://localhost:4000/2023/05/05/shell-command/">here</a> for
-more detailed introduction on command <code>sed</code> and
-<code>awk</code>.</p>
-<span id="more"></span>
-<p><br></p>
-<div class="note warning"><p>  This article is a self-administered course note.</p>
-<p>  It will <strong>NOT</strong> cover any exam or assignment related
-content.</p>
-</div>
-<p><br></p>
-<p>这一堂课的全部流程基于对某个 ssh
-示例日志文件的处理；只需要一行命令，就能从海量的日志数据中提取到有价值的内容。结合
-R 语言等数据处理语言，甚至还能够迅速生成各种直观的统计图。</p>
-<p>假设我们只关心被拒绝连接的用户；经过
-<code>grep "Disconnected from"</code> 后的原始数据格式如下：</p>
-<figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">...</span><br><span class="line">Jan 13 14:59:08 thesquareplanet.com sshd[25047]: Disconnected from invalid user guest 58.26.43.39 port 47900 [preauth]</span><br><span class="line">Jan 13 15:00:14 thesquareplanet.com sshd[25062]: Disconnected from invalid user postgres 190.187.67.67 port 50091 [preauth]</span><br><span class="line">Jan 13 15:00:23 thesquareplanet.com sshd[25065]: Disconnected from authenticating user ftp_test 156.236.72.23 port 54404</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p>在原始数据中，我们可以观察到大量的重复 pattern； <code>sed</code>
-命令可以识别这一 pattern 并<strong>替换 (substitute)</strong>
-无用的数据前缀：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ssh myserver journalctl</span><br><span class="line">| grep sshd</span><br><span class="line">| grep <span class="string">&quot;Disconnected from&quot;</span></span><br><span class="line">| sed <span class="string">&#x27;s/.*Disconnected from //&#x27;</span></span><br><span class="line">invalid user guest 58.26.43.39 port 47900 [preauth]</span><br><span class="line">invalid user postgres 190.187.67.67 port 50091 [preauth]</span><br><span class="line">authenticating user ftp_test 156.236.72.23 port 54404</span><br></pre></td></tr></table></figure>
-<p><code>sed</code> 命令的最基础用法为
-<code>sed 's/REGEX/SUBSTITUTION/'</code>。<code>REGEX</code>
-是目标模式的正则表达式，<code>SUBSTITUTION</code>
-是替换匹配模式的文本。注意到 <code>sed s</code> 命令的语法与 vim
-搜索&amp;替换命令的语法十分相似。</p>
-<p><br></p>
-<h2 id="basic-regex-for-sed">Basic regex for sed</h2>
-<p>Regular expressions are usually (though not always) surrounded by
-<code>/</code>. Most ASCII characters just carry their normal meaning,
-but some characters have special matching behavior.</p>
-<ul>
-<li><code>.</code> means "any single character" except newline.</li>
-<li><code>*</code> zero or more of the preceding match.</li>
-<li><code>+</code> one or more of the preceding match.</li>
-<li><code>?</code> zero or one of the preceding match.</li>
-<li><code>[abc]</code> any one character of <code>a</code>,
-<code>b</code>, and <code>c</code>.</li>
-<li><code>(RX1|RX2)</code> either something that matches
-<code>RX1</code> or <code>RX2</code>.</li>
-<li><code>^</code> the start of the line.</li>
-<li><code>$</code> the end of the line.</li>
-</ul>
-<p><code>sed</code>'s regular expressions are somewhat weired, and will
-require you to put a <code>\</code> before most of
-<strong>these</strong> to give them their special meaning. Or you can
-pass <code>-E</code>.</p>
-<p>现在看到之前的例子
-<code>/.*Disconnected from /</code>，我们会发现当用户名本身为
-<code>Disconnected from</code> 时， 结果不符合预期：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> malicious_login</span><br><span class="line">Jan 17 03:13:00 thesquareplanet.com sshd[2631]: Disconnected from invalid user Disconnected from 46.97.239.16 port 55920 [preauth]</span><br><span class="line">$ <span class="built_in">cat</span> malicious_login | sed <span class="string">&#x27;s/.*Disconnected from //&#x27;</span></span><br><span class="line">46.97.239.16 port 55920 [preauth]</span><br></pre></td></tr></table></figure>
-<p>想要保留的用户名被 <code>sed</code> 命令替换成了 null。这是由于
-<code>sed</code>
-命令的匹配策略是<strong>贪心的</strong>；它总是匹配尽可能多的文本进行替换。在一些正则表达式实现中，我们可以在
-<code>*</code> 或 <code>+</code> 后添加 <code>?</code>
-后缀将匹配策略改为 non-greedy 的，例如 perl 的命令行模式：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">perl -pe <span class="string">&#x27;s/.*?Disconnected from //&#x27;</span></span><br></pre></td></tr></table></figure>
-<p>可惜的是 <code>sed</code>
-命令并不支持这个写法。为了解决这个问题，也同时为之后提取用户名做准备，我们尝试使用
-<code>sed</code> 的正则表达式匹配整行数据：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">| sed -E <span class="string">&#x27;s/.*Disconnected from (invalid |authenticating )?user .* [0-9.]+ port [0-9]+( \[preauth\])?$//&#x27;</span> </span><br></pre></td></tr></table></figure>
-<p>剩下的问题是，如何从匹配的正则表达式中保留我们需要的数据——用户名。解决方案是使用正则中自带的
-<strong>"capture group" (捕获组)</strong> feature。</p>
-<div class="note info no-icon"><p>Any text matched by a regex surrounded by parentheses <code>()</code>
-is stored in a <strong>numbered capture group</strong>. These are
-available in the substitution as <code>\1</code>, <code>\2</code>,
-<code>\3</code>, etc.</p>
-</div>
-<p>使用小括号 <code>()</code>
-“捕获”用户名之后，我们成功得到了需要的数据。注意用户名对应的捕获组
-<code>(.*)</code> 是整个正则表达式中的第二个捕获组，所以我们用
-<code>\2</code> 进行指代。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ssh myserver hournalctl</span><br><span class="line">| grep sshd</span><br><span class="line">| grep <span class="string">&quot;Disconnected from&quot;</span></span><br><span class="line">| sed -E <span class="string">&#x27;s/.*Disconnected from (invalid |authenticating )?user (.*) [0-9.]+ port [0-9]+( \[preauth\])?$/\2/&#x27;</span></span><br><span class="line">...</span><br><span class="line">guest</span><br><span class="line">postgres</span><br><span class="line">ftp_test</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p><br></p>
-<h2 id="further-data-wrangling">Further Data Wrangling</h2>
-<p>在提取出用户名之后，我们还能进一步对其进行整理。最常见的就是使用
-<code>sort</code>，<code>uniq</code>，<code>head</code> 与
-<code>tail</code> 命令。下面的命令提取出 10
-个登录次数最多的用户并与其登录次数一起输出。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ssh myserver journalctl</span><br><span class="line">| grep sshd</span><br><span class="line">| grep <span class="string">&quot;Disconnected from&quot;</span></span><br><span class="line">| sed -E <span class="string">&#x27;s/.*Disconnected from (invalid |authenticating )?user (.*) [0-9.]+ port [0-9]+( \[preauth\])?$/\2/&#x27;</span></span><br><span class="line">| <span class="built_in">sort</span> | <span class="built_in">uniq</span> -c</span><br><span class="line">| <span class="built_in">sort</span> -nk1,1 | <span class="built_in">tail</span> -n10</span><br><span class="line">    1115 123</span><br><span class="line">    1141 ftpuser</span><br><span class="line">    1415 oracle</span><br><span class="line">    1444 postgres</span><br><span class="line">    1561 ubuntu</span><br><span class="line">    1951 user</span><br><span class="line">    3326 admin</span><br><span class="line">    3345 <span class="built_in">test</span></span><br><span class="line">    3782 123456</span><br><span class="line">   10892 root</span><br></pre></td></tr></table></figure>
-<p>现在，数据的格式已经变得相当简洁：分为两列，第一列为登录次数，第二列为对应的用户名；对于这种<strong>以列的形式</strong>呈现的数据，<code>awk</code>
-命令能够很轻松的进行处理。</p>
-<ul>
-<li>将所有用户名以合并为一行进行输出。</li>
-<li>输出所有只登陆过一次的，且用户名以 c 开头，以 e
-结尾的用户的个数。</li>
-</ul>
-<p>注意这里的 <code>awk</code> 有一个小用法是之前自学没有 cover 到的：在
-<code>awk script</code> 中也能进行正则匹配。使用 <code>~</code>
-运算符匹配某一列与某个括在 <code>//</code>
-中的正则表达式，若能够匹配，表达式为真；否则为假。</p>
-<p>这里也要对我之前的一个误区进行修正；<code>awk</code> 中的
-<code>BEGIN</code> is a <strong>pattern</strong> that matches the start
-of the input (and <code>END</code> matches the
-end)。而并不是之前我以为的，在匹配开始之前或结束之后执行的命令。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ... | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span> | <span class="built_in">paste</span> -sd</span><br><span class="line">123ftpuseroraclepostgresubuntuuseradmintest123456root</span><br><span class="line">$ ... | awk <span class="string">&#x27;$1 == 1 &amp;&amp; $2 ~ /^c.*e$/ &#123; print $2 &#125;&#x27;</span> | <span class="built_in">wc</span> -l</span><br><span class="line">1302</span><br><span class="line">$ ... | awk <span class="string">&#x27;BEGIN &#123;row = 0&#125; $1 == 1 &amp;&amp; $2 ~ /^c.*e$/ &#123; rows++ &#125; END &#123;print rows&#125;&#x27;</span></span><br><span class="line">1302</span><br></pre></td></tr></table></figure>
-<div class="note info no-icon"><p><code>paste</code>
-命令将每个文件以<strong>列对列</strong>的方式，<strong>一列列</strong>地加以合并。flag
-<code>-s</code> 表示将所有列合并到同一行。</p>
-</div>
-<p><br></p>
-<h2 id="data-analysis">Data Analysis</h2>
-<p>在完成初步的数据整理之后，还有更多命令可以进行进一步的数据分析：</p>
-<p>在 shell 中，可以使用 <code>bc</code> 命令 (Barkeley-Calculator)
-直接进行数学计算。举例来说，我们利用 <code>paste</code>
-命令将每一行的数字用 <code>+</code> 加号连接起来并直接传入
-<code>bc</code> 进行计算：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ... | awk <span class="string">&#x27;&#123;print $1&#125;&#x27;</span> | <span class="built_in">paste</span> -sd+ | bc -l</span><br><span class="line">100203</span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;2*(<span class="subst">$(data | paste -sd+)</span>)&quot;</span> | bc -l</span><br><span class="line">200406</span><br></pre></td></tr></table></figure>
-<p>使用 <code>st</code> 命令，<code>R</code> 语言的命令行模式或
-<code>gnuplot</code> 命令根据数据<strong>产生图表
-(plotting)</strong>：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ... | awk <span class="string">&#x27;&#123;print $1&#125;&#x27;</span></span><br><span class="line">| R --no-echo -e <span class="string">&#x27;x &lt;- scan(file=&quot;stdin&quot;, quiet=TRUE); summary(x)&#x27;</span></span><br><span class="line"></span><br><span class="line">$ ... | <span class="built_in">sort</span> -nk1,1 | <span class="built_in">tail</span> -n10</span><br><span class="line">| gnuplot -p -e <span class="string">&#x27;set boxwidth 0.5; plot &quot;-&quot; using 1:xtic(2) with boxes&#x27;</span></span><br></pre></td></tr></table></figure>
-<p><br></p>
-<h2 id="exercises">Exercises</h2>
-<blockquote>
-<p>Find the number of words (in <code>/usr/share/dict/words</code>) that
-contain at least three <code>a</code>s and don't have a <code>'s</code>
-ending. What are the three most common last two letters of the words?
-How many of those two-letter combinations are there? <code>sed</code>'s
-<code>y</code> command, or the <code>tr</code> program, may help you
-with case insensitivity.</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># the number of words contains at least 3 as and don&#x27;t have a &#x27;s ending</span></span><br><span class="line"><span class="built_in">cat</span> words | <span class="built_in">tr</span> <span class="string">&quot;[:upper:]&quot;</span> <span class="string">&quot;[:lower:]&quot;</span> | grep -E <span class="string">&quot;^(.*a)&#123;3&#125;&quot;</span> | grep -vE <span class="string">&quot;&#x27;s$&quot;</span> | <span class="built_in">wc</span> -l</span><br><span class="line"><span class="comment"># the three most common last two letters</span></span><br><span class="line"><span class="built_in">cat</span> words | <span class="built_in">tr</span> <span class="string">&quot;[:upper:]&quot;</span> <span class="string">&quot;[:lower:]&quot;</span> </span><br><span class="line">          | sed -E <span class="string">&#x27;s/.*([^ ]&#123;2&#125;)$/\1/&#x27;</span> | <span class="built_in">sort</span> | <span class="built_in">uniq</span> -c | <span class="built_in">sort</span> -nk1,1 | <span class="built_in">tail</span> -n3</span><br><span class="line">          | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span></span><br><span class="line"><span class="comment"># the number of two-letter combinations</span></span><br><span class="line"><span class="built_in">cat</span> words | <span class="built_in">tr</span> <span class="string">&quot;[:upper:]&quot;</span> <span class="string">&quot;[:lower:]&quot;</span></span><br><span class="line">          | sed -E <span class="string">&#x27;s/.*([^ ]&#123;2&#125;)$/\1/&#x27;</span> | <span class="built_in">sort</span> | <span class="built_in">uniq</span> | <span class="built_in">wc</span> -l</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>To do in-place substitution it is quite tempting to do something like
-<code>sed s/REGEX/SUBSTITUTION/ input.txt &gt; input.txt</code>. However
-this is a bad idea, why? Is this particular to <code>sed</code>? Use
-<code>man sed</code> to find out how to accomplish this.</p>
-</blockquote>
-<p><code>sed s/REGEX/SUBSTITUTION/ input.txt &gt; input.txt</code> will
-return a blank file, since <code>input.txt</code> on the right hand side
-of the output operator <code>&gt;</code> will be made blank before the
-left hand side of the output operator could be applied. Because the file
-names conicide, an empty <code>input.txt</code> will be output to an
-empty <code>input.txt</code>.</p>
-<p>It is generally a bad idea to in-place edit files as mistakes can be
-made when using regular expressions and without backups on the original
-file, it can be very difficult to recover. This is not particular to
-<code>sed</code> but in general to all forms of in-place editing files.
-To accomplish in-place substitution add the <code>-i</code> tag.</p>
-<p><br></p>
-<h2 id="reference">Reference</h2>
-<div class="note warning"><p>  This article is a self-administered course note.</p>
-<p>  References in the article are from corresponding course materials
-if not specified.</p>
-</div>
-<ul>
-<li><a href="https://ivan-kim.github.io/MIT-missing-semester/Lecture4/">Ivan-kim.
-MIT-missing-semester Lec4</a>.</li>
-<li><a href="https://thoughtbot.com/blog/sed-102-replace-in-place">Thoughtbot -
-sed 102: Replace In-Place</a>.</li>
-</ul>
-<p>Course info:</p>
-<p>MIT Open Learning. The Missing Semester of Your CS Education.</p>
-<p>Course resource:</p>
-<p><a href="https://missing.csail.mit.edu/">The Missing Semester of Your
-CS Education</a>.</p>
-]]></content>
-      <categories>
-        <category>notes</category>
-        <category>courses</category>
-        <category>Missing Semester, MIT</category>
-      </categories>
-      <tags>
-        <tag>course notes</tag>
-        <tag>shell</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>The Missing Semester of CS Education, MIT - the Shell</title>
     <url>/2023/07/02/missing-sem-1/</url>
     <content><![CDATA[<p>“计算机教育缺失的一课”，MIT
@@ -4331,6 +4156,181 @@ detailed introduction</a>.</p>
 <p>  References in the article are from corresponding course materials
 if not specified.</p>
 </div>
+<p>Course info:</p>
+<p>MIT Open Learning. The Missing Semester of Your CS Education.</p>
+<p>Course resource:</p>
+<p><a href="https://missing.csail.mit.edu/">The Missing Semester of Your
+CS Education</a>.</p>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>courses</category>
+        <category>Missing Semester, MIT</category>
+      </categories>
+      <tags>
+        <tag>course notes</tag>
+        <tag>shell</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>The Missing Semester of CS Education, MIT - Data Wrangling</title>
+    <url>/2023/07/06/missing-sem-2/</url>
+    <content><![CDATA[<p>ENGG1340 shell 命令部分的加强版。老师通过一个例子就深入浅出的展示了
+<code>grep</code>, <code>sort</code>, <code>uniq</code>,
+<code>sed</code>, <code>awk</code>
+等命令强大的数据处理能力。由于之前自学了一点 <code>sed</code> 与
+<code>awk</code>，这一节我理解的比较快，所以笔记相对来说会比较简单；See
+<a href="http://localhost:4000/2023/05/05/shell-command/">here</a> for
+more detailed introduction on command <code>sed</code> and
+<code>awk</code>.</p>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<p>这一堂课的全部流程基于对某个 ssh
+示例日志文件的处理；只需要一行命令，就能从海量的日志数据中提取到有价值的内容。结合
+R 语言等数据处理语言，甚至还能够迅速生成各种直观的统计图。</p>
+<p>假设我们只关心被拒绝连接的用户；经过
+<code>grep "Disconnected from"</code> 后的原始数据格式如下：</p>
+<figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">...</span><br><span class="line">Jan 13 14:59:08 thesquareplanet.com sshd[25047]: Disconnected from invalid user guest 58.26.43.39 port 47900 [preauth]</span><br><span class="line">Jan 13 15:00:14 thesquareplanet.com sshd[25062]: Disconnected from invalid user postgres 190.187.67.67 port 50091 [preauth]</span><br><span class="line">Jan 13 15:00:23 thesquareplanet.com sshd[25065]: Disconnected from authenticating user ftp_test 156.236.72.23 port 54404</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>在原始数据中，我们可以观察到大量的重复 pattern； <code>sed</code>
+命令可以识别这一 pattern 并<strong>替换 (substitute)</strong>
+无用的数据前缀：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ssh myserver journalctl</span><br><span class="line">| grep sshd</span><br><span class="line">| grep <span class="string">&quot;Disconnected from&quot;</span></span><br><span class="line">| sed <span class="string">&#x27;s/.*Disconnected from //&#x27;</span></span><br><span class="line">invalid user guest 58.26.43.39 port 47900 [preauth]</span><br><span class="line">invalid user postgres 190.187.67.67 port 50091 [preauth]</span><br><span class="line">authenticating user ftp_test 156.236.72.23 port 54404</span><br></pre></td></tr></table></figure>
+<p><code>sed</code> 命令的最基础用法为
+<code>sed 's/REGEX/SUBSTITUTION/'</code>。<code>REGEX</code>
+是目标模式的正则表达式，<code>SUBSTITUTION</code>
+是替换匹配模式的文本。注意到 <code>sed s</code> 命令的语法与 vim
+搜索&amp;替换命令的语法十分相似。</p>
+<p><br></p>
+<h2 id="basic-regex-for-sed">Basic regex for sed</h2>
+<p>Regular expressions are usually (though not always) surrounded by
+<code>/</code>. Most ASCII characters just carry their normal meaning,
+but some characters have special matching behavior.</p>
+<ul>
+<li><code>.</code> means "any single character" except newline.</li>
+<li><code>*</code> zero or more of the preceding match.</li>
+<li><code>+</code> one or more of the preceding match.</li>
+<li><code>?</code> zero or one of the preceding match.</li>
+<li><code>[abc]</code> any one character of <code>a</code>,
+<code>b</code>, and <code>c</code>.</li>
+<li><code>(RX1|RX2)</code> either something that matches
+<code>RX1</code> or <code>RX2</code>.</li>
+<li><code>^</code> the start of the line.</li>
+<li><code>$</code> the end of the line.</li>
+</ul>
+<p><code>sed</code>'s regular expressions are somewhat weired, and will
+require you to put a <code>\</code> before most of
+<strong>these</strong> to give them their special meaning. Or you can
+pass <code>-E</code>.</p>
+<p>现在看到之前的例子
+<code>/.*Disconnected from /</code>，我们会发现当用户名本身为
+<code>Disconnected from</code> 时， 结果不符合预期：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> malicious_login</span><br><span class="line">Jan 17 03:13:00 thesquareplanet.com sshd[2631]: Disconnected from invalid user Disconnected from 46.97.239.16 port 55920 [preauth]</span><br><span class="line">$ <span class="built_in">cat</span> malicious_login | sed <span class="string">&#x27;s/.*Disconnected from //&#x27;</span></span><br><span class="line">46.97.239.16 port 55920 [preauth]</span><br></pre></td></tr></table></figure>
+<p>想要保留的用户名被 <code>sed</code> 命令替换成了 null。这是由于
+<code>sed</code>
+命令的匹配策略是<strong>贪心的</strong>；它总是匹配尽可能多的文本进行替换。在一些正则表达式实现中，我们可以在
+<code>*</code> 或 <code>+</code> 后添加 <code>?</code>
+后缀将匹配策略改为 non-greedy 的，例如 perl 的命令行模式：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">perl -pe <span class="string">&#x27;s/.*?Disconnected from //&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>可惜的是 <code>sed</code>
+命令并不支持这个写法。为了解决这个问题，也同时为之后提取用户名做准备，我们尝试使用
+<code>sed</code> 的正则表达式匹配整行数据：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">| sed -E <span class="string">&#x27;s/.*Disconnected from (invalid |authenticating )?user .* [0-9.]+ port [0-9]+( \[preauth\])?$//&#x27;</span> </span><br></pre></td></tr></table></figure>
+<p>剩下的问题是，如何从匹配的正则表达式中保留我们需要的数据——用户名。解决方案是使用正则中自带的
+<strong>"capture group" (捕获组)</strong> feature。</p>
+<div class="note info no-icon"><p>Any text matched by a regex surrounded by parentheses <code>()</code>
+is stored in a <strong>numbered capture group</strong>. These are
+available in the substitution as <code>\1</code>, <code>\2</code>,
+<code>\3</code>, etc.</p>
+</div>
+<p>使用小括号 <code>()</code>
+“捕获”用户名之后，我们成功得到了需要的数据。注意用户名对应的捕获组
+<code>(.*)</code> 是整个正则表达式中的第二个捕获组，所以我们用
+<code>\2</code> 进行指代。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ssh myserver hournalctl</span><br><span class="line">| grep sshd</span><br><span class="line">| grep <span class="string">&quot;Disconnected from&quot;</span></span><br><span class="line">| sed -E <span class="string">&#x27;s/.*Disconnected from (invalid |authenticating )?user (.*) [0-9.]+ port [0-9]+( \[preauth\])?$/\2/&#x27;</span></span><br><span class="line">...</span><br><span class="line">guest</span><br><span class="line">postgres</span><br><span class="line">ftp_test</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="further-data-wrangling">Further Data Wrangling</h2>
+<p>在提取出用户名之后，我们还能进一步对其进行整理。最常见的就是使用
+<code>sort</code>，<code>uniq</code>，<code>head</code> 与
+<code>tail</code> 命令。下面的命令提取出 10
+个登录次数最多的用户并与其登录次数一起输出。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ssh myserver journalctl</span><br><span class="line">| grep sshd</span><br><span class="line">| grep <span class="string">&quot;Disconnected from&quot;</span></span><br><span class="line">| sed -E <span class="string">&#x27;s/.*Disconnected from (invalid |authenticating )?user (.*) [0-9.]+ port [0-9]+( \[preauth\])?$/\2/&#x27;</span></span><br><span class="line">| <span class="built_in">sort</span> | <span class="built_in">uniq</span> -c</span><br><span class="line">| <span class="built_in">sort</span> -nk1,1 | <span class="built_in">tail</span> -n10</span><br><span class="line">    1115 123</span><br><span class="line">    1141 ftpuser</span><br><span class="line">    1415 oracle</span><br><span class="line">    1444 postgres</span><br><span class="line">    1561 ubuntu</span><br><span class="line">    1951 user</span><br><span class="line">    3326 admin</span><br><span class="line">    3345 <span class="built_in">test</span></span><br><span class="line">    3782 123456</span><br><span class="line">   10892 root</span><br></pre></td></tr></table></figure>
+<p>现在，数据的格式已经变得相当简洁：分为两列，第一列为登录次数，第二列为对应的用户名；对于这种<strong>以列的形式</strong>呈现的数据，<code>awk</code>
+命令能够很轻松的进行处理。</p>
+<ul>
+<li>将所有用户名以合并为一行进行输出。</li>
+<li>输出所有只登陆过一次的，且用户名以 c 开头，以 e
+结尾的用户的个数。</li>
+</ul>
+<p>注意这里的 <code>awk</code> 有一个小用法是之前自学没有 cover 到的：在
+<code>awk script</code> 中也能进行正则匹配。使用 <code>~</code>
+运算符匹配某一列与某个括在 <code>//</code>
+中的正则表达式，若能够匹配，表达式为真；否则为假。</p>
+<p>这里也要对我之前的一个误区进行修正；<code>awk</code> 中的
+<code>BEGIN</code> is a <strong>pattern</strong> that matches the start
+of the input (and <code>END</code> matches the
+end)。而并不是之前我以为的，在匹配开始之前或结束之后执行的命令。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ... | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span> | <span class="built_in">paste</span> -sd</span><br><span class="line">123ftpuseroraclepostgresubuntuuseradmintest123456root</span><br><span class="line">$ ... | awk <span class="string">&#x27;$1 == 1 &amp;&amp; $2 ~ /^c.*e$/ &#123; print $2 &#125;&#x27;</span> | <span class="built_in">wc</span> -l</span><br><span class="line">1302</span><br><span class="line">$ ... | awk <span class="string">&#x27;BEGIN &#123;row = 0&#125; $1 == 1 &amp;&amp; $2 ~ /^c.*e$/ &#123; rows++ &#125; END &#123;print rows&#125;&#x27;</span></span><br><span class="line">1302</span><br></pre></td></tr></table></figure>
+<div class="note info no-icon"><p><code>paste</code>
+命令将每个文件以<strong>列对列</strong>的方式，<strong>一列列</strong>地加以合并。flag
+<code>-s</code> 表示将所有列合并到同一行。</p>
+</div>
+<p><br></p>
+<h2 id="data-analysis">Data Analysis</h2>
+<p>在完成初步的数据整理之后，还有更多命令可以进行进一步的数据分析：</p>
+<p>在 shell 中，可以使用 <code>bc</code> 命令 (Barkeley-Calculator)
+直接进行数学计算。举例来说，我们利用 <code>paste</code>
+命令将每一行的数字用 <code>+</code> 加号连接起来并直接传入
+<code>bc</code> 进行计算：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ... | awk <span class="string">&#x27;&#123;print $1&#125;&#x27;</span> | <span class="built_in">paste</span> -sd+ | bc -l</span><br><span class="line">100203</span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;2*(<span class="subst">$(data | paste -sd+)</span>)&quot;</span> | bc -l</span><br><span class="line">200406</span><br></pre></td></tr></table></figure>
+<p>使用 <code>st</code> 命令，<code>R</code> 语言的命令行模式或
+<code>gnuplot</code> 命令根据数据<strong>产生图表
+(plotting)</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ... | awk <span class="string">&#x27;&#123;print $1&#125;&#x27;</span></span><br><span class="line">| R --no-echo -e <span class="string">&#x27;x &lt;- scan(file=&quot;stdin&quot;, quiet=TRUE); summary(x)&#x27;</span></span><br><span class="line"></span><br><span class="line">$ ... | <span class="built_in">sort</span> -nk1,1 | <span class="built_in">tail</span> -n10</span><br><span class="line">| gnuplot -p -e <span class="string">&#x27;set boxwidth 0.5; plot &quot;-&quot; using 1:xtic(2) with boxes&#x27;</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="exercises">Exercises</h2>
+<blockquote>
+<p>Find the number of words (in <code>/usr/share/dict/words</code>) that
+contain at least three <code>a</code>s and don't have a <code>'s</code>
+ending. What are the three most common last two letters of the words?
+How many of those two-letter combinations are there? <code>sed</code>'s
+<code>y</code> command, or the <code>tr</code> program, may help you
+with case insensitivity.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># the number of words contains at least 3 as and don&#x27;t have a &#x27;s ending</span></span><br><span class="line"><span class="built_in">cat</span> words | <span class="built_in">tr</span> <span class="string">&quot;[:upper:]&quot;</span> <span class="string">&quot;[:lower:]&quot;</span> | grep -E <span class="string">&quot;^(.*a)&#123;3&#125;&quot;</span> | grep -vE <span class="string">&quot;&#x27;s$&quot;</span> | <span class="built_in">wc</span> -l</span><br><span class="line"><span class="comment"># the three most common last two letters</span></span><br><span class="line"><span class="built_in">cat</span> words | <span class="built_in">tr</span> <span class="string">&quot;[:upper:]&quot;</span> <span class="string">&quot;[:lower:]&quot;</span> </span><br><span class="line">          | sed -E <span class="string">&#x27;s/.*([^ ]&#123;2&#125;)$/\1/&#x27;</span> | <span class="built_in">sort</span> | <span class="built_in">uniq</span> -c | <span class="built_in">sort</span> -nk1,1 | <span class="built_in">tail</span> -n3</span><br><span class="line">          | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span></span><br><span class="line"><span class="comment"># the number of two-letter combinations</span></span><br><span class="line"><span class="built_in">cat</span> words | <span class="built_in">tr</span> <span class="string">&quot;[:upper:]&quot;</span> <span class="string">&quot;[:lower:]&quot;</span></span><br><span class="line">          | sed -E <span class="string">&#x27;s/.*([^ ]&#123;2&#125;)$/\1/&#x27;</span> | <span class="built_in">sort</span> | <span class="built_in">uniq</span> | <span class="built_in">wc</span> -l</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>To do in-place substitution it is quite tempting to do something like
+<code>sed s/REGEX/SUBSTITUTION/ input.txt &gt; input.txt</code>. However
+this is a bad idea, why? Is this particular to <code>sed</code>? Use
+<code>man sed</code> to find out how to accomplish this.</p>
+</blockquote>
+<p><code>sed s/REGEX/SUBSTITUTION/ input.txt &gt; input.txt</code> will
+return a blank file, since <code>input.txt</code> on the right hand side
+of the output operator <code>&gt;</code> will be made blank before the
+left hand side of the output operator could be applied. Because the file
+names conicide, an empty <code>input.txt</code> will be output to an
+empty <code>input.txt</code>.</p>
+<p>It is generally a bad idea to in-place edit files as mistakes can be
+made when using regular expressions and without backups on the original
+file, it can be very difficult to recover. This is not particular to
+<code>sed</code> but in general to all forms of in-place editing files.
+To accomplish in-place substitution add the <code>-i</code> tag.</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<ul>
+<li><a href="https://ivan-kim.github.io/MIT-missing-semester/Lecture4/">Ivan-kim.
+MIT-missing-semester Lec4</a>.</li>
+<li><a href="https://thoughtbot.com/blog/sed-102-replace-in-place">Thoughtbot -
+sed 102: Replace In-Place</a>.</li>
+</ul>
 <p>Course info:</p>
 <p>MIT Open Learning. The Missing Semester of Your CS Education.</p>
 <p>Course resource:</p>
@@ -4797,6 +4797,50 @@ CS Education</a>.</p>
       </tags>
   </entry>
   <entry>
+    <title>在平江东山寺</title>
+    <url>/2023/07/10/moment-230708/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+<p><strong>癸卯小暑。</strong></p>
+
+</blockquote>
+<center>
+<em>在虔信者愿望中诞生的神明脚下，我偷听到关于未来的只言片语。</em>
+</center>
+<span id="more"></span>
+<p><br></p>
+<figure>
+<img data-src="1.jpg" alt="是日已过">
+<figcaption aria-hidden="true">是日已过</figcaption>
+</figure>
+<figure>
+<img data-src="2.jpg" alt="命亦随减">
+<figcaption aria-hidden="true">命亦随减</figcaption>
+</figure>
+<figure>
+<img data-src="3.jpg" alt="如少水鱼">
+<figcaption aria-hidden="true">如少水鱼</figcaption>
+</figure>
+<figure>
+<img data-src="4.jpg" alt="斯有何乐">
+<figcaption aria-hidden="true">斯有何乐</figcaption>
+</figure>
+<figure>
+<img data-src="5.jpg" alt="呢支签话咧……">
+<figcaption aria-hidden="true">呢支签话咧……</figcaption>
+</figure>
+<p><br></p>
+<div class="note success"><p>新成就：在寺庙里抽一次签！</p>
+</div>
+<p><br></p>
+]]></content>
+      <categories>
+        <category>achievements</category>
+      </categories>
+      <tags>
+        <tag>moment</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ncurses 库学习笔记</title>
     <url>/2023/04/14/ncurses-study/</url>
     <content><![CDATA[<p>这次 ENGG1340 课程的 group project 是设计并实现一个 <strong>text-base
@@ -4985,50 +5029,6 @@ scr_dump</a></li>
       <tags>
         <tag>ncurses</tag>
         <tag>library</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在平江东山寺</title>
-    <url>/2023/07/10/moment-230708/</url>
-    <content><![CDATA[<blockquote class="blockquote-center">
-<p><strong>癸卯小暑。</strong></p>
-
-</blockquote>
-<center>
-<em>在虔信者愿望中诞生的神明脚下，我偷听到关于未来的只言片语。</em>
-</center>
-<span id="more"></span>
-<p><br></p>
-<figure>
-<img data-src="1.jpg" alt="是日已过">
-<figcaption aria-hidden="true">是日已过</figcaption>
-</figure>
-<figure>
-<img data-src="2.jpg" alt="命亦随减">
-<figcaption aria-hidden="true">命亦随减</figcaption>
-</figure>
-<figure>
-<img data-src="3.jpg" alt="如少水鱼">
-<figcaption aria-hidden="true">如少水鱼</figcaption>
-</figure>
-<figure>
-<img data-src="4.jpg" alt="斯有何乐">
-<figcaption aria-hidden="true">斯有何乐</figcaption>
-</figure>
-<figure>
-<img data-src="5.jpg" alt="呢支签话咧……">
-<figcaption aria-hidden="true">呢支签话咧……</figcaption>
-</figure>
-<p><br></p>
-<div class="note success"><p>新成就：在寺庙里抽一次签！</p>
-</div>
-<p><br></p>
-]]></content>
-      <categories>
-        <category>achievements</category>
-      </categories>
-      <tags>
-        <tag>moment</tag>
       </tags>
   </entry>
   <entry>
@@ -5770,6 +5770,417 @@ Grossman.</p>
       </tags>
   </entry>
   <entry>
+    <title>Programming Languages, UW, Part B-2</title>
+    <url>/2023/07/19/prog-lan-3/</url>
+    <content><![CDATA[<p>这一节可以说是整套系列课程中含金量最高的一部分，学习的时候甚至能感受到获取知识的快感......！</p>
+<ul>
+<li>一方面，在我们已经建立起对 ML 与 Racket
+相当认识的基础之上，这一节由浅入深的展示了 static typing system 与
+dynamic typing system 之间的区别与联系。</li>
+<li>另一方面，本节的<a href="https://www.cnblogs.com/VeniVidiVici/p/16667116.html">作业</a>是用
+Racket 写一个 MUPL (made-up programming language) 的解释器。</li>
+</ul>
+<span id="more"></span>
+<p><br></p>
+<blockquote class="blockquote-center">
+<p>If you want to understand something, implement it.</p>
+
+</blockquote>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="interpreter-compiler">Interpreter &amp; Compiler</h2>
+<p>We can describe a typical workflow for a language implementation as
+follows.</p>
+<ul>
+<li>We take a <em>string</em> holding the <em>concrete syntax</em> of a
+program in the language. Typically this string would be the contents of
+one or more files.</li>
+<li>The <em>parser</em> (解析器，语法分析器) gives errors if this string
+is not syntactically well-formed. (no misused keywords, misplaced
+parentheses, etc.)</li>
+<li>If there are no such errors, the parser produces a <em>tree</em>
+that represents the program. This is called <em>abstract-syntax
+tree</em> (抽象语法树), or AST for short.</li>
+<li>If our language includes type-checking rules, the
+<em>type-checker</em> will use this AST to either produce error messages
+or not.</li>
+</ul>
+<p>解析器将代码解析为
+AST；这是源代码语言结构的一种树形抽象表示，树上的每一个节点代表源代码中的一种结构。若语言有类型检查规则，类型检查器将对
+AST 进行类型检查。若通过检查，AST 将被进一步处理。</p>
+<p>There are basically two approaches to this rest-of-the-implementation
+for implementing some programming language B, or sometimes of the
+mix.</p>
+<ul>
+<li><em>interpreter</em> (解释器)：我们用另一种语言 A 编写语言 B
+的解释器。解释器读入 B 语言程序的 AST 并生成结果。更好的名字
+(但并非学术共识)：<em>executor</em> for B 或 <em>evaluator</em> for
+B.</li>
+<li><em>compiler</em> (编译器)：我们用另一种语言 A 编写语言 B
+的编译器。编译器读入 B 语言程序的 AST 并生成一段与其完全等价的 C 语言
+(not necessarily the language C) 程序，再利用某些已有的 C 语言实现
+(pre-existing implementation for C) 生成结果。更好的名字
+(但并非学术共识)：<em>translator</em> for B.</li>
+</ul>
+<p>无论采用解释器还是编译器，我们把语言 A 称之为 <em>metalanguage</em>
+(元语言)。For compilation, 我们把语言 B 称为 <em>source language</em>
+(源语言)，语言 C 称为 <em>target language</em> (目标语言)。</p>
+<div class="note info no-icon"><p>A one-sentence sermon: <em>Interpreter versus compiler is a feature
+of a particular programming-language implementation, NOT a feature of
+the programming language.</em></p>
+</div>
+<p>采用编译器或解释器是语言实现的两种方式，与语言本身无关。我们不能将使用编译器或解释器当作语言本身的
+feature。</p>
+<p>我们常说的所谓编译型语言 (compiled languages) 与解释型语言
+(interpreted languages)
+其实是毫无道理的：这种分类方法的出现有着很复杂的历史原因，例如 C
+语言长期以来都是采用编译器实现，函数式语言通常采用解释器实现。(因此 C
+语言常被称作编译型语言，而函数式语言常被称作解释型语言)。</p>
+<p>但这并不代表我们不能编写 C 语言的解释器，或是编写函数式语言的编译器
+(事实上，SML/NJ
+就采用了部分编译器实现)：无论采用哪一种实现方式，都与源语言本身无关。</p>
+<p><br></p>
+<h2 id="ml-versus-racket">ML versus Racket</h2>
+<p>General semantics 上的异同：</p>
+<ul>
+<li>similarities:
+<ul>
+<li>have constructs that encourage a functional style.</li>
+<li>avoiding mutations, while allowing it where appropriate.</li>
+<li>using first-class closures.</li>
+<li>...</li>
+</ul></li>
+<li>differences:
+<ul>
+<li>different syntax: ML's pattern matching, Racket's accessor functions
+for structs.</li>
+<li>Racket's mutiple variants of let-expressions (<code>let</code>,
+<code>let*</code>, <code>letrec</code>)</li>
+<li>(most important) <u><em>ML has a static type system that Racket does
+not!</em></u></li>
+</ul></li>
+</ul>
+<div class="note info no-icon"><p>ML's static type system rejects lots of programs before running them
+by doing type-checking and reporting errors. To do so, ML enforces
+certain <em>restrictions</em> (e.g., all elements of a list must have
+the same type). As a result, ML ensures the absence of certain errors at
+<em>compile time</em>.</p>
+</div>
+<p>理解两个语言区别的最好方式是从其中一个语言的角度审视另一个语言。抛开语法的桎梏，我们站在
+ML 的视角，研究它的静态类型系统会对 Racket 的程序作何反应。</p>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">f</span> y) (<span class="name"><span class="built_in">+</span></span> y (<span class="name"><span class="built_in">car</span></span> y)))</span><br></pre></td></tr></table></figure>
+<p>ML
+的静态类型系统可以识别到以上程序的类型错误并在编译时报告错误，阻止该程序进入运行阶段。而
+Racket 只有该函数被调用时才会弹出 run-time error。</p>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> xs (<span class="name"><span class="built_in">list</span></span> <span class="number">1</span> <span class="literal">#t</span> <span class="string">&quot;hi&quot;</span>))</span><br></pre></td></tr></table></figure>
+<p>然而 ML 也会 reject 一些在 Racket 视角下没有 bug
+的程序；如上例，这个程序违反了 ML 的类型规则：list
+中的所有元素类型应该保持一致。但这样的 list 定义在 Racket
+中完全没有问题。</p>
+<p>从这个角度看，我们能够得出这样的结论：ML is roughly a <em>subset</em>
+of Racket. Programs that run produce similar answers, but ML rejects
+many more programs as illegal, i.e., not part of the language.</p>
+<p>那么，一个 ML 程序员又会如何看待 Racket 呢？他可能会认为 Racket is
+just ML where <em>every expression is part of one big datatype</em>.</p>
+<figure class="highlight ml"><table><tr><td class="code"><pre><span class="line"><span class="keyword">datatype</span> theType = <span class="type">Int</span> <span class="keyword">of</span> <span class="built_in">int</span></span><br><span class="line">                 | <span class="type">String</span> <span class="keyword">of</span> <span class="built_in">string</span></span><br><span class="line">                 | <span class="type">Pair</span> <span class="keyword">of</span> theType <span class="keyword">of</span> theType * theType</span><br><span class="line">                 | <span class="type">Fun</span> <span class="keyword">of</span> theType -&gt; theType</span><br><span class="line">                 | ... <span class="comment">(* one constructor per built-in type *)</span></span><br></pre></td></tr></table></figure>
+<p>Racket 中的每个表达，都被某个 constructor 隐式的 (implicitly)
+包装入这个 big datatype 中。例如 <code>42</code> 实际上是
+<code>(Int 42)</code>；这能够使得每个表达的结果都是 <code>theType</code>
+类型。</p>
+<p>并且，函数将检查其参数是否有正确的 constructors (in other words,
+"tags")，如果不合法，弹出错误；反之将调用函数的结果也隐式的包装在对应的
+<code>theType</code> 类内。例如，<code>(+ a b)</code> 将检查
+<code>a</code> 与 <code>b</code> 是否有标签
+<code>Int</code>；如果有，则返回结果 <code>(Int a+b)</code>。</p>
+<figure class="highlight ml"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fun</span> car v = <span class="keyword">case</span> v <span class="keyword">of</span> <span class="type">Pair</span>(a, b) =&gt; a | _ =&gt; <span class="keyword">raise</span> ... <span class="comment">(* give some error *)</span></span><br><span class="line"><span class="keyword">fun</span> pair? v = <span class="keyword">case</span> v <span class="keyword">of</span> <span class="type">Pair</span> _ =&gt; <span class="literal">true</span> | _ =&gt; <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p>这是另外一个例子：我们用 ML 来展示 Racket 中存在的 implicit run-time
+pattern matching。由于这种 "secret pattern-matching"
+是不对程序员暴露的，Racket 提供了类型检查函数例如
+<code>pair?</code>。</p>
+<p>The fact that we can think of Racket in terms of <code>theType</code>
+suggests that anything you can do in Racket can be done, perhaps more
+awkwardly, in ML: The ML programmer could just program explicitly using
+something like <code>theType</code> definition above.</p>
+<p><br></p>
+<h2 id="what-is-static-checking">What is Static Checking?</h2>
+<p>What is usually meant by "static checking" is anything done to reject
+a program at <em>compile-time</em>.</p>
+<div class="note info no-icon"><p>Compile-time is the time <em>after</em> a program (successfully)
+parses but <em>before</em> it runs.</p>
+</div>
+<p>注意，compile-time 是一个时间概念，虽然名字中含有
+compile，但它与语言实现采用的是 interpreter 还是 compiler
+无关。这进一步印证了我们之前所提到的语言实现并不是语言本身的 feature
+这一观念。</p>
+<div class="note info no-icon"><p>The most common <em>approach</em> to define a language's static
+checking is via a <em>type system</em>.</p>
+</div>
+<p>type system 中包含一系列 typing rules，例如 (以 ML
+为背景)：每个变量都有一个类型，条件语句的分支有着相同的类型，list
+中的元素类型一致等等。static checking 则检查程序是否遵循了这些规则。</p>
+<p>注意在 ML 中，type inferencer 也是 static checking
+的一部分，它对程序进行推断，判断是否存在一种可能的 type
+annotations，使得程序能够遵循 type system 中定义的规则。</p>
+<div class="note info no-icon"><p>The <em>purpose</em> of static checking is to reject programs that
+"make no sense" or "may try to misuse a language feature".</p>
+</div>
+<p>static checking 的确能够达到它设计之初的目的，但它并不是完美的；</p>
+<ul>
+<li>There are errors a type system typically does not prevent (such as
+array-bounds errors).</li>
+<li>There are errors a type system <em>cannot</em> prevent unless given
+more information about what a program is supposed to do. (ex. wrongly
+calls <code>+</code> instead of <code>*</code>)</li>
+<li>The necessary <em>trade-off</em>. the static checker has to reject
+some programs that would not do anything wrong.</li>
+</ul>
+<p>值得注意的是第三点：Racket 的动态检查 (dynamic checking, i.e.,
+run-time checking) 通过赋予并检测值的标签实现 (即上一节提到的 secret
+pattern-matching)，这使得它在运行时发现程序的错误。</p>
+<p>而静态检查则能在程序运行之前排除某些有问题的程序，这样做的代价
+(trade-off) 是它将会拒绝某些实际上没有问题的程序 (例如拥有不同类型元素的
+list)。</p>
+<div class="note info no-icon"><p>The typical points at which to prevent an error are compile-time and
+run-time. However, it is worth realizing that there is really a
+<em>continuum of eagerness</em> about when we declare something an
+error.</p>
+</div>
+<p>实际上，静态检查与动态检查并非是对立的概念，对于不同类型的错误，我们可以选择在
+compile-time 将其检出，也可以选择等到 run-time
+时再弹出错误；在这两个时间段之外进行处理也是一个可行但非典型的选择。</p>
+<p>如何掌握好 static checking 的
+trade-off，平衡其检出错误的效率与语言的灵活性，才是一个更加实际且有意义的命题。</p>
+<p><br></p>
+<h2 id="correctness-soundness-completeness-undecidability">Correctness:
+Soundness, Completeness, Undecidability</h2>
+<p>设我们想要避免的错误为 X，我们定义一个 static checker 的正确性
+(correctness) 为：</p>
+<ul>
+<li>A type system is <em>sound</em> if it never accepts a program that,
+when run with some input, does X, i.e., soundness prevents <em>false
+negatives</em>.</li>
+<li>A type system is <em>complete</em> if it never rejects a program
+that, no matter what input it is run with, will not do X, i.e.,
+completeness prevents <em>false positives</em>.</li>
+</ul>
+<p>实际上，<em>soundness</em> 与 <em>completeness</em>
+这两个术语来自逻辑学，其被广泛的应用在编程语言的理论设计中。</p>
+<ul>
+<li>A sound logic proves <em>only</em> true things.</li>
+<li>A complete logic proves <em>all</em> true things.</li>
+</ul>
+<p>如果一个 type system 能够兼具 soundness 与
+completeness，那么它所接受的程序集合与所有不执行 X
+的程序集合是完全等价的。可惜，理论是美好的，现实是残酷的：</p>
+<div class="note info no-icon"><p>In modern languages, type system are sound (they prevent what they
+claim to) but not complete (they reject program that need not
+reject).</p>
+</div>
+<p>以 ML 的 static checker 为例，若我们想避免的问题 X 为 "string
+类型的值作为除法运算的运算数"：</p>
+<figure class="highlight ml"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fun</span> f1 x = <span class="number">4</span> div <span class="string">&quot;hi&quot;</span>                         <span class="comment">(* f1 never get called *)</span></span><br><span class="line"><span class="keyword">fun</span> f2 x = <span class="keyword">if</span> <span class="literal">true</span> <span class="keyword">then</span> <span class="number">0</span> <span class="keyword">else</span> <span class="number">4</span> div <span class="string">&quot;hi&quot;</span></span><br><span class="line"><span class="keyword">fun</span> f3 = <span class="keyword">if</span> x &lt;= abs x <span class="keyword">then</span> <span class="number">0</span> <span class="keyword">else</span> <span class="number">4</span> div <span class="string">&quot;hi&quot;</span></span><br></pre></td></tr></table></figure>
+<p>注意，上述的三个函数均不会执行 <code>4 div "hi"</code> 这一语句，但
+ML 的 static checker 却会检出类型错误并拒绝程序运行。这也就是说，ML
+并不能很好的处理假阳性程序，它的 static checker 并不是 complete 的。</p>
+<div class="note info no-icon"><p>It is <em>impossible</em> to implement a static checker that given
+any program in your language (a) always terminates, (b) is sound, (c) is
+complete.</p>
+</div>
+<p>为了确保 X 不出现，现代语言的设计者选择了 soundness 与 always
+terminates 而牺牲了
+completeness。接受假阴性程序的后果要远大于拒绝假阳性程序的后果。</p>
+<p>与停机问题 (halting problem) 类似，一个总能停机的 static checker
+不能兼具 soundness 与 completeness 的原因也是由图灵机的<em>不可决定性
+(undecidability)</em> 决定的。</p>
+<p>非正式的设想一下，若我们想避免的问题 X 为程序进入死循环，那么一个既
+sound 又 complete 的 static checker
+本身就是对停机问题的通用解法。这样，我们把该问题的不可能性归约到了停机问题的不可能性上。</p>
+<p><br></p>
+<h2 id="weak-typing">Weak Typing</h2>
+<p>接下来我们再来介绍一个语言概念，<em>strongly typed</em> language 与
+<em>weakly typed</em> language。</p>
+<p>首先要强调，语言的强/弱类型与静态/动态类型是没有必然联系的两个概念。ML
+与 Racket
+虽然分别采用静态与动态类型系统，但它们都可被视为是强类型语言。</p>
+<p>对于想要阻止的问题 X，不同的语言有不同的处理方式：</p>
+<ul>
+<li>static checking: 利用 static checker 在 compile-time 检出。</li>
+<li>dynamic checking: 若 static checker 无法检出 X (语言不使用 static
+checker 或其 static checker 对问题 X 是 unsound
+的)，则在语言实现中加入一些 dynamic checks 在 run-time 阻止 X
+发生。</li>
+<li>......</li>
+<li>weak typing: 语言实现根本不对程序进行检查：认定 X
+的出现是程序员本身的问题。若程序员本身没有发现问题，X
+将会发生。(你程序员觉得是我的锅，那就是我的锅)</li>
+</ul>
+<p>C/C++ 是很典型的弱类型语言：举一个非常熟悉的例子，C/C++
+中的数组越界问题。即使我们访问了不合法的数组下标如
+<code>a[-1]</code>，C/C++
+也不会阻止程序的运行，最后程序可能会因为访问某些未申请的内存而导致崩溃。</p>
+<p>所谓强类型语言，就是其类型系统 (type system) 中存在较多的
+restrictions，阻止潜在 bug 程序的运行。而弱类型语言的 restrictions
+就相对较少。</p>
+<p>相对于强类型语言，弱类型语言省去了进行检查的时间成本，存储数据 (例如
+dynamic checks 所需要记录的 tags 信息)
+的空间成本；但所付出的代价是，程序的 bug
+更需要程序员本身进行检出而不能依靠强类型语言中的各种检查来发现。(相信我们都遇到过出现难以
+de 出的奇怪 bug，最后发现是数组越界的抓狂时刻)</p>
+<p>因此，在实际应用中存在很多外置的 checking tools
+对弱类型语言程序进行检查；这是一个折中的方案。</p>
+<p>另外需要强调的是，语言的强/弱类型比起是一种定义，不如说是一种相对的概念，具体可以参考<a href="https://learn.microsoft.com/zh-cn/archive/blogs/ericlippert/is-c-a-strongly-typed-or-a-weakly-typed-language">这个帖子</a>，回答者讲的很好。在中文语境下对强/弱类型似乎还有另外的定义，与变量的定义与类型转换规则相关。</p>
+<h3 id="extended-semantics">Extended Semantics</h3>
+<p>对于某个想要避免的问题
+X，一些语言并不纠结是否将其检出的问题，它们选择扩展其 primitives
+的语义。例如，传统的 <code>+</code> 只允许两个数字进行相加，一个
+<code>string</code> 类型的参数是不合法的。</p>
+<p>而在 Python 中，<code>"Hello" + "World"</code>
+这样的表达是合法的；这是因为 Python 扩展了 <code>+</code> 的
+semantics，使其具有了连接两个 <code>string</code> 类型字符串的语义。</p>
+<p>关于是否将问题 X 所对应的本来应当视作 bug
+的语句赋予新的意义这个问题见仁见智：一方面，这样的处理使得一些 bug
+更难被检出。一方面，它又确实给程序员带来了很多方便。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Supplementary notes:</p>
+<p><a href="https://www.cnblogs.com/VeniVidiVici/p/16644030.html">My
+notes in CnBlogs</a>. <a href="https://www.cnblogs.com/VeniVidiVici/p/16667116.html">My
+implementation</a>.</p>
+<p><a href="https://learn.microsoft.com/zh-cn/archive/blogs/ericlippert/is-c-a-strongly-typed-or-a-weakly-typed-language">Is
+C# a strongly typed or weakly typed language?</a>.</p>
+<p>Course info:</p>
+<p><a href="https://www.coursera.org/learn/programming-languages-part-b">Programming
+Languages, Part B, University of Washington</a>, Lecturer: Professor Dan
+Grossman.</p>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>courses</category>
+        <category>Programming Languages, UW</category>
+      </categories>
+      <tags>
+        <tag>PL</tag>
+        <tag>Racket</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Programming Languages, UW, Part C-1</title>
+    <url>/2023/07/22/prog-lan-4/</url>
+    <content><![CDATA[<p>作为一门研究 programming languages 的课程，OOP
+是一个避不开的话题。这一节通过介绍 Ruby —— a <em>dynamically typed
+OOP</em> language，来引出 functional v.s. OOP 这一历史悠久的命题。</p>
+<blockquote>
+<p>Taken together, ML, Racket, and Ruby cover three of the four
+combinations of functional v.s. object-oriented and statically v.s.
+dynamically typed.</p>
+</blockquote>
+<span id="more"></span>
+<p>Part C 的内容非常多，因此也分为两节笔记；但这里将不会详细记录 Ruby 的
+semantics。若想参考这部分的内容，详阅我在博客园上的<a href="https://www.cnblogs.com/VeniVidiVici/p/16698175.html">笔记</a>或课程提供的总结材料
+section8sum.pdf。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="the-rules-of-class-based-oop">The Rules of Class-Based OOP</h2>
+<p><em>Object-oriented programming</em>, which we abbreviate OOP, is as
+follows:</p>
+<ul>
+<li>All values (as usual, the result of evaluating expressions) are
+references to <em>objects</em>.</li>
+<li>Given an object, code "communicate with it" by calling its
+<em>methods</em>. A synonym for calling a method is <em>sending a
+message</em>.</li>
+<li>Each object has its own private <em>state</em>. Only an object's
+methods can directly access or update it.</li>
+<li>Every object is an instance of a <em>class</em>.</li>
+<li>An object's class determines the object's <em>behavior</em>.</li>
+</ul>
+<p>这些规则在绝大多数 OOP 语言中成立，但仍有例外：例如在 Java 或 C#
+中，某些值 (numbers) 并不被视为对象，这违反了规则
+1；并且存在一些方法使得对象的私有域被公有访问，这违反了规则 3。</p>
+<p>比起这些语言，Ruby 将以上的规则贯彻的更加彻底，因此有时其也被称为
+pure OOP language.</p>
+<p><br></p>
+<h2 id="everything-is-an-object">Everything is an Object</h2>
+<p>Ruby 彻底贯彻了 Everything is an object 这个最基础的 OOP
+思想，甚至连数，布尔值与空值 <code>nil</code> (as <code>null</code> in
+Java) 都属于对象。</p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">&gt; -<span class="number">42</span>.abs</span><br><span class="line"><span class="number">42</span></span><br><span class="line">&gt; <span class="string">&quot;hello&quot;</span>.<span class="literal">nil</span>?</span><br><span class="line"><span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p>数 <code>-42</code> 是 <code>Fixnum</code>
+类的对象。在该类中定义了方法 <code>abs</code>，因此 <code>-42</code>
+可以直接调用该方法。所有的对象都定义了 <code>nil?</code> 方法；对于
+<code>nil</code> 类的对象，该方法返回 <code>true</code>；反之返回
+<code>false</code>。</p>
+<p>注意到以上的代码都是在 REPL 中进行的：这是因为 Ruby
+提供了很多方法支持 <em>reflection</em>。举例来说，<code>methods</code>
+方法返回一个 list，其中存储某个对象所定义的全部方法；而
+<code>class</code>
+方法则返回某个对象的类。这些方法均可以在程序运行时进行调用。</p>
+<div class="note info no-icon"><p>reflection. Learning about objects and their definition during
+<em>program execution</em>.</p>
+</div>
+<p>Such reflection is occasionally useful in writing flexible code; it
+is also useful in the REPL or for debugging. Refer to <a href="https://www.zhihu.com/question/28570203">this</a> article for
+detailed explanation.</p>
+<p><br></p>
+<h2 id="dynamic-class-definition">Dynamic Class Definition</h2>
+<div class="note info no-icon"><p>A Ruby program (or a user of the REPL) can change class definition
+while a Ruby program is <em>running</em>.</p>
+</div>
+<p>很符合我对 dynamically typed language 的想象：Ruby
+真是把这一点做到了极致。在运行时改变类的定义后，所有该类的实例，甚至包括<strong>修改之前创造的实例</strong>都将发生改变。</p>
+<p>这是因为 Ruby 严格遵循了这一 OOP 规则：Every object has a class and
+the (current) class (definition) defines an object's behavior.</p>
+<p>这一 feature 经常被人质疑，因为其破坏了封装 (breaks
+abstraction)：如果我对方法 <code>+</code> (计算两数之和)
+进行更改或直接删除，那么绝大多数程序都将无法正常运行。</p>
+<p>但其确实使得 language definition 变得更加简单：Defining classes and
+changing their definitions is just a run-time operation like everything
+else.</p>
+<p>对类的定义进行动态更改 (具体表现在修改已有的方法或添加新的方法)
+的语法十分简单：Just give a class definition including method
+definitions for a class that is already defined. 若给出的方法已被定义
+(与已有的方法重名)，则其将替换类中原有的方法定义；反之，其将作为一个新方法加入类的定义中。</p>
+<p><br></p>
+<h2 id="duck-typing">Duck Typing</h2>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Supplementry notes:</p>
+<p><a href="https://www.cnblogs.com/VeniVidiVici/p/16698175.html">My
+notes in CnBlogs</a>.</p>
+<p><a href="https://www.zhihu.com/question/28570203">知乎 -
+为什么语言要提供 “反射” 功能？</a>.</p>
+<p>Course info:</p>
+<p><a href="https://www.coursera.org/learn/programming-languages-part-c">Programming
+Languages, Part C, University of Washington</a>, Lecturer: Professor Dan
+Grossman.</p>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>courses</category>
+        <category>Programming Languages, UW</category>
+      </categories>
+      <tags>
+        <tag>PL</tag>
+        <tag>Ruby</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Shell Command &amp; Script 笔记</title>
     <url>/2023/05/05/shell-command/</url>
     <content><![CDATA[<p>关于 shell command 和 shell script 的内容也是在 ENGG1340
@@ -6229,308 +6640,6 @@ xargs 详解</a>.</li>
       </categories>
       <tags>
         <tag>shell</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Programming Languages, UW, Part B-2</title>
-    <url>/2023/07/19/prog-lan-3/</url>
-    <content><![CDATA[<p>这一节可以说是整套系列课程中含金量最高的一部分，学习的时候甚至能感受到获取知识的快感......！</p>
-<ul>
-<li>一方面，在我们已经建立起对 ML 与 Racket
-相当认识的基础之上，这一节由浅入深的展示了 static typing system 与
-dynamic typing system 之间的区别与联系。</li>
-<li>另一方面，本节的<a href="https://www.cnblogs.com/VeniVidiVici/p/16667116.html">作业</a>是用
-Racket 写一个 MUPL (made-up programming language) 的解释器。</li>
-</ul>
-<span id="more"></span>
-<p><br></p>
-<blockquote class="blockquote-center">
-<p>If you want to understand something, implement it.</p>
-
-</blockquote>
-<p><br></p>
-<div class="note warning"><p>  This article is a self-administered course note.</p>
-<p>  It will <strong>NOT</strong> cover any exam or assignment related
-content.</p>
-</div>
-<p><br></p>
-<h2 id="interpreter-compiler">Interpreter &amp; Compiler</h2>
-<p>We can describe a typical workflow for a language implementation as
-follows.</p>
-<ul>
-<li>We take a <em>string</em> holding the <em>concrete syntax</em> of a
-program in the language. Typically this string would be the contents of
-one or more files.</li>
-<li>The <em>parser</em> (解析器，语法分析器) gives errors if this string
-is not syntactically well-formed. (no misused keywords, misplaced
-parentheses, etc.)</li>
-<li>If there are no such errors, the parser produces a <em>tree</em>
-that represents the program. This is called <em>abstract-syntax
-tree</em> (抽象语法树), or AST for short.</li>
-<li>If our language includes type-checking rules, the
-<em>type-checker</em> will use this AST to either produce error messages
-or not.</li>
-</ul>
-<p>解析器将代码解析为
-AST；这是源代码语言结构的一种树形抽象表示，树上的每一个节点代表源代码中的一种结构。若语言有类型检查规则，类型检查器将对
-AST 进行类型检查。若通过检查，AST 将被进一步处理。</p>
-<p>There are basically two approaches to this rest-of-the-implementation
-for implementing some programming language B, or sometimes of the
-mix.</p>
-<ul>
-<li><em>interpreter</em> (解释器)：我们用另一种语言 A 编写语言 B
-的解释器。解释器读入 B 语言程序的 AST 并生成结果。更好的名字
-(但并非学术共识)：<em>executor</em> for B 或 <em>evaluator</em> for
-B.</li>
-<li><em>compiler</em> (编译器)：我们用另一种语言 A 编写语言 B
-的编译器。编译器读入 B 语言程序的 AST 并生成一段与其完全等价的 C 语言
-(not necessarily the language C) 程序，再利用某些已有的 C 语言实现
-(pre-existing implementation for C) 生成结果。更好的名字
-(但并非学术共识)：<em>translator</em> for B.</li>
-</ul>
-<p>无论采用解释器还是编译器，我们把语言 A 称之为 <em>metalanguage</em>
-(元语言)。For compilation, 我们把语言 B 称为 <em>source language</em>
-(源语言)，语言 C 称为 <em>target language</em> (目标语言)。</p>
-<div class="note info no-icon"><p>A one-sentence sermon: <em>Interpreter versus compiler is a feature
-of a particular programming-language implementation, NOT a feature of
-the programming language.</em></p>
-</div>
-<p>采用编译器或解释器是语言实现的两种方式，与语言本身无关。我们不能将使用编译器或解释器当作语言本身的
-feature。</p>
-<p>我们常说的所谓编译型语言 (compiled languages) 与解释型语言
-(interpreted languages)
-其实是毫无道理的：这种分类方法的出现有着很复杂的历史原因，例如 C
-语言长期以来都是采用编译器实现，函数式语言通常采用解释器实现。(因此 C
-语言常被称作编译型语言，而函数式语言常被称作解释型语言)。</p>
-<p>但这并不代表我们不能编写 C 语言的解释器，或是编写函数式语言的编译器
-(事实上，SML/NJ
-就采用了部分编译器实现)：无论采用哪一种实现方式，都与源语言本身无关。</p>
-<p><br></p>
-<h2 id="ml-versus-racket">ML versus Racket</h2>
-<p>General semantics 上的异同：</p>
-<ul>
-<li>similarities:
-<ul>
-<li>have constructs that encourage a functional style.</li>
-<li>avoiding mutations, while allowing it where appropriate.</li>
-<li>using first-class closures.</li>
-<li>...</li>
-</ul></li>
-<li>differences:
-<ul>
-<li>different syntax: ML's pattern matching, Racket's accessor functions
-for structs.</li>
-<li>Racket's mutiple variants of let-expressions (<code>let</code>,
-<code>let*</code>, <code>letrec</code>)</li>
-<li>(most important) <u><em>ML has a static type system that Racket does
-not!</em></u></li>
-</ul></li>
-</ul>
-<div class="note info no-icon"><p>ML's static type system rejects lots of programs before running them
-by doing type-checking and reporting errors. To do so, ML enforces
-certain <em>restrictions</em> (e.g., all elements of a list must have
-the same type). As a result, ML ensures the absence of certain errors at
-<em>compile time</em>.</p>
-</div>
-<p>理解两个语言区别的最好方式是从其中一个语言的角度审视另一个语言。抛开语法的桎梏，我们站在
-ML 的视角，研究它的静态类型系统会对 Racket 的程序作何反应。</p>
-<figure class="highlight scheme"><table><tr><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">f</span> y) (<span class="name"><span class="built_in">+</span></span> y (<span class="name"><span class="built_in">car</span></span> y)))</span><br></pre></td></tr></table></figure>
-<p>ML
-的静态类型系统可以识别到以上程序的类型错误并在编译时报告错误，阻止该程序进入运行阶段。而
-Racket 只有该函数被调用时才会弹出 run-time error。</p>
-<figure class="highlight scheme"><table><tr><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> xs (<span class="name"><span class="built_in">list</span></span> <span class="number">1</span> <span class="literal">#t</span> <span class="string">&quot;hi&quot;</span>))</span><br></pre></td></tr></table></figure>
-<p>然而 ML 也会 reject 一些在 Racket 视角下没有 bug
-的程序；如上例，这个程序违反了 ML 的类型规则：list
-中的所有元素类型应该保持一致。但这样的 list 定义在 Racket
-中完全没有问题。</p>
-<p>从这个角度看，我们能够得出这样的结论：ML is roughly a <em>subset</em>
-of Racket. Programs that run produce similar answers, but ML rejects
-many more programs as illegal, i.e., not part of the language.</p>
-<p>那么，一个 ML 程序员又会如何看待 Racket 呢？他可能会认为 Racket is
-just ML where <em>every expression is part of one big datatype</em>.</p>
-<figure class="highlight ml"><table><tr><td class="code"><pre><span class="line"><span class="keyword">datatype</span> theType = <span class="type">Int</span> <span class="keyword">of</span> <span class="built_in">int</span></span><br><span class="line">                 | <span class="type">String</span> <span class="keyword">of</span> <span class="built_in">string</span></span><br><span class="line">                 | <span class="type">Pair</span> <span class="keyword">of</span> theType <span class="keyword">of</span> theType * theType</span><br><span class="line">                 | <span class="type">Fun</span> <span class="keyword">of</span> theType -&gt; theType</span><br><span class="line">                 | ... <span class="comment">(* one constructor per built-in type *)</span></span><br></pre></td></tr></table></figure>
-<p>Racket 中的每个表达，都被某个 constructor 隐式的 (implicitly)
-包装入这个 big datatype 中。例如 <code>42</code> 实际上是
-<code>(Int 42)</code>；这能够使得每个表达的结果都是 <code>theType</code>
-类型。</p>
-<p>并且，函数将检查其参数是否有正确的 constructors (in other words,
-"tags")，如果不合法，弹出错误；反之将调用函数的结果也隐式的包装在对应的
-<code>theType</code> 类内。例如，<code>(+ a b)</code> 将检查
-<code>a</code> 与 <code>b</code> 是否有标签
-<code>Int</code>；如果有，则返回结果 <code>(Int a+b)</code>。</p>
-<figure class="highlight ml"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fun</span> car v = <span class="keyword">case</span> v <span class="keyword">of</span> <span class="type">Pair</span>(a, b) =&gt; a | _ =&gt; <span class="keyword">raise</span> ... <span class="comment">(* give some error *)</span></span><br><span class="line"><span class="keyword">fun</span> pair? v = <span class="keyword">case</span> v <span class="keyword">of</span> <span class="type">Pair</span> _ =&gt; <span class="literal">true</span> | _ =&gt; <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<p>这是另外一个例子：我们用 ML 来展示 Racket 中存在的 implicit run-time
-pattern matching。由于这种 "secret pattern-matching"
-是不对程序员暴露的，Racket 提供了类型检查函数例如
-<code>pair?</code>。</p>
-<p>The fact that we can think of Racket in terms of <code>theType</code>
-suggests that anything you can do in Racket can be done, perhaps more
-awkwardly, in ML: The ML programmer could just program explicitly using
-something like <code>theType</code> definition above.</p>
-<p><br></p>
-<h2 id="what-is-static-checking">What is Static Checking?</h2>
-<p>What is usually meant by "static checking" is anything done to reject
-a program at <em>compile-time</em>.</p>
-<div class="note info no-icon"><p>Compile-time is the time <em>after</em> a program (successfully)
-parses but <em>before</em> it runs.</p>
-</div>
-<p>注意，compile-time 是一个时间概念，虽然名字中含有
-compile，但它与语言实现采用的是 interpreter 还是 compiler
-无关。这进一步印证了我们之前所提到的语言实现并不是语言本身的 feature
-这一观念。</p>
-<div class="note info no-icon"><p>The most common <em>approach</em> to define a language's static
-checking is via a <em>type system</em>.</p>
-</div>
-<p>type system 中包含一系列 typing rules，例如 (以 ML
-为背景)：每个变量都有一个类型，条件语句的分支有着相同的类型，list
-中的元素类型一致等等。static checking 则检查程序是否遵循了这些规则。</p>
-<p>注意在 ML 中，type inferencer 也是 static checking
-的一部分，它对程序进行推断，判断是否存在一种可能的 type
-annotations，使得程序能够遵循 type system 中定义的规则。</p>
-<div class="note info no-icon"><p>The <em>purpose</em> of static checking is to reject programs that
-"make no sense" or "may try to misuse a language feature".</p>
-</div>
-<p>static checking 的确能够达到它设计之初的目的，但它并不是完美的；</p>
-<ul>
-<li>There are errors a type system typically does not prevent (such as
-array-bounds errors).</li>
-<li>There are errors a type system <em>cannot</em> prevent unless given
-more information about what a program is supposed to do. (ex. wrongly
-calls <code>+</code> instead of <code>*</code>)</li>
-<li>The necessary <em>trade-off</em>. the static checker has to reject
-some programs that would not do anything wrong.</li>
-</ul>
-<p>值得注意的是第三点：Racket 的动态检查 (dynamic checking, i.e.,
-run-time checking) 通过赋予并检测值的标签实现 (即上一节提到的 secret
-pattern-matching)，这使得它在运行时发现程序的错误。</p>
-<p>而静态检查则能在程序运行之前排除某些有问题的程序，这样做的代价
-(trade-off) 是它将会拒绝某些实际上没有问题的程序 (例如拥有不同类型元素的
-list)。</p>
-<div class="note info no-icon"><p>The typical points at which to prevent an error are compile-time and
-run-time. However, it is worth realizing that there is really a
-<em>continuum of eagerness</em> about when we declare something an
-error.</p>
-</div>
-<p>实际上，静态检查与动态检查并非是对立的概念，对于不同类型的错误，我们可以选择在
-compile-time 将其检出，也可以选择等到 run-time
-时再弹出错误；在这两个时间段之外进行处理也是一个可行但非典型的选择。</p>
-<p>如何掌握好 static checking 的
-trade-off，平衡其检出错误的效率与语言的灵活性，才是一个更加实际且有意义的命题。</p>
-<p><br></p>
-<h2 id="correctness-soundness-completeness-undecidability">Correctness:
-Soundness, Completeness, Undecidability</h2>
-<p>设我们想要避免的错误为 X，我们定义一个 static checker 的正确性
-(correctness) 为：</p>
-<ul>
-<li>A type system is <em>sound</em> if it never accepts a program that,
-when run with some input, does X, i.e., soundness prevents <em>false
-negatives</em>.</li>
-<li>A type system is <em>complete</em> if it never rejects a program
-that, no matter what input it is run with, will not do X, i.e.,
-completeness prevents <em>false positives</em>.</li>
-</ul>
-<p>实际上，<em>soundness</em> 与 <em>completeness</em>
-这两个术语来自逻辑学，其被广泛的应用在编程语言的理论设计中。</p>
-<ul>
-<li>A sound logic proves <em>only</em> true things.</li>
-<li>A complete logic proves <em>all</em> true things.</li>
-</ul>
-<p>如果一个 type system 能够兼具 soundness 与
-completeness，那么它所接受的程序集合与所有不执行 X
-的程序集合是完全等价的。可惜，理论是美好的，现实是残酷的：</p>
-<div class="note info no-icon"><p>In modern languages, type system are sound (they prevent what they
-claim to) but not complete (they reject program that need not
-reject).</p>
-</div>
-<p>以 ML 的 static checker 为例，若我们想避免的问题 X 为 "string
-类型的值作为除法运算的运算数"：</p>
-<figure class="highlight ml"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fun</span> f1 x = <span class="number">4</span> div <span class="string">&quot;hi&quot;</span>                         <span class="comment">(* f1 never get called *)</span></span><br><span class="line"><span class="keyword">fun</span> f2 x = <span class="keyword">if</span> <span class="literal">true</span> <span class="keyword">then</span> <span class="number">0</span> <span class="keyword">else</span> <span class="number">4</span> div <span class="string">&quot;hi&quot;</span></span><br><span class="line"><span class="keyword">fun</span> f3 = <span class="keyword">if</span> x &lt;= abs x <span class="keyword">then</span> <span class="number">0</span> <span class="keyword">else</span> <span class="number">4</span> div <span class="string">&quot;hi&quot;</span></span><br></pre></td></tr></table></figure>
-<p>注意，上述的三个函数均不会执行 <code>4 div "hi"</code> 这一语句，但
-ML 的 static checker 却会检出类型错误并拒绝程序运行。这也就是说，ML
-并不能很好的处理假阳性程序，它的 static checker 并不是 complete 的。</p>
-<div class="note info no-icon"><p>It is <em>impossible</em> to implement a static checker that given
-any program in your language (a) always terminates, (b) is sound, (c) is
-complete.</p>
-</div>
-<p>为了确保 X 不出现，现代语言的设计者选择了 soundness 与 always
-terminates 而牺牲了
-completeness。接受假阴性程序的后果要远大于拒绝假阳性程序的后果。</p>
-<p>与停机问题 (halting problem) 类似，一个总能停机的 static checker
-不能兼具 soundness 与 completeness 的原因也是由图灵机的<em>不可决定性
-(undecidability)</em> 决定的。</p>
-<p>非正式的设想一下，若我们想避免的问题 X 为程序进入死循环，那么一个既
-sound 又 complete 的 static checker
-本身就是对停机问题的通用解法。这样，我们把该问题的不可能性归约到了停机问题的不可能性上。</p>
-<p><br></p>
-<h2 id="weak-typing">Weak Typing</h2>
-<p>接下来我们再来介绍一个语言概念，<em>strongly typed</em> language 与
-<em>weakly typed</em> language。</p>
-<p>首先要强调，语言的强/弱类型与静态/动态类型是没有必然联系的两个概念。ML
-与 Racket
-虽然分别采用静态与动态类型系统，但它们都可被视为是强类型语言。</p>
-<p>对于想要阻止的问题 X，不同的语言有不同的处理方式：</p>
-<ul>
-<li>static checking: 利用 static checker 在 compile-time 检出。</li>
-<li>dynamic checking: 若 static checker 无法检出 X (语言不使用 static
-checker 或其 static checker 对问题 X 是 unsound
-的)，则在语言实现中加入一些 dynamic checks 在 run-time 阻止 X
-发生。</li>
-<li>......</li>
-<li>weak typing: 语言实现根本不对程序进行检查：认定 X
-的出现是程序员本身的问题。若程序员本身没有发现问题，X
-将会发生。(你程序员觉得是我的锅，那就是我的锅)</li>
-</ul>
-<p>C/C++ 是很典型的弱类型语言：举一个非常熟悉的例子，C/C++
-中的数组越界问题。即使我们访问了不合法的数组下标如
-<code>a[-1]</code>，C/C++
-也不会阻止程序的运行，最后程序可能会因为访问某些未申请的内存而导致崩溃。</p>
-<p>所谓强类型语言，就是其类型系统 (type system) 中存在较多的
-restrictions，阻止潜在 bug 程序的运行。而弱类型语言的 restrictions
-就相对较少。</p>
-<p>相对于强类型语言，弱类型语言省去了进行检查的时间成本，存储数据 (例如
-dynamic checks 所需要记录的 tags 信息)
-的空间成本；但所付出的代价是，程序的 bug
-更需要程序员本身进行检出而不能依靠强类型语言中的各种检查来发现。(相信我们都遇到过出现难以
-de 出的奇怪 bug，最后发现是数组越界的抓狂时刻)</p>
-<p>因此，在实际应用中存在很多外置的 checking tools
-对弱类型语言程序进行检查；这是一个折中的方案。</p>
-<p>另外需要强调的是，语言的强/弱类型比起是一种定义，不如说是一种相对的概念，具体可以参考<a href="https://learn.microsoft.com/zh-cn/archive/blogs/ericlippert/is-c-a-strongly-typed-or-a-weakly-typed-language">这个帖子</a>，回答者讲的很好。在中文语境下对强/弱类型似乎还有另外的定义，与变量的定义与类型转换规则相关。</p>
-<h3 id="extended-semantics">Extended Semantics</h3>
-<p>对于某个想要避免的问题
-X，一些语言并不纠结是否将其检出的问题，它们选择扩展其 primitives
-的语义。例如，传统的 <code>+</code> 只允许两个数字进行相加，一个
-<code>string</code> 类型的参数是不合法的。</p>
-<p>而在 Python 中，<code>"Hello" + "World"</code>
-这样的表达是合法的；这是因为 Python 扩展了 <code>+</code> 的
-semantics，使其具有了连接两个 <code>string</code> 类型字符串的语义。</p>
-<p>关于是否将问题 X 所对应的本来应当视作 bug
-的语句赋予新的意义这个问题见仁见智：一方面，这样的处理使得一些 bug
-更难被检出。一方面，它又确实给程序员带来了很多方便。</p>
-<p><br></p>
-<h2 id="reference">Reference</h2>
-<div class="note warning"><p>  This article is a self-administered course note.</p>
-<p>  References in the article are from corresponding course materials
-if not specified.</p>
-</div>
-<p>Supplementary notes:</p>
-<p><a href="https://www.cnblogs.com/VeniVidiVici/p/16644030.html">My
-notes in CnBlogs</a>. <a href="https://www.cnblogs.com/VeniVidiVici/p/16667116.html">My
-implementation</a>.</p>
-<p><a href="https://learn.microsoft.com/zh-cn/archive/blogs/ericlippert/is-c-a-strongly-typed-or-a-weakly-typed-language">Is
-C# a strongly typed or weakly typed language?</a>.</p>
-<p>Course info:</p>
-<p><a href="https://www.coursera.org/learn/programming-languages-part-b">Programming
-Languages, Part B, University of Washington</a>, Lecturer: Professor Dan
-Grossman.</p>
-]]></content>
-      <categories>
-        <category>notes</category>
-        <category>courses</category>
-        <category>Programming Languages, UW</category>
-      </categories>
-      <tags>
-        <tag>PL</tag>
-        <tag>Racket</tag>
       </tags>
   </entry>
 </search>
