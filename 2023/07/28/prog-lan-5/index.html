@@ -31,7 +31,7 @@
 <meta property="og:description" content="在此之前，我们已经接触了三种各具特色的语言：ML，Racket 与 Ruby，这门课程选择它们作为示例语言是十分别具匠心的。ML - statically functional language, Racket - dynamically functional language, Ruby - dynamically OOP language.">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-07-28T13:02:05.000Z">
-<meta property="article:modified_time" content="2023-07-29T09:46:03.521Z">
+<meta property="article:modified_time" content="2023-07-29T15:47:13.435Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="PL">
 <meta property="article:tag" content="Ruby">
@@ -478,17 +478,66 @@ as arguments.</p>
 等等)。</p>
 <p>举例来说，<code>add_values</code> 方法原本只能计算两个
 <code>Int</code> 类型数之和；若我们想将其扩展为 binary method，支持对
-<code>Int</code> 与 <code>String</code> 两种数据类型进行操作
-(语义由我们自定义)，我们只需要在其函数体中增加该 case 即可。</p>
-<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fun</span> add_values(v1, v2) = </span><br><span class="line">    <span class="keyword">case</span> (v1, v2) <span class="keyword">of</span></span><br><span class="line">        (<span class="type">Int</span> i, <span class="type">Int</span> j)		=&gt; <span class="type">Int</span> (i + j)</span><br><span class="line">      | (<span class="type">Int</span> i, <span class="type">String</span> s)	=&gt; <span class="type">String</span> (<span class="type">Int</span>.toString i ^ s)</span><br><span class="line">      | ...</span><br></pre></td></tr></table></figure>
+<code>Int</code> 与 <code>String</code> 与 <code>Rational</code>
+三种数据类型进行操作
+(语义由我们自定义)，我们只需要在其函数体中增加对应的 3 * 3 = 9 种 cases
+即可。</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fun</span> add_values(v1, v2) = </span><br><span class="line">    <span class="keyword">case</span> (v1, v2) <span class="keyword">of</span></span><br><span class="line">        (<span class="type">Int</span> i, <span class="type">Int</span> j)		=&gt; <span class="type">Int</span> (i + j)</span><br><span class="line">      | (<span class="type">Int</span> i, <span class="type">String</span> s)	=&gt; <span class="type">String</span> (<span class="type">Int</span>.toString i ^ s)</span><br><span class="line">      | ... <span class="comment">(* 3 data variants, 9 cases in total *)</span></span><br></pre></td></tr></table></figure>
 <h3 id="oop-double-dispatch">OOP: Double Dispatch</h3>
-<p>对于同样的例子，OOP 需要使用一个特殊的 technique - <em>dynamic
+<p>对于同样的例子，OOP 需要使用一个特殊的 technique - <em>double
 dispatch</em> 来实现 binary method。</p>
 <p>假设我们已经定义了 <code>Int</code>, <code>Negate</code>,
 <code>MyString</code>, <code>MyRational</code>, <code>Add</code>,
 <code>Mult</code> 等相关的类，为了扩展 <code>Add</code>
 的语义，我们需要对 <code>Add</code> 类中的 <code>eval</code>
-方法进行修改。</p>
+方法进行修改。原来的 <code>eval</code> 方法：只能处理两个
+<code>Int</code> 类型数之和。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Add</span> &lt; <span class="title class_ inherited__">Exp</span></span><br><span class="line">    <span class="built_in">attr_reader</span> <span class="symbol">:e1</span>, <span class="symbol">:e2</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">initialize</span>(<span class="params">e1, e2</span>)</span><br><span class="line">        <span class="variable">@e1</span> = e1</span><br><span class="line">        <span class="variable">@e2</span> = e2</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">toString</span></span><br><span class="line">        <span class="string">&quot;(&quot;</span> + e1.toString + e2.toString + <span class="string">&quot;)&quot;</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">hasZero</span></span><br><span class="line">        e1.hasZero |<span class="params"></span>| e2.hasZero</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">eval</span>                              <span class="comment"># eval method that needs to be modified</span></span><br><span class="line">        <span class="title class_">Int</span>.new(e1.eval.i + e2.eval.i)    <span class="comment"># i is a method in class Int</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>一个很自然的想法是，模仿在 FP 中我们定义的 <code>add_values</code>
+函数对来修改 <code>eval</code>：利用 <code>is_a?</code>
+等类型判断方法来分类讨论不同的 cases。例如使用
+<code>is_a? Int</code>，或 <code>is_a? MyString</code> 来获取
+<code>e1</code> 与 <code>e2</code> 的类。</p>
+<p>但是请注意，使用类型判断函数是非常不符合 OOP style
+的。我们应该调用某个对象的方法，在无需明确的获取另一个对象所属类的情况下执行我们自定义的加法操作。也就是说，An
+<code>Int</code>, <code>MyRational</code> or <code>MyString</code>
+should <em>know</em> "how to add itself to another value." 于是我们将类
+<code>Add</code> 中的 <code>eval</code> 改写成这样。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">eval</span></span><br><span class="line">    e1.eval.add_values e2.eval    <span class="comment"># one (first) dispatch</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>这样修改要求我们分别在 <code>Int</code>, <code>MyString</code> 与
+<code>MyRational</code> 类中实现方法 <code>add_values</code>。通过
+<em>dynamic
+dispatch</em>，我们成功将该自定义的加法运算分为了三种情况，分别交由
+<code>Int</code>, <code>MyString</code> 与 <code>MyRational</code>
+类进行进一步处理。</p>
+<p>为什么这里利用了 dynamic dispatch？因为调用同样的方法
+<code>eval</code>， <code>e1.eval</code> 返回的类不同 (可能是
+<code>Int</code>, <code>MyString</code> 或
+<code>MyRational</code>)，所调用的 <code>add_values</code>
+方法也不同，从而实现了相同方法造成的不同表现。</p>
+<p>以 <code>Int</code> 类中的 <code>add_values</code>
+方法的实现为例；当前已知的信息是 <code>Self</code> 的类为
+<code>Int</code>，未知的是参数对象的信息；我们不如再进行一次 dynamic
+dispatch，即，在所有类中再定义三个接口方法，分别对应 <code>Int</code>,
+<code>MyString</code> 与 <code>MyRational</code> 类，并将
+<code>Self</code>
+的信息传入该未知对象的接口。这样未知对象就间接获取了关于
+<code>Self</code> 的信息。</p>
+<p>这样的 technique 称为 <em>double dispatch</em>，即利用两次 dynamic
+dispatch 以实现 binary method。这正符合 OOP 的精神：When we "need to
+know" the class of <em>v</em>, we call a method on <em>v</em>
+instead.</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Int</span> &lt; <span class="title class_ inherited__">Exp</span></span><br><span class="line">    <span class="built_in">attr_reader</span> <span class="symbol">:i</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">add_values</span> v</span><br><span class="line">        v.addInt <span class="variable language_">self</span>    <span class="comment"># double (second) dispatch (based on following interfaces)</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">addInt</span> v</span><br><span class="line">        <span class="title class_">Int</span>.new(i + v.i)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">addString</span> v</span><br><span class="line">        <span class="title class_">MyString</span>.new(v.s + i.to_s)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">addRational</span> v</span><br><span class="line">        <span class="title class_">MyRational</span>.new(v.i+v.j*i, v.j)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>虽然形式上差异很大，Double dispatch 本质上与 FP approach
+是相同的；最终我们还是实现了 3 * 3 = 9 种 cases。只不过，通过
+<code>add_values</code> 方法的一次分配与 <code>addInt</code>,
+<code>addString</code> 与 <code>addRational</code>
+接口方法的二次分配，dynamic dispatch could <em>pick</em> the correct
+code among all 9 cases in the end.</p>
+<p>在 Java 这样的静态类型 OOP 语言中，我们需要 (1)
+声明参数与返回值的类型，并且 (2)
+在父类中声明子类所继承的方法与其类型，这使得 double dispatch
+的实现更为直观。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
