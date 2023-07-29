@@ -152,6 +152,189 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
+    <title>Programming Languages, UW, Part C - OOP v.s. FP</title>
+    <url>/2023/07/28/prog-lan-5/</url>
+    <content><![CDATA[<p>在此之前，我们已经接触了三种各具特色的语言：ML，Racket 与
+Ruby，这门课程选择它们作为示例语言是十分别具匠心的。ML - <em>statically
+functional</em> language, Racket - <em>dynamically functional</em>
+language, Ruby - <em>dynamically OOP</em> language.</p>
+<span id="more"></span>
+<p>在 Part B 中，我们以 ML 与 Racket 为例比较了 static typing 与 dynamic
+typing；在这一节中，我们将以 ML，Racket 与 Ruby 为例比较 functional
+programming 与 object-oriented programming。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="oop-versus-functional-decomposition">OOP Versus Functional
+Decomposition</h2>
+<h3 id="the-basic-set-up">The Basic Set-Up</h3>
+<p>Followed is the canonical example of a common programming pattern.
+Suppose we have:</p>
+<ul>
+<li>Expressions for a small "language" such as for arithmetic.</li>
+<li>Different <em>variants</em> of expression, such as integer values,
+negation and addition expressions.</li>
+<li>Different <em>operations</em> over expressions, such as evaluating
+them, converting them to strings, or determining if they contain the
+constant zero in them.</li>
+</ul>
+<p>对这个范式我们应该已经相当熟悉了；之前我们也分别用 ML 与 Racket
+实现过这个算数小语言。该问题能被一个矩阵 (two-dimensional grid)
+进行表示：其中的每一个格子代表某个 variant 与 operation 的组合。例：</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">variant/operation</th>
+<th style="text-align: center;">eval</th>
+<th style="text-align: center;">toString</th>
+<th style="text-align: center;">hasZero</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><strong>Int</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>Add</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><strong>Negate</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<p>No matter what programming language we use or how we approach solving
+this programming problem, we need to indicate what the proper
+<em>behavior</em> is for each entry in the grid.</p>
+<h3 id="functional-v.s.-oop-approach">Functional v.s. OOP Approach</h3>
+<div class="note info no-icon"><p>Functional decomposition breaks programs into <em>functions</em> that
+performs some operation and object-oriented decomposition breaks
+programs down into <em>classes</em> that give behavior to some kind of
+data.</p>
+</div>
+<p>也就是说，对于上文中提到的矩阵，functional programming lays out the
+program <em>by column</em> —
+其定义操纵不同类型数据的函数，按列实现程序。要素有 datatype, constructor
+与 function。</p>
+<p>而 object-oriented programming lays out the program <em>by row</em> —
+其定义不同的类，类中包含与其他类的实例交互的方法，按行实现程序。要素有
+class, subclass 与 abstract method。</p>
+<p>因此，functional decomposition 又被称为 <em>procedural
+decomposition</em> (过程分解) - it breaks the problem down into
+procedures corresponding to each operation。相对的，OOP decomposition
+被称为 <em>data-oriented decomposition</em> - it breaks the problem down
+into classes corresponding to each data variant.</p>
+<p>至于哪种分解方式更好完全是一个见仁见智的问题：对于不同的问题模型，有时基于过程的分解更为自然，有时基于数据的分解更为自然。但本质上，这两种分解方式是对立而又统一的
+(so exactly opposite that they are the same).</p>
+<p><br></p>
+<h2 id="extending-new-operations-or-variants">Extending New Operations
+or Variants</h2>
+<p>当我们尝试扩展以上矩阵，即增添新的 operations 或 variants
+时，functional programming 的 by-column 方法与 OOP 的 by-row
+方法之间的区别将更加明显。</p>
+<p>首先考虑 functional programming。</p>
+<ul>
+<li>Adding a new operation is easy. We can implement a new function
+without editing any existing code. 由于 FP
+是按列，也就是按函数实现程序的，新增一个 operation
+等价于在矩阵中新增一列。</li>
+<li>Adding a new data variant is less pleasent. We need to go back and
+change all our functions to add a new case. 新增一个 variant
+等价于在矩阵中新增一行；但 FP
+是按列实现程序的，因此在每一列后我们都需要新增一个单元 (case)。</li>
+</ul>
+<p>Object-oriented programming 则与其完全相反。</p>
+<ul>
+<li>Adding a new variant is easy: implement a new subclass without
+editing any existing code.</li>
+<li>Adding a new operation is less pleasant. We need to go back and
+change all classes to add a new method.</li>
+</ul>
+<div class="note info no-icon"><p>Functional decomposition allows new operations and object-oriented
+decomposition allows new variants without modifying existing code and
+without explicitly planning for it.</p>
+</div>
+<p>但在设计程序时，如果做好提前的计划，或者使用某些 somewhat awkward
+programming techniques，那么在 FP 中添加 variants 与在 OOP 中添加
+operations 也能较为简单的实现。</p>
+<p>代码的设计与结构允许方便的进行删减或添加新功能，而不会引起大规模的重构或破坏原有的功能，这种性质称为代码的
+<em>extensibility (可扩展性)</em>。</p>
+<p>若我们只需要添加新的 operations，那么一个 FP-style 的程序显然要比
+OOP-style 的程序可扩展性更强；反之，一个只需要添加新的 variants
+的应用背景下 OOP-style 要比 FP-style 的程序可扩展性更强。</p>
+<p>问题在于 (1) the future is often difficult to predict; we may not
+know what extensions are likely, and (2) both forms of extension may be
+likely.</p>
+<p>实际上，软件的设计 <em>rubostness (鲁棒性)</em> 与 <em>extensibility
+(可扩展性)</em>
+鱼与熊掌难以兼得。由于要为未来做规划，可扩展性高的程序往往 need more
+work to develop, harder reason about locally and harder to change
+without breaking extensions.</p>
+<p><br></p>
+<h2 id="binary-methods">Binary Methods</h2>
+<div class="note info no-icon"><p>Binary methods are operations that take two data variants as
+arguments. Similarly, we have n-ary methods that take more data variants
+as arguments.</p>
+</div>
+<p>在此之前，我们研究的 operations
+大多都是针对同一种数据类型的：<code>eval</code>, <code>toString</code>
+与 <code>hasZero</code> 皆属此类。若我们想对两个 (binary) 或以上 (n-ary)
+种类的数据类型进行操作，则需要讨论更多的情况。</p>
+<h3 id="fp-simply-adding-cases">FP: Simply Adding Cases</h3>
+<p>在 functional decomposition 中，binary method
+的实现比较简单，我们只需要在函数体中讨论对应的 cases
+即可。当数据种类较多时，讨论的 cases 也将增加，但也存在许多简化的方法
+(使用 wildcard <code>_</code>，定义辅助函数，利用重复的 cases
+等等)。</p>
+<p>举例来说，<code>add_values</code> 方法原本只能计算两个
+<code>Int</code> 类型数之和；若我们想将其扩展为 binary method，支持对
+<code>Int</code> 与 <code>String</code> 两种数据类型进行操作
+(语义由我们自定义)，我们只需要在其函数体中增加该 case 即可。</p>
+<figure class="highlight ml"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fun</span> add_values(v1, v2) = </span><br><span class="line">    <span class="keyword">case</span> (v1, v2) <span class="keyword">of</span></span><br><span class="line">        (<span class="type">Int</span> i, <span class="type">Int</span> j)		=&gt; <span class="type">Int</span> (i + j)</span><br><span class="line">      | (<span class="type">Int</span> i, <span class="type">String</span> s)	=&gt; <span class="type">String</span> (<span class="type">Int</span>.toString i ^ s)</span><br><span class="line">      | ...</span><br></pre></td></tr></table></figure>
+<h3 id="oop-double-dispatch">OOP: Double Dispatch</h3>
+<p>对于同样的例子，OOP 需要使用一个特殊的 technique - <em>dynamic
+dispatch</em> 来实现 binary method。</p>
+<p>假设我们已经定义了 <code>Int</code>, <code>Negate</code>,
+<code>MyString</code>, <code>MyRational</code>, <code>Add</code>,
+<code>Mult</code> 等相关的类，为了扩展 <code>Add</code>
+的语义，我们需要对 <code>Add</code> 类中的 <code>eval</code>
+方法进行修改。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Supplementry notes:</p>
+<p><a href="https://www.cnblogs.com/VeniVidiVici/p/16790138.html">My
+notes in CnBlogs</a>.</p>
+<p>Course info:</p>
+<p><a href="https://www.coursera.org/learn/programming-languages-part-c">Programming
+Languages, Part C, University of Washington</a>, Lecturer: Professor Dan
+Grossman.</p>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>courses</category>
+        <category>Programming Languages, UW</category>
+      </categories>
+      <tags>
+        <tag>PL</tag>
+        <tag>Ruby</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Psychology and Life, Fudan University (Cheatsheet)</title>
     <url>/2023/07/25/psy-in-life/</url>
     <content><![CDATA[<p>为了水 CC 学分上的一门暑校课。比想象中的有趣，老师教的也很好 (比
@@ -1041,7 +1224,7 @@ Education, Inc. 2012</p>
       </tags>
   </entry>
   <entry>
-    <title>Programming Languages, UW, Part C-1</title>
+    <title>Programming Languages, UW, Part C - Ruby Basic</title>
     <url>/2023/07/22/prog-lan-4/</url>
     <content><![CDATA[<p>作为一门研究 programming languages 的课程，OOP
 是一个避不开的话题。这一节通过介绍 Ruby —— a <em>dynamically typed
@@ -1404,7 +1587,7 @@ Grossman.</p>
       </tags>
   </entry>
   <entry>
-    <title>Programming Languages, UW, Part B-2</title>
+    <title>Programming Languages, UW, Part B - Static Checking</title>
     <url>/2023/07/19/prog-lan-3/</url>
     <content><![CDATA[<p>这一节可以说是整套系列课程中含金量最高的一部分，学习的时候甚至能感受到获取知识的快感......！</p>
 <ul>
@@ -1706,7 +1889,7 @@ Grossman.</p>
       </tags>
   </entry>
   <entry>
-    <title>Programming Languages, UW, Part B-1</title>
+    <title>Programming Languages, UW, Part B - Racket Basic</title>
     <url>/2023/07/16/prog-lan-2/</url>
     <content><![CDATA[<p>Part A 深入的介绍了 ML —— 一个优美的 static typed functional
 language. 接下来的 Part B 我们将会引入一个 <em>dynamic typed</em>
@@ -1994,7 +2177,7 @@ Grossman.</p>
       </tags>
   </entry>
   <entry>
-    <title>Programming Languages, UW, Part A</title>
+    <title>Programming Languages, UW, Part A - ML Basic &amp; FP</title>
     <url>/2023/07/14/prog-lan-1/</url>
     <content><![CDATA[<p>毫无疑问的神课，不愧于 Coursera 上接近满分的评价。Dan Grossman
 教授显然对 PL 领域十分 passionate
