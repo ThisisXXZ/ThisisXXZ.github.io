@@ -31,7 +31,7 @@
 <meta property="og:description" content="我们定义某个 static type system 的expressiveness (表达性) 为：not rejecting too many programs that do nothing wrong and programmers are likely to write。  ML type system 的表达性来自 parametric polymorphism (参数多态)，">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-07-31T11:01:34.000Z">
-<meta property="article:modified_time" content="2023-07-31T11:42:14.264Z">
+<meta property="article:modified_time" content="2023-08-02T15:07:01.425Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="PL">
 <meta property="article:tag" content="Ruby">
@@ -167,7 +167,8 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">1.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction-and-rules"><span class="nav-number">1.</span> <span class="nav-text">Introduction and Rules</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#width-subtyping"><span class="nav-number">1.1.</span> <span class="nav-text">Width Subtyping</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#depth-subtyping-a-bad-idea-with-mutation"><span class="nav-number">2.</span> <span class="nav-text">Depth Subtyping: A Bad
+Idea With Mutation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#array-subtyping"><span class="nav-number">3.</span> <span class="nav-text">Array Subtyping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#function-subtyping"><span class="nav-number">4.</span> <span class="nav-text">Function Subtyping</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#convariant-return-type"><span class="nav-number">4.1.</span> <span class="nav-text">Convariant Return Type</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#contravariant-argument-type"><span class="nav-number">4.2.</span> <span class="nav-text">Contravariant Argument Type</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#subtyping-for-oop"><span class="nav-number">5.</span> <span class="nav-text">Subtyping for OOP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#generics-v.s.-subtyping"><span class="nav-number">6.</span> <span class="nav-text">Generics v.s. Subtyping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -337,16 +338,264 @@ programmers are likely to write。</p>
 <ul>
 <li>ML type system 的表达性来自 <em>parametric polymorphism</em>
 (参数多态)，即 <em>generics</em> (泛型)。</li>
-<li>而对于 statically typed OOP 语言 (e.g., Java, C#)，其 type system
-的表达性更多的来自于 <em>subtype polymorphism</em>
-(子类型多态)，也即我们所说的 <em>subtyping</em>。</li>
+<li>许多 OOP style (Java, C#) 的 type system 的表达性更多的来自于
+<em>subtype polymorphism</em> (子类型多态)，也即我们所说的
+<em>subtyping</em>。</li>
 </ul>
 <span id="more"></span>
+<p>我们将使用一种类 ML 的 MUPL 来介绍 subtyping；但请注意，ML
+本身是不支持 subtyping 的。</p>
 <p><br></p>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  It will <strong>NOT</strong> cover any exam or assignment related
 content.</p>
 </div>
+<p><br></p>
+<h2 id="introduction-and-rules">Introduction and Rules</h2>
+<div class="note info no-icon"><p>Letting an expression that has one type also have another type that
+has less information is the idea of <em>subtyping</em>.</p>
+</div>
+<p>我们来看一个例子：</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fun</span> distToOrigin(p:&#123;x:<span class="built_in">real</span>, y:<span class="built_in">real</span>&#125;) =</span><br><span class="line">    <span class="type">Math</span>.sqrt(p.x*p.x + p.y*p.y)</span><br><span class="line">    </span><br><span class="line"><span class="keyword">val</span> c : &#123;x:<span class="built_in">real</span>, y:<span class="built_in">real</span>, color:<span class="built_in">string</span>&#125; = &#123;x=<span class="number">3.0</span>, y=<span class="number">4.0</span>, color=<span class="string">&quot;green&quot;</span>&#125;</span><br><span class="line"><span class="keyword">val</span> five : <span class="built_in">real</span> = distToOrigin(c)</span><br></pre></td></tr></table></figure>
+<p>该程序是一个典型的 false positive (假阳性) 程序。在不支持 subtyping
+的语言中，将 <code>c</code> 传入 <code>distToOrigin</code> 方法将会产生
+type error。这引出了 subtyping 的必要性：它在一定程度上令 type system
+更加 <em>complete</em>，从而提高了其 expressiveness。(关于 type system
+的分析见 <a target="_blank" rel="noopener" href="https://thisisxxz.com/2023/07/19/prog-lan-3/">Part
+B</a>)</p>
+<p><code>c</code> 的类型 <code>&#123;x:real, y:real, color:string&#125;</code>
+是形参 <code>p</code> 类型 <code>&#123;x:real, y:real&#125;</code> 的子类型，而
+subtype can have any of its supertypes，所以 <code>c</code> 能够顺利传入
+<code>distToOrigin</code> 方法中。</p>
+<h3 id="width-subtyping">Width Subtyping</h3>
+<p>对于类型 <code>t1</code> 与 <code>t2</code>，若 <code>t1</code> 是
+<code>t2</code> 的 subtype，我们标记为 <code>t1 &lt;: t2</code>。那么
+subtyping 可以表示为这么一条最基本的 typing tule：If <code>e</code> has
+type <code>t1</code> and <code>t1 &lt;: t2</code>, then <code>e</code>
+(also) has type <code>t2</code>.</p>
+<p>为了进一步提升 type system 的 expressiveness，还有四条
+rules；其中最重要的是对 <code>&lt;:</code>
+关系本身的定义。最常见的一种定义是 <em>width subtyping</em>，即
+supertype 与 subtype 呈宽度展开关系：在 width subtyping 中，supertype
+中含有的 fields 一定是 subtype 的子集。</p>
+<ul>
+<li><em>Width subtyping</em>. A supertype can have a subset of fields
+with the same type, i.e., a subtype can have extra fields:
+<code>&#123;f1:t1,...,fm:tm,...,fn:tn&#125; &lt;: &#123;f1:t1,...,fm:tm&#125;</code>.</li>
+<li>Permutation subtyping. A supertype can have the same set of fields
+with the same types in a different order:
+<code>&#123;y:real, x:real&#125; &lt;: &#123;x:real, y:real&#125;</code>.</li>
+<li>Transitivity. If <code>t1 &lt;: t2</code> and
+<code>t2 &lt;: t3</code>, then <code>t1 &lt;: t3</code>.</li>
+<li>Reflexitivity. Every type is a subtype of itself:
+<code>t &lt;: t</code>.</li>
+</ul>
+<p>结合 width subtyping, permutation subtyping 与
+transitivity，我们能够做到类似
+<code>&#123;x:real, foo:string, y:real&#125; :&lt; &#123;y:real, x:real&#125;</code>
+的子类型关系，这大大提高了 type system 的 expressiveness。</p>
+<p><br></p>
+<h2 id="depth-subtyping-a-bad-idea-with-mutation">Depth Subtyping: A Bad
+Idea With Mutation</h2>
+<p>在使用 subtyping 时，最常见的错误如下：</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fun</span> circleY (c:&#123;center:&#123;x:<span class="built_in">real</span>, y:<span class="built_in">real</span>&#125;, r:<span class="built_in">real</span>&#125;) = </span><br><span class="line">    c.center.y</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> sphere:&#123;center:&#123;x:<span class="built_in">real</span>, y:<span class="built_in">real</span>, z:<span class="built_in">real</span>&#125;, r:<span class="built_in">real</span>&#125; = &#123;center=&#123;x=<span class="number">3.0</span>, y=<span class="number">4.0</span>, z=<span class="number">5.0</span>&#125;, r=<span class="number">1.0</span>&#125;</span><br><span class="line"><span class="keyword">val</span> _ = circleY(sphere)</span><br></pre></td></tr></table></figure>
+<p><code>circleY</code> 方法返回传入圆的圆心的 y
+坐标。自然的，对于一个球 sphere，我们可能会认为其可以作为圆 circle
+的子类型传入 <code>circleY</code> 方法，并成功得到球心的 y 坐标。</p>
+<p>实际上，circle 类型与 sphere 类型之间的关系并不遵循 width subtyping
+规则：circle 类型的 fields 并不是 sphere 类型的子集，因此该程序将无法
+type check。但抛开圆与球类型继承上的逻辑问题，该程序本质上是 false
+positive 的：它在运行时并不会出现 field missing 的错误。</p>
+<p>为了进一步提升 type system 的 expressiveness，不妨再添加一条
+subtyping rule，称为 <em>depth subtyping</em>:</p>
+<ul>
+<li><em>Depth subtyping</em>: If <code>ta &lt;: tb</code>, then
+<code>&#123;f1:t1,...,f:ta,...,fn:tn&#125; &lt;: &#123;f1:t1,...,f:tb,...,fn:tn&#125;</code>.</li>
+</ul>
+<p>在该规则下，以上的程序就能 type-check 了。</p>
+<p>遗憾的是，depth subtyping 这一规则会破坏我们的 type system；一些
+false negative 的程序将通过 type check。这也是程序员常犯的错误之一：认为
+depth subtyping 是被允许的。见下例：</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fun</span> setToOrigin (c:&#123;center:&#123;x:<span class="built_in">real</span>, y:<span class="built_in">real</span>&#125;, r:<span class="built_in">real</span>&#125;) =</span><br><span class="line">    c.center = &#123;x=<span class="number">0.0</span>, y=<span class="number">0.0</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> sphere:&#123;center:&#123;x:<span class="built_in">real</span>, y:<span class="built_in">real</span>, z:<span class="built_in">real</span>&#125;, r:<span class="built_in">real</span>&#125; = &#123;center=&#123;x=<span class="number">3.0</span>, y=<span class="number">4.0</span>, z=<span class="number">0.0</span>&#125;, r=<span class="number">1.0</span>&#125;</span><br><span class="line"><span class="keyword">val</span> _ = setToOrigin(sphere)</span><br><span class="line"><span class="keyword">val</span> _ = sphere.center.z</span><br></pre></td></tr></table></figure>
+<p>在允许 depth subtyping 的语言中，该程序能通过 type
+check。但在运行时，最后一行 <code>sphere.center.z</code> 将出现 field
+missing 错误；这是由于 <code>setToOrigin</code> 方法 <em>mutate</em>
+其参数，使得 <code>center</code> 失去了 <code>z</code> 域。</p>
+<div class="note info no-icon"><p>In a language with records (or objects) with <em>getters</em> and
+<em>setters</em> for fields, depth subtyping is unsound, i.e., you
+cannot have a different type for a field in the subtype and the
+supertype.</p>
+</div>
+<p>对于一个支持 subtyping 的语言，以下三个 features
+最多只能同时做到其中两个：</p>
+<ul>
+<li>Fields of objects are settable (i.e., immutable).</li>
+<li>Supporting depth subtyping.</li>
+<li>Having a type system actually prevent field-missing errors.</li>
+</ul>
+<p><br></p>
+<h2 id="array-subtyping">Array Subtyping</h2>
+<p>我们来看一段 Java 代码，其在 Java 中是 type check 的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span> &#123; ... &#125;    <span class="comment">// has fields double x, y</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ColorPoint</span> <span class="keyword">extends</span> <span class="title class_">Point</span> &#123; ... &#125; <span class="comment">// adds field String color</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">m1</span><span class="params">(Point[] pt_arr)</span> &#123;</span><br><span class="line">    pt_arr[<span class="number">0</span>] = <span class="keyword">new</span> <span class="title class_">Point</span>(<span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">String <span class="title function_">m2</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">    ColorPoint[] cpt_arr = <span class="keyword">new</span> <span class="title class_">ColorPoint</span>[x];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; x; ++i)</span><br><span class="line">        cpt_arr[i] = <span class="keyword">new</span> <span class="title class_">ColorPoint</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="string">&quot;green&quot;</span>);</span><br><span class="line">    m1(cpt_arr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的操作称为 <em>array subtyping</em>：即 If
+<code>ta &lt;: tb</code>, then
+<code>ta[] &lt;: tb[]</code>。它本质上就是 depth
+subtyping。根据上文中我们总结的规律，Java 支持三个 features
+中的两个：</p>
+<ul>
+<li>Array subtyping.</li>
+<li>Array indices are mutable.</li>
+</ul>
+<p>那么 Java 的 type system 就无法阻止某些程序的 field-missing
+错误。事实确实如此，上述程序能够通过 Java 的 type
+check。为了解决这个问题，Java 引入了 <em>run-time checks</em>。</p>
+<div class="note info no-icon"><p>Java use run-time checks to maintain the <em>invariant</em> that an
+object of type <code>t[]</code> always holds objects that have type
+<code>t</code> or a subtype, but not a supertype.</p>
+</div>
+<p>于是当程序运行到 <code>pt_arr[0] = new Point(3, 4)</code>
+这一语句时，Java 的 run-time check 会发现 <code>ColorPoint[]</code>
+类的数组存储了其 supertype <code>Point</code> 类的对象，于是
+<code>ArrayStoreException</code> 错误将被抛出。</p>
+<p>Java 与 C# 以加入 run-time checks 的代价换取了 depth
+subtyping，这是因为 depth subtyping 自有其意义：它的确提升了语言的灵活性
+(flexibility) 与 type system 的 expressiveness。</p>
+<p>除了利用 run-time checks 之外，还有其他的方法可以达到相同的目的：</p>
+<ul>
+<li><em>Bounded polymorphism</em>. Use generics (parametric
+polymorphism) combined with subtyping.</li>
+<li>Having support for indicating that a method will not update array
+elemtents, in which case depth subtyping is sound.</li>
+</ul>
+<p><br></p>
+<h2 id="function-subtyping">Function Subtyping</h2>
+<p>函数 (方法) 也拥有它的类型，因此研究函数类型间的 subtyping
+关系也是很有必要的。It is just as important for understanding how to
+safely override methods in object-oriented languages.</p>
+<p>When we talk about function subtyping, we are talking about using a
+function of one type in place of a function of another type.</p>
+<p>我们以 higher-order function 为例研究函数类型间的 subtyping
+关系：<code>distMoved</code> function computes the distance between the
+two-dimensional point <code>p</code> and the result of calling
+<code>f</code> with <code>p</code>.</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fun</span> distMoved (f : &#123;x:<span class="built_in">real</span>,y:<span class="built_in">real</span>&#125;-&gt;&#123;x:<span class="built_in">real</span>,y:<span class="built_in">real</span>&#125;,</span><br><span class="line">               p : &#123;x:<span class="built_in">real</span>,y:<span class="built_in">real</span>&#125;) = </span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">val</span> p2 : &#123;x:<span class="built_in">real</span>,y:<span class="built_in">real</span>&#125; = f p</span><br><span class="line">        <span class="keyword">val</span> dx : <span class="built_in">real</span> = p2.x - p.x</span><br><span class="line">        <span class="keyword">val</span> dy : <span class="built_in">real</span> = p2.y - p.y</span><br><span class="line">    <span class="keyword">in</span> <span class="type">Math</span>.sqrt(dx*dx + dy*dy) <span class="keyword">end</span></span><br><span class="line">    </span><br><span class="line"><span class="keyword">fun</span> flip p = &#123;x=~p.x, y=~p.y&#125;</span><br><span class="line"><span class="keyword">val</span> d = distMoved(flip, &#123;x=<span class="number">3.0</span>, y=<span class="number">4.0</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>那么函数 <code>distMoved</code> 的类型为
+<code>((&#123;x:real,y:real&#125;-&gt;&#123;x:real,y:real&#125;) * &#123;x:real,y:real&#125;) -&gt; real</code>.</p>
+<p>函数 <code>flip</code> 的类型为
+<code>&#123;x:real, y:real&#125; -&gt; &#123;x:real, y:real&#125;</code>，与函数
+<code>distMoved</code> 期待的参数类型是相符的；以函数 <code>flip</code>
+为参数调用函数 <code>distMoved</code> 没有用到 subtyping。</p>
+<h3 id="convariant-return-type">Convariant Return Type</h3>
+<div class="note info no-icon"><p>The subtyping for the return types works <em>covariant</em> as for
+the types overall.</p>
+</div>
+<p>函数类型与其返回值类型的 subtyping 关系是 covariant (协变) 的: If
+<code>ta &lt;: tb</code>, then
+<code>t -&gt; ta &lt;: t -&gt; tb</code>.</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fun</span> flipGreen p = &#123;x=~p.x, y=~p.y, color=<span class="string">&quot;green&quot;</span>&#125;</span><br><span class="line"><span class="keyword">val</span> d = distMoved(flipGreen, &#123;x=<span class="number">3.0</span>, y=<span class="number">4.0</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>如上例，<code>flipGreen</code> 函数作为参数传入
+<code>distMoved</code> 函数不会产生任何问题。</p>
+<ul>
+<li><code>flipGreen</code> 函数的返回值类型为
+<code>&#123;x:real,y:real,color:string&#125;</code>，是 <code>distMoved</code>
+形参函数返回值类型 <code>&#123;x:real,y:real&#125;</code> 的 subtype。</li>
+<li>而 <code>flipGreen</code> 函数类型
+<code>&#123;x:real,y:real&#125;-&gt;&#123;x:real,y:real,color:string&#125;</code> 是
+<code>distMoved</code> 形参函数类型
+<code>&#123;x:real,y:real&#125;-&gt;&#123;x:real,y:real&#125;</code> 的 subtype。</li>
+</ul>
+<p>可以看出函数类型与其返回值类型 subtyping 的协变关系。</p>
+<h3 id="contravariant-argument-type">Contravariant Argument Type</h3>
+<div class="note info no-icon"><p>The subtyping for argument types is the reverse of the subtyping for
+the types overall.</p>
+</div>
+<p>函数类型与其参数类型的 subtyping 关系是 contravariant (逆变) 的: If
+<code>ta &lt;: tb</code>, then
+<code>tb -&gt; t &lt;: ta -&gt; t</code>.</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fun</span> flipX_Y0 p = &#123;x=~p.x, y=<span class="number">0</span>&#125;</span><br><span class="line"><span class="keyword">val</span> d = distMoved(flipX_Y0, &#123;x=<span class="number">3.0</span>, y=<span class="number">4.0</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>如上例，<code>flipX_Y0</code> 函数作为参数传入 <code>distMoved</code>
+函数不会产生任何问题。</p>
+<ul>
+<li><code>flipX_Y0</code> 函数的参数类型为 <code>&#123;x:real&#125;</code>，是
+<code>distMoved</code> 形参函数参数类型 <code>&#123;x:real,y:real&#125;</code> 的
+supertype。</li>
+<li>而 <code>flipX_Y0</code> 函数类型
+<code>&#123;x:real&#125;-&gt;&#123;x:real,y:real&#125;</code> 是 <code>distMoved</code>
+形参函数类型 <code>&#123;x:real,y:real&#125;-&gt;&#123;x:real,y:real&#125;</code> 的
+subtype。</li>
+</ul>
+<p>可以看出函数类型与其参数类型 subtype 的逆变关系。</p>
+<div class="note info no-icon"><p>The <u>general rule for function subtyping</u> is: If
+<code>t3 &lt;: t1</code> (argument type) and <code>t2 &lt;: t4</code>
+(return type), then <code>t1-&gt;t2 &lt;: t3-&gt;t4</code>. This rule,
+combined with reflexivity lets us use contravariant arguments, covariant
+results, or both.</p>
+</div>
+<p>注意在 OOP 语言中，<code>self</code> (或 <code>this</code>)
+是被特殊处理的，它的类型与对象的类型始终是 convariant (共变) 的。</p>
+<p><br></p>
+<h2 id="subtyping-for-oop">Subtyping for OOP</h2>
+<p>在 Java 与 C# 这些 statically typed OOP
+语言中存在许多容易混淆的概念，如 inheritance v.s. subtyping, class v.s.
+type 等，这一节将对其进行澄清。(很重要的一节！)</p>
+<p>在之前，我们使用 ML-like MUPL 中的 record feature 来解释了
+subtyping。其实对于 OOP 中的 object，我们也可以视为一个 record：An
+object is basically a record holding fields (which we assume here are
+<em>mutable</em>) and methods (we assume the "slots" for methods are
+<em>immutable</em>).</p>
+<p>结合之前我们基于 record 与 higher-order function 研究的 width typing
+与 function typing，我们定义 OOP 中的 subtyping 规则如下：</p>
+<ul>
+<li>(Width typing for fields) A subtype can have extra fields.</li>
+<li>(NO depth typing for fields) Because fields are mutable, a subtype
+cannot have a different type for a field.</li>
+<li>(Width typing for methods) A subtype can have extra methods.</li>
+<li>(Depth typing for methods) Because methods are immutable, <u>a
+subtype can have a subtype for method</u>, which means the method in the
+subtype can have contravariant argument types and a covariant result
+type.</li>
+</ul>
+<p>虽然我们可以将 object 视为 PL 中的 record，Java 与 C# 中的 object
+types 与 ML-like 的 record types，function types 却有着很大的不同。</p>
+<div class="note info no-icon"><p>In Java and C#, we <u>reuse class (interfaces) names as types</u>. If
+there is a class <code>Foo</code>, then the type <code>Foo</code>
+includes in it all fields and methods inplied by the class definition
+(including superclasses).</p>
+</div>
+<p>Subtyping in Java and C# includes only the subtyping explicitly
+stated via:</p>
+<ul>
+<li>the subclass relationship.</li>
+<li>the interfaces that classes explicitly indicate they implement
+(including interfaces implemented by superclasses).</li>
+</ul>
+<p>接下来我们介绍 OOP 中的 subclassing 规则：它比 subtyping
+规则更为严格，因此可以 soundly 地阻止 field missing 与 method missing
+错误。</p>
+<ul>
+<li>A subclass can add fields but not remove them.</li>
+<li>A subclass can add methods but not removed them.</li>
+<li>A subclass can override a method with a covariant return type. (在
+C++ 中，这条规则更为严格，重写方法地参数表与返回值地类型均不能改变)</li>
+<li>A class can implement more methods than an interface requires or
+implement a required method with a covariant return type.</li>
+</ul>
+<p>注意，<u>classes 与 types 是两个完全不同的概念</u>！！！</p>
+<p>在 C# 与 Java 这种语言中，每个 class declaration 在定义 class
+的同时引入同名的 type。为了方便， classes 与 types
+的界限被刻意模糊了。类似的，inheritance (subclassing) 与 subtyping
+的界限也变得很暧昧。</p>
+<p>但实际上这些概念是有本质上的区别的。(高能预警，接下来的内容很精华，就不翻译了)</p>
+<div class="note info no-icon"><p>A class defines an object's <em>behavior</em>. Subclassing
+<em>inherits</em> behavior, modifying behavior via extension and
+override.</p>
+</div>
+<div class="note info no-icon"><p>A type describes what fields an object has and what messages it can
+respond to. Subtyping is a question of substitutability and what we want
+to flag as a type error.</p>
+</div>
+<p><br></p>
+<h2 id="generics-v.s.-subtyping">Generics v.s. Subtyping</h2>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
