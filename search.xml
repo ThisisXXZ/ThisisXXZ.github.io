@@ -466,6 +466,104 @@ to flag as a type error.</p>
 </div>
 <p><br></p>
 <h2 id="generics-v.s.-subtyping">Generics v.s. Subtyping</h2>
+<p>关于 generics (parametric polymorphism) 与 subtyping polymorphism
+的比较也是一个很重要的话题。</p>
+<h3 id="what-are-generics-good-for">What are generics good for?</h3>
+<p>先来看看 generics (parametric polymorphism) 的两种最常见的应用。</p>
+<ol type="1">
+<li><p>higher-order function 的复合。</p>
+<figure class="highlight ml"><table><tr><td class="code"><pre><span class="line"><span class="keyword">val</span> compose : (<span class="symbol">&#x27;b</span> -&gt; <span class="symbol">&#x27;c</span>) * (<span class="symbol">&#x27;a</span> -&gt; <span class="symbol">&#x27;b</span>) -&gt; (<span class="symbol">&#x27;a</span> -&gt; <span class="symbol">&#x27;c</span>)</span><br></pre></td></tr></table></figure></li>
+<li><p>functions that operate over collections/containers where
+different collections/containers can hold values of different types.</p>
+<figure class="highlight ml"><table><tr><td class="code"><pre><span class="line"><span class="keyword">val</span> length : <span class="symbol">&#x27;a</span> <span class="built_in">list</span> -&gt; <span class="built_in">int</span></span><br><span class="line"><span class="keyword">val</span> map : (<span class="symbol">&#x27;a</span> -&gt; <span class="symbol">&#x27;b</span>) * <span class="symbol">&#x27;a</span> <span class="built_in">list</span> -&gt; <span class="symbol">&#x27;b</span> <span class="built_in">list</span></span><br><span class="line"><span class="keyword">val</span> swap : (<span class="symbol">&#x27;a</span> * <span class="symbol">&#x27;b</span>) -&gt; (<span class="symbol">&#x27;b</span> * <span class="symbol">&#x27;a</span>)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>generic types
+放松了对函数参数类型的限制，从而提高了代码的复用性。举例来说，如果没有
+generics，那么对于每一对不同类型的 pair 都需要编写一个 <code>swap</code>
+函数。</p>
+<h3 id="subtyping-is-bad-substitute-for-generics">Subtyping is bad
+substitute for generics</h3>
+<p>在不支持 generics 的语言中，程序员有时会用 subtyping 实现
+generics，但是：</p>
+<ul>
+<li>Somewhat lame generics.</li>
+<li>Doing so is like painting with a hammer instead of a
+paintbrush.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">LamePair</span> &#123;</span><br><span class="line">    Object x;</span><br><span class="line">    Object y;</span><br><span class="line">    LamePair(Object _x, Object _y) &#123; x=_x; y=_y; &#125;</span><br><span class="line">    LamePair <span class="title function_">swap</span><span class="params">()</span> &#123; <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">LamePair</span>(y,x); &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> (String)(<span class="keyword">new</span> <span class="title class_">LamePair</span>(<span class="string">&quot;hi&quot;</span>, <span class="number">4</span>).y); <span class="comment">// error caught only at run-time</span></span><br></pre></td></tr></table></figure>
+<p>这是用 subtyping 实现 generics 的一个例子：由于 <code>Object</code>
+类型是所有类型的 supertype，任何类型的数据都能传入 <code>LamePair</code>
+的域中。问题出在从 <code>LamePair</code> 中提取数据：我们只能获得一个
+<code>Object</code> 类型的数据，因此必须使用强制类型转换 downcast
+来将其转换为“原本”的类型。</p>
+<p>downcast 将对被转换的数据类型执行 run-time
+checks，因此上述程序中的类型错误只有在运行时才能被侦测到；这一方面增加了动态检查的时空成本，一方面潜在降低了程序的安全性。</p>
+<div class="note info no-icon"><p>When you use <code>Object</code> and downcasts, you are essentially
+taking a dynamic typing approach: any object could be stored in an
+<code>Object</code> field, so it is up to programmers, <u>without help
+from the type system</u>, to keep straight what kind of data is
+where.</p>
+</div>
+<h3 id="what-is-subtyping-good-for">What is subtyping good for?</h3>
+<p>subtyping 的优势区间在于 allowing code to be reused with data that
+has <em>extra information</em>.</p>
+<figure class="highlight ml"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fun</span> distToOrigin &#123;x=x, y=y&#125; = </span><br><span class="line">    <span class="type">Math</span>.sqrt(x*x + y*y)</span><br><span class="line"><span class="keyword">val</span> five = distToOrigin &#123;x=<span class="number">3.0</span>, y=<span class="number">4.0</span>, color=<span class="string">&quot;red&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>该代码在不支持 subtyping 的语言如 ML 中将不会 type check。而在支持
+subtyping 的语言中，<code>distToOrigin</code> 函数既能作用于
+<code>Point</code> 类的对象，又能作用于 <code>ColorPoint</code>
+类的对象：其中 <code>ColorPoint</code> is data that has extra
+information for <code>Point</code>.</p>
+<p><br></p>
+<h2 id="bounded-polymorphism">Bounded Polymorphism</h2>
+<p>既然 generics 与 subtyping 都有着各自的优势区间，许多 statically
+typed 语言 (例如 Java 与 C#) 选择同时实现这 generics 与
+subtyping。同时拥有这两种 polymorphism 机制带来了：</p>
+<ul>
+<li>Some <em>complications</em>. (e.g. static overloading &amp;
+subtyping are more difficult to define)</li>
+<li>Merits brought by generics and subtyping separately.</li>
+<li>More code reuse and expressiveness with the <em>combination</em> of
+the two ideas.</li>
+</ul>
+<p>generics 与 subtyping 的结合带来了 <em>bounded polymorphism</em>,
+具体体现为 <em>bounded generic types</em>。</p>
+<div class="note info no-icon"><p>Bounded generic types allow us to say, <u>for all types
+<code>'a</code> that are subtype of <code>T</code>.</u></p>
+<ul>
+<li>(generics) We use <code>'a</code> multiple times to indicate where
+two things must have the same type.</li>
+<li>(subtyping) We can treat <code>'a</code> as a subtype of
+<code>T</code>, accessing whatever fields and methods we know a
+<code>T</code> has.</li>
+</ul>
+</div>
+<p>见下例，<code>Point</code> 类中定义了 <code>distance</code>
+方法。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Pt</span> &#123;</span><br><span class="line">    <span class="type">double</span> x, y;</span><br><span class="line">    <span class="type">double</span> <span class="title function_">distance</span><span class="params">(Pt pt)</span> &#123; <span class="keyword">return</span> Math.sqrt((x-pt.x)*(x-pt.x)+(y-pt.y)*(y-pt.y)); &#125;</span><br><span class="line">    Pt(<span class="type">double</span> _x, <span class="type">double</span> _y) &#123; x = _x; y = _y; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来是一个静态函数，输入一个 <code>point</code> 类 list
+与一个圆，返回 list 中所有在该圆内的 <code>point</code>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> List&lt;Pt&gt; <span class="title function_">inCircle</span><span class="params">(List&lt;Pt&gt; pts, Pt center, <span class="type">double</span> radius)</span> &#123;</span><br><span class="line">    List&lt;Pt&gt; result = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;Pt&gt;();</span><br><span class="line">    <span class="keyword">for</span> (Pt pt : pts)</span><br><span class="line">        <span class="keyword">if</span> (pt.distance(center) &lt;= radious)</span><br><span class="line">            result.add(pt)</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于一个 <code>ColorPt</code> 类型的 list，我们能否将其传入
+<code>inCircle</code> 方法实现代码的复用？该问题我们已经讨论过。</p>
+<ul>
+<li>一方面，list 中的各个 entry 是 mutable 的，这意味着 depth subtyping
+不成立，<code>List&lt;ColorPt&gt;</code> 并非
+<code>List&lt;Pt&gt;</code> 的 subtype。</li>
+<li>另一方面，即使 <code>List&lt;ColorPt&gt;</code> 传入了
+<code>inCircle</code> 方法，其返回的 list 类型是
+<code>List&lt;Pt&gt;</code> 而不是
+<code>List&lt;ColorPt&gt;</code>，我们必须用到丑陋的 downcast。</li>
+</ul>
+<p>好消息是，Java 的 bounded polymorphism 使得我们能够结合 generics 与
+subtyping，实现该功能：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> &lt;T <span class="keyword">extends</span> <span class="title class_">Pt</span>&gt; List&lt;T&gt; <span class="title function_">inCircle</span><span class="params">(List&lt;T&gt; pts, Pt center, <span class="type">double</span> radius)</span> &#123;</span><br><span class="line">    List&lt;T&gt; result = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;T&gt;();</span><br><span class="line">    <span class="keyword">for</span> (T pt : pts)</span><br><span class="line">        <span class="keyword">if</span> (pt.distance(center) &lt;= radius)</span><br><span class="line">            result.add(pt);</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>利用 generics，我们将 <code>T</code> 声明为一个 generic type；利用
+subtyping，我们规定该 generic type <code>T</code> 必须是 <code>Pt</code>
+的 subtype。当传入 <code>List&lt;ColorPt&gt;</code> 时，<code>T</code>
+将被指定为 <code>ColorPt</code>，且 <code>ColorPt</code> 的确是
+<code>Pt</code> 的 subtype。</p>
+<p>这样，我们不仅能够传入 <code>List&lt;ColorPt&gt;</code> 类型的
+list，该方法也将返回相同类型的 list 而无需用到 downcast。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
@@ -475,6 +573,8 @@ if not specified.</p>
 <p>Supplementry notes:</p>
 <p><a href="https://www.cnblogs.com/VeniVidiVici/p/16848669.html">My
 notes in CnBlogs</a>.</p>
+<p><a href="https://www.zhihu.com/question/57486254">Inheritance 与
+subtyping 到底有什么区别 -知乎</a>.</p>
 <p>Course info:</p>
 <p><a href="https://www.coursera.org/learn/programming-languages-part-c">Programming
 Languages, Part C, University of Washington</a>, Lecturer: Professor Dan
