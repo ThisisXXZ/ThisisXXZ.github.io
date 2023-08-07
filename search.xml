@@ -152,6 +152,211 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
+    <title>Algorithms II, Princeton University, P5</title>
+    <url>/2023/08/06/algo-princeton-p5/</url>
+    <content><![CDATA[<p>书接上文，我们进入了<a href="https://thisisxxz.com/categories/notes/courses/Algorithms-Princeton/">本系列课程</a>的第
+II Part。本节侧重于图论方面的知识，介绍了：</p>
+<ul>
+<li>一些基本概念 (<del>终于知道 BFS 中的 B 是什么了</del>)
+<ul>
+<li>Undirected Graphs, Directed Graphs (<em>Digraphs</em>), Directed
+<u>Acyclic</u> Graphs (DAG).</li>
+<li>Depth-First Search (DFS), <u>Breadth</u>-First Search (BFS),
+Topological Sort.</li>
+</ul></li>
+<li>Shortest Path Algorithms.</li>
+<li>Minimum Spanning Trees (MSTs).</li>
+<li>Connected Component, Strong (Connected) Component.</li>
+</ul>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="graph-terminology">Graph Terminology</h2>
+<p>图论概念的中英文对照表：这些概念的介绍将被省去，因为实在是太过基础了。</p>
+<ul>
+<li>Graph. Set of <em>vertices</em> (顶点) connected pairwise by
+<em>edges</em> (边).</li>
+<li>Path. Sequence of vertices connected by edges.</li>
+<li>Cycle. Path whose first and last vertices are the same.</li>
+<li>Directed graphs (Digraph). Set of vertices connected pairwise by
+<em>directed</em> edges.</li>
+</ul>
+<p>Cycle-related problems.</p>
+<ul>
+<li>Is there a cycle in the graph?</li>
+<li><em>Euler tour</em> (欧拉回路): It there a cycle that uses each edge
+exactly once.</li>
+<li><em>Hamilton tour</em> (哈密顿回路): Is there a cycle that uses each
+vertex exactly once.</li>
+</ul>
+<p>Connectivity problems.</p>
+<ul>
+<li>Connectivity. Is there a way to connect all of the vertices?</li>
+<li>MST. What is the best way to connect all of the vertices?</li>
+<li>Biconnectivity. Is there a vertex whose removal <em>disconnects</em>
+the graph?</li>
+</ul>
+<p>Graph representation problems.</p>
+<ul>
+<li>Graph <em>isomorphism</em>. Are two graphs identical except for
+vertex names?</li>
+<li><em>Planarity</em>. Can we lay out a graph in the plane without
+crossing edges?</li>
+<li>Topological sort. Can we draw a diagraph so that all edges point
+upwards?</li>
+</ul>
+<p><br></p>
+<h2 id="graph-processing-design">Graph Processing Design</h2>
+<p>Graph API.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Graph</span> &#123;</span><br><span class="line">    Graph(<span class="type">int</span> V);                     <span class="comment">// create an empty graph with V vertices</span></span><br><span class="line">    Graph(In in);                    <span class="comment">// create a graph from input stream</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">addEdge</span><span class="params">(<span class="type">int</span> v, <span class="type">int</span> w)</span>;        <span class="comment">// add an edge v-w</span></span><br><span class="line">    Iterable&lt;Integer&gt; <span class="title function_">adj</span><span class="params">(<span class="type">int</span> v)</span>;    <span class="comment">// vertices adjacent to v</span></span><br><span class="line">    <span class="type">int</span> <span class="title function_">V</span><span class="params">()</span>;                        <span class="comment">// number of vertices</span></span><br><span class="line">    <span class="type">int</span> <span class="title function_">E</span><span class="params">()</span>;                        <span class="comment">// number of edges</span></span><br><span class="line">    String <span class="title function_">toString</span><span class="params">()</span>;                <span class="comment">// string representation</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Adjacency-matrix graph representation. (邻接矩阵表示)</p>
+<p>Adjacency-list (undirected) graph representation. (邻接表表示)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Graph</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> V;</span><br><span class="line">    <span class="keyword">private</span> Bag&lt;Integer&gt;[] adj;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Graph</span><span class="params">(<span class="type">int</span> V)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.V = V;</span><br><span class="line">        adj = (Bag&lt;Integer&gt;[]) <span class="keyword">new</span> <span class="title class_">Bag</span>[V];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> <span class="number">0</span>; v &lt; V; ++v)</span><br><span class="line">            adj[v] = <span class="keyword">new</span> <span class="title class_">Bag</span>&lt;Integer&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addEdge</span><span class="params">(<span class="type">int</span> v, <span class="type">int</span> w)</span> &#123;</span><br><span class="line">        adj[v].add(w);</span><br><span class="line">        adj[w].add(v);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> Iterable&lt;Integer&gt; <span class="title function_">adj</span><span class="params">(<span class="type">int</span> v)</span> &#123; <span class="keyword">return</span> adj[v]; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="note info no-icon"><p>Design pattern for graph processing. <em>Decouple</em> graph data
+type from graph processing.</p>
+<ul>
+<li>Create a <code>Graph</code> object.</li>
+<li>Pass the <code>Graph</code> to a graph-processing routine.</li>
+<li>Query the graph-processing routine for information.</li>
+</ul>
+</div>
+<p>经典的设计原则：对某个数据结构的操作 (processing)
+与该数据结构本身的定义应当是分开的。例如，若我们想要对图进行
+DFS，相较于在 <code>Graph</code> 类内部定义 <code>depthFirstPaths</code>
+方法，定义一个 <code>DepthFirstPaths</code> 类并与 <code>Graph</code>
+类对象进行交互是一个更优美的设计。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DepthFirstSearch</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span>[] marked;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DepthFirstSearch</span><span class="params">(Graph G, <span class="type">int</span> s)</span> &#123;</span><br><span class="line">        marked = <span class="keyword">new</span> <span class="title class_">boolean</span>[G.V()];</span><br><span class="line">        dfs(G, s);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(Graph G, <span class="type">int</span> v)</span> &#123;</span><br><span class="line">        marked[v] = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> w : G.adj(v))</span><br><span class="line">            <span class="keyword">if</span> (!marked[w])    dfs(G, w);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">visited</span><span class="params">(<span class="type">int</span> v)</span> &#123; <span class="keyword">return</span> marked[v]; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="topological-sort">Topological Sort</h2>
+<div class="note info no-icon"><p>Topological sort. Redraw DAG so all edges point upwards (or to the
+same direction).</p>
+</div>
+<figure>
+<img data-src="topo.png" alt="What it means by &quot;Redraw&quot;">
+<figcaption aria-hidden="true">What it means by "Redraw"</figcaption>
+</figure>
+<p>拓扑序是这样一个序列：对 DAG 上的每一条有向边 <span class="math inline">\(u \to v\)</span>，拓扑序中 <span class="math inline">\(u\)</span> 都必定在 <span class="math inline">\(v\)</span> 之前出现。如果文明 6 中的科技树是一个
+DAG，那么其拓扑序就是一种可能的点科技树的顺序。</p>
+<h3 id="kahns-algorithm">Kahn's Algorithm</h3>
+<p>一个很经典的求拓扑序的算法是 Kahn 算法：</p>
+<ul>
+<li>初始将所有 indegree 为 0 的 vertices 加入队列。</li>
+<li>当队列非空时，弹出 vertice <span class="math inline">\(v\)</span>。</li>
+<li>在 DAG 中删除 <span class="math inline">\(v\)</span> 与以 <span class="math inline">\(v\)</span> 为起点的有向边。实现上我们仅需维护
+indegree 数组：对于每一条有向边 <span class="math inline">\(v \to
+w\)</span>，删除 <span class="math inline">\(v\)</span> 意味着 <span class="math inline">\(w\)</span> 的 indegree 减一。若更新后 <span class="math inline">\(w\)</span> 的 indegree 为 0，则把 <span class="math inline">\(w\)</span> 加入队列。</li>
+<li>重复上述步骤直至队列为空。</li>
+</ul>
+<p>从队列中弹出的 vertices 的顺序即为一种可能的拓扑序。</p>
+<p>Kahn 算法的理解非常的 intuitive；其本身就是一个 trivial
+的拓扑排序过程。</p>
+<h3 id="depth-first-search-approach">Depth-First Search Approach</h3>
+<div class="note info no-icon"><p>Proposition. Reverse <u>DFS postorder</u> of a DAG is a topological
+order.</p>
+</div>
+<p>In <em>postorder</em>, a vertice is marked only when its subvertices
+are marked.</p>
+<p>这个结论异常的简单且优美，仔细想一想也是很符合直觉的。证明如下：考虑任意有向边
+<span class="math inline">\(v \to w\)</span>，当 <code>dfs(v)</code>
+被调用时，分别有三种情况：</p>
+<ul>
+<li>Case 1: <code>dfs(w)</code> has already been called and returned.
+Thus <span class="math inline">\(w\)</span> was done before <span class="math inline">\(v\)</span>.</li>
+<li>Case 2: <code>dfs(w)</code> has not yet been called. Then
+<code>dfs(w)</code> will get called directly or indirecely by
+<code>dfs(v)</code> and will finish before <code>dfs(v)</code>. Thus
+<span class="math inline">\(w\)</span> will be done before <span class="math inline">\(v\)</span>.</li>
+<li>Case 3: <code>dfs(w)</code> has already been called but has not yet
+returned. This cannot happen in a DAG.</li>
+</ul>
+<p>因此，在 DAG 的 postorder 中，一条有向边 <span class="math inline">\(v \to w\)</span> 能够保证 <span class="math inline">\(w\)</span> 在 <span class="math inline">\(v\)</span> 之前；因此在 reverse postorder 中 <span class="math inline">\(w\)</span> 一定在 <span class="math inline">\(v\)</span> 之后。这正好符合 topological order
+的定义。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DepthFirstOrder</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span>[] marked;</span><br><span class="line">    <span class="keyword">private</span> ArrayList&lt;Integer&gt; postorder;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DepthFirstOrder</span><span class="params">(Digraph G)</span> &#123;</span><br><span class="line">        postorder = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;Integer&gt;();</span><br><span class="line">        marked = <span class="keyword">new</span> <span class="title class_">boolean</span>[G.V()];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> <span class="number">0</span>; v &lt; G.V(); ++v)</span><br><span class="line">            <span class="keyword">if</span> (!marked[v])    dfs(G, v);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(Digraph G, <span class="type">int</span> v)</span> &#123;</span><br><span class="line">        marked[v] = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> w : G.adj(v))</span><br><span class="line">            <span class="keyword">if</span> (!marked[w])    dfs(G, w);</span><br><span class="line">        postorder.add(v);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> Iterable&lt;Integer&gt; <span class="title function_">reversePost</span><span class="params">()</span> &#123;</span><br><span class="line">        Collections.reverse(postorder);</span><br><span class="line">        <span class="keyword">return</span> postorder;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="directed-cycle-detection">Directed Cycle Detection</h3>
+<div class="note info no-icon"><p>Proposition. A diagraph has a topological order iff no directed
+cycle.</p>
+</div>
+<p>很好理解，只有 DAG 有拓扑序；若使用 dfs
+对有环图求拓扑序将进入死循环。</p>
+<p>关于判环，有一个优美的算法：将每个节点染成白，灰，黑三种颜色。白色节点是还未入
+dfs 栈的节点，灰色节点是当前 dfs 栈中的节点，黑色节点是已经弹出 dfs
+栈的节点。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">DepthFirstOrder</span><span class="params">(Digraph G)</span> &#123;</span><br><span class="line">    marked = <span class="keyword">new</span> <span class="title class_">int</span>[G.V()];    <span class="comment">// 0 for white, 1 for grey, 2 for black</span></span><br><span class="line">    hasCycle = <span class="literal">false</span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(Digraph G, <span class="type">int</span> v)</span> &#123;</span><br><span class="line">    marked[v] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> w : G.adj(v)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (marked[w] == <span class="number">0</span>)    dfs(G, w);</span><br><span class="line">        <span class="keyword">if</span> (marked[w] == <span class="number">1</span>)    hasCycle = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    marked[v] = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>关于判环还有许多其他的应用：precedence scheduling，Java compiler 中的
+cyclic inheritance 判断与 Excel 中的 spreadsheet recalculation。</p>
+<p><br></p>
+<h2 id="strong-components">Strong Components</h2>
+<div class="note info no-icon"><p>Strongly Connected. Vertices <span class="math inline">\(v\)</span>
+and <span class="math inline">\(w\)</span> are <em>strongly
+connected</em> if there is both a directed path from <span class="math inline">\(v\)</span> to <span class="math inline">\(w\)</span> and a directed path from <span class="math inline">\(w\)</span> to <span class="math inline">\(v\)</span>.</p>
+</div>
+<p>强连通关系具有以下性质：</p>
+<ul>
+<li>Reflexivity. <span class="math inline">\(v\)</span> is strongly
+connected to <span class="math inline">\(v\)</span>.</li>
+<li>Symmetry. If <span class="math inline">\(v\)</span> is strongly
+connected to <span class="math inline">\(w\)</span>, then <span class="math inline">\(w\)</span> is strongly connected to <span class="math inline">\(v\)</span>.</li>
+<li>Transitivity. If <span class="math inline">\(v\)</span> is strongly
+connected to <span class="math inline">\(w\)</span> and <span class="math inline">\(w\)</span> to <span class="math inline">\(x\)</span>, then <span class="math inline">\(v\)</span> is strongly connected to <span class="math inline">\(x\)</span>.</li>
+</ul>
+<p>这三个性质决定了 strong component (强连通分量) 的定义。</p>
+<div class="note info no-icon"><p>Def. A strong component is a maximal subset of strongly-connected
+vertices.</p>
+</div>
+<p><img data-src="scc.png"></p>
+<p>接下来我们来介绍 Kosaraju-Sharir 算法：其通过对 DAG <span class="math inline">\(G\)</span> 的两次 DFS 求出其所有的 strong
+components。具体来说，该算法将计算出一个数组 <code>id</code>，属于同一个
+strong components 的节点具有相同的 <code>id</code>。</p>
+<ul>
+<li>Phase 1: run DFS on <span class="math inline">\(G^R\)</span> to
+compute reverse postorder.</li>
+<li>Phase 2: run DFS on <span class="math inline">\(G\)</span>,
+considering vertices in order given by first DFS.</li>
+</ul>
+<p><span class="math inline">\(G^R\)</span> 是图 <span class="math inline">\(G\)</span> 的 reverse graph (反向图)：其通过反转
+<span class="math inline">\(G\)</span> 中的所有有向边生成。利用 Strong
+components in <span class="math inline">\(G\)</span> are the same as in
+<span class="math inline">\(G^R\)</span> 这一性质，我们得到了对 kernal
+DAG of <span class="math inline">\(G\)</span> 的一种染色顺序。</p>
+<div class="note info no-icon"><p>Kernal DAG. Contract each strong component into a single vertex.
+(Tarjan 缩点)</p>
+</div>
+<p><img data-src="kernal.png"></p>
+<p>如图，按照逆拓扑序对 kernal DAG of <span class="math inline">\(G\)</span> 进行染色能够保证 strong components
+之间的颜色不会相互干扰；而 <u><span class="math inline">\(G\)</span>
+的逆拓扑序就是 <span class="math inline">\(G^R\)</span> 的拓扑序</u>，即
+<span class="math inline">\(G^R\)</span> 的 reverse
+postorder。附上知乎上的<a href="https://www.zhihu.com/question/58926821">这个回答</a>，讲的很精辟。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">KosarajuSharirSCC</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> marked[];</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span>[] id;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> count;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">KosarajuSharirSCC</span><span class="params">(Digraph G)</span> &#123;</span><br><span class="line">        marked = <span class="keyword">new</span> <span class="title class_">boolean</span>[G.V()];</span><br><span class="line">        id = <span class="keyword">new</span> <span class="title class_">int</span>[G.V()];</span><br><span class="line">        <span class="type">DepthFirstOrder</span> <span class="variable">dfs</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DepthFirstOrder</span>(G.reverse());</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> v : dfs.reversePost()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!marked[v]) &#123;</span><br><span class="line">                dfs(G, v);</span><br><span class="line">                count++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(Digraph G, <span class="type">int</span> v)</span> &#123;</span><br><span class="line">        marked[v] = <span class="literal">true</span>;</span><br><span class="line">        id[v] = count;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> w : G.adj(v))</span><br><span class="line">            <span class="keyword">if</span> (!marked[w])    dfs(G, w);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">stronglyConnected</span><span class="params">(<span class="type">int</span> v, <span class="type">int</span> w)</span> &#123; <span class="keyword">return</span> id[v] == id[w]; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p><a href="https://www.coursera.org/learn/algorithms-part2">Algorithms,
+Part 2, Princeton University</a>. Lecturer: Robert Sedgewick &amp; Kevin
+Wayne.</p>
+<p>Course textbook:</p>
+<p><em>Algorithms (4th edition)</em>, Sedgewick, R. &amp; Wayne, K.,
+(2011), Addison-Wesley Professional, <a href="https://algs4.cs.princeton.edu/home/">view</a></p>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>courses</category>
+        <category>Algorithms, Princeton</category>
+      </categories>
+      <tags>
+        <tag>course notes</tag>
+        <tag>graph theory</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>在炎陵与茶陵 - 此后如竟没有炬火</title>
     <url>/2023/08/02/moment-230723/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
