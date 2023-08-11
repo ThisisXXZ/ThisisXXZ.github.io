@@ -333,6 +333,189 @@ DAG of <span class="math inline">\(G\)</span> 的一种染色顺序。</p>
 postorder。附上知乎上的<a href="https://www.zhihu.com/question/58926821">这个回答</a>，讲的很精辟。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">KosarajuSharirSCC</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> marked[];</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span>[] id;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> count;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">KosarajuSharirSCC</span><span class="params">(Digraph G)</span> &#123;</span><br><span class="line">        marked = <span class="keyword">new</span> <span class="title class_">boolean</span>[G.V()];</span><br><span class="line">        id = <span class="keyword">new</span> <span class="title class_">int</span>[G.V()];</span><br><span class="line">        <span class="type">DepthFirstOrder</span> <span class="variable">dfs</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DepthFirstOrder</span>(G.reverse());</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> v : dfs.reversePost()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!marked[v]) &#123;</span><br><span class="line">                dfs(G, v);</span><br><span class="line">                count++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(Digraph G, <span class="type">int</span> v)</span> &#123;</span><br><span class="line">        marked[v] = <span class="literal">true</span>;</span><br><span class="line">        id[v] = count;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> w : G.adj(v))</span><br><span class="line">            <span class="keyword">if</span> (!marked[w])    dfs(G, w);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">stronglyConnected</span><span class="params">(<span class="type">int</span> v, <span class="type">int</span> w)</span> &#123; <span class="keyword">return</span> id[v] == id[w]; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
+<h2 id="minimum-spanning-trees">Minimum Spanning Trees</h2>
+<p>Given a undirected graph <span class="math inline">\(G\)</span> with
+positive edges weights (connected).</p>
+<div class="note info no-icon"><p>A spanning tree of <span class="math inline">\(G\)</span> is a
+subgraph <span class="math inline">\(T\)</span> that is both a
+<em>tree</em> (connected and acyclic) and <em>spanning</em> (includes
+all of the vertices).</p>
+</div>
+<p>Our goal is to find a min weight spanning tree, i.e., minimum
+spanning tree.</p>
+<h3 id="cut-property">Cut Property</h3>
+<p>We make the simplifying assumptions: (1) Edge weights are distinct.
+(2) Graph is connected. Under such assumptions MST exists and is
+unique.</p>
+<div class="note info no-icon"><p>A <em>cut</em> in a graph is a partiton of its vertices into two
+nonempty sets. A <em>crossing edge</em> connects a vertex in one set
+with a vertex in the other.</p>
+</div>
+<p><img data-src="MST.png"></p>
+<p>如图，cut 将顶点分为灰色与白色两个点集，所有连接这两个点击的边都是
+crossing edge。MST 有这样一个性质：<u>Given any cut, the crossing edge
+of min weight is in the MST.</u></p>
+<p>我们用反证法对该性质进行证明：假设 min-weight crossing edge <span class="math inline">\(e\)</span> 并不在 MST 中。</p>
+<ul>
+<li>Adding <span class="math inline">\(e\)</span> to MST creates a
+cycle.</li>
+<li>Some other edge <span class="math inline">\(f\)</span> in cycle must
+be a crossing tree.</li>
+<li>Removing <span class="math inline">\(f\)</span> and adding <span class="math inline">\(e\)</span> is also a spanning tree.</li>
+<li>Since weight of <span class="math inline">\(e\)</span> is less than
+the weight of <span class="math inline">\(f\)</span>, that spanning tree
+is lower weight.</li>
+<li>Contradiction!</li>
+</ul>
+<h3 id="greedy-mst-algorithms">Greedy MST Algorithms</h3>
+<p>利用 MST 的 cut property，我们能设计这样一个理论上的贪心算法：</p>
+<ul>
+<li>Start with all edges colored gray.</li>
+<li>Find cut with no black crossing edges; color its min-weight edge
+black.</li>
+<li>Repeat until <span class="math inline">\(V-1\)</span> edges are
+colored black.</li>
+</ul>
+<p>该算法的 crucial 之处在于如何找到一种划分点集的方法 (即
+cut)，并且点集之间没有 black crossing
+edges。接下来我们将介绍两种划分的算法：Kruskal 算法与 Prim 算法。</p>
+<p><br></p>
+<h2 id="kruskals-algorithm">Kruskal's Algorithm</h2>
+<p>Kruskal's algorithm considers edges in <em>ascending</em> order of
+weight. We add next edge to tree <span class="math inline">\(T\)</span>
+unless doing so would create a cycle. If V-1 edges is added, <span class="math inline">\(T\)</span> is spanned to MST.</p>
+<p>我们来看看 Kruskal's algorithm 是如何划分两个点集 (即找到一个合法的
+cut) 的。</p>
+<ul>
+<li>Suppose Kruskal's algorithm colors the edge <span class="math inline">\(e\)</span>: <span class="math inline">\(v\)</span>-<span class="math inline">\(w\)</span>
+black.</li>
+<li>Cut = set of vertices connected to <span class="math inline">\(v\)</span> in tree <span class="math inline">\(T\)</span>.</li>
+<li>In this cut we can guarentee that no crossing edge is black &amp; no
+crossing edge has lower weight.</li>
+</ul>
+<p><img data-src="kruskal.png"></p>
+<p>如图，根据 Kruskal 算法，当前的 <span class="math inline">\(T\)</span> 中包括边 1-7，7-0 与
+2-3，下一个被添加的边为 0-2。如果加入 0-2 不会令 <span class="math inline">\(T\)</span> 中出现环，一个合法的 cut 为 <span class="math inline">\(\{1,7,0\}\)</span> (<span class="math inline">\(T\)</span> 中与 0 连接的所有点) 与 <span class="math inline">\(\{2,3,4,5,6\}\)</span>。</p>
+<p>对于该 cut，可以证明 0-2 是一个 minimum black-crossing edge。</p>
+<ul>
+<li>black-crossing edge：由于加入 0-2 不会使 <span class="math inline">\(T\)</span> 中出现环，<span class="math inline">\(T\)</span> 中点 0 所在的连通块与点 2
+所在的连通块本来是不连通的。因此 0-2 一定是一个 black-crossing
+edge。</li>
+<li>minimum：Kruskal
+算法是按照边权由小到大的顺序考虑的，因此可以保证当前考虑的这条边一定是所有
+crossing edge 中最小的。</li>
+</ul>
+<p>Implementation Challenge. Kruskal
+算法实现的难点在于动态判环：由于是否存在环本质上是一个判断是否联通的问题，我们可以轻易用并查集解决这个问题。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">KruskalMST</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Queue&lt;Edge&gt; mst = <span class="keyword">new</span> <span class="title class_">Queue</span>&lt;Edge&gt;();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">KruskalMST</span><span class="params">(EdgeWeightedGraph G)</span> &#123;</span><br><span class="line">        MinPQ&lt;Edge&gt; pq = <span class="keyword">new</span> <span class="title class_">MinPQ</span>&lt;Edge&gt;();</span><br><span class="line">        <span class="keyword">for</span> (Edge e : G.edges())    pq.insert(e);</span><br><span class="line">        <span class="type">UF</span> <span class="variable">uf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UF</span>(G.V());</span><br><span class="line">        <span class="keyword">while</span> (!pq.isEmpty() &amp;&amp; mst.size() &lt; G.V() - <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="type">Edge</span> <span class="variable">e</span> <span class="operator">=</span> pq.delMin();</span><br><span class="line">            <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> e.either(), w = e.other(v);</span><br><span class="line">            <span class="keyword">if</span> (!uf.connected(v, w)) &#123;</span><br><span class="line">                uf.union(v, w);</span><br><span class="line">                mst.enqueue(e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> Iterable&lt;Edge&gt; <span class="title function_">edges</span><span class="params">()</span> &#123; <span class="keyword">return</span> mst; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="single-link-clustering">Single-link Clustering</h3>
+<p>接下来我们看一个似乎与 MST 不相关的问题 — single-link clustering
+问题。首先介绍以下定义：</p>
+<ul>
+<li>k-clustering. Divide a set of objects classify into <span class="math inline">\(k\)</span> conherent groups.</li>
+<li>Distance function. Numeric value specifying "closeness" of two
+objects.</li>
+</ul>
+<p>一个常见的 distance function 定义是 single-link definition: Distance
+between two clusters equals the distance between the two closest objects
+(one in each cluster).</p>
+<p>那么我们定义 single-link clustering 问题如下：Given an integer <span class="math inline">\(k\)</span>, find a k-clustering that maximizes the
+distance between two closest clusters.</p>
+<p><img data-src="kclustering.png"></p>
+<p>我们对给出的点集构造出一张无向图，任意两点间的边权为它们之间的距离。</p>
+<p>由于需要 clusters
+之间的最小距离最大，我们采取贪心算法：由小到大考虑每一条边，若该边连接了两个不同的
+clusters，则将这两个 clusters 聚合为一个
+cluster，从而消除了该最小距离。重复以上过程直至图中只剩下 <span class="math inline">\(k\)</span> 个 clusters，我们能够保证这 <span class="math inline">\(k\)</span> 个 clusters 间的最小距离最大。</p>
+<p>这本质上就是 Kruskal 算法求 MST
+的过程。它微妙的印证了这样一个性质：对于一棵树，删掉该树中的 <span class="math inline">\(k-1\)</span> 条边，最后将会得到 <span class="math inline">\(k\)</span> 个连通块。</p>
+<p><br></p>
+<h2 id="prims-algorithm">Prim's Algorithm</h2>
+<p>关于 Kruskal 算法与 Prim 算法的区别有一条十分精准的概括：Kruskal
+是基于边 (edges) 的贪心算法，而 Prim 则是基于点 (vertices)
+的贪心算法。</p>
+<ul>
+<li>Start with vertex 0 and greedily grow tree <span class="math inline">\(T\)</span>.</li>
+<li>Add to <span class="math inline">\(T\)</span> the min weight edge
+with <em>exactly one endpoint</em> in <span class="math inline">\(T\)</span>.</li>
+<li>Repeat until V-1 edges are added.</li>
+</ul>
+<p>与 Kruskal 算法相同，Prim 算法也是 greedy MST algorithm 的一种
+special case。它是这样划分点集的：</p>
+<ul>
+<li>Suppose edge <span class="math inline">\(e\)</span> = min weight
+edge connecting a vertex on the tree.</li>
+<li>Cut = set of vertices connected on tree.</li>
+<li>In this cut we can guarentee that no crossing edge is black &amp; no
+crossing edge has lower weight.</li>
+</ul>
+<p><img data-src="prim.png"></p>
+<p>如图，当前 <span class="math inline">\(T\)</span> 中的边包括 1-7,
+7-0, 0-2 与 2-3，下一个加入的边为 7-5。此时一个合法的 cut 为 <span class="math inline">\(\{1,7,0,2,3\}\)</span> (即 <span class="math inline">\(T\)</span> 本身) 与 <span class="math inline">\(\{4,5,6\}\)</span>。</p>
+<p>由于 Prim 算法是逐渐对 <span class="math inline">\(T\)</span>
+进行扩展的，<span class="math inline">\(T\)</span>
+一定是联通的。因此，任何连接 <span class="math inline">\(T\)</span> 与非
+<span class="math inline">\(T\)</span> 节点的边都一定是 crossing
+edge。又我们是按照权值由小到大进行考虑的，该 crossing edge 一定是
+minimum 的。</p>
+<p>Implementation Challenge. Find the min weight edge with exactly one
+endpoint in <span class="math inline">\(T\)</span>.</p>
+<h3 id="lazy-implementation">Lazy Implementation</h3>
+<p>Lazy solution. Maintain a PQ of <em>edges</em> with (at least) one
+endpoint in <span class="math inline">\(T\)</span>.</p>
+<ul>
+<li>Key = edge; priority = weight of edge.</li>
+<li>Delete-min to determine next edge <span class="math inline">\(e\)</span> = <span class="math inline">\(v\)</span>-<span class="math inline">\(w\)</span>
+to add to <span class="math inline">\(T\)</span>.</li>
+<li>Disregard if both endpoints <span class="math inline">\(v\)</span>
+and <span class="math inline">\(w\)</span> are marked (both in <span class="math inline">\(T\)</span>).</li>
+<li>Otherwise, let <span class="math inline">\(w\)</span> be the
+unmarked vertex (not in <span class="math inline">\(T\)</span>):
+<ul>
+<li>add to PQ any edge incident to <span class="math inline">\(w\)</span> (assuming other endpoint not in <span class="math inline">\(T\)</span>)</li>
+<li>add <span class="math inline">\(e\)</span> to <span class="math inline">\(T\)</span> and mark <span class="math inline">\(w\)</span>.</li>
+</ul></li>
+</ul>
+<p>为何叫 <em>lazy</em> approach？因为 PQ
+中维护的边并非所有都是只有一端在 <span class="math inline">\(T\)</span>
+中的。随着 <span class="math inline">\(T\)</span> 的生长，PQ
+中的某些边会变得 obsolete (两端都在 <span class="math inline">\(T\)</span> 中)。因此从 PQ
+中取边时需要加入判断，舍弃已经变得 obsolete 的边。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LazyPrimMST</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span>[] marked;       <span class="comment">// MST vertices</span></span><br><span class="line">    <span class="keyword">private</span> Queue&lt;Edge&gt; mst;        <span class="comment">// MST edges</span></span><br><span class="line">    <span class="keyword">private</span> MinPQ&lt;Edge&gt; pq;         <span class="comment">// PQ of edges</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">LazyPrimMST</span><span class="params">(WeightedGraph G)</span> &#123;</span><br><span class="line">        pq = <span class="keyword">new</span> <span class="title class_">MinPQ</span>&lt;Edge&gt;();</span><br><span class="line">        mst = <span class="keyword">new</span> <span class="title class_">Queue</span>&lt;Edge&gt;();</span><br><span class="line">        marked = <span class="keyword">new</span> <span class="title class_">boolean</span>[G.V()];</span><br><span class="line">        visit(G, <span class="number">0</span>);                      <span class="comment">// assume G is connected: add vertex 0 to T</span></span><br><span class="line">        <span class="keyword">while</span> (!pq.isEmpty() &amp;&amp; mst.size() &lt; G.V() - <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="type">Edge</span> <span class="variable">e</span> <span class="operator">=</span> pq.delMin();</span><br><span class="line">            <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> e.either(), w = e.other(v);</span><br><span class="line">            <span class="keyword">if</span> (marked[v] &amp;&amp; marked[w])  <span class="keyword">continue</span>;  <span class="comment">// disgard obsolete edges</span></span><br><span class="line">            mst.enqueue(e);                         <span class="comment">// add edge e to tree T</span></span><br><span class="line">            <span class="keyword">if</span> (!marked[v])  visit(G, v);           <span class="comment">// add the not-in-T endpoint to T</span></span><br><span class="line">            <span class="keyword">if</span> (!marked[w])  visit(G, w);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">visit</span><span class="params">(WeightedGraph G, <span class="type">int</span> v)</span> &#123;</span><br><span class="line">        marked[v] = <span class="literal">true</span>;               <span class="comment">// add v to T</span></span><br><span class="line">        <span class="keyword">for</span> (Edge e : G.adj(v))</span><br><span class="line">            <span class="keyword">if</span> (!marked[e.other(v)])    <span class="comment">// for each edge v-w, add to PQ if w not already in T</span></span><br><span class="line">                pq.insert(e);         </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> Iterable&lt;Edge&gt; <span class="title function_">mst</span><span class="params">()</span> &#123; <span class="keyword">return</span> mst; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="eager-implementation">Eager Implementation</h3>
+<p>eager approach 同样维护一个 PQ，但与 lazy approach 不同的是 PQ
+中维护的是点，而非边。</p>
+<p>Maintain a PQ of vertices connected by an edge to <span class="math inline">\(T\)</span>, where priority of vertex <span class="math inline">\(v\)</span> = weight of shortest edge connecting
+<span class="math inline">\(v\)</span> to <span class="math inline">\(T\)</span>. (是不是有点像最短路算法的思路？)</p>
+<ul>
+<li>Delete min vertex <span class="math inline">\(v\)</span> and add its
+associated edge <span class="math inline">\(e\)</span> = <span class="math inline">\(v\)</span> - <span class="math inline">\(w\)</span> to <span class="math inline">\(T\)</span>.</li>
+<li>Update PQ by considering all edges <span class="math inline">\(e\)</span> = <span class="math inline">\(v\)</span> - <span class="math inline">\(x\)</span> incident to <span class="math inline">\(v\)</span>.
+<ul>
+<li>case 1: ignore if <span class="math inline">\(x\)</span> is already
+in <span class="math inline">\(T\)</span>.</li>
+<li>case 2: add <span class="math inline">\(x\)</span> to PQ if not
+already on it.</li>
+<li>case 3: <em>decrease priority</em> of <span class="math inline">\(x\)</span> if <span class="math inline">\(v\)</span>-<span class="math inline">\(x\)</span>
+becomes the shortest edge connecting <span class="math inline">\(x\)</span> to <span class="math inline">\(T\)</span> if <span class="math inline">\(x\)</span> in PQ but not in <span class="math inline">\(T\)</span>.</li>
+</ul></li>
+</ul>
+<p>当点 <span class="math inline">\(x\)</span> 到 <span class="math inline">\(T\)</span>
+的距离被更新时，我们需要降低其优先级：这就涉及到对 PQ
+内部元素的操作。实现这一功能的数据结构称为 <em>Indexed priority
+queue</em> (索引优先队列)。</p>
+<p>对于每个元素，IPQ 为其分配一个整数索引，并维护三个数组
+<code>keys[]</code>, <code>pq[]</code> 与 <code>qp[]</code>。</p>
+<ul>
+<li><code>keys[i]</code> is the priority of <code>i</code>.</li>
+<li><code>pq[i]</code> is the index of the key in heap position
+<code>i</code>.</li>
+<li><code>qp[i]</code> is the heap position of the key with index
+<code>i</code>.</li>
+</ul>
+<p><br></p>
+<h2 id="shortest-paths">Shortest Paths</h2>
+<p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
@@ -4966,6 +5149,9 @@ whitespace</strong>.</li>
 methods.</li>
 <li>Define constant variables to hold the constants used more than
 once.</li>
+<li>If a private instance (or static) variable is initialized only in
+the declaration or constructor, then you should make it
+<strong>final</strong>.</li>
 </ol>
 <p><br></p>
 <h2 id="reference">Reference</h2>
