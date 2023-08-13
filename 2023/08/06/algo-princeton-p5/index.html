@@ -39,8 +39,10 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2023/08/06/algo-princeton-p5/kruskal.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/08/06/algo-princeton-p5/kclustering.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/08/06/algo-princeton-p5/prim.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/06/algo-princeton-p5/SPT.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/06/algo-princeton-p5/CPM.png">
 <meta property="article:published_time" content="2023-08-06T08:50:21.000Z">
-<meta property="article:modified_time" content="2023-08-11T09:31:10.381Z">
+<meta property="article:modified_time" content="2023-08-13T13:57:37.810Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="course notes">
 <meta property="article:tag" content="graph theory">
@@ -177,7 +179,9 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#graph-terminology"><span class="nav-number">1.</span> <span class="nav-text">Graph Terminology</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#graph-processing-design"><span class="nav-number">2.</span> <span class="nav-text">Graph Processing Design</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#topological-sort"><span class="nav-number">3.</span> <span class="nav-text">Topological Sort</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#kahns-algorithm"><span class="nav-number">3.1.</span> <span class="nav-text">Kahn&#39;s Algorithm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#depth-first-search-approach"><span class="nav-number">3.2.</span> <span class="nav-text">Depth-First Search Approach</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#directed-cycle-detection"><span class="nav-number">3.3.</span> <span class="nav-text">Directed Cycle Detection</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#strong-components"><span class="nav-number">4.</span> <span class="nav-text">Strong Components</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#minimum-spanning-trees"><span class="nav-number">5.</span> <span class="nav-text">Minimum Spanning Trees</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cut-property"><span class="nav-number">5.1.</span> <span class="nav-text">Cut Property</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#greedy-mst-algorithms"><span class="nav-number">5.2.</span> <span class="nav-text">Greedy MST Algorithms</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kruskals-algorithm"><span class="nav-number">6.</span> <span class="nav-text">Kruskal&#39;s Algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#single-link-clustering"><span class="nav-number">6.1.</span> <span class="nav-text">Single-link Clustering</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#prims-algorithm"><span class="nav-number">7.</span> <span class="nav-text">Prim&#39;s Algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#lazy-implementation"><span class="nav-number">7.1.</span> <span class="nav-text">Lazy Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#eager-implementation"><span class="nav-number">7.2.</span> <span class="nav-text">Eager Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shortest-paths"><span class="nav-number">8.</span> <span class="nav-text">Shortest Paths</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#graph-terminology"><span class="nav-number">1.</span> <span class="nav-text">Graph Terminology</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#graph-processing-design"><span class="nav-number">2.</span> <span class="nav-text">Graph Processing Design</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#topological-sort"><span class="nav-number">3.</span> <span class="nav-text">Topological Sort</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#kahns-algorithm"><span class="nav-number">3.1.</span> <span class="nav-text">Kahn&#39;s Algorithm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#depth-first-search-approach"><span class="nav-number">3.2.</span> <span class="nav-text">Depth-First Search Approach</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#directed-cycle-detection"><span class="nav-number">3.3.</span> <span class="nav-text">Directed Cycle Detection</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#strong-components"><span class="nav-number">4.</span> <span class="nav-text">Strong Components</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#minimum-spanning-trees"><span class="nav-number">5.</span> <span class="nav-text">Minimum Spanning Trees</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cut-property"><span class="nav-number">5.1.</span> <span class="nav-text">Cut Property</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#greedy-mst-algorithms"><span class="nav-number">5.2.</span> <span class="nav-text">Greedy MST Algorithms</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kruskals-algorithm"><span class="nav-number">6.</span> <span class="nav-text">Kruskal&#39;s Algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#single-link-clustering"><span class="nav-number">6.1.</span> <span class="nav-text">Single-link Clustering</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#prims-algorithm"><span class="nav-number">7.</span> <span class="nav-text">Prim&#39;s Algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#lazy-implementation"><span class="nav-number">7.1.</span> <span class="nav-text">Lazy Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#eager-implementation"><span class="nav-number">7.2.</span> <span class="nav-text">Eager Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shortest-paths"><span class="nav-number">8.</span> <span class="nav-text">Shortest Paths</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#shortest-paths-optimality-conditions"><span class="nav-number">8.1.</span> <span class="nav-text">Shortest-paths Optimality
+Conditions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#generic-shortest-paths-algorithm"><span class="nav-number">8.2.</span> <span class="nav-text">Generic Shortest-paths
+Algorithm</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dijkstras-algorithm"><span class="nav-number">9.</span> <span class="nav-text">Dijkstra&#39;s Algorithm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#longest-paths-in-dag"><span class="nav-number">10.</span> <span class="nav-text">Longest Paths in DAG</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bellman-ford-algorithm"><span class="nav-number">11.</span> <span class="nav-text">Bellman-Ford Algorithm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">12.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -687,8 +691,8 @@ already on it.</li>
 becomes the shortest edge connecting <span class="math inline">\(x\)</span> to <span class="math inline">\(T\)</span> if <span class="math inline">\(x\)</span> in PQ but not in <span class="math inline">\(T\)</span>.</li>
 </ul></li>
 </ul>
-<p>当点 <span class="math inline">\(x\)</span> 到 <span class="math inline">\(T\)</span>
-的距离被更新时，我们需要降低其优先级：这就涉及到对 PQ
+<p>当点 <span class="math inline">\(x\)</span> 到 <span class="math inline">\(T\)</span> 的距离被更新时，我们需要降低其优先级
+(e.g., 修改 PQ 中储存的距离值)：这就涉及到对 PQ
 内部元素的操作。实现这一功能的数据结构称为 <em>Indexed priority
 queue</em> (索引优先队列)。</p>
 <p>对于每个元素，IPQ 为其分配一个整数索引，并维护三个数组
@@ -702,6 +706,183 @@ queue</em> (索引优先队列)。</p>
 </ul>
 <p><br></p>
 <h2 id="shortest-paths">Shortest Paths</h2>
+<p>Which vertices?</p>
+<ul>
+<li><em>Single source</em> (单源最短路): from one vertex <span class="math inline">\(s\)</span> to every other vertex.</li>
+<li>Source-sink: from one vertex <span class="math inline">\(s\)</span>
+to another <span class="math inline">\(t\)</span>.</li>
+<li>All pairs: between all pairs of vertices.</li>
+</ul>
+<p>在这里我们主要讨论单源最短路。代表单源最短路的数据结构是
+shortest-paths tree (SPT, 最短路树)。We can represent the SPT with two
+vertex-indexed arrays:</p>
+<ul>
+<li><code>distTo[v]</code> is length of shortest path from <span class="math inline">\(s\)</span> to <span class="math inline">\(v\)</span>.</li>
+<li><code>edgeTo[v]</code> is <em>last</em> edge on shortest path from
+<span class="math inline">\(s\)</span> to <span class="math inline">\(v\)</span>.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">double</span> <span class="title function_">distTo</span><span class="params">(<span class="type">int</span> v)</span> &#123; <span class="keyword">return</span> distTo[v]; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> Iterable&lt;DirectedEdge&gt; <span class="title function_">pathTo</span><span class="params">(<span class="type">int</span> v)</span> &#123;</span><br><span class="line">    Stack&lt;DirectedEdge&gt; path = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;DirectedEdge&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">DirectedEdge</span> <span class="variable">e</span> <span class="operator">=</span> edgeTo[v]; e != <span class="literal">null</span>; e = edgeTo[e.from()])</span><br><span class="line">        path.push(e);</span><br><span class="line">    <span class="keyword">return</span> path;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="shortest-paths-optimality-conditions">Shortest-paths Optimality
+Conditions</h3>
+<p>最短路的最优化条件，即所谓的三角形条件 (两边之和大于第三边)。Let
+<span class="math inline">\(G\)</span> be an edge-weighted digragh. Then
+<code>distTo[]</code> are the shortest path distances from <span class="math inline">\(s\)</span> iff:</p>
+<ul>
+<li><code>distTo[s] = 0</code>.</li>
+<li>For each vertex <code>v</code>, <code>distTo[v]</code> is the length
+of some path from <span class="math inline">\(s\)</span> to <span class="math inline">\(v\)</span>.</li>
+<li>For each edge <span class="math inline">\(e = v\to w\)</span>,
+<code>distTo[w] &lt;= distTo[v] + e.weight()</code>.</li>
+</ul>
+<p>根据最短路的最优化条件，我们介绍一个操作：<u>edge relaxation</u>.
+Relax edge <span class="math inline">\(e=v\to w\)</span> 的意义是：</p>
+<ul>
+<li><code>distTo[v]</code> is length of shortest <em>known</em> path
+from <span class="math inline">\(s\)</span> to <span class="math inline">\(v\)</span>.</li>
+<li><code>distTo[w]</code> is length of shortest <em>known</em> path
+from <span class="math inline">\(s\)</span> to <span class="math inline">\(w\)</span>.</li>
+<li><code>edgeTo[w]</code> is last edge on shortest <em>known</em> path
+from <span class="math inline">\(s\)</span> to <span class="math inline">\(w\)</span>.</li>
+<li>If <span class="math inline">\(e=v\to w\)</span> gives shorter path
+to <span class="math inline">\(w\)</span> through <span class="math inline">\(v\)</span>, update both <code>distTo[w]</code> and
+<code>edgeTo[w]</code>.</li>
+</ul>
+<h3 id="generic-shortest-paths-algorithm">Generic Shortest-paths
+Algorithm</h3>
+<p>利用最短路的最优化条件，我们能够设计一个理论上的最短路算法，它一定能够计算出以
+<span class="math inline">\(s\)</span> 为源点的 SPT。</p>
+<ul>
+<li>Initialize <code>distTo[s] = 0</code> and
+<code>distTo[v] = inf</code> for all other vertices.</li>
+<li>Repeat until optimality conditions are satisfied.
+<ul>
+<li>Relax any edge.</li>
+</ul></li>
+</ul>
+<p>我们能够证明该算法是可行的：每一次成功的 relaxation 都能使得某个
+<code>distTo[v]</code> 减小；而由于最短路一定存在 (under certain
+assumption)，<code>distTo[v]</code> 只会减小有限次。</p>
+<p>(Efficient) Implementation Challenge. How to choose which edge to
+relax? 对这个问题的解答区分了不同的最短路算法。</p>
+<ul>
+<li>Dijkstra's algorithm (nonnegative weights).</li>
+<li>Topological sort algorithm (no directed cycles).</li>
+<li>Bellman-Ford algorithm/SPFA (no <em>negative cycles</em>).</li>
+</ul>
+<p><br></p>
+<h2 id="dijkstras-algorithm">Dijkstra's Algorithm</h2>
+<p>Dijkstra 算法求 SPT 与 Prim 算法求 MST 的本质相同。Prim
+算法维护逐渐增长的 MST <span class="math inline">\(T\)</span>，每次选择<u>离 <span class="math inline">\(T\)</span> 最近</u>的非 <span class="math inline">\(T\)</span> 点进行扩展。而 Dijkstra
+算法维护逐渐增长的 SPT <span class="math inline">\(T\)</span>，每次选择离<u>源点 <span class="math inline">\(s\)</span> 最近</u>的非 <span class="math inline">\(T\)</span> 点进行扩展。</p>
+<ul>
+<li>Consider vertices in increasing order of distance from <span class="math inline">\(s\)</span>, e.g., pick non-tree vertex with the
+lowest <code>distTo[]</code> value.</li>
+<li>Add vertex to tree and relax all edges pointing from that
+vertex.</li>
+</ul>
+<div class="note info no-icon"><p>Dijkstra's algorithm computes a SPT in any edge-weighted diagraph
+with <em>nonnegative weights</em>.</p>
+</div>
+<p>下面将给出对于 Dijkstra 算法非正式的正确性证明 (这节课并没有 cover
+该内容，是我自己想的！)</p>
+<figure>
+<img data-src="SPT.png" alt="画图工具画的渣图...感觉有必要掌握一下这方面的技能">
+<figcaption aria-hidden="true">画图工具画的渣图...感觉有必要掌握一下这方面的技能</figcaption>
+</figure>
+<p>假设下一个将被扩展入 SPT <span class="math inline">\(T\)</span>
+的节点为 <span class="math inline">\(v\)</span>，即在所有非 <span class="math inline">\(T\)</span> 节点中 <code>distTo[v]</code>
+是最小的。而当前 <code>edgeTo[v]</code> 中记录的边为 <span class="math inline">\(u-v\)</span>。我们想要证明的是当前的
+<code>distTo[v]</code> 与 <code>edgeTo[v]</code> 是全局最优的。</p>
+<p>采用反证法，假设存在另一条由 <span class="math inline">\(s\)</span>
+到 <span class="math inline">\(v\)</span> 的路径距离比
+<code>distTo[v]</code> 更短。我们将该路径中第一个非 <span class="math inline">\(T\)</span> 节点标记为 <span class="math inline">\(x\)</span>，<span class="math inline">\(x\)</span>
+与 <span class="math inline">\(v\)</span> 在 <span class="math inline">\(T\)</span> 的外部经过若干条边相连。</p>
+<p>在 Dijkstra 算法中，我们选择下一个待扩展节点的规则是
+<code>distTo[]</code> 值最小的节点；那么一定有
+<code>distTo[x] &gt;= distTo[v]</code>。而由于图中没有负权边，<span class="math inline">\(x\)</span> 到 <span class="math inline">\(v\)</span> 的距离 <span class="math inline">\(d&gt;0\)</span>。那么该路径的长度
+<code>distTo[x] + d</code> 一定大于
+<code>distTo[v]</code>，与我们的假设相悖。(如果有负权边，该不等式就不一定成立了！)
+算法正确性得证。</p>
+<p>Dijkstra 算法最多 relax 每条边一次。因此，binary heap 优化后的
+Dijkstra 算法复杂度为 <span class="math inline">\(O(E\log{V})\)</span>.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DijkstraSP</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> DirectedEdge[] edgeTo;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span>[] distTo;</span><br><span class="line">    <span class="keyword">private</span> IndexMinPQ&lt;Double&gt; pq;    <span class="comment">// Eager Implementation of Dijkstra</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DijkstraSP</span><span class="params">(EdgeWeightedDigraph G, <span class="type">int</span> s)</span> &#123;</span><br><span class="line">        edgeTo = <span class="keyword">new</span> <span class="title class_">DirectedEdge</span>[G.V()];</span><br><span class="line">        distTo = <span class="keyword">new</span> <span class="title class_">double</span>[G.V()];</span><br><span class="line">        pq = <span class="keyword">new</span> <span class="title class_">IndexMinPQ</span>&lt;Double&gt;(G.V());</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> <span class="number">0</span>; v &lt; G.V(); ++v)</span><br><span class="line">            distTo[v] = Double.POSITIVE_INFINITY;</span><br><span class="line">        distTo[s] = <span class="number">0.0</span>;</span><br><span class="line">        </span><br><span class="line">        pq.insert(s, <span class="number">0.0</span>);</span><br><span class="line">        <span class="keyword">while</span> (!pq.isEmpty()) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> pq.delMin();</span><br><span class="line">            <span class="keyword">for</span> (DirectedEdge e : G.adj(v))    relax(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">relax</span><span class="params">(DirectedEdge e)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> e.from(), w = e.to();</span><br><span class="line">        <span class="keyword">if</span> (distTo[w] &gt; distTo[v] + e.weight()) &#123;</span><br><span class="line">            distTo[w] = distTo[v] + e.weight();</span><br><span class="line">            edgeTo[w] = e;</span><br><span class="line">            <span class="keyword">if</span> (pq.contains(w))  pq.decreaseKey(w, distTo[w]);</span><br><span class="line">            <span class="keyword">else</span>                 pq.insert     (w, distTo[w]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="longest-paths-in-dag">Longest Paths in DAG</h2>
+<p>Suppose that an edge-weighted digraph has no directed cycles
+(weighted DAG), it is easier to find shortest paths than in a general
+digraph.</p>
+<div class="note info no-icon"><p>Topological sort algorithm computes SPT in any edge-weighted DAG in
+time proportional to <span class="math inline">\(E+V\)</span>. Note that
+edge weights can be negative!</p>
+</div>
+<p>对于 DAG，按照拓扑序 relax all edges
+寻找最短路是一个很自然的思路。正确性比较 trivial，就不证明了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AcyclicSP</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> DirectedEdge[] edgeTo;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span>[] distTo;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">AcyclicSP</span><span class="params">(EdgeWeightedDigraph G, <span class="type">int</span> s)</span> &#123;</span><br><span class="line">        edgeTo = <span class="keyword">new</span> <span class="title class_">DirectedEdge</span>[G.V()];</span><br><span class="line">        distTo = <span class="keyword">new</span> <span class="title class_">double</span>[G.V()];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> <span class="number">0</span>; v &lt; G.V(); ++v)</span><br><span class="line">            distTo[v] = Double.POSITIVE_INFINITY;</span><br><span class="line">        distTo[s] = <span class="number">0.0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="type">Topological</span> <span class="variable">topological</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Topological</span>(G);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> v : topological.order())</span><br><span class="line">            <span class="keyword">for</span> (DirectedEdge e : G.adj(v))    relax(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于 DAG 还存在最长路问题 (longest paths in edge-weighted
+DAGs)；将其转化为最短路问题加以解决。</p>
+<ul>
+<li>Nagate all weights.</li>
+<li>Find shortest paths.</li>
+<li>Negate weights in result.</li>
+</ul>
+<p>该问题的一个经典应用是 parallel job scheduling 问题。对于一组有
+durations 与 precedence constraints
+的任务，我们可以将其抽象为最长路问题以找到最佳的安排方案，使得完成所有任务的总时间最少。</p>
+<p>对于给出的任务集合，我们将其抽象为一个 weighted DAG。该方法称为
+critical path method。</p>
+<ul>
+<li>Create a source and sink vertices.</li>
+<li>Two vertices (begin and end) for each job.</li>
+<li>Three edges for each job.
+<ul>
+<li>Begin to end (weighted by duration).</li>
+<li>Source to begin (0 weight).</li>
+<li>End to sink (0 weight).</li>
+</ul></li>
+<li>Critical path: one 0-weight edge for each precedence
+constraint.</li>
+</ul>
+<p><img data-src="CPM.png"></p>
+<p>对于任务 <span class="math inline">\(i\)</span>，从源点 source 到任务
+<span class="math inline">\(i\)</span> 对应的结束点 end
+最长路的长度即是该任务的最早完成时间；因此我们将从源点 source 到任务
+<span class="math inline">\(i\)</span> 对应的起始点 begin
+最长路的长度设为该任务的安排时间即可。</p>
+<p><br></p>
+<h2 id="bellman-ford-algorithm">Bellman-Ford Algorithm</h2>
+<p>Dijkstra 算法是基于贪心的最短路算法；而 Bellman-Ford
+算法是基于动态规划的最短路算法。Bellman-Ford 算法能够很好的 handle
+带有负权边的图。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// After pass i, found shortest path containing at most i edges</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; G.V(); ++i)</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> <span class="number">0</span>; v &lt; G.V(); ++v)</span><br><span class="line">        <span class="keyword">for</span> (DirectedEdge e : G.adj(v))</span><br><span class="line">            relax(e);</span><br></pre></td></tr></table></figure>
+<p>Bellman-Ford 算法的思想很好理解：其对所有的边进行 <span class="math inline">\(V-1\)</span> 轮 relax。这是因为在一个含有 <span class="math inline">\(V\)</span>
+个顶点的图中，任意两点间的最短路径最多包含 <span class="math inline">\(V-1\)</span> 条边。</p>
+<p>在第 1 轮 relax 后，得到了源点最多经过 1 条边到达的顶点的最短路，在第
+2 轮 relax 后，得到了源点最多经过 2 条边到达的顶点的最短路……在第 <span class="math inline">\(V-1\)</span> 轮 relax
+后能够保证得到所有其他顶点的最短路。</p>
+<div class="note info no-icon"><p>Observation. If <code>distTo[v]</code> does not change during pass
+<code>i</code>, no need to relax any edge pointing from <code>v</code>
+in pass <code>i+1</code>.</p>
+</div>
+<p>根据这一 observation 能设计出队列优化的 Bellman-Ford 算法 — 即 SPFA
+(shortest-path fast algorithm) 算法。我们使用一个 queue 来记录
+<code>distTo[]</code> 值发生更改的顶点，在下一轮中只 relax
+这些顶点发射的边。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">SPFA</span><span class="params">(EdgeWeightedDigraph G, <span class="type">int</span> s)</span> &#123;</span><br><span class="line">    ... <span class="comment">// initialize</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> <span class="number">0</span>; v &lt; G.V(); ++v)</span><br><span class="line">        distTo[v] = Double.POSITIVE_INFINITY;</span><br><span class="line">    distTo[s] = <span class="number">0.0</span>;</span><br><span class="line">    que.push(s);</span><br><span class="line">    vis[s] = <span class="literal">true</span>;    <span class="comment">// vis[x] marks whether x is in queue</span></span><br><span class="line">    <span class="keyword">while</span> (!que.empty()) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">u</span> <span class="operator">=</span> que.front();</span><br><span class="line">        que.pop();</span><br><span class="line">        vis[u] = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">for</span> (DirectedEdge e : G.adj(u))    &#123;	<span class="comment">// relax</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> e.from(), w = e.to();</span><br><span class="line">            <span class="keyword">if</span> (distTo[w] &gt; distTo[v] + e.weight()) &#123;</span><br><span class="line">                distTo[w] = distTo[v] + e.weight();</span><br><span class="line">                edgeTo[w] = e;</span><br><span class="line">                <span class="keyword">if</span> (!vis[w]) &#123;</span><br><span class="line">                    que.push(w);</span><br><span class="line">                    vis[w] = <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Bellman-Ford-based 算法的理论上的最坏时间复杂度为 <span class="math inline">\(\Omega(EV)\)</span>；但实际应用中经过队列优化的
+SPFA 算法效率是可以接受的。另外，Bellman-Ford-based 算法还能用于判负环 —
+对存在负环的图，Bellman-Ford 算法将陷入死循环，不断更新负环内顶点的
+<code>distTo[]</code> 与 <code>edgeTo[]</code> 值。</p>
+<div class="note info no-icon"><p>A <em>negative cycle</em> is a directed cycle whose sum of edge
+weights is negative. A SPT exists iff no negative cycles.</p>
+</div>
+<p>综上所述，最短路问题有三个困难性阶段：</p>
+<ul>
+<li>Directed cycles make the problem harder. (Dijkstra -&gt; Topological
+DP)</li>
+<li>Negative weights make the problem harder. (Bellman-Ford/SPFA -&gt;
+Dijkstra)</li>
+<li>Negative cycles makes the problem <em>intractable</em>.</li>
+</ul>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
