@@ -152,6 +152,240 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
+    <title>Algorithms II, Princeton University, P6</title>
+    <url>/2023/08/14/algo-princeton-p6/</url>
+    <content><![CDATA[<p>这是 <a href="https://thisisxxz.com/categories/notes/courses/Algorithms-Princeton/">Algorithms
+I &amp; II, Princeton</a> 系列笔记的 P6 部分。这一节将介绍：</p>
+<ul>
+<li>Maximum Flow &amp; Minimum Cut.</li>
+<li>Radix Sort - LSD, MSD &amp; 3-way radix sorts.</li>
+<li>字符串算法：Tries &amp; Substring Search.</li>
+</ul>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="maxflow-mincut">Maxflow &amp; Mincut</h2>
+<p>在了解最大流最小割定理前，我们先对最大流问题与最小割问题进行一个简单的介绍。</p>
+<h3 id="mincut-problem">Mincut Problem</h3>
+<p>对于一个边权为正的 edge-weighted digraph，给出一个 source vertex
+<span class="math inline">\(s\)</span> 与 target vertex <span class="math inline">\(t\)</span>.</p>
+<div class="note info no-icon"><p>Def. A <span class="math inline">\(st\)</span>-cut (cut) is a
+partition of the vertices into two disjoint sets, with <span class="math inline">\(s\)</span> in one set <span class="math inline">\(A\)</span> and <span class="math inline">\(t\)</span> in the other set <span class="math inline">\(B\)</span>. Its <em>capacity</em> is the sum of
+the capacities of the edges from <span class="math inline">\(A\)</span>
+to <span class="math inline">\(B\)</span>.</p>
+</div>
+<p>关于 cut 的定义在之前 MST 的部分也介绍过。对于最小割问题我们引入一个
+cut 的容量 (capacity)：即从一个点集到另一个点集间所有边的边权之和。</p>
+<p>据此我们定义最小割问题：Minumum st-cut (mincut) problem. Find a cut
+of minimum capacity.</p>
+<p>冷战期间，对于苏联-东欧的铁路网，我们假设破坏一个铁路线的代价是该铁路线的容量。西方世界想要以最小的代价切断两地的物资供应：这个问题的模型就是最小割问题。</p>
+<h3 id="maxflow-problem">Maxflow Problem</h3>
+<p>同样，对于一个有 source vertex 与 target vertex 的正边权
+edge-weighted digraph 我们定义流：</p>
+<div class="note info no-icon"><p>Def. An <span class="math inline">\(st\)</span>-flow (flow) is an
+assignment of values to the edges such that:</p>
+<ul>
+<li>Capacity constraint: 0 <span class="math inline">\(\leq\)</span>
+edge's flow <span class="math inline">\(\leq\)</span> edge's
+capacity.</li>
+<li>Local equilibrium: inflow = outflow at every vertex (except <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span>).</li>
+</ul>
+<p>The <em>value</em> of a flow is the inflow at <span class="math inline">\(t\)</span>.</p>
+</div>
+<p>流是一种分配方式 (assignment of values)，而流的值即最后流入 target
+vertex 的值之和。据此我们定义最大流问题：Maximum st-flow (maxflow)
+problem. Find a flow of maximum value.</p>
+<p>冷战期间，对于苏联-东欧的铁路网，每条铁路都有其容量上限。苏联方想要找到一种运输方式，使得由苏联运送到东欧的物资总量最大化，这个问题的模型即为最大流问题。</p>
+<p><br></p>
+<h2 id="ford-fulkerson-algorithm">Ford-Fulkerson Algorithm</h2>
+<p>Ford-Fulkerson
+算法是求解最大流问题的经典算法，它通过不断寻找图中可能的 augmenting
+paths (增广路) 试图增加 flow 的值。本质上它是一个贪心算法，但通过
+backward edges 引入了一个类似后悔的机制。</p>
+<p>Initialization. Start with 0 flow.</p>
+<p><img data-src="init.png"></p>
+<p>在初始化之后，Ford-Fulkerson 算法开始不断寻找图中的 augmenting paths
+(增广路)。</p>
+<div class="note info no-icon"><p>Augmenting Path. An <u>undirected</u> path from <span class="math inline">\(s\)</span> to <span class="math inline">\(t\)</span> such that:</p>
+<ul>
+<li>Can increase flow on <em>forward edges</em> (not full).</li>
+<li>Can decrease flow on <em>backward edges</em> (not empty).</li>
+</ul>
+</div>
+<p>注意增广路是 undirected 的：因此一条增广路可能包含若干条 forward
+edges 与若干条 backward edges。forward edges 是增广路中指向终点 <span class="math inline">\(t\)</span> 的边；而 backward edges
+是增广路中指向源点 <span class="math inline">\(s\)</span> 的边。</p>
+<p>In an augmenting path, we greedily increase the flow in all forward
+edges that are not full and decrease the flow in all backward edges that
+are not empty.</p>
+<p><img data-src="augpath.png"></p>
+<p>如图所示，在两次增广过后，Ford-Fulkerson
+算法找到了第三条增广路，它包括四条 forward edges 与一条 backward
+edge。在 forward edges 上我们贪心的增加流量，在 backward edge
+上我们贪心的减少流量。</p>
+<p>在 local equilibrium 条件下我们得以计算出这条增广路的 bottleneck 是
+5；因此它将为最大流贡献 5 流量。</p>
+<figure>
+<img data-src="block.png" alt="Algorithm ternimation.">
+<figcaption aria-hidden="true">Algorithm ternimation.</figcaption>
+</figure>
+<p>Termination. All paths from <span class="math inline">\(s\)</span> to
+<span class="math inline">\(t\)</span> are blocked by either a</p>
+<ul>
+<li>Full forward edge.</li>
+<li>Empty backward edge.</li>
+</ul>
+<p>如图，当图中没有增广路时，Ford-Fulkerson
+算法将中止。而没有增广路的表现是，从 <span class="math inline">\(s\)</span> 到 <span class="math inline">\(t\)</span>
+的所有无向路径都将被以上两种边所阻隔。换句话讲，所有存在 full forward
+edges 与 empty backward edges 的增广路的 bottleneck capacity 都是
+0，无法为最大流做出任何贡献。</p>
+<h3 id="running-time-analysis">Running Time Analysis</h3>
+<div class="note info no-icon"><p>Integrity theorem: There exists an <em>integer-valued</em> maxflow
+(and FF finds one).</p>
+</div>
+<p>一个图中的增广路数量 <span class="math inline">\(\leq\)</span>
+最大流的值：这是因为 Each augmentation increases the value by at least
+1.</p>
+<p>此外，对于一些特殊的构造，FF 算法可能显得比较低效。例如：</p>
+<p><img data-src="badcase.png"></p>
+<p>对于该图，朴素的 FF 算法在 100 次增广后才能计算出最大流 (其不断以 S
+型与倒 S 型这两种 bottleneck capacity 为 1
+的增广路进行增广)。解决的方法是采用特殊的增广路选取方式。<span class="math inline">\(V\)</span> vertices, <span class="math inline">\(E\)</span> edges, integer capacities between <span class="math inline">\(1\)</span> and <span class="math inline">\(U\)</span>.</p>
+<ul>
+<li>shortest path: augmenting path with fewest number of edges. number
+of paths <span class="math inline">\(\leq \frac{1}{2}EV\)</span>.</li>
+<li>fattest path: augmenting path with maximum bottleneck capacity.
+number of paths <span class="math inline">\(\leq E\ln{EU}\)</span>.</li>
+</ul>
+<h3 id="java-implementation">Java Implementation</h3>
+<p>定义一系列 flow network representation。在 flow edge data type 中保存
+flow <span class="math inline">\(f_e\)</span> 与 capacity <span class="math inline">\(c_e\)</span>。</p>
+<p>定义一条边的 residual capacity (残留容量) 为：</p>
+<ul>
+<li>Forward edge: residual capacity = <span class="math inline">\(c_e-f_e\)</span>.</li>
+<li>Backward edge: residual capacity = <span class="math inline">\(f_e\)</span>.</li>
+</ul>
+<p>如此一来，对于一条增广路，其 Augment flow 的计算方式为：</p>
+<ul>
+<li>Forward edge: add <span class="math inline">\(\Delta\)</span>
+(residual capacity).</li>
+<li>Backward edge: substract <span class="math inline">\(\Delta\)</span>
+(residual capacity).</li>
+</ul>
+<p>在引入了 residual capacity 的概念之后，我们可以基于此构造 residual
+network (残留网络)。在原始网络中， augmenting paths 是 undirected
+的，而在 residual network 中 augmenting paths 是 directed 的。</p>
+<p>首先是 <code>FlowEdge</code> datatype 的实现：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FlowEdge</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> v, w;          <span class="comment">// from and to</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">double</span> capacity;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> flow;             <span class="comment">// initialized as 0</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">FlowEdge</span><span class="params">(<span class="type">int</span> v, <span class="type">int</span> w, <span class="type">double</span> capacity)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.v        = v;</span><br><span class="line">        <span class="built_in">this</span>.w        = w;</span><br><span class="line">        <span class="built_in">this</span>.capacity = capacity;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">from</span><span class="params">()</span>        &#123; <span class="keyword">return</span> v;        &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">to</span><span class="params">()</span>          &#123; <span class="keyword">return</span> w;        &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">capacity</span><span class="params">()</span> &#123; <span class="keyword">return</span> capacity; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">other</span><span class="params">(<span class="type">int</span> vertex)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>      (vertex == v) <span class="keyword">return</span> w;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (vertex == w) <span class="keyword">return</span> v;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">residualCapacityTo</span><span class="params">(<span class="type">int</span> vertex)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>      (vertex == v) <span class="keyword">return</span> flow;             <span class="comment">// backward edge</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (vertex == w) <span class="keyword">return</span> capacity - flow;  <span class="comment">// forward edge</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addResidualFlowTo</span><span class="params">(<span class="type">int</span> vertex, <span class="type">double</span> delta)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>      (vertex == v) flow -= delta;           <span class="comment">// backward edge</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (vertex == w) flow += delta;           <span class="comment">// forward edge</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来是 <code>FlowNetwork</code> datatype：其实现与
+<code>EdgeWeightedGraph</code> datatype 的实现基本相同。注意，虽然边是
+directed 的，但我们却需要将其同时加入 <span class="math inline">\(v\)</span> 与 <span class="math inline">\(w\)</span> 的邻接表中 (这是 undirected edge
+的加边方式)；这是由增广路的 undirected 性质决定的。因此 <span class="math inline">\(v\)</span> 中的边为 forward edge，<span class="math inline">\(w\)</span> 中的边为 backward edge。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FlowNetwork</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> V;</span><br><span class="line">    <span class="keyword">private</span> Bag&lt;FlowEdge&gt;[] adj;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">FlowNetwork</span><span class="params">(<span class="type">int</span> V)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.V = V;</span><br><span class="line">        adj = (Bag&lt;FlowEdge&gt;[]) <span class="keyword">new</span> <span class="title class_">Bag</span>[V];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> <span class="number">0</span>; v &lt; V; ++v)</span><br><span class="line">            adj[v] = <span class="keyword">new</span> <span class="title class_">Bag</span>&lt;FlowEdge&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addEdge</span><span class="params">(FlowEdge e)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> e.from();</span><br><span class="line">        <span class="type">int</span> <span class="variable">w</span> <span class="operator">=</span> e.to();</span><br><span class="line">        adj[v].add(e);     <span class="comment">// add forward edge</span></span><br><span class="line">        adj[w].add(e);     <span class="comment">// add backward edge</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> Iterable&lt;FlowEdge&gt; <span class="title function_">adj</span><span class="params">(<span class="type">int</span> v)</span> &#123; </span><br><span class="line">        <span class="keyword">return</span> adj[v]; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后是 <code>FordFulkerson</code> datatype：并且我们采用 shortest
+path 策略来寻找增广路。在网络流中边权的意义是容量 (capacity)
+而非距离。在距离意义上，每条边的长度都是 1；因此使用 BFS
+即可保证找到的增广路最短。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FordFulkerson</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span>[] marked;       <span class="comment">// true if s-&gt;v path in residual network</span></span><br><span class="line">    <span class="keyword">private</span> FlowEdge[] edgeTo;      <span class="comment">// last edge on s-&gt;v path</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> value;           <span class="comment">// value of the flow</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">FordFulkerson</span><span class="params">(FlowNetwork G, <span class="type">int</span> s, <span class="type">int</span> t)</span> &#123;</span><br><span class="line">        value = <span class="number">0.0</span>;</span><br><span class="line">        <span class="keyword">while</span> (hasAugmentingPath(G, s, t)) &#123;</span><br><span class="line">            <span class="type">double</span> <span class="variable">bottleneck</span> <span class="operator">=</span> Double.POSITIVE_INFINITY;</span><br><span class="line">            <span class="comment">// 遍历找到的增广路并计算 bottleneck capacity</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> t; v != s; v = edgeTo[v].other(v))  </span><br><span class="line">                bottle = Math.min(bottleneck, edgeTo[v].residualCapacityTo(v));</span><br><span class="line">            <span class="comment">// 遍历找到的增广路并对每一条边进行增广 (更新 flow)</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> t; v != s; v = edgeTo[v].other(v))  </span><br><span class="line">                edgeTo[v].addResidualFlowTo(v, bottleneck);</span><br><span class="line">            value += bottleneck;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">hasAugmentingPath</span><span class="params">(FlowNetwork G, <span class="type">int</span> s, <span class="type">int</span> t)</span> &#123;</span><br><span class="line">        edgeTo = <span class="keyword">new</span> <span class="title class_">FlowEdge</span>[G.V()];</span><br><span class="line">        marked = <span class="keyword">new</span> <span class="title class_">boolean</span>[G.V()];</span><br><span class="line">        </span><br><span class="line">        Queue&lt;Integer&gt; queue = <span class="keyword">new</span> <span class="title class_">Queue</span>&lt;Integer&gt;();  <span class="comment">// 采用 BFS 寻找增广路</span></span><br><span class="line">        queue.enqueue(s);</span><br><span class="line">        marked[s] = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> queue.dequeue();</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">for</span> (FlowEdge e : G.adj(v)) &#123;</span><br><span class="line">                <span class="type">int</span> <span class="variable">w</span> <span class="operator">=</span> e.other(v);</span><br><span class="line">                <span class="keyword">if</span> (e.residualCapacity(w) &gt; <span class="number">0</span> &amp;&amp; !marked[w]) &#123;</span><br><span class="line">                    edgeTo[w] = e;</span><br><span class="line">                    marked[w] = <span class="literal">true</span>;</span><br><span class="line">                    queue.enqueue(w);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// if t reachable from s in residual network, an augmenting path found</span></span><br><span class="line">        <span class="keyword">return</span> marked[t];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">value</span><span class="params">()</span> &#123; <span class="keyword">return</span> value; &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// is v reachable from s in residual network?</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">inCut</span><span class="params">(<span class="type">int</span> v)</span> &#123; <span class="keyword">return</span> marked[v]; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意 <code>inCut</code> 函数：该函数在 FF 算法结束后被调用，判断在
+residual network 中 <span class="math inline">\(s\)</span> 是否能到达
+<span class="math inline">\(v\)</span>。</p>
+<p>之前我们讲过，FF
+算法结束后，网络中的点将会被分为两个点集，这两个点集被一系列 full
+forward edges 与 empty backward edges 分隔开来，因此在该 residual
+network 中不存在任何新的增广路。此外，源点 <span class="math inline">\(s\)</span> 与终点 <span class="math inline">\(t\)</span> 在 FF 算法结束后的 residual network
+中一定分属不同的点集；如果它们仍然属于同一个点集，那么一定存在新的增广路。</p>
+<p><code>inCut</code> 函数的作用就是描述这两个点集的划分，即 cut：若
+<code>inCut(v)</code> 为真，说明 <span class="math inline">\(v\)</span>
+处于源点 <span class="math inline">\(s\)</span> 所在的点集内；反之说明
+<span class="math inline">\(v\)</span> 处于终点 <span class="math inline">\(t\)</span> 所在的点集内。</p>
+<p>更重要的是，该 cut 恰恰是这个网络的 mincut
+(最小割)！这绝非偶然：事实上，maxflow (最大流) 与 mincut (最小割)
+问题是等价的 (<em>dual problems</em>)。我们将通过介绍 maxflow-mincut
+theorem 来说明这一点。</p>
+<p><br></p>
+<h2 id="maxflow-mincut-theorem">Maxflow-Mincut Theorem</h2>
+<h3 id="flow-value-lemma">Flow-value Lemma</h3>
+<p>首先我们引入 flow-value lemma：这一 lemma 将 flows 与 cuts
+这两个概念联系起来。</p>
+<div class="note info no-icon"><p>Flow-value lemma. Let <span class="math inline">\(f\)</span> be any
+flow and let <span class="math inline">\((A,B)\)</span> be any cut.
+Then, the <em>net flow across</em> <span class="math inline">\((A,B)\)</span> equals the value of <span class="math inline">\(f\)</span>.</p>
+</div>
+<p>Def. The <em>net flow across</em> a cut <span class="math inline">\((A,B)\)</span> is the sum of the flows on its
+edges from <span class="math inline">\(A\)</span> to <span class="math inline">\(B\)</span> minus the flows on its edges from <span class="math inline">\(B\)</span> to <span class="math inline">\(A\)</span>.</p>
+<p>Flow-value lemma 的证明很符合直觉：它是由流的 local equilibrium
+保证的。通过 flow-value lemma 我们还能得出一个有用的结论：Outflow from
+<span class="math inline">\(s\)</span> = inflow to <span class="math inline">\(t\)</span> = value of flow <span class="math inline">\(f\)</span>.</p>
+<h3 id="weak-duality">Weak Duality</h3>
+<div class="note info no-icon"><p>Weak duality. Let <span class="math inline">\(f\)</span> be any flow
+and let <span class="math inline">\((A,B)\)</span> be any cut. Then the
+value of the flow <span class="math inline">\(=\)</span> net flow across
+cut <span class="math inline">\((A,B)\)</span> <span class="math inline">\(\leq\)</span> capacity of cut <span class="math inline">\((A,B)\)</span>.</p>
+</div>
+<p>Flow-value lemma 决定了第一个等式成立；flow bounded by capacity
+决定了第二个不等式成立。这一性质称为 weak duality：true duality 由
+maxflow-mincut theorem 决定。</p>
+<h3 id="true-duality">True Duality</h3>
+<p>Augmenting path theorem. A flow <span class="math inline">\(f\)</span> is a maxflow iff no augmenting
+paths.</p>
+<div class="note info no-icon"><p>Maxflow-mincut theorem. <u>Value of the maxflow = Capacity of
+mincut.</u></p>
+</div>
+<p>Pf. The following three conditions are equivalent for any flow <span class="math inline">\(f\)</span>:</p>
+<ol type="1">
+<li>There exists a cut whose capacity equals the value of the flow <span class="math inline">\(f\)</span>.</li>
+<li><span class="math inline">\(f\)</span> is a maxflow.</li>
+<li>There is no augmenting path with repect to <span class="math inline">\(f\)</span>.</li>
+</ol>
+<p>其中 ii <span class="math inline">\(\to\)</span> iii 与 iii <span class="math inline">\(\to\)</span> i 的证明比较 trivial，联想 FF
+算法的原理即可。需要稍作说明的是 i <span class="math inline">\(\to\)</span> ii：</p>
+<ul>
+<li>Suppose that <span class="math inline">\((A,B)\)</span> is a cut
+with capacity equal to the value of <span class="math inline">\(f\)</span>.</li>
+<li>Then, the value of any flow <span class="math inline">\(f&#39;\leq\)</span> capacity of <span class="math inline">\((A,B)\)</span> = value of <span class="math inline">\(f\)</span>. (weak duality + assumption)</li>
+<li>Thus, <span class="math inline">\(f\)</span> is a maxflow.</li>
+</ul>
+<p>据此，通过 FF 算法求最小割的正确性得以证明 (具体实现见 Ford-Fulkerson
+部分)：</p>
+<ul>
+<li>By augmenting path theorem, no augmenting paths with respect to
+<span class="math inline">\(f\)</span>.</li>
+<li>Compute <span class="math inline">\(A=\)</span> set of vertices
+connected to <span class="math inline">\(s\)</span> by an undirected
+path with no full forward or empty backward edges.</li>
+</ul>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p><a href="https://www.coursera.org/learn/algorithms-part2">Algorithms,
+Part 2, Princeton University</a>. Lecturer: Robert Sedgewick &amp; Kevin
+Wayne.</p>
+<p>Course textbook:</p>
+<p><em>Algorithms (4th edition)</em>, Sedgewick, R. &amp; Wayne, K.,
+(2011), Addison-Wesley Professional, <a href="https://algs4.cs.princeton.edu/home/">view</a></p>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>courses</category>
+        <category>Algorithms, Princeton</category>
+      </categories>
+      <tags>
+        <tag>course notes</tag>
+        <tag>graph theory</tag>
+        <tag>string</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Algorithms II, Princeton University, P5</title>
     <url>/2023/08/06/algo-princeton-p5/</url>
     <content><![CDATA[<p>书接上文，我们进入了<a href="https://thisisxxz.com/categories/notes/courses/Algorithms-Princeton/">本系列课程</a>的第
