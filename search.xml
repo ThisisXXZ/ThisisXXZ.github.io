@@ -3130,6 +3130,43 @@ applies rule recursively)</li>
 <p>This recipe works resonably well <strong>in practice</strong> and is
 widely used in Java libraries.</p>
 <p><br></p>
+<h2 id="string-in-java">String in Java</h2>
+<p>Java 中的字符串类型主要有 <code>String</code>,
+<code>StringBuilder</code> 两种，实现的不同决定了其应用场景的不同。</p>
+<p><code>String</code> 类：</p>
+<ul>
+<li>Sequence of <em>immutable</em> characters.</li>
+<li>Underlying implementation. Immutable <code>char[]</code> array,
+offset, and length.</li>
+</ul>
+<p><code>StringBuilder</code> 类：</p>
+<ul>
+<li>Sequence of <em>mutable</em> characters.</li>
+<li>Underlying implementation. Resizing <code>char[]</code> array and
+length.</li>
+</ul>
+<figure>
+<img data-src="string.png" alt="常见 string operations 的效率对比">
+<figcaption aria-hidden="true">常见 string operations
+的效率对比</figcaption>
+</figure>
+<p>immutability 上的差异造成了这两种字符串实现在 <code>concat()</code>
+与 <code>substring()</code> 操作上的表现差异。</p>
+<p>值得注意的是 <code>substring()</code> 函数：<code>String</code> 类的
+immutability 允许它使用 copy of reference to original char
+array，因此创建一个 substring 仅仅需要 constant time。</p>
+<p>除了以上提到的 built-in functions
+之外，一些其他常见的字符串操作也会因为字符串实现的不同而产生效率上的差异。例如：</p>
+<ul>
+<li>字符串翻转函数 <code>rev()</code>。<code>String</code> 类需要
+quadratic time：每一次添加新字符都需要 linear time。而
+<code>StringBuilder</code> 类只需要 linear time：使用
+<code>append()</code> 函数，每一次添加新字符仅需 constant time。</li>
+<li>Form array of suffixes。<code>String</code> 类需要 linear time &amp;
+space：如上所述，每次创建一个 substring 仅需要 constant time。而
+<code>StringBuilder</code> 类需要 quadratic time &amp; space。</li>
+</ul>
+<p><br></p>
 <h2 id="java-language-style">Java Language Style</h2>
 <p>这门课的 projects 设计实在是太良心了，在评分反馈里居然还包含 style
 check！难以想象教职员们为课程的准备倾注了多少心血……至少我从来没有见过有一门课的评分标准里还包含
@@ -8888,7 +8925,7 @@ nonempty sets. A <em>crossing edge</em> connects a vertex in one set
 with a vertex in the other.</p>
 </div>
 <p><img data-src="MST.png"></p>
-<p>如图，cut 将顶点分为灰色与白色两个点集，所有连接这两个点击的边都是
+<p>如图，cut 将顶点分为灰色与白色两个点集，所有连接这两个点集的边都是
 crossing edge。MST 有这样一个性质：<u>Given any cut, the crossing edge
 of min weight is in the MST.</u></p>
 <p>我们用反证法对该性质进行证明：假设 min-weight crossing edge <span class="math inline">\(e\)</span> 并不在 MST 中。</p>
@@ -9462,6 +9499,51 @@ connected to <span class="math inline">\(s\)</span> by an undirected
 path with no full forward or empty backward edges.</li>
 </ul>
 <p><br></p>
+<h2 id="key-indexed-counting">Key-Indexed Counting</h2>
+<p>典型的思路比代码好懂的算法。Key-indexed Counting 算法的目的是：Sort
+an array <code>a[]</code> of N integers between <span class="math inline">\(0\)</span> and <span class="math inline">\(R-1\)</span>. 我们照着代码对一个样例进行分析：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> a.length;</span><br><span class="line"><span class="type">int</span>[] count = <span class="keyword">new</span> <span class="title class_">int</span>[R+<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)    count[a[i]+<span class="number">1</span>]++;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">r</span> <span class="operator">=</span> <span class="number">0</span>; r &lt; R; ++r)    count[r+<span class="number">1</span>] += count[r];</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)    aux[count[a[i]]++] = a[i];</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)    a[i] = aux[i];</span><br></pre></td></tr></table></figure>
+<p>第一步：Count frequencies of each letter using key as index.</p>
+<figure>
+<img data-src="radix1.png" alt="计算 count[] 桶数组">
+<figcaption aria-hidden="true">计算 count[] 桶数组</figcaption>
+</figure>
+<p>第二步：Compute frequency cumulates which specify destinations.</p>
+<figure>
+<img data-src="radix2.png" alt="对 count[] 数组计算前缀和，从而得到每种 key 排序后的起始位置">
+<figcaption aria-hidden="true">对 count[] 数组计算前缀和，从而得到每种
+key 排序后的起始位置</figcaption>
+</figure>
+<p>在第二次循环后，<code>count[i]</code> 的意义是严格小于
+(这是由第一次循环中计算 <code>count[]</code> 时 offset by 1 保证的) key
+<code>i</code> 的 keys 的个数，也即 key <code>i</code>
+在排序后数组中的初始位置。</p>
+<p>第三步：Access cumulates using key as index to move items.</p>
+<figure>
+<img data-src="radix3.png" alt="注意 ++: count[i] 始终记录 key i 将会在的位置">
+<figcaption aria-hidden="true">注意 ++: count[i] 始终记录 key i
+将会在的位置</figcaption>
+</figure>
+<p>每次将 key <code>i</code> 根据 <code>count[i]</code>
+移动到指定的位置后，<code>count[i]++</code>；这是因为当我们要为下一个
+key <code>i</code> 的出现做好“准备”。由于我们是按照 keys
+的原顺序扫描的，key-indexed counting 是一个 stable 的排序算法。</p>
+<p>第四步：Copy <code>aux[]</code> back into original array.</p>
+<div class="note info no-icon"><p>Key-indexed array counting uses <span class="math inline">\(\sim11N+4R\)</span> array assesses to sort <span class="math inline">\(N\)</span> items whose keys are integers between
+<span class="math inline">\(0\)</span> and <span class="math inline">\(R-1\)</span>.</p>
+</div>
+<p>在之前学习排序算法时，我们提到过 compare-based sorting algorithm
+的下界是 <span class="math inline">\(\sim N\log{N}\)</span> 次比较。</p>
+<p>注意这与 key-indexed counting 算法的线性复杂度并不冲突。key-indexed
+counting 实际上是桶排序的变种，它并不是 compare-based 的排序算法！</p>
+<p><br></p>
+<h2 id="radix-sort">Radix Sort</h2>
+<h3 id="lsd-radix-sort">LSD Radix Sort</h3>
+<h3 id="msd-radix-sort">MSD Radix Sort</h3>
+<h3 id="way-radix-quicksort">3-way Radix Quicksort</h3>
+<p><br></p>
+<h2 id="suffix-arrays">Suffix Arrays</h2>
+<p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
@@ -9556,6 +9638,8 @@ Wayne.</p>
 <li>东方<u>持国天王</u>：保护众生，护持国土；南方<u>增长天王</u>：增长善根，护持佛法；西方<u>广目天王</u>：观察世界，护持人民；北方<u>多闻天王</u>：精通佛法，闻佛于天下。</li>
 <li>忿怒相
 (明王相)：怒发冲冠，卷舌露齿的凶恶形象，是以威慑之力驱除魔怪，护持佛法的表征。</li>
+<li>欢喜佛
+(明王与明妃)：密教中的性力思想与生殖崇拜。“先以欲勾之，后令入佛智”。</li>
 <li>吉祥天女：莲华带来的富贵。</li>
 <li>千手千眼观世音菩萨：常以 42
 手象征千手，每一手中各有一眼。一只手可洞察 25
