@@ -25,12 +25,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="这是 Algorithms I &amp; II, Princeton 系列笔记的 P6 部分。这一节将介绍：  Maximum Flow &amp; Minimum Cut. Radix Sort - LSD, MSD &amp; 3-way radix sorts. 字符串算法：Tries &amp; Substring Search.">
+    <meta name="description" content="这是 Algorithms I &amp; II, Princeton 系列笔记的 P6 部分。这一节将介绍：  Maximum Flow &amp; Minimum Cut. Radix Sort - LSD, MSD &amp; 3-way radix sorts (Bentley &amp; Sedgewick, 1997). Suffix Arrays.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Algorithms II, Princeton University, P6">
 <meta property="og:url" content="https://www.thisisxxz.com/2023/08/14/algo-princeton-p6/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="这是 Algorithms I &amp; II, Princeton 系列笔记的 P6 部分。这一节将介绍：  Maximum Flow &amp; Minimum Cut. Radix Sort - LSD, MSD &amp; 3-way radix sorts. 字符串算法：Tries &amp; Substring Search.">
+<meta property="og:description" content="这是 Algorithms I &amp; II, Princeton 系列笔记的 P6 部分。这一节将介绍：  Maximum Flow &amp; Minimum Cut. Radix Sort - LSD, MSD &amp; 3-way radix sorts (Bentley &amp; Sedgewick, 1997). Suffix Arrays.">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/08/14/algo-princeton-p6/init.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/08/14/algo-princeton-p6/augpath.png">
@@ -39,8 +39,9 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2023/08/14/algo-princeton-p6/radix1.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/08/14/algo-princeton-p6/radix2.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/08/14/algo-princeton-p6/radix3.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/14/algo-princeton-p6/radix4.png">
 <meta property="article:published_time" content="2023-08-14T13:27:48.000Z">
-<meta property="article:modified_time" content="2023-08-24T15:52:52.099Z">
+<meta property="article:modified_time" content="2023-08-25T10:12:28.100Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="course notes">
 <meta property="article:tag" content="graph theory">
@@ -178,7 +179,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#maxflow-mincut"><span class="nav-number">1.</span> <span class="nav-text">Maxflow &amp; Mincut</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mincut-problem"><span class="nav-number">1.1.</span> <span class="nav-text">Mincut Problem</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#maxflow-problem"><span class="nav-number">1.2.</span> <span class="nav-text">Maxflow Problem</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ford-fulkerson-algorithm"><span class="nav-number">2.</span> <span class="nav-text">Ford-Fulkerson Algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#running-time-analysis"><span class="nav-number">2.1.</span> <span class="nav-text">Running Time Analysis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#java-implementation"><span class="nav-number">2.2.</span> <span class="nav-text">Java Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#maxflow-mincut-theorem"><span class="nav-number">3.</span> <span class="nav-text">Maxflow-Mincut Theorem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#flow-value-lemma"><span class="nav-number">3.1.</span> <span class="nav-text">Flow-value Lemma</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#weak-duality"><span class="nav-number">3.2.</span> <span class="nav-text">Weak Duality</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#true-duality"><span class="nav-number">3.3.</span> <span class="nav-text">True Duality</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#key-indexed-counting"><span class="nav-number">4.</span> <span class="nav-text">Key-Indexed Counting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#radix-sort"><span class="nav-number">5.</span> <span class="nav-text">Radix Sort</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#lsd-radix-sort"><span class="nav-number">5.1.</span> <span class="nav-text">LSD Radix Sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#msd-radix-sort"><span class="nav-number">5.2.</span> <span class="nav-text">MSD Radix Sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#way-radix-quicksort"><span class="nav-number">5.3.</span> <span class="nav-text">3-way Radix Quicksort</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#suffix-arrays"><span class="nav-number">6.</span> <span class="nav-text">Suffix Arrays</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#maxflow-mincut"><span class="nav-number">1.</span> <span class="nav-text">Maxflow &amp; Mincut</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mincut-problem"><span class="nav-number">1.1.</span> <span class="nav-text">Mincut Problem</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#maxflow-problem"><span class="nav-number">1.2.</span> <span class="nav-text">Maxflow Problem</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ford-fulkerson-algorithm"><span class="nav-number">2.</span> <span class="nav-text">Ford-Fulkerson Algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#running-time-analysis"><span class="nav-number">2.1.</span> <span class="nav-text">Running Time Analysis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#java-implementation"><span class="nav-number">2.2.</span> <span class="nav-text">Java Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#maxflow-mincut-theorem"><span class="nav-number">3.</span> <span class="nav-text">Maxflow-Mincut Theorem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#flow-value-lemma"><span class="nav-number">3.1.</span> <span class="nav-text">Flow-value Lemma</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#weak-duality"><span class="nav-number">3.2.</span> <span class="nav-text">Weak Duality</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#true-duality"><span class="nav-number">3.3.</span> <span class="nav-text">True Duality</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#key-indexed-counting"><span class="nav-number">4.</span> <span class="nav-text">Key-Indexed Counting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#radix-sort"><span class="nav-number">5.</span> <span class="nav-text">Radix Sort</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#lsd-radix-sort"><span class="nav-number">5.1.</span> <span class="nav-text">LSD Radix Sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#msd-radix-sort"><span class="nav-number">5.2.</span> <span class="nav-text">MSD Radix Sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#way-radix-quicksort"><span class="nav-number">5.3.</span> <span class="nav-text">3-way Radix Quicksort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#performance-analysis"><span class="nav-number">5.4.</span> <span class="nav-text">Performance Analysis</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#suffix-arrays"><span class="nav-number">6.</span> <span class="nav-text">Suffix Arrays</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -346,8 +347,9 @@
 I &amp; II, Princeton</a> 系列笔记的 P6 部分。这一节将介绍：</p>
 <ul>
 <li>Maximum Flow &amp; Minimum Cut.</li>
-<li>Radix Sort - LSD, MSD &amp; 3-way radix sorts.</li>
-<li>字符串算法：Tries &amp; Substring Search.</li>
+<li>Radix Sort - LSD, MSD &amp; 3-way radix sorts (Bentley &amp;
+<em>Sedgewick</em>, 1997).</li>
+<li>Suffix Arrays.</li>
 </ul>
 <span id="more"></span>
 <p><br></p>
@@ -588,11 +590,186 @@ key <code>i</code> 的出现做好“准备”。由于我们是按照 keys
 counting 实际上是桶排序的变种，它并不是 compare-based 的排序算法！</p>
 <p><br></p>
 <h2 id="radix-sort">Radix Sort</h2>
+<p>基数排序的原理是将整数按位数切割成不同的数字，按位进行排序。因此其也完美符合字符串排序的要求：字符串是由一系列字符组成的，每一个字符就相当于其的一个“位数”。</p>
 <h3 id="lsd-radix-sort">LSD Radix Sort</h3>
+<p>LSD Radix Sort 即 Least-Significant-Digit-First Radix
+Sort；它从键值的低位到高位逐位进行排序。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LSD</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(String[] a, <span class="type">int</span> W)</span> &#123;    <span class="comment">// fixed-length W strings</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">R</span> <span class="operator">=</span> <span class="number">256</span>;    <span class="comment">// radix R</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> a.length;</span><br><span class="line">        String[] aux = <span class="keyword">new</span> <span class="title class_">String</span>[N];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">d</span> <span class="operator">=</span> W-<span class="number">1</span>; d &gt;= <span class="number">0</span>; --d) &#123;    <span class="comment">// do key-indexed counting from LSD to MSD</span></span><br><span class="line">            <span class="type">int</span>[] count = <span class="keyword">new</span> <span class="title class_">int</span>[R+<span class="number">1</span>];</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">                count[a[i].charAt(d) + <span class="number">1</span>]++;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">r</span> <span class="operator">=</span> <span class="number">0</span>; r &lt; R; ++r)</span><br><span class="line">                count[r+<span class="number">1</span>] += count[r];</span><br><span class="line">               <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">                aux[count[a[i].charAt(d)]++] = a[i];</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">                a[i] = aux[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个做法确实非常的优雅，正确性也比较符合直觉；由于采用了 key-indexed
+counting，每一轮排序都能保证是 stable 的；因此 LSD Radix Sort 是一个
+stable 的排序算法。</p>
+<p>Pf. [By induction on i] After pass <span class="math inline">\(i\)</span>, strings are sorted by last <span class="math inline">\(i\)</span> characters.</p>
+<ul>
+<li>If two strings differ on sort key, key-indexed sort puts them in
+proper relative order.</li>
+<li>If two strings agree on sort key, stability keeps them in proper
+relative order.</li>
+</ul>
+<p>注意，以上的代码是针对 fixed-length strings 的。对于 variable-length
+strings，我们只需要用 <code>-1</code> 补齐每个字符串即可。(在 C
+语言中则没有这种顾虑，因为每个字符串的末尾都添加了 <code>'\0'</code>
+标识符)</p>
 <h3 id="msd-radix-sort">MSD Radix Sort</h3>
+<p>类似的，MSD Radix Sort 即 Most-Significant-Digit-First Radix
+Sort，从键值的高位到低位逐位进行排序。很容易发现在 MSD 中我们需要引入
+partition，按照类似 quick sort 的结构进行排序。</p>
+<ul>
+<li>Partition array into <span class="math inline">\(R\)</span> pieces
+according to first character (use key-indexed counting).</li>
+<li>Recursively sort all strings that start with each character. (do
+key-indexed counting in each subarray)</li>
+</ul>
+<p>与 LSD 相比，MSD 的劣势在于：</p>
+<ul>
+<li>更多的空间。特别是每一层递归都需要为 <code>count[]</code>
+数组分配空间。</li>
+<li>递归带来的较低效率。可以采用 cutoff to insertion sort for small
+subarrays 优化。</li>
+<li>Inner loop has a lot of instructions.</li>
+<li>Cache inefficient: accesses memory "randomly".</li>
+</ul>
+<div class="note info no-icon"><p>MSD examines just enough characters to sort the keys.</p>
+</div>
+<p>以上的种种缺点与相对比较复杂的代码换来的是 MSD
+理论复杂度上的优势。由于 number of characters examined only depends on
+keys, MSD can be <em>sublinear</em> in input size!</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">charAt</span><span class="params">(String s, <span class="type">int</span> d)</span> &#123;    <span class="comment">// for variable-length strings</span></span><br><span class="line">    <span class="keyword">if</span> (d &lt; s.length())	<span class="keyword">return</span> s.charAt(d);</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(String[] a)</span> &#123;</span><br><span class="line">    aux = <span class="keyword">new</span> <span class="title class_">String</span>[a.length];    <span class="comment">// can recycle aux[] array but not count[] array</span></span><br><span class="line">    sort(a, aux, <span class="number">0</span>, a.length-<span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(String[] a, String[] aux, <span class="type">int</span> lo, <span class="type">int</span> hi, <span class="type">int</span> d)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (hi &lt;= lo)    <span class="keyword">return</span>;</span><br><span class="line">    <span class="type">int</span>[] count = <span class="keyword">new</span> <span class="title class_">int</span>[R+<span class="number">2</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> lo; i &lt;= hi; ++i)</span><br><span class="line">        count[charAt(a[i], d) + <span class="number">2</span>]++;   <span class="comment">// the existence of -1</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">r</span> <span class="operator">=</span> <span class="number">0</span>; r &lt; R+<span class="number">1</span>; ++r)</span><br><span class="line">        count[r+<span class="number">1</span>] += count[r];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> lo; i &lt;= hi; ++i)</span><br><span class="line">        aux[count[charAt(a[i], d) + <span class="number">1</span>]++] = a[i];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> lo; i &lt;= hi; ++i)</span><br><span class="line">        a[i] = aux[i - lo];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">r</span> <span class="operator">=</span> <span class="number">0</span>; r &lt; R; ++r)    <span class="comment">// sort R subarrays recursively</span></span><br><span class="line">        sort(a, aux, lo + count[r], lo + count[r+<span class="number">1</span>] - <span class="number">1</span>, d+<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="way-radix-quicksort">3-way Radix Quicksort</h3>
+<p>MSD 实际上使用的是 R-way Partitioning：它使用 key-indexed counting
+将原数组分为 R 个 subarrays，每个 subarray
+中的字符串都具有相同的第一关键字，接下来再递归的对这 R 个 subarrays
+进行排序。</p>
+<p>而 3-way radix quicksort 则借助了 3-way quicksort 的思想对 MSD
+进行改造。对于所有第一关键字，选择一个 partitioning
+item，并对应的将所有字符串分为 less, equal 与 greater 三个
+subarrays。</p>
+<figure>
+<img data-src="radix4.png" alt="Does not re-examine characters equal to the partitioning char">
+<figcaption aria-hidden="true">Does not re-examine characters equal to
+the partitioning char</figcaption>
+</figure>
+<p>与朴素的 Quicksort for strings 相比，3-way radix quicksort
+能够做到：</p>
+<ul>
+<li>Use <span class="math inline">\(\sim 2N\ln{N}\)</span> character
+compares (instead of string compares) on average for random
+strings.</li>
+<li>Avoids re-comparing long common prefixes.</li>
+</ul>
+<p>与 MSD (R-way radix sort) 相比 3-way radix quicksort 有以下优势：</p>
+<ul>
+<li>Has a short inner loop.</li>
+<li>Is cache-friendly.</li>
+<li>Is in-place.</li>
+</ul>
+<p>注意 3-way radix quicksort 并未使用 key-indexed
+counting；但它仍然是一种 radix
+sort，因为它是按位进行排序的。从这个意义上来讲，比起 MSD，3-way radix
+quicksort 的亲缘关系更偏向于传统的 quicksort。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(String[] a)</span> &#123;</span><br><span class="line">    sort(a, <span class="number">0</span>, a.length - <span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(String[] a, <span class="type">int</span> lo, <span class="type">int</span> hi, <span class="type">int</span> d)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (hi &lt;= lo)    <span class="keyword">return</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">lt</span> <span class="operator">=</span> lo, gt = hi;</span><br><span class="line">    <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> charAt(a[lo], d);</span><br><span class="line">    <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> lo + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= gt) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">t</span> <span class="operator">=</span> charAt(a[i], d);</span><br><span class="line">        <span class="keyword">if</span>      (t &lt; v) exch(a, lt++, i++);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (t &gt; v) exch(a, i, gt--);</span><br><span class="line">        <span class="keyword">else</span>            i++;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    sort(a, lo, lt-<span class="number">1</span>, d);</span><br><span class="line">    <span class="keyword">if</span> (v &gt;= <span class="number">0</span>) sort(a, lt, gt, d+<span class="number">1</span>);</span><br><span class="line">    sort(a, gt+<span class="number">1</span>, hi, d);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="performance-analysis">Performance Analysis</h3>
+<p>对 <span class="math inline">\(N\)</span> 个 <span class="math inline">\(W\)</span> 位的字符串进行排序，若字符集大小为
+<span class="math inline">\(R\)</span>，我们有：</p>
+<table>
+<colgroup>
+<col style="width: 30%">
+<col style="width: 20%">
+<col style="width: 18%">
+<col style="width: 10%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">algorithm</th>
+<th style="text-align: center;">guarantee</th>
+<th style="text-align: center;">random</th>
+<th style="text-align: center;">stable?</th>
+<th style="text-align: center;">operation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">quicksort</td>
+<td style="text-align: center;"><span class="math inline">\(1.39N\lg{N}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1.39N\lg{N}\)</span></td>
+<td style="text-align: center;">no</td>
+<td style="text-align: center;"><code>compareTo()</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">LSD</td>
+<td style="text-align: center;"><span class="math inline">\(2NW\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2NW\)</span></td>
+<td style="text-align: center;">yes</td>
+<td style="text-align: center;"><code>charAt()</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">MSD</td>
+<td style="text-align: center;"><span class="math inline">\(2NW\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(N\log_{R}
+N\)</span></td>
+<td style="text-align: center;">yes</td>
+<td style="text-align: center;"><code>charAt()</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">3-way radix quicksort</td>
+<td style="text-align: center;"><span class="math inline">\(1.39WN\lg{R}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1.39N\lg{N}\)</span></td>
+<td style="text-align: center;">no</td>
+<td style="text-align: center;"><code>charAt()</code></td>
+</tr>
+</tbody>
+</table>
+<p>注意 <code>compareTo()</code>
+操作的复杂度与字符串间的最长公共前缀的长度有关，因此其最坏是 <span class="math inline">\(\Omega(W)\)</span> 的；而 <code>charAt()</code> 是
+constant time 的操作。</p>
+<p>对于 string sorting algorithms，我们能够作出以下总结：</p>
+<ul>
+<li>We can develop linear-time sorts (LSD): key compares not necessary
+for string keys; we use characters as index in an array.</li>
+<li>We can develop sublinear-time sorts (MSD): input size is amount of
+data in keys (not number of keys) and not all of the data has to be
+examined.</li>
+<li>3-way radix quicksort is asymptotically optimal.</li>
+<li>Long strings are <em>rarely random</em> in practice: we may need
+specialized algorithms.</li>
+</ul>
 <p><br></p>
 <h2 id="suffix-arrays">Suffix Arrays</h2>
+<p>接下来我们介绍后缀数组：一个字符串处理的终极利器，也是进一步理解后缀系算法
+(后缀树，后缀自动机)
+的基础。对于一个字符串，我们用数组保存其所有的后缀并进行排序，得到的数组即为后缀数组。</p>
+<div class="note info no-icon"><p>Bottleneck Problem. Suffix sort an arbitrary string of length <span class="math inline">\(N\)</span>.</p>
+</div>
+<p>后缀排序问题本质上是字符串排序问题，所以以上介绍的 LSD，MSD 与 3-way
+radix quicksort 甚至传统的 quicksort
+均可以作为后缀排序采用的算法；但其效率 ( <span class="math inline">\(\Omega(NW)\)</span> 或 <span class="math inline">\(\Omega(N^2\lg{N})\)</span> )
+难以满足实际应用的要求。</p>
+<p>利用后缀这一特殊的性质，我们能设计出性能更加优越的后缀排序算法：Manber-Myers
+倍增算法能够做到最坏 <span class="math inline">\(N\lg{N}\)</span>
+的时间复杂度，DC3 算法与后缀树能够做到线性的时间复杂度。</p>
+<p>Manber-Myers MSD algorithm overview.</p>
+<ul>
+<li>Phase <span class="math inline">\(0\)</span>: sort on first
+character using key-indexed counting sort.</li>
+<li>Phase <span class="math inline">\(i\)</span>: given array of
+suffixes sorted on first <span class="math inline">\(2^{i-1}\)</span>
+characters, create array of suffixes sorted on first <span class="math inline">\(2^i\)</span> characters.</li>
+</ul>
+<p>后缀数组的经典应用之一：Keyword-in-context search
+(本博客的搜索功能就是一种文本关键字搜索)。</p>
+<ul>
+<li>Proprocess: suffix sort the text.</li>
+<li>Query: <em>binary search</em> for query; scan until mismatch.</li>
+</ul>
+<p>后缀数组的经典应用之二：Longest repeated substring。</p>
+<ul>
+<li>暴力做法：Try all indices <span class="math inline">\(i\)</span> and
+<span class="math inline">\(j\)</span> for start of possible match, and
+compute longest common prefix (LCP) for each pair. 该做法的复杂度为
+<span class="math inline">\(\Omega (DN^2)\)</span>，其中 <span class="math inline">\(D\)</span> 是 LCP 的长度。</li>
+<li>后缀数组做法：在求出后缀数组后对每个相邻的后缀求 LCP 即可。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> String <span class="title function_">lrs</span><span class="params">(String s)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> s.length;</span><br><span class="line">    String[] suffixes = <span class="keyword">new</span> <span class="title class_">String</span>[N];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">        suffix[i] = s.substring(i, N);   <span class="comment">// String class: linear time &amp; space</span></span><br><span class="line">    Arrays.sort(suffixes);               <span class="comment">// sort suffixes</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">lrs</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N-<span class="number">1</span>; ++i) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> lcp(suffixes[i], suffixes[i+<span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">if</span> (len &gt; lrs.length())</span><br><span class="line">            lrs = suffixes[i].substring(<span class="number">0</span>, len);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> lrs;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
@@ -797,6 +974,15 @@ Wayne.</p>
 
 
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
 
 <script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/08/14/algo-princeton-p6/"}</script>
 <script>
@@ -812,15 +998,6 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
