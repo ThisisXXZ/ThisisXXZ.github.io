@@ -155,6 +155,257 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
+    <title>Algorithms II, Princeton University, P7</title>
+    <url>/2023/08/27/algo-princeton-p7/</url>
+    <content><![CDATA[<p><a href="https://thisisxxz.com/categories/notes/courses/Algorithms-Princeton/">Algorithms
+I &amp; II, Princeton</a> 系列笔记的 P7
+部分。字符串算法博大精深，远非一篇笔记就能囊括。上一篇笔记主要关注字符串排序问题，而本篇将着重介绍以字符串为键值的
+symbol tables 与 substring search 问题。</p>
+<ul>
+<li>Tries: traditional R-way tries &amp; ternary search tries.</li>
+<li>Substring Search: Knuth-Morris-Pratt, Boyer-Moore, Rabin-Karp.</li>
+</ul>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="tries">Tries</h2>
+<div class="note info no-icon"><p>String symbol table. Symbol table specialized to string keys. It
+avoids examing the entrie key (as with string sorting) thus perform
+better than traditional symbol tables with string keys.</p>
+</div>
+<p>用红黑树或 linear-probing hashing 实现的 string symbol tables
+已经拥有较为优秀的效率；但一个更为 ingenious 的，string-specialized
+的数据结构是 tries (字典树)。</p>
+<h3 id="r-way-tries">R-way Tries</h3>
+<p>Tries 的名字来源于 re<em>trie</em>val，但读作
+try。相当简单优雅的数据结构，就不详细介绍了。</p>
+<ul>
+<li>Search hit. Need to examine all <span class="math inline">\(L\)</span> characters for equality.</li>
+<li>Search miss. (typical case) examine only a few characters
+(sublinear).</li>
+<li>Space. <span class="math inline">\(R\)</span> null links at each
+leaf.</li>
+</ul>
+<div class="note info no-icon"><p>Bottom line. Fast search hit and even faster search miss, but
+<em>wasted space</em>.</p>
+</div>
+<p>trie 的删除操作也十分简单：</p>
+<ul>
+<li>Find the node corresponding to key and set value to null.</li>
+<li>If node has null value and all null links, remove that node (and
+recur).</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// This is a Trie Symbol Table, which associate a value with each string key. </span></span><br><span class="line"><span class="comment">// To create a Trie plainly storing strings, use Trie Set.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TrieST</span>&lt;Value&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">R</span> <span class="operator">=</span> <span class="number">256</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">Node</span> <span class="variable">root</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Node</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Node</span> &#123;</span><br><span class="line">        <span class="comment">// use Object instead of Value since no generic array creation in Java</span></span><br><span class="line">        <span class="keyword">private</span> Object value;</span><br><span class="line">        <span class="keyword">private</span> Node[] next = <span class="keyword">new</span> <span class="title class_">Node</span>[R];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">put</span><span class="params">(String key, Value val)</span> &#123;</span><br><span class="line">        root = put(root, key, value, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> Node <span class="title function_">put</span><span class="params">(Node x, String key, Value val, <span class="type">int</span> d)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (x == <span class="literal">null</span>) x = <span class="keyword">new</span> <span class="title class_">Node</span>();</span><br><span class="line">        <span class="keyword">if</span> (d == key.length()) &#123;</span><br><span class="line">            x.val = val;</span><br><span class="line">            <span class="keyword">return</span> x;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">char</span> <span class="variable">c</span> <span class="operator">=</span> key.charAt(d);</span><br><span class="line">        x.next[c] = put(x.next[c], key, val, d+<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">contains</span><span class="params">(String key)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> get(key) != <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> Value <span class="title function_">get</span><span class="params">(String key)</span> &#123;</span><br><span class="line">        <span class="type">Node</span> <span class="variable">x</span> <span class="operator">=</span> get(root, key, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">if</span> (x == <span class="literal">null</span>)    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">return</span> (Value) x.val;    <span class="comment">// cast needed</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> Node <span class="title function_">get</span><span class="params">(Node x, String key, <span class="type">int</span> d)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (x == <span class="literal">null</span>)    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (d == key.length())    <span class="keyword">return</span> x;</span><br><span class="line">        <span class="type">char</span> <span class="variable">c</span> <span class="operator">=</span> key.charAt(d);</span><br><span class="line">        <span class="keyword">return</span> get(x.next[c], key, d+<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="ternary-search-tries">Ternary Search Tries</h3>
+<p>又是 Sedgewick 教授发明的算法之一 (Bentley &amp;
+<em>Sedgewick</em>)，ORZ。</p>
+<ul>
+<li>Store characters and values in nodes (not keys).</li>
+<li>Each node has 3 children: smaller (left), equal (middle), larger
+(right).</li>
+<li>Search or Insert.
+<ul>
+<li>If less, take left link; If greater, take right link.</li>
+<li>If equal, take the middle link and move to the next key
+character.</li>
+</ul></li>
+</ul>
+<div class="note info no-icon"><p>TST is as fast as hashing (for string keys), space efficient.</p>
+</div>
+<p>TSTs 改善了传统 R-way tries 耗费空间过多的缺点 (从 <span class="math inline">\((R+1)N\)</span> 优化至 <span class="math inline">\(4N\)</span>)，同时仍然维持了 tries 优秀的时间效率
+(从 <span class="math inline">\(L\)</span> 到可以接受的 <span class="math inline">\(L+\ln{N}\)</span>)。</p>
+<p>TSTs 还存在许多 variants：balanced TSTs via rotations (can achieve
+worst-case <span class="math inline">\(L+\log{N}\)</span> guarantees) 与
+TSTs with <span class="math inline">\(R^2\)</span> branching
+(对特定的输入进一步提升时空效率)。</p>
+<p>总而言之，TST 是这样的一种数据结构，它：</p>
+<ul>
+<li>Faster than hashing (especially for search misses).</li>
+<li>More space-efficient than R-way tries.</li>
+<li>More flexible than red-black BSTs.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TST</span>&lt;Value&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> Node root;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">Node</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> Value val;</span><br><span class="line">        <span class="keyword">private</span> <span class="type">char</span> c;</span><br><span class="line">        <span class="keyword">private</span> Node left, mid, right;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">put</span><span class="params">(String key, Value val)</span> &#123;</span><br><span class="line">        root = put(root, key, val, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> Node <span class="title function_">put</span><span class="params">(Node x, String key, Value val, <span class="type">int</span> d)</span> &#123;</span><br><span class="line">        <span class="type">char</span> <span class="variable">c</span> <span class="operator">=</span> key.charAt(d);</span><br><span class="line">        <span class="keyword">if</span> (x == <span class="literal">null</span>)    &#123; x = <span class="keyword">new</span> <span class="title class_">Node</span>(); x.c = c; &#125;</span><br><span class="line">        <span class="keyword">if</span>      (c &lt; x.c)               x.left  = put(x.left,  key, val, d);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (c &gt; x.c)               x.right = put(x.right, key, val, d);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (d &lt; key.length() - <span class="number">1</span>)  x.mid   = put(x.mid,   key, val, d+<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">else</span>                            x.val = val;</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">contains</span><span class="params">(String key)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> get(key) != <span class="literal">null</span>; </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> Value <span class="title function_">get</span><span class="params">(String key)</span> &#123;</span><br><span class="line">        <span class="type">Node</span> <span class="variable">x</span> <span class="operator">=</span> get(root, key, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">if</span> (x == <span class="literal">null</span>)    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">return</span> x.val;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> Node <span class="title function_">get</span><span class="params">(Node x, String key, <span class="type">int</span> d)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (x == <span class="literal">null</span>)    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="type">char</span> <span class="variable">c</span> <span class="operator">=</span> key.charAt(d);</span><br><span class="line">        <span class="keyword">if</span>      (c &lt; x.c)               <span class="keyword">return</span> get(x.left,  key, d);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (c &gt; x.c)               <span class="keyword">return</span> get(x.right, key, d);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (d &lt; key.length() - <span class="number">1</span>)  <span class="keyword">return</span> get(x.mid,   key, d+<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">else</span>                            <span class="keyword">return</span> x;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="character-based-operations">Character-Based Operations</h2>
+<p>以 string 作为键值的 string symbol table implemented with tries
+不仅仅支持以 string 为基本单位的操作，更支持基于字符的操作
+(character-based operations)。</p>
+<ul>
+<li>Ordered iteration (引入了利用 trie 进行 string sorting 的新思路).
+<ul>
+<li>Do inorder traversal of trie; add keys encountered to a queue.</li>
+<li>Maintain a sequence of characters on path from root to node.</li>
+</ul></li>
+<li>Prefix matches. Find all keys in a symbol table starting with a
+given prefix.</li>
+<li>Longest prefix. Find longest key in symbol table that is a prefix of
+query string.</li>
+<li>T9 texting.
+<ul>
+<li>Multi-tap input. 不断按某键直到切换到想要的字母。</li>
+<li>T9 text input. Find all words that correspond to given sequence of
+numbers.</li>
+</ul></li>
+<li>Patricia trie (crit-bit tree, radix tree). 将 trie 上的 internal
+one-way branching (象征着多个字符串的共同前缀) 压缩成一个节点，提升了
+trie 的空间利用率。</li>
+<li>Suffix tree. Patricia trie of suffixes of a string; can be
+constructed in linear time.</li>
+</ul>
+<p>最后，我们再来对 string symbol table
+的不同实现进行一个全面的比较与总结：</p>
+<table>
+<colgroup>
+<col style="width: 21%">
+<col style="width: 35%">
+<col style="width: 43%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Implementation</th>
+<th style="text-align: center;">Performance Guarantee</th>
+<th style="text-align: center;">Features</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Red-black BST.</td>
+<td style="text-align: center;"><span class="math inline">\(\log{N}\)</span> <em>key</em> (string)
+compares.</td>
+<td style="text-align: center;">Supports ordered symbol table API.</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Hash tables.</td>
+<td style="text-align: center;">constant number of probes.</td>
+<td style="text-align: center;">Requires good hash function for key
+type.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">R-way tries or TSTs.</td>
+<td style="text-align: center;"><span class="math inline">\(\log{N}\)</span> <em>characters</em>
+accessed.</td>
+<td style="text-align: center;">Supports character-based
+operations.</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<h2 id="substring-search">Substring Search</h2>
+<p>Substring search 也是一个相当 fundamental
+的字符串问题。用一句话就可以概括：</p>
+<div class="note info no-icon"><p>Goal. Find pattern of length <span class="math inline">\(M\)</span>
+in a text of length <span class="math inline">\(N\)</span>. (typically
+<span class="math inline">\(N&gt;&gt;M\)</span>)</p>
+</div>
+<p>Brute-force substring search. Check for pattern starting at each text
+position.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">search</span><span class="params">(String pat, String txt)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">M</span> <span class="operator">=</span> pat.length();</span><br><span class="line">    <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> txt.length();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt;= N-M; ++i) &#123;</span><br><span class="line">        <span class="type">int</span> j;</span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; M; ++j)</span><br><span class="line">            <span class="keyword">if</span> (txt.charAt(i+j) != pat.charAt(j))</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">if</span> (j == M)    <span class="keyword">return</span> i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> N;    <span class="comment">// not found</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>暴力做法的最坏时间复杂度是 <span class="math inline">\(\sim
+MN\)</span> 的。另外，由于每次失配时 text pointer 将会回滚
+(backup)，使得该做法无法适应文本的流式输入 (text
+string)；我们需要更加优秀的 substring search 算法。</p>
+<p><br></p>
+<h2 id="knuth-morris-pratt">Knuth-Morris-Pratt</h2>
+<p>很早以前就学过并被惊艳过的 KMP
+算法；今天以另外的角度来学习这个算法，倍感新鲜。</p>
+<p>首先来介绍一下 DFA (deterministic finite state automaton,
+有限状态自动机)。</p>
+<ul>
+<li>Finate number of states (including start and halt).</li>
+<li>Exactly one transition for each char in alphabet.</li>
+<li>Accept if sequence of transitions leads to halt state.</li>
+</ul>
+<figure>
+<img data-src="DFA.png" alt="看到这个图就想到了后缀自动机">
+<figcaption aria-hidden="true">看到这个图就想到了后缀自动机</figcaption>
+</figure>
+<p>上图是 pattern <code>ABABAC</code> 构建的 KMP
+自动机；其接受且仅接受以该 pattern 为后缀的字符串。将给出的 text stream
+输入该 DFA，若在某个时刻能够到达 halting state，说明匹配成功。</p>
+<p>这是因为 text stream 在该时刻形成的前缀被 KMP 自动机接受了；根据 KMP
+自动机的性质，这一前缀一定存在某个 <code>ABABAC</code>
+的后缀。而<u>字符串前缀的后缀一定是该字符串的子串</u>：据此我们成功将
+substring search 问题转化为了基于 pattern 的 KMP 自动机构建问题。</p>
+<p>KMP 自动机的 internal representation 是一个二维数组
+<code>dfa[][]</code>: <code>dfa[c][j]</code> 存储了状态 <span class="math inline">\(j\)</span> 在读取字符 <span class="math inline">\(c\)</span> 后转移到的状态 <span class="math inline">\(k\)</span>。</p>
+<p>Match transition.</p>
+<ul>
+<li>Descriptive. If first <span class="math inline">\(j\)</span>
+characters of pattern have already been matched and next char also
+matches, then first <span class="math inline">\(j+1\)</span> characters
+of pattern will be matched.</li>
+<li>Operative. If in state <span class="math inline">\(j\)</span> and
+next char <span class="math inline">\(c = \mathtt{pat}[j]\)</span>, go
+to state <span class="math inline">\(j+1\)</span>.</li>
+</ul>
+<p>Mismatch transition. (!) If in state <span class="math inline">\(j\)</span> and next char <span class="math inline">\(c \neq \mathtt{pat}[j]\)</span>, then the last
+<span class="math inline">\(j-1\)</span> characters of input are <span class="math inline">\(\mathtt{pat}[1...j-1]\)</span>, followed by <span class="math inline">\(c\)</span>.</p>
+<p>根据 KMP 自动机的定义，在字符 <code>c</code>
+被读入后，我们将转移到一个状态 <span class="math inline">\(k\)</span>，在该状态中 <span class="math inline">\(\mathtt{pat}[0...j-1]+c\)</span> 的某个长度为
+<span class="math inline">\(k\)</span> 的后缀将与 <span class="math inline">\(\mathtt{pat}[0...k-1]\)</span> (pattern 长度为
+<span class="math inline">\(k\)</span> 的前缀) 匹配。</p>
+<p>在第一种情况 (match transition) 下，显然 <span class="math inline">\(k = j+1\)</span>。想要找到失配情况下的 <span class="math inline">\(k\)</span> 则比较 tricky。</p>
+<p>我们不妨这样解读 KMP 自动机：对于输入的字符串 <span class="math inline">\(s\)</span> 与某个 pattern，KMP 自动机将会把 <span class="math inline">\(s\)</span> 的所有后缀与 pattern
+进行匹配，并且返回匹配长度最长的后缀，该后缀的长度为 <span class="math inline">\(k\)</span>。</p>
+<p>能够证明的是，字符串 <span class="math inline">\(s_1=\mathtt{pat}[0...j-1]+c\)</span> 与 <span class="math inline">\(s_2=\mathtt{pat}[1...j-1]+c\)</span> 输入 KMP
+自动机后得到的结果后缀是相同的。<span class="math inline">\(s_1\)</span>
+除了比 <span class="math inline">\(s_2\)</span>
+多出了一个后缀以外完全相同，而这个多出来的后缀 <span class="math inline">\(\mathtt{pat}[0...j-1]+c\)</span> 不可能是 KMP
+自动机返回的结果：这正是由失配 (mismatch transition) 的条件决定的。</p>
+<p>To compute <code>dfa[c][j]</code>: <em>Simulate</em> <span class="math inline">\(\mathtt{pat}[1...j-1]\)</span> on DFA and take
+trancision <span class="math inline">\(c\)</span>.</p>
+<ul>
+<li>plain simulation: takes linear time.</li>
+<li>maintain <span class="math inline">\(\mathtt{pat}[1...j-1]\)</span>
+as <em>restart state</em> <span class="math inline">\(X\)</span>: takes
+only constant time.</li>
+</ul>
+<figure>
+<img data-src="DFA2.png" alt="remember to update state X each time">
+<figcaption aria-hidden="true">remember to update state X each
+time</figcaption>
+</figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">KMP</span><span class="params">(String pat)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.pat = pat;</span><br><span class="line">    M = pat.length();</span><br><span class="line">    dfa = <span class="keyword">new</span> <span class="title class_">int</span>[R][M];</span><br><span class="line">    dfa[pat.charAt(<span class="number">0</span>)][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">X</span> <span class="operator">=</span> <span class="number">0</span>, j = <span class="number">1</span>; j &lt; M; ++j) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">c</span> <span class="operator">=</span> <span class="number">0</span>; c &lt; R; ++c)</span><br><span class="line">            dfa[c][j] = dfa[c][X];       <span class="comment">// copy mismatch transitions</span></span><br><span class="line">        dfa[pat.charAt(j)][j] = j+<span class="number">1</span>;     <span class="comment">// set match transition</span></span><br><span class="line">        X = dfa[pat.charAt(j)][X];       <span class="comment">// update restart state</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="note info no-icon"><p>Proposition. KMP substring search accesses no more than <span class="math inline">\(M+N\)</span> chars to search for a pattern of
+length <span class="math inline">\(M\)</span> in a text of length <span class="math inline">\(N\)</span>.</p>
+</div>
+<p>从有限状态自动机的角度来理解 KMP
+对我来说确实是一个全新的视角：但是构造 KMP 自动机的时空代价是 <span class="math inline">\(\sim RM\)</span>，这比我之前学习的构造 fail 指针
+(标记最长公共前后缀) 的 KMP 算法多了一个小常数 <span class="math inline">\(R\)</span>。</p>
+<p><br></p>
+<h2 id="boyer-moore">Boyer-Moore</h2>
+<p><br></p>
+<h2 id="rabin-karp">Rabin-Karp</h2>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p><a href="https://www.coursera.org/learn/algorithms-part2">Algorithms,
+Part 2, Princeton University</a>. Lecturer: Robert Sedgewick &amp; Kevin
+Wayne.</p>
+<p>Course textbook:</p>
+<p><em>Algorithms (4th edition)</em>, Sedgewick, R. &amp; Wayne, K.,
+(2011), Addison-Wesley Professional, <a href="https://algs4.cs.princeton.edu/home/">view</a></p>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>courses</category>
+        <category>Algorithms, Princeton</category>
+      </categories>
+      <tags>
+        <tag>course notes</tag>
+        <tag>data structure</tag>
+        <tag>string</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>从秦皇岛到承德</title>
     <url>/2023/08/22/moment-230816/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -6522,7 +6773,7 @@ likely</strong> to hash to an integer between <span class="math inline">\(0\)</s
 <li>Separate chaining symbol table.</li>
 <li>Linear probing symbol table.</li>
 </ul>
-<p><strong>Separate chaning ST.</strong> Use an array of <span class="math inline">\(M&lt;N\)</span> linked lists.</p>
+<p><strong>Separate chaining ST.</strong> Use an array of <span class="math inline">\(M&lt;N\)</span> linked lists.</p>
 <ul>
 <li>Hash: map key to interger <span class="math inline">\(i\)</span>
 between <span class="math inline">\(0\)</span> and <span class="math inline">\(M-1\)</span>.</li>
