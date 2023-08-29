@@ -308,6 +308,10 @@ position.</p>
 MN\)</span> 的。另外，由于每次失配时 text pointer 将会回滚
 (backup)，使得该做法无法适应文本的流式输入 (text
 string)；我们需要更加优秀的 substring search 算法。</p>
+<figure>
+<img data-src="sss.png" alt="未见其人，先闻其声">
+<figcaption aria-hidden="true">未见其人，先闻其声</figcaption>
+</figure>
 <p><br></p>
 <h2 id="knuth-morris-pratt">Knuth-Morris-Pratt</h2>
 <p>很早以前就学过并被惊艳过的 KMP
@@ -378,8 +382,63 @@ length <span class="math inline">\(M\)</span> in a text of length <span class="m
 (标记最长公共前后缀) 的 KMP 算法多了一个小常数 <span class="math inline">\(R\)</span>。</p>
 <p><br></p>
 <h2 id="boyer-moore">Boyer-Moore</h2>
+<p>Boyer-Moore 是一种启发式的字符串匹配算法，其包含两种规则：坏字符启发
+(bad character heuristic) 与好后缀启发 (good suffix heuristic). BM
+算法的 intuition 在于：</p>
+<ul>
+<li>Scan characters in pattern <em>from right to left</em>.</li>
+<li>Can skip as many as <span class="math inline">\(M\)</span> text
+chars when finding one not in the pattern.</li>
+</ul>
+<p>问题在于 how much to skip。</p>
+<p>我们定义 <span class="math inline">\(i\)</span>
+为定位指针，它所指向的 text 中的字符总是与 pattern 的首字符对齐；定义
+<span class="math inline">\(c\)</span> 为当前的失配字符 (mismatch
+character)。具体的例子见 slides 53-SubstringSearch。</p>
+<ul>
+<li>Case 1 - <span class="math inline">\(c\)</span> not in pattern.
+increment <span class="math inline">\(i\)</span> one character beyond
+the mismatch character.</li>
+<li>Case 2 - <span class="math inline">\(c\)</span> in pattern.
+<ul>
+<li>Case 2a - align the text <span class="math inline">\(c\)</span> with
+rightmost pattern <span class="math inline">\(c\)</span>.</li>
+<li>Case 2b (heuristic no help since backup will happen) - increment
+<span class="math inline">\(i\)</span> by 1.</li>
+</ul></li>
+</ul>
+<div class="note info no-icon"><p>Property. Substring search with the Boyer-Moore mismatched character
+heuristic takes about <span class="math inline">\(\sim N/M\)</span>
+character (sublinear) compares to search for a pattern of length <span class="math inline">\(M\)</span> in a text of length <span class="math inline">\(N\)</span>.</p>
+</div>
+<p>虽然 BM 算法的平均时间复杂度十分优秀，但其最坏时间复杂度仍然是 <span class="math inline">\(\sim MN\)</span>。但通过向其中添加 KMP-like rule
+形成的 BM variant 可以保证最坏 <span class="math inline">\(\sim
+3N\)</span> 的时间复杂度。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">BMsearch</span><span class="params">(String text)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> txt.length();</span><br><span class="line">    <span class="type">int</span> <span class="variable">M</span> <span class="operator">=</span> pat.length();</span><br><span class="line">    <span class="type">int</span> skip;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt;= N-M; i += skip) &#123;</span><br><span class="line">        skip = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> M-<span class="number">1</span>; j &gt;= <span class="number">0</span>; --j) &#123;</span><br><span class="line">            <span class="keyword">if</span> (pat.charAt(j) != txt.charAt(i+j)) &#123;</span><br><span class="line">                skip = Math.max(<span class="number">1</span>, j - rightmost[txt.charAt(i+j)]);  <span class="comment">// precompute rightmost</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (skip == <span class="number">0</span>)    <span class="keyword">return</span> i;  <span class="comment">// match</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> N;  <span class="comment">// not match</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
-<h2 id="rabin-karp">Rabin-Karp</h2>
+<h2 id="rabin-karp-fingerprint-search">Rabin-Karp Fingerprint
+Search</h2>
+<p>在 Brute-force 的基础上，RK 算法使用 modular hash
+进行快速的字符串比较从而大大改善了时间复杂度。</p>
+<ul>
+<li>Compute a hash of pattern characters <span class="math inline">\(0\)</span> to <span class="math inline">\(M-1\)</span>.</li>
+<li>For each <span class="math inline">\(i\)</span>, compuate a hash
+<span class="math inline">\(x_i\)</span> of text characters <span class="math inline">\(i\)</span> to <span class="math inline">\(M+i-1\)</span>. (Horner's method)</li>
+<li>If pattern hash = text string hash, check for a match.</li>
+<li>We can update hash function in constant time: <span class="math inline">\(x_{i+1}=(x_i-t_iR^{M-1})R+t_{i+M}\)</span>.</li>
+</ul>
+<p>Rabin-Karp 算法有两种实现的方式：</p>
+<ul>
+<li>Monte Carlo version - return match if hash match: linear-time
+guarantee but <em>not</em> always return the correct answer.</li>
+<li>Las Vegas version - always returns correct answer: worst-case
+running time is <span class="math inline">\(MN\)</span> (backup).</li>
+</ul>
+<div class="note info no-icon"><p>In practice, we choose <span class="math inline">\(Q\)</span> to be a
+large prime (but not so large to cause overflow). Under reasonable
+assumptions, probability of a collision is about <span class="math inline">\(1/Q\)</span>.</p>
+</div>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RabinKarp</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> patHash;    <span class="comment">// pattern hash value</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> M;           <span class="comment">// pattern length</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> Q;          <span class="comment">// modulus</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> R;           <span class="comment">// radix</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> RM;         <span class="comment">// R^(M-1) % Q</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">RabinKarp</span><span class="params">(String pat)</span> &#123;</span><br><span class="line">        M = pat.length();</span><br><span class="line">        R = <span class="number">256</span>;</span><br><span class="line">        Q = longRandomPrime();</span><br><span class="line">        RM = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= M-<span class="number">1</span>; ++i)</span><br><span class="line">            RM = (R * RM) % Q;</span><br><span class="line">        patHash = hash(pat, M);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> <span class="title function_">hash</span><span class="params">(String key, <span class="type">int</span> M)</span> &#123;</span><br><span class="line">        <span class="type">long</span> <span class="variable">h</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; M; ++j)</span><br><span class="line">            h = (R * h + key.charAt(j)) % Q;</span><br><span class="line">        <span class="keyword">return</span> h;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">search</span><span class="params">(String txt)</span> &#123;    <span class="comment">// Monte Carlo Version</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> txt.length();</span><br><span class="line">        <span class="type">int</span> <span class="variable">txtHash</span> <span class="operator">=</span> hash(txt, M);</span><br><span class="line">        <span class="keyword">if</span> (patHash == txtHash)    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> M; i &lt; N; ++i) &#123;</span><br><span class="line">            txtHash = (txtHash + Q - RM*txt.charAt(i-M) % Q) % Q;</span><br><span class="line">            txtHash = (txtHash*R + txt.charAt(i)) % Q;</span><br><span class="line">            <span class="keyword">if</span> (patHash == txtHash)    <span class="keyword">return</span> i - M + <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> N;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
