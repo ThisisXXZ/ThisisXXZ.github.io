@@ -35,12 +35,16 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2023/08/27/algo-princeton-p7/sss.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/08/27/algo-princeton-p7/DFA.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/08/27/algo-princeton-p7/DFA2.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/27/algo-princeton-p7/NFA.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/27/algo-princeton-p7/NFA2.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/27/algo-princeton-p7/NFA3.png">
+<meta property="og:image" content="c:\Users\XXZ\Desktop\document\github\Hexo-blog\source_posts\LZW.png">
 <meta property="article:published_time" content="2023-08-27T08:00:05.000Z">
-<meta property="article:modified_time" content="2023-08-29T03:13:29.302Z">
+<meta property="article:modified_time" content="2023-08-31T05:33:06.999Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="course notes">
-<meta property="article:tag" content="data structure">
 <meta property="article:tag" content="string">
+<meta property="article:tag" content="data structure">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://www.thisisxxz.com/2023/08/27/algo-princeton-p7/sss.png">
 
@@ -175,7 +179,8 @@
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#tries"><span class="nav-number">1.</span> <span class="nav-text">Tries</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#r-way-tries"><span class="nav-number">1.1.</span> <span class="nav-text">R-way Tries</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ternary-search-tries"><span class="nav-number">1.2.</span> <span class="nav-text">Ternary Search Tries</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#character-based-operations"><span class="nav-number">2.</span> <span class="nav-text">Character-Based Operations</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#substring-search"><span class="nav-number">3.</span> <span class="nav-text">Substring Search</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#knuth-morris-pratt"><span class="nav-number">4.</span> <span class="nav-text">Knuth-Morris-Pratt</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#boyer-moore"><span class="nav-number">5.</span> <span class="nav-text">Boyer-Moore</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rabin-karp-fingerprint-search"><span class="nav-number">6.</span> <span class="nav-text">Rabin-Karp Fingerprint
-Search</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Search</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#regular-expression"><span class="nav-number">7.</span> <span class="nav-text">Regular Expression</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nondeterministic-finite-state-automata"><span class="nav-number">8.</span> <span class="nav-text">Nondeterministic
+Finite-State Automata</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nfa-simulation"><span class="nav-number">9.</span> <span class="nav-text">NFA Simulation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nfa-construction"><span class="nav-number">10.</span> <span class="nav-text">NFA Construction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#regex-miscellaneous"><span class="nav-number">11.</span> <span class="nav-text">Regex Miscellaneous</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#generalized-re-print"><span class="nav-number">11.1.</span> <span class="nav-text">Generalized RE Print</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#not-so-regular-expressions"><span class="nav-number">11.2.</span> <span class="nav-text">Not-So-Regular Expressions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#abstract-machines"><span class="nav-number">11.3.</span> <span class="nav-text">Abstract Machines</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#data-compression"><span class="nav-number">12.</span> <span class="nav-text">Data Compression</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#run-length-coding"><span class="nav-number">13.</span> <span class="nav-text">Run-Length Coding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#huffman-compression"><span class="nav-number">14.</span> <span class="nav-text">Huffman Compression</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lzw-compression"><span class="nav-number">15.</span> <span class="nav-text">LZW Compression</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">16.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -346,6 +351,9 @@ symbol tables 与 substring search 问题。</p>
 <ul>
 <li>Tries: traditional R-way tries &amp; ternary search tries.</li>
 <li>Substring Search: Knuth-Morris-Pratt, Boyer-Moore, Rabin-Karp.</li>
+<li>Pattern Matching: Regular expressions (regex).</li>
+<li>Data Compression: Huffman &amp; LZW compression. (trie plays an
+important role!)</li>
 </ul>
 <span id="more"></span>
 <p><br></p>
@@ -622,6 +630,324 @@ assumptions, probability of a collision is about <span class="math inline">\(1/Q
 </div>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RabinKarp</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> patHash;    <span class="comment">// pattern hash value</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> M;           <span class="comment">// pattern length</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> Q;          <span class="comment">// modulus</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> R;           <span class="comment">// radix</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> RM;         <span class="comment">// R^(M-1) % Q</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">RabinKarp</span><span class="params">(String pat)</span> &#123;</span><br><span class="line">        M = pat.length();</span><br><span class="line">        R = <span class="number">256</span>;</span><br><span class="line">        Q = longRandomPrime();</span><br><span class="line">        RM = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= M-<span class="number">1</span>; ++i)</span><br><span class="line">            RM = (R * RM) % Q;</span><br><span class="line">        patHash = hash(pat, M);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> <span class="title function_">hash</span><span class="params">(String key, <span class="type">int</span> M)</span> &#123;</span><br><span class="line">        <span class="type">long</span> <span class="variable">h</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; M; ++j)</span><br><span class="line">            h = (R * h + key.charAt(j)) % Q;</span><br><span class="line">        <span class="keyword">return</span> h;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">search</span><span class="params">(String txt)</span> &#123;    <span class="comment">// Monte Carlo Version</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> txt.length();</span><br><span class="line">        <span class="type">int</span> <span class="variable">txtHash</span> <span class="operator">=</span> hash(txt, M);</span><br><span class="line">        <span class="keyword">if</span> (patHash == txtHash)    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> M; i &lt; N; ++i) &#123;</span><br><span class="line">            txtHash = (txtHash + Q - RM*txt.charAt(i-M) % Q) % Q;</span><br><span class="line">            txtHash = (txtHash*R + txt.charAt(i)) % Q;</span><br><span class="line">            <span class="keyword">if</span> (patHash == txtHash)    <span class="keyword">return</span> i - M + <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> N;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
+<h2 id="regular-expression">Regular Expression</h2>
+<div class="note info no-icon"><p>A regular expression is a notation to specify a set (possibly
+infinite) of strings.</p>
+</div>
+<p>正则表达式是解决 pattern matching 问题的有力武器。与 substring search
+问题不同，pattern matching 问题要求在文本中找到所有匹配给定 pattern
+的字符串集合，而不是某个单独的精确匹配的子串。</p>
+<p>正则表达式的基本 operations 有四种，按优先级从大到小分别是 ：</p>
+<ul>
+<li>parentheses. ex. <code>(AB)*A</code></li>
+<li>closure. ex. <code>AB*A</code></li>
+<li>concatenation. ex. <code>ABA</code></li>
+<li>or. ex. <code>AA | ABA</code></li>
+</ul>
+<p>此外还有几个约定俗成的 additional operations，比如：</p>
+<ul>
+<li>wildcard. ex. <code>.U.U.U.</code></li>
+<li>character class. ex. <code>[A-Za-z][a-z]*</code></li>
+<li>at least <span class="math inline">\(1\)</span>. ex.
+<code>A(BC)+DE</code></li>
+<li>exactly <span class="math inline">\(k\)</span>. ex.
+<code>[0-9]&#123;5&#125;-[0-9]&#123;4&#125;</code></li>
+</ul>
+<p>教授在这一节的末尾对正则表达式做了一个很精准的总结："REs are
+amazingly powerful and expressive, but using them in applications can be
+amazingly complex and error-prone."</p>
+<p><br></p>
+<h2 id="nondeterministic-finite-state-automata">Nondeterministic
+Finite-State Automata</h2>
+<p>在介绍 KMP 算法时，我们引入了 DFA (deterministic finite-state
+automata, 确定性有限状态自动机) 的概念并以此为基础构造了 KMP
+自动机。类似的，对于 RE 我们也能构建对应的 DFA。根据 Kleene's theorem
+有:</p>
+<ul>
+<li>For any DFA, there exists a RE that describes the same set of
+strings.</li>
+<li>For any RE, there exists a DFA that recognizes the same set of
+strings.</li>
+</ul>
+<p>因此，我们能够提出用 RE 实现 pattern matching 的 basic plan：</p>
+<ul>
+<li>Build DFA from RE.</li>
+<li>Simulate DFA with text as input. Pattern matched if it reaches the
+halting state.</li>
+</ul>
+<p>然而，理想很美好，现实很残酷，basic plan 实际上是 infeasible
+的。这是因为我们构建的 DFA may have exponential number of states.
+例如给出的 pattern 为 <code>a.......</code>，每多一个 wildcard，DFA
+的状态数就将增加 <span class="math inline">\(R\)</span> 倍；有 <span class="math inline">\(n\)</span> 个 wildcard 的 RE 所构建的 DFA
+将具有至少 <span class="math inline">\(R^n\)</span> 个状态。</p>
+<p>为了解决这个问题，NFA (nondeterministic finite-state
+automata，非确定性有限状态自动机)
+横空出世。不得不说这真的是一个非常天才的想法。我们构造
+Regular-expression-matching NFA 如下：</p>
+<ul>
+<li>We assume RE enclosed in parentheses.</li>
+<li><u>One state pre RE character</u> (start = 0, accept = M).</li>
+<li>Red <span class="math inline">\(\varepsilon\)</span>-transition only
+changes state, but do <em>not</em> scan text.</li>
+<li>Black match transition changes state and scan to next text
+char.</li>
+<li>Accept if <em>any</em> sequence of transitions ends in accept
+state.</li>
+</ul>
+<figure>
+<img data-src="NFA.png" alt="NFA corresponding to the pattern ( ( A*B | AC ) D )">
+<figcaption aria-hidden="true">NFA corresponding to the pattern
+<code>( ( A*B | AC ) D )</code></figcaption>
+</figure>
+<p>可以看到，NFA 中的状态数只与 RE 的长度有关；并且它巧妙地将
+transitions 分为两种，红色的 <span class="math inline">\(\varepsilon\)</span> 转移与黑色的 match
+转移。其中，利用 <span class="math inline">\(\varepsilon\)</span>
+转移可以在不读入字符的前提下转移到新的状态。</p>
+<p>这一设计虽然天才，但是也同时带来了不确定性 (nondeterminism)。与 DFA
+中 sequence 作为一个确定的 “解” 不同，NFA 中的 sequence 更像是：</p>
+<ul>
+<li>One view: machine can <em>guess</em> the proper sequence of state
+transitions.</li>
+<li>Another view: sequence is a proof that machine accepts the
+text.</li>
+</ul>
+<figure>
+<img data-src="NFA2.png" alt="AAAABD sequence matched by the above NFA">
+<figcaption aria-hidden="true"><code>AAAABD</code> sequence matched by
+the above NFA</figcaption>
+</figure>
+<p>可以看到，NFA 中存在若干个 applicable transitions，因此 NFA
+simulation 远比 DFA simulation 更加 tricky: we need to systematically
+consider <em>all</em> possible transition sequences.</p>
+<p><br></p>
+<h2 id="nfa-simulation">NFA Simulation</h2>
+<p>在理解了 NFA 的原理之后，其 simulation
+也变得十分简单。我们利用类似多源 BFS
+的思路模拟每一步能够到达的状态的集合 (“一步”代表读入一个 text
+character)。具体实现上，我们：</p>
+<ul>
+<li>State names. Integers from <span class="math inline">\(0\)</span> to
+<span class="math inline">\(M\)</span> (number of symbols in RE).</li>
+<li>Match-transitions. Keep regular expression in array
+<code>re[]</code>.</li>
+<li><span class="math inline">\(\varepsilon\)</span>-transitions. Store
+in a diagraph <span class="math inline">\(G\)</span>.</li>
+<li>Simulation. Maintain set of all possible (reachable) states that NFA
+could be in after reading in the first <span class="math inline">\(i\)</span> text characters. 其中 reachable states
+用 DFS 即可找到。</li>
+</ul>
+<figure>
+<img data-src="NFA3.png" alt="One step in simulating an NFA">
+<figcaption aria-hidden="true">One step in simulating an
+NFA</figcaption>
+</figure>
+<div class="note info no-icon"><p>Determining whether an <span class="math inline">\(N\)</span>-character text is recognized by the NFA
+corresponding to an <span class="math inline">\(M\)</span>-character
+pattern takes time proportional to <span class="math inline">\(MN\)</span> in the worst case.</p>
+</div>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">NFA</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">char</span>[] re;    <span class="comment">// match transitions</span></span><br><span class="line">    <span class="keyword">private</span> Digraph G;    <span class="comment">// epsilon-transition digraph</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> M;        <span class="comment">// number of states</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">NFA</span><span class="params">(String regexp)</span> &#123;</span><br><span class="line">        M  = regexp.length();</span><br><span class="line">        re = regexp.toCharArray();</span><br><span class="line">        G  = buildEpsilonTransitionDigraph();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">recognizes</span><span class="params">(String txt)</span> &#123;</span><br><span class="line">        Bag&lt;Integer&gt; pc = <span class="keyword">new</span> <span class="title class_">Bag</span>&lt;Integer&gt;();</span><br><span class="line">        <span class="type">DirectedDFS</span> <span class="variable">dfs</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DirectedDFS</span>(G, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> <span class="number">0</span>; v &lt; G.V(); ++v)</span><br><span class="line">            <span class="keyword">if</span> (dfs.marked(v))    pc.add(v);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; txt.length(); ++i) &#123;</span><br><span class="line">            Bag&lt;Integer&gt; states = <span class="keyword">new</span> <span class="title class_">Bag</span>&lt;Integer&gt;();</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> v : pc) &#123;</span><br><span class="line">                <span class="comment">// not necessarily a match since RE needs to match full text</span></span><br><span class="line">                <span class="keyword">if</span> (v == M)    <span class="keyword">continue</span>;  </span><br><span class="line">                <span class="keyword">if</span> ((re[v] == txt.charAt(i)) || re[v] == <span class="string">&#x27;.&#x27;</span>)  <span class="comment">// follow match transitions</span></span><br><span class="line">                    states.add(v+<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            dfs = <span class="keyword">new</span> <span class="title class_">DirectedDFS</span>(G, states);    <span class="comment">// follow epsilon-transitions</span></span><br><span class="line">            pc = <span class="keyword">new</span> <span class="title class_">Bag</span>&lt;Integer&gt;();</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> <span class="number">0</span>; v &lt; G.V(); ++v)</span><br><span class="line">                <span class="keyword">if</span> (dfs.marked(v))    pc.add(v);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> Digraph <span class="title function_">buildEpsilonTransitionDigraph</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">/* stay tuned */</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="nfa-construction">NFA Construction</h2>
+<p>NFA construction 本质上是图的构建，而图的形式是由 RE 对各种
+operations 的定义决定的。这里将着重介绍 RE 中四种基本 operations
+的连边方式。(slide 54RegularExpressions.pdf
+上有对应的实例图，很清晰)</p>
+<ul>
+<li>Concatenation. Add <em>match-transition</em> edge from state
+corresponding to characters to next state.</li>
+<li>Parentheses. Add a <span class="math inline">\(\varepsilon\)</span>-transition edge from
+parentheses to next state.</li>
+<li>Closure. Add three <span class="math inline">\(\varepsilon\)</span>-transition edges for each
+<code>*</code> operator.
+<ul>
+<li>character/closure expression to <code>*</code>.</li>
+<li><code>*</code> to characte/closure expression.</li>
+<li><code>*</code> to next state.</li>
+</ul></li>
+<li>Or. Add two <span class="math inline">\(\varepsilon\)</span>-transition edges for each
+<code>|</code> operator.</li>
+</ul>
+<p>可以发现 or 操作一定是与 parentheses
+伴生的，且只有在右括号的位置确定后才能确定如何连边，因此用栈来维护是一个很自然的想法。</p>
+<div class="note info no-icon"><p>Proposition. Building the NFA corresponding to an <span class="math inline">\(M\)</span>-character regular expresssion takes
+time and space proportional to <span class="math inline">\(M\)</span>.</p>
+</div>
+<p>对于长度为 <span class="math inline">\(M\)</span> 的RE
+中的每个字符，我们最多执行三次连边操作与两次栈操作，可以视为
+constant-time。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Digraph <span class="title function_">buildEpsilonTransitionDigraph</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">Digraph</span> <span class="variable">G</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Digraph</span>(M+<span class="number">1</span>);</span><br><span class="line">    Stack&lt;Integer&gt; ops = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;Integer&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; M; ++i) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">lp</span> <span class="operator">=</span> i;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (re[i] == <span class="string">&#x27;(&#x27;</span> || re[i] == <span class="string">&#x27;|&#x27;</span>) ops.push(i);    <span class="comment">// left parentheses and |</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (re[i] == <span class="string">&#x27;)&#x27;</span>) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">or</span> <span class="operator">=</span> ops.pop();</span><br><span class="line">            <span class="keyword">if</span> (re[or] == <span class="string">&#x27;|&#x27;</span>) &#123;                          <span class="comment">// 2-way or</span></span><br><span class="line">                lp = ops.pop();</span><br><span class="line">                G.addEdge(lp, or+<span class="number">1</span>);</span><br><span class="line">                G.addEdge(or, i);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> lp = or;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (i &lt; M-<span class="number">1</span> &amp;&amp; re[i+<span class="number">1</span>] == <span class="string">&#x27;*&#x27;</span>) &#123;                  <span class="comment">// closure</span></span><br><span class="line">            G.addEdge(lp, i+<span class="number">1</span>);</span><br><span class="line">            G.addEdge(i+<span class="number">1</span>, lp);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (re[i] == <span class="string">&#x27;(&#x27;</span> || re[i] == <span class="string">&#x27;*&#x27;</span> || re[i] == <span class="string">&#x27;)&#x27;</span>) <span class="comment">// metasymbols</span></span><br><span class="line">            G.addEdge(i, i+<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> G;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="regex-miscellaneous">Regex Miscellaneous</h2>
+<h3 id="generalized-re-print">Generalized RE Print</h3>
+<p>Generalized/Global regular expression print (grep,
+全局正则表达式打印) 我们应该再熟悉不过了。在学习了 RE NFA 的 simulation
+与 construction 之后，我们也能自己实现 grep。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GREP</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">re</span> <span class="operator">=</span> <span class="string">&quot;(.*&quot;</span> + args[<span class="number">0</span>] + <span class="string">&quot;.*)&quot;</span>;    <span class="comment">// contains RE as a substring</span></span><br><span class="line">        <span class="type">NFA</span> <span class="variable">nfa</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NFA</span>(re);</span><br><span class="line">        <span class="keyword">while</span> (StdIn.hasNextLine()) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">line</span> <span class="operator">=</span> StdIn.readLine();</span><br><span class="line">            <span class="keyword">if</span> (nfa.recognized(line))</span><br><span class="line">                StdOut.println(line);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>grep 的最坏时间复杂度与 substring search 问题的 brute-force
+算法相同，均是 <span class="math inline">\(\sim MN\)</span>；但 pattern
+matching 问题确实要比 substring search 更加 fundamental。</p>
+<h3 id="not-so-regular-expressions">Not-So-Regular Expressions</h3>
+<p>正则表达式能描述特定的字符串集合 (pattern)，那么是否所有的 pattern
+都能被正则表达式表示呢？答案是否定的。举几个非正则 (non-regular) pattern
+的例子：</p>
+<ul>
+<li>String of the form <span class="math inline">\(ww\)</span> for some
+string <span class="math inline">\(w\)</span>:
+<code>beriberi</code>.</li>
+<li>Unary strings with a composite number of 1s: <code>111111</code>,
+<code>1111</code>, <code>11</code>...</li>
+<li>Bitstrings with an equal number of 0s and 1s:
+<code>01110100</code>.</li>
+<li>Palindromes. <code>abccba</code>.</li>
+</ul>
+<p>还有一个许多编程语言中支持的 RE additional operation,
+<em>back-references</em>: <code>\1</code> notation matches subexpression
+that was matched earlier. 但实际上，这一 feature 将会令 pattern matching
+问题变得 intractable。</p>
+<h3 id="abstract-machines">Abstract Machines</h3>
+<p>Abstract machines, languages, and nondeterminism.</p>
+<ul>
+<li>Basis of the theory of computation.</li>
+<li>Basis of programming languages.</li>
+</ul>
+<p>实际上我们熟悉的 compiler 本质上与 DFA，NFA 这些 abstract machines
+没有区别：它们都将某种“程序” (program) 翻译成另一种“机器码” (machine
+code)，再由 executor (即 simulator) 进行执行。</p>
+<ul>
+<li>KMP: string =&gt; DFA =&gt; DFA simulator.</li>
+<li><code>grep</code>: RE =? NFA =&gt; NFA simulator.</li>
+<li><code>javac</code>: Java language =&gt; Java byte code =&gt;
+JVM.</li>
+</ul>
+<p><br></p>
+<h2 id="data-compression">Data Compression</h2>
+<p>我一直很好奇数据压缩的原理：我们常用的 <code>zip</code>,
+<code>7z</code> 等压缩软件，到底是依据什么样的原理进行工作的呢？</p>
+<p>先介绍几个数据压缩中的常用术语：</p>
+<ul>
+<li>Message. Binary data <span class="math inline">\(B\)</span> we want
+to compress.</li>
+<li>Compress. Generate a "compressed" representation <span class="math inline">\(C(B)\)</span>.</li>
+<li>Expand. Reconstructs original bitstream <span class="math inline">\(B\)</span>.</li>
+<li>Compression ratio. Bits in <span class="math inline">\(C(B)\)</span>
+/ bits in <span class="math inline">\(B\)</span>.</li>
+</ul>
+<p>一般来说，被压缩的数据都是 Standard ASCII characters: 每个 ASCII 字符
+(<code>char</code>) 都占 8 bits。</p>
+<div class="note info no-icon"><p>Non-existence of <em>universal data compression</em>. No algorithm
+can compress every bitstream.</p>
+</div>
+<p>用反证法简单证明：如果 universal data compression
+算法存在，那么对于某个 bitstream <span class="math inline">\(B\)</span>，我们不断对其应用该算法，理论上可以将空间压缩至
+0；这显然是不合理的。</p>
+<p><br></p>
+<h2 id="run-length-coding">Run-Length Coding</h2>
+<p>Run-length coding 是一个简单的数据压缩算法：对于 long runs of
+repeated bits，我们用 4-bits counts to represent alternating runs of 0s
+and 1s。</p>
+<p><code>0000000000000001111111000000011111111111</code> (40 bits) =&gt;
+15 0s, then 7 1s, then 7 0s, then 11 1s =&gt;
+<code>1111011101111011</code> (16 bits)。这 16 bits，每 4 bits 分别是
+15, 7, 7 与 11 的二进制表示。</p>
+<p>在实际应用中，我们一般用一个 8-bits string 来记录
+run-length。也就是说，若某个连续的 <span class="math inline">\(0/1\)</span> 段的长度超过 <span class="math inline">\(2^8-1=255\)</span> 时，我们需要 intersperse runs
+of length 0。(例如，当一个长度超过 255 的 <span class="math inline">\(0\)</span> 段出现时，我们将其分为两个长度小于 255
+的 <span class="math inline">\(0\)</span> 段并用一个形式化的长为 0 的
+<span class="math inline">\(1\)</span> 段隔开)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RunLength</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">R</span>   <span class="operator">=</span> <span class="number">256</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">lgR</span> <span class="operator">=</span> <span class="number">8</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">compress</span><span class="params">()</span> &#123; <span class="comment">/* see textbook */</span> &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">expand</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">bit</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">while</span> (!BinaryStdIn.isEmpty()) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">run</span> <span class="operator">=</span> BinaryStdIn.readInt(lgR);  <span class="comment">// read 8-bit count from standard input</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; run; ++i)</span><br><span class="line">                 BinaryStdOut.write(bit);         <span class="comment">// write 1 bit to standard output</span></span><br><span class="line">            bit = !bit;                          <span class="comment">// alternate 0 and 1</span></span><br><span class="line">        &#125;</span><br><span class="line">        BinaryStdOut.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="huffman-compression">Huffman Compression</h2>
+<p>我们常常能发现，一些 encoding 方式会导致
+ambiguity：比如这一段摩斯电码 <code>***---***</code> 可以解释为
+SOS，V7，IAMIE 与 EEWNI。在实际应用中，摩斯电码在每个 codewords
+间停顿一段时间以作区分。</p>
+<p>但对于 data compression 我们需要采取另外的方式来避免 ambiguity: we
+need to ensure no code word is a prefix of another.</p>
+<ul>
+<li>Ex 1. Fixed-length code.</li>
+<li>Ex 2. Append special stop char to each codeword.</li>
+<li>Ex 3. General prefix-free code.</li>
+</ul>
+<p>很巧妙的是，prefix-free code 可以用一颗 binary trie 来表示！</p>
+<ul>
+<li>Char in leaves.</li>
+<li>Codeword is path from root to leaf.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Node</span> <span class="keyword">implements</span> <span class="title class_">Comparable</span>&lt;Node&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">char</span> ch;            <span class="comment">// used only for leaf nodes</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> freq;           <span class="comment">// used only for compress (stay tuned)</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Node left, right; </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Node</span><span class="params">(<span class="type">char</span> ch, <span class="type">int</span> freq, Node left, Node right)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.ch    = ch;</span><br><span class="line">        <span class="built_in">this</span>.freq  = freq;</span><br><span class="line">        <span class="built_in">this</span>.left  = left;</span><br><span class="line">        <span class="built_in">this</span>.right = right;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isLeaf</span><span class="params">()</span> &#123; <span class="keyword">return</span> left == <span class="literal">null</span> &amp;&amp; right == <span class="literal">null</span>; &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(Node that)</span> &#123; <span class="keyword">return</span> <span class="built_in">this</span>.freq - that.freq; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样，对于一个给定的用 binary trie 表示的 prefix-free coding scheme
+与一段待压缩的 message，我们能够轻易的进行 compression (从 leaf
+开始向上) 与 expansion (从 root 开始向下)。以 expansion 为例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">expand</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">Node</span> <span class="variable">root</span> <span class="operator">=</span> readTrie();           <span class="comment">// read in encoding trie</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> BinaryStdIn.readInt();    <span class="comment">// read in number of chars</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i) &#123;</span><br><span class="line">        <span class="type">Node</span> <span class="variable">x</span> <span class="operator">=</span> root;</span><br><span class="line">        <span class="keyword">while</span> (!x.isLeaf()) &#123;         <span class="comment">// expand codeword for ith char</span></span><br><span class="line">            <span class="keyword">if</span> (!BinaryStdIn.readBoolean())</span><br><span class="line">                x = x.left;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                x = x.right;</span><br><span class="line">        &#125;</span><br><span class="line">        BinaryStdOut.write(x.ch, <span class="number">8</span>);  <span class="comment">// field &#x27;ch&#x27; stores the encoded char</span></span><br><span class="line">    &#125;</span><br><span class="line">    BinaryStdOut.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在，问题来到如何构建一颗 <em>optimal</em> prefix-free binary
+trie。Huffman tree 是一个绝佳的选择：</p>
+<ul>
+<li>Count frequency <code>freq[i]</code> for each char <code>i</code> in
+input.</li>
+<li>Start with one node corresponding to each char <code>i</code> (with
+weight <code>freq[i]</code>).</li>
+<li>Repeat until a single binary trie formed:
+<ul>
+<li>select two tries with min weight <code>freq[i]</code> and
+<code>freq[j]</code></li>
+<li>merge into single trie with weight
+<code>freq[i] + freq[j]</code></li>
+</ul></li>
+</ul>
+<p>Huffman tree 贪心的对当前权值最小的两颗 trie
+进行二叉合并，可以证明这样做能够使得权值越大的叶子节点离根节点的距离越远。也就是说，出现频率越高的字符，其编码
+(codeword) 的长度越短。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> Node <span class="title function_">buildTrie</span><span class="params">(<span class="type">int</span>[] freq)</span> &#123;</span><br><span class="line">    MinPQ&lt;Node&gt; pq = <span class="keyword">new</span> <span class="title class_">MinPQ</span>&lt;Node&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">char</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; R; ++i)    <span class="comment">// initialize PQ with singleton tries</span></span><br><span class="line">        <span class="keyword">if</span> (freq[i] &gt; <span class="number">0</span>)</span><br><span class="line">            pq.insert(<span class="keyword">new</span> <span class="title class_">Node</span>(i, freq[i], <span class="literal">null</span>, <span class="literal">null</span>));  </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (pq.size() &gt; <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="type">Node</span> <span class="variable">x</span> <span class="operator">=</span> pq.delMin();</span><br><span class="line">        <span class="type">Node</span> <span class="variable">y</span> <span class="operator">=</span> pq.delMin();  <span class="comment">// greedily merge two smallest tries</span></span><br><span class="line">        <span class="type">Node</span> <span class="variable">parent</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Node</span>(<span class="string">&#x27;\0&#x27;</span>, x.freq + y.freq, x, y);  <span class="comment">// new root/internal nodes</span></span><br><span class="line">        pq.insert(parent);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> pq.delMin();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="lzw-compression">LZW Compression</h2>
+<p>与 static model (ex. ASCII, Morse code) 与 dynamic model (ex. Huffman
+code) 不同，LZW code 是一种 <em>adaptive model</em>: it progressively
+learn and update model as you read text.</p>
+<p>LZW 算法维护一个 symbol table，其中记录着一系列 string-code
+的映射。与 Huffman code 逐字符编码的方式不同，LZW
+算法能够为特定的字符串进行编码。</p>
+<p>与 Huffman code 相同的是，LZW 中的 symbol table 也用 trie 进行实现
+(但并非 binary trie)；并且该 trie 需要支持 longest prefix match
+操作。这是因为 LZW compression 的步骤如下：</p>
+<ul>
+<li>Create ST associating <span class="math inline">\(W\)</span>-bit
+codewords with string keys.</li>
+<li>Initialize ST with codewords for single-char keys.</li>
+<li>(longest prefix match) Find longest string <span class="math inline">\(s\)</span> in ST that is a prefix of <em>unscanned
+part</em> of input.</li>
+<li>Write the <span class="math inline">\(W\)</span>-bit codeword
+associated with <span class="math inline">\(s\)</span>.</li>
+<li>Add <span class="math inline">\(s+c\)</span> to ST as an update,
+where <span class="math inline">\(c\)</span> is the next char in the
+input.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">compress</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">input</span> <span class="operator">=</span> BinaryStdIn.readString();</span><br><span class="line">    TST&lt;Integer&gt; st = <span class="keyword">new</span> <span class="title class_">TST</span>&lt;Integer&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; R; ++i)    <span class="comment">// codewords for single-char, radix R keys</span></span><br><span class="line">        st.put(<span class="string">&quot;&quot;</span> + (<span class="type">char</span>) i, i);</span><br><span class="line">    <span class="type">int</span> <span class="variable">code</span> <span class="operator">=</span> R+<span class="number">1</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (input.length() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> st.longestPrefixOf(input);    <span class="comment">// find longest prefix match s</span></span><br><span class="line">        BinaryStdOut.write(st.get(s), W);        <span class="comment">// write W-bit codeword for s</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">t</span> <span class="operator">=</span> s.length();</span><br><span class="line">        <span class="keyword">if</span> (t &lt; input.length() &amp;&amp; code &lt; L)      <span class="comment">// add new codeword</span></span><br><span class="line">            st.put(input.substring(<span class="number">0</span>, t+<span class="number">1</span>), code++);</span><br><span class="line">        input = input.substring(t);              <span class="comment">// scan past s in input</span></span><br><span class="line">    &#125;</span><br><span class="line">    BinaryStdOut.write(R, W);                    <span class="comment">// write &quot;stop&quot; codeword</span></span><br><span class="line">    BinaryStdOut.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>LZW expansion 需要在 decode 的同时 reconstruct the symbol table.
+其步骤如下：</p>
+<ul>
+<li>Create ST associating string values with <span class="math inline">\(W\)</span>-bit keys.</li>
+<li>Initialize ST to contain single-char values.</li>
+<li>Read a <span class="math inline">\(W\)</span>-bit key.</li>
+<li>Find associated string value in ST and write it out.</li>
+<li>Update ST.</li>
+</ul>
+<p>注意，LZW expansion 存在一种 tricky case 需要 handle: 尝试 expand
+以下例子，可以发现有时我们会遇到 symbol table
+中当前未记录的编码。(具体的处理方式 not cover in this class)</p>
+<figure>
+<img data-src="C:\Users\XXZ\Desktop\document\github\Hexo-blog\source_posts\LZW.png" alt="expansion stops for unknown code value">
+<figcaption aria-hidden="true">expansion stops for unknown code
+value</figcaption>
+</figure>
+<p>LZW 与 Huffman compression 都是一种 <em>loseless compression</em>
+(我们熟悉的 JPEG, MP3 compression 均不属于此类，它们是 <em>lossy
+compression</em>)，并且都被 Shannon entropy
+理论所限制。它们最大的区别在于：</p>
+<ul>
+<li>LZW: represent variable-length symbols with fixed-length codes.</li>
+<li>Huffman: represent fixed-length symbols with variable-length
+codes.</li>
+</ul>
+<p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
@@ -714,8 +1040,8 @@ Wayne.</p>
     </div>
           <div class="post-tags">
               <a href="/tags/course-notes/" rel="tag"><i class="fa fa-tag"></i> course notes</a>
-              <a href="/tags/data-structure/" rel="tag"><i class="fa fa-tag"></i> data structure</a>
               <a href="/tags/string/" rel="tag"><i class="fa fa-tag"></i> string</a>
+              <a href="/tags/data-structure/" rel="tag"><i class="fa fa-tag"></i> data structure</a>
           </div>
 
         
@@ -822,15 +1148,6 @@ Wayne.</p>
 
 
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
 
 <script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/08/27/algo-princeton-p7/"}</script>
 <script>
@@ -846,6 +1163,15 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
