@@ -34,8 +34,9 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/truth.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/multiplex.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/ALU.png">
 <meta property="article:published_time" content="2023-09-06T06:42:55.000Z">
-<meta property="article:modified_time" content="2023-09-06T08:54:43.132Z">
+<meta property="article:modified_time" content="2023-09-06T14:53:04.161Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="system">
 <meta name="twitter:card" content="summary">
@@ -173,7 +174,7 @@
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#boolean-functions-gate-logic"><span class="nav-number">1.</span> <span class="nav-text">Boolean Functions &amp; Gate
 Logic</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#boolean-identities"><span class="nav-number">1.1.</span> <span class="nav-text">Boolean Identities</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#truth-table-to-boolean-expression"><span class="nav-number">1.2.</span> <span class="nav-text">Truth Table to Boolean
-Expression</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multiplexer"><span class="nav-number">1.3.</span> <span class="nav-text">Multiplexer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">2.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Expression</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multiplexer"><span class="nav-number">1.3.</span> <span class="nav-text">Multiplexer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#alu-implementation"><span class="nav-number">2.</span> <span class="nav-text">ALU Implementation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#s-complement"><span class="nav-number">2.1.</span> <span class="nav-text">2&#39;s Complement</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#adder"><span class="nav-number">2.2.</span> <span class="nav-text">Adder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#arithmatic-logic-unit"><span class="nav-number">2.3.</span> <span class="nav-text">Arithmatic Logic Unit</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -428,13 +429,78 @@ simultaneous 的，使得多路信息能在单条信道上同时进行传输。<
 an oscillator producing alternating 0/1 signals</figcaption>
 </figure>
 <p><br></p>
+<h2 id="alu-implementation">ALU Implementation</h2>
+<p>这一节我们将使用 project 01 中设计的众多 chips 来构建一个 ALU
+(Arithmatic Logic Unit, 算术逻辑单元)。</p>
+<h3 id="s-complement">2's Complement</h3>
+<div class="note info no-icon"><p>Definition. Represent Negative number <span class="math inline">\(-x\)</span> using the positive number: <span class="math inline">\(2^n-x\)</span>.</p>
+</div>
+<p>这是因为 binary addition 本质上是 modular addition。对于 <span class="math inline">\(n\)</span>-bits 下的 binary addition，overflow bit
+(溢出位) 将会被直接舍弃；这实质上相当于将结果对 <span class="math inline">\(2^n\)</span> 取模。</p>
+<p>这样，计算 substraction <span class="math inline">\(x-y\)</span>
+也变得十分简单：<span class="math inline">\(x-y=x+(-y)\)</span>。给出
+<span class="math inline">\(y\)</span>，我们能通过下面的方式迅速计算出
+<span class="math inline">\(-y\)</span> 的 2s complement：将 <span class="math inline">\(y\)</span> 取反后加 1。这是因为：<span class="math inline">\(2^n-y=1+(2^n-1)-y\)</span>。</p>
+<h3 id="adder">Adder</h3>
+<p>所有算术运算的基础是加法运算：因此，ALU 的一个基础单元是 adder
+(加法器)。此外由于 2's complement 的存在，adder 可以同时完成 addition 与
+substraction。</p>
+<p>一个 binary adder 由一个 half adder (半加器) 与若干个 full adder
+(全加器) 组成：</p>
+<ul>
+<li>Half Adder: 模拟 LSB 的加法运算。输入 <code>a</code>,
+<code>b</code>；输出 <code>out</code> 与 <code>carry</code>.</li>
+<li>Full Adder: 一个 full adder 可以由两个 half adders 组成
+(这也是半加器名称的来源)；模拟普通位的加法运算。输入 <code>a</code>,
+<code>b</code> 与 <code>carry</code> (前一位), 输出 <code>out</code> 与
+<code>carry</code>。</li>
+</ul>
+<p>注意，若 MSB 在进行加法运算后产生了 carry bit，该 carry bit
+将被忽略。</p>
+<h3 id="arithmatic-logic-unit">Arithmatic Logic Unit</h3>
+<p>ALU 的基本模型如下：</p>
+<ul>
+<li>输入 <code>input1</code>, <code>input2</code> 与某个 pre-defined
+arithmetic/logical function <span class="math inline">\(f\)</span>.</li>
+<li>输出 <span class="math inline">\(f(\)</span><code>input1</code>,
+<code>input2</code><span class="math inline">\()\)</span>.</li>
+<li>输出两个 output control bits <code>zr</code> 与
+<code>ng</code>.</li>
+</ul>
+<p>其中，函数 <span class="math inline">\(f\)</span> 被 6 个 input
+control bits 所 specified：<code>zx</code>, <code>nx</code>,
+<code>zy</code>, <code>ny</code>, <code>f</code> 与
+<code>no</code>，每个 input control bit 指定了一种特定的 operation。ALU
+将根据每个 control bit 的值依次执行这一系列
+operations，最后得到的输出将与某个算数/逻辑函数 <span class="math inline">\(f\)</span> 一致。</p>
+<figure>
+<img data-src="ALU.png" alt="Only 18 different fs are defined">
+<figcaption aria-hidden="true">Only 18 different <span class="math inline">\(f\)</span>s are defined</figcaption>
+</figure>
+<p>理论上来说，6 个 input control bits 可以代表 <span class="math inline">\(2^6=64\)</span> 种不同的 <span class="math inline">\(f\)</span>；但本课程中只要求我们实现 18 种。真正的
+ALU 的确能够支持远超 18 种的函数以执行不同的算数/逻辑运算。</p>
+<p>两个 output control bits <code>zr</code>, <code>ng</code> 则用于标识
+ALU 计算结果 <code>out</code> 的性质：</p>
+<ul>
+<li>if <code>out == 0</code> then <code>zr = 1</code>, else
+<code>zr = 0</code>.</li>
+<li>if <code>out &lt;  0</code> then <code>ng = 1</code>, else
+<code>ng = 0</code>.</li>
+</ul>
+<p>当我们构建整个计算机的结构时，这两个 output control bits
+提供的信息将至关重要 [stay tuned].</p>
+<p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
 if not specified.</p>
 </div>
 <p>Course info:</p>
+<p>Lecturer: Prof. Shimon Shocken, Prof. Noam Nisan.</p>
 <p>Course textbook:</p>
+<p>(Nisan N., Schocken S., 2008) <a target="_blank" rel="noopener" href="https://www.amazon.com/Elements-Computing-Systems-Principles-ebook/dp/B004HHORGA/">The
+Element of Computing Systems: Building a Modern Computer from First
+Principles.</a></p>
 
     </div>
 
