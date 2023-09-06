@@ -155,6 +155,196 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
+    <title>Nand2Tetris Section I - Hebrew University</title>
+    <url>/2023/09/06/nand2tetris-1/</url>
+    <content><![CDATA[<p>这门课将带领我们使用普通的与非门 (NAND gate) 从零开始搭建一个完整的
+general-purpose
+computer；不得不说这真是太极客了，很符合我对计算机科学的酷炫想象。</p>
+<p>这门课课时并不长，但涵盖了从最底层的 logic gate，中层的 assembly
+languages 到顶层的 programming languages 与 OS
+等一系列计算机的基本组成部分，可谓是具体而微。目标：一个月内 (10.6 之前)
+搞定！</p>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="boolean-functions-gate-logic">Boolean Functions &amp; Gate
+Logic</h2>
+<p>这门课确实做到了完全的
+non-prerequisite；本节的内容十分基础，但我还是从中学到了不少新东西。</p>
+<h3 id="boolean-identities">Boolean Identities</h3>
+<p>三个基本的布尔函数：AND <span class="math inline">\(\land\)</span>,
+OR <span class="math inline">\(\lor\)</span> 与 NOT <span class="math inline">\(\lnot\)</span> .一个 Boolean Algebra
+具有以下性质：</p>
+<ul>
+<li>Commutative Laws (交换律).
+<ul>
+<li><span class="math inline">\((x\land y)=(y\land x)\)</span>.</li>
+<li><span class="math inline">\((x\lor y)=(y\lor x)\)</span>.</li>
+</ul></li>
+<li>Associative Laws (结合律).
+<ul>
+<li><span class="math inline">\((x \land (y\land z))=((x\land y)\land
+z)\)</span>.</li>
+<li><span class="math inline">\((x\lor (y\lor z))=((x\lor y)\lor
+z)\)</span>.</li>
+</ul></li>
+<li>Distributive Laws (分配律).
+<ul>
+<li><span class="math inline">\((x\land(y\lor z))=(x\land y)\lor (x\land
+z)\)</span>.</li>
+<li><span class="math inline">\((x\lor (y\land z))=(x\lor y)\land (x\lor
+z)\)</span>.</li>
+</ul></li>
+<li>De Morgan Laws.
+<ul>
+<li><span class="math inline">\(\lnot(x \land y)=(\lnot{x})\lor(\lnot
+y)\)</span>.</li>
+<li><span class="math inline">\(\lnot(x\lor y)=(\lnot{x})\land (\lnot
+y)\)</span>.</li>
+</ul></li>
+</ul>
+<p>应用这些性质，我们能够对任意的 Boolean algebra
+进行化简/等价变形；但需要注意的是，找到给定的 Boolean algebra
+的最简化形式这个问题是 NP-hard 的；不存在解决该问题的 general
+algorithm。</p>
+<h3 id="truth-table-to-boolean-expression">Truth Table to Boolean
+Expression</h3>
+<p>对于一张给定的真值表，如何找到等价的布尔表达式？这个问题很有应用价值。至少当我在写
+project 时发现，这一准则在 chip design
+中作用很大。我们来看一个例子：</p>
+<figure>
+<img data-src="truth.png" alt="A 3-variable boolean function">
+<figcaption aria-hidden="true">A 3-variable boolean
+function</figcaption>
+</figure>
+<p>对于每个值为 1 的行，我们查看对应的变量；若为
+0，则对其取反。最后把所有变量与起来 (保证最后的结果为
+1)：以第一行为例，由于 <span class="math inline">\(x,y,z\)</span> 均为
+0，该行对应的 constraint 为 <span class="math inline">\((\lnot x)\land
+(\lnot{y})\land (\lnot z)\)</span>；而第三行中 <span class="math inline">\(y\)</span> 的值为
+1，我们不需要对其取反，因此对应的 constraint 为 <span class="math inline">\((\lnot{x})\land y\land (\lnot{z})\)</span>.</p>
+<p>把这一步得出的所有 constraints
+再或起来，就得到了这张真值表对应的布尔表达式。</p>
+<h3 id="multiplexer">Multiplexer</h3>
+<p>当初在 ENGG1310 中接触了 multiplexer (多路复用器)
+这个概念，奈何该课实在过于水，只知道猛灌大量的概念，因此时至今日我只对这个名字产生了些许印象。而在
+Nand2Tetris 这门课程中，仅仅用了 10 分钟我就掌握了 multiplexer
+的基本原理，课程质量高下立判。</p>
+<p>multiplexer 与 demultiplexer 其实是一种 chip
+design，其宏观表现即为通讯系统中著名的复用器/解复用器。用 HDL (Hardware
+Description Language) 描述的 multiplexer 与 demultiplexer 的 API
+如下：</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="comment">/** </span></span><br><span class="line"><span class="comment"> * Multiplexor:         * Demultiplexor:</span></span><br><span class="line"><span class="comment"> *                      *                        </span></span><br><span class="line"><span class="comment"> * out = a if sel == 0  * &#123;a, b&#125; = &#123;in, 0&#125; if sel == 0</span></span><br><span class="line"><span class="comment"> *       b otherwise    * &#123;0, in&#125; if sel == 1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">CHIP Mux &#123;</span><br><span class="line">    IN a, b, sel;</span><br><span class="line">    OUT out;</span><br><span class="line">    ...  <span class="comment">// implementation</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">CHIP DMux &#123;</span><br><span class="line">    IN in, sel;</span><br><span class="line">    OUT a, b;</span><br><span class="line">    ...  <span class="comment">// implementation</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>多路复用器根据输入的 <code>sel</code>
+流同时将多路的输入比特流转化为一路的输出比特流；解复用器则是上述过程的逆过程。整个流程是
+simultaneous 的，使得多路信息能在单条信道上同时进行传输。</p>
+<figure>
+<img data-src="multiplex.png" alt="Each sel bit is connected to an oscillator producing alternating 0/1 signals">
+<figcaption aria-hidden="true">Each <code>sel</code> bit is connected to
+an oscillator producing alternating 0/1 signals</figcaption>
+</figure>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p>Course textbook:</p>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>courses</category>
+        <category>From NAND to Tetris, HUJI</category>
+      </categories>
+      <tags>
+        <tag>system</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>COMP3322 notes P1 - Internet &amp; WWW Basic</title>
+    <url>/2023/09/04/COMP3322-1/</url>
+    <content><![CDATA[<p>选这门课完全是为了推进我博客美化的大业！希望学完之后 update logs
+里的一部分 issues 能自己亲手解决。首先来到第一节 Internet and World Wide
+Web basic。出乎意料的是我确实混淆了不少相似的概念。</p>
+<p>从这门课开始我打算 develop
+一个新的笔记模式。目前已有的笔记模式大概分为：</p>
+<ul>
+<li>Fragment 碎片型。Ex. ENGG1340/COMP2113.</li>
+<li>Essence 精华型。Ex. ENGG3357.</li>
+<li>Comprehensive 全面型。Ex. Algorithms I &amp; II.</li>
+</ul>
+<span id="more"></span>
+<p>对于类似 COMP3322
+这种概念较多较杂的课程，碎片型显得没有条理，精华型容易产生遗漏，全面型整理起来又太过冗长。于是我准备尝试一下结合课程
+slides 的 revision-oriented 型：一切以 final 复习方便为宗旨！</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="what-is-the-internet">What is the Internet?</h2>
+<p>Keywords. [见 slides 01-Internet-Basic]</p>
+<ul>
+<li>Internet is an <em>infrastructure</em>.</li>
+<li>hosts (主机)。</li>
+<li>IP routers.</li>
+</ul>
+<p><br></p>
+<h2 id="what-is-www">What is WWW?</h2>
+<p>Internet 的中文翻译是互联网；而 WWW (World Wide Web)
+是万维网。在此之前我一直以为它们指的是同一种东西；然而互联网中的「网」强调的是
+network；而万维网中的「网」指的是 web。这个问题挺值得玩味。</p>
+<p>另外，WWW
+的台译是<em>全球资讯网</em>，我认为该翻译虽没有万维网那么「雅」，但「信」，「达」却做得更好。</p>
+<p>Keywords. [见 slides 01-Internet-Basic]</p>
+<ul>
+<li>hypertext links (超文本链接).</li>
+<li>URL (Uniform Resource Locator).</li>
+</ul>
+<p><br></p>
+<h2 id="client-server-communication">Client-Server Communication</h2>
+<p>Keywords. [见 slides 01-Internet-Basic]</p>
+<ul>
+<li>Host-to-Host. URL: domain name/IP address. HTTP protocol: network
+path.</li>
+<li>End-to-End and <em>port numbers</em>. [a]</li>
+<li>[IMPORTANT] Illustration of steps taken by client and server.</li>
+<li>IP address and IPV4 addressing. [b]</li>
+</ul>
+<p>[a]: 客户端同时运行着 Google Chrome 与 Firefox，而服务器端运行着
+Nginx 与 MongoDB；通过分配不同的 port numbers，进程间可以分别建立联系
+(Chrome <span class="math inline">\(\to^{80}\)</span> Nginx, Firefox
+<span class="math inline">\(\to^{443}\)</span>
+MongoDB)。客户端的进程向对应的端口发送请求；而服务器端的进程则监听特定的端口，并对请求进行回应。</p>
+<p>[b]: IPV4 addressing scheme 的前/后缀。在 HKU
+之外，<code>148.7</code> 这一前缀将作为 (HKU) physical network
+locator；而在 HKU 内部，<code>147.8.175</code> 这一前缀将作为 (HKU CS)
+physical network locator.</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p>Code: COMP3322, Lecturer: Dr.Anthony Tam.</p>
+]]></content>
+      <categories>
+        <category>notes</category>
+        <category>courses</category>
+        <category>Modern Technologies on World Wide Web, HKU</category>
+      </categories>
+      <tags>
+        <tag>networking</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Algorithms II, Princeton University, P8</title>
     <url>/2023/09/01/algo-princeton-p8/</url>
     <content><![CDATA[<blockquote>
