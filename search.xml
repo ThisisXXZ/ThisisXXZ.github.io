@@ -309,6 +309,44 @@ ALU 计算结果 <code>out</code> 的性质：</p>
 <p>当我们构建整个计算机的结构时，这两个 output control bits
 提供的信息将至关重要 [stay tuned].</p>
 <p><br></p>
+<h2 id="problematic-combinatorial-logic">Problematic Combinatorial
+Logic</h2>
+<p>到目前为止，我们构建的所有 chips 都是 <em>combinational chips</em>
+(组合逻辑芯片/器件)；combinatorial logic (组合逻辑)
+意味着芯片任意时刻的稳态输出仅仅取决于该时刻的输入 (i.e., <span class="math inline">\(\mathtt{out}(t)=f(\mathtt{in}(t))\)</span>)。组合逻辑器件使得计算机具有了「计算」(compute
+values) 的能力。</p>
+<p>其实在写 projects 的时候就能感觉到这一点：由于所有 HDL 语句都是
+synchronized 的，chips
+的输入与输出仿佛是同时发生的。像这样，仅仅建立在组合逻辑器件上，缺少时间概念的计算机有两个致命的问题：</p>
+<ul>
+<li>It cannot store and recall values (i.e., it cannot <em>memorize</em>
+things).</li>
+<li>The system state is not stablized.</li>
+</ul>
+<p>第一点很好理解：组合逻辑器件的输出仅仅与该时刻的输入有关，而与前一时刻的状态无关；这一定义本身就与「记忆」这一概念相悖。</p>
+<p>第二点则需要稍微进行说明：虽然组合逻辑器件刻意忽略了时间的概念，但现实中，无论是器件的输入与输出之间还是不同器件间信号的传输都会产生时间造成的误差。举例来说，ALU
+此时需要计算 <span class="math inline">\(x\)</span>, <span class="math inline">\(y\)</span> 两数之和：</p>
+<ul>
+<li><span class="math inline">\(x\)</span> 位于 ALU 临近的某个 register
+[stay tuned]。</li>
+<li><span class="math inline">\(y\)</span> 位于某个比较偏远的 RAM
+register。</li>
+</ul>
+<p>In this case，<span class="math inline">\(x\)</span> 与 <span class="math inline">\(y\)</span> 到达 ALU
+的时间一定会有差异。于是，在产生稳定的 <span class="math inline">\(x+y\)</span> 输出之前，ALU 的输出完全没有意义
+(generate
+garbage)。当器件数较少时这个问题的影响可能不会太大；但计算机是一个含有成千上万个元件的精密结构，如果无法实现
+architecture synchronization，微小的误差将会导致巨大的混沌。</p>
+<p>为了解决以上的问题，一个新的设计逻辑 - sequential logic (时序逻辑)
+应运而生。在该逻辑下，芯片在某时刻的稳态输出不仅取决于当前的输入，还与前一时刻输入形成的<em>状态</em>有关
+(i.e., <span class="math inline">\(\mathtt{state}(t)=f(\mathtt{state}(t-1))\)</span>)。</p>
+<p>注意在 sequential logic 的定义中，我们使用了 state (状态)
+这一概念：这也是其与 combinatorial logic 的最根本区别之一。sequential
+chips (register, binary cell, RAM 等等)
+几乎都与计算机的存储功能相关。</p>
+<p><br></p>
+<h2 id="sequential-logic-dff">Sequential Logic &amp; DFF</h2>
+<p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
