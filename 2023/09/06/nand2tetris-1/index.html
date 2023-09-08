@@ -35,8 +35,11 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/truth.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/multiplex.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/ALU.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/register.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/RAM.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/seqchips.png">
 <meta property="article:published_time" content="2023-09-06T06:42:55.000Z">
-<meta property="article:modified_time" content="2023-09-07T13:49:37.742Z">
+<meta property="article:modified_time" content="2023-09-08T07:56:19.701Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="system">
 <meta name="twitter:card" content="summary">
@@ -175,7 +178,7 @@
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#boolean-functions-gate-logic"><span class="nav-number">1.</span> <span class="nav-text">Boolean Functions &amp; Gate
 Logic</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#boolean-identities"><span class="nav-number">1.1.</span> <span class="nav-text">Boolean Identities</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#truth-table-to-boolean-expression"><span class="nav-number">1.2.</span> <span class="nav-text">Truth Table to Boolean
 Expression</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multiplexer"><span class="nav-number">1.3.</span> <span class="nav-text">Multiplexer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#alu-implementation"><span class="nav-number">2.</span> <span class="nav-text">ALU Implementation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#s-complement"><span class="nav-number">2.1.</span> <span class="nav-text">2&#39;s Complement</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#adder"><span class="nav-number">2.2.</span> <span class="nav-text">Adder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#arithmatic-logic-unit"><span class="nav-number">2.3.</span> <span class="nav-text">Arithmatic Logic Unit</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#problematic-combinatorial-logic"><span class="nav-number">3.</span> <span class="nav-text">Problematic Combinatorial
-Logic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sequential-logic-dff"><span class="nav-number">4.</span> <span class="nav-text">Sequential Logic &amp; DFF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Logic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sequential-logic-dff"><span class="nav-number">4.</span> <span class="nav-text">Sequential Logic &amp; DFF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memory-units-counters"><span class="nav-number">5.</span> <span class="nav-text">Memory Units &amp; Counters</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -528,6 +531,103 @@ chips (register, binary cell, RAM 等等)
 几乎都与计算机的存储功能相关。</p>
 <p><br></p>
 <h2 id="sequential-logic-dff">Sequential Logic &amp; DFF</h2>
+<p>如何实现 sequential
+logic，亦即，如何使一个元件在某时刻的输出能够被前一个时刻的状态影响？如何定义所谓的「时刻」与「状态」？sequential
+logic 又如何解决 combinatorial logic 产生的两个致命问题？</p>
+<p>接下来我们介绍实现 sequential logic 的两个重要基本元件：The
+<em>Clock</em> (钟) 与 Flips-Flops (正反器/触发器).</p>
+<p>The Clock. The Clock 是一个不断在 0-1 (<em>tick-tock</em>)
+两信号中交替的 oscillator。该信号 (0-<em>tick</em>, 1-<em>tock</em>)
+同时向所有 sequential chips 进行广播，宣布当前的 clock phase。从某个
+tick 开始到随后的 tock 结束之间的时间称为 <em>cycle</em>
+(周期)，每个周期代表了一个离散的时间单位 (discrete time
+unit)，即所谓的「时刻」。</p>
+<p>Flip-Flops. Data Flip-Flops (DFF) 是能够实现 sequential logic
+的最小单位。DFF 接受从 master clock
+传输的隐藏输入，从而具有了时刻的概念。在此基础上，DFF 能够实现 <span class="math inline">\(\mathtt{out}(t)=\mathtt{in}(t-1)\)</span>:
+即，在某时刻 <span class="math inline">\(t\)</span> 的 DFF 能够输出其在
+<span class="math inline">\(t-1\)</span> 时刻接受的输入，<span class="math inline">\(\mathtt{in}(t-1)\)</span> 的值从时刻 <span class="math inline">\(t-1\)</span> 到时刻 <span class="math inline">\(t\)</span> 被 DFF 所「记忆」。</p>
+<p>被 DFF 所记忆的值，我们称之为 DFF 的「状态」
+(state)。从另一个角度来看，DFF 创造的是一个长度为 <span class="math inline">\(1\)</span> (或者说，<span class="math inline">\(1\)</span> 个时刻) 的时间延迟 (inherent time
+delay)：本该在 <span class="math inline">\(t-1\)</span> 时输出的值直到
+<span class="math inline">\(t\)</span> 时刻才被输出。</p>
+<p>DFF 是由两个互相连接的与非门构建的。由 DFF 开始，我们能够构建从
+register 到 RAM 的所有记忆器件。DFF 与 sequential logic 给予了计算机
+maintain values 的能力 - 组合逻辑束手无策的第一个问题得以解决。</p>
+<p>第二个问题的解决则更加巧妙：我们计算出计算机中相距最远的两个元件传输信号所需的时间，并将
+clock 控制的时间单元周期 <em>cycle</em>
+设为稍微高于该时间的某个值。这样我们能够保证在每个 cycle 的末尾 (即
+<em>tock</em> 信号结束的瞬间) 所有元件的输出都是稳定且有意义的。</p>
+<p><br></p>
+<h2 id="memory-units-counters">Memory Units &amp; Counters</h2>
+<p>接下来我们以 DFF 为基础构建一系列经典的记忆单元：registers
+(寄存器)，RAM units (random-access memory unit, 随机访问存储器) 与
+program counters (程序计数器)。</p>
+<p><u><em>Single-bit register</em></u> (a.k.a., Bit, binary cell).
+Behavior: <span class="math inline">\(\mathtt{out}(t)=\mathtt{out}(t-1)\)</span>。该函数恰恰是对「记忆」这一功能的定义。如何使用仅能执行
+<span class="math inline">\(\mathtt{out}(t)=\mathtt{in}(t-1)\)</span> 的
+DFF 构造出这样的元件？</p>
+<figure>
+<img data-src="register.png" alt="Register implementation">
+<figcaption aria-hidden="true">Register implementation</figcaption>
+</figure>
+<ul>
+<li>[write] If <span class="math inline">\(\mathtt{load}(t-1)\)</span>
+then <span class="math inline">\(\mathtt{out}(t)=\mathtt{in}(t-1)\)</span>.</li>
+<li>[read] else <span class="math inline">\(\mathtt{out}(t)=\mathtt{out}(t-1)\)</span>.</li>
+</ul>
+<p>某个 cycle 内 register 的工作流程如下：在每个 tick 期间，Mux 根据
+load 选择保留或更新 DFF 的 state；在接下来的 tock 期间，DFF 产生稳定的
+out 输出；同时，在 register 内部，该输出值将被导入 Mux 以便其在下一个
+cycle 开始时进行选择。</p>
+<p>一系列的 single-bit registers 串联形成 multiple-bits registers。宽度
+<em>width</em> 是 register 的基本参数之一，它描述了某个 register
+最多能够容纳的比特数。在本课程内一个典型的 multiple-bits register 的宽度
+<span class="math inline">\(w\)</span> 是 16。</p>
+<p><u><em>RAM unit</em>.</u> 一个 RAM 单元由若干个 <span class="math inline">\(w\)</span>-bits register 与附加的 direct (random)
+access logic 组成，它支持根据输入的地址 address 直接对对应的 register
+执行读/写操作；此即为所谓的 random access。</p>
+<figure>
+<img data-src="RAM.png" alt="word is a w-bit content">
+<figcaption aria-hidden="true"><em>word</em> is a <span class="math inline">\(w\)</span>-bit content</figcaption>
+</figure>
+<p>RAM 的基本参数包括 width 与 size: width 与组成其的 register 的 width
+(即 word 的长度) 一致；size 则描述其含有的 registers
+的个数。现代计算机的 RAMs 一般是 32/64-bit-wide 的；但其 size
+却是数以亿计的。</p>
+<p><u><em>Program counters</em>.</u> counter (计数器) 是一种特殊的
+sequential
+chip；它所维护的状态在每个时间单元内都会产生一定的变化，遵循函数 <span class="math inline">\(\mathtt{out}(t)=\mathtt{out}(t-1)+c\)</span>；其中
+<span class="math inline">\(c\)</span> 一般为 <span class="math inline">\(1\)</span>。Counter 在现代计算机中扮演的角色是指令
+(instructions)
+储存器：在当前的程序中它总是储存下一个将被执行的指令的地址。</p>
+<p>一般来说，counter 需要支持以下三种操作 (我们把 counter 维护的 state
+称为 "count")：</p>
+<ul>
+<li>resetting the count to zero.</li>
+<li>loading a new counting base.</li>
+<li>incrementing/decrementing the count by 1.</li>
+</ul>
+<p><u><em>Sequential chips design</em>.</u> 现在我们能对 sequential
+chips 下这样的定义：A sequential chip is a chip that embeds one or more
+DFF gates, either directly or indirectly.</p>
+<p>DFF 的存在使 sequential chips 具有了 maintain state (memory units) 与
+operate on state (counters) 的能力。技术上来说，<u>DFF 通过引入时间延迟
+(inherent time delay) 使得 feedback loop 成为了可能</u>。</p>
+<figure>
+<img data-src="seqchips.png" alt="Sequential chips always consist of a layer of DFFs sandwiched between combinational logic layers">
+<figcaption aria-hidden="true">Sequential chips always consist of a
+layer of DFFs sandwiched between combinational logic layers</figcaption>
+</figure>
+<p>feedback loop 是一种 (directly or indirecrly)
+将某个元件的输出作为其自身输入的结构。sequential chips
+能够「记忆」的本质，即为通过 feedback loop
+持续不断的将上一时刻的输出重新作为该时刻的输入。</p>
+<p>这一结构只有在 DFF
+创造的时间延迟基础上才得以存在；也就是说，combinatorial logic 下
+feedback loop 的存在是非法的。由于时间的概念被忽视，combinational chips
+的输入与输出可以看成是同时发生的：因此将其输出作为其自身输入将会产生
+mutual dependence 的悖论。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
