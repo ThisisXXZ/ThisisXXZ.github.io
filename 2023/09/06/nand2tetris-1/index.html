@@ -39,7 +39,7 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/RAM.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/seqchips.png">
 <meta property="article:published_time" content="2023-09-06T06:42:55.000Z">
-<meta property="article:modified_time" content="2023-09-08T07:56:19.701Z">
+<meta property="article:modified_time" content="2023-09-10T12:27:15.351Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="system">
 <meta name="twitter:card" content="summary">
@@ -350,6 +350,8 @@ languages 到顶层的 programming languages 与 OS
 等一系列计算机的基本组成部分，可谓是具体而微。目标：一个月内 (10.6 之前)
 搞定！</p>
 <span id="more"></span>
+<p>我将该课程中所有 projects 的 HDL 代码实现储存在 <a target="_blank" rel="noopener" href="https://github.com/ThisisXXZ/Nand2Tetris-HebrewU">ThisisXXZ/Nand2Tetris
+- GitHub</a> 中，仅供参考。</p>
 <p><br></p>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  It will <strong>NOT</strong> cover any exam or assignment related
@@ -536,14 +538,14 @@ logic，亦即，如何使一个元件在某时刻的输出能够被前一个时
 logic 又如何解决 combinatorial logic 产生的两个致命问题？</p>
 <p>接下来我们介绍实现 sequential logic 的两个重要基本元件：The
 <em>Clock</em> (钟) 与 Flips-Flops (正反器/触发器).</p>
-<p>The Clock. The Clock 是一个不断在 0-1 (<em>tick-tock</em>)
-两信号中交替的 oscillator。该信号 (0-<em>tick</em>, 1-<em>tock</em>)
-同时向所有 sequential chips 进行广播，宣布当前的 clock phase。从某个
-tick 开始到随后的 tock 结束之间的时间称为 <em>cycle</em>
+<p><u><em>The Clock</em></u>. The Clock 是一个不断在 0-1
+(<em>tick-tock</em>) 两信号中交替的 oscillator。该信号 (0-<em>tick</em>,
+1-<em>tock</em>) 同时向所有 sequential chips 进行广播，宣布当前的 clock
+phase。从某个 tick 开始到随后的 tock 结束之间的时间称为 <em>cycle</em>
 (周期)，每个周期代表了一个离散的时间单位 (discrete time
 unit)，即所谓的「时刻」。</p>
-<p>Flip-Flops. Data Flip-Flops (DFF) 是能够实现 sequential logic
-的最小单位。DFF 接受从 master clock
+<p><u><em>Flip-Flops.</em></u> Data Flip-Flops (DFF) 是能够实现
+sequential logic 的最小单位。DFF 接受从 master clock
 传输的隐藏输入，从而具有了时刻的概念。在此基础上，DFF 能够实现 <span class="math inline">\(\mathtt{out}(t)=\mathtt{in}(t-1)\)</span>:
 即，在某时刻 <span class="math inline">\(t\)</span> 的 DFF 能够输出其在
 <span class="math inline">\(t-1\)</span> 时刻接受的输入，<span class="math inline">\(\mathtt{in}(t-1)\)</span> 的值从时刻 <span class="math inline">\(t-1\)</span> 到时刻 <span class="math inline">\(t\)</span> 被 DFF 所「记忆」。</p>
@@ -584,9 +586,15 @@ cycle 开始时进行选择。</p>
 <em>width</em> 是 register 的基本参数之一，它描述了某个 register
 最多能够容纳的比特数。在本课程内一个典型的 multiple-bits register 的宽度
 <span class="math inline">\(w\)</span> 是 16。</p>
-<p><u><em>RAM unit</em>.</u> 一个 RAM 单元由若干个 <span class="math inline">\(w\)</span>-bits register 与附加的 direct (random)
-access logic 组成，它支持根据输入的地址 address 直接对对应的 register
-执行读/写操作；此即为所谓的 random access。</p>
+<p><u><em>RAM unit</em>.</u> 一个 RAM 单元由若干个 <span class="math inline">\(w\)</span>-bits registers/RAMs (with smaller size)
+与附加的 direct (random) access logic 组成，它支持根据输入的地址 address
+直接对对应的 register 执行读/写操作。</p>
+<p>direct (random) access logic 一般由一对 <code>DMux</code> 与
+<code>Mux</code> chips 组成：<code>DMux</code> 根据传入的 address 把
+load 分配给对应的 registers/RAMs，<code>Mux</code>
+则收集相应的输出。这一 logic 的存在使得元件具有了 random access
+(随机访问) 的性质：我们能够<em>直接</em>
+访问任意存储单元中的数据，而不需要按照顺序逐个读取。</p>
 <figure>
 <img data-src="RAM.png" alt="word is a w-bit content">
 <figcaption aria-hidden="true"><em>word</em> is a <span class="math inline">\(w\)</span>-bit content</figcaption>

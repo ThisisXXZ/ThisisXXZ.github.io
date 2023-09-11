@@ -165,6 +165,8 @@ languages 到顶层的 programming languages 与 OS
 等一系列计算机的基本组成部分，可谓是具体而微。目标：一个月内 (10.6 之前)
 搞定！</p>
 <span id="more"></span>
+<p>我将该课程中所有 projects 的 HDL 代码实现储存在 <a href="https://github.com/ThisisXXZ/Nand2Tetris-HebrewU">ThisisXXZ/Nand2Tetris
+- GitHub</a> 中，仅供参考。</p>
 <p><br></p>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  It will <strong>NOT</strong> cover any exam or assignment related
@@ -351,14 +353,14 @@ logic，亦即，如何使一个元件在某时刻的输出能够被前一个时
 logic 又如何解决 combinatorial logic 产生的两个致命问题？</p>
 <p>接下来我们介绍实现 sequential logic 的两个重要基本元件：The
 <em>Clock</em> (钟) 与 Flips-Flops (正反器/触发器).</p>
-<p>The Clock. The Clock 是一个不断在 0-1 (<em>tick-tock</em>)
-两信号中交替的 oscillator。该信号 (0-<em>tick</em>, 1-<em>tock</em>)
-同时向所有 sequential chips 进行广播，宣布当前的 clock phase。从某个
-tick 开始到随后的 tock 结束之间的时间称为 <em>cycle</em>
+<p><u><em>The Clock</em></u>. The Clock 是一个不断在 0-1
+(<em>tick-tock</em>) 两信号中交替的 oscillator。该信号 (0-<em>tick</em>,
+1-<em>tock</em>) 同时向所有 sequential chips 进行广播，宣布当前的 clock
+phase。从某个 tick 开始到随后的 tock 结束之间的时间称为 <em>cycle</em>
 (周期)，每个周期代表了一个离散的时间单位 (discrete time
 unit)，即所谓的「时刻」。</p>
-<p>Flip-Flops. Data Flip-Flops (DFF) 是能够实现 sequential logic
-的最小单位。DFF 接受从 master clock
+<p><u><em>Flip-Flops.</em></u> Data Flip-Flops (DFF) 是能够实现
+sequential logic 的最小单位。DFF 接受从 master clock
 传输的隐藏输入，从而具有了时刻的概念。在此基础上，DFF 能够实现 <span class="math inline">\(\mathtt{out}(t)=\mathtt{in}(t-1)\)</span>:
 即，在某时刻 <span class="math inline">\(t\)</span> 的 DFF 能够输出其在
 <span class="math inline">\(t-1\)</span> 时刻接受的输入，<span class="math inline">\(\mathtt{in}(t-1)\)</span> 的值从时刻 <span class="math inline">\(t-1\)</span> 到时刻 <span class="math inline">\(t\)</span> 被 DFF 所「记忆」。</p>
@@ -399,9 +401,15 @@ cycle 开始时进行选择。</p>
 <em>width</em> 是 register 的基本参数之一，它描述了某个 register
 最多能够容纳的比特数。在本课程内一个典型的 multiple-bits register 的宽度
 <span class="math inline">\(w\)</span> 是 16。</p>
-<p><u><em>RAM unit</em>.</u> 一个 RAM 单元由若干个 <span class="math inline">\(w\)</span>-bits register 与附加的 direct (random)
-access logic 组成，它支持根据输入的地址 address 直接对对应的 register
-执行读/写操作；此即为所谓的 random access。</p>
+<p><u><em>RAM unit</em>.</u> 一个 RAM 单元由若干个 <span class="math inline">\(w\)</span>-bits registers/RAMs (with smaller size)
+与附加的 direct (random) access logic 组成，它支持根据输入的地址 address
+直接对对应的 register 执行读/写操作。</p>
+<p>direct (random) access logic 一般由一对 <code>DMux</code> 与
+<code>Mux</code> chips 组成：<code>DMux</code> 根据传入的 address 把
+load 分配给对应的 registers/RAMs，<code>Mux</code>
+则收集相应的输出。这一 logic 的存在使得元件具有了 random access
+(随机访问) 的性质：我们能够<em>直接</em>
+访问任意存储单元中的数据，而不需要按照顺序逐个读取。</p>
 <figure>
 <img data-src="RAM.png" alt="word is a w-bit content">
 <figcaption aria-hidden="true"><em>word</em> is a <span class="math inline">\(w\)</span>-bit content</figcaption>
@@ -491,12 +499,13 @@ content.</p>
 <h2 id="what-is-the-internet">What is the Internet?</h2>
 <p>Keywords. [见 slides 01-Internet-Basic]</p>
 <ul>
-<li>Internet is an <em>infrastructure</em>.</li>
+<li>Internet is a technical <em>infrastructure</em>.</li>
 <li>hosts (主机)。</li>
-<li>IP routers.</li>
+<li>IP routers (<span class="math inline">\(\sim n^2\)</span> links to
+<span class="math inline">\(n\)</span> links).</li>
 </ul>
 <p><br></p>
-<h2 id="what-is-www">What is WWW?</h2>
+<h2 id="what-is-world-wide-web-www">What is World Wide Web (WWW)?</h2>
 <p>Internet 的中文翻译是互联网；而 WWW (World Wide Web)
 是万维网。在此之前我一直以为它们指的是同一种东西；然而互联网中的「网」强调的是
 network；而万维网中的「网」指的是 web。这个问题挺值得玩味。</p>
@@ -505,17 +514,22 @@ network；而万维网中的「网」指的是 web。这个问题挺值得玩味
 <p>Keywords. [见 slides 01-Internet-Basic]</p>
 <ul>
 <li>hypertext links (超文本链接).</li>
-<li>URL (Uniform Resource Locator).</li>
+<li>uniform resource locator (URL): protocol + domain name + network
+path.
+<ul>
+<li>uniquely identify a resource on the WWW.</li>
+</ul></li>
+<li>client-server communication: by means of HTTP protocol.</li>
+<li>publishing documents with HTML &amp; CSS.</li>
 </ul>
 <p><br></p>
 <h2 id="client-server-communication">Client-Server Communication</h2>
 <p>Keywords. [见 slides 01-Internet-Basic]</p>
 <ul>
-<li>Host-to-Host. URL: domain name/IP address. HTTP protocol: network
-path.</li>
 <li>End-to-End and <em>port numbers</em>. [a]</li>
 <li>[IMPORTANT] Illustration of steps taken by client and server.</li>
 <li>IP address and IPV4 addressing. [b]</li>
+<li>localhost: this computer. IP: <code>127.0.0.1</code>.</li>
 </ul>
 <p>[a]: 客户端同时运行着 Google Chrome 与 Firefox，而服务器端运行着
 Nginx 与 MongoDB；通过分配不同的 port numbers，进程间可以分别建立联系
@@ -527,11 +541,114 @@ MongoDB)。客户端的进程向对应的端口发送请求；而服务器端的
 locator；而在 HKU 内部，<code>147.8.175</code> 这一前缀将作为 (HKU CS)
 physical network locator.</p>
 <p><br></p>
+<h2 id="domain-name-system-dns">Domain Name System (DNS)</h2>
+<p>DNS maps human-readable domain names to binary address<em>es</em>
+used by Internet Protocol.</p>
+<p>Keywords. [见 slides 01-Internet-Basic]</p>
+<ul>
+<li>hierarchical domain names: read from right to left.
+<ul>
+<li>nameless DNS root node connecting to all TLDs.</li>
+<li>top-level domains (TLD). e.g., <code>com</code>, <code>org</code>,
+<code>hk</code>, <code>cn</code>...</li>
+<li>second-level domains (SLD). e.g., <code>thisisxxz</code>...</li>
+<li>3rd, 4th...</li>
+</ul></li>
+<li>distributed hierarchical database.
+<ul>
+<li>internal machines <span class="math inline">\(\to\)</span> local DNS
+servers (provided by ISP) <span class="math inline">\(\to\)</span> root
+name servers.</li>
+</ul></li>
+<li>[IMPORTANT] domain name address resolution process.</li>
+<li>DNS caching.</li>
+</ul>
+<p><br></p>
+<h2 id="hypertext-transfer-protocol-http">Hypertext Transfer Protocol
+(HTTP)</h2>
+<p>HTTP describes requests and responses within client-server
+communication.</p>
+<p>Keywords. [见 slides 01-Internet-Basic]</p>
+<ul>
+<li>application-layer protocol: sent over TCP.</li>
+<li><em>stateless</em> protocol.</li>
+<li>HTTP/1.0. HTTP headers, status code info.</li>
+<li>HTTP/1.1 (still widely used). pipeline request, caching, content
+negotiation.</li>
+</ul>
+<p><br></p>
+<h2 id="http-messages">HTTP Messages</h2>
+<figure>
+<img data-src="msg.png" alt="HTTP messages: general format">
+<figcaption aria-hidden="true">HTTP messages: general
+format</figcaption>
+</figure>
+<p>Keywords. [见 slides 01-Internet-Basic]</p>
+<ul>
+<li>HTTP request: <code>[request type] [URL] [HTTP version]</code>.
+<ul>
+<li>e.g.,
+<code>GET /https://i.cs.hku.hk/~atctam/view/Simple.html HTTP/1.1</code>.</li>
+</ul></li>
+<li>HTTP response (status line):
+<code>[HTTP version] [status code] [status phrase]</code>.
+<ul>
+<li>e.g., <code>HTTP/1.1 200 OK</code>.</li>
+</ul></li>
+<li>HTTP headers. A series of key-value pairs
+<code>[case_insensitive_name]: [value]</code>.
+<ul>
+<li>provide additional info. 4 kinds:
+General/Entity/Request/Response.</li>
+</ul></li>
+<li>Message body.
+<ul>
+<li>requests: do not have a body most of the time. e.g.,
+<code>GET</code>, <code>HEAD</code>...</li>
+<li>responses: carries the resource (HTML page) requested by
+clients.</li>
+</ul></li>
+<li>Web requests. The browser makes subsequent requests for each
+resource (CSS, scripts, external pictures...) referenced in the
+HTML.</li>
+</ul>
+<p><br></p>
+<h2 id="caching-validation">Caching &amp; Validation</h2>
+<p>Keywords. [见 slides 01-Internet-Basic]</p>
+<ul>
+<li>web caching: private browser caches/proxy servers caches.
+<ul>
+<li>advantages: (1) cache close to client <span class="math inline">\(\to\)</span> reduce response time. (2) decrease
+network traffic to distant servers.</li>
+</ul></li>
+<li><em>stale</em>: <code>Cache-Control</code> &amp;
+<code>Expires</code> headers.</li>
+<li>validation: two response headers &amp; a request header.
+<ul>
+<li>web server responses with <code>Etag</code> and
+<code>Last-Modified</code> headers.</li>
+<li>browser/proxy server requests with <code>If-None-Match</code> and/or
+<code>If-Modified-Since</code> header.</li>
+<li>If not modified, web server responses with
+<code>HTTP/1.1 304 Not Modified</code>.</li>
+</ul></li>
+<li><em>cookies</em>. server sends cookies to browser with the
+<code>Set-Cookie</code> header. browser stores it and the next request
+to the same server includes the <code>Cookie</code> header.
+<ul>
+<li>responses: <code>Set-Cookie: user_id=1678</code>.</li>
+<li>(next) requests: <code>Cookie: user_id=1678</code>.</li>
+</ul></li>
+</ul>
+<p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
 if not specified.</p>
 </div>
+<p>Reference website:</p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web">Getting
+started with the web - mdn web docs</a>.</p>
 <p>Course info:</p>
 <p>Code: COMP3322, Lecturer: Dr.Anthony Tam.</p>
 ]]></content>
