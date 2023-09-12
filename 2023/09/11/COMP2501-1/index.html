@@ -33,7 +33,7 @@
 <meta property="og:description" content="COMP2501 的 Ting 老教授完美符合我对上了年纪的老师的印象：佛系，人好，但上课催眠；加之 R 语言是一种脚本型语言，semantics 相对简单 (甚至绝大部分操作都是在 REPL 中进行的)，遂决定自学。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-09-11T11:05:21.000Z">
-<meta property="article:modified_time" content="2023-09-11T13:54:45.854Z">
+<meta property="article:modified_time" content="2023-09-12T13:52:43.649Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="data science">
 <meta property="article:tag" content="R">
@@ -169,7 +169,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#the-very-basics"><span class="nav-number">1.</span> <span class="nav-text">The Very Basics</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#data-types"><span class="nav-number">2.</span> <span class="nav-text">Data Types</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#the-very-basics"><span class="nav-number">1.</span> <span class="nav-text">The Very Basics</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#data-types"><span class="nav-number">2.</span> <span class="nav-text">Data Types</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#basic-data-types"><span class="nav-number">2.1.</span> <span class="nav-text">Basic Data Types</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#data-frames"><span class="nav-number">2.2.</span> <span class="nav-text">Data Frames</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vectors"><span class="nav-number">2.3.</span> <span class="nav-text">Vectors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#factors"><span class="nav-number">2.4.</span> <span class="nav-text">Factors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lists"><span class="nav-number">2.5.</span> <span class="nav-text">Lists</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#matrices"><span class="nav-number">2.6.</span> <span class="nav-text">Matrices</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vectors-1"><span class="nav-number">3.</span> <span class="nav-text">Vectors</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#creating-vectors"><span class="nav-number">3.1.</span> <span class="nav-text">Creating Vectors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#names"><span class="nav-number">3.2.</span> <span class="nav-text">Names</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sequences"><span class="nav-number">3.3.</span> <span class="nav-text">Sequences</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#subsetting"><span class="nav-number">3.4.</span> <span class="nav-text">Subsetting</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#coercion"><span class="nav-number">4.</span> <span class="nav-text">Coercion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -367,7 +367,7 @@ longer important.</li>
 </ul>
 <p><br></p>
 <h2 id="data-types">Data Types</h2>
-<p><u>Basic Data Types.</u></p>
+<h3 id="basic-data-types">Basic Data Types</h3>
 <ul>
 <li>numeric. e.g., <code>a &lt;- 1</code>.</li>
 <li>integer (subset of numeric). e.g., <code>b &lt;- 1L</code>.</li>
@@ -375,8 +375,9 @@ longer important.</li>
 <li>logical. e.g., <code>d &lt;- TRUE</code>. (capitalized
 <code>TRUE</code> &amp; <code>FALSE</code>)</li>
 </ul>
-<p><u>Data Frames.</u> The most common way of storing a dataset in R is
-in a <em>data frame</em>. Think of it as a table:</p>
+<h3 id="data-frames">Data Frames</h3>
+<p>The most common way of storing a dataset in R is in a <em>data
+frame</em>. Think of it as a table:</p>
 <ul>
 <li>rows: observations.</li>
 <li>columns: different <em>variables</em> reported for each
@@ -391,15 +392,14 @@ observation.</li>
 <li><code>str()</code> function is useful for finding out more about the
 structure of an object.</li>
 </ul>
-<p><u>Retrieving columns.</u></p>
 <figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">names</span><span class="punctuation">(</span>murders<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;state&quot; &quot;abb&quot; &quot;region&quot; &quot;population&quot; &quot;total&quot;</span></span><br><span class="line">murders<span class="operator">$</span>population</span><br><span class="line"><span class="comment">#&gt;  [1]  4779736   710231  6392017  2915918 37253956  5029196  3574097</span></span><br><span class="line"><span class="comment">#&gt;  [8]   897934   601723 19687653  9920000  1360301  1567582 12830632</span></span><br><span class="line"><span class="comment">#&gt; [15]  ...</span></span><br></pre></td></tr></table></figure>
 <ul>
-<li><code>names()</code> 函数返回 data frame 的所有 variables (columns)
+<li><code>names()</code> 函数返回 data frame 的所有 variables' (columns)
 names.</li>
 <li><code>[data_frame_name]$[variable_name]</code>: 使用 accessor
-<code>$</code> 取出某 column。</li>
+<code>$</code> 取出对应的 column。</li>
 </ul>
-<p><u>Vectors: numerics, characters, and logical.</u></p>
+<h3 id="vectors">Vectors</h3>
 <p>The object <code>murder$population</code> is not one number but
 several. We call these types of objects <em>vectors</em>.</p>
 <figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pop <span class="operator">&lt;-</span> murder<span class="operator">$</span>population</span><br><span class="line"><span class="built_in">length</span><span class="punctuation">(</span>pop<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] 51</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>pop<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;numeric&quot;</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>murder<span class="operator">$</span>state<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;character&quot;</span></span><br></pre></td></tr></table></figure>
@@ -407,8 +407,16 @@ several. We call these types of objects <em>vectors</em>.</p>
 的类型是 <code>numeric</code>，而不是某个类似
 <code>numeric vector</code> 或 <code>numeric[]</code> 的东西；这是因为在
 R 中，a single number is technically a vector of length <span class="math inline">\(1\)</span>.</p>
+<p>由此可见，与我们之前接触过的其他语言不同，在 R 语言中 the most basic
+objects available to store data are <em>vectors</em>.
+这样的规定带有很强烈的 data wrangling
+色彩：在进行数据处理时，最基本的单位并非某个单独的数据单元，而是一组
+(通常情况下) 具有相同特征的数据集。</p>
 <figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">z <span class="operator">&lt;-</span> 3 <span class="operator">==</span> <span class="number">2</span></span><br><span class="line">print<span class="punctuation">(</span>z<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] FALSE</span></span><br><span class="line"><span class="built_in">length</span><span class="punctuation">(</span>z<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; 1</span></span><br></pre></td></tr></table></figure>
-<p><u>Factors.</u> Factors are useful for storing categorical data.</p>
+<p>We shall discuss vectors in full detail later.</p>
+<h3 id="factors">Factors</h3>
+<div class="note info no-icon"><p>Factors are useful for storing categorical data.</p>
+</div>
 <p>当 data frame 的某一列中 distinct elements 的数量较少时，我们可以使用
 factors 来节省空间。举例来说，<code>murders</code> 的
 <code>region</code> 列中只有四种元素：Northeast, South, North Central 与
@@ -420,17 +428,110 @@ certain factor object.</p>
 <li>In the background, R stores these <em>levels</em> as integers and
 keeps a map to keep track of the labels. This is more memory-efficient
 than storing all the characters.</li>
-<li>注意，<code>levels()</code> 默认将所有 levels 按照 alphabetical
-order 输出。</li>
+<li>The default in R is for the levels to follow alphabetical
+order.</li>
 </ul>
-<p>若想要以其他顺序输出所有的 levels，我们需要使用
-<code>reorder()</code> 函数并指定一种 data summary
-来确定一种顺序。举例来说，我们想要按照谋杀数由小到大的顺序输出所有
-levels：</p>
+<p>The function <code>reorder()</code> lets us change the order of the
+levels of a factor variable (e.g., <code>region</code>) based on a
+summary computed on a numertic vector (e.g., <code>value</code>):</p>
 <figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">region <span class="operator">&lt;-</span> murders<span class="operator">$</span>region</span><br><span class="line">value <span class="operator">&lt;-</span> murders<span class="operator">$</span>total</span><br><span class="line">region <span class="operator">&lt;-</span> reorder<span class="punctuation">(</span>region<span class="punctuation">,</span> value<span class="punctuation">,</span> FUN <span class="operator">=</span> <span class="built_in">sum</span><span class="punctuation">)</span></span><br><span class="line">levels<span class="punctuation">(</span>region<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;Northeast&quot; &quot;North Central&quot; &quot;West&quot; &quot;South&quot;</span></span><br></pre></td></tr></table></figure>
-<p>以上的代码计算每个 region 的 total murders 之和, 并且根据这些 sums 对
-levels 进行 reorder。根据输出结果我们可以看到 Northeast
-的谋杀数最少，South 则最多。</p>
+<p>The above code takes the sum of the total murders in each region, and
+reorders the factor following these sums. The new order shows that
+<code>Northeast</code> has the least murders while <code>South</code>
+has the most.</p>
+<h3 id="lists">Lists</h3>
+<p>Data frames are special case of lists. (data frame
+本质上是一个含有若干长度相同的 vectors 或 factors 的 list) Lists are
+useful because you can store any combination of different types (and
+vectors can't).</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">record <span class="operator">&lt;-</span> <span class="built_in">list</span><span class="punctuation">(</span>name <span class="operator">=</span> <span class="string">&quot;John Doe&quot;</span><span class="punctuation">,</span> </span><br><span class="line">               student_id <span class="operator">=</span> <span class="number">1234</span><span class="punctuation">,</span> </span><br><span class="line">               grade <span class="operator">=</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">95</span><span class="punctuation">,</span> <span class="number">82</span><span class="punctuation">,</span> <span class="number">91</span><span class="punctuation">,</span> <span class="number">97</span><span class="punctuation">,</span> <span class="number">93</span><span class="punctuation">)</span><span class="punctuation">,</span> </span><br><span class="line">               final_grade <span class="operator">=</span> <span class="string">&quot;A&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>record<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;list&quot;</span></span><br><span class="line">record<span class="operator">$</span>student_id</span><br><span class="line"><span class="comment">#&gt; [1] 1234</span></span><br><span class="line">record<span class="punctuation">[[</span><span class="string">&quot;student_id&quot;</span><span class="punctuation">]</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; [1] 1234</span></span><br></pre></td></tr></table></figure>
+<p>与在 data frame 中一致，我们使用
+<code>[list_name]$[variable_name]</code> 来访问 list 中对应的
+field。除此之外，<code>[[]]</code> + "name"
+也能达到同样的目的。有时我们会遇到 lists without names:</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">record2 <span class="operator">&lt;-</span> <span class="built_in">list</span><span class="punctuation">(</span><span class="string">&quot;John Doe&quot;</span><span class="punctuation">,</span> <span class="number">1234</span><span class="punctuation">)</span></span><br><span class="line">record2<span class="punctuation">[[</span><span class="number">1</span><span class="punctuation">]</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;John Doe&quot;</span></span><br></pre></td></tr></table></figure>
+<p>我们可以把这种 lists 视作能够储存不同类型数据的 vectors。由于这种
+lists 的 fields 是匿名的，我们无法通过 <code>$</code> + name
+进行访问。Instead，我们使用 <code>[[]]</code> + index
+来访问对应下标的元素。</p>
+<p>注意 R 语言遵循 1-indexed rule: 下标从 1 而非从 0 开始！</p>
+<h3 id="matrices">Matrices</h3>
+<ul>
+<li>Matrices are two-dimensional (like data frames).</li>
+<li>All entries in matrices have to be all the same type (like
+vectors).</li>
+</ul>
+<p>Compared to matrices, data frames are much more useful for storing
+data. Yet matrices have a major advantage over data frames: we can
+perform <em>matrix algebra operations</em> on them.</p>
+<p>使用 <code>matrix()</code> 函数创建一个新的 matrix；使用
+<code>as.data.frame()</code> 函数方便的将 matrix 转化为 data frame。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mat <span class="operator">&lt;-</span> matrix<span class="punctuation">(</span><span class="number">1</span><span class="operator">:</span><span class="number">12</span><span class="punctuation">,</span> <span class="number">4</span><span class="punctuation">,</span> <span class="number">3</span><span class="punctuation">)</span></span><br><span class="line">mat</span><br><span class="line"><span class="comment">#&gt;      [,1] [,2] [,3]</span></span><br><span class="line"><span class="comment">#&gt; [1,]    1    5    9</span></span><br><span class="line"><span class="comment">#&gt; [2,]    2    6   10</span></span><br><span class="line"><span class="comment">#&gt; [3,]    3    7   11</span></span><br><span class="line"><span class="comment">#&gt; [4,]    4    8   12</span></span><br><span class="line">as.data.frame<span class="punctuation">(</span>mat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt;   V1 V2 V3</span></span><br><span class="line"><span class="comment">#&gt; 1  1  5  9</span></span><br><span class="line"><span class="comment">#&gt; 2  2  6 10</span></span><br><span class="line"><span class="comment">#&gt; 3  3  7 11</span></span><br><span class="line"><span class="comment">#&gt; 4  4  8 12</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>[]</code> ，我们可以随心所欲地进行 matrix
+slicing。若被切割的是 matrix 中的某「条」(one-demensional)
+数据，返回的将是一个 vector；若是某「块」(two-dimensional)
+数据，返回的将是一个 matrix。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mat<span class="punctuation">[</span><span class="number">2</span><span class="punctuation">,</span> <span class="number">3</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; [1] 10</span></span><br><span class="line">mat<span class="punctuation">[</span><span class="number">2</span><span class="punctuation">,</span> <span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; [1]  2  6 10</span></span><br><span class="line">mat<span class="punctuation">[</span><span class="punctuation">,</span> <span class="number">3</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; [1]  9 10 11 12</span></span><br><span class="line">mat<span class="punctuation">[</span><span class="number">1</span><span class="operator">:</span><span class="number">2</span><span class="punctuation">,</span> <span class="number">2</span><span class="operator">:</span><span class="number">3</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt;      [,1] [,2]</span></span><br><span class="line"><span class="comment">#&gt; [1,]    5    9</span></span><br><span class="line"><span class="comment">#&gt; [2,]    6   10</span></span><br></pre></td></tr></table></figure>
+<p>此外，相似的 slicing 方法也可以用在 data frame 中：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">data<span class="punctuation">(</span><span class="string">&quot;murders&quot;</span><span class="punctuation">)</span></span><br><span class="line">murders<span class="punctuation">[</span><span class="number">25</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;Mississippi&quot;</span></span><br><span class="line">murders<span class="punctuation">[</span><span class="number">2</span><span class="operator">:</span><span class="number">3</span><span class="punctuation">,</span> <span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt;     state abb region population total</span></span><br><span class="line"><span class="comment">#&gt; 2  Alaska  AK   West     710231    19</span></span><br><span class="line"><span class="comment">#&gt; 3 Arizona  AZ   West    6392017   232</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="vectors-1">Vectors</h2>
+<div class="note info no-icon"><p>In R, the most basic objects available to store data are
+<em>vectors</em>. As we have seen, complex datasets can usually be
+broken down into components that are vectors.</p>
+</div>
+<h3 id="creating-vectors">Creating Vectors</h3>
+<p>We can create vectors using the function <code>c()</code>, which
+stands for <em>concatenate</em>.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">grades <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">95</span><span class="punctuation">,</span> <span class="number">82</span><span class="punctuation">,</span> <span class="number">91</span><span class="punctuation">,</span> <span class="number">97</span><span class="punctuation">,</span> <span class="number">93</span><span class="punctuation">)</span></span><br><span class="line">grades</span><br><span class="line"><span class="comment">#&gt; [1] 95 82 91 97 93</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>grades<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;numeric&quot;</span></span><br></pre></td></tr></table></figure>
+<p>与 lists 不同，vectors 中所有 entries
+的类型必须是一致的。当我们尝试使用 <code>c()</code>
+创建一个含有不同类型元素的 vectors 时，lower-level types (e.g., numeric)
+将转化为 higher-level types (e.g., character)。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">grades <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">95</span><span class="punctuation">,</span> <span class="number">82</span><span class="punctuation">,</span> <span class="string">&quot;91&quot;</span><span class="punctuation">,</span> <span class="string">&quot;97&quot;</span><span class="punctuation">,</span> <span class="string">&quot;93&quot;</span><span class="punctuation">)</span></span><br><span class="line">grades</span><br><span class="line"><span class="comment">#&gt; [1] &quot;95&quot; &quot;82&quot; &quot;91&quot; &quot;97&quot; &quot;93&quot;</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>grades<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;character&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="names">Names</h3>
+<p>与 lists 一样，我们可以为 vectors 中的 entries 命名，并对具名的
+vectors 调用 <code>names()</code> 函数。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">codes <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span>italy <span class="operator">=</span> <span class="number">380</span><span class="punctuation">,</span> canada <span class="operator">=</span> <span class="number">124</span><span class="punctuation">,</span> egypt <span class="operator">=</span> <span class="number">818</span><span class="punctuation">,</span> <span class="number">86</span><span class="punctuation">)</span></span><br><span class="line">codes</span><br><span class="line"><span class="comment">#&gt;  italy canada  egypt </span></span><br><span class="line"><span class="comment">#&gt;    380    124    818     86</span></span><br><span class="line"><span class="built_in">names</span><span class="punctuation">(</span>codes<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;italy&quot; &quot;canada&quot; &quot;egypt&quot; &quot;&quot;</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>codes<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;numeric&quot;</span></span><br></pre></td></tr></table></figure>
+<p>在为 vectors 的 entries 命名时将变量名用引号 <code>""</code> 括起来
+makes no difference。此外，我们还能使用 <code>names()</code> 函数来
+assign names - 即，names can be given later after being defined.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">codes <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">380</span><span class="punctuation">,</span> <span class="number">124</span><span class="punctuation">,</span> <span class="number">818</span><span class="punctuation">)</span></span><br><span class="line">country <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;italy&quot;</span><span class="punctuation">,</span> <span class="string">&quot;canada&quot;</span><span class="punctuation">,</span> <span class="string">&quot;egypt&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="built_in">names</span><span class="punctuation">(</span>codes<span class="punctuation">)</span> <span class="operator">&lt;-</span> country</span><br><span class="line">codes</span><br><span class="line"><span class="comment">#&gt;  italy canada  egypt </span></span><br><span class="line"><span class="comment">#&gt;    380    124    818</span></span><br></pre></td></tr></table></figure>
+<h3 id="sequences">Sequences</h3>
+<p>使用 sequences 来迅速创建一个元素符合特定规律的 vector。Python
+中也有类似的 idiom，很方便。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">seq<span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span> <span class="number">10</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1]  1  2  3  4  5  6  7  8  9 10</span></span><br><span class="line">seq<span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span> <span class="number">10</span><span class="punctuation">,</span> <span class="number">2</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] 1 3 5 7 9</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>seq<span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span> <span class="number">10</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;integer&quot;</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>seq<span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span> <span class="number">10</span><span class="punctuation">,</span> <span class="number">2</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;numeric&quot;</span></span><br></pre></td></tr></table></figure>
+<p>只有当未指定 jump length 时 (即使用默认的 jump length
+1)，<code>seq()</code> 函数返回的 vector 类型才是 integer；其余情况下
+<code>seq()</code> 函数返回的 vector 都是 numeric 类型的。</p>
+<p><code>seq(a, b)</code> 与 <code>a:b</code> 这一表达等价：但
+<code>a:b</code> 这种表达只能生成 jump length 为 1 的 vectors。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="operator">:</span><span class="number">10</span></span><br><span class="line"><span class="comment">#&gt; [1]  1  2  3  4  5  6  7  8  9 10</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span><span class="number">1</span><span class="operator">:</span><span class="number">10</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;integer&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="subsetting">Subsetting</h3>
+<p>我们使用 single square brackets <code>[]</code> + name/index 来访问
+vector 中的 entry。神奇的是，You can get more than one entry by using a
+multi-entry vector referring to indexes/names.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">codes<span class="punctuation">[</span><span class="number">2</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; canada</span></span><br><span class="line"><span class="comment">#&gt;    124</span></span><br><span class="line">codes<span class="punctuation">[</span><span class="built_in">c</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span> <span class="number">3</span><span class="punctuation">)</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; italy egypt </span></span><br><span class="line"><span class="comment">#&gt;   380   818</span></span><br><span class="line">codes<span class="punctuation">[</span><span class="number">1</span><span class="operator">:</span><span class="number">2</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt;  italy canada </span></span><br><span class="line"><span class="comment">#&gt;    380    124</span></span><br><span class="line">codes<span class="punctuation">[</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;egypt&quot;</span><span class="punctuation">,</span> <span class="string">&quot;italy&quot;</span><span class="punctuation">)</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; egypt italy </span></span><br><span class="line"><span class="comment">#&gt;   818   380</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="coercion">Coercion</h2>
+<p><em>coercion</em> is an attempt by R to be flexible with data types.
+When an entry does not match expected type, some of the prebuilt R
+functions try to guess what was meant before throwing errors.</p>
+<p>R 以放弃 type safeness 为代价换取了 type flexiblity. 几个 coercion
+的例子 (有些我们已经接触过了)：</p>
+<ul>
+<li>when coercion is possible: R <em>coerced</em> lower-level data into
+higher-level data.</li>
+<li>when coercion is impossible: Not availables (NA) is introduced.</li>
+</ul>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">x <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span> <span class="string">&quot;canada&quot;</span><span class="punctuation">,</span> <span class="number">3</span><span class="punctuation">)</span></span><br><span class="line">x</span><br><span class="line"><span class="comment">#&gt; [1] &quot;1&quot; &quot;canada&quot; &quot;3&quot;</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>x<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; &quot;character&quot;</span></span><br></pre></td></tr></table></figure>
+<p>以上是 possible coercion 的例子：R 为了遵循「vector
+内类型一致」这一规则，将 numeric 类型的数据强制转换为了 character
+类型。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;1&quot;</span><span class="punctuation">,</span> <span class="string">&quot;b&quot;</span><span class="punctuation">,</span> <span class="string">&quot;3&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="built_in">as.numeric</span><span class="punctuation">(</span>x<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; Warning: NAs introduced by coercion</span></span><br><span class="line"><span class="comment">#&gt; [1]  1 NA  3</span></span><br></pre></td></tr></table></figure>
+<p>当某种强制类型转换不可能完成时 (我们无法将一个 character
+类型的数据转化为 numeric 型)，伴随着一个软绵绵的 warning
+信息，<code>NA</code> 这一特殊的值将被引入。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
@@ -629,6 +730,15 @@ Prediction Algorithms with R - Rafael A. Irizarry</a>.</p>
 
 
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
 
 <script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/09/11/COMP2501-1/"}</script>
 <script>
@@ -644,15 +754,6 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
