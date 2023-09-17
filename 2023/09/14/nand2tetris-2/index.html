@@ -25,30 +25,29 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="选这门课完全是为了推进我博客美化的大业！希望学完之后 update logs 里的一部分 issues 能自己亲手解决。 首先来到 Internet and WWW basic: 这些基本的 network 知识对接下来的 front-end framework 学习大有裨益。Internet, Web, DNS, HTTP 等「最熟悉的陌生人」在这一节得以祛魅。">
+    <meta name="description" content="(胡言乱语时刻) 学习的越深入，越感觉到计算机真是神的造物；阴与阳，黑与白，假与真，0 与 1：吟唱着二进制神谕的摩西缓缓举起手杖，混沌的芯片与电路之海顷刻间分开，一条平坦的道路向应许之地延伸。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="COMP3322 notes P1 - Internet &amp; WWW Basic">
-<meta property="og:url" content="https://www.thisisxxz.com/2023/09/04/COMP3322-1/index.html">
+<meta property="og:title" content="Nand2Tetris I, Hebrew University - Machine Language">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/09/14/nand2tetris-2/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="选这门课完全是为了推进我博客美化的大业！希望学完之后 update logs 里的一部分 issues 能自己亲手解决。 首先来到 Internet and WWW basic: 这些基本的 network 知识对接下来的 front-end framework 学习大有裨益。Internet, Web, DNS, HTTP 等「最熟悉的陌生人」在这一节得以祛魅。">
+<meta property="og:description" content="(胡言乱语时刻) 学习的越深入，越感觉到计算机真是神的造物；阴与阳，黑与白，假与真，0 与 1：吟唱着二进制神谕的摩西缓缓举起手杖，混沌的芯片与电路之海顷刻间分开，一条平坦的道路向应许之地延伸。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/09/04/COMP3322-1/msg.png">
-<meta property="article:published_time" content="2023-09-04T11:26:40.000Z">
-<meta property="article:modified_time" content="2023-09-15T14:38:56.080Z">
+<meta property="article:published_time" content="2023-09-14T11:29:43.000Z">
+<meta property="article:modified_time" content="2023-09-16T09:13:12.143Z">
 <meta property="article:author" content="XXZ">
-<meta property="article:tag" content="networking">
+<meta property="article:tag" content="PL">
+<meta property="article:tag" content="system">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.thisisxxz.com/2023/09/04/COMP3322-1/msg.png">
 
 
-<link rel="canonical" href="https://www.thisisxxz.com/2023/09/04/COMP3322-1/">
+<link rel="canonical" href="https://www.thisisxxz.com/2023/09/14/nand2tetris-2/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/09/04/COMP3322-1/","path":"2023/09/04/COMP3322-1/","title":"COMP3322 notes P1 - Internet & WWW Basic"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/09/14/nand2tetris-2/","path":"2023/09/14/nand2tetris-2/","title":"Nand2Tetris I, Hebrew University - Machine Language"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>COMP3322 notes P1 - Internet & WWW Basic | ThisisXXZ's Blog</title>
+<title>Nand2Tetris I, Hebrew University - Machine Language | ThisisXXZ's Blog</title>
   
 
 
@@ -170,8 +169,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#what-is-the-internet"><span class="nav-number">1.</span> <span class="nav-text">What is the Internet?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#what-is-world-wide-web-www"><span class="nav-number">2.</span> <span class="nav-text">What is World Wide Web (WWW)?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#client-server-communication"><span class="nav-number">3.</span> <span class="nav-text">Client-Server Communication</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#domain-name-system-dns"><span class="nav-number">4.</span> <span class="nav-text">Domain Name System (DNS)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hypertext-transfer-protocol-http"><span class="nav-number">5.</span> <span class="nav-text">Hypertext Transfer Protocol
-(HTTP)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#http-messages"><span class="nav-number">6.</span> <span class="nav-text">HTTP Messages</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#caching-validation"><span class="nav-number">7.</span> <span class="nav-text">Caching &amp; Validation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">8.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#machine-language"><span class="nav-number">1.</span> <span class="nav-text">Machine Language</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hardware-platform"><span class="nav-number">2.</span> <span class="nav-text">Hardware Platform</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#memory"><span class="nav-number">2.1.</span> <span class="nav-text">Memory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#processor"><span class="nav-number">2.2.</span> <span class="nav-text">Processor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#register"><span class="nav-number">2.3.</span> <span class="nav-text">Register</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#assembly-language"><span class="nav-number">3.</span> <span class="nav-text">Assembly Language</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#basic-instructions"><span class="nav-number">4.</span> <span class="nav-text">Basic Instructions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#the-a-instruction"><span class="nav-number">4.1.</span> <span class="nav-text">The A-Instruction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#the-c-instruction"><span class="nav-number">4.2.</span> <span class="nav-text">The C-Instruction</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#symbols"><span class="nav-number">5.</span> <span class="nav-text">Symbols</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#io-devices"><span class="nav-number">6.</span> <span class="nav-text">I&#x2F;O Devices</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#screen"><span class="nav-number">6.1.</span> <span class="nav-text">Screen</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#keyboard"><span class="nav-number">6.2.</span> <span class="nav-text">Keyboard</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -269,7 +267,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/09/04/COMP3322-1/">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/09/14/nand2tetris-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
@@ -282,12 +280,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="COMP3322 notes P1 - Internet & WWW Basic | ThisisXXZ's Blog">
+      <meta itemprop="name" content="Nand2Tetris I, Hebrew University - Machine Language | ThisisXXZ's Blog">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          COMP3322 notes P1 - Internet & WWW Basic
+          Nand2Tetris I, Hebrew University - Machine Language
         </h1>
 
         <div class="post-meta-container">
@@ -300,7 +298,7 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2023-09-04 19:26:40" itemprop="dateCreated datePublished" datetime="2023-09-04T19:26:40+08:00">2023-09-04</time>
+      <time title="Created: 2023-09-14 19:29:43" itemprop="dateCreated datePublished" datetime="2023-09-14T19:29:43+08:00">2023-09-14</time>
     </span>
 
   <span class="post-meta-item">
@@ -335,177 +333,256 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>选这门课完全是为了推进我博客美化的大业！希望学完之后 update logs
-里的一部分 issues 能自己亲手解决。</p>
-<p>首先来到 Internet and WWW basic: 这些基本的 network 知识对接下来的
-front-end framework 学习大有裨益。Internet, Web, DNS, HTTP
-等「最熟悉的陌生人」在这一节得以祛魅。</p>
+    <div class="post-body" itemprop="articleBody"><p>(胡言乱语时刻)
+学习的越深入，越感觉到计算机真是神的造物；阴与阳，黑与白，假与真，0 与
+1：吟唱着二进制神谕的摩西缓缓举起手杖，混沌的芯片与电路之海顷刻间分开，一条平坦的道路向应许之地延伸。</p>
 <span id="more"></span>
-<p>从这门课开始我打算 develop
-一个新的笔记模式。目前已有的笔记模式大概分为：</p>
-<ul>
-<li>Fragment 碎片型。Ex. ENGG1340/COMP2113.</li>
-<li>Essence 精华型。Ex. ENGG3357.</li>
-<li>Comprehensive 全面型。Ex. Algorithms I &amp; II.</li>
-</ul>
-<p>对于类似 COMP3322
-这种概念较多较杂的课程，碎片型显得没有条理，精华型容易产生遗漏，全面型整理起来又太过冗长。于是我准备尝试一下结合课程
-slides 的 revision-oriented 型：一切以 final 复习方便为宗旨！</p>
+<p>神的语言 (machine language)
+太简单又太复杂，远非人类贫瘠的大脑能够理解；但人类又觊觎祂全知全能的伟力
+(Church-Turing Thesis)，遂亵渎地创造了自己简陋的语言 (assembly language)
+来对神谕加以解读。</p>
+<p>见此情形，神曰：「看哪，他們都是一樣的人，說着同一種語言，如今他們既然能做起這事，以後他們想要做的事就沒有不成功的了。」为了惩罚人类的僭越，神把他们的语言打乱
+(programming
+languages)；愚钝的人类从此无法互相理解，并都宣称自己使用的语言是最好的。这就是巴别塔倒塌的故事了。</p>
 <p><br></p>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  It will <strong>NOT</strong> cover any exam or assignment related
 content.</p>
 </div>
 <p><br></p>
-<h2 id="what-is-the-internet">What is the Internet?</h2>
-<p>The <em>Internet</em> is the backbone of the Web, the technical
-infrastructure that makes the Web possible. At its most basic, the
-Internet is a large network of computers which communicate all
-together.</p>
-<p>Keywords. [见 slides 01-Internet-Basic]</p>
+<h2 id="machine-language">Machine Language</h2>
+<div class="note info no-icon"><p>A machine language is an agree-upon formalism, designed to code
+low-level programs as series of machine instructions.</p>
+</div>
+<p>Machine language is the most profound interface in the overall
+computer enterprise - <u>the fine line where hardware and software meet.
+</u></p>
+<p>This is the point where the abstract thoughts of the programmers, as
+manifested in symbolic (binary) instructions, are turned into physical
+operations performed in silicon.</p>
+<p>上面这段对机器语言的描述太精髓了，我无力进行翻译或总结。</p>
+<p>在前几节里我们构造了一系列重要的元件，包括 ALU 与 memory
+chips；这些硬件构成了计算机的 hardware
+platform。我们常常认为机器语言是为了向 hardware
+platform「发号施令」而设计的；但其实并不尽然。</p>
+<p>machine language 与 hardware platform 是一体两面的。</p>
 <ul>
-<li>Internet is a technical <em>infrastructure</em>.</li>
-<li>hosts (主机)。</li>
-<li>IP routers (<span class="math inline">\(\sim n^2\)</span> links to
-<span class="math inline">\(n\)</span> links).</li>
+<li>It's true that the machine language is designed to exploit a given
+hardware platform.</li>
+<li>It's also true that the hardware platform is designed to fetch,
+interpret, and execute instructions written in the given machine
+language.</li>
+</ul>
+<p>machine language 与 hardware platform
+从不同的角度描述计算机的底层实现，但终究殊途同归。</p>
+<ul>
+<li><em>constructive</em> : how hardware platform is built from
+low-level chips? (第一节)</li>
+<li><em>abstractly</em> : What is the given machine language's
+capabilities? (本节)</li>
 </ul>
 <p><br></p>
-<h2 id="what-is-world-wide-web-www">What is World Wide Web (WWW)?</h2>
-<p>Internet 的中文翻译是互联网；而 WWW (World Wide Web)
-是万维网。在此之前我一直以为它们指的是同一种东西；然而互联网中的「网」强调的是
-network；而万维网中的「网」指的是 web。这个问题挺值得玩味。</p>
-<p>另外，WWW
-的台译是<em>全球资讯网</em>，我认为该翻译虽没有万维网那么「雅」，但「信」，「达」却做得更好。</p>
-<p>Keywords. [见 slides 01-Internet-Basic]</p>
+<h2 id="hardware-platform">Hardware Platform</h2>
+<div class="note info no-icon"><p>A <em>machine language</em> can be viewed as an agreed-upon
+formalism, designed to manipulate a <em>memory</em> using a
+<em>processor</em> and a set of <em>registers</em>.</p>
+</div>
+<h3 id="memory">Memory</h3>
+<p>memory 通常用于指代计算机中用于存储数据<u>与指令</u>的硬件设备，包括
+RAM 与 ROM，中文语境下通常称其为「内存」或「记忆体」。</p>
+<p>memory structure: A continuous array of cells of some fixed width
+(每个 cell 对应一个 register), also called <em>words</em> or
+<em>locations</em>, each having a unique <em>address</em>.</p>
+<p>An individual word (representing a data item or an instruction) is
+specified by supplying its address, with the notation Memory[address],
+RAM[address], or R[address] for brevity.</p>
+<h3 id="processor">Processor</h3>
+<p>Processor 即我们熟知的 <em>Central Processor Unit</em>
+(<em>CPU</em>)，它负责执行一系列 elementary operations:</p>
 <ul>
-<li>hypertext links (超文本链接).</li>
-<li>uniform resource locator (URL): protocol + domain name + network
-path.
+<li>Arithmetic and logic operations. (通过 ALU)</li>
+<li>Memory access operations.</li>
+<li>Control (branching) operations.</li>
+</ul>
+<p>这些 operations 的 operants 来自 registers 或 selected memory
+locations；同样，经过 processor 计算之后的结果 results 也将储存到
+registers 或 selected memory locations 中。</p>
+<p>那么 instructions 又从哪来？答案是 instruction memory: <u>instruction
+memory is a read-only device (例如 ROM), programs are loaded into it
+using some exogenous means.</u></p>
+<p>我们不妨想象这个情形：</p>
 <ul>
-<li>uniquely identify a resource on the WWW.</li>
-</ul></li>
-<li>client-server communication: by means of HTTP protocol.</li>
-<li>publishing documents with HTML &amp; CSS.</li>
+<li>memory 分为两个部分，data memory 与 instruction memory。</li>
+<li>processor 拥有 data memory 的 read/write 权限与 instruction memory
+的 read 权限。</li>
+</ul>
+<p>如何更改只读的 instruction memory？e.g., If the instruction memory is
+implemented in a ROM chip pre-burned with some program. Loading a new
+program is done by <u>replacing the entire ROM chip.</u></p>
+<h3 id="register">Register</h3>
+<p>register 是 memory chips 的基本组成部分；但我们这里提到的 register
+与这个意义无关。在讨论 hardware platform 时，register 特指 CPU
+所配备的一系列快速储存器，有时也叫 <em>cache</em> (快存)。</p>
+<p>它的出现是为了解决 processor 对 memory 的直接访问速度过慢的问题。</p>
+<div class="note info no-icon"><p>Located in the processor's immediate proximity, registers serve as a
+high-speed local memory, allowing the processor to manipulate data and
+instructions quickly.</p>
+</div>
+<p>registers 使 processor
+本身也具备了少量记忆的功能；就像程序中的临时变量一样，registers
+的存在能够最小化 memory access 命令的数量，从而加速程序执行。</p>
+<p>在本节课将要实现的 Hack computer 中，我们将关注两个 CPU registers
+与一个对应的 memory register：</p>
+<ul>
+<li>D register: solely store data value.</li>
+<li>A register: both a data register and an <em>address register</em>
+.</li>
+<li>M register: M register 由 A 指定，M <span class="math inline">\(\leftarrow\)</span> <span class="math inline">\(RAM\)</span>[A].</li>
 </ul>
 <p><br></p>
-<h2 id="client-server-communication">Client-Server Communication</h2>
-<p>Keywords. [见 slides 01-Internet-Basic]</p>
+<h2 id="assembly-language">Assembly Language</h2>
+<p>注意，计算机是符合 von Neumann architecture [stay tuned]
+的；简单来说就是 data 与 instructions 是平等的，均能被计算机所存储
+(stored-program concept)。</p>
+<p>若想被计算机所存储，instructions 必须以 binary value
+的形式存在；又因为 instructions 是被 machine language
+所描述的，我们不难归结出 machine language 的本质：<u>a series of coded
+binaries.</u></p>
+<p>例如，对于二进制串 <code>1010001100011001</code>，我们赋予其如下意义
+(每 4 bits 为一组)：</p>
 <ul>
-<li>End-to-End and <em>port numbers</em>. [a]</li>
-<li>[IMPORTANT] Illustration of steps taken by client and server.</li>
-<li>IP address and IPV4 addressing. [b]</li>
-<li>localhost: this computer. IP: <code>127.0.0.1</code>.</li>
+<li><code>1010</code>: 表明该 instruction 的类型为 addition。</li>
+<li><code>0011</code>: processor 应将执行完该 instruction 后的结果储存至
+<span class="math inline">\(R\)</span>[3] 中。</li>
+<li><code>0001</code>: 第一个 operant 的值为 <span class="math inline">\(R\)</span>[1]。</li>
+<li><code>1001</code>: 第二个 operant 的值为 <span class="math inline">\(R\)</span>[9]。</li>
 </ul>
-<p>[a]: 客户端同时运行着 Google Chrome 与 Firefox，而服务器端运行着
-Nginx 与 MongoDB；通过分配不同的 port numbers，进程间可以分别建立联系
-(Chrome <span class="math inline">\(\to^{80}\)</span> Nginx, Firefox
-<span class="math inline">\(\to^{443}\)</span>
-MongoDB)。客户端的进程向对应的端口发送请求；而服务器端的进程则监听特定的端口，并对请求进行回应。</p>
-<p>[b]: IPV4 addressing scheme 的前/后缀。在 HKU
-之外，<code>148.7</code> 这一前缀将作为 (HKU) physical network
-locator；而在 HKU 内部，<code>147.8.175</code> 这一前缀将作为 (HKU CS)
-physical network locator.</p>
+<p>Under the formalism，我们将一个普通的 16-bit 二进制串编码成了
+hardware platform 能够理解的机器语言。对应的 hardware platform
+在读入这一 instruction 过后，将会执行 <span class="math inline">\(R\)</span>[3] = <span class="math inline">\(R\)</span>[1] + <span class="math inline">\(R\)</span>[9]。</p>
+<p>但人类难以理解以二进制编码形式存在的机器语言；很自然的，我们需要一套
+human-readable 的体系来描述机器语言。于是人类引入了一系列 symbolic
+notation：这就是所谓 assembly language 的由来了。</p>
+<div class="note info no-icon"><p>Assembly language (or simply <em>assembly</em>) is a mnemonic for
+machine language.</p>
+</div>
+<p>举例来说，我们将 <code>1010</code> 符号化为
+<code>ADD</code>，接下来的几个地址则对应为 <code>R3</code>,
+<code>R1</code>, <code>R9</code>；这样，instruction <span class="math inline">\(R\)</span>[3] = <span class="math inline">\(R\)</span>[1] + <span class="math inline">\(R\)</span>[9] 能被 assembly language 描述为
+<code>ADD R3, R1, R9</code>.</p>
+<p>人类不光擅长读 symbolic notation，还擅长写由这些 symbolic notation
+组成的程序；assembly language 是一个真正意义上的 programming
+language。这就是 symbolic abstraction 的力量。</p>
+<p>至此，红海分开，道路显现：人类用 assembly language 写就的程序，经
+<em>assembler</em> 按照特定的 mapping rules 翻译成 machine language，被
+hardware platform 读取后终于转化为硅晶间的微小电流。</p>
 <p><br></p>
-<h2 id="domain-name-system-dns">Domain Name System (DNS)</h2>
-<p>DNS maps human-readable domain names to binary address<em>es</em>
-used by Internet Protocol.</p>
-<p>Keywords. [见 slides 01-Internet-Basic]</p>
+<h2 id="basic-instructions">Basic Instructions</h2>
+<p>我们将用 assembly language 来描述两个基本的 instructions:
+<em>A</em>-Instruction 与 <em>C</em>-Instruction.</p>
+<h3 id="the-a-instruction">The <em>A</em>-Instruction</h3>
+<p>The <em>A</em>-instruction is used to set the A register to a 15-bit
+value (address).</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@value                       // Where value is either a non-negative decimal number</span><br><span class="line">                             // or a symbol referring to such number.</span><br></pre></td></tr></table></figure>
+<p>这个指令与 A 作为 address register
+的身份密切相关。因此，在该命令执行完之后我们一般会对 A
+中储存的地址所对应的 register - M 进行操作。(M = <span class="math inline">\(R\)</span>[value])</p>
+<h3 id="the-c-instruction">The <em>C</em>-Instruction</h3>
+<p>The <em>C</em>-instruction is the programming workhorse of the Hack
+platform - the instruction that gets almost everything done. The
+instruction code is a specification that answers three questions:</p>
 <ul>
-<li>hierarchical domain names: read from right to left.
-<ul>
-<li>nameless DNS root node connecting to all TLDs.</li>
-<li>top-level domains (TLD). e.g., <code>com</code>, <code>org</code>,
-<code>hk</code>, <code>cn</code>...</li>
-<li>second-level domains (SLD). e.g., <code>thisisxxz</code>...</li>
-<li>3rd, 4th...</li>
-</ul></li>
-<li>distributed hierarchical database.
-<ul>
-<li>internal machines <span class="math inline">\(\to\)</span> local DNS
-servers (provided by ISP) <span class="math inline">\(\to\)</span> root
-name servers.</li>
-</ul></li>
-<li>[IMPORTANT] domain name address resolution process.</li>
-<li>DNS caching: browser cashes/local DNS(name) server cashes.</li>
+<li>what to compute? (<em>comp</em>)</li>
+<li>where to store the computed value? (<em>dest</em>)</li>
+<li>what to do next? (<em>jump</em>)</li>
 </ul>
-<p><br></p>
-<h2 id="hypertext-transfer-protocol-http">Hypertext Transfer Protocol
-(HTTP)</h2>
-<p>HTTP is an extensible protocol that is easy to use. The client-server
-structure, combined with the ability to add headers, allows HTTP to
-advance along with the extended capabilities of the Web.</p>
-<p>Keywords. [见 slides 01-Internet-Basic]</p>
+<p>Along with the <em>A</em>-instruction, these specifications determine
+all the possible operations.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dest=comp; jump               // Either the desk or jump fields may be empty.</span><br><span class="line">comp; jump                    // If dest is empty, the &quot;=&quot; is omitted;</span><br><span class="line">dest=comp                     // If jump is empty, the &quot;;&quot; is omitted;</span><br></pre></td></tr></table></figure>
 <ul>
-<li>application-layer protocol: sent over TCP.</li>
-<li><em>stateless</em> but not <em>sessionless</em> (e.g.,
-cookies).</li>
-<li>HTTP/1.0. HTTP headers, status code info.</li>
-<li>HTTP/1.1 (still widely used). pipeline request, caching, content
-negotiation.</li>
+<li><code>dest</code>: 将结果储存至 register (A, D) 或 data memory (M)
+处。</li>
+<li><code>comp</code>: 支持常数 <code>0</code>, <code>1</code>, 与
+<code>-1</code> 和 A, D, M 三个 register
+所储存的值之间任意的算数或逻辑运算。</li>
+<li><code>jump</code>: 支持 conditional jump 与 unconditional
+jump，可以跳跃到程序的任意一行执行 (类似 <code>goto</code>)。</li>
 </ul>
-<p><br></p>
-<h2 id="http-messages">HTTP Messages</h2>
-<figure>
-<img data-src="msg.png" alt="HTTP messages: general format">
-<figcaption aria-hidden="true">HTTP messages: general
-format</figcaption>
-</figure>
-<p>Keywords. [见 slides 01-Internet-Basic]</p>
+<p>在正常情况下，程序是一行一行执行的，每一行对应一个 instruction，而
+<code>jump</code> 可以改变程序的执行流程。其底层实现是 system counter
+元件 (可以看出 system counter 指向 instruction memory 的地址)。</p>
+<p><em>conflicting uses of the A register</em>. 之前我们提到，A register
+既是 data register，又是 address register。因此 A
+中储存的值的含义可能有三种：</p>
 <ul>
-<li>HTTP request: <code>[request type] [URL] [HTTP version]</code>.
-<ul>
-<li>e.g.,
-<code>GET /https://i.cs.hku.hk/~atctam/view/Simple.html HTTP/1.1</code>.</li>
-</ul></li>
-<li>HTTP response (status line):
-<code>[HTTP version] [status code] [status phrase]</code>.
-<ul>
-<li>e.g., <code>HTTP/1.1 200 OK</code>.</li>
-</ul></li>
-<li>HTTP headers. A series of key-value pairs
-<code>[case_insensitive_name]: [value]</code>.
-<ul>
-<li>provide additional info. 4 kinds:
-General/Entity/Request/Response.</li>
-</ul></li>
-<li>Message body.
-<ul>
-<li>requests: do not have a body for <code>GET</code>,
-<code>HEAD</code>..., have it for <code>POST</code>...</li>
-<li>responses: carries the resource (HTML page) requested by
-clients.</li>
-</ul></li>
-<li>Web requests. The browser makes <em>subsequent</em> requests for
-each resource (CSS, scripts, external pictures...) referenced in the
-HTML.</li>
+<li>data: 一个平平无奇的 data。</li>
+<li>address: 指向 data memory，是 M register 的地址。</li>
+<li>address: 指向 instruction memory，是程序下一步将会 <code>jump</code>
+到的地址。</li>
 </ul>
+<p>为了避免语义冲突，在可能会进行 <code>jump</code> 的 C-instruction
+中我们尽量避免引用 M register。</p>
 <p><br></p>
-<h2 id="caching-validation">Caching &amp; Validation</h2>
-<p>Keywords. [见 slides 01-Internet-Basic]</p>
+<h2 id="symbols">Symbols</h2>
+<p>Assembly commands can refer to memory locations (addresses) using
+either constants or <em>symbols</em>. Symbols are introduced into
+assembly programs in the following three ways:</p>
 <ul>
-<li>web caching: private browser caches/proxy servers caches.
+<li><em>Predefined symbols</em>.
 <ul>
-<li>advantages: (1) cache close to client <span class="math inline">\(\to\)</span> reduce response time. (2) decrease
-network traffic to distant servers.</li>
+<li>Virtual registers: <code>R0</code> to <code>R15</code> refer to RAM
+addresses 0 to 15 respectively.</li>
+<li>Predefined pointers: <code>SP</code>, <code>LCL</code>,
+<code>ARG</code>, <code>THIS</code> and <code>THAT</code> refer to RAM
+addresses 0 to 4.</li>
+<li>I/O pointers: <code>SCREEN</code> and <code>KBD</code> refer to RAM
+addresses 16834 (0x4000) and 24576 (0x6000).</li>
 </ul></li>
-<li><em>stale</em>: <code>Cache-Control</code> &amp;
-<code>Expires</code> headers.</li>
-<li>validation: two response headers &amp; a request header.
+<li><em>Label symbols</em>.</li>
+<li><em>Variable symbols</em>.</li>
+</ul>
+<p>label symbols 与 variable symbols 均属于 user-defined
+symbols。其中，label symbols 作为 <em>jump</em> 命令的补充，使得
+assembly language 程序的可读性进一步提高。语法和 <em>goto</em>
+很类似：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(JUMP_HERE)</span><br><span class="line"></span><br><span class="line">@JUMP_HERE</span><br><span class="line">0; JMP            // or other conditional jump</span><br></pre></td></tr></table></figure>
+<p>assembler 将自动把 <code>JUMP_HERE</code> symbol 解析为
+<code>(JUMP_HERE)</code> 下一行的行数：在这个例子中是 2。</p>
+<p>结合 conditional jump 与 label symbols，我们能在 assembly language
+中实现简单的
+while-loop。最常见的例子是程序末尾的死循环：这是为了阻止潜在的
+no-operation (NOP) attack.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(END)</span><br><span class="line">@END</span><br><span class="line">0; JMP</span><br></pre></td></tr></table></figure>
+<p>variable symbols 与 label symbol 唯一的区别是它没有 <code>()</code>
+标记。variable symbols 将在 data memory 中申请一个
+register；此后，所有对该 variable symbol 的引用都将被 assembler 解析为该
+register 的地址。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@VAR</span><br><span class="line">M=0            // VAR=0</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="io-devices">I/O Devices</h2>
+<p>这里我再一次感受到计算机底层结构的统一性：例如键盘，屏幕这样的输入输出设备，其底层实现与
+memory 大同小异：我们仍然可以将其视作 a continuous array of fixed-width
+registers.</p>
+<p>以下例子中的具体数据是以本课程中的 Hack computer
+为标准的，但其涉及到的原理是共通的。</p>
+<h3 id="screen">Screen</h3>
+<p>Hack computer 拥有一个 256x512 (131072 pixels)
+的黑白屏幕。其底层实现是由 <code>SCREEN</code> 标记的 base address 16384
+开始的 8K memory map。(<span class="math inline">\(8192 \times 16 =
+131072\)</span>)。</p>
+<p>第 <span class="math inline">\(r\)</span> 行第 <span class="math inline">\(c\)</span> 列的某个 pixel 位于 <span class="math inline">\(RAM[16384+r\cdot32+c/16]\)</span> 中 word 的第
+<span class="math inline">\(c\%16\)</span> 个 bit 上 (从 LSB 到
+MSB)。e.g., 屏幕最左上角的 pixel 位于 <span class="math inline">\(RAM[\)</span><code>SCREEN</code><span class="math inline">\(]\)</span> 的第一个 bit 上。</p>
+<p>黑色的 pixel 对应 bit 1，白色的则对应 bit
+0。假设屏幕一开始为空，若我们想将左上角的 pixel 改为黑色：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@SCREEN</span><br><span class="line">M=1</span><br></pre></td></tr></table></figure>
+<h3 id="keyboard">Keyboard</h3>
+<p>Hack computer 的键盘用一个 register <span class="math inline">\(RAM[\)</span><code>KBD</code><span class="math inline">\(]\)</span> 即可实现。</p>
 <ul>
-<li>web server responses with <code>Etag</code> and
-<code>Last-Modified</code> headers.</li>
-<li>browser/proxy server requests with <code>If-None-Match</code> and/or
-<code>If-Modified-Since</code> header.</li>
-<li>If not modified, web server responses with
-<code>HTTP/1.1 304 Not Modified</code>.</li>
-</ul></li>
-<li><em>cookies</em>. server sends cookies to browser with the
-<code>Set-Cookie</code> header. browser stores it and the next request
-to the same server includes the <code>Cookie</code> header.
-<ul>
-<li>responses: <code>Set-Cookie: user_id=1678</code>.</li>
-<li>(next) requests: <code>Cookie: user_id=1678</code>.</li>
-</ul></li>
+<li>A key is pressed on the physical keyboard: its 16-bit ASCII code
+appears in <span class="math inline">\(RAM[24576]\)</span>.</li>
+<li>No key is pressed: the code <span class="math inline">\(0\)</span>
+appears in this location.</li>
 </ul>
 <p><br></p>
 <h2 id="reference">Reference</h2>
@@ -513,19 +590,12 @@ to the same server includes the <code>Cookie</code> header.
 <p>  References in the article are from corresponding course materials
 if not specified.</p>
 </div>
-<p>Reference website:</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Learn/Common_questions/How_does_the_Internet_work">How
-does the <em>Internet</em> work? - mdn web docs</a>.</li>
-<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/How_the_Web_works">How
-the <em>Web</em> works? - mdn web docs</a>.</li>
-<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Web_mechanics/What_is_a_domain_name">What
-is a <em>domain name</em>? - mdn web docs</a>.</li>
-<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview#basic_aspects_of_http">An
-overview of <em>HTTP</em> - mdn web docs</a>.</li>
-</ul>
 <p>Course info:</p>
-<p>Code: COMP3322, Lecturer: Dr.Anthony Tam.</p>
+<p>Lecturer: Prof. Shimon Shocken, Prof. Noam Nisan.</p>
+<p>Course textbook:</p>
+<p>(Nisan N., Schocken S., 2008) <a target="_blank" rel="noopener" href="https://www.amazon.com/Elements-Computing-Systems-Principles-ebook/dp/B004HHORGA/">The
+Element of Computing Systems: Building a Modern Computer from First
+Principles.</a></p>
 
     </div>
 
@@ -563,13 +633,13 @@ overview of <em>HTTP</em> - mdn web docs</a>.</li>
   </li>
   <li class="post-copyright-link">
       <strong>Post link: </strong>
-      <a href="https://www.thisisxxz.com/2023/09/04/COMP3322-1/" title="COMP3322 notes P1 - Internet &amp; WWW Basic">https://www.thisisxxz.com/2023/09/04/COMP3322-1/</a>
+      <a href="https://www.thisisxxz.com/2023/09/14/nand2tetris-2/" title="Nand2Tetris I, Hebrew University - Machine Language">https://www.thisisxxz.com/2023/09/14/nand2tetris-2/</a>
       <!--copy buttom-->
       <span class="copy-path" title="Click to copy markdown-style reference"
       ><i
         style="cursor: pointer"
         class="fa fa-clipboard"
-        data-clipboard-text="[XXZ's Blog | COMP3322 notes P1 - Internet & WWW Basic](https://www.thisisxxz.com/2023/09/04/COMP3322-1/)"
+        data-clipboard-text="[XXZ's Blog | Nand2Tetris I, Hebrew University - Machine Language](https://www.thisisxxz.com/2023/09/14/nand2tetris-2/)"
         aria-label="Markdown-style reference is now on your clipboard"
       ></i
     ></span>
@@ -605,20 +675,21 @@ overview of <em>HTTP</em> - mdn web docs</a>.</li>
       </div>
     </div>
           <div class="post-tags">
-              <a href="/tags/networking/" rel="tag"><i class="fa fa-tag"></i> networking</a>
+              <a href="/tags/PL/" rel="tag"><i class="fa fa-tag"></i> PL</a>
+              <a href="/tags/system/" rel="tag"><i class="fa fa-tag"></i> system</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2023/09/01/algo-princeton-p8/" rel="prev" title="Algorithms II, Princeton University, P8">
-                  <i class="fa fa-chevron-left"></i> Algorithms II, Princeton University, P8
+                <a href="/2023/09/11/COMP2501-1/" rel="prev" title="Introduction to DS - R 语言初探之壹">
+                  <i class="fa fa-chevron-left"></i> Introduction to DS - R 语言初探之壹
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/09/06/nand2tetris-1/" rel="next" title="Nand2Tetris I, Hebrew University - ALU & Memory">
-                  Nand2Tetris I, Hebrew University - ALU & Memory <i class="fa fa-chevron-right"></i>
+                <a href="/2023/09/16/JAPN1088/" rel="next" title="中学以来の再会 — 霓虹语入门">
+                  中学以来の再会 — 霓虹语入门 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -725,7 +796,7 @@ overview of <em>HTTP</em> - mdn web docs</a>.</li>
       new needShareButton('#needsharebutton-postbottom', pbOptions);
   </script>
 
-<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/09/04/COMP3322-1/"}</script>
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/09/14/nand2tetris-2/"}</script>
 <script>
 document.addEventListener('page:loaded', () => {
   NexT.utils.loadComments(CONFIG.valine.el)
