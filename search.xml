@@ -148,10 +148,208 @@ NexT.Pisces。</strong></p>
 <p><br></p>
 ]]></content>
       <categories>
-        <category>logs</category>
+        <category>清单</category>
       </categories>
       <tags>
         <tag>blog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Introduction to DS - R 语言初探之贰</title>
+    <url>/2023/09/19/COMP2501-2/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+<p>Data Scientist spend up to 80% of the time on data cleaning and 20%
+on actual data analysis.</p>
+
+</blockquote>
+<p>与上一节不同，这一节中我们主要关注 data frame 而不是
+vector；我们将引入 <em>tidy format</em> 的概念，并介绍能够有效操纵 tidy
+data 的开源包 <em>tidyverse</em>。</p>
+<span id="more"></span>
+<p>在开始之前，我们在 RStudio 的 REPL 中输入
+<code>install.packages("tidyverse")</code> 安装 <code>tidyverse</code>
+包。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="tidy-data">Tidy Data</h2>
+<div class="note info no-icon"><p>Tidy dataset provides a standardized way to link the
+<em>structure</em> of a dataset (its physical layout) with its
+<em>semantics</em> (its meaning).</p>
+</div>
+<p>我们怎样根据数据的含义 (semantics) 来组织其结构 (structure)
+呢？一般来说，datasets are a collection of values, either
+<em>quantitative</em> or <em>qualitative</em>. These values are
+organized in 2 ways:</p>
+<ul>
+<li><em>Variables</em> - all values that measure the same underlying
+attribute across units.</li>
+<li><em>Observations</em> - all values measured on the same unit across
+attributes.</li>
+</ul>
+<p>We say a dataset is <em>tidy</em> if:</p>
+<ul>
+<li>each row represents one observation.</li>
+<li>columns represent the different variables available for each of
+these observations.</li>
+<li>each cell is a single value.</li>
+</ul>
+<p>我们来看看这个例子：下面这组数据反映了德国与韩国 1960-1962
+年的生育率。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line"><span class="comment">#&gt;       country 1960 1961 1962</span></span><br><span class="line"><span class="comment">#&gt; 1     Germany 2.41 2.44 2.47</span></span><br><span class="line"><span class="comment">#&gt; 2 South Korea 6.16 5.99 5.79</span></span><br></pre></td></tr></table></figure>
+<p>这一组数据显然不是 tidy 的 (或者说，是 messy 的)；这是因为：</p>
+<ul>
+<li>Each row includes several observations.</li>
+<li>One of the variables, year, is stored in the header.</li>
+</ul>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line"><span class="comment">#&gt;       country year fertility</span></span><br><span class="line"><span class="comment">#&gt; 1     Germany 1960      2.41</span></span><br><span class="line"><span class="comment">#&gt; 2 South Korea 1960      6.16</span></span><br><span class="line"><span class="comment">#&gt; 3     Germany 1961      2.44</span></span><br><span class="line"><span class="comment">#&gt; 4 South Korea 1961      5.99</span></span><br><span class="line"><span class="comment">#&gt; 5     Germany 1962      2.47</span></span><br><span class="line"><span class="comment">#&gt; 6 South Korea 1962      5.79</span></span><br></pre></td></tr></table></figure>
+<p>我们对这组数据进行整理，使其变得 tidy：每组 observation
+占据一行，抽象出 <code>year</code>, <code>fertility</code>
+变量并整理到列中。接下来，我们可以使用 <code>tidyverse</code>
+包中提供的各种函数对 tidy data 进行操纵。</p>
+<p><br></p>
+<h2 id="manipulating-data-frames">Manipulating Data Frames</h2>
+<p>本小节中的函数引入自 <code>tidyverse</code> 中的 <code>dplyr</code>
+包。</p>
+<ul>
+<li><code>dplyr</code> functions are aware of variable names. (no need
+to specify <code>murders$total</code>)</li>
+<li>most <code>dplyr</code> functions take data frames as their first
+argument.</li>
+</ul>
+<h3 id="adding-a-column">Adding a column</h3>
+<p>使用 <code>mutate()</code> 函数。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">library<span class="punctuation">(</span>dslabs<span class="punctuation">)</span></span><br><span class="line">data<span class="punctuation">(</span><span class="string">&quot;murders&quot;</span><span class="punctuation">)</span></span><br><span class="line">murders <span class="operator">&lt;-</span> mutate<span class="punctuation">(</span>murders<span class="punctuation">,</span> rate <span class="operator">=</span> total <span class="operator">/</span> population <span class="operator">*</span> <span class="number">100000</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>将为 <code>murders</code> data frame 新增一个变量 (一列)
+<code>rate</code>。</p>
+<h3 id="subsetting">Subsetting</h3>
+<p>使用 <code>filter()</code> 对 data frame 进行 subsetting。(横向
+<code>filter</code>)</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">filter<span class="punctuation">(</span>murders<span class="punctuation">,</span> rate <span class="operator">&lt;=</span> <span class="number">0.71</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt;           state abb        region population total  rate</span></span><br><span class="line"><span class="comment">#&gt; 1        Hawaii  HI          West    1360301     7 0.515</span></span><br><span class="line"><span class="comment">#&gt; 2          Iowa  IA North Central    3046355    21 0.689</span></span><br><span class="line"><span class="comment">#&gt; 3 New Hampshire  NH     Northeast    1316470     5 0.380</span></span><br><span class="line"><span class="comment">#&gt; 4  North Dakota  ND North Central     672591     4 0.595</span></span><br><span class="line"><span class="comment">#&gt; 5       Vermont  VT     Northeast     625741     2 0.320</span></span><br></pre></td></tr></table></figure>
+<h3 id="selecting-columns">Selecting columns</h3>
+<p><code>select()</code> 函数选定给定 data frame 中指定的 variables
+并形成一个新的 data frame。(纵向 <code>select</code>)</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">new_table <span class="operator">&lt;-</span> select<span class="punctuation">(</span>murders<span class="punctuation">,</span> state<span class="punctuation">,</span> region<span class="punctuation">,</span> rate<span class="punctuation">)</span></span><br><span class="line">filter<span class="punctuation">(</span>new_table<span class="punctuation">,</span> rate <span class="operator">&lt;=</span> <span class="number">0.71</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt;           state        region  rate</span></span><br><span class="line"><span class="comment">#&gt; 1        Hawaii          West 0.515</span></span><br><span class="line"><span class="comment">#&gt; 2          Iowa North Central 0.689</span></span><br><span class="line"><span class="comment">#&gt; 3 New Hampshire     Northeast 0.380</span></span><br><span class="line"><span class="comment">#&gt; 4  North Dakota North Central 0.595</span></span><br><span class="line"><span class="comment">#&gt; 5       Vermont     Northeast 0.320</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="the-pipe-or">The Pipe: <code>|&gt;</code> or
+<code>%&gt;%</code></h2>
+<p>与 shell 中的 pipe <code>|</code> 的用法一致。在 R 中，the pipe
+<code>|&gt;</code> or <code>%&gt;%</code> <em>sends</em> the result of
+the left side of the pipe to be the first argument of the function on
+the right side of the pipe.</p>
+<p>注意，我们目前接触的所有 <code>dplyr</code> 函数
+(<code>mutate</code>, <code>filter</code> 与 <code>select</code>)
+的第一个参数都是给定的 data frame；这一性质为 pipe
+的应用创造了良好的条件。再回到之前的程序：</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">new_table <span class="operator">&lt;-</span> select<span class="punctuation">(</span>murders<span class="punctuation">,</span> state<span class="punctuation">,</span> region<span class="punctuation">,</span> rate<span class="punctuation">)</span></span><br><span class="line">filter<span class="punctuation">(</span>new_table<span class="punctuation">,</span> rate <span class="operator">&lt;=</span> <span class="number">0.71</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt;           state        region  rate</span></span><br><span class="line"><span class="comment">#&gt; 1        Hawaii          West 0.515</span></span><br><span class="line"><span class="comment">#&gt; 2          Iowa North Central 0.689</span></span><br><span class="line"><span class="comment">#&gt; 3 New Hampshire     Northeast 0.380</span></span><br><span class="line"><span class="comment">#&gt; 4  North Dakota North Central 0.595</span></span><br><span class="line"><span class="comment">#&gt; 5       Vermont     Northeast 0.320</span></span><br></pre></td></tr></table></figure>
+<p>数据的流向是 <span class="math inline">\(\rm{original \ data\to
+select\to newtable}\)</span>，再由 <span class="math inline">\(\rm{newtable\to filter\to result}\)</span>。使用
+pipe，我们可以直接将 <code>select</code> 的输出导入到
+<code>filter</code>
+的输入，这样既省去了中间变量的定义，又提升了代码可读性。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">murders <span class="operator">|&gt;</span> select<span class="punctuation">(</span>state<span class="punctuation">,</span> region<span class="punctuation">,</span> rate<span class="punctuation">)</span> <span class="operator">|&gt;</span> filter<span class="punctuation">(</span>rate <span class="operator">&lt;=</span> <span class="number">0.71</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt;           state        region  rate</span></span><br><span class="line"><span class="comment">#&gt; 1        Hawaii          West 0.515</span></span><br><span class="line"><span class="comment">#&gt; 2          Iowa North Central 0.689</span></span><br><span class="line"><span class="comment">#&gt; 3 New Hampshire     Northeast 0.380</span></span><br><span class="line"><span class="comment">#&gt; 4  North Dakota North Central 0.595</span></span><br><span class="line"><span class="comment">#&gt; 5       Vermont     Northeast 0.320</span></span><br></pre></td></tr></table></figure>
+<p>当我们想将某个函数的输出导入至其他函数的第二个 (或其他所有非第一的)
+参数的输入时，使用 placeholder (占位符) <code>_</code>。联想到 shell
+中的 pipe 也有相同的 idiom。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line"><span class="built_in">log</span><span class="punctuation">(</span><span class="number">8</span><span class="punctuation">,</span> base <span class="operator">=</span> <span class="number">2</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] 3</span></span><br><span class="line"><span class="number">2</span> <span class="operator">|&gt;</span> <span class="built_in">log</span><span class="punctuation">(</span><span class="number">8</span><span class="punctuation">,</span> base <span class="operator">=</span> _<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] 3</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="summarizing-data">Summarizing Data</h2>
+<div class="note info no-icon"><p>An important part of <em>exploratory</em> data analysis is
+summarizing data.</p>
+</div>
+<p>最简单的 data summary 例子：求平均值 (average) 与标准差 (standard
+deviation)。</p>
+<h3 id="summarize"><code>summarize</code></h3>
+<p>对于给定的 data frame，<code>summarize()</code> 函数返回一个新的
+summarized table。该 data frame：</p>
+<ul>
+<li>one row for each grouping variable [stay tuned].</li>
+<li>one column for each of the summary statistics that you have
+specified.</li>
+</ul>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">data<span class="punctuation">(</span>heights<span class="punctuation">)</span></span><br><span class="line">s <span class="operator">&lt;-</span> heights <span class="operator">|&gt;</span></span><br><span class="line">    filter<span class="punctuation">(</span>sex <span class="operator">==</span> <span class="string">&quot;Female&quot;</span><span class="punctuation">)</span> <span class="operator">|&gt;</span></span><br><span class="line">    summarize<span class="punctuation">(</span>average <span class="operator">=</span> mean<span class="punctuation">(</span>height<span class="punctuation">)</span><span class="punctuation">,</span> standard_deviation <span class="operator">=</span> sd<span class="punctuation">(</span>height<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">s</span><br><span class="line"><span class="comment">#&gt;   average standard_deviation</span></span><br><span class="line"><span class="comment">#&gt; 1    64.9               3.76</span></span><br></pre></td></tr></table></figure>
+<p>由于这里没有指定 grouping variables，<code>summarize</code>
+函数仅仅返回了一行数据，每一列对应一个我们指定的 summary statistic
+(平均数与标准差)。</p>
+<p><code>summarize</code> 函数要与<code>group_by</code>
+函数配合使用才能显出其强大之处。</p>
+<h3 id="group-then-summarize">Group then Summarize</h3>
+<p>分组摘要：A common operation in data exploration is to first split
+data into groups and then compute summaries for each group.</p>
+<p><code>group_by</code> 函数将指定的 data frame 按照某个 variable
+分组，并返回一个 <em>grouped data frame</em>。该 variable
+中每个不同的值对应一个 grouping variable。(例：<code>sex</code> 中有
+<code>Male</code> 与 <code>Female</code> 两种 grouping variables)</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">heights <span class="operator">|&gt;</span> group_by<span class="punctuation">(</span>sex<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; # A tibble: 1,050 × 2</span></span><br><span class="line"><span class="comment">#&gt; # Groups:   sex [2]</span></span><br><span class="line"><span class="comment">#&gt;   sex   height</span></span><br><span class="line"><span class="comment">#&gt;   &lt;fct&gt;  &lt;dbl&gt;</span></span><br><span class="line"><span class="comment">#&gt; 1 Male      75</span></span><br><span class="line"><span class="comment">#&gt; 2 Male      70</span></span><br><span class="line"><span class="comment">#&gt; 3 Male      68</span></span><br><span class="line"><span class="comment">#&gt; 4 Male      74</span></span><br><span class="line"><span class="comment">#&gt; 5 Male      61</span></span><br><span class="line"><span class="comment">#&gt; # ℹ 1,045 more rows</span></span><br></pre></td></tr></table></figure>
+<p><code>summrize</code> 函数将对 grouped data frame
+进行分组摘要；每一组 (每一个 grouping variable) 占据一行。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">heights <span class="operator">|&gt;</span> </span><br><span class="line">  group_by<span class="punctuation">(</span>sex<span class="punctuation">)</span> <span class="operator">|&gt;</span></span><br><span class="line">  summarize<span class="punctuation">(</span>average <span class="operator">=</span> mean<span class="punctuation">(</span>height<span class="punctuation">)</span><span class="punctuation">,</span> standard_deviation <span class="operator">=</span> sd<span class="punctuation">(</span>height<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; # A tibble: 2 × 3</span></span><br><span class="line"><span class="comment">#&gt;   sex    average standard_deviation</span></span><br><span class="line"><span class="comment">#&gt;   &lt;fct&gt;    &lt;dbl&gt;              &lt;dbl&gt;</span></span><br><span class="line"><span class="comment">#&gt; 1 Female    64.9               3.76</span></span><br><span class="line"><span class="comment">#&gt; 2 Male      69.3               3.61</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="pull"><code>pull</code></h2>
+<p><code>pull()</code> 函数抽出给定 data frame
+中的某一列。就功能上来说，其与 <code>$</code> 的作用一致；"it's mostly
+useful because it looks a little nicer in pipe expression."</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">pull<span class="punctuation">(</span>murders<span class="punctuation">,</span> total<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt;  [1]  135   19  232   93 1257   65   97   38   99  669  376    7   12  364  142   21</span></span><br><span class="line"><span class="comment">#&gt; [17]   63  116  351   11  293  118  413   53  120  321   12   32   84    5  246   67</span></span><br><span class="line"><span class="comment">#&gt; [33]  517  286    4  310  111   36  457   16  207    8  219  805   22    2  250   93</span></span><br><span class="line"><span class="comment">#&gt; [49]   27   97    5</span></span><br><span class="line">murders<span class="operator">$</span>total</span><br><span class="line"><span class="comment">#&gt;  [1]  135   19  232   93 1257   65   97   38   99  669  376    7   12  364  142   21</span></span><br><span class="line"><span class="comment">#&gt; [17]   63  116  351   11  293  118  413   53  120  321   12   32   84    5  246   67</span></span><br><span class="line"><span class="comment">#&gt; [33]  517  286    4  310  111   36  457   16  207    8  219  805   22    2  250   93</span></span><br><span class="line"><span class="comment">#&gt; [49]   27   97    5</span></span><br></pre></td></tr></table></figure>
+<p>再看一个例子：</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">us_murder_rate <span class="operator">&lt;-</span> murders <span class="operator">|&gt;</span></span><br><span class="line">    summarize<span class="punctuation">(</span>rate <span class="operator">=</span> <span class="built_in">sum</span><span class="punctuation">(</span>total<span class="punctuation">)</span> <span class="operator">/</span> <span class="built_in">sum</span><span class="punctuation">(</span>population<span class="punctuation">)</span> <span class="operator">*</span> <span class="number">100000</span><span class="punctuation">)</span></span><br><span class="line">us_murder_rate</span><br><span class="line"><span class="comment">#&gt;   rate</span></span><br><span class="line"><span class="comment">#&gt; 1 3.03</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>us_murder_eate<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;data.frame&quot;</span></span><br></pre></td></tr></table></figure>
+<p><code>us_murder_rate</code> 只是个 single value，却被储存在 data
+frame 中；这显然不合理。于是我们在 pipe 中添加 <code>pull</code>
+函数：(<code>us_murder_rate |&gt; pull(rate)</code> 等价于
+<code>us_murder_rate$rate</code>)</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">us_murder_rate <span class="operator">&lt;-</span> murders <span class="operator">|&gt;</span></span><br><span class="line">    summarize<span class="punctuation">(</span>rate <span class="operator">=</span> <span class="built_in">sum</span><span class="punctuation">(</span>total<span class="punctuation">)</span> <span class="operator">/</span> <span class="built_in">sum</span><span class="punctuation">(</span>population<span class="punctuation">)</span> <span class="operator">*</span> <span class="number">100000</span><span class="punctuation">)</span> <span class="operator">|&gt;</span></span><br><span class="line">    pull<span class="punctuation">(</span>rate<span class="punctuation">)</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>us_murder_rate<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;numeric&quot;</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="sorting-data-frames">Sorting Data Frames</h2>
+<p>之前我们介绍了一系列排序函数，例如 <code>sort</code>,
+<code>order</code> 等；但那是对于 vector 而言的。data frames
+有另外的排序函数 (同样在 <code>dplyr</code> 包中引入)。</p>
+<h3 id="arrange"><code>arrange</code></h3>
+<p>对于给定的 data frame，<code>arrange</code> 函数根据指定的某个变量
+(某一列) 进行排序。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">murders <span class="operator">|&gt;</span></span><br><span class="line">  arrange<span class="punctuation">(</span>population<span class="punctuation">)</span> <span class="operator">|&gt;</span></span><br><span class="line">  head<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt;                  state abb        region population total   rate</span></span><br><span class="line"><span class="comment">#&gt; 1              Wyoming  WY          West     563626     5  0.887</span></span><br><span class="line"><span class="comment">#&gt; 2 District of Columbia  DC         South     601723    99 16.453</span></span><br><span class="line"><span class="comment">#&gt; 3              Vermont  VT     Northeast     625741     2  0.320</span></span><br><span class="line"><span class="comment">#&gt; 4         North Dakota  ND North Central     672591     4  0.595</span></span><br><span class="line"><span class="comment">#&gt; 5               Alaska  AK          West     710231    19  2.675</span></span><br><span class="line"><span class="comment">#&gt; 6         South Dakota  SD North Central     814180     8  0.983</span></span><br></pre></td></tr></table></figure>
+<p><code>arrange</code> 函数默认由小到大进行排序，若想降序排序，我们使用
+<code>desc()</code> 函数。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">murders <span class="operator">|&gt;</span></span><br><span class="line">    arrange<span class="punctuation">(</span>desc<span class="punctuation">(</span>population<span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">|&gt;</span></span><br><span class="line">    head<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line">         state abb        region population total</span><br><span class="line"><span class="comment">#&gt; 1   California  CA          West   37253956  1257</span></span><br><span class="line"><span class="comment">#&gt; 2        Texas  TX         South   25145561   805</span></span><br><span class="line"><span class="comment">#&gt; 3      Florida  FL         South   19687653   669</span></span><br><span class="line"><span class="comment">#&gt; 4     New York  NY     Northeast   19378102   517</span></span><br><span class="line"><span class="comment">#&gt; 5     Illinois  IL North Central   12830632   364</span></span><br><span class="line"><span class="comment">#&gt; 6 Pennsylvania  PA     Northeast   12702379   457</span></span><br></pre></td></tr></table></figure>
+<p>若排序变量的类型是数字 (<code>numeric</code> 或
+<code>integer</code>)，<code>arrange(-population)</code>
+可以达到相同的效果。</p>
+<h3 id="nested-sorting">Nested sorting</h3>
+<p>If we are ordering by a column with ties, we can use a second (or
+more) column to break the tie.</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">murders <span class="operator">|&gt;</span> </span><br><span class="line">  arrange<span class="punctuation">(</span>region<span class="punctuation">,</span> rate<span class="punctuation">)</span> <span class="operator">|&gt;</span> </span><br><span class="line">  head<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt;           state abb    region population total  rate</span></span><br><span class="line"><span class="comment">#&gt; 1       Vermont  VT Northeast     625741     2 0.320</span></span><br><span class="line"><span class="comment">#&gt; 2 New Hampshire  NH Northeast    1316470     5 0.380</span></span><br><span class="line"><span class="comment">#&gt; 3         Maine  ME Northeast    1328361    11 0.828</span></span><br><span class="line"><span class="comment">#&gt; 4  Rhode Island  RI Northeast    1052567    16 1.520</span></span><br><span class="line"><span class="comment">#&gt; 5 Massachusetts  MA Northeast    6547629   118 1.802</span></span><br><span class="line"><span class="comment">#&gt; 6      New York  NY Northeast   19378102   517 2.668</span></span><br></pre></td></tr></table></figure>
+<p>实际上就是 <code>arrange</code> 函数允许传入多个排序变量，第 <span class="math inline">\(n\)</span> 个排序变量就是排序的第 <span class="math inline">\(n\)</span> 关键字。</p>
+<h3 id="the-top-n">The top <span class="math inline">\(n\)</span></h3>
+<p><code>top_n()</code> 函数的定义有点奇怪，很容易被它的名字所迷惑。在其
+manual page 中作者也声明该函数已经过时 (deprecated)，建议使用
+<code>slice_min()</code> 与 <code>slice_max()</code> 函数进行替代
+(superseded)。</p>
+<p>但既然 slide 中提到了，还是稍微说明一下：<code>top_n(x, n, wt)</code>
+把 data frame <code>x</code> 的 <code>wt</code> 变量作为排序变量，选出前
+<code>n</code> 行。但它并不对这些行进行排序！也就是说，返回的
+<code>n</code> 行仍遵循原来在 <code>x</code> 中的相对顺序。</p>
+<p>还是来看一个例子：</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">df <span class="operator">&lt;-</span> data.frame<span class="punctuation">(</span>x <span class="operator">=</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">8</span><span class="punctuation">,</span> <span class="number">9</span><span class="punctuation">,</span> <span class="number">10</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">top_n<span class="punctuation">(</span>df<span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; Selecting by x</span></span><br><span class="line"><span class="comment">#&gt;    x</span></span><br><span class="line"><span class="comment">#&gt; 1 10</span></span><br><span class="line">top_n<span class="punctuation">(</span>df<span class="punctuation">,</span> <span class="number">2</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; Selecting by x</span></span><br><span class="line"><span class="comment">#&gt;    x</span></span><br><span class="line"><span class="comment">#&gt; 1  9</span></span><br><span class="line"><span class="comment">#&gt; 2 10</span></span><br><span class="line">top_n<span class="punctuation">(</span>df<span class="punctuation">,</span> <span class="number">3</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; Selecting by x</span></span><br><span class="line"><span class="comment">#&gt;    x</span></span><br><span class="line"><span class="comment">#&gt; 1  8</span></span><br><span class="line"><span class="comment">#&gt; 2  9</span></span><br><span class="line"><span class="comment">#&gt; 3 10</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p>Code: COMP2501, Lecturer: Dr. H.F. Ting.</p>
+<p>Course textbook:</p>
+<p><a href="http://rafalab.dfci.harvard.edu/dsbook/">Data Analysis and
+Prediction Algorithms with R - Rafael A. Irizarry</a>.</p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>data science</tag>
+        <tag>R</tag>
+        <tag>PL</tag>
       </tags>
   </entry>
   <entry>
@@ -313,9 +511,7 @@ to HTML - mdn web docs</a>.</p>
 <p>Code: COMP3322, Lecturer: Dr.Anthony Tam.</p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
-        <category>Modern Technologies on WWW, HKU</category>
+        <category>笔记</category>
       </categories>
       <tags>
         <tag>HTML</tag>
@@ -422,7 +618,7 @@ content.</p>
 <tr class="odd">
 <td style="text-align: center;">寸・須</td>
 <td style="text-align: center;">す</td>
-<td style="text-align: center;">ス<br>6</td>
+<td style="text-align: center;">ス</td>
 <td style="text-align: center;">一寸（いっすん）</td>
 </tr>
 <tr class="even">
@@ -670,8 +866,7 @@ if not specified.</p>
 版) - スリーエーネットワーク</a>.</p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>desserts</category>
+        <category>笔记</category>
       </categories>
       <tags>
         <tag>course notes</tag>
@@ -945,8 +1140,7 @@ Element of Computing Systems: Building a Modern Computer from First
 Principles.</a></p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>From NAND to Tetris, HUJI</category>
       </categories>
       <tags>
@@ -1360,8 +1554,7 @@ if not specified.</p>
 Prediction Algorithms with R - Rafael A. Irizarry</a>.</p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
       </categories>
       <tags>
         <tag>data science</tag>
@@ -1680,8 +1873,7 @@ Element of Computing Systems: Building a Modern Computer from First
 Principles.</a></p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>From NAND to Tetris, HUJI</category>
       </categories>
       <tags>
@@ -1887,9 +2079,7 @@ overflow</a>.</li>
 <p>Code: COMP3322, Lecturer: Dr.Anthony Tam.</p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
-        <category>Modern Technologies on WWW, HKU</category>
+        <category>笔记</category>
       </categories>
       <tags>
         <tag>networking</tag>
@@ -2471,12 +2661,10 @@ stack overflow</a>.</li>
 </ul>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Algorithms, Princeton</category>
       </categories>
       <tags>
-        <tag>course notes</tag>
         <tag>computational theory</tag>
       </tags>
   </entry>
@@ -3101,12 +3289,10 @@ Wayne.</p>
 (2011), Addison-Wesley Professional, <a href="https://algs4.cs.princeton.edu/home/">view</a></p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Algorithms, Princeton</category>
       </categories>
       <tags>
-        <tag>course notes</tag>
         <tag>string</tag>
         <tag>data structure</tag>
       </tags>
@@ -3198,7 +3384,7 @@ Wayne.</p>
 <p><br></p>
 ]]></content>
       <categories>
-        <category>achievements</category>
+        <category>光玉</category>
       </categories>
       <tags>
         <tag>moment</tag>
@@ -3649,12 +3835,10 @@ Wayne.</p>
 (2011), Addison-Wesley Professional, <a href="https://algs4.cs.princeton.edu/home/">view</a></p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Algorithms, Princeton</category>
       </categories>
       <tags>
-        <tag>course notes</tag>
         <tag>string</tag>
         <tag>graph theory</tag>
       </tags>
@@ -4215,12 +4399,10 @@ Wayne.</p>
 (2011), Addison-Wesley Professional, <a href="https://algs4.cs.princeton.edu/home/">view</a></p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Algorithms, Princeton</category>
       </categories>
       <tags>
-        <tag>course notes</tag>
         <tag>graph theory</tag>
       </tags>
   </entry>
@@ -4261,7 +4443,7 @@ A4 纸上写字画画视作一件神圣的事，每一划都要经过深思熟�
 <p><br></p>
 ]]></content>
       <categories>
-        <category>achievements</category>
+        <category>光玉</category>
       </categories>
       <tags>
         <tag>moment</tag>
@@ -4649,13 +4831,11 @@ Languages, Part C, University of Washington</a>, Lecturer: Professor Dan
 Grossman.</p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Programming Languages, UW</category>
       </categories>
       <tags>
         <tag>PL</tag>
-        <tag>Ruby</tag>
       </tags>
   </entry>
   <entry>
@@ -5107,13 +5287,11 @@ Languages, Part C, University of Washington</a>, Lecturer: Professor Dan
 Grossman.</p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Programming Languages, UW</category>
       </categories>
       <tags>
         <tag>PL</tag>
-        <tag>Ruby</tag>
       </tags>
   </entry>
   <entry>
@@ -5998,8 +6176,7 @@ if not specified.</p>
 Education, Inc. 2012</p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>desserts</category>
+        <category>笔记</category>
       </categories>
       <tags>
         <tag>course notes</tag>
@@ -6358,13 +6535,11 @@ Languages, Part C, University of Washington</a>, Lecturer: Professor Dan
 Grossman.</p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Programming Languages, UW</category>
       </categories>
       <tags>
         <tag>PL</tag>
-        <tag>Ruby</tag>
       </tags>
   </entry>
   <entry>
@@ -6660,13 +6835,11 @@ Languages, Part B, University of Washington</a>, Lecturer: Professor Dan
 Grossman.</p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Programming Languages, UW</category>
       </categories>
       <tags>
         <tag>PL</tag>
-        <tag>Racket</tag>
       </tags>
   </entry>
   <entry>
@@ -6948,13 +7121,11 @@ Languages, Part B, University of Washington</a>, Lecturer: Professor Dan
 Grossman.</p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Programming Languages, UW</category>
       </categories>
       <tags>
         <tag>PL</tag>
-        <tag>Racket</tag>
       </tags>
   </entry>
   <entry>
@@ -7308,8 +7479,7 @@ Grossman.</p>
 <p><br></p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Programming Languages, UW</category>
       </categories>
       <tags>
@@ -7453,12 +7623,10 @@ if not specified.</p>
 CS Education</a>.</p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Missing Semester, MIT</category>
       </categories>
       <tags>
-        <tag>course notes</tag>
         <tag>make</tag>
       </tags>
   </entry>
@@ -7500,7 +7668,7 @@ CS Education</a>.</p>
 <p><br></p>
 ]]></content>
       <categories>
-        <category>achievements</category>
+        <category>光玉</category>
       </categories>
       <tags>
         <tag>moment</tag>
@@ -7760,12 +7928,10 @@ Branch</a>.</p></li>
 CS Education</a>.</p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Missing Semester, MIT</category>
       </categories>
       <tags>
-        <tag>course notes</tag>
         <tag>git</tag>
       </tags>
   </entry>
@@ -7935,12 +8101,10 @@ sed 102: Replace In-Place</a>.</li>
 CS Education</a>.</p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Missing Semester, MIT</category>
       </categories>
       <tags>
-        <tag>course notes</tag>
         <tag>shell</tag>
       </tags>
   </entry>
@@ -8100,8 +8264,7 @@ xargs 详解</a>.</li>
 </ul>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>desserts</category>
+        <category>笔记</category>
       </categories>
       <tags>
         <tag>shell</tag>
@@ -8408,12 +8571,10 @@ if not specified.</p>
 CS Education</a>.</p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Missing Semester, MIT</category>
       </categories>
       <tags>
-        <tag>course notes</tag>
         <tag>shell</tag>
       </tags>
   </entry>
@@ -8504,7 +8665,7 @@ P5 这款游戏？等到三四十岁时，我还能重拾这种感动的情绪�
 P5 曾经带给我的感动——毕竟，「吾即是汝，汝即是吾」。</p>
 ]]></content>
       <categories>
-        <category>reviews</category>
+        <category>杂感</category>
       </categories>
       <tags>
         <tag>JRPG</tag>
@@ -8544,7 +8705,7 @@ P5 曾经带给我的感动——毕竟，「吾即是汝，汝即是吾」。</
 <p><br></p>
 ]]></content>
       <categories>
-        <category>achievements</category>
+        <category>光玉</category>
       </categories>
       <tags>
         <tag>moment</tag>
@@ -8893,13 +9054,11 @@ Wayne.</p>
 <p><br></p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Algorithms, Princeton</category>
       </categories>
       <tags>
-        <tag>course notes</tag>
-        <tag>Java</tag>
+        <tag>PL</tag>
       </tags>
   </entry>
   <entry>
@@ -9577,12 +9736,10 @@ Wayne.</p>
 (2011), Addison-Wesley Professional, <a href="https://algs4.cs.princeton.edu/home/">view</a></p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Algorithms, Princeton</category>
       </categories>
       <tags>
-        <tag>course notes</tag>
         <tag>data structure</tag>
         <tag>BST</tag>
       </tags>
@@ -10046,13 +10203,11 @@ Wayne.</p>
 (2011), Addison-Wesley Professional, <a href="https://algs4.cs.princeton.edu/home/">view</a></p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Algorithms, Princeton</category>
       </categories>
       <tags>
         <tag>heap</tag>
-        <tag>course notes</tag>
         <tag>sort</tag>
       </tags>
   </entry>
@@ -10428,12 +10583,10 @@ Wayne.</p>
 <p><br></p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Algorithms, Princeton</category>
       </categories>
       <tags>
-        <tag>course notes</tag>
         <tag>sort</tag>
         <tag>union find</tag>
         <tag>string</tag>
@@ -10656,7 +10809,7 @@ material.</p>
 <p><br></p>
 ]]></content>
       <categories>
-        <category>notes</category>
+        <category>笔记</category>
       </categories>
       <tags>
         <tag>data science</tag>
@@ -10814,7 +10967,7 @@ material.</p>
 <p><br></p>
 ]]></content>
       <categories>
-        <category>notes</category>
+        <category>笔记</category>
       </categories>
       <tags>
         <tag>data science</tag>
@@ -10845,10 +10998,10 @@ E 题，需要每次 <span class="math inline">\(O(1)\)</span>
 <p>另外 CF 的比赛时间对 CN 真的不友好，做到半夜脑袋都昏昏沉沉的。</p>
 <p>补题记录：</p>
 <ul>
-<li><p><a href="https://thisisxxz.com/2023/06/07/CF878T6/">CF #878
-<em>Problem F</em> Railgun</a></p></li>
-<li><p><a href="https://thisisxxz.com/2023/06/08/CF878T7/">CF #878
-<em>Problem G</em> In Search of Truth</a></p></li>
+<li><a href="https://thisisxxz.com/2023/06/07/CF878T6/">CF #878
+<em>Problem F</em> Railgun</a></li>
+<li><a href="https://thisisxxz.com/2023/06/08/CF878T7/">CF #878
+<em>Problem G</em> In Search of Truth</a></li>
 </ul>
 <p>自己没看标程补完了！爽！F 题和 G 题都挺有意思的，感觉 F
 题努力想一想也能想出来。</p>
@@ -10893,9 +11046,17 @@ Educational Round #150 <em>Problem E</em> Fill the Matrix</a></li>
 </ul>
 <p>做完了以后发现这三道题都很好，看来 Div.2 挺适合我的。</p>
 <p><br></p>
+<h2 id="cf-round-896-div.2">CF Round #896 (Div.2)</h2>
+<p><a href="https://codeforces.com/contest/1869">link</a>。A，B
+简单贪心速切，C
+是一个构造题，不算难但是思路挺不错的，记录一下。剩下的题慢慢补。</p>
+<ul>
+<li><a href="http://thisisxxz.com/2023/09/19/CF896T3/">CF #896
+<em>Problem C</em> Fill in the Matrix</a>.</li>
+</ul>
 ]]></content>
       <categories>
-        <category>logs</category>
+        <category>清单</category>
       </categories>
       <tags>
         <tag>plan</tag>
@@ -11237,8 +11398,7 @@ if not specified.</p>
 &amp; Lindell, Y., (2015), CRC Press, <a href="https://ebookcentral.proquest.com/lib/HKUHK/detail.action?docID=1619504">view</a></p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Cryptography, HKU</category>
       </categories>
       <tags>
@@ -11662,8 +11822,7 @@ if not specified.</p>
 <p><a href="https://oi-wiki.org/">OI Wiki</a>, <a href="https://brilliant.org/">Brilliant Math Wiki</a>, <a href="https://mathworld.wolfram.com/">Wolframe MathWorld</a>.</p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Cryptography, HKU</category>
       </categories>
       <tags>
@@ -12139,8 +12298,7 @@ if not specified.</p>
 &amp; Lindell, Y., (2015), CRC Press, <a href="https://ebookcentral.proquest.com/lib/HKUHK/detail.action?docID=1619504">view</a></p>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>courses</category>
+        <category>笔记</category>
         <category>Cryptography, HKU</category>
       </categories>
       <tags>
@@ -12299,8 +12457,7 @@ Hexo</a></p></li>
 </ol>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>desserts</category>
+        <category>笔记</category>
       </categories>
       <tags>
         <tag>blog</tag>
@@ -12599,8 +12756,7 @@ C 非常相似。贴一段 shell script 程序感受一下:</p>
 </ol>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>desserts</category>
+        <category>笔记</category>
       </categories>
       <tags>
         <tag>shell</tag>
@@ -12789,8 +12945,7 @@ scr_dump</a></li>
 </ol>
 ]]></content>
       <categories>
-        <category>notes</category>
-        <category>desserts</category>
+        <category>笔记</category>
       </categories>
       <tags>
         <tag>ncurses</tag>
