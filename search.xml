@@ -155,65 +155,6 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
-    <title>Codeforces 1869D Candy Party</title>
-    <url>/2023/09/21/CF896T4/</url>
-    <content><![CDATA[<p>题目来自 Codeforces Round #896 (Div.2) D1。<a href="https://codeforces.com/contest/1869/problem/D1">link</a></p>
-<span id="more"></span>
-<p><br></p>
-<div class="note warning"><p>  This article provides a <strong>feasible</strong> solution to a
-certain competitive programming problem.   If you have better solutions,
-feel free to share with me!</p>
-</div>
-<p><br></p>
-<h2 id="problem-description">Problem Description</h2>
-<p><span class="math inline">\(n\)</span> 个人，第 <span class="math inline">\(i\)</span> 个人有 <span class="math inline">\(a_i\)</span>
-个糖果。按照某种顺序，每个人依次进行如下操作：选择某个整数 <span class="math inline">\(p\)</span> (<span class="math inline">\(1\leq
-p\leq n\)</span>) 与非负整数 <span class="math inline">\(x\)</span>，并将自己的 <span class="math inline">\(2^x\)</span> 个糖果给第 <span class="math inline">\(p\)</span> 个人。整个过程遵循以下限制：</p>
-<ul>
-<li>若轮到第 <span class="math inline">\(i\)</span> 个人时此人有 <span class="math inline">\(a_i\)</span> 个糖果，则其选择的 <span class="math inline">\(x\)</span> 必须满足 <span class="math inline">\(2^x\leq a_i\)</span>。[*]</li>
-<li>第 <span class="math inline">\(i\)</span> 个人选择的 <span class="math inline">\(p\neq i\)</span> (不能自己给自己糖果)。[*]</li>
-<li>One can receive candies from exactly one person.</li>
-</ul>
-<p>是否存在一种 swap candies 的方式，使得最终 <span class="math inline">\(n\)</span> 个人拥有的糖果数量相同。</p>
-<p><br></p>
-<h2 id="tutorial">Tutorial</h2>
-<p>首先，若能均分糖果，最后每个人拥有的糖果数量 <span class="math inline">\(s=(\sum a_i)/n\)</span>.</p>
-<p>根据给出的限制，不难得出每个人一定会送出一次糖果且收到一次糖果。那么有对于第
-<span class="math inline">\(i\)</span> 个人，一定有 <span class="math inline">\(s-a_i=2^{y_i}-2^{x_i}\)</span>。而限制 [*]
-实际上并不会产生任何影响，详见 <a href="https://codeforces.com/blog/entry/116642">tutorial</a>。</p>
-<p>令 <span class="math inline">\(k_i=|s-a_i|\)</span>，问题转化为对于每个 <span class="math inline">\(k_i\)</span>，判定方程 <span class="math inline">\(k_i=2^{y_i}-2^{x_i}\)</span>
-解的存在性。若存在，找出一组解 <span class="math inline">\(y_i,
-x_i\)</span>。将 <span class="math inline">\(y_i\)</span> 加入集合 <span class="math inline">\(\{\rm{Received}\}\)</span>，<span class="math inline">\(x_i\)</span> 加入集合 <span class="math inline">\(\{\rm{Sent}\}\)</span>；若最后 <span class="math inline">\(\{\rm{Received}\}=\{\rm{Sent}\}\)</span>，输出
-True。</p>
-<p>这个结论很 intuitive。简单的证明：一个 swap 关系代表着同一个 <span class="math inline">\(x\)</span> 同时被加入两个集合。</p>
-<p>下面来讨论如何解方程 <span class="math inline">\(k=2^y-2^x\)</span>.
-从二进制的角度看，该方程要么有唯一解，要么无解。其中：</p>
-<ul>
-<li>一个二次幂为 <span class="math inline">\(\rm{lowbit(k)}\)</span>，其对应的解为 <span class="math inline">\(\log_2{(\rm{lowbit(k))}}\)</span>。(具体是 <span class="math inline">\(x\)</span> 还是 <span class="math inline">\(y\)</span> 取决于 <span class="math inline">\(s\)</span> 与 <span class="math inline">\(a_i\)</span> 的大小关系)</li>
-<li>另一个二次幂为 <span class="math inline">\(k+{\rm{lowbit(k)}}\)</span>。若这个值并不是二次幂，说明该方程无解。</li>
-</ul>
-<p>举例来说，<span class="math inline">\(6=110_2=2^x-2^y\)</span>.</p>
-<ul>
-<li><span class="math inline">\(y=\log(\rm{lowbit(110_2)})=\log{(10_2)}=\log(2)=1\)</span>.</li>
-<li><span class="math inline">\(x=\log(6+\rm{lowbit(110_2)})=\log(6+2)=\log(8)=3\)</span>.</li>
-</ul>
-<p>因此 <span class="math inline">\(6=2^3-2^1\)</span>，我们由此得到方程的解 <span class="math inline">\(x=3, y=1\)</span>。</p>
-<p><br></p>
-<h2 id="code-implementation">Code Implementation</h2>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_N = <span class="number">2e5</span> + <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">long</span> <span class="type">long</span> a[MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">long</span> <span class="type">long</span> <span class="title">lowbit</span><span class="params">(<span class="type">long</span> <span class="type">long</span> k)</span> </span>&#123; <span class="keyword">return</span> k &amp; -k; &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">solved</span><span class="params">(<span class="type">long</span> <span class="type">long</span> s, <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    vector&lt;<span class="type">long</span> <span class="type">long</span>&gt; REC, SEN;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">        <span class="type">long</span> <span class="type">long</span> k = <span class="built_in">abs</span>(a[i] - s);</span><br><span class="line">        <span class="keyword">if</span> (k == <span class="number">0</span>) <span class="keyword">continue</span>;</span><br><span class="line">        <span class="type">long</span> <span class="type">long</span> powFir = <span class="built_in">lowbit</span>(k), powSec = k + <span class="built_in">lowbit</span>(k);</span><br><span class="line">        <span class="keyword">if</span> (powSec != <span class="built_in">lowbit</span>(powSec)) &#123;     <span class="comment">// powSec is not a power of 2</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (a[i] &lt; s) &#123;     <span class="comment">// receive &gt; sent</span></span><br><span class="line">            REC.<span class="built_in">push_back</span>(powSec);</span><br><span class="line">            SEN.<span class="built_in">push_back</span>(powFir);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;            <span class="comment">// sent &gt; receive</span></span><br><span class="line">            REC.<span class="built_in">push_back</span>(powFir);</span><br><span class="line">            SEN.<span class="built_in">push_back</span>(powSec);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">sort</span>(REC.<span class="built_in">begin</span>(), REC.<span class="built_in">end</span>());</span><br><span class="line">    <span class="built_in">sort</span>(SEN.<span class="built_in">begin</span>(), SEN.<span class="built_in">end</span>());</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; REC.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (REC[i] != SEN[i])   <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> t;</span><br><span class="line">    cin &gt;&gt; t;</span><br><span class="line">    <span class="keyword">while</span> (t--) &#123;</span><br><span class="line">        <span class="type">int</span> n;</span><br><span class="line">        cin &gt;&gt; n;</span><br><span class="line"></span><br><span class="line">        <span class="type">long</span> <span class="type">long</span> sum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">            cin &gt;&gt; a[i];</span><br><span class="line">            sum += a[i];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (sum % n != <span class="number">0</span>) &#123;</span><br><span class="line">            cout &lt;&lt; <span class="string">&quot;No&quot;</span> &lt;&lt; endl;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">long</span> <span class="type">long</span> s = sum / n;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">solved</span>(s, n)) &#123;</span><br><span class="line">            cout &lt;&lt; <span class="string">&quot;Yes&quot;</span> &lt;&lt; endl;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            cout &lt;&lt; <span class="string">&quot;No&quot;</span> &lt;&lt; endl;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><br></p>
-<h2 id="reference">Reference</h2>
-<p><a href="https://www.luogu.com.cn/blog/AuroraWind/solution-cf1868b1">One_JuRuo's
-Blog.</a></p>
-]]></content>
-      <categories>
-        <category>题解</category>
-      </categories>
-      <tags>
-        <tag>constructive</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Introduction to DS - R 语言初探之贰</title>
     <url>/2023/09/19/COMP2501-2/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -11112,6 +11053,8 @@ Educational Round #150 <em>Problem E</em> Fill the Matrix</a></li>
 <ul>
 <li><a href="http://thisisxxz.com/2023/09/19/CF896T3/">CF #896
 <em>Problem C</em> Fill in the Matrix</a>.</li>
+<li><a href="https://thisisxxz.com/2023/09/21/CF896T4/">CF #896
+<em>Problem D</em> Candy Party</a>.</li>
 </ul>
 ]]></content>
       <categories>
