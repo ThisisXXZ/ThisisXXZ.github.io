@@ -25,33 +25,28 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="The computer that will emerge from this project will be as simple as possible, but not simpler.   终于来到了最激动人心的时刻：这一节我们将使用之前构造的所有芯片 (ALU, memory, counter...)，构造一个能够运行任意以 Hack assembly language 编写的">
+    <meta name="description" content="传说，在日本冬木市，每隔数十年，会出现能实现其持有者所有愿望的宝物「圣杯」。七名御主 (マスター，Master ) 与七名从者 (サーヴァント，Servant) 签订契约，为了争夺圣杯而参与秘密的「圣杯战争」。 能获得圣杯的只有一组，这七组人马各自为了成为最后的那一组而互相残杀。为了赢下圣杯战争，男主角卫宫士郎与他的从者 Saber 必须解出某种基于分治的递归式算法 (形如 \(T(n)&#x3D;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Nand2Tetris I, Hebrew University - Computer Architecture">
-<meta property="og:url" content="https://www.thisisxxz.com/2023/09/24/nand2tetris-3/index.html">
+<meta property="og:title" content="貴方が私の Master Theorem か">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/09/27/master-theorem/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="The computer that will emerge from this project will be as simple as possible, but not simpler.   终于来到了最激动人心的时刻：这一节我们将使用之前构造的所有芯片 (ALU, memory, counter...)，构造一个能够运行任意以 Hack assembly language 编写的">
+<meta property="og:description" content="传说，在日本冬木市，每隔数十年，会出现能实现其持有者所有愿望的宝物「圣杯」。七名御主 (マスター，Master ) 与七名从者 (サーヴァント，Servant) 签订契约，为了争夺圣杯而参与秘密的「圣杯战争」。 能获得圣杯的只有一组，这七组人马各自为了成为最后的那一组而互相残杀。为了赢下圣杯战争，男主角卫宫士郎与他的从者 Saber 必须解出某种基于分治的递归式算法 (形如 \(T(n)&#x3D;">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/09/24/nand2tetris-3/vonNeumann.png">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/09/24/nand2tetris-3/CPU.png">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/09/24/nand2tetris-3/memory.png">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/09/24/nand2tetris-3/computer.png">
-<meta property="article:published_time" content="2023-09-24T08:09:03.000Z">
-<meta property="article:modified_time" content="2023-09-24T15:00:35.962Z">
+<meta property="article:published_time" content="2023-09-27T10:49:06.000Z">
+<meta property="article:modified_time" content="2023-09-27T13:31:48.405Z">
 <meta property="article:author" content="XXZ">
-<meta property="article:tag" content="system">
+<meta property="article:tag" content="computational theory">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.thisisxxz.com/2023/09/24/nand2tetris-3/vonNeumann.png">
 
 
-<link rel="canonical" href="https://www.thisisxxz.com/2023/09/24/nand2tetris-3/">
+<link rel="canonical" href="https://www.thisisxxz.com/2023/09/27/master-theorem/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/09/24/nand2tetris-3/","path":"2023/09/24/nand2tetris-3/","title":"Nand2Tetris I, Hebrew University - Computer Architecture"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/09/27/master-theorem/","path":"2023/09/27/master-theorem/","title":"貴方が私の Master Theorem か"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Nand2Tetris I, Hebrew University - Computer Architecture | ThisisXXZ's Blog</title>
+<title>貴方が私の Master Theorem か | ThisisXXZ's Blog</title>
   
 
 
@@ -173,8 +168,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#the-stored-program-concept"><span class="nav-number">1.</span> <span class="nav-text">The Stored Program Concept</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#von-neumann-architecture"><span class="nav-number">1.1.</span> <span class="nav-text">von Neumann architecture</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#harvard-architecture"><span class="nav-number">1.2.</span> <span class="nav-text">Harvard Architecture</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#central-processing-unit"><span class="nav-number">2.</span> <span class="nav-text">Central Processing Unit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memory"><span class="nav-number">3.</span> <span class="nav-text">Memory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#here-it-comes---hack-computer"><span class="nav-number">4.</span> <span class="nav-text">Here it comes - Hack
-Computer!</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#master-theorem"><span class="nav-number">1.</span> <span class="nav-text">Master Theorem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#where-does-it-come-from"><span class="nav-number">2.</span> <span class="nav-text">Where does it come from?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#examples"><span class="nav-number">3.</span> <span class="nav-text">Examples</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -272,7 +266,7 @@ Computer!</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" hr
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/09/24/nand2tetris-3/">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/09/27/master-theorem/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
@@ -285,12 +279,12 @@ Computer!</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" hr
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Nand2Tetris I, Hebrew University - Computer Architecture | ThisisXXZ's Blog">
+      <meta itemprop="name" content="貴方が私の Master Theorem か | ThisisXXZ's Blog">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Nand2Tetris I, Hebrew University - Computer Architecture
+          貴方が私の Master Theorem か
         </h1>
 
         <div class="post-meta-container">
@@ -303,7 +297,7 @@ Computer!</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" hr
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2023-09-24 16:09:03" itemprop="dateCreated datePublished" datetime="2023-09-24T16:09:03+08:00">2023-09-24</time>
+      <time title="Created: 2023-09-27 18:49:06" itemprop="dateCreated datePublished" datetime="2023-09-27T18:49:06+08:00">2023-09-27</time>
     </span>
 
   <span class="post-meta-item">
@@ -338,218 +332,144 @@ Computer!</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" hr
     
     
     
-    <div class="post-body" itemprop="articleBody"><blockquote class="blockquote-center">
-<p>The computer that will emerge from this project will be as simple as
-possible, but not simpler.</p>
-
-</blockquote>
-<p>终于来到了最激动人心的时刻：这一节我们将使用之前构造的所有芯片 (ALU,
-memory, counter...)，构造一个能够运行任意以 Hack assembly language
-编写的程序的，真正意义上的 general-purpose computer！</p>
+    <div class="post-body" itemprop="articleBody"><p>传说，在日本冬木市，每隔数十年，会出现能实现其持有者所有愿望的宝物「圣杯」。七名御主
+(マスター，<em>Master </em>) 与七名从者 (サーヴァント，Servant)
+签订契约，为了争夺圣杯而参与秘密的「圣杯战争」。</p>
+<p>能获得圣杯的只有一组，这七组人马各自为了成为最后的那一组而互相残杀。为了赢下圣杯战争，男主角卫宫士郎与他的从者
+Saber 必须解出某种基于分治的递归式算法 (形如 <span class="math inline">\(T(n)=aT(\frac{n}{b})+f(n)\)</span>)
+的时间复杂度。</p>
 <span id="more"></span>
-<p>下面我们介绍的构造方案基于本课程中定义的 Hack
-computer；因此在细节方面与现代计算机可能有所差异。</p>
 <p><br></p>
-<div class="note warning"><p>  This article is a self-administered course note.</p>
-<p>  It will <strong>NOT</strong> cover any exam or assignment related
-content.</p>
-</div>
+<h2 id="master-theorem">Master Theorem</h2>
+<p>主定理适用于求解如下递归式算法的时间复杂度： <span class="math display">\[
+T(n)=aT(\frac{n}{b})+\Theta(n^d)
+\]</span></p>
+<ul>
+<li><span class="math inline">\(n\)</span> 是问题规模；</li>
+<li><span class="math inline">\(a\)</span> 是原问题的子问题个数。</li>
+<li><span class="math inline">\(b\)</span>
+是由原问题到子问题所削减的规模；因此子问题的规模为 <span class="math inline">\(\frac{n}{b}\)</span>。</li>
+<li><span class="math inline">\(\Theta(n^d)\)</span> (有时写成 <span class="math inline">\(f(n)\)</span>)
+是将原问题分解为子问题与将子问题的解合并为原问题的解所需的时间。</li>
+</ul>
+<p>主定理指出，对于此类型的递归式算法，其时间复杂度为： <span class="math display">\[
+T(n)=
+\begin{cases}
+\Theta(n^d) \ \ \ \ \ \ \ \ \ \ \ \ \ {\rm{if}} \ d&gt;\log_b a \\
+\Theta(n^d\log n) \ \ \ \ {\rm{if}} \ d=\log_ba \\
+\Theta(n^{\log_b a}) \ \ \ \ \ \ \ \ {\rm{if}} \ d&lt;\log_ba
+\end{cases}
+\]</span></p>
 <p><br></p>
-<h2 id="the-stored-program-concept">The Stored Program Concept</h2>
-<p>计算机之所以能从其他机械中脱颖而出，最为突出的原因在于其无与伦比的「万用性」(versatile)。但这万用性又从何而来呢？</p>
+<h2 id="where-does-it-come-from">Where does it come from?</h2>
+<p>将递归式 <span class="math inline">\(T(n)=aT(\frac{n}{b})+O(n^d)\)</span> 展开：</p>
+<table>
+<colgroup>
+<col style="width: 10%">
+<col style="width: 17%">
+<col style="width: 14%">
+<col style="width: 57%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Level</th>
+<th style="text-align: center;">Problem size</th>
+<th style="text-align: center;">Problem #</th>
+<th style="text-align: center;">Work (current level)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0</td>
+<td style="text-align: center;"><span class="math inline">\(n\)</span></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><span class="math inline">\(\Theta(n^d)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><span class="math inline">\(n/b\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(a\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(a\Theta((n/b)^d)=\Theta(n^d)\frac{a}{b^d}\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><span class="math inline">\(n/b^2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(a^2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(a^2\Theta((n/b^2)^d)=\Theta(n^d)(\frac{a}{b^d})^2\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">...</td>
+<td style="text-align: center;">...</td>
+<td style="text-align: center;">...</td>
+<td style="text-align: center;">...</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(k\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(n/b^k\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(a^k\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\Theta(n^d)(\frac{a}{b^d})^k\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">...</td>
+<td style="text-align: center;">...</td>
+<td style="text-align: center;">...</td>
+<td style="text-align: center;">...</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(\log_bn\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(n/b^{\log_bn}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(a^{\log_bn}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\Theta(1)a^{\log_bn}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>求 total work 就是对每一层的 work
+求和；可以发现这是一个等比数列求和问题： <span class="math display">\[
+{\rm{Total \ work}}=T(n)=\sum_{0}^{\log_bn}\Theta(n^d)(\frac{a}{b^d})^i
+\]</span>
+首先提出一个引理：<u>任意一个等比数列之和不会大于其最大项的常数倍</u>。</p>
+<p>例如，对于 <span class="math inline">\(q&lt;1\)</span> 的等比数列
+<span class="math inline">\(\{a_n\}\)</span>，显然 <span class="math inline">\(a_1\)</span> 是其最大项。那么 <span class="math inline">\(\{a_n\}\)</span> 的和 <span class="math inline">\(S=\frac{a_1(1-q^n)}{1-q}\leq
+O(a_1)\)</span>。很好证明：由于 <span class="math inline">\(q&lt;1\)</span>，<span class="math inline">\(\lim_{n\to\infty}\frac{1-q^n}{1-q}=\frac{1}{1-q}=O(1)\)</span>
+(与 <span class="math inline">\(n\)</span> 无关)。</p>
+<p>根据该引理，<span class="math inline">\(\Theta({\rm{Total \
+work}})\)</span> 能被其最大项的时间复杂度表示，即 <span class="math inline">\(O(a_1) \ (q&lt;1)\)</span> 或 <span class="math inline">\(O(a_n) \ (q&gt;1)\)</span>。</p>
+<p>至此，我们能够(不严谨地)对主定理进行证明：</p>
 <ul>
-<li>[theoretically] Church-Turing Thesis 指出图灵机是一种 universal
-computing machine。</li>
-<li>[practically] von Neumann architecture 是所有现代计算机的蓝图。</li>
+<li>当 <span class="math inline">\(q=a/b^d&lt;1\)</span> 即 <span class="math inline">\(d&gt;\log_ba\)</span> 时，<span class="math inline">\(\Theta(\rm{Total \ work})\)</span> 被首项决定，即
+<span class="math inline">\(T(n)=\Theta(n^d)\)</span>。在该情况下，将原问题分解为子问题与合并子问题解所需的时间是
+dominant term。</li>
+<li>当 <span class="math inline">\(q=a/b^d&gt;1\)</span> 即 <span class="math inline">\(d&lt;\log_ba\)</span> 时，<span class="math inline">\(\Theta(\rm{Total \ work})\)</span> 被末项决定，即
+<span class="math inline">\(T(n)=\Theta(a^{\log_bn})=\Theta(n^{\log_b
+a})\)</span>。在该情况下，解决子问题所需的时间是 dominant term。</li>
+<li>当 <span class="math inline">\(q=a/b^d=1\)</span> 即 <span class="math inline">\(d=\log_ba\)</span> 时，要求 <span class="math inline">\(\Theta(\rm{Total \ work})\)</span>
+必须对数列求和。注意到这一数列的 <span class="math inline">\(q=1\)</span>，这意味着每一项都相同，因此 <span class="math inline">\(T(n)=(\log_bn+1)\Theta(n^d)=\Theta(n^d\log_bn)\)</span>。在该情况下，将原问题分解为子问题+合并子问题解所需的时间与解决子问题所需的时间在渐进意义上具有同等重要性。</li>
 </ul>
-<p><em>universal Turing machine</em> (1936) 与 <em>von Neumann
-machine</em> (1945) 殊途同归，它们不约而同地 (存疑?) 提出了 stored
-program 这一天才般的想法。而这一想法又是那样的简洁与优雅：</p>
-<div class="note info no-icon"><p>The program's code is temporarily stored and manipulated in the
-computer's memory, <em>just like data</em>, becoming what is known as
-"software".</p>
-</div>
-<p>在理论计算机领域中，Turing machine
-占有很高的地位；但本节课是基于实践的。因此，我们将着重介绍 von Neumann
-architecture，并亲自见证这一诞生在近 80
-年前的概念是如何指导我们今天的计算机设计的。</p>
-<h3 id="von-neumann-architecture">von Neumann architecture</h3>
-<p>von Neumann architecture 基于 central processing unit (CPU)
-这一核心元件。它：</p>
-<ul>
-<li>interacting with a <em>memory</em> device.</li>
-<li>receiving data from some <em>input</em> device.</li>
-<li>sending data to some <em>output</em> device.</li>
-</ul>
-<p>von Neumann architecture 的核心 - stored program concept 则体现在
-memory device 中：it stores not only the data that the computer
-manipulates, but also the very instructions that tell the computer what
-to do.</p>
-<figure>
-<img data-src="vonNeumann.png" alt="the von Neumann architecture">
-<figcaption aria-hidden="true">the von Neumann architecture</figcaption>
-</figure>
-<h3 id="harvard-architecture">Harvard Architecture</h3>
-<p>von Neumann architecture 有许多不同的 variants，其中 Harvard
-architecture 是比较著名的一个。</p>
-<p>Harvard architecture 强调 data 与 instruction
-在计算机中的分离储存；也就是说，data 与 instruction 各自占据 memory
-中两块独立的连续空间，拥有各自独立的 data bus，两者井水不犯河水。</p>
-<p>正因如此，在 Harvard architecture 中，CPU 能够同时获取 data 与
-instruction；而 pure von Neumann architecture 则无法做到。</p>
-<p>Hack computer 采用的是 Harvard Architecture；详见 machine language
-一节中对 hardware platform 的描述，我们对 memory 作出了 data memory 与
-instruction memory 这两种明确的区分。</p>
 <p><br></p>
-<h2 id="central-processing-unit">Central Processing Unit</h2>
-<p>计算机的核心，当之无愧的艺术品。它把我们之前构造的所有硬件巧妙地联系在一起：</p>
-<figure>
-<img data-src="CPU.png" alt="CPU diagram">
-<figcaption aria-hidden="true">CPU diagram</figcaption>
-</figure>
-<p>我们来看看 CPU 是如何完成经典的 <em>fetch-decode-execute cycle</em>
-的：</p>
-<p><em>Tick</em> 时刻 (<u>Tick 时刻 combinatorial chips
-瞬间完成工作，sequential chips 仅仅向外输出其状态</u>)：</p>
+<h2 id="examples">Examples</h2>
+<p>经典的 binary search：<span class="math inline">\(T(n)=T(n/2)+\Theta(1)\)</span>。</p>
 <ul>
-<li>外部控制器 (reset button): 向 CPU 中的 Program Counter (PC) 传入
-<code>reset</code>。</li>
-<li>Mux16 (leftmost): 根据 <code>c=instruction[15]</code> 选择将
-instruction 或 ALU output 传入 A register 中。
-<ul>
-<li><code>c=0</code>: 该指令是一个 <span class="math inline">\(A\)</span>-指令 <code>@val</code>，表示将
-<code>val</code> 存入 A register。</li>
-<li><code>c=1</code>: 该指令是一个 <span class="math inline">\(C\)</span>-指令
-<code>dest=comp; jump</code>。将上一循环计算的结果传入 A register。</li>
-</ul></li>
-<li>A register: 向外 (ALU, <code>addressM</code>) 输出其状态
-<code>A</code>。</li>
-<li>D register: 向外 (ALU) 输出其状态 <code>D</code>。</li>
-<li>Mux16 (rightmost): 根据 <code>c=instruction[12]</code> 选择将
-<code>M</code> 或 <code>A</code> 传入 ALU 中。
-<ul>
-<li>这是 Hack machine language 的规定：<span class="math inline">\(C\)</span>-指令的第 12 位指定了计算式
-<code>comp</code> 中的其中一个操作数是 <code>A</code> 还是
-<code>M</code> (另一个操作数一定是 <code>D</code>)。</li>
-<li><u>若传入的指令是 <span class="math inline">\(A\)</span>-指令，接下来的环节都没有意义</u>；但也不会产生任何影响。</li>
-</ul></li>
-<li>ALU: 根据 <code>instruction</code> 的对应 bits 确定计算式
-<code>comp</code> 并对传入的 <code>D</code> 与
-<code>A</code>/<code>M</code> 执行相应的计算。向 <code>outM</code> 与 D
-register 输出计算的结果。输出 control bits <code>zr</code> 与
-<code>ng</code>。</li>
-<li>PC: 向外输出其状态 <code>PC</code>。</li>
-<li>A register logic: A register 的 combinatorial logic 根据
-<code>instruction</code> 的对应 bits 计算出 <span class="math inline">\(C\)</span>-指令中 <code>dest</code> 是否为
-<code>A</code>，用 <code>load_A</code> 表示并将该值传入 A register
-中。</li>
-<li>D register logic: D register 的 combinatorial logic 根据
-<code>instruction</code> 的对应 bits 计算出 <span class="math inline">\(C\)</span>-指令中 <code>dest</code> 是否为
-<code>D</code>，用 <code>load_D</code> 表示并将该值传入 D register
-中。</li>
-<li>PC logic: counter 的 combinatorial logic 根据 <code>zr</code> 与
-<code>ng</code> 计算出 <span class="math inline">\(C\)</span>-指令中
-conditional jump 的 conditional，用 <code>load_PC</code>
-表示并将该值传入 PC 中。</li>
-<li>以上是所有 internal chips 在 tick 时刻的工作状态。就 CPU
-整体而言，其与外部的交互：
-<ul>
-<li>read from memory [stay tuned]: 向 CPU 输入 <code>instruction</code>,
-data <code>inM</code>。</li>
-<li>write to memory [stay tuned]: 向 memory 中传入 <code>outM</code>,
-<code>writeM</code> 与 <code>addressM</code>。</li>
-</ul></li>
+<li><span class="math inline">\(a=1, b=2, d=\log_n1=0\)</span>。由于
+<span class="math inline">\(\log_ba=d=0\)</span>，适用于第三种情况：因此
+<span class="math inline">\(T(n)=\Theta(\log n)\)</span>。</li>
 </ul>
-<p><em>Tock</em> 时刻 (<u>Tock 时刻 sequential chips 根据
-<code>load</code> 改变自身状态</u>)：</p>
+<p>归并排序 merge sort：<span class="math inline">\(T(n)=2T(n/2)+\Theta(n)\)</span>。</p>
 <ul>
-<li>A register: 根据 <code>load_A</code> 决定是否将 Mux16 (leftmost)
-传入的值进行存储。继续向外输出。</li>
-<li>D register: 根据 <code>load_D</code> 决定是否将 ALU
-计算的结果进行存储。继续向外输出。</li>
-<li>PC: 从 register A 中获取 address，从 PC logic 中获取 conditional
-<code>load_PC</code>，从外部获取
-reset。根据这三个值决定是否与如何改变自身状态之后继续向外输出。
-<ul>
-<li>If <code>reset=1</code>, <code>PC=[0]</code>. (重启)</li>
-<li>Else if <code>load_PC=1</code>, <code>PC=address</code>. (执行
-<code>jump</code>)</li>
-<li>Else <code>PC++</code>. (正常的程序执行流程，自增)</li>
-</ul></li>
+<li><span class="math inline">\(a=b=2, d=\log_n n=1\)</span>。由于 <span class="math inline">\(\log_ba=d=1\)</span>，适用于第三种情况：因此 <span class="math inline">\(T(n)=\Theta(n\log n)\)</span>。</li>
 </ul>
-<p>一切都联系起来了：在一个时刻内，CPU 在 A register 的指导下从 data
-memory 中获取数据，在 PC 的指导下从 instruction memory 中获取指令 (
-<em>fetch</em> )，在 Mux16 等一系列 combinatorial logic 中完成解码 (
-<em>decode</em> )，在 ALU 与 PC 中执行对应的指令 ( <em>execute</em>
-)。</p>
-<p>除了感叹设计者的匠心独运之外，任何评价都是多余的。</p>
-<p><br></p>
-<h2 id="memory">Memory</h2>
-<p>memory 本质上是一个 24KRAM chip，由若干较小的 RAM chips 与对应的
-combinatorial logic 组成。注意到 screen，keyboard 这些 IO devices 也是
-memory 的一部分，这得益于 IO devices 与 RAM 底层实现的统一性 (见
-hardware platform)。screen 与 keyboard 的地址是被 pre-defined 的。</p>
-<figure>
-<img data-src="memory.png" alt="data memory: including RAM and memory-mapped I/O devices">
-<figcaption aria-hidden="true">data memory: including RAM and
-memory-mapped I/O devices</figcaption>
-</figure>
-<p>以上是 Hack computer <em>data</em> memory
-的示意图。这一系列的输入/输出对应 CPU 中的：</p>
+<p>二叉树遍历：<span class="math inline">\(T(n)=2T(n/2)+\Theta(1)\)</span>。</p>
 <ul>
-<li><code>in</code>: 对应 CPU 输出的
-<code>outM</code>，被写入的值（如有）。</li>
-<li><code>address</code>: 对应 CPU 输出的
-<code>addressM</code>，访问/被写入的 memory cell 的地址。</li>
-<li><code>load</code>: 对应 CPU 输出的
-<code>writeM</code>，决定是否执行写入操作
-(若不写入，则单纯进行访问)。</li>
-<li><code>out</code>: 对应 CPU 输入的
-<code>inM</code>，输出对应地址中的值。</li>
+<li><span class="math inline">\(a=b=2, d=\log_n1=0\)</span>。由于 <span class="math inline">\(\log_ba&gt;d\)</span>，适用于第二种情况：因此
+<span class="math inline">\(T(n)=\Theta(n)\)</span>。</li>
 </ul>
-<p>CPU 具有对 data memory 的读/写权限，但 instruction memory
-是只读的。因此 instruction memory 是一个仅有两个接口的 ROM chip。</p>
-<ul>
-<li><code>in</code>: 对应 CPU 输出的 <code>PC</code>，根据
-<code>PC</code> 指定的地址访问 ROM 中对应的指令。</li>
-<li><code>out</code>: 对应 CPU 输入的
-<code>instruction</code>，输出对应地址中的指令。</li>
-</ul>
-<p>我们仅仅能通过一些外部方式对 instruction memory 进行更改 (i.e., load
-a new program)；例如，替换整片 ROM chip。</p>
-<p><br></p>
-<h2 id="here-it-comes---hack-computer">Here it comes - Hack
-Computer!</h2>
-<p>即使是最原始，最简陋的原核细胞，也能在漫长的进化中构建出种种精妙的生物体；如果说
-register
-的出现象征着原核细胞的诞生，那么计算机的构建无疑是相当于人类诞生的奇迹。</p>
-<p>然而，在 CPU 与 memory
-已经构建完毕的基础上，这个奇迹显得那么的自然而简洁：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">CHIP Computer &#123;</span><br><span class="line"></span><br><span class="line">    IN reset;</span><br><span class="line"></span><br><span class="line">    PARTS:</span><br><span class="line">    CPU(inM=outMem, instruction=outROM, reset=reset, </span><br><span class="line">        outM=inMem, writeM=wriMem, addressM=addrMem, pc=inROM);</span><br><span class="line">    Memory(in=inMem, load=wriMem, address=addrMem, out=outMem);</span><br><span class="line">    ROM32K(address=inROM, out=outROM);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure>
-<img data-src="computer.png" alt="Hack computer">
-<figcaption aria-hidden="true">Hack computer</figcaption>
-</figure>
-<p>注意这个特殊的外部输入 <code>reset</code>: 我们可以将其理解为重启键
-(reset bottom)。每当我们按下重启键，<code>PC</code> 将被设定为
-<code>[0]</code>；这代表着我们将中止目前的进程，从头开始执行 ROM chip
-中存储的程序。</p>
-<p>庆贺吧！Hack computer
-就此诞生了！我们亲手创造了一个「奇迹」；它将能够完成 physical world
-中一切能被观测到的计算任务，是名副其实的 universal computing
-machine。你之所以能够看到这篇文章，也是神迹的一部分。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
-<div class="note warning"><p>  This article is a self-administered course note.</p>
-<p>  References in the article are from corresponding course materials
-if not specified.</p>
-</div>
-<p>Course info:</p>
-<p>Lecturer: Prof. Shimon Shocken, Prof. Noam Nisan.</p>
-<p>Course textbook:</p>
-<p>(Nisan N., Schocken S., 2008) <a target="_blank" rel="noopener" href="https://www.amazon.com/Elements-Computing-Systems-Principles-ebook/dp/B004HHORGA/">The
-Element of Computing Systems: Building a Modern Computer from First
-Principles.</a></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/113406812">主定理 (Master
+Theorem) - John Liu</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/100531135">Master Theorem -
+托比欧</a>.</li>
+</ul>
 
     </div>
 
@@ -587,13 +507,13 @@ Principles.</a></p>
   </li>
   <li class="post-copyright-link">
       <strong>Post link: </strong>
-      <a href="https://www.thisisxxz.com/2023/09/24/nand2tetris-3/" title="Nand2Tetris I, Hebrew University - Computer Architecture">https://www.thisisxxz.com/2023/09/24/nand2tetris-3/</a>
+      <a href="https://www.thisisxxz.com/2023/09/27/master-theorem/" title="貴方が私の Master Theorem か">https://www.thisisxxz.com/2023/09/27/master-theorem/</a>
       <!--copy buttom-->
       <span class="copy-path" title="Click to copy markdown-style reference"
       ><i
         style="cursor: pointer"
         class="fa fa-clipboard"
-        data-clipboard-text="[XXZ's Blog | Nand2Tetris I, Hebrew University - Computer Architecture](https://www.thisisxxz.com/2023/09/24/nand2tetris-3/)"
+        data-clipboard-text="[XXZ's Blog | 貴方が私の Master Theorem か](https://www.thisisxxz.com/2023/09/27/master-theorem/)"
         aria-label="Markdown-style reference is now on your clipboard"
       ></i
     ></span>
@@ -629,21 +549,18 @@ Principles.</a></p>
       </div>
     </div>
           <div class="post-tags">
-              <a href="/tags/system/" rel="tag"><i class="fa fa-tag"></i> system</a>
+              <a href="/tags/computational-theory/" rel="tag"><i class="fa fa-tag"></i> computational theory</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2023/09/19/COMP2501-2/" rel="prev" title="Introduction to DS - R 语言初探之贰">
-                  <i class="fa fa-chevron-left"></i> Introduction to DS - R 语言初探之贰
+                <a href="/2023/09/24/nand2tetris-3/" rel="prev" title="Nand2Tetris I, Hebrew University - Computer Architecture">
+                  <i class="fa fa-chevron-left"></i> Nand2Tetris I, Hebrew University - Computer Architecture
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/09/27/master-theorem/" rel="next" title="貴方が私の Master Theorem か">
-                  貴方が私の Master Theorem か <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
@@ -740,7 +657,7 @@ Principles.</a></p>
 
 
 
-<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/09/24/nand2tetris-3/"}</script>
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/09/27/master-theorem/"}</script>
 <script>
 document.addEventListener('page:loaded', () => {
   NexT.utils.loadComments(CONFIG.valine.el)

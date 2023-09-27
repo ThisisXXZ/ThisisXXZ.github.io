@@ -155,6 +155,156 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
+    <title>貴方が私の Master Theorem か</title>
+    <url>/2023/09/27/master-theorem/</url>
+    <content><![CDATA[<p>传说，在日本冬木市，每隔数十年，会出现能实现其持有者所有愿望的宝物「圣杯」。七名御主
+(マスター，<em>Master </em>) 与七名从者 (サーヴァント，Servant)
+签订契约，为了争夺圣杯而参与秘密的「圣杯战争」。</p>
+<p>能获得圣杯的只有一组，这七组人马各自为了成为最后的那一组而互相残杀。为了赢下圣杯战争，男主角卫宫士郎与他的从者
+Saber 必须解出某种基于分治的递归式算法 (形如 <span class="math inline">\(T(n)=aT(\frac{n}{b})+f(n)\)</span>)
+的时间复杂度。</p>
+<span id="more"></span>
+<p><br></p>
+<h2 id="master-theorem">Master Theorem</h2>
+<p>主定理适用于求解如下递归式算法的时间复杂度： <span class="math display">\[
+T(n)=aT(\frac{n}{b})+\Theta(n^d)
+\]</span></p>
+<ul>
+<li><span class="math inline">\(n\)</span> 是问题规模；</li>
+<li><span class="math inline">\(a\)</span> 是原问题的子问题个数。</li>
+<li><span class="math inline">\(b\)</span>
+是由原问题到子问题所削减的规模；因此子问题的规模为 <span class="math inline">\(\frac{n}{b}\)</span>。</li>
+<li><span class="math inline">\(\Theta(n^d)\)</span> (有时写成 <span class="math inline">\(f(n)\)</span>)
+是将原问题分解为子问题与将子问题的解合并为原问题的解所需的时间。</li>
+</ul>
+<p>主定理指出，对于此类型的递归式算法，其时间复杂度为： <span class="math display">\[
+T(n)=
+\begin{cases}
+\Theta(n^d) \ \ \ \ \ \ \ \ \ \ \ \ \ {\rm{if}} \ d&gt;\log_b a \\
+\Theta(n^d\log n) \ \ \ \ {\rm{if}} \ d=\log_ba \\
+\Theta(n^{\log_b a}) \ \ \ \ \ \ \ \ {\rm{if}} \ d&lt;\log_ba
+\end{cases}
+\]</span></p>
+<p><br></p>
+<h2 id="where-does-it-come-from">Where does it come from?</h2>
+<p>将递归式 <span class="math inline">\(T(n)=aT(\frac{n}{b})+O(n^d)\)</span> 展开：</p>
+<table>
+<colgroup>
+<col style="width: 10%">
+<col style="width: 17%">
+<col style="width: 14%">
+<col style="width: 57%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Level</th>
+<th style="text-align: center;">Problem size</th>
+<th style="text-align: center;">Problem #</th>
+<th style="text-align: center;">Work (current level)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0</td>
+<td style="text-align: center;"><span class="math inline">\(n\)</span></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><span class="math inline">\(\Theta(n^d)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><span class="math inline">\(n/b\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(a\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(a\Theta((n/b)^d)=\Theta(n^d)\frac{a}{b^d}\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><span class="math inline">\(n/b^2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(a^2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(a^2\Theta((n/b^2)^d)=\Theta(n^d)(\frac{a}{b^d})^2\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">...</td>
+<td style="text-align: center;">...</td>
+<td style="text-align: center;">...</td>
+<td style="text-align: center;">...</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(k\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(n/b^k\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(a^k\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\Theta(n^d)(\frac{a}{b^d})^k\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">...</td>
+<td style="text-align: center;">...</td>
+<td style="text-align: center;">...</td>
+<td style="text-align: center;">...</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(\log_bn\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(n/b^{\log_bn}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(a^{\log_bn}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\Theta(1)a^{\log_bn}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>求 total work 就是对每一层的 work
+求和；可以发现这是一个等比数列求和问题： <span class="math display">\[
+{\rm{Total \ work}}=T(n)=\sum_{0}^{\log_bn}\Theta(n^d)(\frac{a}{b^d})^i
+\]</span>
+首先提出一个引理：<u>任意一个等比数列之和不会大于其最大项的常数倍</u>。</p>
+<p>例如，对于 <span class="math inline">\(q&lt;1\)</span> 的等比数列
+<span class="math inline">\(\{a_n\}\)</span>，显然 <span class="math inline">\(a_1\)</span> 是其最大项。那么 <span class="math inline">\(\{a_n\}\)</span> 的和 <span class="math inline">\(S=\frac{a_1(1-q^n)}{1-q}\leq
+O(a_1)\)</span>。很好证明：由于 <span class="math inline">\(q&lt;1\)</span>，<span class="math inline">\(\lim_{n\to\infty}\frac{1-q^n}{1-q}=\frac{1}{1-q}=O(1)\)</span>
+(与 <span class="math inline">\(n\)</span> 无关)。</p>
+<p>根据该引理，<span class="math inline">\(\Theta({\rm{Total \
+work}})\)</span> 能被其最大项的时间复杂度表示，即 <span class="math inline">\(O(a_1) \ (q&lt;1)\)</span> 或 <span class="math inline">\(O(a_n) \ (q&gt;1)\)</span>。</p>
+<p>至此，我们能够(不严谨地)对主定理进行证明：</p>
+<ul>
+<li>当 <span class="math inline">\(q=a/b^d&lt;1\)</span> 即 <span class="math inline">\(d&gt;\log_ba\)</span> 时，<span class="math inline">\(\Theta(\rm{Total \ work})\)</span> 被首项决定，即
+<span class="math inline">\(T(n)=\Theta(n^d)\)</span>。在该情况下，将原问题分解为子问题与合并子问题解所需的时间是
+dominant term。</li>
+<li>当 <span class="math inline">\(q=a/b^d&gt;1\)</span> 即 <span class="math inline">\(d&lt;\log_ba\)</span> 时，<span class="math inline">\(\Theta(\rm{Total \ work})\)</span> 被末项决定，即
+<span class="math inline">\(T(n)=\Theta(a^{\log_bn})=\Theta(n^{\log_b
+a})\)</span>。在该情况下，解决子问题所需的时间是 dominant term。</li>
+<li>当 <span class="math inline">\(q=a/b^d=1\)</span> 即 <span class="math inline">\(d=\log_ba\)</span> 时，要求 <span class="math inline">\(\Theta(\rm{Total \ work})\)</span>
+必须对数列求和。注意到这一数列的 <span class="math inline">\(q=1\)</span>，这意味着每一项都相同，因此 <span class="math inline">\(T(n)=(\log_bn+1)\Theta(n^d)=\Theta(n^d\log_bn)\)</span>。在该情况下，将原问题分解为子问题+合并子问题解所需的时间与解决子问题所需的时间在渐进意义上具有同等重要性。</li>
+</ul>
+<p><br></p>
+<h2 id="examples">Examples</h2>
+<p>经典的 binary search：<span class="math inline">\(T(n)=T(n/2)+\Theta(1)\)</span>。</p>
+<ul>
+<li><span class="math inline">\(a=1, b=2, d=\log_n1=0\)</span>。由于
+<span class="math inline">\(\log_ba=d=0\)</span>，适用于第三种情况：因此
+<span class="math inline">\(T(n)=\Theta(\log n)\)</span>。</li>
+</ul>
+<p>归并排序 merge sort：<span class="math inline">\(T(n)=2T(n/2)+\Theta(n)\)</span>。</p>
+<ul>
+<li><span class="math inline">\(a=b=2, d=\log_n n=1\)</span>。由于 <span class="math inline">\(\log_ba=d=1\)</span>，适用于第三种情况：因此 <span class="math inline">\(T(n)=\Theta(n\log n)\)</span>。</li>
+</ul>
+<p>二叉树遍历：<span class="math inline">\(T(n)=2T(n/2)+\Theta(1)\)</span>。</p>
+<ul>
+<li><span class="math inline">\(a=b=2, d=\log_n1=0\)</span>。由于 <span class="math inline">\(\log_ba&gt;d\)</span>，适用于第二种情况：因此
+<span class="math inline">\(T(n)=\Theta(n)\)</span>。</li>
+</ul>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/113406812">主定理 (Master
+Theorem) - John Liu</a>.</li>
+<li><a href="https://zhuanlan.zhihu.com/p/100531135">Master Theorem -
+托比欧</a>.</li>
+</ul>
+]]></content>
+      <categories>
+        <category>笔记</category>
+        <category>misc</category>
+      </categories>
+      <tags>
+        <tag>computational theory</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Nand2Tetris I, Hebrew University - Computer Architecture</title>
     <url>/2023/09/24/nand2tetris-3/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -8321,6 +8471,7 @@ xargs 详解</a>.</li>
 ]]></content>
       <categories>
         <category>笔记</category>
+        <category>misc</category>
       </categories>
       <tags>
         <tag>shell</tag>
@@ -12527,6 +12678,7 @@ Hexo</a></p></li>
 ]]></content>
       <categories>
         <category>笔记</category>
+        <category>misc</category>
       </categories>
       <tags>
         <tag>blog</tag>
@@ -12826,6 +12978,7 @@ C 非常相似。贴一段 shell script 程序感受一下:</p>
 ]]></content>
       <categories>
         <category>笔记</category>
+        <category>misc</category>
       </categories>
       <tags>
         <tag>shell</tag>
@@ -13015,6 +13168,7 @@ scr_dump</a></li>
 ]]></content>
       <categories>
         <category>笔记</category>
+        <category>misc</category>
       </categories>
       <tags>
         <tag>ncurses</tag>
