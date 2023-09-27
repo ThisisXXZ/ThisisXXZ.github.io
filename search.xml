@@ -616,6 +616,96 @@ variables</em> based on existing variables.</p>
 中。下面的两个命令等价：</p>
 <figure class="highlight r"><table><tr><td class="code"><pre><span class="line">x <span class="operator">&gt;=</span> a <span class="operator">&amp;</span> x <span class="operator">&lt;=</span> b</span><br><span class="line">between<span class="punctuation">(</span>x<span class="punctuation">,</span> a<span class="punctuation">,</span> b<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
 <p><br></p>
+<h2 id="data.table"><code>data.table</code></h2>
+<p>除了 <code>tidyverse</code> 包提供的 <code>tibble</code>
+外，<code>data.table</code> 包提供的 <code>data.table</code> 也是传统
+data frames 的一种 alternative。</p>
+<p>在使用 <code>data.table</code> object 前，先导入
+<code>data.table</code> 包：<code>library(data.table)</code>。使用
+<code>setDT()</code> 函数将一个 data frame 转为 <code>data.table</code>
+类 object：<code>murders &lt;- setDT(murders)</code>。</p>
+<h3 id="selecting">Selecting</h3>
+<p>以下的 selecting 方式，不仅适用于 <code>data.table</code>
+类对象，也适用于普通的 data frame。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">murders<span class="punctuation">[</span><span class="punctuation">,</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;state&quot;</span><span class="punctuation">,</span> <span class="string">&quot;region&quot;</span><span class="punctuation">)</span><span class="punctuation">]</span> <span class="operator">|&gt;</span> head<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt;         state region</span></span><br><span class="line"><span class="comment">#&gt; 1:    Alabama  South</span></span><br><span class="line"><span class="comment">#&gt; 2:     Alaska   West</span></span><br><span class="line"><span class="comment">#&gt; 3:    Arizona   West</span></span><br><span class="line"><span class="comment">#&gt; 4:   Arkansas  South</span></span><br><span class="line"><span class="comment">#&gt; 5: California   West</span></span><br></pre></td></tr></table></figure>
+<p>但 <code>.()</code> 这一特殊的函数只能在导入了
+<code>data.table</code> 包后才能使用。R 将 <code>.()</code>
+中的变量识别为 column names，而不是 R 环境中的其他对象。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">murders<span class="punctuation">[</span><span class="punctuation">,</span> .<span class="punctuation">(</span>state<span class="punctuation">,</span> region<span class="punctuation">)</span><span class="punctuation">]</span> <span class="operator">|&gt;</span> head<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt;         state region</span></span><br><span class="line"><span class="comment">#&gt; 1:    Alabama  South</span></span><br><span class="line"><span class="comment">#&gt; 2:     Alaska   West</span></span><br><span class="line"><span class="comment">#&gt; 3:    Arizona   West</span></span><br><span class="line"><span class="comment">#&gt; 4:   Arkansas  South</span></span><br><span class="line"><span class="comment">#&gt; 5: California   West</span></span><br></pre></td></tr></table></figure>
+<h3 id="manipulating-columns">Manipulating columns</h3>
+<p>回忆起在 <code>dplyr</code> 包中我们使用 <code>mutate</code> 函数来为
+data frame 添加新的一列。在 <code>data.table</code> 包中我们则使用
+<code>:=</code> 函数。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">s <span class="operator">&lt;-</span> murders<span class="punctuation">[</span><span class="punctuation">,</span> rate <span class="operator">:=</span> total <span class="operator">/</span> population <span class="operator">*</span> <span class="number">100000</span><span class="punctuation">]</span></span><br><span class="line">head<span class="punctuation">(</span>s<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt;         state abb region population total rate</span></span><br><span class="line"><span class="comment">#&gt; 1:    Alabama  AL  South    4779736   135 2.82</span></span><br><span class="line"><span class="comment">#&gt; 2:     Alaska  AK   West     710231    19 2.68</span></span><br><span class="line"><span class="comment">#&gt; 3:    Arizona  AZ   West    6392017   232 3.63</span></span><br><span class="line"><span class="comment">#&gt; 4:   Arkansas  AR  South    2915918    93 3.19</span></span><br><span class="line"><span class="comment">#&gt; 5: California  CA   West   37253956  1257 3.37</span></span><br></pre></td></tr></table></figure>
+<p>若想同时定义多个 columns，向 <code>:=</code>
+函数中传入多个参数。(注意要加引号；真是奇怪的 syntax)</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">s <span class="operator">&lt;-</span> murders<span class="punctuation">[</span><span class="punctuation">,</span> <span class="string">&quot;:=&quot;</span><span class="punctuation">(</span>rate <span class="operator">=</span> total <span class="operator">/</span> population <span class="operator">*</span> <span class="number">100000</span><span class="punctuation">,</span> rank <span class="operator">=</span> rank<span class="punctuation">(</span>population<span class="punctuation">)</span><span class="punctuation">)</span><span class="punctuation">]</span></span><br><span class="line">head<span class="punctuation">(</span>s<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt;         state abb region population total     rate rank</span></span><br><span class="line"><span class="comment">#&gt; 1:    Alabama  AL  South    4779736   135 2.824424   29</span></span><br><span class="line"><span class="comment">#&gt; 2:     Alaska  AK   West     710231    19 2.675186    5</span></span><br><span class="line"><span class="comment">#&gt; 3:    Arizona  AZ   West    6392017   232 3.629527   36</span></span><br><span class="line"><span class="comment">#&gt; 4:   Arkansas  AR  South    2915918    93 3.189390   20</span></span><br><span class="line"><span class="comment">#&gt; 5: California  CA   West   37253956  1257 3.374138   51</span></span><br></pre></td></tr></table></figure>
+<p>另外，如果 <code>:=</code> 函数中的 column name 是原
+<code>data.table</code> 中一个已存在的 column name，那么 <code>:=</code>
+函数的作用是 changing (columns) 而不是 adding (columns)。</p>
+<h3 id="reference-versus-copy">Reference versus Copy</h3>
+<p><code>data.table</code>
+包在设计时的一个目的就是为了尽量节省空间。因此，与许多编程语言一样，在使用
+<code>data.table</code> 包时一定要注意 reference 与 copy 的区别。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">x <span class="operator">&lt;-</span> data.table<span class="punctuation">(</span>a <span class="operator">=</span> <span class="number">1</span><span class="punctuation">)</span></span><br><span class="line">y <span class="operator">&lt;-</span> x</span><br></pre></td></tr></table></figure>
+<p>在上例中，<code>y</code> 仅仅是 <code>x</code> 的一个 reference
+(或称为 alias)。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">x <span class="operator">&lt;-</span> data.table<span class="punctuation">(</span>a <span class="operator">=</span> <span class="number">1</span><span class="punctuation">)</span></span><br><span class="line">y <span class="operator">&lt;-</span> copy<span class="punctuation">(</span>x<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>copy</code> 函数创建一个拷贝。</p>
+<h3 id="subsetting-1">Subsetting</h3>
+<p><code>data.table</code> 对象的 sebsetting：</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">murders<span class="punctuation">[</span>rate <span class="operator">&lt;=</span> <span class="number">0.7</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt;            state abb        region population total  rate rank</span></span><br><span class="line"><span class="comment">#&gt; 1:        Hawaii  HI          West    1360301     7 0.515   12</span></span><br><span class="line"><span class="comment">#&gt; 2:          Iowa  IA North Central    3046355    21 0.689   22</span></span><br><span class="line"><span class="comment">#&gt; 3: New Hampshire  NH     Northeast    1316470     5 0.380   10</span></span><br><span class="line"><span class="comment">#&gt; 4:  North Dakota  ND North Central     672591     4 0.595    4</span></span><br><span class="line"><span class="comment">#&gt; 5:       Vermont  VT     Northeast     625741     2 0.320    3</span></span><br></pre></td></tr></table></figure>
+<p>等价于使用 <code>dplyr</code> 包中的 <code>filter</code> 函数。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">filter<span class="punctuation">(</span>murders<span class="punctuation">,</span> rate <span class="operator">&lt;=</span> <span class="number">0.7</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>data.table</code> 包提供的特性，我们可以将
+<code>filter</code> 与 <code>select</code> 函数压缩为 one succinct
+command：</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">murders<span class="punctuation">[</span>rate <span class="operator">&lt;=</span> <span class="number">0.7</span><span class="punctuation">,</span> .<span class="punctuation">(</span>state<span class="punctuation">,</span> rate<span class="punctuation">)</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt;            state  rate</span></span><br><span class="line"><span class="comment">#&gt; 1:        Hawaii 0.515</span></span><br><span class="line"><span class="comment">#&gt; 2:          Iowa 0.689</span></span><br><span class="line"><span class="comment">#&gt; 3: New Hampshire 0.380</span></span><br><span class="line"><span class="comment">#&gt; 4:  North Dakota 0.595</span></span><br><span class="line"><span class="comment">#&gt; 5:       Vermont 0.320</span></span><br></pre></td></tr></table></figure>
+<p>该命令等价于：</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">murders <span class="operator">|&gt;</span> filter<span class="punctuation">(</span>rate <span class="operator">&lt;=</span> <span class="number">0.7</span><span class="punctuation">)</span> <span class="operator">|&gt;</span> select<span class="punctuation">(</span>state<span class="punctuation">,</span> rate<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="importing-data">Importing Data</h2>
+<p>在实际应用中，我们面对的大量数据通常是从外部导入的；system package
+中的众多数据集 (如 <code>murders</code>, <code>heights</code>)
+起到的多数是 demonstrative purpose。因此，了解如何 importing data
+非常重要。</p>
+<h3 id="dealing-with-paths">Dealing with paths</h3>
+<p>使用 <code>system.file</code> 函数获取 system package
+所在的文件夹路径。(现实中几乎不可能用到)</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">system.file<span class="punctuation">(</span>package<span class="operator">=</span><span class="string">&quot;dslabs&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;C:/Users/XXZ/AppData/Local/R/win-library/4.3/dslabs&quot;</span></span><br><span class="line">system.file<span class="punctuation">(</span><span class="string">&quot;extdata&quot;</span><span class="punctuation">,</span> package<span class="operator">=</span><span class="string">&quot;dslabs&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;C:/Users/XXZ/AppData/Local/R/win-library/4.3/dslabs/extdata&quot;</span></span><br><span class="line">system.file<span class="punctuation">(</span><span class="string">&quot;confidential&quot;</span><span class="punctuation">,</span> package<span class="operator">=</span><span class="string">&quot;dslabs&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>当定位到某个文件所在的文件夹时，可以使用 <code>file.path</code>
+函数获得该文件的路径。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">dir <span class="operator">&lt;-</span> system.file<span class="punctuation">(</span>package<span class="operator">=</span><span class="string">&quot;dslabs&quot;</span><span class="punctuation">)</span></span><br><span class="line">file.path<span class="punctuation">(</span>dir<span class="punctuation">,</span> <span class="string">&quot;extdata&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;C:/Users/XXZ/AppData/Local/R/win-library/4.3/dslabs/extdata&quot;</span></span><br></pre></td></tr></table></figure>
+<p>或者使用更简单粗暴的 <code>paste</code> 方法，更适合程序员体质：</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">paste<span class="punctuation">(</span>dir<span class="punctuation">,</span> <span class="string">&quot;extdata&quot;</span><span class="punctuation">,</span> sep<span class="operator">=</span><span class="string">&#x27;/&#x27;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;C:/Users/XXZ/AppData/Local/R/win-library/4.3/dslabs/extdata&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="showing-files">Showing files</h3>
+<p>使用 <code>list.files(dir)</code> 方法输出 <code>dir</code>
+指定路径下文件夹中的所有文件。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">dir <span class="operator">&lt;-</span> system.file<span class="punctuation">(</span>package<span class="operator">=</span><span class="string">&quot;dslabs&quot;</span><span class="punctuation">)</span></span><br><span class="line">list.files<span class="punctuation">(</span>dir<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;data&quot;        &quot;DESCRIPTION&quot; &quot;extdata&quot;     &quot;help&quot;       </span></span><br><span class="line"><span class="comment">#&gt; [5] &quot;html&quot;        &quot;INDEX&quot;       &quot;MD5&quot;         &quot;Meta&quot;       </span></span><br><span class="line"><span class="comment">#&gt; [9] &quot;NAMESPACE&quot;   &quot;R&quot;           &quot;script&quot;     </span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>wd</code> 函数获取 working directory 的路径。结合该函数与
+<code>list.file</code> 可以实现 <code>ls</code> 的功能：</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">wd <span class="operator">&lt;-</span> getwd<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line">list.files<span class="punctuation">(</span>wd<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;Anno 1800&quot;              &quot;ardc00.ini&quot;            </span></span><br><span class="line"><span class="comment">#&gt; [3] &quot;Arma 3&quot;                 &quot;Assassin&#x27;s Creed Unity&quot;</span></span><br><span class="line"><span class="comment">#&gt; [5] &quot;Dell&quot;                   &quot;desktop.ini&quot; </span></span><br><span class="line"><span class="comment">#&gt; ...</span></span><br></pre></td></tr></table></figure>
+<h3 id="copying-files-with-paths">Copying files with paths</h3>
+<p>使用 <code>file.copy</code> 函数将指定路径下的文件拷贝到 working
+directory 中。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">fullpath <span class="operator">&lt;-</span> file.path<span class="punctuation">(</span>system.file<span class="punctuation">(</span><span class="string">&quot;extdata&quot;</span><span class="punctuation">,</span> package<span class="operator">=</span><span class="string">&quot;dslabs&quot;</span><span class="punctuation">)</span><span class="punctuation">,</span> <span class="string">&quot;murders.csv&quot;</span><span class="punctuation">)</span></span><br><span class="line">file.copy<span class="punctuation">(</span>fullpath<span class="punctuation">,</span> <span class="string">&quot;local_murders.csv&quot;</span><span class="punctuation">)</span></span><br><span class="line">list.files<span class="punctuation">(</span>wd<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; ... local_murders.csv ...</span></span><br></pre></td></tr></table></figure>
+<h3 id="reading-files">Reading files</h3>
+<p><code>readr</code> 与 <code>readxl</code>
+包提供了读取不同类型数据集的函数。不同类型指：</p>
+<ul>
+<li>format: spaces, commas, semicolons, tabs...-separated values.</li>
+<li>suffix: txt, csv, tsv, xls, xlsx...</li>
+</ul>
+<p>调用 <code>readr</code> 包中的 <code>read.csv</code> 直接对 working
+directory 下指定的 csv 数据集进行读取。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">library<span class="punctuation">(</span>readr<span class="punctuation">)</span></span><br><span class="line">dat <span class="operator">&lt;-</span> read.csv<span class="punctuation">(</span><span class="string">&quot;local_murders.csv&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>此外，<code>readr</code> 包中的函数还可以读取给定 url
+指向的某个远程资源。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">url <span class="operator">&lt;-</span> <span class="string">&quot;https://raw.githubusercontent.com/.../extdata/murders.csv&quot;</span></span><br><span class="line">dat <span class="operator">&lt;-</span> read.csv<span class="punctuation">(</span>url<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>我们也可以使用 <code>download.file</code>
+函数将其下载到本地后再进行读取。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">download.file<span class="punctuation">(</span>url<span class="punctuation">,</span> <span class="string">&quot;murders.csv&quot;</span><span class="punctuation">)</span></span><br><span class="line">dat <span class="operator">&lt;-</span> read.csv<span class="punctuation">(</span><span class="string">&quot;murders.csv&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
