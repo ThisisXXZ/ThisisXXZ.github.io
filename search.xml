@@ -158,12 +158,16 @@ NexT.Pisces。</strong></p>
     <title>貴方が私の Master Theorem か</title>
     <url>/2023/09/27/master-theorem/</url>
     <content><![CDATA[<p>传说，在日本冬木市，每隔数十年，会出现能实现其持有者所有愿望的宝物「圣杯」。七名御主
-(マスター，<em>Master </em>) 与七名从者 (サーヴァント，Servant)
+(マスター, <em>Master </em>) 与七名从者 (サーヴァント, Servant)
 签订契约，为了争夺圣杯而参与秘密的「圣杯战争」。</p>
+<span id="more"></span>
 <p>能获得圣杯的只有一组，这七组人马各自为了成为最后的那一组而互相残杀。为了赢下圣杯战争，男主角卫宫士郎与他的从者
 Saber 必须解出某种基于分治的递归式算法 (形如 <span class="math inline">\(T(n)=aT(\frac{n}{b})+f(n)\)</span>)
 的时间复杂度。</p>
-<span id="more"></span>
+<p>阴差阳错之下，士郎得到了宝具「御主之律法」(マスターテオリム,
+<em>Master Theorem</em>
+)，但面对斐波那契数列时还是束手无策。他希望你能帮助他与 Saber
+解决这个问题。</p>
 <p><br></p>
 <h2 id="master-theorem">Master Theorem</h2>
 <p>主定理适用于求解如下递归式算法的时间复杂度： <span class="math display">\[
@@ -302,6 +306,113 @@ F_n=\frac{1}{\sqrt{5}}[(\frac{1+\sqrt{5}}{2})^n-(\frac{1-\sqrt{5}}{2})^n]
 \]</span></p>
 </div>
 <h3 id="general-formula">General Formula</h3>
+<p>简单介绍一下该通项公式的推导。首先将斐波那契数列的递归表达式 <span class="math inline">\(F_n=F_{n-1}+F_{n-2}\)</span> 写成矩阵形式： <span class="math display">\[
+\begin{bmatrix}
+F_n \\
+F_{n-1} \\
+\end{bmatrix}=
+\begin{bmatrix}
+1 &amp; 1 \\
+1 &amp; 0
+\end{bmatrix}
+\begin{bmatrix}
+F_{n-1} \\
+F_{n-2}
+\end{bmatrix}
+\]</span> 展开后得： <span class="math display">\[
+\begin{bmatrix}
+F_n \\
+F_{n-1}
+\end{bmatrix}=
+\begin{bmatrix}
+1 &amp; 1 \\
+1 &amp; 0
+\end{bmatrix}
+\begin{bmatrix}
+F_{n-1} \\
+F_{n-2}
+\end{bmatrix}=
+\begin{bmatrix}
+1 &amp; 1 \\
+1 &amp; 0
+\end{bmatrix}^2
+\begin{bmatrix}
+F_{n-2} \\
+F_{n-3}
+\end{bmatrix}=...=
+\begin{bmatrix}
+1 &amp; 1 \\
+1 &amp; 0
+\end{bmatrix}^{n-2}
+\begin{bmatrix}
+F_2 \\
+F_1
+\end{bmatrix}=A^{n-2}
+\begin{bmatrix}
+1\\
+1
+\end{bmatrix}
+\]</span> 至此问题转化为求矩阵 <span class="math inline">\(A\)</span> 的
+<span class="math inline">\(n-2\)</span> 次方。应用 <span class="math inline">\(\det(A-\lambda I)=0\)</span> 求出 <span class="math inline">\(A\)</span> 的两个 eigenvalues： <span class="math display">\[
+\lambda_1=\frac{1-\sqrt{5}}{2}, \lambda_2=\frac{1+\sqrt{5}}{2}
+\]</span> 接下来对 <span class="math inline">\(A\)</span> 进行 eigen
+decomposition: <span class="math inline">\(A=Q\Lambda
+Q^{-1}\)</span>，求出 <span class="math inline">\(Q\)</span> 与 <span class="math inline">\(\Lambda\)</span> 分别为： <span class="math display">\[
+Q=\begin{bmatrix}
+\lambda_1&amp;\lambda_2 \\
+1&amp;1
+\end{bmatrix}, \Lambda=
+\begin{bmatrix}
+\lambda_1&amp;0 \\
+0&amp;\lambda_2
+\end{bmatrix}
+\]</span> 对 <span class="math inline">\(A\)</span> 进行 eigen
+decomposition 后再进行乘方运算： <span class="math display">\[
+\begin{aligned}
+\begin{bmatrix}
+F_n\\
+F_{n-1}
+\end{bmatrix}&amp;=A^{n-2}
+\begin{bmatrix}
+1\\1
+\end{bmatrix}\\&amp;=Q\Lambda^{n-2}Q^{-1}
+\begin{bmatrix}
+1\\1
+\end{bmatrix}\\&amp;=
+\begin{bmatrix}
+\lambda_1&amp;\lambda_2\\
+1&amp;1
+\end{bmatrix}
+\begin{bmatrix}
+\lambda_1&amp;0\\
+0&amp;\lambda_2
+\end{bmatrix}^{n-2}
+\begin{bmatrix}
+\lambda_1&amp;\lambda_2\\
+1&amp;1
+\end{bmatrix}^{-1}
+\begin{bmatrix}
+1\\1
+\end{bmatrix}\\&amp;=
+\frac{1}{\lambda_1-\lambda_2}
+\begin{bmatrix}
+\lambda_1^n-\lambda_2^n\\
+\lambda_1^{n-1}-\lambda_2^{n-1}
+\end{bmatrix}
+\end{aligned}
+\]</span> 至此我们求出斐波那契数列 <span class="math inline">\(\{F_n\}\)</span> 的通项公式： <span class="math display">\[
+F_n=\frac{\lambda_1^n-\lambda_2^n}{\lambda_1-\lambda_2}=\frac{1}{\sqrt{5}}[(\frac{1+\sqrt{5}}{2})^n-(\frac{1-\sqrt{5}}{2})^n]
+\]</span></p>
+<h3 id="time-complexity">Time Complexity</h3>
+<p>注意到该算法时间复杂度的递归表示为 <span class="math inline">\(T(n)=T(n-1)+T(n-2)\)</span>，其本质上是一个首项为
+<span class="math inline">\(O(1)\)</span>
+的斐波那契数列；因此该算法的时间复杂度 <span class="math inline">\(T(n)\)</span> 与 <span class="math inline">\(F_n\)</span> 的增长率一致。</p>
+<p>由此得出 <span class="math inline">\(T(n)\sim
+\Theta(F_n)\)</span>，即 <span class="math inline">\(T(n)\sim
+\Theta(\frac{1}{\sqrt{5}}[(\frac{1+\sqrt{5}}{2})^n-(\frac{1-\sqrt{5}}{2})^n])\)</span>。观察到
+<span class="math inline">\((\frac{1-\sqrt{5}}{2})^n\)</span> 在 <span class="math inline">\(n\to\infty\)</span> 的情况下趋近于 <span class="math inline">\(0\)</span>，再忽略常数 <span class="math inline">\(1/\sqrt{5}\)</span>，我们可以总结出：</p>
+<div class="note info no-icon"><p>斐波那契数列朴素算法时间复杂度的紧界为 <span class="math inline">\(\Theta((\frac{1+\sqrt{5}}{2})^n)\)</span>.</p>
+</div>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <ul>
