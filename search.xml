@@ -171,6 +171,204 @@ content.</p>
 </div>
 <p><br></p>
 <h2 id="graph-components">Graph Components</h2>
+<p>在 <code>ggplot2</code> 包中图表的组分包括：</p>
+<ul>
+<li>data component.</li>
+<li>geometry component. (图表本身，如 scatterplot, barplot, histogram,
+boxplot...)</li>
+<li><strong>Aesthetic mapping</strong>. 是一系列 <em>visual
+cues</em>，决定了数据在图表上 present 的方式。
+<ul>
+<li>map observations to <span class="math inline">\(x\)</span>- or <span class="math inline">\(y\)</span>-scale visual cues.</li>
+<li>map variables to color visual cue.</li>
+<li>other graph styling......</li>
+</ul></li>
+</ul>
+<p><br></p>
+<h2 id="layers">Layers</h2>
+<p>在 <code>ggplot2</code> 包中我们通过添加 layers
+的方式「组装」出一个图表；每一个 layer 都是一个函数。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">DATA <span class="operator">|&gt;</span> ggplot<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> <span class="operator">&lt;</span>LAYER <span class="number">1</span><span class="operator">&gt;</span> <span class="operator">+</span> <span class="operator">&lt;</span>LAYER <span class="number">2</span><span class="operator">&gt;</span> <span class="operator">+</span> ... <span class="operator">+</span> <span class="operator">&lt;</span>LAYER N<span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="geometry-layer">Geometry layer</h3>
+<p><code>&lt;LAYER 1&gt;</code> 通常是一个 geometry layer，形如
+<code>geom_X()</code>，其中 <code>X</code> 是图表的类型，如
+<code>geom_point</code>, <code>geom_bar</code> 与
+<code>geom_histogram</code>。</p>
+<p>以 <code>geom_point</code> 为例：我们需要向 <code>geom_point()</code>
+函数传入 data 与一种 mapping。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">p <span class="operator">&lt;-</span> murders <span class="operator">|&gt;</span> ggplot<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>x <span class="operator">=</span> population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> y <span class="operator">=</span> total<span class="punctuation">)</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>以上的代码对应一个 <span class="math inline">\(x\)</span> 轴为
+<code>population/10^6</code>, <span class="math inline">\(y\)</span>
+轴为 <code>total</code> 的 scatterplot。</p>
+<p>注意 <code>aes()</code> 函数：它将为传入的两个 variable 构建
+aesthetic mapping。此外，它也是 <code>ggplot2</code>
+包中少数能够直接识别 variable 的函数，我们可以直接传入
+<code>total</code> 而不用写成 <code>murders$total</code>。</p>
+<p><code>geom_point()</code> 函数还支持传入其他的参数，例如
+<code>size</code>:</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">p <span class="operator">&lt;-</span> murders <span class="operator">|&gt;</span> ggplot<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>x <span class="operator">=</span> population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> y <span class="operator">=</span> total<span class="punctuation">)</span><span class="punctuation">,</span> size <span class="operator">=</span> <span class="number">2</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>注意 <code>size</code> 并不是 mapping，它是应用在所有 points 上的一个
+styling rule；因此它必须写在 <code>aes()</code> 函数之外，作为
+<code>geom_point()</code> 函数的参数而非 <code>aes()</code>
+函数的参数。</p>
+<h3 id="adding-text">Adding text</h3>
+<p><code>geom_label</code> 与 <code>geom_text</code>
+函数允许我们为图表中的数据添加文本说明。它们的区别在于前者所添加的文本有一个矩形边框，而后者没有。</p>
+<p>我们也许只想为某些数据添加文本说明，因此 text 不是应用在所有 points
+上的 general styling rule。我们需要通过 mapping 指定需要添加 text
+的数据。(这意味着 <code>label</code> 是 <code>aes()</code>
+函数的参数而非 <code>geom_text()</code> 的。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">p <span class="operator">+</span> geom_text<span class="punctuation">(</span>aes<span class="punctuation">(</span>population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> total<span class="punctuation">,</span> label <span class="operator">=</span> abb<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">p <span class="operator">+</span> geom_text<span class="punctuation">(</span>aes<span class="punctuation">(</span><span class="number">10</span><span class="punctuation">,</span> <span class="number">100</span><span class="punctuation">,</span> label <span class="operator">=</span> <span class="string">&quot;x=10, y=100&quot;</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>任何 layer 函数除 <code>data</code> 与 <code>aes</code>
+以外往往还能接受其他类型的参数，<code>geom_text</code>
+也不例外。上述代码表示的图表中，文本与 data points
+经常发生重合。为提升观感，我们传入 <code>nudge_x</code> 参数使其在 <span class="math inline">\(x\)</span> 方向产生偏移。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">p <span class="operator">+</span> geom_text<span class="punctuation">(</span>aes<span class="punctuation">(</span>population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> total<span class="punctuation">,</span> label <span class="operator">=</span> abb<span class="punctuation">)</span><span class="punctuation">,</span> nudge_x <span class="operator">=</span> <span class="number">1.5</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<h3 id="scales">Scales</h3>
+<p><code>scale_x_continuous</code> 与 <code>scale_y_continuous</code>
+函数允许我们操作图表的标度 (scale)。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">p <span class="operator">+</span> scale_x_continuous<span class="punctuation">(</span>trans <span class="operator">=</span> <span class="string">&quot;log10&quot;</span><span class="punctuation">)</span> <span class="operator">+</span> scale_y_continuous<span class="punctuation">(</span>trans <span class="operator">=</span> <span class="string">&quot;log10&quot;</span><span class="punctuation">)</span></span><br><span class="line">p <span class="operator">+</span> scale_x_log10<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> scale_y_log10<span class="punctuation">(</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<h3 id="labels-and-titles">Labels and titles</h3>
+<p>使用 <code>xlab</code> 与 <code>ylab</code> 函数修改图表在 <span class="math inline">\(x\)</span> 轴与 <span class="math inline">\(y\)</span> 轴方向上的标签；使用
+<code>ggtitle</code> 函数为图表添加标题。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">p <span class="operator">&lt;-</span> p <span class="operator">+</span> scale_x_log10<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line">       <span class="operator">+</span> scale_y_log10<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line">       <span class="operator">+</span> xlab<span class="punctuation">(</span><span class="string">&quot;Population in millions (log scale)&quot;</span><span class="punctuation">)</span></span><br><span class="line">       <span class="operator">+</span> ylab<span class="punctuation">(</span><span class="string">&quot;Total number of murders (log scale)&quot;</span><span class="punctuation">)</span></span><br><span class="line">       <span class="operator">+</span> ggtitle<span class="punctuation">(</span><span class="string">&quot;US Gun Muders in 2010&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<h3 id="catogories-as-colors">Catogories as colors</h3>
+<p>我们再添加一层 <code>geom_point</code> layer
+来改变图表中数据点的颜色。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">p <span class="operator">+</span> geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> total<span class="punctuation">)</span><span class="punctuation">,</span> color <span class="operator">=</span> <span class="string">&quot;red&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>注意，<code>geom_point</code> 中 <code>aes</code>
+参数是不可省略的，即使从逻辑上来说，「改变数据点的颜色」这一功能看上去并不需要提供
+mapping 信息。[stay tuned for global aesthetic mapping]</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">p <span class="operator">+</span> geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> total<span class="punctuation">,</span> col <span class="operator">=</span> region<span class="punctuation">)</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>以上代码根据每个 observation 的 <code>region</code>
+为数据点染色；相同 <code>region</code>
+的数据点将具有相同的颜色。在这里，color 又成了一种 aesthetic
+mapping，作为 <code>aes()</code> 函数的参数 <code>col</code> 而非
+<code>geom_point()</code> 函数的参数。</p>
+<table>
+<colgroup>
+<col style="width: 31%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">aesthetic</th>
+<th style="text-align: center;">aesthetic mapping</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">往往应用于全体数据</td>
+<td style="text-align: center;">可以应用于全体数据或部分数据</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">值是常量</td>
+<td style="text-align: center;">值是数据中的某个变量</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">作为 layer 函数的参数</td>
+<td style="text-align: center;">作为 <code>aes()</code>
+函数的参数参与生成 aes mapping</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<h2 id="global-aesthetic-mappings">Global Aesthetic Mappings</h2>
+<p>综合以上的
+layers，我们组装出了一个好看的图表。其完整的，不包含中间变量的代码如下：</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">p <span class="operator">&lt;-</span> murders <span class="operator">|&gt;</span> ggplot<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>x <span class="operator">=</span> population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> y <span class="operator">=</span> total<span class="punctuation">)</span><span class="punctuation">,</span> size <span class="operator">=</span> <span class="number">2</span><span class="punctuation">)</span></span><br><span class="line">                         <span class="operator">+</span> geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> total<span class="punctuation">,</span> col <span class="operator">=</span> region<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">                         <span class="operator">+</span> geom_text<span class="punctuation">(</span>aes<span class="punctuation">(</span>population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> total<span class="punctuation">,</span> label <span class="operator">=</span> abb<span class="punctuation">)</span><span class="punctuation">,</span> nudge_x <span class="operator">=</span> <span class="number">0.5</span><span class="punctuation">)</span></span><br><span class="line">                         <span class="operator">+</span> scale_x_log10<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line">                         <span class="operator">+</span> scale_y_log10<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line">                         <span class="operator">+</span> xlab<span class="punctuation">(</span><span class="string">&quot;Population in millions (log scale)&quot;</span><span class="punctuation">)</span></span><br><span class="line">                         <span class="operator">+</span> ylab<span class="punctuation">(</span><span class="string">&quot;Total number of murders (log scale)&quot;</span><span class="punctuation">)</span></span><br><span class="line">                         <span class="operator">+</span> ggtitle<span class="punctuation">(</span><span class="string">&quot;US Gun Muders in 2010&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>可以见到，<code>aes(x = population/10^6, y = total)</code> 这一
+aesthetic mapping 共出现了三次。</p>
+<p><code>ggplot2</code> 允许我们在 <code>ggplot()</code> 函数中定义
+global aesthetic mapping，之后所有未指明 aesthetic mapping
+的函数都将使用该 global aesthetic mapping 作为参数。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">p <span class="operator">&lt;-</span> murders <span class="operator">|&gt;</span> ggplot<span class="punctuation">(</span>aes<span class="punctuation">(</span>x <span class="operator">=</span> population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> y <span class="operator">=</span> total<span class="punctuation">)</span><span class="punctuation">)</span> </span><br><span class="line">              <span class="operator">+</span> geom_point<span class="punctuation">(</span>size <span class="operator">=</span> <span class="number">2</span><span class="punctuation">)</span></span><br><span class="line">              <span class="operator">+</span> geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>col <span class="operator">=</span> region<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">              <span class="operator">+</span> geom_text<span class="punctuation">(</span>nudge_x <span class="operator">=</span> <span class="number">0.5</span><span class="punctuation">)</span></span><br><span class="line">              <span class="operator">+</span> ...</span><br></pre></td></tr></table></figure>
+<p>是不是清晰简洁多了。当然，global aesthetic mapping 也是可以被
+override 的。</p>
+<p><br></p>
+<h2 id="visualization-data-distribution">Visualization Data
+Distribution</h2>
+<div class="note info no-icon"><p>The most basic statistical summary of a list of objects or numbers is
+its <em>distribution</em>.</p>
+</div>
+<p>散点图描述的是数据集中的某个因变量 <span class="math inline">\(y\)</span> 随自变量 <span class="math inline">\(x\)</span>
+而变化的大致趋势，主要用于变量间的相关性分析；而描述数据的分布
+(distribution) 我们则有另外的选择，如 bar plot, eCDF, histogram 与
+boxplot。</p>
+<p>首先我们来澄清一个概念：数据集中变量的类型。</p>
+<ul>
+<li><em>Categorical</em> type. (generally) small groups with many data
+points in each group.
+<ul>
+<li>Ordinal: ordered values. E.g. Spiciness: (mild, medium, hot).</li>
+<li>Non-ordinal: unordered values. E.g. Region: (west, central, north
+east, south).</li>
+</ul></li>
+<li><em>Numerical</em> type. (generally) large groups with few data
+points in each group.
+<ul>
+<li>Discrete numerics.</li>
+<li>Continuous numerics.</li>
+</ul></li>
+</ul>
+<p><br></p>
+<h2 id="barplot">Barplot</h2>
+<p>On <em>categorical type</em> of variables, barplot shows for each
+group the number of data points whose belong to this group.</p>
+<p>情景：统计 northeast，central，south，west 四个 <code>region</code>
+的州占美国总犯罪率的比例。</p>
+<p>注意，barplot 是针对 categorical type variables 而言的；其对
+numerical type
+效用不大。考虑统计班级内所有同学身高的分布这一情景：由于两学生身高完全一致的情况相当罕见，对应的
+barplot 中绝大部分的 vertical bar 高度均为 <span class="math inline">\(1\)</span>。这并不能提供很有效的 data
+summary。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">murders <span class="operator">|&gt;</span> ggplot<span class="punctuation">(</span>aes<span class="punctuation">(</span>region<span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">+</span> geom_bar<span class="punctuation">(</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="ecdf-histogram">eCDF &amp; Histogram</h2>
+<h3 id="cumulative-distribution-functions">Cumulative distribution
+functions</h3>
+<p>累积分布函数图 (eCDF, emipirical cumulative distribution funcion)
+描述了某个 numerical variable <span class="math inline">\(x\)</span>
+的累积分布情况，即 <span class="math inline">\(F(a)=\Pr(x\leq
+a)\)</span>。</p>
+<p><span class="math inline">\(\Pr(x\leq a)\)</span> 表示 <span class="math inline">\(x\leq a\)</span> 的
+possibility；我们可以将其视为所有满足 <span class="math inline">\(x\leq
+a\)</span> 的数据点占所有数据的比例。</p>
+<p>eCDF 能够很好的描述 numerical variable 的分布，但并不直观。</p>
+<h3 id="histogram">Histogram</h3>
+<p>直方图 (histogram) 建立在 <em>bins</em> 的概念之上；我们将 span of
+data 分割为若干个等长的，不重叠的 <em>bins</em>，并计算落在每个 bins
+中的 data points 个数，并将其作为每个 bin 所对应的 bar 的高度。</p>
+<p>实际上，我们通过划分 bins 的方式人为创造出一个 categorical
+variable。Histogram 本质上就是一个以 bin 作为 categorical variable
+绘制出的 barplot。</p>
+<p>需要注意的是，histogram 展现出 numerical variable
+分布的同时也损失了一部分关于这些数据的信息；我们无法通过 histogram
+区分位于一个 bin 内的数据点的区别。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">heights <span class="operator">|&gt;</span> filter<span class="punctuation">(</span>sex <span class="operator">==</span> <span class="string">&quot;Female&quot;</span><span class="punctuation">)</span> <span class="operator">|&gt;</span></span><br><span class="line">           ggplot<span class="punctuation">(</span>aes<span class="punctuation">(</span>height<span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">           geom_histogram<span class="punctuation">(</span>binwidth <span class="operator">=</span> <span class="number">1</span><span class="punctuation">,</span> fill <span class="operator">=</span> <span class="string">&quot;blue&quot;</span><span class="punctuation">,</span> col <span class="operator">=</span> <span class="string">&quot;black&quot;</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">           xlab<span class="punctuation">(</span><span class="string">&quot;Female heights in inches&quot;</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">           ggtitle<span class="punctuation">(</span><span class="string">&quot;Histogram&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<h3 id="smoothed-density">Smoothed density</h3>
+<p>将 histogram 的每个 bar 的顶端连起来，形成的图表称为 smooth density
+plot。它的合理性基于 estimate。Smoothed density plot 相对于 histogram
+的优点在于它能够更加直观的比较两个分布间的差异。</p>
+<p>smoothed density plot 舍弃了 bar 而采用 curve 来描述分布，这不仅更加
+visually appealing，还使得我们能用 normal distribution 来拟合 smoothed
+density plot；即，我们可以用平均值 <span class="math inline">\(\mu\)</span> 与标准差 <span class="math inline">\(\sigma\)</span>
+来近似的描述某个符合正态分布的数据集对应的 smoothed density plot。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">heights <span class="operator">|&gt;</span> filter<span class="punctuation">(</span>sex <span class="operator">==</span> <span class="string">&quot;Female&quot;</span><span class="punctuation">)</span> <span class="operator">|&gt;</span></span><br><span class="line">           ggplot<span class="punctuation">(</span>aes<span class="punctuation">(</span>height<span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">           geom_density<span class="punctuation">(</span>fill <span class="operator">=</span> <span class="string">&quot;blue&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="boxplot">Boxplot</h2>
+<p>箱型图 (boxplot) 是一种 five-number data
+summary，该五个值分别是下限，上限与三种 <em>quartiles</em> (the 25th,
+50th and 75th percentiles)。</p>
+<p>此外，boxplot 中还有一系列 <em>outliers</em> (异常值)，它们不属于 box
+的范围。</p>
+<ul>
+<li>Interquartile range (IQ): the difference between the 25th <span class="math inline">\((Q1)\)</span> and 75th <span class="math inline">\((Q3)\)</span>.</li>
+<li>下限: <span class="math inline">\(Q1-1.5IQ\)</span>, 上限: <span class="math inline">\(Q3+1.5IQ\)</span>.</li>
+<li>所有 <span class="math inline">\(&gt;\)</span> 上限与 <span class="math inline">\(&lt;\)</span> 下限的数据点都是 outliers。</li>
+</ul>
+<p>不要混淆上/下限与最大/最小值的概念；上限与下限是 boxplot
+中人为规定的边界，而不是某个具体的数据点。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
