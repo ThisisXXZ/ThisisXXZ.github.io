@@ -25,29 +25,30 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="(胡言乱语时刻) 学习的越深入，越感觉到计算机真是神的造物；阴与阳，黑与白，假与真，0 与 1：吟唱着二进制神谕的摩西缓缓举起手杖，混沌的芯片与电路之海顷刻间分开，一条平坦的道路向应许之地延伸。">
+    <meta name="description" content="COMP3322 课程 JavaScript 相关内容拾遗。  接触到的第二种 dynamically typed OOP 语言 (第一种是 Ruby)，但其语法又总是令人联想到 C 与 Java；学起来不算难，令人惊艳的点主要在于它是如何通过 DOM (Document Object Model) 与 HTML 交互的。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Nand2Tetris I, Hebrew University - Machine Language">
-<meta property="og:url" content="https://www.thisisxxz.com/2023/09/14/nand2tetris-2/index.html">
+<meta property="og:title" content="JavaScript 杂记">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/10/09/COMP3322-2/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="(胡言乱语时刻) 学习的越深入，越感觉到计算机真是神的造物；阴与阳，黑与白，假与真，0 与 1：吟唱着二进制神谕的摩西缓缓举起手杖，混沌的芯片与电路之海顷刻间分开，一条平坦的道路向应许之地延伸。">
+<meta property="og:description" content="COMP3322 课程 JavaScript 相关内容拾遗。  接触到的第二种 dynamically typed OOP 语言 (第一种是 Ruby)，但其语法又总是令人联想到 C 与 Java；学起来不算难，令人惊艳的点主要在于它是如何通过 DOM (Document Object Model) 与 HTML 交互的。">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-09-14T11:29:43.000Z">
-<meta property="article:modified_time" content="2023-09-24T08:09:38.729Z">
+<meta property="article:published_time" content="2023-10-09T12:02:37.000Z">
+<meta property="article:modified_time" content="2023-10-09T13:58:31.254Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="PL">
-<meta property="article:tag" content="system">
+<meta property="article:tag" content="course notes">
+<meta property="article:tag" content="web">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://www.thisisxxz.com/2023/09/14/nand2tetris-2/">
+<link rel="canonical" href="https://www.thisisxxz.com/2023/10/09/COMP3322-2/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/09/14/nand2tetris-2/","path":"2023/09/14/nand2tetris-2/","title":"Nand2Tetris I, Hebrew University - Machine Language"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/10/09/COMP3322-2/","path":"2023/10/09/COMP3322-2/","title":"JavaScript 杂记"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Nand2Tetris I, Hebrew University - Machine Language | ThisisXXZ's Blog</title>
+<title>JavaScript 杂记 | ThisisXXZ's Blog</title>
   
 
 
@@ -169,7 +170,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#machine-language"><span class="nav-number">1.</span> <span class="nav-text">Machine Language</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hardware-platform"><span class="nav-number">2.</span> <span class="nav-text">Hardware Platform</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#memory"><span class="nav-number">2.1.</span> <span class="nav-text">Memory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#processor"><span class="nav-number">2.2.</span> <span class="nav-text">Processor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#register"><span class="nav-number">2.3.</span> <span class="nav-text">Register</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#assembly-language"><span class="nav-number">3.</span> <span class="nav-text">Assembly Language</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#basic-instructions"><span class="nav-number">4.</span> <span class="nav-text">Basic Instructions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#the-a-instruction"><span class="nav-number">4.1.</span> <span class="nav-text">The A-Instruction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#the-c-instruction"><span class="nav-number">4.2.</span> <span class="nav-text">The C-Instruction</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#symbols"><span class="nav-number">5.</span> <span class="nav-text">Symbols</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#io-devices"><span class="nav-number">6.</span> <span class="nav-text">I&#x2F;O Devices</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#screen"><span class="nav-number">6.1.</span> <span class="nav-text">Screen</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#keyboard"><span class="nav-number">6.2.</span> <span class="nav-text">Keyboard</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#prototype-based-oop"><span class="nav-number">1.</span> <span class="nav-text">Prototype-based OOP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#document-object-model"><span class="nav-number">2.</span> <span class="nav-text">Document Object Model</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -267,7 +268,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/09/14/nand2tetris-2/">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/10/09/COMP3322-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
@@ -280,12 +281,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Nand2Tetris I, Hebrew University - Machine Language | ThisisXXZ's Blog">
+      <meta itemprop="name" content="JavaScript 杂记 | ThisisXXZ's Blog">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Nand2Tetris I, Hebrew University - Machine Language
+          JavaScript 杂记
         </h1>
 
         <div class="post-meta-container">
@@ -298,7 +299,7 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2023-09-14 19:29:43" itemprop="dateCreated datePublished" datetime="2023-09-14T19:29:43+08:00">2023-09-14</time>
+      <time title="Created: 2023-10-09 20:02:37" itemprop="dateCreated datePublished" datetime="2023-10-09T20:02:37+08:00">2023-10-09</time>
     </span>
 
   <span class="post-meta-item">
@@ -333,269 +334,68 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>(胡言乱语时刻)
-学习的越深入，越感觉到计算机真是神的造物；阴与阳，黑与白，假与真，0 与
-1：吟唱着二进制神谕的摩西缓缓举起手杖，混沌的芯片与电路之海顷刻间分开，一条平坦的道路向应许之地延伸。</p>
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>COMP3322 课程 JavaScript 相关内容拾遗。</p>
+</blockquote>
+<p>接触到的第二种 dynamically typed OOP 语言 (第一种是
+Ruby)，但其语法又总是令人联想到 C 与
+Java；学起来不算难，令人惊艳的点主要在于它是如何通过 DOM (Document
+Object Model) 与 HTML 交互的。</p>
 <span id="more"></span>
-<p>神的语言 (machine language)
-太简单又太复杂，远非人类贫瘠的大脑能够理解；但人类又觊觎祂全知全能的伟力
-(Church-Turing Thesis)，遂亵渎地创造了自己简陋的语言 (assembly language)
-来对神谕加以解读。</p>
-<p>见此情形，神曰：「看哪，他們都是一樣的人，說着同一種語言，如今他們既然能做起這事，以後他們想要做的事就沒有不成功的了。」为了惩罚人类的僭越，神把他们的语言打乱
-(programming
-languages)；愚钝的人类从此无法互相理解，并都宣称自己使用的语言是最好的。这就是巴别塔倒塌的故事了。</p>
+<p>严格来说，HTML, CSS, JavaScript 三件套中只有 JavaScript
+能够称之为是一种「编程语言」 (programming
+language)。前两者是静态的标记语言 (markup language)，因此不归在 PL
+类别中。</p>
 <p><br></p>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  It will <strong>NOT</strong> cover any exam or assignment related
 content.</p>
 </div>
 <p><br></p>
-<h2 id="machine-language">Machine Language</h2>
-<div class="note info no-icon"><p>A machine language is an agree-upon formalism, designed to code
-low-level programs as series of machine instructions.</p>
-</div>
-<p>Machine language is the most profound interface in the overall
-computer enterprise - <u>the fine line where hardware and software meet.
-</u></p>
-<p>This is the point where the abstract thoughts of the programmers, as
-manifested in symbolic (binary) instructions, are turned into physical
-operations performed in silicon.</p>
-<p>上面这段对机器语言的描述太精髓了，我无力进行翻译或总结。</p>
-<p>在前几节里我们构造了一系列重要的元件，包括 ALU 与 memory
-chips；这些硬件构成了计算机的 hardware
-platform。我们常常认为机器语言是为了向 hardware
-platform「发号施令」而设计的；但其实并不尽然。</p>
-<p>machine language 与 hardware platform 是一体两面的。</p>
-<ul>
-<li>It's true that the machine language is designed to exploit a given
-hardware platform.</li>
-<li>It's also true that the hardware platform is designed to fetch,
-interpret, and execute instructions written in the given machine
-language.</li>
-</ul>
-<p>machine language 与 hardware platform
-从不同的角度描述计算机的底层实现，但终究殊途同归。</p>
-<ul>
-<li><em>constructive</em> : how hardware platform is built from
-low-level chips? (第一节)</li>
-<li><em>abstractly</em> : What is the given machine language's
-capabilities? (本节)</li>
-</ul>
+<h2 id="prototype-based-oop">Prototype-based OOP</h2>
+<blockquote class="blockquote-center">
+<p>We don't need classes... <em>Objects inherit from object</em>. What
+could be more object-oriented than that?</p>
+
+</blockquote>
+<p>关于语言的部分我不打算详细记录，JavaScript
+的语法并非这门语言的精髓所在。</p>
+<p>但值得注意的是，JavaScript 的 OOP 概念并非传统的 class-based
+programming，而是 <em>prototype-based programming</em>
+(基于原型编程)。</p>
+<p>在传统的 class-based OOP 中，我们首先定义抽象的，(通常是) 静态的
+<em>类</em> (class)，再在类所规定的框架下创造 <em>对象</em>
+(object)。这一过程被称为 <em>实例化</em> (instantiation)。</p>
+<p>而在 JavaScript 为代表的 prototype-based OOP
+中，类的概念并不存在；继承发生在对象与对象之间。若对象 <span class="math inline">\(a\)</span> 继承了对象 <span class="math inline">\(b\)</span>，我们称对象 <span class="math inline">\(b\)</span> 为对象 <span class="math inline">\(a\)</span> 的原型 (prototype)。</p>
+<p>很显然，只有在 dynamically typed 语言中 prototype-based OOP
+才有生存的空间；对象间的继承依赖于对对象的动态更改，即，在运行时增添，删减或重写对象的性质与行为。</p>
+<p>如果仔细想想的话，其实 prototype-based OOP 才是更符合直觉的 OOP
+定义方式。女娲在造人之前并没有获得某种人类的制造蓝图
+(<code>class Human</code>)，而是以自己为原型 (<code>Object Nüwa</code>)
+决定了人类的外形。如果我们使用 JavaScript 来描述女娲造人的过程：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Nüwa = &#123;</span><br><span class="line">    <span class="attr">head</span>: 人首,</span><br><span class="line">    <span class="attr">body</span>: 蛇身,</span><br><span class="line">    <span class="attr">specialPower</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="title function_">createHuman</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">Human001</span> = <span class="title class_">Object</span>.<span class="title function_">create</span>(Nüwa);   <span class="comment">// creating object based on prototype object</span></span><br><span class="line"><span class="title class_">Human001</span>.<span class="property">body</span> = 人身;                 <span class="comment">// modifying property dynamically</span></span><br><span class="line"><span class="title class_">Human001</span>.<span class="property">specialPower</span> = <span class="literal">undefined</span>;   <span class="comment">// deleting property dynamically</span></span><br></pre></td></tr></table></figure>
+<p>那么能否在 JavaScript 中实现类似 class-based OOP
+的行为呢？也是可以的。构造函数 (constructor) 可以一定程度上承担 class
+所具备的功能。</p>
+<p>女娲没日没夜地捏着泥巴，手终于开始发酸了；而且她也觉得这样效率实在是太低。她打算建造一个自动化人类生产工厂，自己只需要传入对应的参数，工厂就能生产出具备这些特点的人类：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Human</span>(<span class="params">name, gender, destiny</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">gender</span> = gender;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">destiny</span> = destiny;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">speak</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123; ... &#125;;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">hear</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123; ... &#125;;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">var</span> <span class="title class_">Human999</span> = <span class="keyword">new</span> <span class="title class_">Human</span>(<span class="string">&#x27;Huang&#x27;</span>, <span class="string">&#x27;male&#x27;</span>, <span class="string">&#x27;Emperor&#x27;</span>)</span><br></pre></td></tr></table></figure>
 <p><br></p>
-<h2 id="hardware-platform">Hardware Platform</h2>
-<div class="note info no-icon"><p>A <em>machine language</em> can be viewed as an agreed-upon
-formalism, designed to manipulate a <em>memory</em> using a
-<em>processor</em> and a set of <em>registers</em>.</p>
-</div>
-<h3 id="memory">Memory</h3>
-<p>memory 通常用于指代计算机中用于存储数据<u>与指令</u>的硬件设备，包括
-RAM 与 ROM，中文语境下通常称其为「内存」或「记忆体」。</p>
-<p>memory structure: A continuous array of cells of some fixed width
-(每个 cell 对应一个 register), also called <em>words</em> or
-<em>locations</em>, each having a unique <em>address</em>.</p>
-<p>An individual word (representing a data item or an instruction) is
-specified by supplying its address, with the notation Memory[address],
-RAM[address], or R[address] for brevity.</p>
-<h3 id="processor">Processor</h3>
-<p>Processor 即我们熟知的 <em>Central Processor Unit</em>
-(<em>CPU</em>)，它负责执行一系列 elementary operations:</p>
-<ul>
-<li>Arithmetic and logic operations. (通过 ALU)</li>
-<li>Memory access operations.</li>
-<li>Control (branching) operations.</li>
-</ul>
-<p>这些 operations 的 operants 来自 registers 或 selected memory
-locations；同样，经过 processor 计算之后的结果 results 也将储存到
-registers 或 selected memory locations 中。</p>
-<p>那么 instructions 又从哪来？答案是 instruction memory: <u>instruction
-memory is a read-only device (例如 ROM), programs are loaded into it
-using some exogenous means.</u></p>
-<p>我们不妨想象这个情形：</p>
-<ul>
-<li>memory 分为两个部分，data memory 与 instruction memory。</li>
-<li>processor 拥有 data memory 的 read/write 权限与 instruction memory
-的 read 权限。</li>
-</ul>
-<p>如何更改只读的 instruction memory？e.g., If the instruction memory is
-implemented in a ROM chip pre-burned with some program. Loading a new
-program is done by <u>replacing the entire ROM chip.</u></p>
-<h3 id="register">Register</h3>
-<p>register 是 memory chips 的基本组成部分；但我们这里提到的 register
-与这个意义无关。在讨论 hardware platform 时，register 特指 CPU
-所配备的一系列快速储存器，有时也叫 <em>cache</em> (快存)。</p>
-<p>它的出现是为了解决 processor 对 memory 的直接访问速度过慢的问题。</p>
-<div class="note info no-icon"><p>Located in the processor's immediate proximity, registers serve as a
-high-speed local memory, allowing the processor to manipulate data and
-instructions quickly.</p>
-</div>
-<p>registers 使 processor
-本身也具备了少量记忆的功能；就像程序中的临时变量一样，registers
-的存在能够最小化 memory access 命令的数量，从而加速程序执行。</p>
-<p>在本节课将要实现的 Hack computer 中，我们将关注两个 CPU registers
-与一个对应的 memory register：</p>
-<ul>
-<li>D register: solely store data value.</li>
-<li>A register: both a data register and an <em>address register</em>
-.</li>
-<li>M register: M register 由 A 指定，M <span class="math inline">\(\leftarrow\)</span> <span class="math inline">\(RAM\)</span>[A].</li>
-</ul>
-<p><br></p>
-<h2 id="assembly-language">Assembly Language</h2>
-<p>注意，计算机是符合 von Neumann architecture [stay tuned]
-的；简单来说就是 data 与 instructions 是平等的，均能被计算机所存储
-(stored-program concept)。</p>
-<p>若想被计算机所存储，instructions 必须以 binary value
-的形式存在；又因为 instructions 是被 machine language
-所描述的，我们不难归结出 machine language 的本质：<u>a series of coded
-binaries.</u></p>
-<p>例如，对于二进制串 <code>1010001100011001</code>，我们赋予其如下意义
-(每 4 bits 为一组)：</p>
-<ul>
-<li><code>1010</code>: 表明该 instruction 的类型为 addition。</li>
-<li><code>0011</code>: processor 应将执行完该 instruction 后的结果储存至
-<span class="math inline">\(R\)</span>[3] 中。</li>
-<li><code>0001</code>: 第一个 operant 的值为 <span class="math inline">\(R\)</span>[1]。</li>
-<li><code>1001</code>: 第二个 operant 的值为 <span class="math inline">\(R\)</span>[9]。</li>
-</ul>
-<p>Under the formalism，我们将一个普通的 16-bit 二进制串编码成了
-hardware platform 能够理解的机器语言。对应的 hardware platform
-在读入这一 instruction 过后，将会执行 <span class="math inline">\(R\)</span>[3] = <span class="math inline">\(R\)</span>[1] + <span class="math inline">\(R\)</span>[9]。</p>
-<p>但人类难以理解以二进制编码形式存在的机器语言；很自然的，我们需要一套
-human-readable 的体系来描述机器语言。于是人类引入了一系列 symbolic
-notation：这就是所谓 assembly language 的由来了。</p>
-<div class="note info no-icon"><p>Assembly language (or simply <em>assembly</em>) is a mnemonic for
-machine language.</p>
-</div>
-<p>举例来说，我们将 <code>1010</code> 符号化为
-<code>ADD</code>，接下来的几个地址则对应为 <code>R3</code>,
-<code>R1</code>, <code>R9</code>；这样，instruction <span class="math inline">\(R\)</span>[3] = <span class="math inline">\(R\)</span>[1] + <span class="math inline">\(R\)</span>[9] 能被 assembly language 描述为
-<code>ADD R3, R1, R9</code>.</p>
-<p>人类不光擅长读 symbolic notation，还擅长写由这些 symbolic notation
-组成的程序；assembly language 是一个真正意义上的 programming
-language。这就是 symbolic abstraction 的力量。</p>
-<p>至此，红海分开，道路显现：人类用 assembly language 写就的程序，经
-<em>assembler</em> 按照特定的 mapping rules 翻译成 machine language，被
-hardware platform 读取后终于转化为硅晶间的微小电流。</p>
-<p><br></p>
-<h2 id="basic-instructions">Basic Instructions</h2>
-<p>我们将用 assembly language 来描述两个基本的 instructions:
-<em>A</em>-Instruction 与 <em>C</em>-Instruction.</p>
-<h3 id="the-a-instruction">The <em>A</em>-Instruction</h3>
-<p>The <em>A</em>-instruction is used to set the A register to a 15-bit
-value (address).</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@value                       // Where value is either a non-negative decimal number</span><br><span class="line">                             // or a symbol referring to such number.</span><br></pre></td></tr></table></figure>
-<p>这个指令与 A 作为 address register
-的身份密切相关。因此，在该命令执行完之后我们一般会对 A
-中储存的地址所对应的 register - M 进行操作。(M = <span class="math inline">\(R\)</span>[value])</p>
-<h3 id="the-c-instruction">The <em>C</em>-Instruction</h3>
-<p>The <em>C</em>-instruction is the programming workhorse of the Hack
-platform - the instruction that gets almost everything done. The
-instruction code is a specification that answers three questions:</p>
-<ul>
-<li>what to compute? (<em>comp</em>)</li>
-<li>where to store the computed value? (<em>dest</em>)</li>
-<li>what to do next? (<em>jump</em>)</li>
-</ul>
-<p>Along with the <em>A</em>-instruction, these specifications determine
-all the possible operations.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dest=comp; jump               // Either the desk or jump fields may be empty.</span><br><span class="line">comp; jump                    // If dest is empty, the &quot;=&quot; is omitted;</span><br><span class="line">dest=comp                     // If jump is empty, the &quot;;&quot; is omitted;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>dest</code>: 将结果储存至 register (A, D) 或 data memory (M)
-处。</li>
-<li><code>comp</code>: 支持常数 <code>0</code>, <code>1</code>, 与
-<code>-1</code> 和 A, D, M 三个 register
-所储存的值之间任意的算数或逻辑运算。</li>
-<li><code>jump</code>: 支持 conditional jump 与 unconditional
-jump，可以跳跃到程序的任意一行执行 (类似 <code>goto</code>)。</li>
-</ul>
-<p>在正常情况下，程序是一行一行执行的，每一行对应一个 instruction，而
-<code>jump</code> 可以改变程序的执行流程。其底层实现是 system counter
-元件 (可以看出 system counter 指向 instruction memory 的地址)。</p>
-<p><em>conflicting uses of the A register</em>. 之前我们提到，A register
-既是 data register，又是 address register。因此 A
-中储存的值的含义可能有三种：</p>
-<ul>
-<li>data: 一个平平无奇的 data。</li>
-<li>address: 指向 data memory，是 M register 的地址。</li>
-<li>address: 指向 instruction memory，是程序下一步将会 <code>jump</code>
-到的地址。</li>
-</ul>
-<p>为了避免语义冲突，在可能会进行 <code>jump</code> 的 C-instruction
-中我们尽量避免引用 M register。</p>
-<p><br></p>
-<h2 id="symbols">Symbols</h2>
-<p>Assembly commands can refer to memory locations (addresses) using
-either constants or <em>symbols</em>. Symbols are introduced into
-assembly programs in the following three ways:</p>
-<ul>
-<li><em>Predefined symbols</em>.
-<ul>
-<li>Virtual registers: <code>R0</code> to <code>R15</code> refer to RAM
-addresses 0 to 15 respectively.</li>
-<li>Predefined pointers: <code>SP</code>, <code>LCL</code>,
-<code>ARG</code>, <code>THIS</code> and <code>THAT</code> refer to RAM
-addresses 0 to 4.</li>
-<li>I/O pointers: <code>SCREEN</code> and <code>KBD</code> refer to RAM
-addresses 16834 (0x4000) and 24576 (0x6000).</li>
-</ul></li>
-<li><em>Label symbols</em>.</li>
-<li><em>Variable symbols</em>.</li>
-</ul>
-<p>label symbols 与 variable symbols 均属于 user-defined
-symbols。其中，label symbols 作为 <em>jump</em> 命令的补充，使得
-assembly language 程序的可读性进一步提高。语法和 <em>goto</em>
-很类似：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(JUMP_HERE)</span><br><span class="line"></span><br><span class="line">@JUMP_HERE</span><br><span class="line">0; JMP            // or other conditional jump</span><br></pre></td></tr></table></figure>
-<p>assembler 将自动把 <code>JUMP_HERE</code> symbol 解析为
-<code>(JUMP_HERE)</code> 下一行的行数：在这个例子中是 2。</p>
-<p>结合 conditional jump 与 label symbols，我们能在 assembly language
-中实现简单的
-while-loop。最常见的例子是程序末尾的死循环：这是为了阻止潜在的
-no-operation (NOP) attack.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(END)</span><br><span class="line">@END</span><br><span class="line">0; JMP</span><br></pre></td></tr></table></figure>
-<p>variable symbols 与 label symbol 唯一的区别是它没有 <code>()</code>
-标记。variable symbols 将在 data memory 中申请一个
-register；此后，所有对该 variable symbol 的引用都将被 assembler 解析为该
-register 的地址。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@VAR</span><br><span class="line">M=0            // VAR=0</span><br></pre></td></tr></table></figure>
-<p><br></p>
-<h2 id="io-devices">I/O Devices</h2>
-<p>这里我再一次感受到计算机底层结构的统一性：例如键盘，屏幕这样的输入输出设备，其底层实现与
-memory 大同小异：我们仍然可以将其视作 a continuous array of fixed-width
-registers.</p>
-<p>以下例子中的具体数据是以本课程中的 Hack computer
-为标准的，但其涉及到的原理是共通的。</p>
-<h3 id="screen">Screen</h3>
-<p>Hack computer 拥有一个 256x512 (131072 pixels)
-的黑白屏幕。其底层实现是由 <code>SCREEN</code> 标记的 base address 16384
-开始的 8K memory map。(<span class="math inline">\(8192 \times 16 =
-131072\)</span>)。</p>
-<p>第 <span class="math inline">\(r\)</span> 行第 <span class="math inline">\(c\)</span> 列的某个 pixel 位于 <span class="math inline">\(RAM[16384+r\cdot32+c/16]\)</span> 中 word 的第
-<span class="math inline">\(c\%16\)</span> 个 bit 上 (从 LSB 到
-MSB)。e.g., 屏幕最左上角的 pixel 位于 <span class="math inline">\(RAM[\)</span><code>SCREEN</code><span class="math inline">\(]\)</span> 的第一个 bit 上。</p>
-<p>黑色的 pixel 对应 bit 1，白色的则对应 bit
-0。假设屏幕一开始为空，若我们想将左上角的 pixel 改为黑色：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@SCREEN</span><br><span class="line">M=1</span><br></pre></td></tr></table></figure>
-<h3 id="keyboard">Keyboard</h3>
-<p>Hack computer 的键盘用一个 register <span class="math inline">\(RAM[\)</span><code>KBD</code><span class="math inline">\(]\)</span> 即可实现。</p>
-<ul>
-<li>A key is pressed on the physical keyboard: its 16-bit ASCII code
-appears in <span class="math inline">\(RAM[24576]\)</span>.</li>
-<li>No key is pressed: the code <span class="math inline">\(0\)</span>
-appears in this location.</li>
-</ul>
+<h2 id="document-object-model">Document Object Model</h2>
+<p>文档对象模型 (DOM, Document Object Model) 在 JavaScript
+中被广泛使用，但需要注意的是，它并<strong>不是 JavaScript
+或其他编程语言的一部分 (platfrom- &amp;
+language-neutrality)</strong>！</p>
+<p>DOM 是一种 programming interface：它将 HTML/XML 文件对象化，使 markup
+语言中的元素 (element) 具有了编程语言中的对象 (object)
+的性质，从而大大方便了编程语言对其的操纵。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
 if not specified.</p>
 </div>
-<p>Course info:</p>
-<p>Lecturer: Prof. Shimon Shocken, Prof. Noam Nisan.</p>
-<p>Course textbook:</p>
-<p>(Nisan N., Schocken S., 2008) <a target="_blank" rel="noopener" href="https://www.amazon.com/Elements-Computing-Systems-Principles-ebook/dp/B004HHORGA/">The
-Element of Computing Systems: Building a Modern Computer from First
-Principles.</a></p>
+<p>Course info: Code, COMP3322. Lecturer, Dr. Tam Anthony Tat Chun.</p>
 
     </div>
 
@@ -633,13 +433,13 @@ Principles.</a></p>
   </li>
   <li class="post-copyright-link">
       <strong>Post link: </strong>
-      <a href="https://www.thisisxxz.com/2023/09/14/nand2tetris-2/" title="Nand2Tetris I, Hebrew University - Machine Language">https://www.thisisxxz.com/2023/09/14/nand2tetris-2/</a>
+      <a href="https://www.thisisxxz.com/2023/10/09/COMP3322-2/" title="JavaScript 杂记">https://www.thisisxxz.com/2023/10/09/COMP3322-2/</a>
       <!--copy buttom-->
       <span class="copy-path" title="Click to copy markdown-style reference"
       ><i
         style="cursor: pointer"
         class="fa fa-clipboard"
-        data-clipboard-text="[XXZ's Blog | Nand2Tetris I, Hebrew University - Machine Language](https://www.thisisxxz.com/2023/09/14/nand2tetris-2/)"
+        data-clipboard-text="[XXZ's Blog | JavaScript 杂记](https://www.thisisxxz.com/2023/10/09/COMP3322-2/)"
         aria-label="Markdown-style reference is now on your clipboard"
       ></i
     ></span>
@@ -676,21 +476,19 @@ Principles.</a></p>
     </div>
           <div class="post-tags">
               <a href="/tags/PL/" rel="tag"><i class="fa fa-tag"></i> PL</a>
-              <a href="/tags/system/" rel="tag"><i class="fa fa-tag"></i> system</a>
+              <a href="/tags/course-notes/" rel="tag"><i class="fa fa-tag"></i> course notes</a>
+              <a href="/tags/web/" rel="tag"><i class="fa fa-tag"></i> web</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2023/09/11/COMP2501-1/" rel="prev" title="Introduction to DS - R 语言初探之壹">
-                  <i class="fa fa-chevron-left"></i> Introduction to DS - R 语言初探之壹
+                <a href="/2023/10/06/COMP2501-3/" rel="prev" title="Introduction to DS - R 语言初探之叁">
+                  <i class="fa fa-chevron-left"></i> Introduction to DS - R 语言初探之叁
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/09/16/JAPN1088/" rel="next" title="中学以来の再会 — 霓虹语入门">
-                  中学以来の再会 — 霓虹语入门 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
@@ -796,7 +594,7 @@ Principles.</a></p>
       new needShareButton('#needsharebutton-postbottom', pbOptions);
   </script>
 
-<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/09/14/nand2tetris-2/"}</script>
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/10/09/COMP3322-2/"}</script>
 <script>
 document.addEventListener('page:loaded', () => {
   NexT.utils.loadComments(CONFIG.valine.el)

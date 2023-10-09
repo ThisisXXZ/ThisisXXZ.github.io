@@ -155,6 +155,82 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
+    <title>JavaScript 杂记</title>
+    <url>/2023/10/09/COMP3322-2/</url>
+    <content><![CDATA[<blockquote>
+<p>COMP3322 课程 JavaScript 相关内容拾遗。</p>
+</blockquote>
+<p>接触到的第二种 dynamically typed OOP 语言 (第一种是
+Ruby)，但其语法又总是令人联想到 C 与
+Java；学起来不算难，令人惊艳的点主要在于它是如何通过 DOM (Document
+Object Model) 与 HTML 交互的。</p>
+<span id="more"></span>
+<p>严格来说，HTML, CSS, JavaScript 三件套中只有 JavaScript
+能够称之为是一种「编程语言」 (programming
+language)。前两者是静态的标记语言 (markup language)，因此不归在 PL
+类别中。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="prototype-based-oop">Prototype-based OOP</h2>
+<blockquote class="blockquote-center">
+<p>We don't need classes... <em>Objects inherit from object</em>. What
+could be more object-oriented than that?</p>
+
+</blockquote>
+<p>关于语言的部分我不打算详细记录，JavaScript
+的语法并非这门语言的精髓所在。</p>
+<p>但值得注意的是，JavaScript 的 OOP 概念并非传统的 class-based
+programming，而是 <em>prototype-based programming</em>
+(基于原型编程)。</p>
+<p>在传统的 class-based OOP 中，我们首先定义抽象的，(通常是) 静态的
+<em>类</em> (class)，再在类所规定的框架下创造 <em>对象</em>
+(object)。这一过程被称为 <em>实例化</em> (instantiation)。</p>
+<p>而在 JavaScript 为代表的 prototype-based OOP
+中，类的概念并不存在；继承发生在对象与对象之间。若对象 <span class="math inline">\(a\)</span> 继承了对象 <span class="math inline">\(b\)</span>，我们称对象 <span class="math inline">\(b\)</span> 为对象 <span class="math inline">\(a\)</span> 的原型 (prototype)。</p>
+<p>很显然，只有在 dynamically typed 语言中 prototype-based OOP
+才有生存的空间；对象间的继承依赖于对对象的动态更改，即，在运行时增添，删减或重写对象的性质与行为。</p>
+<p>如果仔细想想的话，其实 prototype-based OOP 才是更符合直觉的 OOP
+定义方式。女娲在造人之前并没有获得某种人类的制造蓝图
+(<code>class Human</code>)，而是以自己为原型 (<code>Object Nüwa</code>)
+决定了人类的外形。如果我们使用 JavaScript 来描述女娲造人的过程：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> Nüwa = &#123;</span><br><span class="line">    <span class="attr">head</span>: 人首,</span><br><span class="line">    <span class="attr">body</span>: 蛇身,</span><br><span class="line">    <span class="attr">specialPower</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="title function_">createHuman</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">Human001</span> = <span class="title class_">Object</span>.<span class="title function_">create</span>(Nüwa);   <span class="comment">// creating object based on prototype object</span></span><br><span class="line"><span class="title class_">Human001</span>.<span class="property">body</span> = 人身;                 <span class="comment">// modifying property dynamically</span></span><br><span class="line"><span class="title class_">Human001</span>.<span class="property">specialPower</span> = <span class="literal">undefined</span>;   <span class="comment">// deleting property dynamically</span></span><br></pre></td></tr></table></figure>
+<p>那么能否在 JavaScript 中实现类似 class-based OOP
+的行为呢？也是可以的。构造函数 (constructor) 可以一定程度上承担 class
+所具备的功能。</p>
+<p>女娲没日没夜地捏着泥巴，手终于开始发酸了；而且她也觉得这样效率实在是太低。她打算建造一个自动化人类生产工厂，自己只需要传入对应的参数，工厂就能生产出具备这些特点的人类：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Human</span>(<span class="params">name, gender, destiny</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">gender</span> = gender;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">destiny</span> = destiny;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">speak</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123; ... &#125;;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">hear</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123; ... &#125;;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">var</span> <span class="title class_">Human999</span> = <span class="keyword">new</span> <span class="title class_">Human</span>(<span class="string">&#x27;Huang&#x27;</span>, <span class="string">&#x27;male&#x27;</span>, <span class="string">&#x27;Emperor&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="document-object-model">Document Object Model</h2>
+<p>文档对象模型 (DOM, Document Object Model) 在 JavaScript
+中被广泛使用，但需要注意的是，它并<strong>不是 JavaScript
+或其他编程语言的一部分 (platfrom- &amp;
+language-neutrality)</strong>！</p>
+<p>DOM 是一种 programming interface：它将 HTML/XML 文件对象化，使 markup
+语言中的元素 (element) 具有了编程语言中的对象 (object)
+的性质，从而大大方便了编程语言对其的操纵。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info: Code, COMP3322. Lecturer, Dr. Tam Anthony Tat Chun.</p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+        <category>misc</category>
+      </categories>
+      <tags>
+        <tag>PL</tag>
+        <tag>course notes</tag>
+        <tag>web</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Introduction to DS - R 语言初探之叁</title>
     <url>/2023/10/06/COMP2501-3/</url>
     <content><![CDATA[<p>Data Wrangling 的下一步就是 Data Visualization。这一节我们将引入
