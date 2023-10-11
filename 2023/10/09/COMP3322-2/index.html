@@ -33,7 +33,7 @@
 <meta property="og:description" content="COMP3322 课程 JavaScript 相关内容拾遗。  接触到的第二种 dynamically typed OOP 语言 (第一种是 Ruby)，但其语法又总是令人联想到 C 与 Java；学起来不算难，令人惊艳的点主要在于它是如何通过 DOM (Document Object Model) 与 HTML 交互的。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-10-09T12:02:37.000Z">
-<meta property="article:modified_time" content="2023-10-09T13:58:31.254Z">
+<meta property="article:modified_time" content="2023-10-10T10:25:06.559Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="PL">
 <meta property="article:tag" content="course notes">
@@ -119,7 +119,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">45</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">40</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">46</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">40</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -170,7 +170,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#prototype-based-oop"><span class="nav-number">1.</span> <span class="nav-text">Prototype-based OOP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#document-object-model"><span class="nav-number">2.</span> <span class="nav-text">Document Object Model</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#prototype-based-oop"><span class="nav-number">1.</span> <span class="nav-text">Prototype-based OOP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#document-object-model"><span class="nav-number">2.</span> <span class="nav-text">Document Object Model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#element-node-object"><span class="nav-number">2.1.</span> <span class="nav-text">Element Node Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#document-object"><span class="nav-number">2.2.</span> <span class="nav-text">Document Object</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#executing-js-in-html"><span class="nav-number">3.</span> <span class="nav-text">Executing JS in HTML</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#event-handling"><span class="nav-number">4.</span> <span class="nav-text">Event Handling</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#event-handler"><span class="nav-number">4.1.</span> <span class="nav-text">Event Handler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#event-propagation"><span class="nav-number">4.2.</span> <span class="nav-text">Event Propagation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -187,7 +187,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -386,9 +386,171 @@ programming，而是 <em>prototype-based programming</em>
 中被广泛使用，但需要注意的是，它并<strong>不是 JavaScript
 或其他编程语言的一部分 (platfrom- &amp;
 language-neutrality)</strong>！</p>
-<p>DOM 是一种 programming interface：它将 HTML/XML 文件对象化，使 markup
-语言中的元素 (element) 具有了编程语言中的对象 (object)
-的性质，从而大大方便了编程语言对其的操纵。</p>
+<p>DOM 是一种 <em>programming interface</em>：在实现了 DOM 接口
+(implement DOM interface) 的编程语言中，我们能够调用一系列强大的
+API，来对 DOM 及其所 model 的 HTML 文件进行动态操纵。</p>
+<h3 id="element-node-object">Element Node Object</h3>
+<p>在 DOM 中，每个 HTML element 都是一个结点
+(node)。结点之间相互连接，从而形成了一颗树。这颗树的结构正是 HTML
+文档的结构。DOM 中的结点共分为三种：</p>
+<ul>
+<li>element nodes.</li>
+<li>text nodes.</li>
+<li>attribute nodes.</li>
+</ul>
+<p>很明显 text nodes 与 attribute nodes 一定是 DOM 树的叶子节点。</p>
+<p>在实现了 DOM interface 的编程语言中，element object 自带一系列
+properties 与 method：</p>
+<ul>
+<li><code>attributes</code>: 返回 a list of attributes.</li>
+<li><code>className</code></li>
+<li><code>id</code></li>
+<li><code>innerHTML</code>: 以字符串的形式返回该元素的 markup content
+(tags 包围的所有内容)。使用这个 property
+对元素进行外科手术式的修改。</li>
+<li><code>style</code>: 返回一个特殊的对象，该对象中存储了一系列 styling
+<em>name-value pairs</em>。</li>
+<li><code>tagName</code></li>
+<li><code>addEventListener()</code>: [stay tuned for event
+handling]</li>
+<li><code>getAttribute()</code>, <code>setAttribute()</code>,
+<code>removeAttribute()</code></li>
+</ul>
+<p>一个典型的 JavaScript workflow：使用 document object [stay tuned]
+定位某个 element node object，访问它的 properties 以获取信息或调用它的
+methods 对其进行修改。</p>
+<h3 id="document-object">Document Object</h3>
+<p><code>document</code> 是一个特殊的对象；它代表整个 HTML
+文档。通常我们将其作为 DOM crawling 的起点。除此之外，它还是
+<code>window</code> 对象的孩子，因此我们也可以用
+<code>window.document</code> 进行指代。</p>
+<p>常用的 DOM crawling 方法：方法名中含有 <code>Elements</code>
+的往往返回 a list of element nodes.</p>
+<ul>
+<li><code>getElementById()</code></li>
+<li><code>getElementsByClassName()</code></li>
+<li><code>getElementsByTagName()</code></li>
+<li><code>querySelector()</code>: 该方法返回与选择器匹配的
+<em>第一个</em> 元素对应的结点。</li>
+<li><code>querySelectorAll()</code></li>
+</ul>
+<p>动态修改 DOM 树的结构；添加新的结点：</p>
+<ul>
+<li><code>createAttribute()</code></li>
+<li><code>createElement()</code></li>
+<li><code>createTextNode()</code></li>
+</ul>
+<p>以上方法的参数均为字符串：注意字符串在 JavaScript 中是 immutable
+的。</p>
+<p><br></p>
+<h2 id="executing-js-in-html">Executing JS in HTML</h2>
+<div class="note info no-icon"><p>JavaScript only needs one friend in the world of HTML - the
+<code>&lt;script&gt;</code> element.</p>
+</div>
+<p>牢记一个原则：当 browser 在解析 HTML 文件时，如果它遇到了某个
+<code>&lt;script&gt;</code> 元素，它将立刻执行其中的 JavaScript
+代码，无论 HTML 文件是否已经解析完成。</p>
+<p><code>&lt;script&gt;</code> 有两个 attribute: <code>async</code> 与
+<code>defer</code>，它们可以 override 这一默认的，由位置决定的顺序。</p>
+<table>
+<colgroup>
+<col style="width: 23%">
+<col style="width: 38%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">different
+<code>&lt;script&gt;</code></th>
+<th style="text-align: center;">execution priority</th>
+<th style="text-align: center;">details</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>&lt;script&gt;</code> in
+<code>&lt;head&gt;</code></td>
+<td style="text-align: center;">very high - blocks parser</td>
+<td style="text-align: center;">loaded &amp; executed before parsing
+begins</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>&lt;script&gt;</code></td>
+<td style="text-align: center;">high - interrupts parser</td>
+<td style="text-align: center;">parser pauses until it is loaded &amp;
+executed</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>&lt;script async&gt;</code></td>
+<td style="text-align: center;">high - interrupts parser</td>
+<td style="text-align: center;">parsing and loading go asynchronously;
+parser pauses when JS is ready to execute</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>&lt;script&gt;</code> at the end
+of <code>&lt;body&gt;</code></td>
+<td style="text-align: center;">low - waits parser end</td>
+<td style="text-align: center;">loaded &amp; executed after parsing
+ends</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>&lt;script defer&gt;</code></td>
+<td style="text-align: center;">very low - executes after
+<code>&lt;script&gt;</code> at the end of <code>&lt;body&gt;</code></td>
+<td style="text-align: center;">parser does not wait for the script; it
+continues to build DOM</td>
+</tr>
+</tbody>
+</table>
+<p>注意，我们能够保证 <code>&lt;script defer&gt;</code> 一定在 DOM is
+fully built 之后，<code>DOMContentLoaded</code> 事件之前被执行；而
+<code>&lt;script async&gt;</code> 被执行的时刻是不可预测的。它可能在
+<code>DOMContentLoaded</code>
+事件之前被执行，也有可能在其之后被执行；一切取决于 script 完成 loading
+所需的时间。</p>
+<p><br></p>
+<h2 id="event-handling">Event Handling</h2>
+<div class="note info no-icon"><p><em>Event-driven programming</em> is a paradigm in which the flow of
+the program is determined by events, usually user actions.</p>
+</div>
+<p>首先，event 也是 DOM interface 的一部分。因此我们可以在实现了 DOM
+interface 的 JavaScript 中直接使用一系列 pre-built <em>event
+objects</em>，调用各种 event-related APIs。</p>
+<h3 id="event-handler">Event Handler</h3>
+<p>Event handler 是一段代码：当其侦测 (listen) 到某事件触发 (event
+fires) 时，其立刻执行所储存的代码 (通常是一个函数)。有三种 registering
+event handlers 的方法：</p>
+<ul>
+<li>As an HTML attribute: bad style.</li>
+<li>As a method attached to the element: only one handler per
+event.</li>
+<li>Using <code>addEventListener()</code>.</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span> = <span class="string">&quot;bttn&quot;</span>&gt;</span>Press me<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> bttn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;bttn&quot;</span>);</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">function</span> <span class="title function_">bttnClick</span>(<span class="params"></span>) &#123; <span class="title function_">alert</span>(<span class="string">&quot;World ends!&quot;</span>) &#125;</span></span><br><span class="line"><span class="language-javascript">    bttn.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, bttnCLick);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>addEventListener()</code> 函数为某个元素添加一个 event
+handler；其第一个参数是 event 的名称，第二个参数是当 event
+触发时所需要执行的函数。同样的，我们有
+<code>removeEventListener()</code> 来删除特定的 event handler。</p>
+<p><code>addEventListener()</code>
+函数还有第三个参数，<code>useCapture: false</code>；它与 event
+propagation 有关。</p>
+<h3 id="event-propagation">Event Propagation</h3>
+<p>在某元素的范围内，一个事件的发生不仅会影响到该元素本身，还会影响到其所有的祖宗元素；因此，多个
+event handlers 可能被触发。Event propagation 规定了这种情况下 event
+handlers 被执行的顺序。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">    ...    </span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;p1&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;p2&quot;</span>&gt;</span></span><br><span class="line">        ...</span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span> = <span class="string">&quot;pn&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">p</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>假设 <code>pn</code> 是事件发生处的最直接元素，event propagation
+规定：</p>
+<ul>
+<li>首先进行 capturing propagation：从 <code>&lt;html&gt;</code> 到
+<code>pn</code>，自顶向下检测元素是否定义了处理对应事件的 event
+handler；如果有，并且其 <code>useCapture</code> 为真，执行该 event
+handler。</li>
+<li>然后进行 bubbling propagation：从 <code>&lt;pn&gt;</code> 到
+<code>&lt;html&gt;</code>，自底向上检测元素是否定义了处理对应是事件的
+event handler；如果有，并且其 <code>useCapture</code> 为假
+(default)，执行该 event handler。</li>
+</ul>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
@@ -489,6 +651,9 @@ if not specified.</p>
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2023/10/11/traning-1/" rel="next" title="HKU Provinci 1st Training">
+                  HKU Provinci 1st Training <i class="fa fa-chevron-right"></i>
+                </a>
             </div>
           </div>
     </footer>
