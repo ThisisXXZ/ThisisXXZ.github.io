@@ -25,15 +25,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="COMP3322 课程 JavaScript 相关内容拾遗。  接触到的第二种 dynamically typed OOP 语言 (第一种是 Ruby)，但其语法又总是令人联想到 C 与 Java；学起来不算难，令人惊艳的点主要在于它是如何通过 DOM (Document Object Model) 与 HTML 交互的。">
+    <meta name="description" content="COMP3322 课程 JavaScript, AJAX &amp; JSON 相关内容拾遗。  接触到的第二种 dynamically typed OOP 语言 (第一种是 Ruby)，但其语法又总是令人联想到 C 与 Java；学起来不算难，令人惊艳的点主要在于它是如何通过 DOM (Document Object Model) 与 HTML 交互的。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JavaScript 杂记">
 <meta property="og:url" content="https://www.thisisxxz.com/2023/10/09/COMP3322-2/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="COMP3322 课程 JavaScript 相关内容拾遗。  接触到的第二种 dynamically typed OOP 语言 (第一种是 Ruby)，但其语法又总是令人联想到 C 与 Java；学起来不算难，令人惊艳的点主要在于它是如何通过 DOM (Document Object Model) 与 HTML 交互的。">
+<meta property="og:description" content="COMP3322 课程 JavaScript, AJAX &amp; JSON 相关内容拾遗。  接触到的第二种 dynamically typed OOP 语言 (第一种是 Ruby)，但其语法又总是令人联想到 C 与 Java；学起来不算难，令人惊艳的点主要在于它是如何通过 DOM (Document Object Model) 与 HTML 交互的。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-10-09T12:02:37.000Z">
-<meta property="article:modified_time" content="2023-10-11T13:36:02.967Z">
+<meta property="article:modified_time" content="2023-10-17T08:06:26.713Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="PL">
 <meta property="article:tag" content="course notes">
@@ -170,7 +170,9 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#prototype-based-oop"><span class="nav-number">1.</span> <span class="nav-text">Prototype-based OOP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#document-object-model"><span class="nav-number">2.</span> <span class="nav-text">Document Object Model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#element-node-object"><span class="nav-number">2.1.</span> <span class="nav-text">Element Node Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#document-object"><span class="nav-number">2.2.</span> <span class="nav-text">Document Object</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#executing-js-in-html"><span class="nav-number">3.</span> <span class="nav-text">Executing JS in HTML</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#event-handling"><span class="nav-number">4.</span> <span class="nav-text">Event Handling</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#event-handler"><span class="nav-number">4.1.</span> <span class="nav-text">Event Handler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#event-propagation"><span class="nav-number">4.2.</span> <span class="nav-text">Event Propagation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#prototype-based-oop"><span class="nav-number">1.</span> <span class="nav-text">Prototype-based OOP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#document-object-model"><span class="nav-number">2.</span> <span class="nav-text">Document Object Model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#element-node-object"><span class="nav-number">2.1.</span> <span class="nav-text">Element Node Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#document-object"><span class="nav-number">2.2.</span> <span class="nav-text">Document Object</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#executing-js-in-html"><span class="nav-number">3.</span> <span class="nav-text">Executing JS in HTML</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#event-handling"><span class="nav-number">4.</span> <span class="nav-text">Event Handling</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#event-handler"><span class="nav-number">4.1.</span> <span class="nav-text">Event Handler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#event-propagation"><span class="nav-number">4.2.</span> <span class="nav-text">Event Propagation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#asynchrounous-programming"><span class="nav-number">5.</span> <span class="nav-text">Asynchrounous Programming</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ajax-with-xmlhttprequest"><span class="nav-number">6.</span> <span class="nav-text">AJAX with
+XMLHttpRequest</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#xmlhttprequest-object"><span class="nav-number">6.1.</span> <span class="nav-text">XMLHttpRequest Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#callback-hell"><span class="nav-number">6.2.</span> <span class="nav-text">Callback Hell</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ajax-with-fetch"><span class="nav-number">7.</span> <span class="nav-text">AJAX with fetch()</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#promise-object"><span class="nav-number">7.1.</span> <span class="nav-text">Promise Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#response-object"><span class="nav-number">7.2.</span> <span class="nav-text">Response Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#asyncawait-sytatic-sugar"><span class="nav-number">7.3.</span> <span class="nav-text">async&#x2F;await
+sytatic sugar</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#json"><span class="nav-number">8.</span> <span class="nav-text">JSON</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -335,7 +337,7 @@
     
     
     <div class="post-body" itemprop="articleBody"><blockquote>
-<p>COMP3322 课程 JavaScript 相关内容拾遗。</p>
+<p>COMP3322 课程 JavaScript, AJAX &amp; JSON 相关内容拾遗。</p>
 </blockquote>
 <p>接触到的第二种 dynamically typed OOP 语言 (第一种是
 Ruby)，但其语法又总是令人联想到 C 与
@@ -552,12 +554,209 @@ event handler；如果有，并且其 <code>useCapture</code> 为假
 (default)，执行该 event handler。</li>
 </ul>
 <p><br></p>
+<h2 id="asynchrounous-programming">Asynchrounous Programming</h2>
+<p>什么是同步/异步
+(synchronous/asynchronous)？在中文语境下其实我们很容易将这两个词的意义弄混。</p>
+<ul>
+<li>synchronous：下一进程必须等待上一进程完成之后才能开始执行。</li>
+<li>asynchronous：上一进程不会阻塞下一进程的执行；两者可以并行。</li>
+</ul>
+<div class="note info no-icon"><p>Asynchrounous programming enables your program to start a potentially
+<em>long-running task</em> and still be able to be <em>responsive</em>
+to other events when that task runs, rather whan having to wait until
+that task has finished.</p>
+</div>
+<p>在 web application 中，asynchronous programming 的应用使得 web
+page：</p>
+<ul>
+<li>faster：多个异步进程能够同时进行，大大节约了时间。</li>
+<li>more responsive：在异步进程执行期间 browser
+将不会停摆，仍然能对用户触发的事件作出响应。</li>
+</ul>
+<p>当异步进程执行完毕之后，将会有对应的函数处理该进程的结果。我们将这种函数称为
+callback function (回调函数)；callback function
+仅仅会在对应的异步进程执行完毕后被调用。</p>
+<p>仔细想想，这是不是和 event 与 event handler 的定义有点相似？event
+handler 只有在对应的 event
+触发后才被调用；如果把异步进程的完成视作某个事件的话，其对应的 callback
+function 就是该事件的 event handler。</p>
+<p>实际上，在 JavaScript 中最常见的 asynchronous paradigm - AJAX
+中，就采用了通过添加 event handler 的方式实现异步的思想 [stay tuned for
+AJAX with <code>XMLHttpRequest</code>]。</p>
+<p><br></p>
+<h2 id="ajax-with-xmlhttprequest">AJAX with
+<code>XMLHttpRequest</code></h2>
+<h3 id="xmlhttprequest-object"><code>XMLHttpRequest</code> Object</h3>
+<p>AJAX (<strong>A</strong>synchronous <strong>Ja</strong>vaScript with
+<strong>X</strong>ML，异步 Javascript 与 XML)
+范式：在<strong>无需重载网页</strong>的情况下，使得 browser
+能对网页进行快速的，增加式的动态更新。(本博客的全局音乐播放功能就应用了
+AJAX)</p>
+<p>为什么我们要采用
+AJAX？想象这样一个场景：在注册账号时我们常常需要在输入手机号之后点击“发送验证码”按钮。在传统方式下，浏览器在收到服务器的响应后将会重载页面，于是我们之前输入的手机号被刷新掉了；这无疑大大降低了用户体验。而
+AJAX 能够解决这个问题。</p>
+<p><code>XMLHttpRequest</code> 对象是 (传统) AJAX 范式的核心。在
+client-side (JavaScript) 中：</p>
+<ul>
+<li>[a] 声明一个 <code>XMLHttpRequest</code> 对象。</li>
+<li>[b] 对该对象的 <code>onreadystatechange</code> property 注册一个
+callback function。</li>
+<li>[c] 调用该对象的 <code>open()</code> 与 <code>send()</code>
+方法向服务器发送 HTTP 请求。
+<ul>
+<li>使用 <code>GET</code> 或 <code>POST</code>。</li>
+<li>异步请求 (asynchronously)：无需等待服务器的
+response，不会阻塞浏览器的控制。</li>
+</ul></li>
+<li>[d] 当收到服务器的 response 后，执行之前定义的 callback
+function。</li>
+<li>[e] 通常接下来 JavaScript 通过 DOM
+来修改并渲染网页，这避免了网页的重载。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ajaxObj = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();  <span class="comment">// [a]</span></span><br><span class="line"><span class="keyword">if</span> (!ajaxObj)</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&#x27;Cannot create XMLHttpRequest object!!&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// HTTP request function</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ajaxRequest</span>(<span class="params"></span>) &#123;</span><br><span class="line">    ajaxObj.<span class="property">onreadystatechange</span> = ajaxResponse;  <span class="comment">// [b] inline style not using addEventListener</span></span><br><span class="line">    ajaxObj.<span class="title function_">open</span>(<span class="string">&#x27;GET&#x27;</span>, <span class="string">&quot;checking.php?number=&quot;</span>+snum.<span class="property">value</span>, <span class="literal">true</span>);  <span class="comment">// [c]</span></span><br><span class="line">    ajaxObj.<span class="title function_">send</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">snum.<span class="title function_">addEventListener</span>(<span class="string">&#x27;blur&#x27;</span>, ajaxRequest);  <span class="comment">// &lt;=&gt; snum.onblur = ajaxRequest</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// callback function</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ajaxResponse</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (ajaxObj.<span class="property">readyState</span> == <span class="number">4</span> &amp;&amp; ajaxObj.<span class="property">status</span> == <span class="number">200</span>) &#123;</span><br><span class="line">        <span class="comment">// [e] use innerHTML/addElement to modify web page</span></span><br><span class="line">        <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;chkReg&#x27;</span>).<span class="property">innerHTML</span> = ajaxObj.<span class="property">responseText</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="callback-hell">Callback Hell</h3>
+<p>在不刷新浏览器的情况下执行 DOM 事件时 (e.g. 点击某链接,
+回车等事件操作) browser 会向服务端发送若干 HTTP
+request，携带后台可识别的参数并等待服务器响应返回数据。</p>
+<p>这个过程是异步回调的，当许多功能需要连续调用，环环相扣互相依赖时，将会产生庞大的
+nested callback：一个 callback function 在函数体中调用另一个
+callback，一层一层递归下去……</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">clickOnLinksResponse</span>(<span class="params">init, callback</span>) &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="title function_">callback</span>(result);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ajaxResponse</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">clickOnLinksResponse</span>(<span class="number">0</span>, <span class="function">(<span class="params">result1</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="title class_">EnterResponse</span>(result1, <span class="function">(<span class="params">result2</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="title class_">SubmitResponse</span>(result2, <span class="function">(<span class="params">result3</span>) =&gt;</span> &#123;</span><br><span class="line">                ...</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种庞大的嵌套回调函数被称为 callback hell (回调地狱)，或是 pyramid
+of doom；它大大降低了代码的可读性，并且由于耦合度太高，debug
+也十分困难。</p>
+<p>为了避免 callback hell，许多现代的 asynchronous API 不再采用 callback
+functions。[stay tuned for <code>fetch()</code> and <code>Promise</code>
+object]</p>
+<p><br></p>
+<h2 id="ajax-with-fetch">AJAX with <code>fetch()</code></h2>
+<p><code>fetch()</code> 是一种更 modern style 的 AJAX
+实现。基本语法是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">fetch</span>(url)</span><br><span class="line">.<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// code for handling the returned data</span></span><br><span class="line">&#125;)</span><br><span class="line">.<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;)</span><br><span class="line">...</span><br><span class="line">.<span class="title function_">catch</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// code to be run when returns any networks errors</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><code>fetch()</code> 函数返回的是一个 Promise 对象 (其最终将被解析为
+Response 对象)；这里的 <code>.then()</code>, <code>.catch()</code>
+实际上都是 Promise 对象对应的语法：它们是“附着”在 Promise 对象后的
+callback functions。</p>
+<p>那么什么是 Promise 对象呢？对这个词的最初印象来自 Racket 中 delayed
+evaluation 的 promise 概念。在学习了 JavaScript 中的 Promise
+对象之后确实感受到了一点很 subtle 的相似性。</p>
+<h3 id="promise-object"><code>Promise</code> Object</h3>
+<div class="note info no-icon"><p>A <code>Promise</code> is a proxy for a value not necessarily known
+when it is created.</p>
+<p>This lets asynchoronous methods (e.g., <code>fetch()</code>) behave
+synchronously: instead of immediately returning the final value, it
+returns a <em>promise</em> to supply the value at some point in the
+future.</p>
+</div>
+<p>Promise 对象有三种状态：</p>
+<ul>
+<li><em>Pending</em>: initial state, before the Promise is resolved or
+rejected.</li>
+<li><em>Resolved</em>: Promise has been resolved with a
+<em>value</em>.</li>
+<li><em>Rejected</em>: Promise has been rejected with a
+<em>reason</em>.</li>
+</ul>
+<p>Promise 对象后附着的一系列 <code>.then()</code> 与
+<code>.catch()</code> 可以视为该对象的 callback functions。</p>
+<ul>
+<li>当 Promise 的状态为 resolved 时，以 Promise 的 resolved value
+作为参数调用 <code>.then()</code>。</li>
+<li>当 Promise 的状态为 rejected 时，以 Promise 的 rejected reason
+作为参数调用 <code>.catch()</code>。</li>
+</ul>
+<p>我们常常能看到 Promise 对象下附着了多个连续的 <code>.then()</code>
+函数：我们把这一系列 <code>.then()</code> 函数称为 callback
+chain。callback chain 中函数的调用是环环相扣的：如果
+<code>.then()</code> 有返回值，那么它返回的是一个 Promise 对象；在被
+resolved 后将对应的 resolved value 传入下一个 <code>.then()</code>
+中进行处理。</p>
+<p>Promise 对象的 callback chain 本质上是对传统方式下 callback hell
+的<strong>解耦合</strong> (nested <span class="math inline">\(\to\)</span> chaining)。</p>
+<h3 id="response-object"><code>Response</code> Object</h3>
+<p><code>.then()</code> 函数将对应 Promise 对象的 resolved value
+作为参数；也就是说，它能够剥开 Promise 的外壳获取到里面的东西。我们来看
+<code>fetch()</code>
+函数的定义：<code>Promise&lt;Response&gt; fetch(input[, init])</code>。</p>
+<ul>
+<li><code>init</code> 是 <code>fetch()</code> 函数的自定义
+options，可以在其中指定 HTTP request 的：
+<ul>
+<li>HTTP method：默认为 <code>GET</code>。</li>
+<li>HTTP headers。</li>
+<li>HTTP body。</li>
+</ul></li>
+<li>Promise 对象所封装的是 Response
+对象：它携带着服务器传回的信息并传入对应的 <code>.then()</code>
+函数。</li>
+</ul>
+<p>Response 对象常用的 properties 与方法：</p>
+<ul>
+<li><code>status</code>: HTTP response code.</li>
+<li><code>statusText</code>: HTTP response text.</li>
+<li><code>ok</code>: True if status is HTTP 2xx.</li>
+<li><code>headers</code>: a Header object associated with the response
+header.</li>
+<li><code>text()</code>: a <em>Promise</em> contains the body as a
+string.</li>
+<li><code>json()</code>: a <em>Promise</em> contains the body text as
+JSON [stay tuned].</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">snum.<span class="title function_">addEventListener</span>(<span class="string">&#x27;blur&#x27;</span>, fetchRequest);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">fetchRequest</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">fetch</span>(<span class="string">&#x27;checking.php?number=&#x27;</span> + snum.<span class="property">value</span>);</span><br><span class="line">    .<span class="title function_">then</span>(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (response.<span class="property">status</span> == <span class="number">200</span>) &#123;</span><br><span class="line">            response.<span class="title function_">text</span>().<span class="title function_">then</span>(<span class="function"><span class="params">data</span> =&gt;</span> &#123;	<span class="comment">// text() returns a promise</span></span><br><span class="line">                <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;chkReg&#x27;</span>).<span class="property">innerHTML</span> = data;</span><br><span class="line">            &#125;);</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;HTTP return status: &quot;</span> + response.<span class="property">status</span>);</span><br><span class="line">        &#125;</span><br><span class="line">       &#125;)</span><br><span class="line">    .<span class="title function_">catch</span>(<span class="function"><span class="params">err</span> =&gt;</span> &#123; <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Fetch Error!&quot;</span>); &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="asyncawait-sytatic-sugar"><code>async</code>/<code>await</code>
+sytatic sugar</h3>
+<p>使用 <code>async</code>/<code>await</code> 写出的代码更近似传统的
+synchronous style，因此可读性更强。</p>
+<ul>
+<li><code>async</code> declaration defines an asynchronous function
+which returns an implicit Promise.</li>
+<li>within the <code>async</code> function, <code>await</code>
+expression 'pauses' the execution.</li>
+<li><code>await</code> is only valid inside the <code>async</code>
+function.</li>
+</ul>
+<p>一言以蔽之，在某个 <code>async</code> 函数内，我们将所有 asynchronous
+function 前加上 <code>await</code>，就可以省去 <code>.then()</code>,
+<code>.catch()</code> 等冗长的定义。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">snum.<span class="title function_">addEventListener</span>(<span class="string">&#x27;blur&#x27;</span>, fetchRequest);</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">fetchRequest</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> response = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&#x27;checking?php?number=&#x27;</span> + snum.<span class="property">value</span>);</span><br><span class="line">        <span class="keyword">if</span> (response.<span class="property">status</span> == <span class="number">200</span>) &#123;</span><br><span class="line">            <span class="keyword">let</span> data = <span class="keyword">await</span> response.<span class="title function_">text</span>();</span><br><span class="line">            <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;chkReg&#x27;</span>).<span class="property">innerHTML</span> = data;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;HTTP return status: &quot;</span> + response.<span class="property">status</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span>(err) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Fetch Error!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="json">JSON</h2>
+<div class="note info no-icon"><p>JSON (<strong>J</strong>ava<strong>S</strong>cript
+<strong>O</strong>bject <strong>N</strong>otation) is a standard
+text-based format for representing structured data based on JavaScript
+object syntax.</p>
+</div>
+<p>关于 JSON 没什么要讲的，理解为每个对象的 <code>toString()</code>
+方法就好。它主要用于网络数据的交换；此外，不仅仅是
+JavaScript，现在很多语言都能生成或解析 JSON 格式的数据。</p>
+<p>JSON object 由一系列 name-value pairs 组成：</p>
+<ul>
+<li>name：一定是<strong>双引号</strong>括起来的字符串。</li>
+<li>value：strings (双引号), numbers, objects (大括号), arrays (中括号),
+booleans, null/empty.</li>
+</ul>
+<p>注意，JSON 是纯文本格式：它只包含 properties，不包含 methods。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// trick: 使用 stringify() 与 parse() 实现 JavaScript 中对象的深拷贝</span></span><br><span class="line"><span class="keyword">let</span> stringObj = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(object);</span><br><span class="line"><span class="keyword">let</span> copyObj = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(stringObj);</span><br></pre></td></tr></table></figure>
+<p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
 if not specified.</p>
 </div>
 <p>Course info: Code, COMP3322. Lecturer, Dr. Tam Anthony Tat Chun.</p>
+<p>Additional website:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Introducing">Introducing
+Asynchoronous JavaScript - Mozilla Web Docs</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/Guide/AJAX">AJAX -
+Mozilla Web Docs</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://ithelp.ithome.com.tw/articles/10252941">JavaScript：Fetch
+练习 - IThome</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2020/12/fetch-tutorial.html">Fetch
+API 教程 - 阮一峰的网络日志</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise
+- Mozilla Web Docs</a>.</li>
+</ul>
 
     </div>
 
@@ -651,8 +850,8 @@ if not specified.</p>
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/10/11/traning-1/" rel="next" title="HKU Provinci 1st Training">
-                  HKU Provinci 1st Training <i class="fa fa-chevron-right"></i>
+                <a href="/2023/10/15/training-2/" rel="next" title="HKU Provinci 2nd Training">
+                  HKU Provinci 2nd Training <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>

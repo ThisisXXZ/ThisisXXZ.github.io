@@ -155,115 +155,158 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
-    <title>HKU Provinci 1st Training</title>
-    <url>/2023/10/11/traning-1/</url>
-    <content><![CDATA[<p>题目来自 2018-2019 ACM-ICPC, NEERC, Southern Subregional Contest,
-Qualification Stage。<a href="https://vjudge.net/contest/267700#overview">link</a></p>
+    <title>HKU Provinci 2nd Training</title>
+    <url>/2023/10/15/training-2/</url>
+    <content><![CDATA[<p>题目来自 杭电 2023 "钉耙编程" 中国大学生算法设计超级联赛。<a href="https://acm.hdu.edu.cn/search.php?field=problem&amp;key=2023%A1%B0%B6%A4%B0%D2%B1%E0%B3%CC%A1%B1%D6%D0%B9%FA%B4%F3%D1%A7%C9%FA%CB%E3%B7%A8%C9%E8%BC%C6%B3%AC%BC%B6%C1%AA%C8%FC%A3%A81%A3%A9&amp;source=1&amp;searchmode=source">link</a></p>
+<p>好难！做得满头大汗了。</p>
 <span id="more"></span>
-<p>完成率
-9/12。怎么说呢，我觉得能够做得更好。还是要吸取一个教训：不要被题目的通过人数所吓到；有时候通过数较少并不一定意味着自己想不出来。另外，当卡在一个题目过久时，要及时止损开另一道题。</p>
-<p>这次训练我们队内的交流很少，基本上是在自己打自己的。的确，用英文交流对我来说是一个挑战，有时候真的想不起来某个术语对应的英文说法。但交流起到的作用究竟大不大呢？还是接下来慢慢探索吧。</p>
 <p><br></p>
 <div class="note warning"><p>  This article provides a <strong>feasible</strong> solution to a
 certain competitive programming problem.   If you have better solutions,
 feel free to share with me!</p>
 </div>
 <p><br></p>
-<h2 id="coffee-break">Coffee Break</h2>
-<p>简单贪心。很自然的想到用 set 实现。</p>
+<h2 id="hide-and-seek-game">Hide-And-Seek Game</h2>
+<p>(待补)</p>
 <p><br></p>
-<h2 id="gilder">Gilder</h2>
-<p>实际上上升气流之间的间隔就是选择经过某个上升气流的代价。飞行轨迹一定是一段连续的区间，可以观察到这就是一个换皮滑动窗口问题。双指针轻松解决。</p>
-<p>这个问题有个坑：当高度为 0
-时，即使有上升气流也不能继续向前飞行。队友在这里卡了很久；我后来补题的时候也踩了这个坑。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_N = <span class="number">2e5</span> + <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">seg</span> &#123;</span><br><span class="line">    <span class="type">int</span> x, y;</span><br><span class="line">&#125; a[MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> n, h;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; h;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">        cin &gt;&gt; a[i].x &gt;&gt; a[i].y;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> l = <span class="number">1</span>, r = <span class="number">1</span>;</span><br><span class="line">    <span class="type">int</span> ans = <span class="number">0</span>, cur = a[<span class="number">1</span>].y - a[<span class="number">1</span>].x, cost = h;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (l &lt;= n) &#123;</span><br><span class="line">        <span class="keyword">while</span> (r &lt; n &amp;&amp; cost &gt; a[r + <span class="number">1</span>].x - a[r].y) &#123;</span><br><span class="line">            cost -= a[r + <span class="number">1</span>].x - a[r].y;</span><br><span class="line">            ++r;</span><br><span class="line">            cur += a[r].y - a[r - <span class="number">1</span>].y;</span><br><span class="line">        &#125;</span><br><span class="line">        ans = <span class="built_in">max</span>(ans, cur + cost);</span><br><span class="line">        <span class="keyword">if</span> (l &lt; n) &#123;</span><br><span class="line">            cur -= a[l + <span class="number">1</span>].x - a[l].x;</span><br><span class="line">            cost += a[l + <span class="number">1</span>].x - a[l].y;</span><br><span class="line">        &#125;</span><br><span class="line">        ++l;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; ans &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><br></p>
-<h2 id="masquerade-strikes-back">Masquerade strikes back</h2>
-<p>思路其实比较好想，但我硬是没找到一种优雅的实现方法。最后看了标程发现它的实现居然比较暴力，理论上的时间复杂度竟然是
-<span class="math inline">\(O(n\sqrt{c})\)</span>
-的。但其实这个时间复杂度在 2s 内是可以接受的。</p>
-<p>具体来说，使用 <span class="math inline">\(O(\sqrt{c})\)</span>
-的算法暴力枚举某数的因数，并用一个数组进行记忆。当再次遇到该数时从记忆数组中储存的位置开始枚举因数。此外还有一个小小的优化：在输出
-<span class="math inline">\(\{a,b\}\)</span> 后下次一定输出 <span class="math inline">\(\{b,a\}\)</span>。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cmath&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_C = <span class="number">1e7</span> + <span class="number">10</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_N = <span class="number">2e5</span> + <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> d[MAX_C], p[MAX_N];</span><br><span class="line"><span class="type">int</span> a[MAX_N];</span><br><span class="line"><span class="type">int</span> ans1[MAX_N], ans2[MAX_N];</span><br><span class="line"><span class="type">bool</span> vis[MAX_C];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> n;</span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)    cin &gt;&gt; a[i];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (vis[a[i]]) &#123;</span><br><span class="line">            vis[a[i]] = <span class="literal">false</span>;</span><br><span class="line">            ans1[i] = a[i] / p[a[i]], ans2[i] = p[a[i]];</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">bool</span> flag = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = p[a[i]] + <span class="number">1</span>; j &lt;= <span class="built_in">sqrt</span>(a[i]); ++j) &#123;</span><br><span class="line">            <span class="keyword">if</span> (a[i] % j == <span class="number">0</span>) &#123;</span><br><span class="line">                flag = <span class="literal">true</span>;</span><br><span class="line">                p[a[i]] = j;</span><br><span class="line">                <span class="keyword">if</span> (j * j != a[i])</span><br><span class="line">                    vis[a[i]] = <span class="literal">true</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!flag) &#123;</span><br><span class="line">            cout &lt;&lt; <span class="string">&quot;NO&quot;</span> &lt;&lt; endl;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">        ans1[i] = p[a[i]], ans2[i] = a[i] / p[a[i]];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;YES&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)</span><br><span class="line">        cout &lt;&lt; ans1[i] &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; ans2[i] &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><br></p>
-<h2 id="painting-the-fence">Painting the fence</h2>
-<p>有点难。这个真的没想出来怎么做。</p>
-<p>首先发现一个性质：每个颜色最多只能被操作一次。在首次操作过后，之后对该颜色的操作都是无意义的。</p>
-<p>可以把操作想象成一个缩点的过程，即首次操作某颜色 <span class="math inline">\(i\)</span> 后，我们将 <span class="math inline">\(i\)</span> 所对应的区间 <span class="math inline">\([l,r]\)</span> 视作一个颜色为 <span class="math inline">\(i\)</span> 的单独点
-(具体实现中我们留下两个点，标记缩点对应区间的范围)。一次有效的缩点会令点的个数减少
-<span class="math inline">\(\geq1\)</span>，既然如此，有效操作所需的总时间是不会超过
-<span class="math inline">\(O(n)\)</span> 的。</p>
-<p>那么问题转化为，如何快速的找到被操作的区间的位置：即，高效地找到颜色
-<span class="math inline">\(i\)</span> 所对应的 <span class="math inline">\(l,r\)</span>。观察到颜色不超过 <span class="math inline">\(3\cdot 10^5\)</span> 种，我们不妨开 <span class="math inline">\(3\cdot10^5\)</span> 个 set
-储存每种颜色对应栅栏的位置。</p>
-<p>当对颜色 <span class="math inline">\(i\)</span>
-执行操作时，我们：</p>
+<h2 id="city-upgrading">City Upgrading</h2>
+<div class="note info no-icon"><p>图 <span class="math inline">\(G\)</span> 的支配集 (dominating set)
+<span class="math inline">\(S\subseteq V\)</span>，满足对于任意顶点
+<span class="math inline">\(v\in V\)</span>，要么 <span class="math inline">\(v\in S\)</span>，要么 <span class="math inline">\(v\)</span> 与 <span class="math inline">\(S\)</span> 中至少一个顶点相邻。若 <span class="math inline">\(S\)</span> 的任何子集都不是支配集，我们称 <span class="math inline">\(S\)</span> 是 <span class="math inline">\(G\)</span> 的最小支配集 (minimal dominating
+set)。</p>
+</div>
+<p>求树的最小权支配集模板；使用树形 DP 解决。令</p>
 <ul>
-<li>若 <span class="math inline">\(i\)</span> 已经被操作过
-(<code>vis[i]=true</code>) 或该颜色的栅栏不足两个
-(<code>set[i].size()&lt;2</code>)，本次操作无效。</li>
-<li>访问 <code>set[i]</code>，获得颜色 <span class="math inline">\(i\)</span> 对应的左边界 <span class="math inline">\(l\)</span> 与右边界 <span class="math inline">\(r\)</span>。</li>
-<li>删除所有 <span class="math inline">\([l+1,r-1]\)</span>
-中的元素；注意处理区间内含有缩点的情况。</li>
-<li>将 <code>vis[i]</code> 设为 <code>true</code>，标记颜色 <span class="math inline">\(i\)</span> 所对应的区间已经成为了缩点。</li>
+<li><span class="math inline">\(f_{u,0}\)</span> 表示 <span class="math inline">\(u\)</span> 被其子节点支配时，<span class="math inline">\(u\)</span> 子树的答案。</li>
+<li><span class="math inline">\(f_{u,1}\)</span> 表示选择 <span class="math inline">\(u\)</span> 时，<span class="math inline">\(u\)</span> 子树的答案。</li>
+<li><span class="math inline">\(f_{u,2}\)</span> 表示 <span class="math inline">\(u\)</span> 被其父节点支配时，<span class="math inline">\(u\)</span> 子树的答案。</li>
 </ul>
-<p>最后根据 set 中存储的信息对所有栅栏进行最终染色。时间复杂度 <span class="math inline">\(O(m\log n+n)\)</span>，确实很巧妙。</p>
-<p>看到有别的队用 splay 过的，orz...</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;set&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_N = <span class="number">3e5</span> + <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> n, m;</span><br><span class="line"><span class="type">int</span> a[MAX_N];</span><br><span class="line"><span class="type">bool</span> vis[MAX_N];</span><br><span class="line"></span><br><span class="line">set&lt;<span class="type">int</span>&gt; pos[MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> maxi = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">        cin &gt;&gt; a[i];</span><br><span class="line">        maxi = <span class="built_in">max</span>(maxi, a[i]);</span><br><span class="line">        pos[a[i]].<span class="built_in">insert</span>(i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cin &gt;&gt; m;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= m; ++i) &#123;</span><br><span class="line">        <span class="type">int</span> col;</span><br><span class="line">        cin &gt;&gt; col;</span><br><span class="line">        <span class="keyword">if</span> (vis[col] || pos[col].<span class="built_in">size</span>() &lt; <span class="number">2</span>) </span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        <span class="type">int</span> p = *(pos[col].<span class="built_in">begin</span>()) + <span class="number">1</span>, r = *(pos[col].<span class="built_in">rbegin</span>()) - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (p &lt;= r) &#123;</span><br><span class="line">            pos[a[p]].<span class="built_in">erase</span>(p);</span><br><span class="line">            <span class="keyword">if</span> (vis[a[p]] &amp;&amp; !pos[a[p]].<span class="built_in">empty</span>()) &#123;</span><br><span class="line">                p = *(pos[a[p]].<span class="built_in">begin</span>());</span><br><span class="line">                pos[a[p]].<span class="built_in">erase</span>(p);</span><br><span class="line">            &#125;</span><br><span class="line">            p++;</span><br><span class="line">        &#125;</span><br><span class="line">        vis[col] = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= maxi; ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (pos[i].<span class="built_in">size</span>() == <span class="number">2</span> &amp;&amp; vis[i]) &#123;</span><br><span class="line">            <span class="type">int</span> l = *pos[i].<span class="built_in">begin</span>(), r = *pos[i].<span class="built_in">rbegin</span>();</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> p = l; p &lt;= r; ++p) &#123;</span><br><span class="line">                a[p] = i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)</span><br><span class="line">        cout &lt;&lt; a[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>转移如下 (<span class="math inline">\(v\)</span> 是 <span class="math inline">\(u\)</span> 的子节点)：</p>
+<ul>
+<li><span class="math inline">\(f_{u,0}=\sum_{v} \min(f_{v,0}, f_{v,1})
++ \mathrm{cost}\)</span>.
+<ul>
+<li><span class="math inline">\({\mathrm{cost}}=\min
+\{f_{v,1}-\min(f_{v,0}, f_{v,1})\}\)</span>
+选择某个子节点所需要付出的最小补偿代价。</li>
+</ul></li>
+<li><span class="math inline">\(f_{u,1}=\sum_v \min\{f_{v,0}, f_{v,1},
+f_{v,2}\}\)</span>.</li>
+<li><span class="math inline">\(f_{u,2}=\sum_v \min(f_{v,0},
+f_{v,1})\)</span>.</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_N = <span class="number">1e5</span> + <span class="number">10</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> inf = INT_MAX;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> val[MAX_N];</span><br><span class="line"><span class="type">long</span> <span class="type">long</span> f[MAX_N][<span class="number">3</span>];</span><br><span class="line"></span><br><span class="line">vector&lt;<span class="type">int</span>&gt; g[MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> u, <span class="type">int</span> fa)</span> </span>&#123;</span><br><span class="line">    <span class="type">bool</span> leaf = <span class="literal">true</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> v : g[u]) &#123;</span><br><span class="line">        <span class="keyword">if</span> (v == fa)	<span class="keyword">continue</span>;</span><br><span class="line">        leaf = <span class="literal">false</span>;</span><br><span class="line">        <span class="built_in">dfs</span>(v, u);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (leaf) &#123;</span><br><span class="line">        f[u][<span class="number">0</span>] = inf;</span><br><span class="line">        f[u][<span class="number">1</span>] = val[u];</span><br><span class="line">        f[u][<span class="number">2</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> sum_0 = <span class="number">0</span>, sum_1 = <span class="number">0</span>, sum_2 = <span class="number">0</span>;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> cost = inf;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> v : g[u]) &#123;</span><br><span class="line">        <span class="keyword">if</span> (v == fa)	<span class="keyword">continue</span>;</span><br><span class="line">        sum_0 += <span class="built_in">min</span>(f[v][<span class="number">0</span>], f[v][<span class="number">1</span>]);</span><br><span class="line">        sum_1 += <span class="built_in">min</span>(f[v][<span class="number">0</span>], <span class="built_in">min</span>(f[v][<span class="number">1</span>], f[v][<span class="number">2</span>]));</span><br><span class="line">        sum_2 += <span class="built_in">min</span>(f[v][<span class="number">0</span>], f[v][<span class="number">1</span>]);</span><br><span class="line">        cost = <span class="built_in">min</span>(cost, f[v][<span class="number">1</span>] - <span class="built_in">min</span>(f[v][<span class="number">0</span>], f[v][<span class="number">1</span>]));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    f[u][<span class="number">0</span>] = sum_0 + cost;</span><br><span class="line">    f[u][<span class="number">1</span>] = sum_1 + val[u];</span><br><span class="line">    f[u][<span class="number">2</span>] = sum_2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">long</span> <span class="type">long</span> <span class="title">solve</span><span class="params">(<span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">        cin &gt;&gt; val[i];</span><br><span class="line">        f[i][<span class="number">0</span>] = f[i][<span class="number">1</span>] = f[i][<span class="number">2</span>] = <span class="number">0</span>;</span><br><span class="line">        g[i].<span class="built_in">clear</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> x, y;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; n; ++i) &#123;</span><br><span class="line">        cin &gt;&gt; x &gt;&gt; y;</span><br><span class="line">        g[x].<span class="built_in">push_back</span>(y);</span><br><span class="line">        g[y].<span class="built_in">push_back</span>(x);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">dfs</span>(<span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">min</span>(f[<span class="number">1</span>][<span class="number">0</span>], f[<span class="number">1</span>][<span class="number">1</span>]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> tt;</span><br><span class="line">    cin &gt;&gt; tt;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (tt--) &#123;</span><br><span class="line">        <span class="type">int</span> n;</span><br><span class="line">        cin &gt;&gt; n;</span><br><span class="line">        cout &lt;&lt; <span class="built_in">solve</span>(n) &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
-<h2 id="tickets">Tickets</h2>
-<p>将询问离线下来排序处理即可。比较简单。</p>
+<h2 id="mr.liang-play-card-game">Mr.Liang play Card Game</h2>
+<p>比较明显的区间 DP。问题在于如果 <span class="math inline">\(O(nmr)\)</span>
+转移的话感觉一定会超时。然而赛后看题解发现标答的单组时间复杂度正是 <span class="math inline">\(O(n^3 mr)\)</span> 的……人还是要有梦想。</p>
+<p>考虑区间 <span class="math inline">\([l,r]\)</span>，无论以什么方式进行消除，最后总会留下一张卡片并在之后被打出。我们把每个区间消去到最后剩余的卡片作为
+anchor 进行 DP 状态的设计。令：</p>
+<ul>
+<li><span class="math inline">\(f_{l,r,t,k}\)</span> 为区间 <span class="math inline">\([l,r]\)</span> 消去到只剩一张 type 为 <span class="math inline">\(t\)</span>，level 为 <span class="math inline">\(k\)</span> 的卡片时获得的最大价值。</li>
+<li><span class="math inline">\(g_{l,r}\)</span> 为全部消去区间 <span class="math inline">\([l,r]\)</span> 后获得的最大价值。</li>
+</ul>
+<p>很明显有以下关系：<span class="math inline">\(g_{l,r}=\max_{t,k}\{f_{l,r,t,k}+p^{k-1}\cdot
+v_t\}\)</span>.</p>
+<p>接下来设计状态的转移：考虑区间 <span class="math inline">\([l,r]\)</span>，枚举断点 <span class="math inline">\(i \ (l\leq i\leq r)\)</span>.</p>
+<ul>
+<li>不考虑合并卡片：<span class="math inline">\(f_{l,r,t,k}=\max_i\{(g_{l,i}+f_{i+1,r,t,k}),
+(f_{l,i,t,k}+g_{i+1,r})\}\)</span>.</li>
+<li>考虑合并卡片 <span class="math inline">\((k\geq 2)\)</span>： <span class="math inline">\(f_{l,r,t,k}=\max_{i}\{f_{l,i,t,k-1}+f_{i+1,r,t,k-1}\}\)</span>.</li>
+</ul>
+<p>全部消去 <span class="math inline">\([l,r]\)</span> 后获得的最大价值
+<span class="math inline">\(g_{l,r}\)</span> 同步进行转移：</p>
+<ul>
+<li><span class="math inline">\(g_{l,r}=\max_i\{g_{l,i} +
+g_{i+1,r}\}\)</span>.</li>
+<li><span class="math inline">\(g_{l,r}=\max_{t,k}\{f_{l,r,t,k}+p^{k-1}\cdot
+v_t\}\)</span>.</li>
+</ul>
+<p>最后答案即为 <span class="math inline">\(g_{1,n}\)</span>。注意应用一个小优化 <span class="math inline">\(r=\min(r, \log n)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cmath&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_N = <span class="number">110</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> n, m, R, P;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> type[MAX_N];</span><br><span class="line"><span class="type">long</span> <span class="type">long</span> v[MAX_N], ppow[MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="type">long</span> <span class="type">long</span> f[MAX_N][MAX_N][<span class="number">25</span>][<span class="number">25</span>];</span><br><span class="line"><span class="type">long</span> <span class="type">long</span> g[MAX_N][MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">long</span> <span class="type">long</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (g[l][r])</span><br><span class="line">        <span class="keyword">return</span> g[l][r];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (l == r) &#123;</span><br><span class="line">        g[l][r] = v[type[l]];</span><br><span class="line">        f[l][r][type[l]][<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">return</span> g[l][r];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> res = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = l; i &lt; r; ++i)</span><br><span class="line">        res = <span class="built_in">max</span>(res, <span class="built_in">dfs</span>(l, i) + <span class="built_in">dfs</span>(i + <span class="number">1</span>, r));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = l; i &lt; r; ++i) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> t = <span class="number">1</span>; t &lt;= m; ++t) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">1</span>; k &lt;= R; ++k) &#123;</span><br><span class="line">                <span class="keyword">if</span> (f[l][i][t][k] &gt;= <span class="number">0</span>)</span><br><span class="line">                    f[l][r][t][k] = <span class="built_in">max</span>(f[l][r][t][k], f[l][i][t][k] + <span class="built_in">dfs</span>(i + <span class="number">1</span>, r));</span><br><span class="line">                <span class="keyword">if</span> (f[i + <span class="number">1</span>][r][t][k] &gt;= <span class="number">0</span>)</span><br><span class="line">                    f[l][r][t][k] = <span class="built_in">max</span>(f[l][r][t][k], <span class="built_in">dfs</span>(l, i) + f[i + <span class="number">1</span>][r][t][k]);</span><br><span class="line">                <span class="keyword">if</span> (k &gt;= <span class="number">2</span>) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (f[l][i][t][k - <span class="number">1</span>] &gt;= <span class="number">0</span> &amp;&amp; f[i + <span class="number">1</span>][r][t][k - <span class="number">1</span>] &gt;= <span class="number">0</span>)</span><br><span class="line">                        f[l][r][t][k] = <span class="built_in">max</span>(f[l][r][t][k], </span><br><span class="line">                                            f[l][i][t][k - <span class="number">1</span>] + f[i + <span class="number">1</span>][r][t][k - <span class="number">1</span>]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> t = <span class="number">1</span>; t &lt;= m; ++t) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">1</span>; k &lt;= R; ++k) &#123;</span><br><span class="line">            <span class="keyword">if</span> (f[l][r][t][k] &gt;= <span class="number">0</span>)</span><br><span class="line">                res = <span class="built_in">max</span>(res, f[l][r][t][k] + ppow[k - <span class="number">1</span>] * v[t]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> g[l][r] = res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">long</span> <span class="type">long</span> <span class="title">solve</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">memset</span>(f, <span class="number">-1</span>, <span class="keyword">sizeof</span> f);</span><br><span class="line">    <span class="built_in">memset</span>(g, <span class="number">0</span>, <span class="keyword">sizeof</span> g);</span><br><span class="line"></span><br><span class="line">    cin &gt;&gt; n &gt;&gt; m &gt;&gt; R &gt;&gt; P;</span><br><span class="line">    R = <span class="built_in">min</span>(R, (<span class="type">int</span>) <span class="built_in">log2</span>(n) + <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)    cin &gt;&gt; type[i];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= m; ++i)    cin &gt;&gt; v[i];</span><br><span class="line"></span><br><span class="line">    ppow[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= R; ++i)</span><br><span class="line">        ppow[i] = <span class="number">1LL</span> * ppow[i - <span class="number">1</span>] * P;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">dfs</span>(<span class="number">1</span>, n);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> tt;</span><br><span class="line">    cin &gt;&gt; tt;</span><br><span class="line">    <span class="keyword">while</span> (tt--) &#123;</span><br><span class="line">        cout &lt;&lt; <span class="built_in">solve</span>() &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
-<h2 id="tree-reconstruction">Tree Reconstruction</h2>
-<p>训练时看到过的人不多于是没有开题；实际上之后自己稍微想了下就想出来了。</p>
-<p>首先观察到节点 <span class="math inline">\(n\)</span>
-一定会出现在所有数对中，不妨将节点 <span class="math inline">\(n\)</span> 作为根进行构建。<span class="math inline">\(\{n,a\}\)</span> 出现 <span class="math inline">\(x\)</span> 次代表节点 <span class="math inline">\(a\)</span> 在以 <span class="math inline">\(n\)</span> 为根的树中深度为 <span class="math inline">\(x\)</span>；贪心的将未被约束的点挪过来凑深度即可。</p>
-<p>如果未被约束的点中有大于 <span class="math inline">\(a\)</span>
-的，那么可以断定该树不存在。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_N = <span class="number">1010</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> dep[MAX_N];</span><br><span class="line"></span><br><span class="line">pair&lt;<span class="type">int</span>, <span class="type">int</span>&gt; ans[MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">dt</span> &#123;</span><br><span class="line">    <span class="type">int</span> x, y;</span><br><span class="line">    <span class="type">bool</span> <span class="keyword">operator</span> &lt; (<span class="type">const</span> dt&amp; a) &#123;</span><br><span class="line">        <span class="keyword">return</span> y &gt; a.y;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; e[MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line"></span><br><span class="line">    <span class="type">bool</span> flag = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; n; ++i) &#123;</span><br><span class="line">        cin &gt;&gt; e[i].x &gt;&gt; e[i].y;</span><br><span class="line">        <span class="keyword">if</span> (e[i].x &lt; e[i].y)    <span class="built_in">swap</span>(e[i].x, e[i].y);</span><br><span class="line">        <span class="keyword">if</span> (e[i].x != n)</span><br><span class="line">            flag = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (flag) &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;NO&quot;</span> &lt;&lt; endl;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">sort</span>(e + <span class="number">1</span>, e + n);</span><br><span class="line">    <span class="type">int</span> l = <span class="number">1</span>, r = <span class="number">2</span>, sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (l &lt; n) &#123;</span><br><span class="line">        <span class="keyword">while</span> (r &lt; n &amp;&amp; e[r].y == e[l].y)</span><br><span class="line">            ++r;</span><br><span class="line">        <span class="type">int</span> depth = r - l;</span><br><span class="line">        dep[e[l].y] = depth;</span><br><span class="line">        sum += depth - <span class="number">1</span>;</span><br><span class="line">        l = r;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    stack&lt;<span class="type">int</span>&gt; internal;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; n; ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!dep[i])</span><br><span class="line">            internal.<span class="built_in">push</span>(i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (internal.<span class="built_in">size</span>() &lt; sum) &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;NO&quot;</span> &lt;&lt; endl;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> ansCnt = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">1</span>; --i) &#123;</span><br><span class="line">        <span class="type">int</span> lst = n;</span><br><span class="line">        <span class="keyword">while</span> (dep[i] &gt;= <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (internal.<span class="built_in">top</span>() &gt; i) &#123;</span><br><span class="line">                cout &lt;&lt; <span class="string">&quot;NO&quot;</span> &lt;&lt; endl;</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            ans[++ansCnt] = <span class="built_in">make_pair</span>(lst, internal.<span class="built_in">top</span>());</span><br><span class="line">            lst = internal.<span class="built_in">top</span>();</span><br><span class="line">            internal.<span class="built_in">pop</span>();</span><br><span class="line">            dep[i]--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (dep[i])</span><br><span class="line">            ans[++ansCnt] = <span class="built_in">make_pair</span>(lst, i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;YES&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= ansCnt; ++i)</span><br><span class="line">        cout &lt;&lt; ans[i].first &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; ans[i].second &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="cyclically-isomorphic">Cyclically Isomorphic</h2>
+<p>循环同构串题目加多个字符串匹配，首先想到 AC
+自动机做法：动态的插入字符串，若查询失败则将其的两倍插入 AC
+自动机中。然后发现自己已经忘记 AC 自动机怎么写了。</p>
+<p>后来想到一个很简单的方法：用字符串的最小表示法 +
+哈希来划分循环同构串群即可。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;map&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_N = <span class="number">1e5</span> + <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> n, m;</span><br><span class="line"><span class="type">int</span> id[MAX_N];</span><br><span class="line"></span><br><span class="line">map&lt;string, <span class="type">int</span>&gt; Hash; </span><br><span class="line"></span><br><span class="line"><span class="function">string <span class="title">getCore</span><span class="params">(string str)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>, j = <span class="number">1</span>, k = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (k &lt; m &amp;&amp; i &lt; m &amp;&amp; j &lt; m) &#123;</span><br><span class="line">        <span class="type">char</span> fir = str[(i + k) % m], sec = str[(j + k) % m];</span><br><span class="line">        <span class="keyword">if</span> (fir == sec) </span><br><span class="line">            ++k;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            (fir &gt; sec) ? (i += (k + <span class="number">1</span>)) : (j += (k + <span class="number">1</span>));</span><br><span class="line">            k = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">if</span> (i == j) ++j;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    i = <span class="built_in">min</span>(i, j);</span><br><span class="line">    string res = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">0</span>; k &lt; m; ++k) res += str[(i + k) % m];</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> tt;</span><br><span class="line">    cin &gt;&gt; tt;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (tt--) &#123;</span><br><span class="line">        cin &gt;&gt; n &gt;&gt; m;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">        string str;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">            cin &gt;&gt; str;</span><br><span class="line">            string core = <span class="built_in">getCore</span>(str);        </span><br><span class="line">            <span class="keyword">if</span> (!Hash.<span class="built_in">count</span>(core))</span><br><span class="line">                Hash[core] = ++cnt;</span><br><span class="line">            id[i] = Hash[core];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> q;</span><br><span class="line">        cin &gt;&gt; q;</span><br><span class="line">        <span class="keyword">while</span> (q--) &#123;</span><br><span class="line">            <span class="type">int</span> x, y;</span><br><span class="line">            cin &gt;&gt; x &gt;&gt; y;</span><br><span class="line">            cout &lt;&lt; (id[x] == id[y] ? <span class="string">&quot;Yes&quot;</span> : <span class="string">&quot;No&quot;</span>) &lt;&lt; endl;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Hash.<span class="built_in">clear</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)    id[i] = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
-<h2 id="theater-square">Theater Square</h2>
-<p>普及组第一题水平。冇野讲。</p>
+<h2 id="assertion">Assertion</h2>
+<p>唯一的一道水题。抽屉原理。</p>
 <p><br></p>
-<h2 id="medians-and-partition">Medians and Partition</h2>
-<p>简单规律。用 <span class="math inline">\(\geq m\)</span>
-的连续区间去补 <span class="math inline">\(&lt;m\)</span>
-连续区间，余下的 <span class="math inline">\(\geq m\)</span>
-区间全部切成长度为 1 的小块使得答案最大化。按这个算法得到的答案一定是
-<span class="math inline">\(\geq m\)</span> 数的个数减去 <span class="math inline">\(&lt; m\)</span> 数的个数。</p>
+<h2 id="play-on-tree">Play on Tree</h2>
+<p>好题，一道题覆盖了博弈论 + 换根两个知识点。哪天找个时间写下关于 NIM
+游戏，SG 定理的东西，这些概念确实很有趣，但也很烧脑。</p>
+<p>Tutorial 里直接把结论摆出来了：<span class="math inline">\(\mathrm{SG}(u)=(\mathrm{SG}(v_1)+1)\oplus(\mathrm{SG}(v_2)+1)\oplus(\mathrm{SG}(v_3)+1)\)</span>，然而这对我来说一点都不显然。我还是想详细的证明一下，不然说服不了我自己。</p>
+<p>首先定义 base case：</p>
+<ul>
+<li>当 <span class="math inline">\(n=1\)</span> 时，必输态，<span class="math inline">\(\mathrm{SG}(u)=0\)</span>。</li>
+<li>当 <span class="math inline">\(n=2\)</span> 时，<span class="math inline">\(\mathrm{SG}(u)=\mathrm{MEX}\{\mathrm{SG}(v)\}=\mathrm{MEX}\{0\}=1\)</span>，满足
+<span class="math inline">\(\mathrm{SG}(u)=\mathrm{SG}(v)+1\)</span>。</li>
+</ul>
+<p>开始进行数学归纳法：若 <span class="math inline">\(n\leq k\)</span>
+时该结论成立，则 <span class="math inline">\(n=k+1\)</span>
+时该结论仍然成立。</p>
+<p>设根节点为 <span class="math inline">\(u\)</span>，且 <span class="math inline">\(\mathrm{size}(u)=k+1\)</span>。</p>
+<ul>
+<li>当 <span class="math inline">\(u\)</span> 只有一颗以 <span class="math inline">\(v\)</span> 为根的子树时。(显然 <span class="math inline">\(\mathrm{size}(v)=\mathrm{size}(u)-1=k\)</span>)
+<ul>
+<li>删去 <span class="math inline">\(v\)</span> 必胜，该局面存在 <span class="math inline">\(\mathrm{SG}(u&#39;)=0\)</span> 的后继。</li>
+<li>删去 <span class="math inline">\(v\)</span> 子树中某内部节点得到局面
+<span class="math inline">\(v&#39;\)</span>；此时 <span class="math inline">\(\mathrm{size}(u&#39;)\leq k\)</span>；由归纳假设得
+<span class="math inline">\(\mathrm{SG}(u&#39;)=\mathrm{SG}(v&#39;)+1\)</span>。由于
+<span class="math inline">\(v&#39;\)</span> 是 <span class="math inline">\(v\)</span> 的后继局面，根据 <span class="math inline">\(\mathrm{SG}\)</span> 函数定义有 <span class="math inline">\(\mathrm{SG}(v&#39;)\in[0,\mathrm{SG}(v)-1]\)</span>。</li>
+<li>由 (ii) 得 <span class="math inline">\(\mathrm{SG}(u&#39;)=\mathrm{SG}(v&#39;)+1\in[1,\mathrm{SG}(v)]\)</span>，又由
+(i) 可知 <span class="math inline">\(\mathrm{SG}(u&#39;)\)</span> 可取到
+<span class="math inline">\(0\)</span>：综上所述，局面 <span class="math inline">\(u&#39;\)</span> 的 SG 值 <span class="math inline">\(\mathrm{SG}(u&#39;)\in[0,\mathrm{SG}(v)]\)</span>。</li>
+<li>根据 SG 函数的定义，<span class="math inline">\(\mathrm{SG}(u)=\mathrm{MEX}\{\forall
+{\mathrm{SG}(u&#39;\}}\}=\mathrm{SG}(v)+1\)</span>，归纳完毕。</li>
+</ul></li>
+<li>当 <span class="math inline">\(u\)</span> 有若干棵子树 <span class="math inline">\(v_1,v_2,v_3...v_m\)</span> 时。
+<ul>
+<li>观察到根节点 <span class="math inline">\(u\)</span> 对答案没有影响
+(删除 <span class="math inline">\(u\)</span> 必败，后继局面的 SG
+函数无限大)，我们将 <span class="math inline">\(u\)</span> 拆点，有
+<span class="math inline">\(m\)</span> 颗子树就拆成 <span class="math inline">\(m\)</span> 个点 <span class="math inline">\(u_1,u_2,...,u_m\)</span>，每个点挂一颗子树。</li>
+<li>这样我们把游戏转化为了 <span class="math inline">\(m\)</span>
+个子游戏，本质上与 <span class="math inline">\(m\)</span> 堆石头的 NIM
+游戏没有区别。</li>
+<li>根据 SG 定理，<span class="math inline">\(\mathrm{SG}(u)=\oplus_{i=1}^m
+\mathrm{SG}(u_i)\)</span>；在情况一中我们已经证明 <span class="math inline">\(\mathrm{SG}(u_i)=\mathrm{SG}(v_i)+1\)</span>，至此我们证明了那个“显然的”结论
+<span class="math inline">\(\mathrm{SG}(u)=\oplus_{i=1}^m
+(\mathrm{SG}(v_i)+1)\)</span>。</li>
+</ul></li>
+</ul>
+<p>至于换根就比较简单了，我们定义 <span class="math inline">\(g_u\)</span> 为 <span class="math inline">\(u\)</span> 父亲方向子树的答案，DFS 一遍即可求出
+<span class="math inline">\(g\)</span>。设以 <span class="math inline">\(1\)</span> 为根时 <span class="math inline">\(u\)</span> 子树的 SG 函数为 <span class="math inline">\(\mathrm{SG}(u)\)</span>，那么最后的答案为 <span class="math inline">\(\frac{1}{n}\sum[\mathrm{SG}(u)\oplus
+g_u&gt;1]\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> mod = <span class="number">1e9</span> + <span class="number">7</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_N = <span class="number">2e5</span> + <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> SG[MAX_N], g[MAX_N];</span><br><span class="line"></span><br><span class="line">vector&lt;<span class="type">int</span>&gt; e[MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">qpow</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> res = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (y) &#123;</span><br><span class="line">        <span class="keyword">if</span> (y &amp; <span class="number">1</span>)</span><br><span class="line">            res = <span class="number">1LL</span> * res * x % mod;</span><br><span class="line">        y &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">        x = <span class="number">1LL</span> * x * x % mod;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">dfs1</span><span class="params">(<span class="type">int</span> u, <span class="type">int</span> fa)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> to : e[u]) &#123;</span><br><span class="line">        <span class="keyword">if</span> (to == fa)   <span class="keyword">continue</span>;</span><br><span class="line">        SG[u] ^= (<span class="built_in">dfs1</span>(to, u) + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> SG[u];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs2</span><span class="params">(<span class="type">int</span> u, <span class="type">int</span> fa)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (fa != <span class="number">0</span>) &#123;</span><br><span class="line">        g[u] = (SG[fa] ^ (SG[u] + <span class="number">1</span>) ^ g[fa]) + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> to : e[u]) &#123;</span><br><span class="line">        <span class="keyword">if</span> (to == fa)   <span class="keyword">continue</span>;</span><br><span class="line">        <span class="built_in">dfs2</span>(to, u);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">solve</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">        e[i].<span class="built_in">clear</span>();</span><br><span class="line">        SG[i] = g[i] = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; n; ++i) &#123;</span><br><span class="line">        <span class="type">int</span> u, v;</span><br><span class="line">        cin &gt;&gt; u &gt;&gt; v;</span><br><span class="line">        e[u].<span class="built_in">push_back</span>(v);</span><br><span class="line">        e[v].<span class="built_in">push_back</span>(u);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">dfs1</span>(<span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="built_in">dfs2</span>(<span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (SG[<span class="number">1</span>] &gt; <span class="number">0</span>)  ans = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (SG[i] ^ g[i])   ++ans;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1LL</span> * ans * <span class="built_in">qpow</span>(n, mod - <span class="number">2</span>) % mod;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> tt;</span><br><span class="line">    cin &gt;&gt; tt;</span><br><span class="line">    <span class="keyword">while</span> (tt--) &#123;</span><br><span class="line">        cout &lt;&lt; <span class="built_in">solve</span>() &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
-<h2 id="ray-in-the-tube">Ray in the tube</h2>
-<p>整场中通过率最低的题，但实际上我觉得比 E
-要简单一点。但也的确是一个非常有趣的题！</p>
-<p>首先根据 common sense 来讲，步长越小，反射越密集，可能覆盖到的
-sensors 就越多，很自然的考虑步长为 <span class="math inline">\(1\)</span> 的情况。</p>
-<p>很显然，步长为 <span class="math inline">\(1\)</span>
-的轨迹一定不劣于其他步长为奇数的轨迹。但它却有可能覆盖不到步长为偶数的轨迹。于是我们试图寻找步长为偶数的轨迹中是否存在某个最优轨迹。</p>
-<p>可以发现，任何步长为 <span class="math inline">\(2^n\times a\)</span>
-(<span class="math inline">\(a\)</span> 为奇数) 的轨迹都能被步长为 <span class="math inline">\(2^n\)</span>
-的轨迹覆盖。(画个图就能明白，从下边界到上边界一定要经过奇数个步长)
-因此，偶数步长是由 <span class="math inline">\(\{2,
-2^2,...,2^n\}\)</span> 这一步长集合 capture 的。</p>
-<p>综上所述，我们只需要关注 <span class="math inline">\(\{2^0,2^1,...,2^n\}\)</span>
-这一系列步长，暴力求出它们对应的答案后取最大值即可。时间复杂度 <span class="math inline">\(O(n\log{n})\)</span>。将答案初始化为 <span class="math inline">\(2\)</span> 防止两个点垂直排列的情况 (即步长为
-<span class="math inline">\(0\)</span>) 产生影响。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"> </span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_N = <span class="number">1e5</span> + <span class="number">10</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_M = <span class="number">1e9</span>;</span><br><span class="line"> </span><br><span class="line"><span class="type">int</span> a[MAX_N], b[MAX_N];</span><br><span class="line"> </span><br><span class="line">map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; cnt;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="type">int</span> n, y1, m, y2;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; y1;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)    cin &gt;&gt; a[i];</span><br><span class="line">    cin &gt;&gt; m &gt;&gt; y2;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= m; ++i)    cin &gt;&gt; b[i];</span><br><span class="line"> </span><br><span class="line">    <span class="type">int</span> finalAns = <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> step = <span class="number">2</span>; step &lt;= MAX_M; step &lt;&lt;= <span class="number">1</span>) &#123;</span><br><span class="line">        cnt.<span class="built_in">clear</span>();</span><br><span class="line">        <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= m; ++i)</span><br><span class="line">            cnt[(b[i] + step / <span class="number">2</span>) % step]++,</span><br><span class="line">            ans = <span class="built_in">max</span>(ans, cnt[(b[i] + step / <span class="number">2</span>) % step]);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)</span><br><span class="line">            cnt[a[i] % step]++, </span><br><span class="line">            ans = <span class="built_in">max</span>(ans, cnt[a[i] % step]);</span><br><span class="line">        finalAns = <span class="built_in">max</span>(finalAns, ans);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    cout &lt;&lt; finalAns &lt;&lt; endl;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><br></p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/644457415">杭电多校个人题解 -
+碎月</a>.</li>
+<li><a href="https://blog.csdn.net/Code92007/article/details/87871216">树形删边游戏
+- Code92007</a>.</li>
+<li><a href="https://zhuanlan.zhihu.com/p/422562139">NIM 博弈与 SG
+定理</a>.</li>
+</ul>
 ]]></content>
       <categories>
         <category>题解</category>
       </categories>
       <tags>
-        <tag>constructive</tag>
-        <tag>set</tag>
+        <tag>DP</tag>
+        <tag>string</tag>
       </tags>
   </entry>
   <entry>
     <title>JavaScript 杂记</title>
     <url>/2023/10/09/COMP3322-2/</url>
     <content><![CDATA[<blockquote>
-<p>COMP3322 课程 JavaScript 相关内容拾遗。</p>
+<p>COMP3322 课程 JavaScript, AJAX &amp; JSON 相关内容拾遗。</p>
 </blockquote>
 <p>接触到的第二种 dynamically typed OOP 语言 (第一种是
 Ruby)，但其语法又总是令人联想到 C 与
@@ -480,12 +523,209 @@ event handler；如果有，并且其 <code>useCapture</code> 为假
 (default)，执行该 event handler。</li>
 </ul>
 <p><br></p>
+<h2 id="asynchrounous-programming">Asynchrounous Programming</h2>
+<p>什么是同步/异步
+(synchronous/asynchronous)？在中文语境下其实我们很容易将这两个词的意义弄混。</p>
+<ul>
+<li>synchronous：下一进程必须等待上一进程完成之后才能开始执行。</li>
+<li>asynchronous：上一进程不会阻塞下一进程的执行；两者可以并行。</li>
+</ul>
+<div class="note info no-icon"><p>Asynchrounous programming enables your program to start a potentially
+<em>long-running task</em> and still be able to be <em>responsive</em>
+to other events when that task runs, rather whan having to wait until
+that task has finished.</p>
+</div>
+<p>在 web application 中，asynchronous programming 的应用使得 web
+page：</p>
+<ul>
+<li>faster：多个异步进程能够同时进行，大大节约了时间。</li>
+<li>more responsive：在异步进程执行期间 browser
+将不会停摆，仍然能对用户触发的事件作出响应。</li>
+</ul>
+<p>当异步进程执行完毕之后，将会有对应的函数处理该进程的结果。我们将这种函数称为
+callback function (回调函数)；callback function
+仅仅会在对应的异步进程执行完毕后被调用。</p>
+<p>仔细想想，这是不是和 event 与 event handler 的定义有点相似？event
+handler 只有在对应的 event
+触发后才被调用；如果把异步进程的完成视作某个事件的话，其对应的 callback
+function 就是该事件的 event handler。</p>
+<p>实际上，在 JavaScript 中最常见的 asynchronous paradigm - AJAX
+中，就采用了通过添加 event handler 的方式实现异步的思想 [stay tuned for
+AJAX with <code>XMLHttpRequest</code>]。</p>
+<p><br></p>
+<h2 id="ajax-with-xmlhttprequest">AJAX with
+<code>XMLHttpRequest</code></h2>
+<h3 id="xmlhttprequest-object"><code>XMLHttpRequest</code> Object</h3>
+<p>AJAX (<strong>A</strong>synchronous <strong>Ja</strong>vaScript with
+<strong>X</strong>ML，异步 Javascript 与 XML)
+范式：在<strong>无需重载网页</strong>的情况下，使得 browser
+能对网页进行快速的，增加式的动态更新。(本博客的全局音乐播放功能就应用了
+AJAX)</p>
+<p>为什么我们要采用
+AJAX？想象这样一个场景：在注册账号时我们常常需要在输入手机号之后点击“发送验证码”按钮。在传统方式下，浏览器在收到服务器的响应后将会重载页面，于是我们之前输入的手机号被刷新掉了；这无疑大大降低了用户体验。而
+AJAX 能够解决这个问题。</p>
+<p><code>XMLHttpRequest</code> 对象是 (传统) AJAX 范式的核心。在
+client-side (JavaScript) 中：</p>
+<ul>
+<li>[a] 声明一个 <code>XMLHttpRequest</code> 对象。</li>
+<li>[b] 对该对象的 <code>onreadystatechange</code> property 注册一个
+callback function。</li>
+<li>[c] 调用该对象的 <code>open()</code> 与 <code>send()</code>
+方法向服务器发送 HTTP 请求。
+<ul>
+<li>使用 <code>GET</code> 或 <code>POST</code>。</li>
+<li>异步请求 (asynchronously)：无需等待服务器的
+response，不会阻塞浏览器的控制。</li>
+</ul></li>
+<li>[d] 当收到服务器的 response 后，执行之前定义的 callback
+function。</li>
+<li>[e] 通常接下来 JavaScript 通过 DOM
+来修改并渲染网页，这避免了网页的重载。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> ajaxObj = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();  <span class="comment">// [a]</span></span><br><span class="line"><span class="keyword">if</span> (!ajaxObj)</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&#x27;Cannot create XMLHttpRequest object!!&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// HTTP request function</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ajaxRequest</span>(<span class="params"></span>) &#123;</span><br><span class="line">    ajaxObj.<span class="property">onreadystatechange</span> = ajaxResponse;  <span class="comment">// [b] inline style not using addEventListener</span></span><br><span class="line">    ajaxObj.<span class="title function_">open</span>(<span class="string">&#x27;GET&#x27;</span>, <span class="string">&quot;checking.php?number=&quot;</span>+snum.<span class="property">value</span>, <span class="literal">true</span>);  <span class="comment">// [c]</span></span><br><span class="line">    ajaxObj.<span class="title function_">send</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">snum.<span class="title function_">addEventListener</span>(<span class="string">&#x27;blur&#x27;</span>, ajaxRequest);  <span class="comment">// &lt;=&gt; snum.onblur = ajaxRequest</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// callback function</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ajaxResponse</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (ajaxObj.<span class="property">readyState</span> == <span class="number">4</span> &amp;&amp; ajaxObj.<span class="property">status</span> == <span class="number">200</span>) &#123;</span><br><span class="line">        <span class="comment">// [e] use innerHTML/addElement to modify web page</span></span><br><span class="line">        <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;chkReg&#x27;</span>).<span class="property">innerHTML</span> = ajaxObj.<span class="property">responseText</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="callback-hell">Callback Hell</h3>
+<p>在不刷新浏览器的情况下执行 DOM 事件时 (e.g. 点击某链接,
+回车等事件操作) browser 会向服务端发送若干 HTTP
+request，携带后台可识别的参数并等待服务器响应返回数据。</p>
+<p>这个过程是异步回调的，当许多功能需要连续调用，环环相扣互相依赖时，将会产生庞大的
+nested callback：一个 callback function 在函数体中调用另一个
+callback，一层一层递归下去……</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">clickOnLinksResponse</span>(<span class="params">init, callback</span>) &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="title function_">callback</span>(result);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ajaxResponse</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">clickOnLinksResponse</span>(<span class="number">0</span>, <span class="function">(<span class="params">result1</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="title class_">EnterResponse</span>(result1, <span class="function">(<span class="params">result2</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="title class_">SubmitResponse</span>(result2, <span class="function">(<span class="params">result3</span>) =&gt;</span> &#123;</span><br><span class="line">                ...</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种庞大的嵌套回调函数被称为 callback hell (回调地狱)，或是 pyramid
+of doom；它大大降低了代码的可读性，并且由于耦合度太高，debug
+也十分困难。</p>
+<p>为了避免 callback hell，许多现代的 asynchronous API 不再采用 callback
+functions。[stay tuned for <code>fetch()</code> and <code>Promise</code>
+object]</p>
+<p><br></p>
+<h2 id="ajax-with-fetch">AJAX with <code>fetch()</code></h2>
+<p><code>fetch()</code> 是一种更 modern style 的 AJAX
+实现。基本语法是：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="title function_">fetch</span>(url)</span><br><span class="line">.<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// code for handling the returned data</span></span><br><span class="line">&#125;)</span><br><span class="line">.<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;)</span><br><span class="line">...</span><br><span class="line">.<span class="title function_">catch</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// code to be run when returns any networks errors</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><code>fetch()</code> 函数返回的是一个 Promise 对象 (其最终将被解析为
+Response 对象)；这里的 <code>.then()</code>, <code>.catch()</code>
+实际上都是 Promise 对象对应的语法：它们是“附着”在 Promise 对象后的
+callback functions。</p>
+<p>那么什么是 Promise 对象呢？对这个词的最初印象来自 Racket 中 delayed
+evaluation 的 promise 概念。在学习了 JavaScript 中的 Promise
+对象之后确实感受到了一点很 subtle 的相似性。</p>
+<h3 id="promise-object"><code>Promise</code> Object</h3>
+<div class="note info no-icon"><p>A <code>Promise</code> is a proxy for a value not necessarily known
+when it is created.</p>
+<p>This lets asynchoronous methods (e.g., <code>fetch()</code>) behave
+synchronously: instead of immediately returning the final value, it
+returns a <em>promise</em> to supply the value at some point in the
+future.</p>
+</div>
+<p>Promise 对象有三种状态：</p>
+<ul>
+<li><em>Pending</em>: initial state, before the Promise is resolved or
+rejected.</li>
+<li><em>Resolved</em>: Promise has been resolved with a
+<em>value</em>.</li>
+<li><em>Rejected</em>: Promise has been rejected with a
+<em>reason</em>.</li>
+</ul>
+<p>Promise 对象后附着的一系列 <code>.then()</code> 与
+<code>.catch()</code> 可以视为该对象的 callback functions。</p>
+<ul>
+<li>当 Promise 的状态为 resolved 时，以 Promise 的 resolved value
+作为参数调用 <code>.then()</code>。</li>
+<li>当 Promise 的状态为 rejected 时，以 Promise 的 rejected reason
+作为参数调用 <code>.catch()</code>。</li>
+</ul>
+<p>我们常常能看到 Promise 对象下附着了多个连续的 <code>.then()</code>
+函数：我们把这一系列 <code>.then()</code> 函数称为 callback
+chain。callback chain 中函数的调用是环环相扣的：如果
+<code>.then()</code> 有返回值，那么它返回的是一个 Promise 对象；在被
+resolved 后将对应的 resolved value 传入下一个 <code>.then()</code>
+中进行处理。</p>
+<p>Promise 对象的 callback chain 本质上是对传统方式下 callback hell
+的<strong>解耦合</strong> (nested <span class="math inline">\(\to\)</span> chaining)。</p>
+<h3 id="response-object"><code>Response</code> Object</h3>
+<p><code>.then()</code> 函数将对应 Promise 对象的 resolved value
+作为参数；也就是说，它能够剥开 Promise 的外壳获取到里面的东西。我们来看
+<code>fetch()</code>
+函数的定义：<code>Promise&lt;Response&gt; fetch(input[, init])</code>。</p>
+<ul>
+<li><code>init</code> 是 <code>fetch()</code> 函数的自定义
+options，可以在其中指定 HTTP request 的：
+<ul>
+<li>HTTP method：默认为 <code>GET</code>。</li>
+<li>HTTP headers。</li>
+<li>HTTP body。</li>
+</ul></li>
+<li>Promise 对象所封装的是 Response
+对象：它携带着服务器传回的信息并传入对应的 <code>.then()</code>
+函数。</li>
+</ul>
+<p>Response 对象常用的 properties 与方法：</p>
+<ul>
+<li><code>status</code>: HTTP response code.</li>
+<li><code>statusText</code>: HTTP response text.</li>
+<li><code>ok</code>: True if status is HTTP 2xx.</li>
+<li><code>headers</code>: a Header object associated with the response
+header.</li>
+<li><code>text()</code>: a <em>Promise</em> contains the body as a
+string.</li>
+<li><code>json()</code>: a <em>Promise</em> contains the body text as
+JSON [stay tuned].</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">snum.<span class="title function_">addEventListener</span>(<span class="string">&#x27;blur&#x27;</span>, fetchRequest);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">fetchRequest</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">fetch</span>(<span class="string">&#x27;checking.php?number=&#x27;</span> + snum.<span class="property">value</span>);</span><br><span class="line">    .<span class="title function_">then</span>(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (response.<span class="property">status</span> == <span class="number">200</span>) &#123;</span><br><span class="line">            response.<span class="title function_">text</span>().<span class="title function_">then</span>(<span class="function"><span class="params">data</span> =&gt;</span> &#123;	<span class="comment">// text() returns a promise</span></span><br><span class="line">                <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;chkReg&#x27;</span>).<span class="property">innerHTML</span> = data;</span><br><span class="line">            &#125;);</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;HTTP return status: &quot;</span> + response.<span class="property">status</span>);</span><br><span class="line">        &#125;</span><br><span class="line">       &#125;)</span><br><span class="line">    .<span class="title function_">catch</span>(<span class="function"><span class="params">err</span> =&gt;</span> &#123; <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Fetch Error!&quot;</span>); &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="asyncawait-sytatic-sugar"><code>async</code>/<code>await</code>
+sytatic sugar</h3>
+<p>使用 <code>async</code>/<code>await</code> 写出的代码更近似传统的
+synchronous style，因此可读性更强。</p>
+<ul>
+<li><code>async</code> declaration defines an asynchronous function
+which returns an implicit Promise.</li>
+<li>within the <code>async</code> function, <code>await</code>
+expression 'pauses' the execution.</li>
+<li><code>await</code> is only valid inside the <code>async</code>
+function.</li>
+</ul>
+<p>一言以蔽之，在某个 <code>async</code> 函数内，我们将所有 asynchronous
+function 前加上 <code>await</code>，就可以省去 <code>.then()</code>,
+<code>.catch()</code> 等冗长的定义。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">snum.<span class="title function_">addEventListener</span>(<span class="string">&#x27;blur&#x27;</span>, fetchRequest);</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">fetchRequest</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> response = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&#x27;checking?php?number=&#x27;</span> + snum.<span class="property">value</span>);</span><br><span class="line">        <span class="keyword">if</span> (response.<span class="property">status</span> == <span class="number">200</span>) &#123;</span><br><span class="line">            <span class="keyword">let</span> data = <span class="keyword">await</span> response.<span class="title function_">text</span>();</span><br><span class="line">            <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;chkReg&#x27;</span>).<span class="property">innerHTML</span> = data;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;HTTP return status: &quot;</span> + response.<span class="property">status</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span>(err) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Fetch Error!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="json">JSON</h2>
+<div class="note info no-icon"><p>JSON (<strong>J</strong>ava<strong>S</strong>cript
+<strong>O</strong>bject <strong>N</strong>otation) is a standard
+text-based format for representing structured data based on JavaScript
+object syntax.</p>
+</div>
+<p>关于 JSON 没什么要讲的，理解为每个对象的 <code>toString()</code>
+方法就好。它主要用于网络数据的交换；此外，不仅仅是
+JavaScript，现在很多语言都能生成或解析 JSON 格式的数据。</p>
+<p>JSON object 由一系列 name-value pairs 组成：</p>
+<ul>
+<li>name：一定是<strong>双引号</strong>括起来的字符串。</li>
+<li>value：strings (双引号), numbers, objects (大括号), arrays (中括号),
+booleans, null/empty.</li>
+</ul>
+<p>注意，JSON 是纯文本格式：它只包含 properties，不包含 methods。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// trick: 使用 stringify() 与 parse() 实现 JavaScript 中对象的深拷贝</span></span><br><span class="line"><span class="keyword">let</span> stringObj = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(object);</span><br><span class="line"><span class="keyword">let</span> copyObj = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(stringObj);</span><br></pre></td></tr></table></figure>
+<p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
 if not specified.</p>
 </div>
 <p>Course info: Code, COMP3322. Lecturer, Dr. Tam Anthony Tat Chun.</p>
+<p>Additional website:</p>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Introducing">Introducing
+Asynchoronous JavaScript - Mozilla Web Docs</a>.</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Guide/AJAX">AJAX -
+Mozilla Web Docs</a>.</li>
+<li><a href="https://ithelp.ithome.com.tw/articles/10252941">JavaScript：Fetch
+练习 - IThome</a>.</li>
+<li><a href="https://www.ruanyifeng.com/blog/2020/12/fetch-tutorial.html">Fetch
+API 教程 - 阮一峰的网络日志</a>.</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise
+- Mozilla Web Docs</a>.</li>
+</ul>
 ]]></content>
       <categories>
         <category>笔记</category>
