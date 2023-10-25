@@ -33,7 +33,7 @@
 <meta property="og:description" content="与 COMP2119A Problem Set 一样，这篇笔记的目的主要是为了查漏补缺，因此记录的会比较随性。部分内容也来源于在学习 Programming Languages, UW 相关课程中产生的疑问。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-10-20T07:08:00.000Z">
-<meta property="article:modified_time" content="2023-10-20T12:55:56.739Z">
+<meta property="article:modified_time" content="2023-10-25T06:32:47.614Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="PL">
 <meta name="twitter:card" content="summary">
@@ -169,7 +169,8 @@
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#abstraction-v.s.-encapsulation"><span class="nav-number">1.</span> <span class="nav-text">Abstraction v.s.
-Encapsulation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#object-references"><span class="nav-number">2.</span> <span class="nav-text">Object References</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#parameters-v.s.-arguments"><span class="nav-number">3.</span> <span class="nav-text">Parameters v.s. Arguments</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#multidimensional-arrays"><span class="nav-number">4.</span> <span class="nav-text">Multidimensional Arrays</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#inheritance-v.s.-subtyping"><span class="nav-number">5.</span> <span class="nav-text">Inheritance v.s. Subtyping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#private-instance-variables"><span class="nav-number">6.</span> <span class="nav-text">Private Instance Variables</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Encapsulation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#object-references"><span class="nav-number">2.</span> <span class="nav-text">Object References</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#parameters-v.s.-arguments"><span class="nav-number">3.</span> <span class="nav-text">Parameters v.s. Arguments</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#multidimensional-arrays"><span class="nav-number">4.</span> <span class="nav-text">Multidimensional Arrays</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#inheritance-v.s.-subtyping"><span class="nav-number">5.</span> <span class="nav-text">Inheritance v.s. Subtyping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#more-inheritance-super"><span class="nav-number">6.</span> <span class="nav-text">More Inheritance:
+super</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#overriding-v.s.-hidding"><span class="nav-number">7.</span> <span class="nav-text">Overriding v.s. Hidding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">8.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -453,16 +454,105 @@ statically-typed language 与 dynamically-typed language
 <p>详情可参见我的笔记 <a target="_blank" rel="noopener" href="https://thisisxxz.com/categories/%E7%AC%94%E8%AE%B0/Programming-Languages-UW/">Programming
 Languages, UW</a>。</p>
 <p><br></p>
-<h2 id="private-instance-variables">Private Instance Variables</h2>
+<h2 id="more-inheritance-super">More Inheritance:
+<code>super</code></h2>
 <p>子类是无法继承父类中的 private members 的！</p>
 <p>但是，子类却能够通过其继承的 public getter/setters
 来间接的访问/修改父类中定义的 private instance
 variables。这是为了保证父类对其 private members 拥有绝对的掌控权。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">secret</span> <span class="operator">=</span> <span class="string">&quot;I want to escape!&quot;</span>;</span><br><span class="line">    A() &#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getSecret</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> secret;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">setSecret</span><span class="params">(String secret)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.secret = secret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">B</span> <span class="keyword">extends</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    B() &#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">show</span><span class="params">()</span> &#123;</span><br><span class="line">        println(<span class="string">&quot;My secret: &quot;</span> + <span class="built_in">this</span>.secret);    <span class="comment">// missing field error</span></span><br><span class="line">        println(<span class="string">&quot;My secret: &quot;</span> + getSecret());    <span class="comment">// no problem</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这一 idiom 可能比较反常识，因为我们常常将一个 class 的 instance
-variables
-视为其本身的属性。尝试去设置某个本身并不具有的属性似乎没什么意义。只要记住这一知识点是关系到
-access control 的就好了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">secret</span> <span class="operator">=</span> <span class="string">&quot;I want to escape!&quot;</span>;</span><br><span class="line">    A() &#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getSecret</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> secret;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">setSecret</span><span class="params">(String secret)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.secret = secret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">B</span> <span class="keyword">extends</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    B() &#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">show</span><span class="params">()</span> &#123;</span><br><span class="line">        println(<span class="string">&quot;My secret: &quot;</span> + <span class="built_in">this</span>.secret);   <span class="comment">// missing field error</span></span><br><span class="line">        println(<span class="string">&quot;My secret: &quot;</span> + <span class="built_in">super</span>.secret);  <span class="comment">// missing field error</span></span><br><span class="line">        println(<span class="string">&quot;My secret: &quot;</span> + getSecret());   <span class="comment">// no problem</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>虽然老师轻描淡写的带过了这个知识点，但我总感觉有哪里不对。</p>
+<p>不觉得这一句话很矛盾吗？既然子类不继承父类的私有实例变量，那理论上来说它并不会储存任何关于这些变量的信息；但我们却能够通过某种方法访问或修改这些“不存在”的变量。</p>
+<p>实际上，这些变量是存在的；从代码复用的角度来看，子类拥有父类的全套代码，只不过并不是所有代码都能被子类所使用。<strong>父类定义中的公有成员能被子类直接访问，我们称其被子类所「继承」；私有成员对子类隐藏，我们称其无法被继承。</strong>这就是公有继承的实质。</p>
+<p>按照这个逻辑，method overriding
+也并不意味着子类方法对父类同名方法的覆盖；父类的同名方法仍然是存在的，只是无法直接被子类调用。</p>
+<p>这一切的证据以及解决方法就是 <code>super</code>
+关键字的存在；我们通过它来访问父类的代码。</p>
+<p>对于 <code>super.a</code> ( <code>a</code> 可以是 instance variable
+或 method )：</p>
+<ul>
+<li>在父类定义中 <code>a</code> 是 private 的：不可访问，弹出 field
+missing 错误。</li>
+<li><code>a</code> 是某个被子类 overridden 的方法：<code>super.a</code>
+将访问父类定义中的同名方法。</li>
+<li><code>a</code> 是某个被子类 hidden [stay tuned]
+的实例变量：<code>super.a</code> 将访问父类定义中的同名变量。</li>
+<li><code>a</code> 为 public 并且没有被子类
+overridden/hidden：<code>super.a</code> 正常访问 <code>a</code>
+成员；在此情况下 <code>super.a</code> 与 <code>this.a</code>
+本质上是完全一致的。</li>
+</ul>
+<p>虽然逻辑上我们可以理解为每个子类在实例化时都伴随着一系列父类对象的创建，但实际上这一过程并不存在。子类只是复用了父类的所有代码，根据父类定义的访问权限有选择地继承一部分内容并初始化自身。</p>
+<ul>
+<li><code>this.hashCode()</code> 与 <code>super.hashCode()</code>
+相等。这两个指针指向的是同一块空间。</li>
+<li><em>constructor chaining</em>:
+当子类对象实例化时，它的构造函数将立即调用其父类的无参构造函数来初始化自身；这个过程将一直追溯到
+<code>Object</code> 类。</li>
+</ul>
+<p><br></p>
+<h2 id="overriding-v.s.-hidding">Overriding v.s. Hidding</h2>
+<p>tutorial 6 上讲的一个问题，考察了对 Java method lookup
+规则的理解。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="type">int</span> n;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">A</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.n = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">calculate</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.n = <span class="number">4</span> * <span class="built_in">this</span>.n;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span> &#123;</span><br><span class="line">        calculate();</span><br><span class="line">        System.out.println(<span class="string">&quot;In A: &quot;</span> + <span class="built_in">this</span>.n);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> <span class="keyword">extends</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="type">int</span> n;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">B</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.n = <span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">calculate</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.n = <span class="number">4</span> * <span class="built_in">super</span>.n;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.calculate();</span><br><span class="line">        System.out.println(<span class="string">&quot;In B: &quot;</span> + <span class="built_in">this</span>.n);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">C</span> <span class="keyword">extends</span> <span class="title class_">B</span> &#123;</span><br><span class="line">    <span class="type">int</span> n;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">C</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.n = <span class="number">100</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">calculate</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.n = <span class="number">4</span> * <span class="built_in">this</span>.n;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.print();</span><br><span class="line">        System.out.println(<span class="string">&quot;In C: &quot;</span> + <span class="built_in">this</span>.n);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">A</span> <span class="variable">x1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">A</span>();</span><br><span class="line">        x1.print();</span><br><span class="line">        <span class="type">B</span> <span class="variable">x2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">B</span>();</span><br><span class="line">        x2.print();</span><br><span class="line">        <span class="type">C</span> <span class="variable">x3</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">C</span>();</span><br><span class="line">        x3.print();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先是第一个问题：为什么可以使用 <code>super.n</code>
+直接在子类中访问父类的 instance variable？在未声明的情况下，父类的
+instance variable 不应该是默认为 private 的吗？</p>
+<p>答案：未声明的情况下，instance variable 的 accessibility 默认为
+<em>package-private</em>。处于同一个 package
+下的其他类是可以直接访问，修改或继承的。</p>
+<p>第二个问题，也就是问题本身：该程序的输出是什么？</p>
+<p>这个问题很值得深究，特别是 <code>x3.print()</code>
+的部分。在不同的语言中，这份代码将表现出完全不同的行为。</p>
+<ul>
+<li>Java: <code>In B: 10; In C: 400.</code></li>
+<li>C# / C++: <code>In B: 4; In C: 100.</code></li>
+</ul>
+<p>为什么会有这样的区别？在 OOP 语言中，针对 class hierarchy 中同名
+field 存在多种实现的情况，有两种不同的 method-lookup mechanisms
+(这里不考虑 static overload)。</p>
+<ul>
+<li><strong>hiding</strong>: The method chosen for execution depends on
+the <em>static type</em> of the reference used to invoke it at
+<em>compile-time</em>.</li>
+<li><strong>overriding</strong>: This is determined by the <em>dynamic
+type</em> (actual type) of the <em>object at runtime</em>.</li>
+</ul>
+<p>Java 对 instance variables 采用的是 hiding 机制，对 methods
+采用的则是 overriding 机制。C++ / C# 则同时对 member variables 与 member
+functions 应用了 overriding 机制。</p>
+<p>这两个机制的最本质区别在于它们根据引用 (reference) 的静态或动态
+(实际) 类型来决定被调用的方法。</p>
+<p><code>x3</code> 中的 <code>print()</code> 首先调用了父类中的
+<code>print()</code> 函数：</p>
+<ul>
+<li><code>this.calculate()</code>：发现 <code>calculate()</code>
+方法在子类与父类中有不同的实现，此时 Java 采用 overriding 机制，依据
+<code>this</code>
+的实际类型来选择被执行的实现。很显然，<code>this</code> 指向的当前对象
+<code>x3</code> 的实际类型为 <code>C</code>；Java 决定执行
+<code>C</code> 类中的 <code>calculate()</code> 实现。所以会有输出
+<code>In C: 400</code>。</li>
+<li><code>println("In B: " + this.n)</code>：发现 <code>n</code>
+实例变量在子类与父类中均有定义，此时 Java 采用 hiding 机制，依据
+<code>this</code>
+的静态类型来选择被访问的实例变量。这是在编译时就被确定的，<code>this</code>
+的静态类型为 <code>B</code>；Java 决定访问 <code>B</code> 类中定义的
+<code>n</code>。所以会有输出 <code>In B: 10</code>。</li>
+</ul>
+<div class="note info no-icon"><p>In Java, the static type of a reference is the class in which it is
+defined. The dynamic type of a reference is the actual type of the
+object that refers to at runtime.</p>
+</div>
+<p>再看一个例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Father</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> a;</span><br><span class="line">    Father() &#123; </span><br><span class="line">        a = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">get</span><span class="params">()</span> &#123; <span class="keyword">return</span> a; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Son</span> <span class="keyword">extends</span> <span class="title class_">Father</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> a;</span><br><span class="line">    Son() &#123;</span><br><span class="line">        a = <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Son</span>    <span class="variable">son1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Son</span>();</span><br><span class="line">        <span class="type">Father</span> <span class="variable">son2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Son</span>();</span><br><span class="line">        </span><br><span class="line">        System.out.println(son1.get());</span><br><span class="line">        System.out.println(son2.get());</span><br><span class="line">        </span><br><span class="line">        System.out.println(son1.a);</span><br><span class="line">        System.out.println(son2.a);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个程序的输出是 <code>1 1 2 1</code>。能想清楚吗？(hint:
+<code>son1</code> 的静态类型为 <code>Son</code>, <code>son2</code>
+的静态类型为 <code>Father</code>；而它们的动态类型均为
+<code>Son</code>)。</p>
+<p>若在 <code>Son</code> 类中添加
+<code>public int get() &#123; return a; &#125;</code> 结果又是怎样？(method
+overriding: <code>2 2 2 1</code>)</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
@@ -473,6 +563,13 @@ if not specified.</p>
 <ul>
 <li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/20266563">抽象与封装的区别是什么？-
 知乎</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/51920553">Java
+中，创建子类对象时父类对象是否会被一起创建？ - 知乎</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/12086298/why-is-an-instance-variable-of-the-superclass-not-overridden-by-a-subclass">Why
+is an instance variable not overriden by a subclass? - Stack
+overflow</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://moodle.hku.hk/mod/forum/discuss.php?d=826256">Moodle
+Discussion Form - Ma Yuanche</a>.</li>
 </ul>
 
     </div>
