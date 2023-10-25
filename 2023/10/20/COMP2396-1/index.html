@@ -33,7 +33,7 @@
 <meta property="og:description" content="与 COMP2119A Problem Set 一样，这篇笔记的目的主要是为了查漏补缺，因此记录的会比较随性。部分内容也来源于在学习 Programming Languages, UW 相关课程中产生的疑问。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-10-20T07:08:00.000Z">
-<meta property="article:modified_time" content="2023-10-25T06:32:47.614Z">
+<meta property="article:modified_time" content="2023-10-25T07:00:18.527Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="PL">
 <meta name="twitter:card" content="summary">
@@ -506,7 +506,7 @@ instance variable 不应该是默认为 private 的吗？</p>
 的部分。在不同的语言中，这份代码将表现出完全不同的行为。</p>
 <ul>
 <li>Java: <code>In B: 10; In C: 400.</code></li>
-<li>C# / C++: <code>In B: 4; In C: 100.</code></li>
+<li>C++: <code>In B: 4; In C: 100.</code></li>
 </ul>
 <p>为什么会有这样的区别？在 OOP 语言中，针对 class hierarchy 中同名
 field 存在多种实现的情况，有两种不同的 method-lookup mechanisms
@@ -519,8 +519,10 @@ the <em>static type</em> of the reference used to invoke it at
 type</em> (actual type) of the <em>object at runtime</em>.</li>
 </ul>
 <p>Java 对 instance variables 采用的是 hiding 机制，对 methods
-采用的则是 overriding 机制。C++ / C# 则同时对 member variables 与 member
-functions 应用了 overriding 机制。</p>
+采用的则是 overriding 机制。C++ 则同时对 member variables 与 member
+functions 应用了 hiding 机制。(C++ 允许使用 <code>virtual</code>
+关键字，通过 double dispatch 的方式实现 member functions 的 overriding
+机制)。</p>
 <p>这两个机制的最本质区别在于它们根据引用 (reference) 的静态或动态
 (实际) 类型来决定被调用的方法。</p>
 <p><code>x3</code> 中的 <code>print()</code> 首先调用了父类中的
@@ -757,15 +759,6 @@ Discussion Form - Ma Yuanche</a>.</li>
 
 
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
 
 <script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/10/20/COMP2396-1/"}</script>
 <script>
@@ -781,6 +774,15 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
