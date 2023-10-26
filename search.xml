@@ -155,6 +155,109 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
+    <title>浅谈 Central Limit Theorem</title>
+    <url>/2023/10/26/central-limit-theorem/</url>
+    <content><![CDATA[<p>第一次接触中心极限定理是在 1853 的概率论 part
+上，当时就觉得这个定理实在是非常优美。第二次就是 2501
+了；但这个立足于数据科学的新表述却给我一种熟悉的陌生感。怎么个事？遂新开一篇文章做一点小小研究。</p>
+<span id="more"></span>
+<p><br></p>
+<h2 id="lindeberg-levy-clt-math1853">Lindeberg-Levy CLT (Math1853)</h2>
+<p>从这个我印象最深的 CLT 定义开始说起。</p>
+<p>对一系列 <em>independent</em> and <em>identically</em> distributed
+(i.i.d.) random variables <span class="math inline">\(\{X_n\}\)</span>，其均值为 <span class="math inline">\(\mu\)</span>，方差 <span class="math inline">\(\sigma^2&lt;\infty\)</span>，并令 <span class="math inline">\(S_n=X_1+X_2+...+X_n\)</span>，那么有 <span class="math display">\[
+\lim_{n\to\infty} S_n\sim N(n\mu,\sqrt{n}\sigma)
+\]</span> 也就是 i.i.d. 变量的 <em>和</em> <span class="math inline">\(S_n\)</span> 符合正态分布。</p>
+<p>注意两个性质：</p>
+<ul>
+<li><span class="math inline">\(\mathrm{mean}(X)+\mathrm{mean}(Y)=\mathrm{mean}(X+Y)\)</span>.</li>
+<li><span class="math inline">\(\mathrm{var}(X)+\mathrm{var}(Y)=\mathrm{var}(X+Y)\)</span>.</li>
+</ul>
+<p>由此可推出 <span class="math inline">\(S_n\)</span>
+所服从的正态分布的两个参数：</p>
+<ul>
+<li><span class="math inline">\(\mathrm{mean}(S_n)=n\cdot\mathrm{mean}(X)=n\mu\)</span>.</li>
+<li><span class="math inline">\(\mathrm{sd}(S_n)=\sqrt{\mathrm{var}(S_n)}=\sqrt{n\mathrm{var}(X)}=\sqrt{n\sigma^2}=\sqrt{n}\sigma\)</span>.</li>
+</ul>
+<p>这是最经典的 CLT 定义，因此限制也最严格。随机变量序列 <span class="math inline">\(\{X_n\}\)</span>
+不仅需要相互独立，还需要保证它们的分布完全一致
+(对具体是怎样的分布则没有限制)。</p>
+<p><br></p>
+<h2 id="第一次变形-standardization">第一次变形: Standardization</h2>
+<p>我们经常能够看到经典 CLT 的另一种表述：条件不变，但结论写成： <span class="math display">\[
+\lim_{n\to\infty} \frac{S_n-n\mu}{\sqrt{n}\sigma}\sim N(0,1)
+\]</span> 右侧的正态分布，我们称其为 标准正态分布 (standard normal
+distribution)。</p>
+<p>对于任何一个服从正态分布的随机变量，通过
+<em>减去均值</em>，<em>除以标准差</em>
+这两个步骤都能得到一个符合标准正态分布的新随机变量，我们称这个过程为
+<em>标准化</em> (standardization)。</p>
+<ul>
+<li>减去均值：使得钟形曲线的中轴移至 <span class="math inline">\(x=0\)</span>。</li>
+<li>除以标准差：使得钟形曲线的标准差变为 <span class="math inline">\(1\)</span>。想象一个原本位于 <span class="math inline">\((\sigma,b)\)</span> 的点，转换后将位于 <span class="math inline">\((1,b)\)</span>。</li>
+</ul>
+<p>这样，我们成功将任意正态分布映射到了标准正态分布上。
+该标准正态分布上的任意一点 <span class="math inline">\((x,b)\)</span>
+都对应原正态分布上的某点 <span class="math inline">\((x\sigma+\mu,
+b)\)</span>。</p>
+<p>正态分布的标准化消除了不同正态分布之间的鸿沟，使得它们都能被总结到标准正态分布上。</p>
+<p><br></p>
+<h2 id="第二种表述-data-science">第二种表述: Data Science</h2>
+<div class="note info no-icon"><p>Given a population with a mean <span class="math inline">\(\mu\)</span> and standard deviation <span class="math inline">\(\sigma\)</span>, the distribution of <span class="math inline">\(n\)</span> sample means approaches a normal
+distribution with the same mean <span class="math inline">\(\mu\)</span>
+and standard deviation <span class="math inline">\(\frac{\sigma}{\sqrt{n}}\)</span>.</p>
+</div>
+<p>这次我们将 <span class="math inline">\(X\)</span>
+定义一次抽样中某个个体的数据，若总共抽样 <span class="math inline">\(n\)</span> 次，那么本次抽样的均值 (即所谓 sample
+means) 为 <span class="math inline">\(S_n/n\)</span>。我们将说明该
+sample means 服从正态分布。</p>
+<p>根据经典 CLT，我们有 <span class="math display">\[
+\lim_{n\to\infty} S_n\sim N(n\mu,\sqrt{n}\sigma)
+\]</span> 按照类似标准化的转换模式，能够得到 <span class="math display">\[
+\lim_{n\to\infty}\frac{S_n-n\mu}{\sqrt{n}\sigma}=\lim_{n\to{\infty}}\frac{\mu_s-\mu}{\frac{\sigma}{\sqrt{n}}}\sim
+N(0,1)
+\]</span> 我们利用该结论来研究使用 sample mean <span class="math inline">\(\mu_s=\frac{S_n}{n}\)</span> 近似 population mean
+<span class="math inline">\(\mu\)</span> 的准确性，即 <span class="math inline">\(\mu_s\)</span> 与 <span class="math inline">\(\mu\)</span> 之间的标准误差 (standard error) <span class="math inline">\(|Z|\)</span>。</p>
+<p>令 <span class="math inline">\(Z=\mu-\mu_s\)</span>，对于任意 <span class="math inline">\(\Delta=z\frac{\sigma}{\sqrt{n}}\)</span>，都有
+<span class="math display">\[
+\begin{aligned}
+\Pr[|Z|\leq \Delta&amp;]=\Pr[|\frac{Z}{\frac{\sigma}{\sqrt{n}}}|\leq z]
+\\
+&amp;= \Pr[\frac{Z}{\frac{\sigma}{\sqrt{n}}}\leq
+z]-\Pr[\frac{Z}{\frac{\sigma}{\sqrt{n}}}\leq -z] \\
+\frac{Z}{\frac{\sigma}{\sqrt{n}}}&amp;\sim N(0,1)
+\end{aligned}
+\]</span> 由此就能计算出 sample mean 与 population mean 误差在 <span class="math inline">\(\Delta\)</span> 之内的概率。</p>
+<p>反过来，给出概率 <span class="math inline">\(\Pr\)</span>
+我们也能求出 <span class="math inline">\(\Delta\)</span>，从而得到在概率
+<span class="math inline">\(\Pr\)</span> 保证下的置信区间 <span class="math inline">\([\mu_s-z\frac{\sigma_s}{\sqrt{n}},
+\mu_s+z\frac{\sigma_s}{\sqrt{n}}]\)</span>。</p>
+<p>还有一个问题，population standard deviation <span class="math inline">\(\sigma\)</span> 是未知的：我们用 sample standard
+deviation <span class="math inline">\(\sigma_s\)</span>
+来近似。能够这样做的原因是当 <span class="math inline">\(n\)</span>
+足够大时，<span class="math inline">\(\frac{\sigma}{\sqrt{n}}\)</span>
+与 <span class="math inline">\(\frac{\sigma_s}{\sqrt{n}}\)</span>
+间的误差可以忽略不记，保证了近似的准确性。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li>COMP2501 lecture slides.</li>
+<li><a href="https://www.youtube.com/watch?v=zeJD6dqJ5lo">But What is
+Central Limit Theorem? - 3Blue1Brown</a>.</li>
+<li><a href="http://mfviz.com/central-limit/">CLT - a visual
+explanation</a>.</li>
+</ul>
+]]></content>
+      <categories>
+        <category>笔记</category>
+        <category>misc</category>
+      </categories>
+      <tags>
+        <tag>math</tag>
+        <tag>data science</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>关于 Java &amp; OOP 的一点小研究</title>
     <url>/2023/10/20/COMP2396-1/</url>
     <content><![CDATA[<p>与 COMP2119A Problem Set
@@ -1405,7 +1508,7 @@ styling rule；因此它必须写在 <code>aes()</code> 函数之外，作为
 <h3 id="labels-and-titles">Labels and titles</h3>
 <p>使用 <code>xlab</code> 与 <code>ylab</code> 函数修改图表在 <span class="math inline">\(x\)</span> 轴与 <span class="math inline">\(y\)</span> 轴方向上的标签；使用
 <code>ggtitle</code> 函数为图表添加标题。</p>
-<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">p <span class="operator">&lt;-</span> p <span class="operator">+</span> scale_x_log10<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line">       <span class="operator">+</span> scale_y_log10<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line">       <span class="operator">+</span> xlab<span class="punctuation">(</span><span class="string">&quot;Population in millions (log scale)&quot;</span><span class="punctuation">)</span></span><br><span class="line">       <span class="operator">+</span> ylab<span class="punctuation">(</span><span class="string">&quot;Total number of murders (log scale)&quot;</span><span class="punctuation">)</span></span><br><span class="line">       <span class="operator">+</span> ggtitle<span class="punctuation">(</span><span class="string">&quot;US Gun Muders in 2010&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">p <span class="operator">&lt;-</span> p <span class="operator">+</span> scale_x_log10<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    scale_y_log10<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    xlab<span class="punctuation">(</span><span class="string">&quot;Population in millions (log scale)&quot;</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    ylab<span class="punctuation">(</span><span class="string">&quot;Total number of murders (log scale)&quot;</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    ggtitle<span class="punctuation">(</span><span class="string">&quot;US Gun Muders in 2010&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
 <h3 id="catogories-as-colors">Catogories as colors</h3>
 <p>我们再添加一层 <code>geom_point</code> layer
 来改变图表中数据点的颜色。</p>
@@ -1450,13 +1553,13 @@ mapping，作为 <code>aes()</code> 函数的参数 <code>col</code> 而非
 <h2 id="global-aesthetic-mappings">Global Aesthetic Mappings</h2>
 <p>综合以上的
 layers，我们组装出了一个好看的图表。其完整的，不包含中间变量的代码如下：</p>
-<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">p <span class="operator">&lt;-</span> murders <span class="operator">|&gt;</span> ggplot<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>x <span class="operator">=</span> population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> y <span class="operator">=</span> total<span class="punctuation">)</span><span class="punctuation">,</span> size <span class="operator">=</span> <span class="number">2</span><span class="punctuation">)</span></span><br><span class="line">                         <span class="operator">+</span> geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> total<span class="punctuation">,</span> col <span class="operator">=</span> region<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">                         <span class="operator">+</span> geom_text<span class="punctuation">(</span>aes<span class="punctuation">(</span>population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> total<span class="punctuation">,</span> label <span class="operator">=</span> abb<span class="punctuation">)</span><span class="punctuation">,</span> nudge_x <span class="operator">=</span> <span class="number">0.5</span><span class="punctuation">)</span></span><br><span class="line">                         <span class="operator">+</span> scale_x_log10<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line">                         <span class="operator">+</span> scale_y_log10<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line">                         <span class="operator">+</span> xlab<span class="punctuation">(</span><span class="string">&quot;Population in millions (log scale)&quot;</span><span class="punctuation">)</span></span><br><span class="line">                         <span class="operator">+</span> ylab<span class="punctuation">(</span><span class="string">&quot;Total number of murders (log scale)&quot;</span><span class="punctuation">)</span></span><br><span class="line">                         <span class="operator">+</span> ggtitle<span class="punctuation">(</span><span class="string">&quot;US Gun Muders in 2010&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">p <span class="operator">&lt;-</span> murders <span class="operator">|&gt;</span> ggplot<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>x <span class="operator">=</span> population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> y <span class="operator">=</span> total<span class="punctuation">)</span><span class="punctuation">,</span> size <span class="operator">=</span> <span class="number">2</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">    geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> total<span class="punctuation">,</span> col <span class="operator">=</span> region<span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    geom_text<span class="punctuation">(</span>aes<span class="punctuation">(</span>population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> total<span class="punctuation">,</span> label <span class="operator">=</span> abb<span class="punctuation">)</span><span class="punctuation">,</span> nudge_x <span class="operator">=</span> <span class="number">0.5</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    scale_x_log10<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    scale_y_log10<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    xlab<span class="punctuation">(</span><span class="string">&quot;Population in millions (log scale)&quot;</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    ylab<span class="punctuation">(</span><span class="string">&quot;Total number of murders (log scale)&quot;</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    ggtitle<span class="punctuation">(</span><span class="string">&quot;US Gun Muders in 2010&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
 <p>可以见到，<code>aes(x = population/10^6, y = total)</code> 这一
 aesthetic mapping 共出现了三次。</p>
 <p><code>ggplot2</code> 允许我们在 <code>ggplot()</code> 函数中定义
 global aesthetic mapping，之后所有未指明 aesthetic mapping
 的函数都将使用该 global aesthetic mapping 作为参数。</p>
-<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">p <span class="operator">&lt;-</span> murders <span class="operator">|&gt;</span> ggplot<span class="punctuation">(</span>aes<span class="punctuation">(</span>x <span class="operator">=</span> population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> y <span class="operator">=</span> total<span class="punctuation">)</span><span class="punctuation">)</span> </span><br><span class="line">              <span class="operator">+</span> geom_point<span class="punctuation">(</span>size <span class="operator">=</span> <span class="number">2</span><span class="punctuation">)</span></span><br><span class="line">              <span class="operator">+</span> geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>col <span class="operator">=</span> region<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">              <span class="operator">+</span> geom_text<span class="punctuation">(</span>nudge_x <span class="operator">=</span> <span class="number">0.5</span><span class="punctuation">)</span></span><br><span class="line">              <span class="operator">+</span> ...</span><br></pre></td></tr></table></figure>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">p <span class="operator">&lt;-</span> murders <span class="operator">|&gt;</span> ggplot<span class="punctuation">(</span>aes<span class="punctuation">(</span>x <span class="operator">=</span> population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> y <span class="operator">=</span> total<span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    geom_point<span class="punctuation">(</span>size <span class="operator">=</span> <span class="number">2</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>col <span class="operator">=</span> region<span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    geom_text<span class="punctuation">(</span>nudge_x <span class="operator">=</span> <span class="number">0.5</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
 <p>是不是清晰简洁多了。当然，global aesthetic mapping 也是可以被
 override 的。</p>
 <p><br></p>
@@ -3322,6 +3425,40 @@ particle へ 指示移动的方向。</p>
 <ul>
 <li>試験は何時に始まりますか。</li>
 <li>試験はいつ始まりますか。</li>
+</ul>
+<p><br></p>
+<h2 id="語彙">語彙</h2>
+<p>这里记录一下容易忘掉的词汇。(外来语真是阿米诺斯了)</p>
+<ul>
+<li>ノート (note 是 to)</li>
+<li>カード (card 是 do)</li>
+<li>ボールペン (<em>ball</em>point <em>pen</em>)</li>
+<li>シャープペンシル (mechanical pencil - sharp pencil)</li>
+<li>チョコレート (chocolate)</li>
+<li>コーヒー (coffee)</li>
+<li>ロビー (lobby)</li>
+<li>ワイン (w<em>i</em>ne)</li>
+<li>なん<em>ぷ</em>ん 何分</li>
+<li>ばん 晚 (不是 man，是 ban)</li>
+<li>しけん 試験 (是 <em>shi</em> ken，不是 <em>ji</em> ken；注意 験
+的写法)</li>
+<li>x日：尤其注意 8 日，10 日，20 日</li>
+<li>なんがつ 何月 (注意，x月与何月都是 gatsu；先/今/来月都是 getsu)</li>
+<li>しんかんせん 新幹線 (the bullet train；注意 幹 的写法)</li>
+<li>べんごし 弁護士</li>
+<li>かんごし 看護師 (注意 士 &amp; 師 均是 shi。注意 護
+的写法，右边是草字头)</li>
+<li>つ<em>う</em>やく 通訳</li>
+<li><em>て</em>んいん 店員 (店 是 ten 不是 den)</li>
+<li>けいたいでんわ 携帯電話 (帯 是 tai 不是 dai)</li>
+<li>うでどけい 腕時計 (u <em>de</em> <em>do</em> kei，但 時計 是
+<em>to</em> kei)</li>
+<li>ゆうえんち 遊園地 (注意 園 字的写法，袁 字不加勾)</li>
+<li>始まります (to be started，注意这里使用的汉字是 始 而不是
+初，两者都是 haji)</li>
+<li>営業時間 えいぎょうじかん (注意 営 的写法)</li>
+<li>祝日 しゅくじつ (national day, festival day)</li>
+<li>[お] 正月 しょうがつ (first three days of the New Year)</li>
 </ul>
 <p><br></p>
 <h2 id="reference">Reference</h2>

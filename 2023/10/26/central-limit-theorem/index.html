@@ -25,29 +25,29 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="Hello Hexo! Hello NexT! Hello GitHub Pages! 终于有一个完完全全属于自己的博客啦！弄完了以后很有成就感。">
+    <meta name="description" content="第一次接触中心极限定理是在 1853 的概率论 part 上，当时就觉得这个定理实在是非常优美。第二次就是 2501 了；但这个立足于数据科学的新表述却给我一种熟悉的陌生感。怎么个事？遂新开一篇文章做一点小小研究。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo blog 搭建笔记">
-<meta property="og:url" content="https://www.thisisxxz.com/2023/05/24/hexo-blog-study/index.html">
+<meta property="og:title" content="浅谈 Central Limit Theorem">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/10/26/central-limit-theorem/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="Hello Hexo! Hello NexT! Hello GitHub Pages! 终于有一个完完全全属于自己的博客啦！弄完了以后很有成就感。">
+<meta property="og:description" content="第一次接触中心极限定理是在 1853 的概率论 part 上，当时就觉得这个定理实在是非常优美。第二次就是 2501 了；但这个立足于数据科学的新表述却给我一种熟悉的陌生感。怎么个事？遂新开一篇文章做一点小小研究。">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-05-24T09:43:00.000Z">
-<meta property="article:modified_time" content="2023-09-27T10:53:32.729Z">
+<meta property="article:published_time" content="2023-10-26T04:56:30.000Z">
+<meta property="article:modified_time" content="2023-10-26T11:14:44.172Z">
 <meta property="article:author" content="XXZ">
-<meta property="article:tag" content="blog">
-<meta property="article:tag" content="hexo">
+<meta property="article:tag" content="math">
+<meta property="article:tag" content="data science">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://www.thisisxxz.com/2023/05/24/hexo-blog-study/">
+<link rel="canonical" href="https://www.thisisxxz.com/2023/10/26/central-limit-theorem/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/05/24/hexo-blog-study/","path":"2023/05/24/hexo-blog-study/","title":"Hexo blog 搭建笔记"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/10/26/central-limit-theorem/","path":"2023/10/26/central-limit-theorem/","title":"浅谈 Central Limit Theorem"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Hexo blog 搭建笔记 | ThisisXXZ's Blog</title>
+<title>浅谈 Central Limit Theorem | ThisisXXZ's Blog</title>
   
 
 
@@ -169,7 +169,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#hexo"><span class="nav-number">1.</span> <span class="nav-text">Hexo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#github-pages"><span class="nav-number">2.</span> <span class="nav-text">GitHub Pages</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hexo-command"><span class="nav-number">3.</span> <span class="nav-text">Hexo Command</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#new"><span class="nav-number">3.1.</span> <span class="nav-text">new</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#generate"><span class="nav-number">3.2.</span> <span class="nav-text">generate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#server"><span class="nav-number">3.3.</span> <span class="nav-text">server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deploy"><span class="nav-number">3.4.</span> <span class="nav-text">deploy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#clean"><span class="nav-number">3.5.</span> <span class="nav-text">clean</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#front-matter"><span class="nav-number">4.</span> <span class="nav-text">Front-matter</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#tags-and-categories"><span class="nav-number">4.1.</span> <span class="nav-text">tags and categories</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mathjax"><span class="nav-number">4.2.</span> <span class="nav-text">mathjax</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#top"><span class="nav-number">4.3.</span> <span class="nav-text">top</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#comments"><span class="nav-number">4.4.</span> <span class="nav-text">comments</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#lindeberg-levy-clt-math1853"><span class="nav-number">1.</span> <span class="nav-text">Lindeberg-Levy CLT (Math1853)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%8F%98%E5%BD%A2-standardization"><span class="nav-number">2.</span> <span class="nav-text">第一次变形: Standardization</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%E8%A1%A8%E8%BF%B0-data-science"><span class="nav-number">3.</span> <span class="nav-text">第二种表述: Data Science</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -267,7 +267,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/05/24/hexo-blog-study/">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/10/26/central-limit-theorem/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
@@ -280,12 +280,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Hexo blog 搭建笔记 | ThisisXXZ's Blog">
+      <meta itemprop="name" content="浅谈 Central Limit Theorem | ThisisXXZ's Blog">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Hexo blog 搭建笔记
+          浅谈 Central Limit Theorem
         </h1>
 
         <div class="post-meta-container">
@@ -298,7 +298,7 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2023-05-24 17:43:00" itemprop="dateCreated datePublished" datetime="2023-05-24T17:43:00+08:00">2023-05-24</time>
+      <time title="Created: 2023-10-26 12:56:30" itemprop="dateCreated datePublished" datetime="2023-10-26T12:56:30+08:00">2023-10-26</time>
     </span>
 
   <span class="post-meta-item">
@@ -333,151 +333,96 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p><strong>Hello Hexo! Hello NexT! Hello GitHub Pages!</strong></p>
-<p>终于有一个完完全全属于自己的博客啦！弄完了以后很有成就感。</p>
+    <div class="post-body" itemprop="articleBody"><p>第一次接触中心极限定理是在 1853 的概率论 part
+上，当时就觉得这个定理实在是非常优美。第二次就是 2501
+了；但这个立足于数据科学的新表述却给我一种熟悉的陌生感。怎么个事？遂新开一篇文章做一点小小研究。</p>
 <span id="more"></span>
-<p>接下来会陆陆续续把博客园上的一些 post
-搬过来。当然博客园也不会停止更新，会将自己比较用心记的笔记同步在两边发布。</p>
-<p>在 Hexo
-发布的第一篇博客，就简短的记录一下搭建的过程中遇到的问题和解决办法吧。</p>
-<h2 id="hexo">Hexo</h2>
-<p>Hexo 是一个博客框架，它允许我们使用 markdown
-撰写文章。在写好之后，Hexo
-将解析文章并快速生成静态网页。它提供了超多的插件 plugin
-和接口，还有很多好看的博客 theme (最有名的应该就是我现在用的这一套
-NexT)。</p>
-<p>使用 Hexo 需要 <code>Node.js</code> 环境与
-<code>git</code>。在必备的应用安装完成之后可以使用 npm 包下载器安装 Hexo
-<code>npm install -g hexo-cli</code>。</p>
-<p>在选择的根目录中打开 git Bash，使用 <code>hexo init</code> 命令初始化
-Hexo 本地框架。初始化后根目录将会生成 (仅列出较为重要的)：</p>
-<ul>
-<li>source 文件夹：储存所有网页的源码 (markdown 文件)。其中的
-<code>_post</code> 文件夹储存的是 post 的源码</li>
-<li>themes 文件夹：储存 Hexo 主题。</li>
-<li>scaffolds 文件夹：储存若干自定义的
-<code>[layout]</code>，即生成网页时采用的模板。初始 <code>layout</code>
-有三种，分别是 draft, post 与 page。</li>
-<li>public 文件夹：储存所有由 source 中源码生成的静态网页文件 (html
-文件与 css 文件)。</li>
-<li><code>_config.yml</code> 文件：Hexo
-基础样式自定义文件，提供了许多接口。注意与 themes 中的
-<code>_config.yml</code> 文件相区分；后续的<strong>非侵入式</strong>
-Hexo 主题自定义过程中，这两个配置文件是最为重要的。</li>
-</ul>
 <p><br></p>
-<h2 id="github-pages">GitHub Pages</h2>
-<p>我们可以将 Hexo 远程部署在 GitHub Pages
-上，且后续可以绑定新的域名。</p>
-<p>在本地配置 git 之后 (生成 RSA 密钥后 SSH 连接到
-<code>git@github.com</code>)，创建一个名称为
-<code>[username].github.io</code>
-的仓库。<code>[username].github.io</code> 是 Hexo 博客的网址。</p>
-<p>安装 <code>hexo-deployer-git</code> 插件，更改
-<code>_config.yml</code> 配置后即可将 Hexo 一键部署到 GitHub Pages。</p>
-<p>本地 Hexo 根目录中的 <code>.deploy_git</code>
-文件夹将会储存在远端仓库中。</p>
-<p><br></p>
-<h2 id="hexo-command">Hexo Command</h2>
-<p>记录一下常用的 Hexo 命令。</p>
-<h3 id="new">new</h3>
-<p>使用 <code>hexo new [layout] &lt;title&gt;</code>
-命令新建一个网页。</p>
-<p><code>[layout]</code> 储存在 scaffolds 文件夹中，初始有 post, page,
-draft 三种。当该函数缺省时，默认采用 post layout</p>
-<p>若 <code>&lt;title&gt;</code> 包含空格，使用双引号括起来。</p>
+<h2 id="lindeberg-levy-clt-math1853">Lindeberg-Levy CLT (Math1853)</h2>
+<p>从这个我印象最深的 CLT 定义开始说起。</p>
+<p>对一系列 <em>independent</em> and <em>identically</em> distributed
+(i.i.d.) random variables <span class="math inline">\(\{X_n\}\)</span>，其均值为 <span class="math inline">\(\mu\)</span>，方差 <span class="math inline">\(\sigma^2&lt;\infty\)</span>，并令 <span class="math inline">\(S_n=X_1+X_2+...+X_n\)</span>，那么有 <span class="math display">\[
+\lim_{n\to\infty} S_n\sim N(n\mu,\sqrt{n}\sigma)
+\]</span> 也就是 i.i.d. 变量的 <em>和</em> <span class="math inline">\(S_n\)</span> 符合正态分布。</p>
+<p>注意两个性质：</p>
 <ul>
-<li><code>hexo new post &lt;title&gt;</code> 新建一个 post。此时
-<code>source/_post</code> 中将会生成可供编辑的 markdown
-源码文件。新建文章时一般采用 post layout。</li>
-<li><code>hexo new page &lt;title&gt;</code> 新建一个 page。此时 source
-中将会生成对应的 page 文件夹，并在其中生成可供编辑的 markdown 源码文件
-(<code>source/[title]/index.md</code>)。新建页面 (如
-about，tags，categories) 时一般采用 page layout。</li>
-<li><code>hexo new draft &lt;title&gt;</code> 新建一个 draft。此时
-<code>source/_drafts</code> 中将会生成可供编辑的 markdown
-源码文件。新建草稿时采用 draft layout，并且可使用 publish 命令
-<code>hexo publish [layout] &lt;title&gt;</code> 将 draft 发布为正式的
-post。</li>
+<li><span class="math inline">\(\mathrm{mean}(X)+\mathrm{mean}(Y)=\mathrm{mean}(X+Y)\)</span>.</li>
+<li><span class="math inline">\(\mathrm{var}(X)+\mathrm{var}(Y)=\mathrm{var}(X+Y)\)</span>.</li>
 </ul>
-<h3 id="generate">generate</h3>
-<p>使用 <code>hexo g</code> 命令生成静态文件 (即根据 source
-中的源码文件生成 public 中的静态网页文件)。</p>
-<h3 id="server">server</h3>
-<p>使用 <code>hexo s</code> 命令启动服务器。默认情况下，本地访问地址为
-<code>https://localhost:4000/</code> 。</p>
-<p>启动服务器后可以访问上述本地地址对博客进行预览。</p>
-<p>添加参数 <code>--debug</code> 在启动服务器后输出调试信息。</p>
-<h3 id="deploy">deploy</h3>
-<p>使用 <code>hexo d</code> 命令部署网站。</p>
-<p>若 Hexo 部署在 GitHub Pages 上，该命令会将本地的更改 push
-到远端仓库。</p>
-<p><code>hexo g -d</code> 与 <code>hexo d -g</code> 命令的意义相同：让
-Hexo 在生成静态文件后立即部署网站。</p>
-<h3 id="clean">clean</h3>
-<p>使用 <code>hexo clean</code> 命令清除所有缓存文件
-(<code>db.json</code>) 与已生成的静态网页 (public 文件夹)。</p>
-<p>当发现本地更改不生效时，常 <code>hexo clean</code> 后
-<code>hexo g</code> 刷新所有的静态网页文件。</p>
-<p>一个典型的发布新文章过程：</p>
+<p>由此可推出 <span class="math inline">\(S_n\)</span>
+所服从的正态分布的两个参数：</p>
 <ul>
-<li><code>hexo new post "hello-hexo"</code> 新建 post，对
-<code>source/_post</code> 中的对应 markdown 源码进行编辑。</li>
-<li><code>hexo g</code> 生成静态网页文件。</li>
-<li><code>hexo s --debug</code> 启动服务器，并访问
-<code>https://localhost:4000/</code>
-预览查看本地的更改是否成功应用。若发现更改未生效，<code>hexo clean</code>
-后 <code>hexo g</code>
-重新生成所有的静态网页文件。重复该步骤，找到问题直至预览到本地更改生效。</li>
-<li><code>hexo d</code> 部署网站，此时 post 将在
-<code>[username].github.io</code> 网址上发布。</li>
+<li><span class="math inline">\(\mathrm{mean}(S_n)=n\cdot\mathrm{mean}(X)=n\mu\)</span>.</li>
+<li><span class="math inline">\(\mathrm{sd}(S_n)=\sqrt{\mathrm{var}(S_n)}=\sqrt{n\mathrm{var}(X)}=\sqrt{n\sigma^2}=\sqrt{n}\sigma\)</span>.</li>
 </ul>
+<p>这是最经典的 CLT 定义，因此限制也最严格。随机变量序列 <span class="math inline">\(\{X_n\}\)</span>
+不仅需要相互独立，还需要保证它们的分布完全一致
+(对具体是怎样的分布则没有限制)。</p>
 <p><br></p>
-<h2 id="front-matter">Front-matter</h2>
-<p>Front-matter 是 markdown 源码最上方以 <code>---</code>
-分隔的区域，其规定了这个网页的各项属性。</p>
-<p>例：</p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: Hexo study notes</span><br><span class="line">date: 2023-05-24 17:43:00</span><br><span class="line">tags:</span><br><span class="line"><span class="bullet">-</span> hexo</span><br><span class="line"><span class="bullet">-</span> blog</span><br><span class="line">categories:</span><br><span class="line"><span class="bullet">-</span> notes</span><br><span class="line"><span class="bullet">-</span> hexo</span><br><span class="line">mathjax: true</span><br><span class="line">top: 1</span><br><span class="line"><span class="section">comments: false</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
-<p>注意，这其中的一些 field
-并不是默认的，而是在安装了对应的插件后实现的功能。</p>
-<p>实现的过程就不一一介绍了，网上大把教程。</p>
-<h3 id="tags-and-categories">tags and categories</h3>
-<p>在启用这两个 fields 之前，需要启用<a target="_blank" rel="noopener" href="https://theme-next.js.org/docs/theme-settings/custom-pages.html">自定义页面
-(custom pages)</a> tags 与 categories，之后就可以为文章添加 tags 与
-categories 了。</p>
-<p>注意对同一篇文章，tags 的关系是平行的，categories
-的关系是树形的。</p>
-<p>如上例，文章 <code>Hexo study notes</code> 的 tags 是
-<code>hexo</code> 与 <code>blog</code>，其所属的类别是
-<code>notes/hexo</code>。</p>
-<h3 id="mathjax">mathjax</h3>
-<p>使用 Hexo 默认的渲染引擎时，markdown 中使用 <code>$</code>
-符号括起来的数学公式解析会出现问题。根据这一<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/108766968">教程</a>，我们安装
-<code>hexo-math</code> 插件使用 <code>MathJax/KaTex</code>
-渲染数学公式，并在每篇文章开头的 Front-matter 中启用 mathjax 引擎
-(<code>mathjax: true</code>)。</p>
-<h3 id="top">top</h3>
-<p>安装 <code>hexo-generator-index-pin-top</code>
-插件实现文章置顶功能。</p>
-<p>添加 top field
-来置顶文章：后面的数字代表置顶优先级。例：<code>top: 10</code>
-的文章将会被置于 <code>top: 1</code> 文章的上方。</p>
-<h3 id="comments">comments</h3>
-<p>本博客采用 valine 实现博客评论功能。缺省 comments
-field，评论区默认开启。</p>
-<p>若想关闭某些 post/page 的评论区，在对应的 front-matter 中添加 comment
-field 并设定为否 (<code>comments: false</code>)。</p>
+<h2 id="第一次变形-standardization">第一次变形: Standardization</h2>
+<p>我们经常能够看到经典 CLT 的另一种表述：条件不变，但结论写成： <span class="math display">\[
+\lim_{n\to\infty} \frac{S_n-n\mu}{\sqrt{n}\sigma}\sim N(0,1)
+\]</span> 右侧的正态分布，我们称其为 标准正态分布 (standard normal
+distribution)。</p>
+<p>对于任何一个服从正态分布的随机变量，通过
+<em>减去均值</em>，<em>除以标准差</em>
+这两个步骤都能得到一个符合标准正态分布的新随机变量，我们称这个过程为
+<em>标准化</em> (standardization)。</p>
+<ul>
+<li>减去均值：使得钟形曲线的中轴移至 <span class="math inline">\(x=0\)</span>。</li>
+<li>除以标准差：使得钟形曲线的标准差变为 <span class="math inline">\(1\)</span>。想象一个原本位于 <span class="math inline">\((\sigma,b)\)</span> 的点，转换后将位于 <span class="math inline">\((1,b)\)</span>。</li>
+</ul>
+<p>这样，我们成功将任意正态分布映射到了标准正态分布上。
+该标准正态分布上的任意一点 <span class="math inline">\((x,b)\)</span>
+都对应原正态分布上的某点 <span class="math inline">\((x\sigma+\mu,
+b)\)</span>。</p>
+<p>正态分布的标准化消除了不同正态分布之间的鸿沟，使得它们都能被总结到标准正态分布上。</p>
+<p><br></p>
+<h2 id="第二种表述-data-science">第二种表述: Data Science</h2>
+<div class="note info no-icon"><p>Given a population with a mean <span class="math inline">\(\mu\)</span> and standard deviation <span class="math inline">\(\sigma\)</span>, the distribution of <span class="math inline">\(n\)</span> sample means approaches a normal
+distribution with the same mean <span class="math inline">\(\mu\)</span>
+and standard deviation <span class="math inline">\(\frac{\sigma}{\sqrt{n}}\)</span>.</p>
+</div>
+<p>这次我们将 <span class="math inline">\(X\)</span>
+定义一次抽样中某个个体的数据，若总共抽样 <span class="math inline">\(n\)</span> 次，那么本次抽样的均值 (即所谓 sample
+means) 为 <span class="math inline">\(S_n/n\)</span>。我们将说明该
+sample means 服从正态分布。</p>
+<p>根据经典 CLT，我们有 <span class="math display">\[
+\lim_{n\to\infty} S_n\sim N(n\mu,\sqrt{n}\sigma)
+\]</span> 按照类似标准化的转换模式，能够得到 <span class="math display">\[
+\lim_{n\to\infty}\frac{S_n-n\mu}{\sqrt{n}\sigma}=\lim_{n\to{\infty}}\frac{\mu_s-\mu}{\frac{\sigma}{\sqrt{n}}}\sim
+N(0,1)
+\]</span> 我们利用该结论来研究使用 sample mean <span class="math inline">\(\mu_s=\frac{S_n}{n}\)</span> 近似 population mean
+<span class="math inline">\(\mu\)</span> 的准确性，即 <span class="math inline">\(\mu_s\)</span> 与 <span class="math inline">\(\mu\)</span> 之间的标准误差 (standard error) <span class="math inline">\(|Z|\)</span>。</p>
+<p>令 <span class="math inline">\(Z=\mu-\mu_s\)</span>，对于任意 <span class="math inline">\(\Delta=z\frac{\sigma}{\sqrt{n}}\)</span>，都有
+<span class="math display">\[
+\begin{aligned}
+\Pr[|Z|\leq \Delta&amp;]=\Pr[|\frac{Z}{\frac{\sigma}{\sqrt{n}}}|\leq z]
+\\
+&amp;= \Pr[\frac{Z}{\frac{\sigma}{\sqrt{n}}}\leq
+z]-\Pr[\frac{Z}{\frac{\sigma}{\sqrt{n}}}\leq -z] \\
+\frac{Z}{\frac{\sigma}{\sqrt{n}}}&amp;\sim N(0,1)
+\end{aligned}
+\]</span> 由此就能计算出 sample mean 与 population mean 误差在 <span class="math inline">\(\Delta\)</span> 之内的概率。</p>
+<p>反过来，给出概率 <span class="math inline">\(\Pr\)</span>
+我们也能求出 <span class="math inline">\(\Delta\)</span>，从而得到在概率
+<span class="math inline">\(\Pr\)</span> 保证下的置信区间 <span class="math inline">\([\mu_s-z\frac{\sigma_s}{\sqrt{n}},
+\mu_s+z\frac{\sigma_s}{\sqrt{n}}]\)</span>。</p>
+<p>还有一个问题，population standard deviation <span class="math inline">\(\sigma\)</span> 是未知的：我们用 sample standard
+deviation <span class="math inline">\(\sigma_s\)</span>
+来近似。能够这样做的原因是当 <span class="math inline">\(n\)</span>
+足够大时，<span class="math inline">\(\frac{\sigma}{\sqrt{n}}\)</span>
+与 <span class="math inline">\(\frac{\sigma_s}{\sqrt{n}}\)</span>
+间的误差可以忽略不记，保证了近似的准确性。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
-<ol type="1">
-<li><p><a target="_blank" rel="noopener" href="https://hexo.io/docs/index.html">Hexo official
-documents</a></p></li>
-<li><p><a target="_blank" rel="noopener" href="https://theme-next.js.org/">NexT Theme for
-Hexo</a></p></li>
-<li><p><a target="_blank" rel="noopener" href="http://yearito.cn/categories/%E6%8A%80%E6%9C%AF/%E5%8D%9A%E5%AE%A2/">yearito-Hexo美化</a></p></li>
-<li><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/108766968">Hexo配置Mathjax渲染数学公式</a></p></li>
-<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/nineya_com/article/details/103394315">Hexo实现文章置顶功能</a></p></li>
-</ol>
+<ul>
+<li>COMP2501 lecture slides.</li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=zeJD6dqJ5lo">But What is
+Central Limit Theorem? - 3Blue1Brown</a>.</li>
+<li><a target="_blank" rel="noopener" href="http://mfviz.com/central-limit/">CLT - a visual
+explanation</a>.</li>
+</ul>
 
     </div>
 
@@ -515,13 +460,13 @@ Hexo</a></p></li>
   </li>
   <li class="post-copyright-link">
       <strong>Post link: </strong>
-      <a href="https://www.thisisxxz.com/2023/05/24/hexo-blog-study/" title="Hexo blog 搭建笔记">https://www.thisisxxz.com/2023/05/24/hexo-blog-study/</a>
+      <a href="https://www.thisisxxz.com/2023/10/26/central-limit-theorem/" title="浅谈 Central Limit Theorem">https://www.thisisxxz.com/2023/10/26/central-limit-theorem/</a>
       <!--copy buttom-->
       <span class="copy-path" title="Click to copy markdown-style reference"
       ><i
         style="cursor: pointer"
         class="fa fa-clipboard"
-        data-clipboard-text="[XXZ's Blog | Hexo blog 搭建笔记](https://www.thisisxxz.com/2023/05/24/hexo-blog-study/)"
+        data-clipboard-text="[XXZ's Blog | 浅谈 Central Limit Theorem](https://www.thisisxxz.com/2023/10/26/central-limit-theorem/)"
         aria-label="Markdown-style reference is now on your clipboard"
       ></i
     ></span>
@@ -557,22 +502,19 @@ Hexo</a></p></li>
       </div>
     </div>
           <div class="post-tags">
-              <a href="/tags/blog/" rel="tag"><i class="fa fa-tag"></i> blog</a>
-              <a href="/tags/hexo/" rel="tag"><i class="fa fa-tag"></i> hexo</a>
+              <a href="/tags/math/" rel="tag"><i class="fa fa-tag"></i> math</a>
+              <a href="/tags/data-science/" rel="tag"><i class="fa fa-tag"></i> data science</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2023/05/05/shell-command/" rel="prev" title="Shell Command & Script 笔记">
-                  <i class="fa fa-chevron-left"></i> Shell Command & Script 笔记
+                <a href="/2023/10/20/COMP2396-1/" rel="prev" title="关于 Java & OOP 的一点小研究">
+                  <i class="fa fa-chevron-left"></i> 关于 Java & OOP 的一点小研究
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/06/01/blog-update-log/" rel="next" title="Blog Update Logs">
-                  Blog Update Logs <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
@@ -663,7 +605,7 @@ Hexo</a></p></li>
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
 <script src="/js/third-party/math/mathjax.js"></script>
 
 
@@ -678,7 +620,7 @@ Hexo</a></p></li>
       new needShareButton('#needsharebutton-postbottom', pbOptions);
   </script>
 
-<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/05/24/hexo-blog-study/"}</script>
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/10/26/central-limit-theorem/"}</script>
 <script>
 document.addEventListener('page:loaded', () => {
   NexT.utils.loadComments(CONFIG.valine.el)
