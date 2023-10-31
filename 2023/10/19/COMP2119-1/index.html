@@ -27,13 +27,13 @@
 
     <meta name="description" content="与 OI 中间接接触到的各种 DS&amp;A 知识相比，这门课的优势在于比较正统，严谨的理论分析；因此还是有必要记录一下的。这篇笔记将采用 problem-based 的形式，比较随性的收集一些 insights。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="COMP2119A Problem Set">
+<meta property="og:title" content="COMP2119A 问题集">
 <meta property="og:url" content="https://www.thisisxxz.com/2023/10/19/COMP2119-1/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
 <meta property="og:description" content="与 OI 中间接接触到的各种 DS&amp;A 知识相比，这门课的优势在于比较正统，严谨的理论分析；因此还是有必要记录一下的。这篇笔记将采用 problem-based 的形式，比较随性的收集一些 insights。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-10-19T03:38:35.000Z">
-<meta property="article:modified_time" content="2023-10-20T10:57:00.848Z">
+<meta property="article:modified_time" content="2023-10-31T12:53:39.253Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="data structure">
 <meta property="article:tag" content="computational theory">
@@ -44,10 +44,10 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/10/19/COMP2119-1/","path":"2023/10/19/COMP2119-1/","title":"COMP2119A Problem Set"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/10/19/COMP2119-1/","path":"2023/10/19/COMP2119-1/","title":"COMP2119A 问题集"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>COMP2119A Problem Set | ThisisXXZ's Blog</title>
+<title>COMP2119A 问题集 | ThisisXXZ's Blog</title>
   
 
 
@@ -170,7 +170,8 @@
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#recursion-problem"><span class="nav-number">1.</span> <span class="nav-text">Recursion Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#complexity-analysis"><span class="nav-number">2.</span> <span class="nav-text">Complexity Analysis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#amortizedaverage-analysis"><span class="nav-number">3.</span> <span class="nav-text">Amortized&#x2F;Average Analysis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#insight-building-egg-problem"><span class="nav-number">4.</span> <span class="nav-text">Insight: Building &amp; Egg
-Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#binary-search-tree"><span class="nav-number">5.</span> <span class="nav-text">Binary Search Tree</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#successor"><span class="nav-number">5.1.</span> <span class="nav-text">Successor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deletion"><span class="nav-number">5.2.</span> <span class="nav-text">Deletion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#analysis"><span class="nav-number">5.3.</span> <span class="nav-text">Analysis</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#insight-convert-linked-list-to-bst"><span class="nav-number">6.</span> <span class="nav-text">Insight: Convert Linked List
+to BST</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -281,12 +282,12 @@ Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="COMP2119A Problem Set | ThisisXXZ's Blog">
+      <meta itemprop="name" content="COMP2119A 问题集 | ThisisXXZ's Blog">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          COMP2119A Problem Set
+          COMP2119A 问题集
         </h1>
 
         <div class="post-meta-container">
@@ -454,6 +455,7 @@ lower bound</td>
 <li>Ex1. 比较 <span class="math inline">\(\sqrt{\log{n}}^{3.14\log{n}}\)</span> 与 <span class="math inline">\(2n^8+\log^2{n}+1\)</span>. (Ans <span class="math inline">\(1&gt;2\)</span>)</li>
 <li>Ex2. 比较 <span class="math inline">\(\log_5(n!)\)</span> 与 <span class="math inline">\(\log_7(n^n)\)</span>. (Ans <span class="math inline">\(1=2\)</span>, <span class="math inline">\(\log_5(n!)=\log_7(n^n)=\Theta(n\log{n})\)</span>
 )</li>
+<li>Ex3. (midterm)</li>
 </ul>
 <p>第二种：使用 Master Theorem 进行分析。关于 Master Theorem 见 <a target="_blank" rel="noopener" href="https://thisisxxz.com/2023/09/27/master-theorem/">貴方が私の
 Master Theorem か</a>。</p>
@@ -515,6 +517,61 @@ search，即我们熟悉的分块策略。<span class="math inline">\(\Theta(\sq
 </ul>
 <p>以上的程序也能显示这一点。(issue: 并没有！准备去问一下 Hubert)</p>
 <p><br></p>
+<h2 id="binary-search-tree">Binary Search Tree</h2>
+<p>关于 BST 一些容易忘记的小细节。</p>
+<h3 id="successor">Successor</h3>
+<p>BST 中某节点的后继：</p>
+<ul>
+<li>the minimum of <span class="math inline">\(T_R\)</span>.</li>
+<li><span class="math inline">\(T_R\)</span> 不存在：locate an ancestor
+<span class="math inline">\(a\)</span> that is a <em>left child</em>.
+the successor is <span class="math inline">\(a\)</span>'s parent.</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">node* <span class="title">successor</span><span class="params">(node* x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (x-&gt;right != <span class="literal">nullptr</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">minimum</span>(x-&gt;right);</span><br><span class="line">    node* fa = x-&gt;parent;</span><br><span class="line">    <span class="keyword">while</span> ((fa != <span class="literal">nullptr</span>) &amp;&amp; (x == y-&gt;right)) &#123;</span><br><span class="line">        x = fa;</span><br><span class="line">        fa = fa-&gt;parent;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> fa;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>前驱类似：</p>
+<ul>
+<li>the maximum of <span class="math inline">\(T_L\)</span>.</li>
+<li><span class="math inline">\(T_L\)</span> 不存在：locate an ancestor
+<span class="math inline">\(a\)</span> that is a <em>right child</em>.
+the successor is <span class="math inline">\(a\)</span>'s parent.</li>
+</ul>
+<h3 id="deletion">Deletion</h3>
+<p>删除节点 <span class="math inline">\(z\)</span>，分三种情况：</p>
+<ul>
+<li><span class="math inline">\(z\)</span> has no children: delete <span class="math inline">\(z\)</span>.</li>
+<li><span class="math inline">\(z\)</span> has one child: splice out
+<span class="math inline">\(z\)</span>.</li>
+<li><span class="math inline">\(z\)</span> has two children: replace
+<span class="math inline">\(z\)</span> by its immediate successor <span class="math inline">\(y\)</span>, and splice out <span class="math inline">\(y\)</span> (<span class="math inline">\(y\)</span>
+is the minimum of <span class="math inline">\(T_R\)</span> for sure,
+which means it has at most one child)</li>
+</ul>
+<p>定义 splice out 操作为将某点的 children 连到其 parent 上。splice out
+只适用于删除只有一个孩子的节点。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">delete</span><span class="params">(root* T, node* z)</span> </span>&#123;</span><br><span class="line">    node* y;    <span class="comment">// y is the node to be spliced out</span></span><br><span class="line">    <span class="keyword">if</span> ((z-&gt;left == <span class="literal">NULL</span>) || (z-&gt;right == <span class="literal">NULL</span>)) &#123;</span><br><span class="line">        y = z;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        y = <span class="built_in">minimum</span>(z-&gt;right);</span><br><span class="line">        z-&gt;key = y-&gt;key;    <span class="comment">// replace z by y, then delete y</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// now splice out y, we can guarentee y has at most one child x</span></span><br><span class="line">    node* x;</span><br><span class="line">    <span class="keyword">if</span> (y-&gt;left != <span class="literal">nullptr</span>)</span><br><span class="line">        x = y-&gt;left;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        x = y-&gt;right;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// if y has no parent, we need to update root</span></span><br><span class="line">    <span class="keyword">if</span> (y-&gt;parent == <span class="literal">nullptr</span>)</span><br><span class="line">        root = x;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (y-&gt;parent-&gt;left == y)</span><br><span class="line">            y-&gt;parent-&gt;left = x;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            y-&gt;parent-&gt;right = x;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="analysis">Analysis</h3>
+<p>Complexity of insertion and deletion: <span class="math inline">\(O(h)\)</span>, and the best <span class="math inline">\(h=\log{n}\)</span>.</p>
+<p>保证树高为 <span class="math inline">\(\log{n}\)</span>
+的重要条件是插入 keys 的随机性，与保证快速排序效率需要 keys
+随机性的原理相同。详情见 Algorithms, Princeton 课程的 quicksort 与 BST
+部分。</p>
+<p>朴素的删除会影响树的结构。在执行若干次删除操作后树会逐渐左倾。</p>
+<p><br></p>
+<h2 id="insight-convert-linked-list-to-bst">Insight: Convert Linked List
+to BST</h2>
+<p>根据 sorted array 建 BST 很简单，这是因为它支持随机访问：<span class="math inline">\(O(n)\)</span> 足矣。那 sorted linked list
+又如何呢？</p>
+<p>朴素算法：模仿 sorted array
+的建立方法，在链表中暴力遍历到根的位置。满足 <span class="math inline">\(T(n)=2T(n/2)+O(n)\)</span>，根据 master theorem
+推出时间复杂度为 <span class="math inline">\(O(n\log{n})\)</span>。</p>
+<p><span class="math inline">\(O(n)\)</span>
+算法：很巧妙。想象这样一个过程：给一颗完全二叉树，我们对其进行中序遍历，并将得到的值序列逐个写在链表中；以下算法就是上述过程的<strong>逆过程</strong>。</p>
+<p>随着 <code>head</code>
+指针在给定链表中迭代，我们还原出以该链表为中序遍历的一颗二叉树。该二叉树的结构又被二分放所保证，其高度一定是接近于
+<span class="math inline">\(\log{n}\)</span> 的
+(其结构接近于完全二叉树)。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">ListNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line">    ListNode* next;</span><br><span class="line">    <span class="built_in">ListNode</span>(<span class="type">int</span> x) : <span class="built_in">val</span>(x), <span class="built_in">next</span>(<span class="literal">nullptr</span>) &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line">    TreeNode* left;</span><br><span class="line">    TreeNode* right;</span><br><span class="line">    <span class="built_in">TreeNode</span>(<span class="type">int</span> x) : <span class="built_in">val</span>(x), <span class="built_in">left</span>(<span class="literal">nullptr</span>), <span class="built_in">right</span>(<span class="literal">nullptr</span>) &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">TreeNode* <span class="title">sortedListToBST</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (head == <span class="literal">nullptr</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="type">int</span> len = <span class="number">0</span>;</span><br><span class="line">    ListNode* curr = head;</span><br><span class="line">    <span class="keyword">while</span> (curr != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        ++len;</span><br><span class="line">        curr = curr-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">buildBST</span>(head, <span class="number">0</span>, len - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">TreeNode* <span class="title">buildBST</span><span class="params">(ListNode* head, <span class="type">int</span> l, <span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l &gt; r)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="type">int</span> mid = (l + r) / <span class="number">2</span>;</span><br><span class="line">    TreeNode left = <span class="built_in">buildBST</span>(head, l, mid - <span class="number">1</span>);</span><br><span class="line">    TreeNode root = <span class="keyword">new</span> <span class="built_in">TreeNode</span>(head-&gt;val);</span><br><span class="line">    root-&gt;left = left;</span><br><span class="line">    head = head-&gt;next;</span><br><span class="line">    root-&gt;right = <span class="built_in">buildBST</span>(head, mid + <span class="number">1</span>, r);</span><br><span class="line">    <span class="keyword">return</span> root;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
@@ -558,13 +615,13 @@ if not specified.</p>
   </li>
   <li class="post-copyright-link">
       <strong>Post link: </strong>
-      <a href="https://www.thisisxxz.com/2023/10/19/COMP2119-1/" title="COMP2119A Problem Set">https://www.thisisxxz.com/2023/10/19/COMP2119-1/</a>
+      <a href="https://www.thisisxxz.com/2023/10/19/COMP2119-1/" title="COMP2119A 问题集">https://www.thisisxxz.com/2023/10/19/COMP2119-1/</a>
       <!--copy buttom-->
       <span class="copy-path" title="Click to copy markdown-style reference"
       ><i
         style="cursor: pointer"
         class="fa fa-clipboard"
-        data-clipboard-text="[XXZ's Blog | COMP2119A Problem Set](https://www.thisisxxz.com/2023/10/19/COMP2119-1/)"
+        data-clipboard-text="[XXZ's Blog | COMP2119A 问题集](https://www.thisisxxz.com/2023/10/19/COMP2119-1/)"
         aria-label="Markdown-style reference is now on your clipboard"
       ></i
     ></span>
@@ -613,8 +670,8 @@ if not specified.</p>
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/10/20/COMP2396-1/" rel="next" title="关于 Java & OOP 的一点小研究">
-                  关于 Java & OOP 的一点小研究 <i class="fa fa-chevron-right"></i>
+                <a href="/2023/10/20/COMP2396-1/" rel="next" title="再探 Java & OOP">
+                  再探 Java & OOP <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
