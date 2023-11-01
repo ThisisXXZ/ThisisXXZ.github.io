@@ -33,7 +33,7 @@
 <meta property="og:description" content="第一次接触中心极限定理是在 1853 的概率论 part 上，当时就觉得这个定理实在是非常优美。第二次就是 2501 了；但这个立足于数据科学的新表述却给我一种熟悉的陌生感。怎么个事？遂新开一篇文章做一点小小研究。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-10-26T04:56:30.000Z">
-<meta property="article:modified_time" content="2023-10-26T11:14:44.172Z">
+<meta property="article:modified_time" content="2023-11-01T06:30:55.152Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="math">
 <meta property="article:tag" content="data science">
@@ -169,7 +169,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#lindeberg-levy-clt-math1853"><span class="nav-number">1.</span> <span class="nav-text">Lindeberg-Levy CLT (Math1853)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%8F%98%E5%BD%A2-standardization"><span class="nav-number">2.</span> <span class="nav-text">第一次变形: Standardization</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%E8%A1%A8%E8%BF%B0-data-science"><span class="nav-number">3.</span> <span class="nav-text">第二种表述: Data Science</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#lindeberg-levy-clt-math1853"><span class="nav-number">1.</span> <span class="nav-text">Lindeberg-Levy CLT (Math1853)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%8F%98%E5%BD%A2-standardization"><span class="nav-number">2.</span> <span class="nav-text">第一次变形: Standardization</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%E8%A1%A8%E8%BF%B0-data-science"><span class="nav-number">3.</span> <span class="nav-text">第二种表述: Data Science</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#p-values"><span class="nav-number">4.</span> <span class="nav-text">p-values</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bayesian-analysis"><span class="nav-number">5.</span> <span class="nav-text">Bayesian Analysis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -407,13 +407,100 @@ z]-\Pr[\frac{Z}{\frac{\sigma}{\sqrt{n}}}\leq -z] \\
 <p>反过来，给出概率 <span class="math inline">\(\Pr\)</span>
 我们也能求出 <span class="math inline">\(\Delta\)</span>，从而得到在概率
 <span class="math inline">\(\Pr\)</span> 保证下的置信区间 <span class="math inline">\([\mu_s-z\frac{\sigma_s}{\sqrt{n}},
-\mu_s+z\frac{\sigma_s}{\sqrt{n}}]\)</span>。</p>
+\mu_s+z\frac{\sigma_s}{\sqrt{n}}]\)</span>。<span class="math inline">\(z\)</span> 和 confidence
+是一一对应的：<code>confidenceTable &lt;- tibble(z) |&gt; mutate(pnorm(z) - pnorm(-z))</code>。</p>
 <p>还有一个问题，population standard deviation <span class="math inline">\(\sigma\)</span> 是未知的：我们用 sample standard
 deviation <span class="math inline">\(\sigma_s\)</span>
 来近似。能够这样做的原因是当 <span class="math inline">\(n\)</span>
 足够大时，<span class="math inline">\(\frac{\sigma}{\sqrt{n}}\)</span>
 与 <span class="math inline">\(\frac{\sigma_s}{\sqrt{n}}\)</span>
 间的误差可以忽略不记，保证了近似的准确性。</p>
+<p><br></p>
+<h2 id="p-values">p-values</h2>
+<p>Given a coin, we are told that <em>the coin is fair</em>.</p>
+<p>We don't quite believe it, and we flip the coin 100 times with 58
+heads. How likely is it to see 58 or more heads if the assumption
+<em>the coin is fair</em> is true?</p>
+<ul>
+<li><strong>null hypothesis</strong> (零假设)：希望被证伪的假设。</li>
+<li><strong>p-value</strong>：根据实验结果所得零假设成立的概率。若
+p-value <span class="math inline">\(&lt;0.05\)</span>,
+没有足够的证据证明零假设成立。</li>
+</ul>
+<p>上例中，零假设为 <em>the coin is
+fair</em>；若其成立，则抛硬币这一事件的 <span class="math inline">\(\mu=0.5\)</span>，<span class="math inline">\(\sigma=\sqrt{0.5(1-0.5)}=0.5\)</span>。因此
+p-value 为 <span class="math inline">\(\Pr[\mu_s\geq
+0.58]\)</span>。应用 CLT 我们得出： <span class="math display">\[
+\begin{aligned}
+\Pr[\mu_s\geq
+0.58]&amp;=\Pr[\mu_s-\mu\geq0.08]\vphantom{\frac{\mu_s-\mu}{\sigma/\sqrt{100}}}\\
+&amp;= \Pr\left[\frac{\mu_s-\mu}{\sigma/\sqrt{100}}\geq
+\frac{0.08}{\sigma/\sqrt{100}}\right] \\
+&amp;= \Pr[Z\geq1.6]\vphantom{\frac{\mu_s-\mu}{\sigma/\sqrt{100}}} \\
+&amp;= 1-\Pr[Z\leq1.6]\vphantom{\frac{\mu_s-\mu}{\sigma/\sqrt{100}}}
+\end{aligned}
+\]</span> 在 R 中利用公式计算出 <code>1-pnorm(1.6)</code> 计算出 p-value
+为
+0.05479929，仍然是一个非常小的值。因此该实验并没有足够的证据支持零假设。</p>
+<p><br></p>
+<h2 id="bayesian-analysis">Bayesian Analysis</h2>
+<p>与 Bayesian Analysis 相对的是 Frequentist Analysis。</p>
+<p>我们目前所学习的所有概念与技巧 (CLT, confidence interval, p-value)
+都属于 frequentist statistic
+的范畴：结论的得出仅仅基于实验的结果，并不考虑任何先验信息 (prior
+information)。</p>
+<p>Bayesian Analysis 得名于贝叶斯公式 <span class="math inline">\(\Pr(A|B)=\frac{\Pr(A)\Pr(B|A)}{\Pr(B)}\)</span>。</p>
+<ul>
+<li>根据 prior information 得出 <em>prior distribution</em>
+(先验分布)。</li>
+<li>根据实验结果对 prior distribution 进行修正，得到 <em>posterior
+distribution</em> (后验预测分布)。</li>
+</ul>
+<p>研究一个例子：<span class="math inline">\(A\)</span>
+是否应该准备开始面对死亡的来临？</p>
+<ul>
+<li>prior information：囊肿性纤维在人群中的发病率为 <span class="math inline">\(\frac{1}{3900}\)</span>。</li>
+<li>实验结果：囊肿性纤维测试准确率为 <span class="math inline">\(99\%\)</span>。某个倒霉蛋 <span class="math inline">\(A\)</span> 测试的结果是阳性。</li>
+</ul>
+<p>这里，医学测试的准确率 (accuracy) 为 <span class="math inline">\(99\%\)</span>
+意味着：(患病为自变量，测试结果为因变量)</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"></th>
+<th style="text-align: center;">has</th>
+<th style="text-align: center;">has not</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">positive</td>
+<td style="text-align: center;">(true positive) <span class="math inline">\(99\%\)</span></td>
+<td style="text-align: center;">(false positive) <span class="math inline">\(1\%\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">negative</td>
+<td style="text-align: center;">(false negative) <span class="math inline">\(1\%\)</span></td>
+<td style="text-align: center;">(true negative) <span class="math inline">\(99\%\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>如果从纯 frequentist analysis 的角度来看，<span class="math inline">\(A\)</span>
+似乎是必死无疑了。毕竟假阳性的出现概率仅有 <span class="math inline">\(1\%\)</span>。然而如果考虑到囊肿性纤维的发病率为
+<span class="math inline">\(\frac{1}{3900}\)</span>
+这一关键的先验信息，Bayesian analysis 能为我们提供另外的答案。</p>
+<p>令 <span class="math inline">\(D=1\)</span> 表示 <span class="math inline">\(A\)</span> 患病，<span class="math inline">\(D=0\)</span> 反之；那么先验信息为 <span class="math inline">\(\Pr(D=1)=\frac{1}{3900}\)</span>。 <span class="math display">\[
+\begin{aligned}
+\Pr(D=1|+)&amp;=\frac{\Pr(+|D=1)\cdot\Pr(D=1)}{\Pr(+)}\\
+&amp;= \frac{\Pr(+|D=1)\cdot
+\Pr(D=1)}{\Pr(+|D=0)\Pr(D=0)+\Pr(+|D=1)\Pr(D=1)} \\
+&amp;=
+\frac{99\%\times\frac{1}{3900}}{1\%\times(1-\frac{1}{3900})+99\%\times
+\frac{1}{3900}} \\
+&amp;\approx \vphantom{\frac{1}{\frac{1}{3900}}} 0.02
+\end{aligned}
+\]</span> 由此可见，在测试结果为阳性的前提下患有囊性纤维的概率仅有 <span class="math inline">\(2\%\)</span>；<span class="math inline">\(A\)</span>
+大可不必如此惊慌。这就是贝叶斯分析：考虑先验信息的存在，从而提高结论的准确性。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <ul>
@@ -610,15 +697,6 @@ explanation</a>.</li>
 
 
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
 
 <script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/10/26/central-limit-theorem/"}</script>
 <script>
@@ -634,6 +712,15 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
