@@ -33,7 +33,7 @@
 <meta property="og:description" content="Data Scientist spend up to 80% of the time on data cleaning and 20% on actual data analysis.   与上一节不同，这一节中我们主要关注 data frame 而不是 vector；我们将引入 tidy format 的概念，并介绍能够有效操纵 tidy data 的开源包 tidyverse。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-09-19T13:24:33.000Z">
-<meta property="article:modified_time" content="2023-10-19T03:09:15.795Z">
+<meta property="article:modified_time" content="2023-11-01T08:16:03.237Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="PL">
 <meta property="article:tag" content="data science">
@@ -119,7 +119,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">50</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">41</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">51</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">41</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -191,7 +191,7 @@ entries</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-count">51</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -467,7 +467,7 @@ data into groups and then compute summaries for each group.</p>
 <p>这一特殊的 grouped data frame 被称为 <em>tibble</em> [stay
 tuned].</p>
 <figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">heights <span class="operator">|&gt;</span> group_by<span class="punctuation">(</span>sex<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; # A tibble: 1,050 × 2</span></span><br><span class="line"><span class="comment">#&gt; # Groups:   sex [2]</span></span><br><span class="line"><span class="comment">#&gt;   sex   height</span></span><br><span class="line"><span class="comment">#&gt;   &lt;fct&gt;  &lt;dbl&gt;</span></span><br><span class="line"><span class="comment">#&gt; 1 Male      75</span></span><br><span class="line"><span class="comment">#&gt; 2 Male      70</span></span><br><span class="line"><span class="comment">#&gt; 3 Male      68</span></span><br><span class="line"><span class="comment">#&gt; 4 Male      74</span></span><br><span class="line"><span class="comment">#&gt; 5 Male      61</span></span><br><span class="line"><span class="comment">#&gt; # ℹ 1,045 more rows</span></span><br></pre></td></tr></table></figure>
-<p><code>summrize</code> 函数将对 grouped data frame
+<p><code>summarize</code> 函数将对 grouped data frame
 进行分组摘要；每一组 (每一个 grouping variable) 占据一行。</p>
 <figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">heights <span class="operator">|&gt;</span> </span><br><span class="line">  group_by<span class="punctuation">(</span>sex<span class="punctuation">)</span> <span class="operator">|&gt;</span></span><br><span class="line">  summarize<span class="punctuation">(</span>average <span class="operator">=</span> mean<span class="punctuation">(</span>height<span class="punctuation">)</span><span class="punctuation">,</span> standard_deviation <span class="operator">=</span> sd<span class="punctuation">(</span>height<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; # A tibble: 2 × 3</span></span><br><span class="line"><span class="comment">#&gt;   sex    average standard_deviation</span></span><br><span class="line"><span class="comment">#&gt;   &lt;fct&gt;    &lt;dbl&gt;              &lt;dbl&gt;</span></span><br><span class="line"><span class="comment">#&gt; 1 Female    64.9               3.76</span></span><br><span class="line"><span class="comment">#&gt; 2 Male      69.3               3.61</span></span><br></pre></td></tr></table></figure>
 <p><br></p>
@@ -864,6 +864,15 @@ Prediction Algorithms with R - Rafael A. Irizarry</a>.</p>
 
 
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
 
 <script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/09/19/COMP2501-2/"}</script>
 <script>
@@ -879,15 +888,6 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
