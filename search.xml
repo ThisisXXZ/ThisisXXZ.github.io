@@ -169,7 +169,8 @@ feel free to share with me!</p>
 <p>[待改]</p>
 <p><br></p>
 <h2 id="challenging-hike">Challenging Hike</h2>
-<p>树上的最长上升子序列问题。</p>
+<p>树上最长上升子序列问题。由于要在树上回溯，需要撤销操作，解普通最长上升子序列的树状数组要改成支持单点修改区间维护的最大值线段树。顺便也复习了一下离散化。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_N = <span class="number">1e5</span> + <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">dp</span> &#123;</span><br><span class="line">    <span class="type">int</span> end;</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line"></span><br><span class="line">    <span class="type">bool</span> <span class="keyword">operator</span> &lt; (<span class="type">const</span> dp&amp; p) <span class="type">const</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (end == p.end)   <span class="keyword">return</span> val &lt; p.val;</span><br><span class="line">        <span class="keyword">return</span> end &lt; p.end;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> n, m;</span><br><span class="line"><span class="type">int</span> v[MAX_N], ans[MAX_N];</span><br><span class="line"><span class="type">int</span> tmp[MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> tree[MAX_N &lt;&lt; <span class="number">2</span>];</span><br><span class="line"></span><br><span class="line">vector&lt;<span class="type">int</span>&gt; e[MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">modify</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> l, <span class="type">int</span> r, <span class="type">int</span> pos, <span class="type">int</span> val)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l == r) &#123;</span><br><span class="line">        tree[x] = val;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> mid = (l + r) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (pos &lt;= mid)</span><br><span class="line">        <span class="built_in">modify</span>(x &lt;&lt; <span class="number">1</span>, l, mid, pos, val);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">modify</span>(x &lt;&lt; <span class="number">1</span> | <span class="number">1</span>, mid + <span class="number">1</span>, r, pos, val);</span><br><span class="line">    tree[x] = <span class="built_in">max</span>(tree[x &lt;&lt; <span class="number">1</span>], tree[x &lt;&lt; <span class="number">1</span> | <span class="number">1</span>]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">query</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> l, <span class="type">int</span> r, <span class="type">int</span> ql, <span class="type">int</span> qr)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (ql &gt; qr)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (ql &lt;= l &amp;&amp; r &lt;= qr)</span><br><span class="line">        <span class="keyword">return</span> tree[x];</span><br><span class="line">    <span class="type">int</span> mid = (l + r) &gt;&gt; <span class="number">1</span>, res = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (ql &lt;= mid)</span><br><span class="line">        res = <span class="built_in">max</span>(res, <span class="built_in">query</span>(x &lt;&lt; <span class="number">1</span>, l, mid, ql, qr));</span><br><span class="line">    <span class="keyword">if</span> (qr &gt; mid)</span><br><span class="line">        res = <span class="built_in">max</span>(res, <span class="built_in">query</span>(x &lt;&lt; <span class="number">1</span> | <span class="number">1</span>, mid + <span class="number">1</span>, r, ql, qr));</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> u, <span class="type">int</span> fa)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> shoot = <span class="built_in">query</span>(<span class="number">1</span>, <span class="number">1</span>, m, <span class="number">1</span>, v[u] - <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">    ans[u] = <span class="built_in">max</span>(ans[fa], shoot);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> cur = <span class="built_in">query</span>(<span class="number">1</span>, <span class="number">1</span>, m, v[u], v[u]);</span><br><span class="line">    <span class="type">int</span> flag = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (shoot &gt; cur) &#123;</span><br><span class="line">        flag = <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">modify</span>(<span class="number">1</span>, <span class="number">1</span>, m, v[u], shoot);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> to : e[u]) &#123;</span><br><span class="line">        <span class="keyword">if</span> (to == fa)   <span class="keyword">continue</span>;</span><br><span class="line">        <span class="built_in">dfs</span>(to, u);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (flag)</span><br><span class="line">        <span class="built_in">modify</span>(<span class="number">1</span>, <span class="number">1</span>, m, v[u], cur);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">discretize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)    tmp[i] = v[i];</span><br><span class="line">    <span class="built_in">sort</span>(tmp + <span class="number">1</span>, tmp + n + <span class="number">1</span>);</span><br><span class="line">    m = <span class="built_in">unique</span>(tmp + <span class="number">1</span>, tmp + n + <span class="number">1</span>) - tmp - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)</span><br><span class="line">        v[i] = <span class="built_in">lower_bound</span>(tmp + <span class="number">1</span>, tmp + m + <span class="number">1</span>, v[i]) - tmp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="number">0</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">        <span class="type">int</span> x;</span><br><span class="line">        cin &gt;&gt; x;</span><br><span class="line">        e[i].<span class="built_in">push_back</span>(x);</span><br><span class="line">        e[x].<span class="built_in">push_back</span>(i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)    cin &gt;&gt; v[i];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">discretize</span>();</span><br><span class="line"></span><br><span class="line">    <span class="built_in">dfs</span>(<span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= n; ++i)    cout &lt;&lt; ans[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
 <h2 id="extracting-pollen">Extracting Pollen</h2>
 <p>很喜欢这道题。<span class="math inline">\(K\leq
@@ -3385,7 +3386,7 @@ content.</p>
 </tbody>
 </table>
 <p><br></p>
-<h2 id="文法-lesson-1">文法 Lesson 1</h2>
+<h2 id="文法授業-1">文法授業 1</h2>
 <h3 id="affirmative-sentence">Affirmative sentence</h3>
 <p>銀時さん<u>は</u>さむらい<u>です</u>。</p>
 <h3 id="negative-sentence">Negative sentence</h3>
@@ -3429,7 +3430,7 @@ topic is the same as previous one.</p>
 </ul></li>
 </ul>
 <p><br></p>
-<h2 id="文法-lesson-2">文法 Lesson 2</h2>
+<h2 id="文法授業-2">文法授業 2</h2>
 <h3 id="これそれあれ">これ／それ／あれ</h3>
 <ul>
 <li>离说者近 - 这：これは○○です。</li>
@@ -3507,7 +3508,7 @@ direction) 的含义。</p>
 <li>(where are you from?)［お］国はどちらですか。</li>
 </ul>
 <p><br></p>
-<h2 id="文法-lesson-4">文法 Lesson 4</h2>
+<h2 id="文法授業-4">文法授業 4</h2>
 <h3 id="今時分です">今‐時‐分‐です</h3>
 <p>表示时间的语句。对应的问句为：</p>
 <ul>
@@ -3566,7 +3567,7 @@ particle。星期几是一个 exception：你可以选择添加或省略 に par
 <li>銀行の休みは土曜日と日曜日です。</li>
 </ul>
 <p><br></p>
-<h2 id="文法-lesson-5">文法 Lesson 5</h2>
+<h2 id="文法授業-5">文法授業 5</h2>
 <h3 id="n-へ行きます来ます帰ります">N へ行きます／来ます／帰ります</h3>
 <p>当我们使用某动词表示移动到某个特定的地点时 (去/来/回)，在地点前加入
 particle へ 指示移动的方向。</p>
@@ -3621,6 +3622,88 @@ particle へ 指示移动的方向。</p>
 <li>試験は何時に始まりますか。</li>
 <li>試験はいつ始まりますか。</li>
 </ul>
+<p><br></p>
+<h2 id="文法授業-6">文法授業 6</h2>
+<h3 id="n-を-v-transitive">N を V (transitive)</h3>
+<p>我喝橙汁：ジュースを飲みます。</p>
+<p>新的 particle を 出现了！It is used to indicate the direct object of
+a <em>transitive verb</em> (及物动词).</p>
+<p>注意一个很特殊的动词 します：它相当于中文中的
+做某事，范围相当广。</p>
+<ul>
+<li>"play" sports/games: サッカーをします、トランプをします</li>
+<li>"hold" gathering: 会議をします</li>
+<li>"do" something: 宿題をします</li>
+</ul>
+<h3 id="何">何</h3>
+<p>用于询问“什么”：何 (なに) をしますか。何 (なに) を買いますか。</p>
+<p>我们已经接触过「何」这个疑问词了：它有两种读法，分别是 なん 与
+なに。只有在下述情况下「何」读作 なん，其余场合下我们使用 なに
+即可：</p>
+<ul>
+<li>precedes a word whose first mora is either in the た, だ, or な-row
+(得忒呢). ex.
+なん<em>で</em>すか、なん<em>の</em>本ですか、なん<em>と</em>言いますか</li>
+<li>when it is followed by counter suffix. ex. なん歳、なん時なん分</li>
+</ul>
+<h3 id="n-place-で-v">N (place) で V</h3>
+<p>在某地做某事：这里，で particle 只是行动发生的位置。</p>
+<p>我在车站买了报纸：駅で新聞を買います。</p>
+<p>注意与去/来某地相区分，也就是说，当 V 为 行きます 或 来ます
+时，对应的 particle 应该是 へ 而不是 で。</p>
+<h3 id="v-ませんか">V ませんか</h3>
+<p>邀请对方做某事时的问句。不去 (一起)
+做某事吗？对应的肯定/否定一般来说是：</p>
+<ul>
+<li>ええ、V ましょう。</li>
+<li>すみません、ちょっと…</li>
+</ul>
+<p><br></p>
+<h2 id="文法授業７">文法授業７</h2>
+<h3 id="ntoolmean-で-v">N(tool/mean) で V</h3>
+<p>之前我们学过用 で 指示去某地所乘坐的交通工具。这里的 で
+本质上是一样的，表示用什么 (方法或工具) 进行对应的行动。</p>
+<ul>
+<li>(tool) 箸で食べます。</li>
+<li>(mean) 日本語でレポートを書きます。</li>
+</ul>
+<p>还有一个常见的例子是询问某个概念在某语言中的讲法，即
+~語でなんですか。</p>
+<ul>
+<li>「謝謝」は日本で何ですか。</li>
+</ul>
+<h3 id="n-person-に-あげます-etc.">N (person) に あげます, etc.</h3>
+<p>这里的 particle に 指示主动动作的接受者，即类似
+あげます、貸します、教えます 这类动词的<strong>受者</strong>。</p>
+<ul>
+<li>彼女にプレゼントをあげます。([I] give present <em>to</em>
+girlfriend. 女友是受者)</li>
+<li>郡司さんは私に日本語を教えます。(Mr.Gunji teaches Japanese
+<em>to</em> me. 我是受者)</li>
+</ul>
+<p>当受者非人 (例某组织等) 时，可以使用 へ 来代替 に：会社に (へ)
+電話を掛けます。</p>
+<h3 id="n-person-に-もらいます-etc.">N (person) に もらいます, etc.</h3>
+<p>虽然这里同样使用 particle
+に，但含义与上一个完全不同。这里它指示的是被动动作的施加者，即类似
+もらいます、借ります、習います 这类动词的<strong>施者</strong>。</p>
+<ul>
+<li>彼女は私にプレゼントをもらいます。(My girlfriend receives present
+<em>from</em> me. 我是施者)</li>
+<li>私は郡司さんに日本語を習います。 (I learn Japanese <em>from</em>
+Mr.Gunji. 郡司是施者)</li>
+</ul>
+<p>当施者非人时，使用 から 而不是
+に：大学から給料をもらいます。銀行からお金を借ります。</p>
+<h3 id="もう-v-ました">もう V ました</h3>
+<p>完成时的一种形式，意为已经做了某事。对于某件应做的事，经常有提问：もう宿題をしましたか。</p>
+<ul>
+<li>ええ、［もう］しました。</li>
+<li>いいえ、まだです。</li>
+</ul>
+<p>まだ 意为现在还 (没有)，相当于 yet。如果直接否定
+(いいえ、しませんでした)
+单纯表示你没有做对应的事，没有完成时的对应含义。</p>
 <p><br></p>
 <h2 id="語彙">語彙</h2>
 <p>这里记录一下容易忘掉的词汇。(外来语真是阿米诺斯了)</p>
@@ -13673,6 +13756,16 @@ Contest</h2>
 Training</h2>
 <p><a href="http://thisisxxz.com/2023/10/11/traning-1/">HKU Provinci 1st
 Training Summary</a>.</p>
+<p><br></p>
+<h2 id="hku-province-2nd-training">HKU <em>Province</em> 2nd
+Training</h2>
+<p><a href="https://thisisxxz.com/2023/10/15/training-2/">HKU Provinci
+2nd Training Summary</a>.</p>
+<p><br></p>
+<h2 id="hku-province-4th-training">HKU <em>Province</em> 4th
+Training</h2>
+<p><a href="https://thisisxxz.com/2023/11/01/training-4/">HKU Provinci
+4th Training Summary</a>.</p>
 ]]></content>
       <categories>
         <category>清单</category>
