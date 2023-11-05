@@ -155,6 +155,274 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
+    <title>JQuery 杂记</title>
+    <url>/2023/11/05/COMP3322-3/</url>
+    <content><![CDATA[<blockquote>
+<p>COMP3322 课程 JQuery 相关内容拾遗。</p>
+</blockquote>
+<p>JQuery 是一个 JavaScript 库，我们可以将其视作整个 JavaScript
+语言的一个超大语法糖。JQuery 的内容其实也是 JavaScript
+的一部分，但因为内容比较多也比较重要，还是单独开一篇文章来记一记，以便后续查阅。</p>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="including-jquery">Including JQuery</h2>
+<p>在<a href="https://jquery.com/download/">这里</a>下载 JQuery 库。</p>
+<p>查看下载的文件，我们能够更加认识到 JQuery 的本质：它仅仅只是一个
+JavaScript 文件，提供了各种可供调用的 JavaScript 函数。也有人称 JQuery
+为一种框架 (framework)，这样的说法其实有点故弄玄虚了。</p>
+<p>在 HTML 的 <code>&lt;head&gt;</code> 标签中引入 JQuery 库。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;jquery-3.5.1.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>或是引用第三方 (如 Google，Microsoft) 提供的 CDN 源。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="jquery-syntax">JQuery Syntax</h2>
+<p>JQuery 的基本语法如下：<code>$</code> 符号后跟着括号包围的
+selector，再对被选中的元素调用对应的方法。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">$(<span class="string">&#x27;#divTest1&#x27;</span>).<span class="title function_">text</span>(<span class="string">&quot;Hello World&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>其等价于以下 <em>vanilla JavaScript</em>：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;#divTest1&#x27;</span>).<span class="property">innerHTML</span> = <span class="string">&quot;Hello World&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>JQuery 中 selector 的格式与 CSS 完全一致 (支持 element selector, id
+selector, class selector, attribute selector, compound and contextual
+selector, pseudo-classes)；除此之外，它还提供了更加丰富的 JQuery custom
+selector。举两个例子：</p>
+<ul>
+<li><code>$(ul li:lt(3))</code>: select list elements with an <em>index
+less than 3</em>.</li>
+<li><code>$(div:contains('Hello'))</code>: select all div element
+<em>contains the text</em> "Hello".</li>
+</ul>
+<p>这些好用的 custom selectors 都是原生 CSS 中没有的。</p>
+<p><code>$()</code> 返回的是一个 JQuery
+object，其包含了所有被选中的元素。JQuery object 有时也被称为 <em>matched
+set</em> (匹配集)。我们通过访问或调用 JQuery object 的各种 properties 与
+methods 来操纵被选中的元素。</p>
+<p><br></p>
+<h2 id="jquery-listeners">JQuery Listeners</h2>
+<p>JQuery object 对大多数常用的 event 定义了对应的 <em>event
+methods</em>，从而大大简化了添加 event listener 的过程。以下是一些常用的
+event methods：</p>
+<table>
+<colgroup>
+<col style="width: 20%">
+<col style="width: 25%">
+<col style="width: 18%">
+<col style="width: 36%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Mouse Events</th>
+<th style="text-align: center;">Keyboard Events</th>
+<th style="text-align: center;">Form Events</th>
+<th style="text-align: center;">Document/Window Events</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">click()</td>
+<td style="text-align: center;">keypress()</td>
+<td style="text-align: center;">submit()</td>
+<td style="text-align: center;">load()</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">dblclick()</td>
+<td style="text-align: center;">keydown()</td>
+<td style="text-align: center;">change()</td>
+<td style="text-align: center;">resize()</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">mouseenter()</td>
+<td style="text-align: center;">keyup()</td>
+<td style="text-align: center;">focus()</td>
+<td style="text-align: center;">scroll()</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">mouseleave()</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">blur()</td>
+<td style="text-align: center;">unload()</td>
+</tr>
+</tbody>
+</table>
+<p>大多数在 <code>&lt;head&gt;</code> 处引用的 JavaScript 代码在 DOM
+构建完成后才开始执行。对应的 JQuery 实现如下：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">$(<span class="variable language_">document</span>).<span class="title function_">ready</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// your code goes here</span></span><br><span class="line">&#125;);</span><br><span class="line">$(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// a shorter version</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>再来看一个例子：对于一系列 <code>&lt;input&gt;</code>
+元素，我们想要实现如下效果：被选中的 <code>&lt;input&gt;</code>
+元素高亮显示，同时，其他未被选中的元素以深色显示。默认情况下，只有第一个
+<code>&lt;input&gt;</code> 元素被选中。</p>
+<p>当某个 form 元素被选中，<code>focus</code>
+事件将被触发；反之，当其被取消选中时，<code>blur</code>
+事件将被触发。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">&#x27;first&#x27;</span>&gt;</span> <span class="tag">&lt;<span class="name">input</span>&gt;</span> <span class="tag">&lt;<span class="name">input</span>&gt;</span> <span class="tag">&lt;<span class="name">input</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> <span class="title class_">Blk</span> = <span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;input&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">    <span class="title class_">Blk</span>[<span class="number">0</span>].<span class="title function_">focus</span>();</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="title class_">Blk</span>.<span class="property">length</span>; ++i) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">let</span> obj = <span class="title class_">Blk</span>[i];</span></span><br><span class="line"><span class="language-javascript">        obj.<span class="title function_">addEventListener</span>(<span class="string">&#x27;focus&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="variable language_">this</span>.<span class="property">style</span>.<span class="property">backgroundColor</span> = <span class="string">&#x27;$ff0&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">        &#125;);</span></span><br><span class="line"><span class="language-javascript">        obj.<span class="title function_">addEventListener</span>(<span class="string">&#x27;blur&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="variable language_">this</span>.<span class="property">style</span>.<span class="property">backgroundColor</span> = <span class="string">&#x27;#aaa&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">        &#125;)</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在 vanilla JavaScript 中，我们通过循环的方式为每个
+<code>&lt;input&gt;</code> 元素添加 <code>focus</code> 与
+<code>blur</code> 事件对应的 event listener。接下来我们再来看看应用了
+JQuery 之后的代码：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">&#x27;first&#x27;</span>&gt;</span> <span class="tag">&lt;<span class="name">input</span>&gt;</span> <span class="tag">&lt;<span class="name">input</span>&gt;</span> <span class="tag">&lt;<span class="name">input</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    $(<span class="string">&#x27;#first&#x27;</span>).<span class="title function_">focus</span>();</span></span><br><span class="line"><span class="language-javascript">    $(<span class="string">&#x27;input&#x27;</span>).<span class="title function_">focus</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        $(<span class="variable language_">this</span>).<span class="title function_">css</span>(<span class="string">&#x27;background&#x27;</span>, <span class="string">&#x27;#ff0&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">    &#125;);</span></span><br><span class="line"><span class="language-javascript">    $(<span class="string">&#x27;input&#x27;</span>).<span class="title function_">blur</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        $(<span class="variable language_">this</span>).<span class="title function_">css</span>(<span class="string">&#x27;background&#x27;</span>, <span class="string">&#x27;#aaa&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">    &#125;);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>只要三句话！这得益于 event method 支持对 JQuery object 对应的所有
+matched elements 统一添加 event listener，而传统的
+<code>addEventListener()</code> 只能对单个 element 添加 event
+listener。</p>
+<h3 id="on-.off-method"><code>.on()</code> &amp; <code>.off()</code>
+method</h3>
+<p>在 JQuery 中添加 event listener 的最 general 的方式是通过
+<code>.on()</code> 方法：以上所有的 event methods 仅仅是
+<code>.on()</code> 方法的 shorthand。</p>
+<p><code>.on()</code> 方法的强大之处在于：</p>
+<ul>
+<li>register multiple events and handlers to the JQuery object.</li>
+<li>bind the same handler function to multiple events.</li>
+<li>provide data to the event handler.</li>
+</ul>
+<p>上述例子使用 <code>.on()</code> 方法可以这样写，一次性为所有
+<code>&lt;input&gt;</code> 元素添加两个事件的 event listener。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">$(<span class="string">&#x27;input&#x27;</span>).<span class="title function_">on</span>(&#123;</span><br><span class="line">    <span class="string">&#x27;focus&#x27;</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        $(<span class="variable language_">this</span>).<span class="title function_">css</span>(<span class="string">&#x27;background&#x27;</span>, <span class="string">&#x27;#ff0&#x27;</span>)&#125;, </span><br><span class="line">    <span class="string">&#x27;blur&#x27;</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        $(<span class="variable language_">this</span>).<span class="title function_">css</span>(<span class="string">&#x27;background&#x27;</span>, <span class="string">&#x27;#aaa&#x27;</span>)&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>使用 <code>.off()</code> 移除所有<strong>使用 <code>.on()</code>
+注册</strong>的 event handlers。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">$(<span class="string">&#x27;input&#x27;</span>).<span class="title function_">off</span>(<span class="string">&#x27;focus&#x27;</span>);</span><br><span class="line">$(<span class="string">&#x27;input&#x27;</span>).<span class="title function_">off</span>();    <span class="comment">// remove all handlers</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="getting-setting-information">Getting &amp; Setting
+Information</h2>
+<div class="note info no-icon"><p>Some JQuery methods both <em>retrieve</em> information from, and
+<em>update</em> the contents of the selected element(s). But they do not
+always apply to all elements.</p>
+</div>
+<p>一个 JQuery object
+可能含有多个元素；当我们调用某些方法时，它的作用范围总是匹配集中的全体元素吗？具体来说，提取信息的方法
+(GET method) 与修改信息的方法 (SET method) 通常遵循：</p>
+<ul>
+<li>GET: If JQuery object holds ore than one elements, <em>some</em> GET
+methods retrieve information from the <em>first element</em> only.</li>
+<li>SET: SET methods update <em>all element</em> in the matched
+set.</li>
+</ul>
+<p>有些方法 (例如 <code>.html()</code>, <code>.text()</code>,
+<code>.val()</code>) 既是 GET method 也是 SET
+method。它们的作用范围根据其扮演的角色 (GET 还是 SET) 而发生改变。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> content = $(<span class="string">&#x27;div&#x27;</span>).<span class="title function_">html</span>(); <span class="comment">// only return innerHTML of the first div element</span></span><br><span class="line">$(<span class="string">&#x27;div&#x27;</span>).<span class="title function_">html</span>(<span class="string">&#x27;Hello World&#x27;</span>);  <span class="comment">// set all div elements&#x27;innerHTML to &quot;Hello World&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="chaining">Chaining</h3>
+<p>Using chaining, it is possible to call multiple methods on the same
+JQuery object.</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">$(<span class="string">&quot;#message&quot;</span>).<span class="title function_">text</span>(<span class="string">&quot;Hello, world&quot;</span>).<span class="title function_">css</span>(<span class="string">&quot;color&quot;</span>, <span class="string">&quot;blue&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>注意，只有 SET methods 才能参与 chaining！纯粹的 GET method s cannot
+be chained。如果一个 chaining
+中的方法不工作，那么其之后的方法将不会被调用。</p>
+<p><br></p>
+<h2 id="css-and-dom-manipulation">CSS and DOM manipulation</h2>
+<p>对 matched set 的 CSS properties 进行更改，或是动态地对 DOM tree
+进行修改，这些都是 JavaScript 的强项所在。理所当然的，JQuery
+提供了一系列好用的方法来简化 vanilla JavaScript 中的修改过程。</p>
+<p>具体的方法介绍可以查阅 course slide 08-jQuery.pdf 的 p.16-20。</p>
+<p>这里只讲几个超级好用的。关于 CSS manipulation，一个
+<code>.css(property, value)</code> 方法已经足够：它既可以作为 GET method
+也可以作为 SET method，并且格式与 CSS 完全一致。</p>
+<p>关于 DOM manipulation，常用的 SET methods 有：</p>
+<ul>
+<li><code>.append()</code>: Insert content <em>inside</em> the selected
+element(s) <em>before</em> the closing tag.</li>
+<li><code>.prepend()</code>: Insert content <em>inside</em> the selected
+element(s) <em>after</em> the opening tag.</li>
+<li><code>.after()</code>: Insert content after the selected
+element(s).</li>
+<li><code>.before()</code>: Insert content before the selected
+element(s).</li>
+</ul>
+<p><br></p>
+<h2 id="special-effects">Special Effects</h2>
+<p>JQuery 使得 animated element 变得异常容易 (本博客的动画效果就采用了
+JQuery)，我们只需要选中相应的元素，调用各种各样的 special effect methods
+即可。</p>
+<p>可供调用的 special effect methods 可分为以下四种：</p>
+<ul>
+<li>hiding and showing: <code>show()</code>, <code>hide()</code>,
+<code>toggle()</code>.</li>
+<li>fading in and out: <code>fadeIn()</code>, <code>fadeout()</code>,
+<code>fadeToggle()</code>.</li>
+<li>sliding: <code>slideUp()</code>, <code>slideDown()</code>,
+<code>slideToggle()</code>.</li>
+<li>animations: any CSS property that can be represented as number can
+be animated.</li>
+</ul>
+<p>注意这个 <code>toggle()</code> 函数：它表示在两个属性之间切换。以
+hiding and showing 为例：原本应用了 <code>hide()</code> 的元素将转而应用
+<code>show()</code>，反之亦然。</p>
+<p>来看一个小例子，注意我们传入的参数 <code>"slow"</code> 的作用。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;odd&quot;</span>&gt;</span>First<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;even&quot;</span>&gt;</span>Second<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;odd&quot;</span>&gt;</span>Third<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;even&quot;</span>&gt;</span>Fourth<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;btn1&quot;</span>&gt;</span>Hide<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;btn2&quot;</span>&gt;</span>Show<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">        $(<span class="variable language_">document</span>).<span class="title function_">ready</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">            $(<span class="string">&#x27;#btn2&#x27;</span>).<span class="title function_">hide</span>();</span></span><br><span class="line"><span class="language-javascript">            $(<span class="string">&#x27;button&#x27;</span>).<span class="title function_">click</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">                $(<span class="string">&#x27;p.even&#x27;</span>).<span class="title function_">toggle</span>(<span class="string">&quot;slow&quot;</span>);</span></span><br><span class="line"><span class="language-javascript">                $(<span class="string">&#x27;button&#x27;</span>).<span class="title function_">toggle</span>();</span></span><br><span class="line"><span class="language-javascript">            &#125;)</span></span><br><span class="line"><span class="language-javascript">        &#125;)</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>效果见<a href="https://i.cs.hku.hk/~atctam/c3322/JQ/toggle.html">这里</a>。随着我们按下按钮，偶数行将不断地
+hiding/showing；这正是 <code>toggle()</code> 的效果。</p>
+<p>除此之外常用的 special effect method 还有 <code>delay()</code> 与
+<code>stop()</code>，用来控制连续的 special effects 发生的间隔与停止某个
+special effect 的发生。</p>
+<p><br></p>
+<h2 id="jquery-ajax">JQuery AJAX</h2>
+<p>同样，JQuery 也提供了一系列与 AJAX 相关的方法。其中最 general 的是
+<code>$.ajax()</code> 方法；还有几个十分方便的 shorthand
+methods：<code>$.load()</code>, <code>$.get()</code>,
+<code>$.getJSON()</code>, <code>$.post()</code>.</p>
+<ul>
+<li><code>$.ajax(url, method, data....)</code> 只有当其他几个 shorthand
+methods
+不适用时才考虑使用这个方法。它虽然强大，但自定义的程度很高，需要传入许多参数来
+specify。</li>
+<li><code>$.load(url, data, function(response, status, xhr))</code>
+fetch the HTML content from a URL and directly place the returned data
+into <em>the selected element</em> that invoked this
+<code>.load()</code> call.</li>
+<li><code>$.get(url, data, function(response, status, xhr), datatype)</code>
+loads data or JSON data from the server using HTTP GET request.</li>
+<li><code>$.getJSON(url, data, function(response, status, xhr))</code></li>
+<li><code>$.post(url, data, function(response, status, xhr), datatype)</code>
+loads data or JSON data from the server using HTTP POST request.</li>
+</ul>
+<p>下面再来简单说明一下这些 AJAX methods 中的参数：</p>
+<ul>
+<li>URL</li>
+<li>data (optional for GET): an object or string that is <em>sent to the
+server</em>. (一般是某个 query string)</li>
+<li>function: a <em>callback</em> to be executed if the request success.
+<ul>
+<li>response: contains the <em>result data</em> from the request.</li>
+<li>status: contains the status of the request.</li>
+<li>xhr: contains the XMLHttpRequest object.</li>
+</ul></li>
+<li>datatype: specifies the data type expected of the server response.
+(可以是 xml, JSON, script, text, html 等，默认为 intelligent guess)</li>
+</ul>
+<p>来看一个例子：当用户向 <code>RegForm</code> 中输入数据并点击 submit
+后，程序将会用 HTTP POST 方法从 server 取得所有 form data 并显示在
+<code>stdTable</code> 中。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">$(<span class="string">&quot;#RegForm&quot;</span>).<span class="title function_">submit</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    $rfrom = <span class="variable language_">this</span>;</span><br><span class="line">    $.<span class="title function_">post</span>(<span class="string">&quot;view.php&quot;</span>, $(<span class="string">&quot;#RegForm&quot;</span>).<span class="title function_">serialize</span>(), <span class="keyword">function</span>(<span class="params">data, status</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (status == <span class="string">&quot;success&quot;</span>) &#123;</span><br><span class="line">            <span class="keyword">let</span> txt = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> i <span class="keyword">in</span> data) &#123;</span><br><span class="line">                txt += <span class="string">&quot;&lt;p&gt;Name   : &quot;</span> + data[i].<span class="property">name</span>  +<span class="string">&quot;&lt;br&gt; &quot;</span>;</span><br><span class="line">                txt +=    <span class="string">&quot;Number : &quot;</span> + data[i].<span class="property">number</span> + <span class="string">&quot;&lt;br&gt; &quot;</span>;</span><br><span class="line">                txt +=    <span class="string">&quot;Age    : &quot;</span> + data[i].<span class="property">age</span> + <span class="string">&quot;&lt;br&gt; &quot;</span>;</span><br><span class="line">                txt +=    <span class="string">&quot;Email  : &quot;</span> + data[i].<span class="property">email</span> + <span class="string">&quot;&lt;/p&gt; &quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            $(<span class="string">&quot;#stdTable&quot;</span>).<span class="title function_">html</span>(txt);</span><br><span class="line">            $rform.<span class="title function_">reset</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;    <span class="comment">// ...</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>有两个需要注意的点：</p>
+<ul>
+<li><code>.serialize()</code> 函数将 form data 转化为 query string
+的形式。这里我们将用户输入的数据转化为 query string 并发送给
+server。</li>
+<li><code>return false;</code> 向 event method 中传入的函数返回值为
+<code>false</code> 等价于<code>event.preventDefault();</code></li>
+</ul>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info: Code, COMP3322. Lecturer, Dr. Tam Anthony Tat Chun.</p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+        <category>Web Development, HKU</category>
+      </categories>
+      <tags>
+        <tag>web</tag>
+        <tag>library</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>HKU Provinci 4th Training</title>
     <url>/2023/11/01/training-4/</url>
     <content><![CDATA[<p>题目来自 2023-2024 ICPC Brazil Subregional Programming Contest。<a href="https://codeforces.com/gym/104555">link</a></p>
@@ -166,7 +434,14 @@ feel free to share with me!</p>
 </div>
 <p><br></p>
 <h2 id="best-fair-shuffles">Best Fair Shuffles</h2>
-<p>[待改]</p>
+<p>思维+猜结论题，这种题没想出来真没办法，就是菜。</p>
+<p>在序列中寻找最长的形如 <span class="math inline">\(1,2,...,x_1\)</span> 的子序列，再寻找形如 <span class="math inline">\(x_1+1,...,x_2\)</span> 的子序列，再寻找 <span class="math inline">\(x_2+1,...,x_3\)</span> 的子序列……若最终找到了
+<span class="math inline">\(k\)</span> 个这样的子序列，答案为 <span class="math inline">\(\log_2(k)\)</span>。</p>
+<p>比较 intuitive 的证明：一次 fair shuffle
+至多会将这样的子序列数量翻倍，因此 <span class="math inline">\(m\)</span> 次 fair shuffle
+后得到的序列中最多将会有 <span class="math inline">\(2^m\)</span>
+个子序列。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_N = <span class="number">1e6</span> + <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">bool</span> pos[MAX_N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="number">0</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> k = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">        <span class="type">int</span> x;</span><br><span class="line">        cin &gt;&gt; x;</span><br><span class="line">        pos[x] = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (!pos[x - <span class="number">1</span>])</span><br><span class="line">            ++k;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="built_in">ceil</span>(<span class="built_in">log2</span>(k)) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
 <h2 id="challenging-hike">Challenging Hike</h2>
 <p>树上最长上升子序列问题。由于要在树上回溯，需要撤销操作，解普通最长上升子序列的树状数组要改成支持单点修改区间维护的最大值线段树。顺便也复习了一下离散化。</p>
@@ -519,6 +794,17 @@ statically-typed language 与 dynamically-typed language
 之间最本质的区别了，在此不再过多赘述。</p>
 <p>详情可参见我的笔记 <a href="https://thisisxxz.com/categories/%E7%AC%94%E8%AE%B0/Programming-Languages-UW/">Programming
 Languages, UW</a>。</p>
+<h3 id="contd.-remote-control">contd. remote control</h3>
+<p>上述例子的另外一种解释 (但本质是相同的)：The compiler decides whether
+you can call a method based on the <em>reference type</em> (static
+type), not the <em>actual object type</em> (dynamic type).</p>
+<p>很喜欢 2396 对该问题的一个浅显比喻。object 是一个复杂的机器，而一个
+object 能够对应多个 references。reference 就像该机器的遥控器 (remote
+control)，每一种类型的 reference
+能在<strong>不同程度</strong>上控制该机器。</p>
+<p>自底向上，沿着 class hierarchy：从 actual object type 到
+<code>Object</code> type，不同类型的 reference 对 object
+的控制程度越来越低。</p>
 <p><br></p>
 <h2 id="more-inheritance-super">More Inheritance:
 <code>super</code></h2>
@@ -621,6 +907,24 @@ object that refers to at runtime.</p>
 <p>若在 <code>Son</code> 类中添加
 <code>public int get() &#123; return a; &#125;</code> 结果又是怎样？(method
 overriding: <code>2 2 2 1</code>)</p>
+<p><br></p>
+<h2 id="java-io">Java I/O</h2>
+<p>midterm 小复习之常用的 Java I/O。有这一节纯粹是因为
+<code>System.in</code> 太难用了。</p>
+<p><strong>InputStreamReader + BufferedReader: </strong>
+适合快速读入大规模的数据。用法如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">InputStreamReader</span> <span class="variable">isr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(System.in);</span><br><span class="line"><span class="type">BufferedReader</span> <span class="variable">inData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(isr);</span><br><span class="line"></span><br><span class="line">String line;</span><br><span class="line"><span class="keyword">while</span> ((line = inData.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="comment">// dealing with line</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用 <code>inData</code> 的 <code>readLine()</code>
+方法一行行的读入数据，每一行数据储存在一个 String 对象中。</p>
+<p><strong>Scanner: </strong> 速度略慢于 InputStreamReader +
+BufferedReader，但胜在多种读入模式。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">Scanner</span> <span class="variable">inData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (inData.hasNextLine()) &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">line</span> <span class="operator">=</span> inData.nextLine();</span><br><span class="line">    <span class="comment">// dealing with line</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>inData</code> 拥有各种各样方便的读入方法，如
+<code>nextInt()</code>, <code>nextLine()</code>,
+<code>nextBoolean()</code> 等等。</p>
+<p><strong>File I/O: </strong> 使用 FileReader 与 File 对象替换
+InputStreamReader 对象与 <code>System.in</code>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">FileReader</span> <span class="variable">fr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileReader</span>(<span class="string">&quot;path/to/file.txt&quot;</span>);</span><br><span class="line"><span class="type">BufferedReader</span> <span class="variable">inData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(fr);</span><br><span class="line"></span><br><span class="line"><span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;path/to/file.txt&quot;</span>);</span><br><span class="line"><span class="type">Scanner</span> <span class="variable">inData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(file);</span><br></pre></td></tr></table></figure>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
