@@ -33,7 +33,7 @@
 <meta property="og:description" content="与 OI 中间接接触到的各种 DS&amp;A 知识相比，这门课的优势在于比较正统，严谨的理论分析；因此还是有必要记录一下的。这篇笔记将采用 problem-based 的形式，比较随性的收集一些 insights。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-10-19T03:38:35.000Z">
-<meta property="article:modified_time" content="2023-10-31T12:53:39.253Z">
+<meta property="article:modified_time" content="2023-11-07T07:07:58.258Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="data structure">
 <meta property="article:tag" content="computational theory">
@@ -171,7 +171,8 @@
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#recursion-problem"><span class="nav-number">1.</span> <span class="nav-text">Recursion Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#complexity-analysis"><span class="nav-number">2.</span> <span class="nav-text">Complexity Analysis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#amortizedaverage-analysis"><span class="nav-number">3.</span> <span class="nav-text">Amortized&#x2F;Average Analysis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#insight-building-egg-problem"><span class="nav-number">4.</span> <span class="nav-text">Insight: Building &amp; Egg
 Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#binary-search-tree"><span class="nav-number">5.</span> <span class="nav-text">Binary Search Tree</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#successor"><span class="nav-number">5.1.</span> <span class="nav-text">Successor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deletion"><span class="nav-number">5.2.</span> <span class="nav-text">Deletion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#analysis"><span class="nav-number">5.3.</span> <span class="nav-text">Analysis</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#insight-convert-linked-list-to-bst"><span class="nav-number">6.</span> <span class="nav-text">Insight: Convert Linked List
-to BST</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+to BST</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bubble-sort-average-of-swapping"><span class="nav-number">7.</span> <span class="nav-text">Bubble Sort: Average # of
+Swapping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">8.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -572,6 +573,29 @@ to BST</h2>
 (其结构接近于完全二叉树)。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">ListNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line">    ListNode* next;</span><br><span class="line">    <span class="built_in">ListNode</span>(<span class="type">int</span> x) : <span class="built_in">val</span>(x), <span class="built_in">next</span>(<span class="literal">nullptr</span>) &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line">    TreeNode* left;</span><br><span class="line">    TreeNode* right;</span><br><span class="line">    <span class="built_in">TreeNode</span>(<span class="type">int</span> x) : <span class="built_in">val</span>(x), <span class="built_in">left</span>(<span class="literal">nullptr</span>), <span class="built_in">right</span>(<span class="literal">nullptr</span>) &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">TreeNode* <span class="title">sortedListToBST</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (head == <span class="literal">nullptr</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="type">int</span> len = <span class="number">0</span>;</span><br><span class="line">    ListNode* curr = head;</span><br><span class="line">    <span class="keyword">while</span> (curr != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        ++len;</span><br><span class="line">        curr = curr-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">buildBST</span>(head, <span class="number">0</span>, len - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">TreeNode* <span class="title">buildBST</span><span class="params">(ListNode* head, <span class="type">int</span> l, <span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l &gt; r)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="type">int</span> mid = (l + r) / <span class="number">2</span>;</span><br><span class="line">    TreeNode left = <span class="built_in">buildBST</span>(head, l, mid - <span class="number">1</span>);</span><br><span class="line">    TreeNode root = <span class="keyword">new</span> <span class="built_in">TreeNode</span>(head-&gt;val);</span><br><span class="line">    root-&gt;left = left;</span><br><span class="line">    head = head-&gt;next;</span><br><span class="line">    root-&gt;right = <span class="built_in">buildBST</span>(head, mid + <span class="number">1</span>, r);</span><br><span class="line">    <span class="keyword">return</span> root;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br></p>
+<h2 id="bubble-sort-average-of-swapping">Bubble Sort: Average # of
+Swapping</h2>
+<p>一个小证明：冒泡排序<strong>平均</strong>会调用 <code>swap()</code>
+函数多少次呢？</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = n; i &gt;= <span class="number">2</span>; --i) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= i - <span class="number">1</span>; ++j) &#123;</span><br><span class="line">        <span class="keyword">if</span> (a[j] &gt; a[j + <span class="number">1</span>])</span><br><span class="line">            <span class="built_in">swap</span>(a[j], a[j + <span class="number">1</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于长为 <span class="math inline">\(n\)</span> 的排列 <span class="math inline">\(S\)</span> (我们只关心排列，因为冒泡排序是
+comparison-based
+sorting，基于元素间的大小关系而与具体数值无关)，答案应当是 <span class="math inline">\(\frac{1}{n!}\sum_{I\in
+S}\mathrm{inv}(I)\)</span>，其中 <span class="math inline">\(\mathrm{inv}(I)\)</span> 是排列 <span class="math inline">\(I\)</span> 中的逆序对个数。</p>
+<p>这个式子很难算。换个角度，考虑每一对逆序对对答案作出的贡献：选取两个数
+<span class="math inline">\(a,b \ (a&lt;b)\)</span>
+作为逆序对，再选取两个位置 <span class="math inline">\(i,j \
+(i&lt;j)\)</span>，将 <span class="math inline">\(b\)</span> 填入位置
+<span class="math inline">\(i\)</span>，<span class="math inline">\(a\)</span> 填入位置 <span class="math inline">\(j\)</span> ，这样的逆序对共有 <span class="math inline">\((C_n^{2})^2\)</span> 个。</p>
+<p>每一个这样的逆序对会做出多少贡献？考虑一个逆序对 <span class="math inline">\((b,a)\)</span>，它们已经占据了 <span class="math inline">\(n\)</span>
+个位置中的两个，那么这样的一个逆序对将会在 <span class="math inline">\((n-2)!\)</span>
+个排列中出现；也就是，它们对答案的贡献是 <span class="math inline">\((n-2)!\)</span>。</p>
+<p>那么长为 <span class="math inline">\(n\)</span>
+的排列平均拥有的逆序对为 <span class="math inline">\(\frac{1}{n!}(C_n^2)^2(n-2)!=\frac{n(n-1)}{4}\)</span>。这就意味着冒泡排序将对长为
+<span class="math inline">\(n\)</span> 的数组 (假设元素 distinct)
+调用平均 <span class="math inline">\(\frac{n(n-1)}{4}\)</span> 次
+<code>swap()</code> 函数。</p>
+<p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
@@ -665,8 +689,8 @@ if not specified.</p>
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2023/10/15/training-2/" rel="prev" title="HKU Provinci 2nd Training">
-                  <i class="fa fa-chevron-left"></i> HKU Provinci 2nd Training
+                <a href="/2023/10/15/training-2/" rel="prev" title="HKU Provincists 2nd Training">
+                  <i class="fa fa-chevron-left"></i> HKU Provincists 2nd Training
                 </a>
             </div>
             <div class="post-nav-item">
