@@ -155,6 +155,175 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
+    <title>Introduction to DS - Data Wrangling</title>
+    <url>/2023/11/08/COMP2501-4/</url>
+    <content><![CDATA[<p>我是在 MIT missing semester 这门课里第一次听到 Data Wrangling
+这一说法的；那时候对这个词并没有很深刻的理解。现在我了解了：数据之所以要被「整理」(wrangling)，是因为存在一种「整洁」(tidy)
+的定义。</p>
+<span id="more"></span>
+<p>关于数据的 tidy format 在 P3
+里已经详细介绍过：对于整洁的数据，存在各种各样强大的工具 (如
+<code>tidyverse</code>)
+对其进行操纵。而本节所要介绍的，是如何将杂乱的数据整理成整洁的数据。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="reshaping-data">Reshaping Data</h2>
+<p>在开始之前，我们引入一个数据集
+<code>fertility-two-countries-example</code>：这个数据集是不整洁的。我们有另一种术语称呼这种不整洁的数据集，即
+<em>wide data</em>。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">wide_data <span class="operator">&lt;-</span> read_csv<span class="punctuation">(</span><span class="string">&quot;fertility-two-countries-example.csv&quot;</span><span class="punctuation">)</span></span><br><span class="line">head<span class="punctuation">(</span>wide_data<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; A tibble: 2 × 57</span></span><br><span class="line"><span class="comment">#&gt;  country `1960` `1961` `1962` `1963` `1964` `1965` `1966` `1967` `1968` ...</span></span><br><span class="line"><span class="comment">#&gt;  &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; ...</span></span><br><span class="line"><span class="comment">#&gt; 1 Germany   2.41   2.44   2.47   2.49   2.49   2.48   2.44   2.37   2.28 ...</span></span><br><span class="line"><span class="comment">#&gt; 2 South …   6.16   5.99   5.79   5.57   5.36   5.16   4.99   4.85   4.73 ...</span></span><br></pre></td></tr></table></figure>
+<h3 id="pivot_longer"><code>pivot_longer</code></h3>
+<p>选择若干列作为 pivots 并将其展开 (即，原列中的 variable「降级」为
+value)。由于这种操作会增加 table 的长度，因此称为
+<code>pivot_longer</code>。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">tidy_data <span class="operator">&lt;-</span> wide_data <span class="operator">|&gt;</span></span><br><span class="line">    pivot_longer<span class="punctuation">(</span>wide_data<span class="punctuation">,</span> <span class="string">&quot;1960&quot;</span><span class="operator">:</span><span class="string">&quot;2015&quot;</span><span class="punctuation">,</span> names_to <span class="operator">=</span> <span class="string">&quot;year&quot;</span><span class="punctuation">,</span> values_to <span class="operator">=</span> <span class="string">&quot;fertility&quot;</span><span class="punctuation">)</span></span><br><span class="line">head<span class="punctuation">(</span>tidy_data<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#    A tibble: 6 × 3</span></span><br><span class="line"><span class="comment">#&gt;   country year  fertility</span></span><br><span class="line"><span class="comment">#&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt;</span></span><br><span class="line"><span class="comment">#&gt; 1 Germany 1960       2.41</span></span><br><span class="line"><span class="comment">#&gt; 2 Germany 1961       2.44</span></span><br><span class="line"><span class="comment">#&gt; 3 Germany 1962       2.47</span></span><br><span class="line"><span class="comment">#&gt; 4 Germany 1963       2.49</span></span><br><span class="line"><span class="comment">#&gt; 5 Germany 1964       2.49</span></span><br><span class="line"><span class="comment">#&gt; 6 Germany 1965       2.48</span></span><br></pre></td></tr></table></figure>
+<p>参数分别是：</p>
+<ul>
+<li>target dataset to be reshaped.</li>
+<li>pivot columns.</li>
+<li><code>names_to</code>: new column name containing the <em>current
+column names</em>.</li>
+<li><code>values_to</code>: new column name containing the <em>current
+observation values</em>.</li>
+</ul>
+<h3 id="pivot_wider"><code>pivot_wider</code></h3>
+<p>基本上是 <code>pivot_longer</code> 的逆过程。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">new_wide_data <span class="operator">&lt;-</span> tidy_data <span class="operator">|&gt;</span></span><br><span class="line">    pivot_wider<span class="punctuation">(</span>names_from <span class="operator">=</span> year<span class="punctuation">,</span> values_from <span class="operator">=</span> fertility<span class="punctuation">)</span></span><br><span class="line">select<span class="punctuation">(</span>new_wide_data<span class="punctuation">,</span> country<span class="punctuation">,</span> <span class="string">&quot;1960&quot;</span><span class="operator">:</span><span class="string">&quot;1967&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; # A tibble: 2 × 9</span></span><br><span class="line"><span class="comment">#&gt;   country     `1960` `1961` `1962` `1963` `1964` `1965` `1966` `1967`</span></span><br><span class="line"><span class="comment">#&gt;   &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span></span><br><span class="line"><span class="comment">#&gt; 1 Germany       2.41   2.44   2.47   2.49   2.49   2.48   2.44   2.37</span></span><br><span class="line"><span class="comment">#&gt; 2 South Korea   6.16   5.99   5.79   5.57   5.36   5.16   4.99   4.85</span></span><br></pre></td></tr></table></figure>
+<h3 id="seperate"><code>seperate</code></h3>
+<p>再看另一组不整洁的数据：</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">raw_dat <span class="operator">&lt;-</span> read_csv<span class="punctuation">(</span>filename<span class="punctuation">)</span></span><br><span class="line">select<span class="punctuation">(</span>raw_dat<span class="punctuation">,</span> <span class="number">1</span><span class="operator">:</span><span class="number">5</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; # A tibble: 2 × 5</span></span><br><span class="line"><span class="comment">#&gt;   country     `1960_fertility` `1960_life_expectancy` `1961_fertility`</span></span><br><span class="line"><span class="comment">#&gt;   &lt;chr&gt;                  &lt;dbl&gt;                  &lt;dbl&gt;            &lt;dbl&gt;</span></span><br><span class="line"><span class="comment">#&gt; 1 Germany                 2.41                   69.3             2.44</span></span><br><span class="line"><span class="comment">#&gt; 2 South Korea             6.16                   53.0             5.99</span></span><br><span class="line"><span class="comment">#&gt; # ℹ 1 more variable: `1961_life_expectancy` &lt;dbl&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这组数据的杂乱程度比 <code>fertility-two-countries-example</code>
+更甚。</p>
+<ul>
+<li>wide data.</li>
+<li>encoding <em>extra information</em> (year) in the column names.</li>
+</ul>
+<p>首先用 <code>pivot_longer</code> 进行第一次整理。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">dat <span class="operator">&lt;-</span> raw_dat <span class="operator">|&gt;</span> pivot_longer<span class="punctuation">(</span><span class="operator">-</span>country<span class="punctuation">)</span></span><br><span class="line">head<span class="punctuation">(</span>dat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt;  A tibble: 6 × 3</span></span><br><span class="line"><span class="comment">#&gt;   country name                 value</span></span><br><span class="line"><span class="comment">#&gt;   &lt;chr&gt;   &lt;chr&gt;                &lt;dbl&gt;</span></span><br><span class="line"><span class="comment">#&gt; 1 Germany 1960_fertility        2.41</span></span><br><span class="line"><span class="comment">#&gt; 2 Germany 1960_life_expectancy 69.3 </span></span><br><span class="line"><span class="comment">#&gt; 3 Germany 1961_fertility        2.44</span></span><br><span class="line"><span class="comment">#&gt; 4 Germany 1961_life_expectancy 69.8 </span></span><br><span class="line"><span class="comment">#&gt; 5 Germany 1962_fertility        2.47</span></span><br><span class="line"><span class="comment">#&gt; 6 Germany 1962_life_expectancy 70.0 </span></span><br></pre></td></tr></table></figure>
+<p>注意这里的特殊写法：<code>pivot_longer(-country)</code> 表示将除了
+<code>country</code> 外的所有列都作为 pivot。</p>
+<p>接下来我们使用 <code>separate</code>
+函数进行第二次整理：<code>seperate</code>
+函数将指定的列分为若干部分。<code>seperate</code> 函数默认以下划线
+<code>_</code> 作为变量分隔符。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">dat <span class="operator">|&gt;</span> separate<span class="punctuation">(</span>name<span class="punctuation">,</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;year, name&quot;</span><span class="punctuation">)</span><span class="punctuation">,</span> extra <span class="operator">=</span> <span class="string">&quot;merge&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; # A tibble: 224 × 4</span></span><br><span class="line"><span class="comment">#&gt;   country year  name            value</span></span><br><span class="line"><span class="comment">#&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;           &lt;dbl&gt;</span></span><br><span class="line"><span class="comment">#&gt; 1 Germany 1960  fertility        2.41</span></span><br><span class="line"><span class="comment">#&gt; 2 Germany 1960  life_expectancy 69.3 </span></span><br><span class="line"><span class="comment">#&gt; 3 Germany 1961  fertility        2.44</span></span><br><span class="line"><span class="comment">#&gt; 4 Germany 1961  life_expectancy 69.8 </span></span><br><span class="line"><span class="comment">#&gt; 5 Germany 1962  fertility        2.47</span></span><br><span class="line"><span class="comment">#&gt; # ℹ 219 more rows</span></span><br></pre></td></tr></table></figure>
+<p>这里要稍微讲一下 <code>extra = "merge"</code> 的作用。对于某个变量
+<code>1962_life_expectancy</code>：</p>
+<ul>
+<li><code>separate</code> 根据默认分隔符 <code>_</code>
+将其分为三部分：<code>1962</code>, <code>life</code> 与
+<code>expectancy</code>。</li>
+<li>但指定的新变量名只有两个 <code>c("year", "name")</code>。</li>
+<li>因此，多余的部分 <code>expectancy</code> 将会被舍弃。</li>
+</ul>
+<p>这就是 <code>extra = "merge"</code> 所规避的：it merges the last two
+variables when there's an extra separation.</p>
+<p>接下来我们进行最后一次整理：为分割开的变量 <code>fertility</code> 与
+<code>life_expectancy</code> 分别创建新的一列 (即，将
+<code>fertility</code> 与 <code>life_expectancy</code> 这两种 value
+「升级」为 variable)。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">dat <span class="operator">|&gt;</span></span><br><span class="line">    separate<span class="punctuation">(</span>name<span class="punctuation">,</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;year&quot;</span><span class="punctuation">,</span> <span class="string">&quot;name&quot;</span><span class="punctuation">)</span><span class="punctuation">,</span> extra <span class="operator">=</span> <span class="string">&quot;merge&quot;</span><span class="punctuation">)</span> <span class="operator">|&gt;</span></span><br><span class="line">    pivot_wider<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; # A tibble: 112 × 4</span></span><br><span class="line"><span class="comment">#&gt;   country year  fertility life_expectancy</span></span><br><span class="line"><span class="comment">#&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt;           &lt;dbl&gt;</span></span><br><span class="line"><span class="comment">#&gt; 1 Germany 1960       2.41            69.3</span></span><br><span class="line"><span class="comment">#&gt; 2 Germany 1961       2.44            69.8</span></span><br><span class="line"><span class="comment">#&gt; 3 Germany 1962       2.47            70.0</span></span><br><span class="line"><span class="comment">#&gt; 4 Germany 1963       2.49            70.1</span></span><br><span class="line"><span class="comment">#&gt; 5 Germany 1964       2.49            70.7</span></span><br><span class="line"><span class="comment">#&gt; # ℹ 107 more rows</span></span><br></pre></td></tr></table></figure>
+<p>Finished！现在每一个 observation 仅仅对应一行了。</p>
+<h3 id="unite"><code>unite</code></h3>
+<p><code>separate</code> 的逆过程。默认的合并符也是下划线
+<code>_</code>。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">dat <span class="operator">|&gt;</span></span><br><span class="line">    separate<span class="punctuation">(</span>name<span class="punctuation">,</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;year&quot;</span><span class="punctuation">,</span> <span class="string">&quot;first&quot;</span><span class="punctuation">,</span> <span class="string">&quot;second&quot;</span><span class="punctuation">)</span><span class="punctuation">,</span> fill <span class="operator">=</span> <span class="string">&quot;right&quot;</span><span class="punctuation">)</span> <span class="operator">|&gt;</span></span><br><span class="line">    unite<span class="punctuation">(</span>name<span class="punctuation">,</span> first_variable_name<span class="punctuation">,</span> second_variable_name<span class="punctuation">)</span> <span class="operator">|&gt;</span></span><br><span class="line">    pivot_wider<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">|&gt;</span></span><br><span class="line">    rename<span class="punctuation">(</span>fertility <span class="operator">=</span> fertility_NA<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; # A tibble: 112 × 4</span></span><br><span class="line"><span class="comment">#&gt;   country year  fertility life_expectancy</span></span><br><span class="line"><span class="comment">#&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt;           &lt;dbl&gt;</span></span><br><span class="line"><span class="comment">#&gt; 1 Germany 1960       2.41            69.3</span></span><br><span class="line"><span class="comment">#&gt; 2 Germany 1961       2.44            69.8</span></span><br><span class="line"><span class="comment">#&gt; 3 Germany 1962       2.47            70.0</span></span><br><span class="line"><span class="comment">#&gt; 4 Germany 1963       2.49            70.1</span></span><br><span class="line"><span class="comment">#&gt; 5 Germany 1964       2.49            70.7</span></span><br><span class="line"><span class="comment">#&gt; # ℹ 107 more rows</span></span><br></pre></td></tr></table></figure>
+<p>上文我们说到，当 separation 的数量大于提供的新变量名数量时，extra
+separation 将会被舍去；但当 separation
+的数量小于提供的新变量名数量时，默认情况 (或使用
+<code>fill = "right"</code>) 将使用 <code>NA</code> 填充 extra variable
+names。</p>
+<p>利用这一点，使用 <code>union</code> 与 <code>rename</code>
+配合能够起到替代 <code>separation</code> 中 <code>extra = "merge"</code>
+的作用。</p>
+<p><br></p>
+<h2 id="joining-tables">Joining Tables</h2>
+<p>下面简单介绍以下如何合并两个 tables。见下例子：</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">tab_1</span><br><span class="line"><span class="comment">#&gt;        state population</span></span><br><span class="line"><span class="comment">#&gt; 1    Alabama    4779736</span></span><br><span class="line"><span class="comment">#&gt; 2     Alaska     710231</span></span><br><span class="line"><span class="comment">#&gt; 3    Arizona    6392017</span></span><br><span class="line"><span class="comment">#&gt; 4   Arkansas    2915918</span></span><br><span class="line"><span class="comment">#&gt; 5 California   37253956</span></span><br><span class="line"><span class="comment">#&gt; 6   Colorado    5029196</span></span><br><span class="line">tab_2</span><br><span class="line"><span class="comment">#&gt;         state ev</span></span><br><span class="line"><span class="comment">#&gt; 1  California 55</span></span><br><span class="line"><span class="comment">#&gt; 2     Arizona 11</span></span><br><span class="line"><span class="comment">#&gt; 3     Alabama  9</span></span><br><span class="line"><span class="comment">#&gt; 4 Connecticut  7</span></span><br><span class="line"><span class="comment">#&gt; 5      Alaska  3</span></span><br><span class="line"><span class="comment">#&gt; 6    Delaware  3</span></span><br></pre></td></tr></table></figure>
+<p>可以发现这两个 tables 拥有相同的变量
+<code>state</code>，但变量的值并非一一对应。那么当它们依据
+<code>state</code> 合并时 (<code>by = "state"</code>) 表现如何呢？</p>
+<h3 id="left_join"><code>left_join</code></h3>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">left_join<span class="punctuation">(</span>tab1<span class="punctuation">,</span> tab2<span class="punctuation">,</span> by <span class="operator">=</span> <span class="string">&quot;state&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt;        state population ev</span></span><br><span class="line"><span class="comment">#&gt; 1    Alabama    4779736  9</span></span><br><span class="line"><span class="comment">#&gt; 2     Alaska     710231  3</span></span><br><span class="line"><span class="comment">#&gt; 3    Arizona    6392017 11</span></span><br><span class="line"><span class="comment">#&gt; 4   Arkansas    2915918 NA</span></span><br><span class="line"><span class="comment">#&gt; 5 California   37253956 55</span></span><br><span class="line"><span class="comment">#&gt; 6   Colorado    5029196 NA</span></span><br></pre></td></tr></table></figure>
+<p><code>left_join</code> 依照左侧 table 的 <code>state</code>
+值进行合并：多余的舍去，空缺的补 <code>NA</code>。</p>
+<h3 id="right_join"><code>right_join</code></h3>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">right_join<span class="punctuation">(</span>tab1<span class="punctuation">,</span> tab2<span class="punctuation">,</span> by <span class="operator">=</span> <span class="string">&quot;state&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt;         state population ev</span></span><br><span class="line"><span class="comment">#&gt; 1     Alabama    4779736  9</span></span><br><span class="line"><span class="comment">#&gt; 2      Alaska     710231  3</span></span><br><span class="line"><span class="comment">#&gt; 3     Arizona    6392017 11</span></span><br><span class="line"><span class="comment">#&gt; 4  California   37253956 55</span></span><br><span class="line"><span class="comment">#&gt; 5 Connecticut         NA  7</span></span><br><span class="line"><span class="comment">#&gt; 6    Delaware         NA  3</span></span><br></pre></td></tr></table></figure>
+<p><code>right_join</code> 依照右侧 table 的 <code>state</code>
+值进行合并：多余的舍去，空缺的补 <code>NA</code>。</p>
+<p>此外还有：</p>
+<ul>
+<li><code>inner_join</code>：求交集。</li>
+<li><code>full_join</code>：求并集。</li>
+<li><code>semi_join</code>：该函数并<strong>不是合并操作</strong>。它仅保留左侧
+table 中拥有右侧 table 信息的行，但不进行合并。</li>
+<li><code>anti_join</code>：<code>semi_join</code> 的逆操作。它删去左侧
+table 中拥有右侧 table 信息的行，不进行合并。</li>
+</ul>
+<p><br></p>
+<h2 id="binding-tables">Binding Tables</h2>
+<div class="note info no-icon"><p>Unlike the join function, the binding functions do not try to match
+by a variable, but instead simply <em>combine datasets</em>. If the
+datasets don't match by the appropriate dimensions, one obtains an
+error.</p>
+</div>
+<p>binding 函数用起来就相当简单粗暴了。</p>
+<h3 id="bind_cols"><code>bind_cols</code></h3>
+<p><code>bind_cols</code> 函数合并若干列；若列的长度不一样将报错。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">bind_cols<span class="punctuation">(</span>a <span class="operator">=</span> <span class="number">1</span><span class="operator">:</span><span class="number">3</span><span class="punctuation">,</span> b <span class="operator">=</span> <span class="number">4</span><span class="operator">:</span><span class="number">6</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; A tibble: 3 × 2</span></span><br><span class="line"><span class="comment">#&gt;       a     b</span></span><br><span class="line"><span class="comment">#&gt;     &lt;int&gt; &lt;int&gt;</span></span><br><span class="line"><span class="comment">#&gt; 1     1     4</span></span><br><span class="line"><span class="comment">#&gt; 2     2     5</span></span><br><span class="line"><span class="comment">#&gt; 3     3     6</span></span><br></pre></td></tr></table></figure>
+<h3 id="bind_rows"><code>bind_rows</code></h3>
+<p>类似的，<code>bind_rows</code> 函数合并若干行；若行间的 variable
+对不上直接报错。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">tab_1 <span class="operator">&lt;-</span> tab<span class="punctuation">[</span><span class="number">1</span><span class="operator">:</span><span class="number">2</span><span class="punctuation">,</span> <span class="punctuation">]</span></span><br><span class="line">tab_2 <span class="operator">&lt;-</span> tab<span class="punctuation">[</span><span class="number">3</span><span class="operator">:</span><span class="number">4</span><span class="punctuation">,</span> <span class="punctuation">]</span></span><br><span class="line">bind_rows<span class="punctuation">(</span>tab_1<span class="punctuation">,</span> tab_2<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="web-scraping">Web Scraping</h2>
+<p>一个简单的 web scraping (web harvesting) 例子。</p>
+<p>我们的目标是从<a href="https://en.wikipedia.org/w/index.php?title=%22,%22Gun_violence_in_the_United_States_by_state%22,%22&amp;direction=prev&amp;oldid=810166167">这里</a>提取美国各州的犯罪率表格并将其存入
+R 中的一个 data frame 中。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">url <span class="operator">&lt;-</span> paste0<span class="punctuation">(</span><span class="string">&quot;https://en.wikipedia.org/w/index.php?title=&quot;</span><span class="punctuation">,</span></span><br><span class="line">              <span class="string">&quot;Gun_violence_in_the_United_States_by_state&quot;</span><span class="punctuation">,</span></span><br><span class="line">              <span class="string">&quot;&amp;direction=prev&amp;oldid=810166167&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>下一步，我们调用 <code>rvest</code> 包中的 <code>read_html</code>
+函数获取网页对应的 XML 内容。接着再对其调用 <code>html_text</code>
+函数，我们能够获得该网页的 HTML 源代码。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">h <span class="operator">&lt;-</span> read_html<span class="punctuation">(</span>url<span class="punctuation">)</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>h<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;xml_document&quot; &quot;xml_node&quot;</span></span><br></pre></td></tr></table></figure>
+<p>下一步，我们使用 <code>html_nodes</code> 函数获取 XML 代码中的所有
+table 元素 (或者说节点，node)。我们只关心第一个 ，也就是我们的目标
+table。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">tab <span class="operator">&lt;-</span> h <span class="operator">|&gt;</span> html_nodes<span class="punctuation">(</span><span class="string">&quot;table&quot;</span><span class="punctuation">)</span></span><br><span class="line">tab<span class="punctuation">[[</span><span class="number">1</span><span class="punctuation">]</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; &#123;html_node&#125;</span></span><br><span class="line"><span class="comment">#&gt; &lt;table class=&quot;wikitable sortable&quot;&gt;</span></span><br><span class="line"><span class="comment">#&gt; [1] &lt;tbody&gt;\n&lt;tr&gt;\n&lt;th&gt;State\n&lt;/th&gt;\n&lt;th&gt;\n&lt;a href=&quot;/wiki/List_of_U.S ...</span></span><br></pre></td></tr></table></figure>
+<p>接下来再对这个 html_node 调用 <code>html_table</code> 函数：它能将
+HTML tables 转化为对应的 data frames。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">tab <span class="operator">&lt;-</span> tab<span class="punctuation">[[</span><span class="number">1</span><span class="punctuation">]</span><span class="punctuation">]</span> <span class="operator">|&gt;</span> html_table<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>tab<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</span></span><br></pre></td></tr></table></figure>
+<p>最后一步，我们将该 data frame 的变量名按照需要进行适当的修改 (原
+table 中的变量名太长了)。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">tab <span class="operator">&lt;-</span> tab <span class="operator">|&gt;</span> setNames<span class="punctuation">(</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;state&quot;</span><span class="punctuation">,</span> <span class="string">&quot;population&quot;</span><span class="punctuation">,</span> <span class="string">&quot;total&quot;</span><span class="punctuation">,</span> <span class="string">&quot;murder_rate&quot;</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">head<span class="punctuation">(</span>tab<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; # A tibble: 6 × 4</span></span><br><span class="line"><span class="comment">#&gt;   state      population total murder_rate</span></span><br><span class="line"><span class="comment">#&gt;   &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt;</span></span><br><span class="line"><span class="comment">#&gt; 1 Alabama    4,853,875  348           7.2</span></span><br><span class="line"><span class="comment">#&gt; 2 Alaska     737,709    59            8  </span></span><br><span class="line"><span class="comment">#&gt; 3 Arizona    6,817,565  309           4.5</span></span><br><span class="line"><span class="comment">#&gt; 4 Arkansas   2,977,853  181           6.1</span></span><br><span class="line"><span class="comment">#&gt; 5 California 38,993,940 1,861         4.8</span></span><br><span class="line"><span class="comment">#&gt; # ℹ 1 more row</span></span><br></pre></td></tr></table></figure>
+<p>现在我们成功将网页上的 table 爬取并存储在 <code>tab</code> 这个 data
+frame 中了。但其实仔细看看，我们还有一些事要做：例如将数据中的
+<code>,</code> 去掉并将其转化为 <code>numeric</code> 类型 (默认的类型是
+<code>character</code>)。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p>Code: COMP2501, Lecturer: Dr. H.F. Ting.</p>
+<p>Course textbook:</p>
+<p><a href="http://rafalab.dfci.harvard.edu/dsbook/">Data Analysis and
+Prediction Algorithms with R - Rafael A. Irizarry</a>.</p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+        <category>Data Science &amp; R, HKU</category>
+      </categories>
+      <tags>
+        <tag>data science</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>JQuery 杂记</title>
     <url>/2023/11/05/COMP3322-3/</url>
     <content><![CDATA[<blockquote>
