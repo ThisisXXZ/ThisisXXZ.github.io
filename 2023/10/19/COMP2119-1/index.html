@@ -33,7 +33,7 @@
 <meta property="og:description" content="与 OI 中间接接触到的各种 DS&amp;A 知识相比，这门课的优势在于比较正统，严谨的理论分析；因此还是有必要记录一下的。这篇笔记将采用 problem-based 的形式，比较随性的收集一些 insights。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-10-19T03:38:35.000Z">
-<meta property="article:modified_time" content="2023-11-09T11:56:37.319Z">
+<meta property="article:modified_time" content="2023-11-14T05:23:59.380Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Data Structure">
 <meta property="article:tag" content="Algorithms">
@@ -119,7 +119,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">52</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">14</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">53</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">14</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -173,7 +173,7 @@
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#recursion-problem"><span class="nav-number">1.</span> <span class="nav-text">Recursion Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#complexity-analysis"><span class="nav-number">2.</span> <span class="nav-text">Complexity Analysis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#amortizedaverage-analysis"><span class="nav-number">3.</span> <span class="nav-text">Amortized&#x2F;Average Analysis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#insight-building-egg-problem"><span class="nav-number">4.</span> <span class="nav-text">Insight: Building &amp; Egg
 Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#binary-search-tree"><span class="nav-number">5.</span> <span class="nav-text">Binary Search Tree</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#successor"><span class="nav-number">5.1.</span> <span class="nav-text">Successor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deletion"><span class="nav-number">5.2.</span> <span class="nav-text">Deletion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#analysis"><span class="nav-number">5.3.</span> <span class="nav-text">Analysis</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#insight-convert-linked-list-to-bst"><span class="nav-number">6.</span> <span class="nav-text">Insight: Convert Linked List
 to BST</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bubble-sort-average-of-swapping"><span class="nav-number">7.</span> <span class="nav-text">Bubble Sort: Average # of
-Swapping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">8.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Swapping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#heap-linear-heap-building"><span class="nav-number">8.</span> <span class="nav-text">Heap: Linear Heap Building</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -190,7 +190,7 @@ Swapping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" hre
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-count">53</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -597,6 +597,29 @@ S}\mathrm{inv}(I)\)</span>，其中 <span class="math inline">\(\mathrm{inv}(I)\
 调用平均 <span class="math inline">\(\frac{n(n-1)}{4}\)</span> 次
 <code>swap()</code> 函数。</p>
 <p><br></p>
+<h2 id="heap-linear-heap-building">Heap: Linear Heap Building</h2>
+<p>众所周知，堆有两种建法：</p>
+<ul>
+<li>向空堆中插入 <span class="math inline">\(n\)</span> 次，复杂度 <span class="math inline">\(O(n\log{n})\)</span></li>
+<li>heapify 方法，复杂度 <span class="math inline">\(O(n)\)</span></li>
+</ul>
+<p>这里主要讲下线性建堆方法的复杂度证明 (以大根堆为例)。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">sink</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (x * <span class="number">2</span> &lt;= n) &#123;</span><br><span class="line">        <span class="type">int</span> child = x * <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (child + <span class="number">1</span> &lt;= n &amp;&amp; a[child + <span class="number">1</span>] &gt;= a[child])</span><br><span class="line">            ++child;          <span class="comment">// right child &gt; left child</span></span><br><span class="line">        <span class="keyword">if</span> (a[child] &lt;= a[x])</span><br><span class="line">            <span class="keyword">break</span>;            <span class="comment">// heap property is not violated</span></span><br><span class="line">        <span class="built_in">swap</span>(a[child], a[x]);</span><br><span class="line">        x = child;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">heapify</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = n; i &gt;= <span class="number">1</span>; --i)    <span class="built_in">sink</span>(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>若堆高为 <span class="math inline">\(h\)</span>，则高度为 <span class="math inline">\(i\)</span> 的节点最多需要被 swap <span class="math inline">\(h-i\)</span> 次。由于堆是二叉树，高度为 <span class="math inline">\(i\)</span> 的节点最多有 <span class="math inline">\(2^i\)</span> 个。</p>
+<p>因此总 swap 次数为： <span class="math display">\[
+T(n)=\sum_{i=1}^h 2^i(h-i)=\sum_{i=1}^h
+i2^{h-i}=2^h\sum_{i=1}^h\frac{i}{2^i}
+\]</span> 令 <span class="math inline">\(x=\frac{1}{2}\)</span>，则
+<span class="math inline">\(L=\sum_i\frac{i}{2^i}\)</span>。我们有：
+<span class="math display">\[
+\begin{aligned}
+①&amp;:L=x+2x^2+3x^3+... \\
+②&amp;:xL=0+x^2+2x^3+... \\
+①-②&amp;:(1-x)L=x+x^2+x^3+...=x(1+x+x^2+...)=\frac{x}{1-x}\\
+\end{aligned}
+\]</span> 解得 <span class="math inline">\(L=x/(1-x)^2=2\)</span>。所以
+<span class="math inline">\(O(T(n))=O(2^hL)=O(2^h)=O(n)\)</span>.</p>
+<p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
@@ -794,6 +817,15 @@ if not specified.</p>
 
 
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
 
 <script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/10/19/COMP2119-1/"}</script>
 <script>
@@ -809,15 +841,6 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
