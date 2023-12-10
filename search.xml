@@ -2463,6 +2463,87 @@ i2^{h-i}=2^h\sum_{i=1}^h\frac{i}{2^i}
 \]</span> 解得 <span class="math inline">\(L=x/(1-x)^2=2\)</span>。所以
 <span class="math inline">\(O(T(n))=O(2^hL)=O(2^h)=O(n)\)</span>.</p>
 <p><br></p>
+<h2 id="randomized-quicksort-analysis">Randomized Quicksort
+Analysis</h2>
+<p>众所周知，快排在序列 already sorted 或 reverse-sorted
+时有最坏时间复杂度 <span class="math inline">\(O(n^2)\)</span>，随机化使得这种情况出现的概率可以忽略不计。但是随机化快排的时间复杂度又怎么分析呢？</p>
+<p>当然是取平均！由于随机化，partition 产生的两个子序列的长度可能是
+<span class="math inline">\((0,n-1)\)</span>, <span class="math inline">\((1,n-2)\)</span> ... <span class="math inline">\((n-1,0)\)</span> 共 <span class="math inline">\(n\)</span> 种情况，且概率相等，均为 <span class="math inline">\(\frac{1}{n}\)</span>。那么对长度为 <span class="math inline">\(n\)</span> 的序列排序所需的时间 <span class="math inline">\(T(n)\)</span> 为： <span class="math display">\[
+T(n)=\frac{2}{n}\sum_{i=0}^{n-1} T(i)+cn
+\]</span> 接下来我们要证明的是 <span class="math inline">\(T(n)\leq
+An\log{n}\)</span>，其中 <span class="math inline">\(A\)</span>
+是某个常数。采用 induction method:</p>
+<ul>
+<li>base case
+<ul>
+<li><span class="math inline">\(T(0)=0,T(1)=1\)</span></li>
+<li><span class="math inline">\(T(2)=1+2c\leq A\log2\)</span> (提示我们
+<span class="math inline">\(A\)</span> 应该是一个 large enough
+constant)</li>
+</ul></li>
+<li>induction hypothesis: assume for <span class="math inline">\(2\leq i
+\leq n-1\)</span>, <span class="math inline">\(T(i)\leq
+Ai\log{i}\)</span></li>
+</ul>
+<p>进行 induction： <span class="math display">\[
+\begin{aligned}
+T(n)&amp;=\frac{2}{n}\sum_{i=0}^{n-1}T(i)+cn \\
+&amp;\leq \frac{2}{n}\cdot \sum_{i=0}^{n-1}Ai\log{i}+cn\\
+&amp;\leq \frac{2}{n}A \frac{n(n-1)}{2}\log{n}+cn \\
+&amp;=An\log{n}-A\log{n}+cn
+\end{aligned}
+\]</span> 可以发现还是没法证明 <span class="math inline">\(T(n)\leq
+An\log{n}\)</span>。重点在于常数 <span class="math inline">\(A\)</span>
+的选取上。</p>
+<p>我们尝试进行更加细致的放缩。由于 <span class="math display">\[
+i\log{i}\leq\left\{
+\begin{matrix}
+\begin{aligned}
+i\log{\frac{n}{2}}, \ \ i&amp;=2,...,\frac{n}{2} \\
+i\log{n}, \ \ i&amp;=\frac{n}{2}+1,...,n
+\end{aligned}
+\end{matrix}
+\right.
+\]</span> 我们有 <span class="math display">\[
+T(i)\leq\left\{
+\begin{matrix}
+\begin{aligned}
+A(i\log{n}-i), \ \ i&amp;=2,...,\frac{n}{2} \\
+Ai\log{n}, \ \ i&amp;=\frac{n}{2}+1,...,n
+\end{aligned}
+\end{matrix}
+\right.
+\]</span> 通过对 <span class="math inline">\(i\)</span>
+分类讨论，引入了新的一项 <span class="math inline">\(-Ai\)</span>。我们用这个更加准确的式子进行放缩。
+<span class="math display">\[
+\begin{aligned}
+T(n)&amp;=\frac{2}{n}\sum_{i=0}^{n-1}T(i)+cn \\
+&amp;\leq \frac{2}{n}A\cdot
+(\sum_{i=0}^{n-1}i\log{i}-\sum_{i=0}^{n-1}i)+cn\\
+&amp;\leq
+An\log{n}-A\log{n}-\frac{2}{n}A\cdot\frac{1}{2}(\frac{n}{2})(\frac{n}{2}+1)
++cn\\
+&amp;= An\log{n}-A\log{n}-\frac{A}{2}(\frac{n}{2}+1)+cn
+\end{aligned}
+\]</span> 为证明 <span class="math inline">\(T(n)\leq
+An\log{n}\)</span>，我们选取常数 <span class="math inline">\(A\)</span>
+使得其能抵消 <span class="math inline">\(cn\)</span> 带来的影响。令
+<span class="math inline">\(cn\leq
+\frac{A}{2}(\frac{n}{2}+1)\)</span>，发现取 <span class="math inline">\(A=4c\)</span> 能够满足要求。因此 <span class="math inline">\(T(n)\)</span> 的上界得证：<span class="math inline">\(T(n)\leq
+An\log{n}=4cn\log{n}=O(n\log{n})\)</span></p>
+<p><br></p>
+<h2 id="huffman-tree-key-lemma">Huffman Tree: Key lemma</h2>
+<p>Key lemma of Huffman tree.</p>
+<div class="note info no-icon"><p>Given a tree <span class="math inline">\(T\)</span>, we can find a
+tree <span class="math inline">\(T&#39;\)</span>, with the two minimum
+cost leaves as siblings, and <span class="math inline">\(C(T&#39;)\leq
+C(T)\)</span>.</p>
+</div>
+<p><span class="math inline">\(C(T)\)</span> 是 <span class="math inline">\(T\)</span> 的 total weighted path length
+(WPL)。给出一颗树 <span class="math inline">\(T\)</span>，不断对其应用
+key lemma，其总 WPL 会持续减小。最小 WPL 对应的是 optimal prefix tree，
+即 Huffman tree。</p>
+<p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
