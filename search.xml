@@ -1013,7 +1013,7 @@ DeepLearning.AI.</p>
 ]]></content>
       <categories>
         <category>笔记</category>
-        <category>Machine Learning, Stanford &amp; DeepLearning.AI</category>
+        <category>Machine Learning, Stanford</category>
       </categories>
       <tags>
         <tag>Data Science</tag>
@@ -2362,6 +2362,38 @@ search，即我们熟悉的分块策略。<span class="math inline">\(\Theta(\sq
 </ul>
 <p>以上的程序也能显示这一点。(issue: 并没有！准备去问一下 Hubert)</p>
 <p><br></p>
+<h2 id="radix-sort-and-counting-sort">Radix Sort and Counting Sort</h2>
+<p>题目来自 2019 COMP2119 Final Exam Q4D (已解禁)。</p>
+<blockquote>
+<p>Given an array of <span class="math inline">\(n\)</span> elements,
+where each element is an integer in <span class="math inline">\(\{1, 2,
+3, ... , n^k\}\)</span> for some small constant <span class="math inline">\(k\leq 2\)</span>. The task is to sort the elements
+with asymptotic running time strictly better than <span class="math inline">\(O(n \log n)\)</span>. (You may use extra <span class="math inline">\(O(n)\)</span> space.)</p>
+</blockquote>
+<ul>
+<li>条件 <span class="math inline">\(1\)</span>: 优于 <span class="math inline">\(O(n\log{n})\)</span>，考虑 counting sort。</li>
+<li>条件 <span class="math inline">\(2\)</span>: Keys range from <span class="math inline">\(\{1,2,3,...,n^k\}\)</span> 但仅有 <span class="math inline">\(O(n)\)</span> extra space。考虑 counting sort
+的进阶 - radix sort。</li>
+</ul>
+<p>如何选取 radix？时刻记住，key range <span class="math inline">\(m\)</span> (<span class="math inline">\(\{1,2,3,..,m\}\)</span>)，radix <span class="math inline">\(k\)</span> 与 # of digits <span class="math inline">\(d\)</span> 满足关系：<span class="math inline">\(k^d=m\)</span>，radix sort 的时间复杂度为 <span class="math inline">\(O(d(k+n))\)</span>。</p>
+<ul>
+<li>Key range <span class="math inline">\(m\)</span>
+决定了键值数组的大小。</li>
+<li>Radix <span class="math inline">\(k\)</span>
+决定了桶数组的大小。</li>
+<li># of digits <span class="math inline">\(d\)</span> 决定了进行几轮
+counting sort。</li>
+</ul>
+<p>回到这道题，<span class="math inline">\(k\)</span> 已经保证了是一个
+small enough constant，并且我们能使用的额外空间只有 <span class="math inline">\(O(n)\)</span>；(桶数组大小) 这提示我们选取 <span class="math inline">\(n\)</span> 作为 radix。</p>
+<ul>
+<li>Key range: <span class="math inline">\(n^k\)</span></li>
+<li>Radix: <span class="math inline">\(n\)</span></li>
+<li># of digits: <span class="math inline">\(\log_n{n^k}=k\)</span></li>
+</ul>
+<p>复杂度 <span class="math inline">\(O(k(n+n))=O(n)\)</span> since
+<span class="math inline">\(k\)</span> is small.</p>
+<p><br></p>
 <h2 id="binary-search-tree">Binary Search Tree</h2>
 <p>关于 BST 一些容易忘记的小细节。</p>
 <h3 id="successor">Successor</h3>
@@ -2394,13 +2426,47 @@ which means it has at most one child)</li>
 <p>定义 splice out 操作为将某点的 children 连到其 parent 上。splice out
 只适用于删除只有一个孩子的节点。</p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">delete</span><span class="params">(root* T, node* z)</span> </span>&#123;</span><br><span class="line">    node* y;    <span class="comment">// y is the node to be spliced out</span></span><br><span class="line">    <span class="keyword">if</span> ((z-&gt;left == <span class="literal">NULL</span>) || (z-&gt;right == <span class="literal">NULL</span>)) &#123;</span><br><span class="line">        y = z;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        y = <span class="built_in">minimum</span>(z-&gt;right);</span><br><span class="line">        z-&gt;key = y-&gt;key;    <span class="comment">// replace z by y, then delete y</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// now splice out y, we can guarentee y has at most one child x</span></span><br><span class="line">    node* x;</span><br><span class="line">    <span class="keyword">if</span> (y-&gt;left != <span class="literal">nullptr</span>)</span><br><span class="line">        x = y-&gt;left;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        x = y-&gt;right;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// if y has no parent, we need to update root</span></span><br><span class="line">    <span class="keyword">if</span> (y-&gt;parent == <span class="literal">nullptr</span>)</span><br><span class="line">        root = x;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (y-&gt;parent-&gt;left == y)</span><br><span class="line">            y-&gt;parent-&gt;left = x;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            y-&gt;parent-&gt;right = x;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="analysis">Analysis</h3>
+<h3 id="tree-height-analysis">Tree Height Analysis</h3>
 <p>Complexity of insertion and deletion: <span class="math inline">\(O(h)\)</span>, and the best <span class="math inline">\(h=\log{n}\)</span>.</p>
 <p>保证树高为 <span class="math inline">\(\log{n}\)</span>
 的重要条件是插入 keys 的随机性，与保证快速排序效率需要 keys
 随机性的原理相同。详情见 Algorithms, Princeton 课程的 quicksort 与 BST
 部分。</p>
 <p>朴素的删除会影响树的结构。在执行若干次删除操作后树会逐渐左倾。</p>
+<p><br></p>
+<h2 id="self-balanced-tree-height-analysis">Self-Balanced Tree: Height
+Analysis</h2>
+<p>题目来自 2019 COMP2119 Final Exam Q3C (已解禁)。</p>
+<blockquote>
+<p>Suppose in a binary tree with n nodes, at every node, the difference
+of heights of the left and the right sub-tree is at most <span class="math inline">\(b\)</span>, where <span class="math inline">\(b\)</span> is some parameter that is at least
+<span class="math inline">\(1\)</span>. Prove that the height of the
+tree is at most <span class="math inline">\(O(b\log n)\)</span>.</p>
+</blockquote>
+<p>我们熟悉的 AVL 树就是 <span class="math inline">\(b=1\)</span>
+的高度平衡树。</p>
+<p>证明来自 <a href="https://people.csail.mit.edu/alinush/6.006-spring-2014/avl-height-proof.pdf">MIT
+algorithm 6.006-spring-2014</a>.</p>
+<p><span class="math inline">\(N(h)\)</span>, the minimum number of
+nodes in a tree with height <span class="math inline">\(h\)</span>, root
+<span class="math inline">\(r\)</span>. <span class="math inline">\(n=N(h)\)</span>. Without loss of generosity we
+express <span class="math inline">\(N(h)\)</span> in terms of:</p>
+<ul>
+<li><span class="math inline">\(N(h-1)\)</span>, the minimum number of
+nodes in the left subtree of <span class="math inline">\(r\)</span></li>
+<li><span class="math inline">\(N(h-b)\)</span>, the minimum number of
+nodes in the right subtree of <span class="math inline">\(r\)</span></li>
+</ul>
+<p><span class="math display">\[
+N(h)=1+N(h-1)+N(h-b)
+\]</span></p>
+<p>Since <span class="math inline">\(N(h-1)&gt;N(h-b)\)</span>, we can
+say that <span class="math display">\[
+N(h)&gt;1+N(h-b)+N(h-b)=1+2N(h-b)&gt;2N(h-b)
+\]</span> Solve the recurrence <span class="math inline">\(N(h)&gt;2N(h-b)\)</span> and we get <span class="math inline">\(N(h)&gt;2^{h/b}\)</span> <span class="math display">\[
+N(h)&gt;2^{h/b} \iff \log{N(h)}&gt;h/b\iff h&lt;b\log{N(h)}\iff
+h=O(b\log{n})
+\]</span> Proof completed.</p>
 <p><br></p>
 <h2 id="insight-convert-linked-list-to-bst">Insight: Convert Linked List
 to BST</h2>
