@@ -25,33 +25,28 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="癸卯夏至。    充满回忆和欢笑的游乐园；三个人的童年在这里交错。小心恐龙出没！">
+    <meta name="description" content="和直来直去的 MLP，CNN 相比，RNN 理解起来难度确实大了不少。遂开一篇文章加深一下理解。计划是用尽量简洁的语言，梳理从 RNN 开始到 BERT 结束的几个著名 NLP 模型的学习路线。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="在神农公园">
-<meta property="og:url" content="https://www.thisisxxz.com/2023/06/26/moment-230624/index.html">
+<meta property="og:title" content="从 RNN 开始说起">
+<meta property="og:url" content="https://www.thisisxxz.com/2024/01/17/recurrent-network/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="癸卯夏至。    充满回忆和欢笑的游乐园；三个人的童年在这里交错。小心恐龙出没！">
+<meta property="og:description" content="和直来直去的 MLP，CNN 相比，RNN 理解起来难度确实大了不少。遂开一篇文章加深一下理解。计划是用尽量简洁的语言，梳理从 RNN 开始到 BERT 结束的几个著名 NLP 模型的学习路线。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/06/26/moment-230624/1.jpg">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/06/26/moment-230624/2.jpg">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/06/26/moment-230624/3.jpg">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/06/26/moment-230624/4.jpg">
-<meta property="article:published_time" content="2023-06-26T04:27:21.000Z">
-<meta property="article:modified_time" content="2023-11-09T11:48:35.747Z">
+<meta property="article:published_time" content="2024-01-17T03:18:52.000Z">
+<meta property="article:modified_time" content="2024-01-17T13:47:23.720Z">
 <meta property="article:author" content="XXZ">
-<meta property="article:tag" content="Moments">
+<meta property="article:tag" content="Machine Learning">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.thisisxxz.com/2023/06/26/moment-230624/1.jpg">
 
 
-<link rel="canonical" href="https://www.thisisxxz.com/2023/06/26/moment-230624/">
+<link rel="canonical" href="https://www.thisisxxz.com/2024/01/17/recurrent-network/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/06/26/moment-230624/","path":"2023/06/26/moment-230624/","title":"在神农公园"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2024/01/17/recurrent-network/","path":"2024/01/17/recurrent-network/","title":"从 RNN 开始说起"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>在神农公园 | ThisisXXZ's Blog</title>
+<title>从 RNN 开始说起 | ThisisXXZ's Blog</title>
   
 
 
@@ -160,7 +155,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -173,6 +168,8 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#rnn"><span class="nav-number">1.</span> <span class="nav-text">RNN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gru-%E4%B8%8E-lstm"><span class="nav-number">2.</span> <span class="nav-text">GRU 与 LSTM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#seq2seq-learning"><span class="nav-number">3.</span> <span class="nav-text">Seq2Seq Learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#attention-mechanism"><span class="nav-number">4.</span> <span class="nav-text">Attention Mechanism</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#self-attention-and-positional-encoding"><span class="nav-number">5.</span> <span class="nav-text">Self-Attention and
+Positional Encoding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -270,7 +267,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/06/26/moment-230624/">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2024/01/17/recurrent-network/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
@@ -283,12 +280,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="在神农公园 | ThisisXXZ's Blog">
+      <meta itemprop="name" content="从 RNN 开始说起 | ThisisXXZ's Blog">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          在神农公园
+          从 RNN 开始说起
         </h1>
 
         <div class="post-meta-container">
@@ -301,7 +298,7 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2023-06-26 12:27:21" itemprop="dateCreated datePublished" datetime="2023-06-26T12:27:21+08:00">2023-06-26</time>
+      <time title="Created: 2024-01-17 11:18:52" itemprop="dateCreated datePublished" datetime="2024-01-17T11:18:52+08:00">2024-01-17</time>
     </span>
 
   <span class="post-meta-item">
@@ -336,35 +333,127 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><blockquote class="blockquote-center">
-<p><strong>癸卯夏至。</strong></p>
-
-</blockquote>
-<center>
-<em>充满回忆和欢笑的游乐园；三个人的童年在这里交错。小心恐龙出没！</em>
-</center>
+    <div class="post-body" itemprop="articleBody"><p>和直来直去的 MLP，CNN 相比，RNN
+理解起来难度确实大了不少。遂开一篇文章加深一下理解。计划是用尽量简洁的语言，梳理从
+RNN 开始到 BERT 结束的几个著名 NLP 模型的学习路线。</p>
 <span id="more"></span>
 <p><br></p>
-<figure>
-<img data-src="1.jpg" alt="回忆碎片1">
-<figcaption aria-hidden="true">回忆碎片1</figcaption>
-</figure>
-<figure>
-<img data-src="2.jpg" alt="回忆碎片2">
-<figcaption aria-hidden="true">回忆碎片2</figcaption>
-</figure>
-<figure>
-<img data-src="3.jpg" alt="他的现在">
-<figcaption aria-hidden="true">他的现在</figcaption>
-</figure>
-<figure>
-<img data-src="4.jpg" alt="他的现在">
-<figcaption aria-hidden="true">他的现在</figcaption>
-</figure>
+<h2 id="rnn">RNN</h2>
+<p>目的：处理时序数据。自然语言是一种典型的时序数据。</p>
+<p>结构：在最简单的 输入层-隐藏层-输出层 的两层 MLP
+基础之上加入时序性。具体来说是第 <span class="math inline">\(k-1\)</span> 个时间步的隐藏层到第 <span class="math inline">\(k\)</span>
+个时间步的隐藏层的<strong>自回归</strong> (autoregression)。在 RNN
+中，自回归的隐藏层被称为<strong>隐状态</strong> (hidden
+state)，它使得网络具有了记忆的能力。 <span class="math display">\[
+\begin{aligned}
+h_t&amp;=f(x_t,h_{t-1},\mathbf{W}_x.
+\mathbf{W}_h)=\phi(x_t\mathbf{W}_{x}+h_{t-1}\mathbf{W}_h+b_h) \\
+o_t&amp;=g(h_t, \mathbf{W}_o)=h_t\mathbf{W}_o+b_o
+\end{aligned}
+\]</span> 前向传播：若批量大小为 1，将时间步为 <span class="math inline">\(T\)</span> (长度为 <span class="math inline">\(T\)</span>) 的输入 <span class="math inline">\(x_1,...,x_T\)</span>，按照时序喂到 RNN 中，产生
+<span class="math inline">\(T\)</span> 个三元组 <span class="math inline">\((x_t,h_t,o_t)\)</span>。</p>
+<p>随时间反向传播 (Backpropagation Through Time, BPTT)：比较 <span class="math inline">\(o_t\)</span> 与 ground truth 标签 <span class="math inline">\(y_t\)</span> 计算损失 <span class="math inline">\(L\)</span>，接下来计算 <span class="math inline">\(\mathbf{W}_x,\mathbf{W}_h,\mathbf{W}_o\)</span>
+的梯度。过程见 <a target="_blank" rel="noopener" href="https://d2l.ai/chapter_recurrent-neural-networks/bptt.html">Analysis
+of Gradients in RNNs</a>，可以看到，当时间步 <span class="math inline">\(T\)</span>
+过大时，梯度的连乘可能导致梯度爆炸或梯度消失。</p>
+<p>梯度更新：以批量为单位前向传播，反向传播，并计算梯度。注意 RNN
+的循环性，每一次迭代都将使得计算图的深度加一。因此在每次批量开始前，对隐状态进行
+<code>detach_()</code> 防止计算图的深度超过时间步 <span class="math inline">\(T\)</span>。</p>
+<p>预测：将第 <span class="math inline">\(k-1\)</span>
+步的预测输出作为第 <span class="math inline">\(k\)</span>
+步的输入做预测直到指定长度的序列成功生成。</p>
 <p><br></p>
-<div class="note success"><p>新成就：和爸爸陪小 per 一起去了神农公园。</p>
-</div>
+<h2 id="gru-与-lstm">GRU 与 LSTM</h2>
+<p>RNN 的变种，引入了记忆单元 (memory cell) 与门控机制 (gating
+mechanism)，解决了传统 RNN 的梯度消失问题 (梯度爆炸可用梯度剪裁 gradient
+clipping 解决)，并且使得网络具有选择性的更新或遗忘记忆中内容的能力。</p>
+<p>结构见 <a target="_blank" rel="noopener" href="https://d2l.ai/chapter_recurrent-modern/gru.html">Gated Recurrent
+Unit</a> 与 <a target="_blank" rel="noopener" href="https://d2l.ai/chapter_recurrent-modern/lstm.html">Long Short-Term
+Memory</a>。</p>
 <p><br></p>
+<h2 id="seq2seq-learning">Seq2Seq Learning</h2>
+<p>Seq2Seq
+问题要求我们解决输入序列与输出序列长度可变的问题。最经典的例子是机器翻译。</p>
+<p>解决这类问题的架构是编码器-解码器架构 (encoder-decoder
+architecture)。</p>
+<ul>
+<li>编码器 (RNN 或双向 RNN)
+将长度可变的序列作为输入，并将其信息编码到隐状态中。</li>
+<li>解码器 (RNN) 将编码器生成的表征 (representation)
+与已经看见/生成的词元作为输入预测下一个词元。</li>
+</ul>
+<p>结构：解码器比编码器多一个全连接输出层用于预测。</p>
+<p>前向传播：</p>
+<ul>
+<li>编码器：若批量大小为 1，将时间步为 <span class="math inline">\(T\)</span> 的输入 <span class="math inline">\(x_1,...,x_T\)</span> 喂到编码器中，获得 <span class="math inline">\(T\)</span> 个隐状态 <span class="math inline">\(h_1,...,h_T\)</span>。编码器通过选定的函数 <span class="math inline">\(q\)</span> 计算上下文变量 (context variable) <span class="math inline">\(c=q(h_1,...,h_T)\)</span>。在最基础的 seq2seq
+模型中，<span class="math inline">\(c=h_T\)</span>。</li>
+<li>解码器：对于输入 <span class="math inline">\(x_1,...,x_T\)</span>，我们有真值 (ground truth)
+序列 <span class="math inline">\(y_1,...,y_{T&#39;}\)</span>。在时间步
+<span class="math inline">\(t&#39;\)</span>，解码器将 <span class="math inline">\(y_{t&#39;-1}\)</span> (已经看见的) 或 <span class="math inline">\(o_{t&#39;-1}\)</span> (已经生成的)
+与编码器生成的上下文变量 <span class="math inline">\(c\)</span>
+拼接起来作为输入。通过全连接输出层和 Softmax
+选择器，编码器作出当前的预测 <span class="math inline">\(o_{t&#39;}\)</span>。</li>
+</ul>
+<p>解码器使用真值序列 <span class="math inline">\(y_1,...,y_{T&#39;}\)</span>
+而不使用自己的预测进行训练，这一技巧被称为<strong>强制教学</strong>
+(teacher forcing)。</p>
+<p>反向传播与梯度更新：差不多，同时更新编码器与解码器的参数。此外，注意使用
+<code>sequence_mask()</code> 零值化有效长度以外的不相关项 (如填充词元
+padding)。</p>
+<p>预测：将源语言喂到编码器里生成上下文变量后，在初始时间步把序列开始词元
+<code>&lt;bos&gt;</code>
+喂到解码器中一步一步生成目标语言的翻译序列。预测时，每个当前时间步的输入来自于前一个时间步的预测。当预测出序列结束词元
+<code>&lt;eos&gt;</code> 时，预测结束。可以使用束搜索 (beam search)
+增加预测准确性。</p>
+<p><br></p>
+<h2 id="attention-mechanism">Attention Mechanism</h2>
+<p>动机：Seq2Seq
+架构的问题是，输入序列越长，作为输入表征编码的上下文变量就越容易失去其影响力。为了解决这个问题，注意力机制为解码器中的每个时间步都设计一个上下文变量
+<span class="math inline">\(c_{t&#39;}\)</span>，从而提高预测准确性。</p>
+<p>模型：若干值 (values) <span class="math inline">\(v_1,...,v_T\)</span> 有若干键值 (keys) <span class="math inline">\(k_1,...,k_T\)</span>。偏好为 <span class="math inline">\(k_q\)</span>。带着这个偏好，我们查询 (query)
+前述的 key-value 对，并将我们的注意力 (attention)
+按照偏好进行分配。符合我们偏好的线索会得到更大的注意力权重，反之亦然。注意力权重的计算方法被函数
+<span class="math inline">\(\alpha(k_i,k_q)\)</span> 表示，其和一般为
+<span class="math inline">\(1\)</span>。加权求和后生成对该线索序列的印象
+<span class="math inline">\(f(x)\)</span>。 <span class="math display">\[
+\begin{aligned}
+\text{\{keys,values\}}&amp;: \{(k_1,v_1), (k_2,v_2),...,(k_T,v_T)\} \\
+\text{query}&amp;: k_q \\
+\text{context}&amp;: f(k_q)=\sum_i \alpha(k_q,k_i)v_i=\sum_i
+\text{softmax}(a(k_q,k_i))v_i
+\end{aligned}
+\]</span> 在 Seq2Seq 架构应用注意力机制：</p>
+<ul>
+<li>编码器产生的隐状态 <span class="math inline">\(h_1,...,h_T\)</span>
+既是 keys 又是 values。</li>
+<li>解码器在时间步 <span class="math inline">\(t&#39;\)</span>
+将上一步的预测 <span class="math inline">\(o_{t&#39;-1}\)</span> 或真值
+<span class="math inline">\(y_{t&#39;-1}\)</span> 或隐状态作为
+query，计算出每个编码器隐状态 <span class="math inline">\(h_1,...,h_T\)</span> 对应的注意力分数 <span class="math inline">\(a_1,...,a_T\)</span>。对注意力分数应用 softmax
+后得到注意力权重 <span class="math inline">\(\alpha_1,...,\alpha_T\)</span>。加权求和后得到的
+<span class="math inline">\(f(k_q)\)</span> 与当前步的输入 <span class="math inline">\(o_{t&#39;-1}\)</span> 或 <span class="math inline">\(y_{t&#39;-1}\)</span>
+一起喂到解码器中生成当前步的预测输出。</li>
+</ul>
+<p>注意力分数：平均分数 (相当于没有注意力)，Nadaraya-Watson
+高斯核回归分数 (可加入可学习的参数)，加型注意力 (additive
+attention，加入参数后合并进入一个单输出单隐藏层的 MLP)，点积注意力
+(scaled dot-product attention，需要将 query 与 key 设置成相同长度)</p>
+<p><br></p>
+<h2 id="self-attention-and-positional-encoding">Self-Attention and
+Positional Encoding</h2>
+<p>自注意力机制可以说是注意力机制的一个子集。它与传统的注意力机制的区别在于，对于给定序列
+<span class="math inline">\(x_1,...,x_t\)</span>，<span class="math inline">\(x_i\)</span> 同时是 key, value 与
+query。序列对自己抽取特征获得 <span class="math inline">\(y_1,...,y_n\)</span>，其中 <span class="math inline">\(y_i=f(x_i,\{x_1,x_1\},...,\{x_n,x_n\})\)</span>。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<p>一些超级好的资料。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=hYdO9CscNes&amp;list=PLJV_el3uVTsMhtt7_Y6sgTHGHp1Vb2P2J&amp;index=10">自注意力機制
+(Self-attention) - 李宏毅</a></li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/ai-academy-taiwan/attention-mechanism-fad735db3c2c#id_token=eyJhbGciOiJSUzI1NiIsImtpZCI6IjFmNDBmMGE4ZWYzZDg4MDk3OGRjODJmMjVjM2VjMzE3YzZhNWI3ODEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIyMTYyOTYwMzU4MzQtazFrNnFlMDYwczJ0cDJhMmphbTRsamRjbXMwMHN0dGcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiIyMTYyOTYwMzU4MzQtazFrNnFlMDYwczJ0cDJhMmphbTRsamRjbXMwMHN0dGcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTgxMjQzMzQ3NjU3NDEwNjIyMDUiLCJlbWFpbCI6Inh4ei43MjAzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYmYiOjE3MDU0ODg3MTUsIm5hbWUiOiJZWiBIdW5nIChIWVpTYWlrb3UpIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0k3UWpST2hzZEJHaG1DMDN2aEt4dHF3OVJ4SmJwXzNZU0I4SEh5YTBYZD1zOTYtYyIsImdpdmVuX25hbWUiOiJZWiIsImZhbWlseV9uYW1lIjoiSHVuZyIsImxvY2FsZSI6InpoLUNOIiwiaWF0IjoxNzA1NDg5MDE1LCJleHAiOjE3MDU0OTI2MTUsImp0aSI6Ijg0MzcxZGEyYmQ3ZjA1ODdlMTVhMmVkZTNiMjM3MmUwNTViY2I1YTcifQ.mjceJLqkR_uM-WcXyFIzl6lD80SnHMhizFLBblPRXoa8fZ9RHTqHpAXmkmoLMROOwgICT1LH15KUSK-3bKDSlOUdPqWcdMxW2Pri9NyvNJgQY4BohJUiO-ZuKJpi2OU1PipPz6V43nfskCqVChiuzhsKvvvbqaJesVG6R_GNYKbFMBK5KxaXiFVEDwgUTr4K04L6gWQAmpYAfJr4_kfv3Z5da1FUJ9gcxB3IX2wF-NMVrtIs7Dogwfjo_S9si94fz1dJAzDgYktMAT0P9tzxMR4maEpdOdr7ozP4ZRz8o06Wl33kXxEyAl5rJgNvPNx8bLTe7zhhEEIjFELMOqZZJw">Attention
+Mechanism - medium</a></li>
+<li>Dive Into Deep Learning</li>
+</ul>
 
     </div>
 
@@ -402,13 +491,13 @@
   </li>
   <li class="post-copyright-link">
       <strong>Post link: </strong>
-      <a href="https://www.thisisxxz.com/2023/06/26/moment-230624/" title="在神农公园">https://www.thisisxxz.com/2023/06/26/moment-230624/</a>
+      <a href="https://www.thisisxxz.com/2024/01/17/recurrent-network/" title="从 RNN 开始说起">https://www.thisisxxz.com/2024/01/17/recurrent-network/</a>
       <!--copy buttom-->
       <span class="copy-path" title="Click to copy markdown-style reference"
       ><i
         style="cursor: pointer"
         class="fa fa-clipboard"
-        data-clipboard-text="[XXZ's Blog | 在神农公园](https://www.thisisxxz.com/2023/06/26/moment-230624/)"
+        data-clipboard-text="[XXZ's Blog | 从 RNN 开始说起](https://www.thisisxxz.com/2024/01/17/recurrent-network/)"
         aria-label="Markdown-style reference is now on your clipboard"
       ></i
     ></span>
@@ -444,21 +533,18 @@
       </div>
     </div>
           <div class="post-tags">
-              <a href="/tags/Moments/" rel="tag"><i class="fa fa-tag"></i> Moments</a>
+              <a href="/tags/Machine-Learning/" rel="tag"><i class="fa fa-tag"></i> Machine Learning</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2023/06/10/OI-rehab-plan/" rel="prev" title="Competitive Programming 复健计划">
-                  <i class="fa fa-chevron-left"></i> Competitive Programming 复健计划
+                <a href="/2024/01/15/learning-review-1/" rel="prev" title="我的第一次反向传播">
+                  <i class="fa fa-chevron-left"></i> 我的第一次反向传播
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/06/29/persona5-review/" rel="next" title="写在通关 Persona 5 之后">
-                  写在通关 Persona 5 之后 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
@@ -549,7 +635,7 @@
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
 <script src="/js/third-party/math/mathjax.js"></script>
 
 
@@ -564,7 +650,7 @@
       new needShareButton('#needsharebutton-postbottom', pbOptions);
   </script>
 
-<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/06/26/moment-230624/"}</script>
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/01/17/recurrent-network/"}</script>
 <script>
 document.addEventListener('page:loaded', () => {
   NexT.utils.loadComments(CONFIG.valine.el)

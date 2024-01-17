@@ -156,6 +156,139 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
+    <title>从 RNN 开始说起</title>
+    <url>/2024/01/17/recurrent-network/</url>
+    <content><![CDATA[<p>和直来直去的 MLP，CNN 相比，RNN
+理解起来难度确实大了不少。遂开一篇文章加深一下理解。计划是用尽量简洁的语言，梳理从
+RNN 开始到 BERT 结束的几个著名 NLP 模型的学习路线。</p>
+<span id="more"></span>
+<p><br></p>
+<h2 id="rnn">RNN</h2>
+<p>目的：处理时序数据。自然语言是一种典型的时序数据。</p>
+<p>结构：在最简单的 输入层-隐藏层-输出层 的两层 MLP
+基础之上加入时序性。具体来说是第 <span class="math inline">\(k-1\)</span> 个时间步的隐藏层到第 <span class="math inline">\(k\)</span>
+个时间步的隐藏层的<strong>自回归</strong> (autoregression)。在 RNN
+中，自回归的隐藏层被称为<strong>隐状态</strong> (hidden
+state)，它使得网络具有了记忆的能力。 <span class="math display">\[
+\begin{aligned}
+h_t&amp;=f(x_t,h_{t-1},\mathbf{W}_x.
+\mathbf{W}_h)=\phi(x_t\mathbf{W}_{x}+h_{t-1}\mathbf{W}_h+b_h) \\
+o_t&amp;=g(h_t, \mathbf{W}_o)=h_t\mathbf{W}_o+b_o
+\end{aligned}
+\]</span> 前向传播：若批量大小为 1，将时间步为 <span class="math inline">\(T\)</span> (长度为 <span class="math inline">\(T\)</span>) 的输入 <span class="math inline">\(x_1,...,x_T\)</span>，按照时序喂到 RNN 中，产生
+<span class="math inline">\(T\)</span> 个三元组 <span class="math inline">\((x_t,h_t,o_t)\)</span>。</p>
+<p>随时间反向传播 (Backpropagation Through Time, BPTT)：比较 <span class="math inline">\(o_t\)</span> 与 ground truth 标签 <span class="math inline">\(y_t\)</span> 计算损失 <span class="math inline">\(L\)</span>，接下来计算 <span class="math inline">\(\mathbf{W}_x,\mathbf{W}_h,\mathbf{W}_o\)</span>
+的梯度。过程见 <a href="https://d2l.ai/chapter_recurrent-neural-networks/bptt.html">Analysis
+of Gradients in RNNs</a>，可以看到，当时间步 <span class="math inline">\(T\)</span>
+过大时，梯度的连乘可能导致梯度爆炸或梯度消失。</p>
+<p>梯度更新：以批量为单位前向传播，反向传播，并计算梯度。注意 RNN
+的循环性，每一次迭代都将使得计算图的深度加一。因此在每次批量开始前，对隐状态进行
+<code>detach_()</code> 防止计算图的深度超过时间步 <span class="math inline">\(T\)</span>。</p>
+<p>预测：将第 <span class="math inline">\(k-1\)</span>
+步的预测输出作为第 <span class="math inline">\(k\)</span>
+步的输入做预测直到指定长度的序列成功生成。</p>
+<p><br></p>
+<h2 id="gru-与-lstm">GRU 与 LSTM</h2>
+<p>RNN 的变种，引入了记忆单元 (memory cell) 与门控机制 (gating
+mechanism)，解决了传统 RNN 的梯度消失问题 (梯度爆炸可用梯度剪裁 gradient
+clipping 解决)，并且使得网络具有选择性的更新或遗忘记忆中内容的能力。</p>
+<p>结构见 <a href="https://d2l.ai/chapter_recurrent-modern/gru.html">Gated Recurrent
+Unit</a> 与 <a href="https://d2l.ai/chapter_recurrent-modern/lstm.html">Long Short-Term
+Memory</a>。</p>
+<p><br></p>
+<h2 id="seq2seq-learning">Seq2Seq Learning</h2>
+<p>Seq2Seq
+问题要求我们解决输入序列与输出序列长度可变的问题。最经典的例子是机器翻译。</p>
+<p>解决这类问题的架构是编码器-解码器架构 (encoder-decoder
+architecture)。</p>
+<ul>
+<li>编码器 (RNN 或双向 RNN)
+将长度可变的序列作为输入，并将其信息编码到隐状态中。</li>
+<li>解码器 (RNN) 将编码器生成的表征 (representation)
+与已经看见/生成的词元作为输入预测下一个词元。</li>
+</ul>
+<p>结构：解码器比编码器多一个全连接输出层用于预测。</p>
+<p>前向传播：</p>
+<ul>
+<li>编码器：若批量大小为 1，将时间步为 <span class="math inline">\(T\)</span> 的输入 <span class="math inline">\(x_1,...,x_T\)</span> 喂到编码器中，获得 <span class="math inline">\(T\)</span> 个隐状态 <span class="math inline">\(h_1,...,h_T\)</span>。编码器通过选定的函数 <span class="math inline">\(q\)</span> 计算上下文变量 (context variable) <span class="math inline">\(c=q(h_1,...,h_T)\)</span>。在最基础的 seq2seq
+模型中，<span class="math inline">\(c=h_T\)</span>。</li>
+<li>解码器：对于输入 <span class="math inline">\(x_1,...,x_T\)</span>，我们有真值 (ground truth)
+序列 <span class="math inline">\(y_1,...,y_{T&#39;}\)</span>。在时间步
+<span class="math inline">\(t&#39;\)</span>，解码器将 <span class="math inline">\(y_{t&#39;-1}\)</span> (已经看见的) 或 <span class="math inline">\(o_{t&#39;-1}\)</span> (已经生成的)
+与编码器生成的上下文变量 <span class="math inline">\(c\)</span>
+拼接起来作为输入。通过全连接输出层和 Softmax
+选择器，编码器作出当前的预测 <span class="math inline">\(o_{t&#39;}\)</span>。</li>
+</ul>
+<p>解码器使用真值序列 <span class="math inline">\(y_1,...,y_{T&#39;}\)</span>
+而不使用自己的预测进行训练，这一技巧被称为<strong>强制教学</strong>
+(teacher forcing)。</p>
+<p>反向传播与梯度更新：差不多，同时更新编码器与解码器的参数。此外，注意使用
+<code>sequence_mask()</code> 零值化有效长度以外的不相关项 (如填充词元
+padding)。</p>
+<p>预测：将源语言喂到编码器里生成上下文变量后，在初始时间步把序列开始词元
+<code>&lt;bos&gt;</code>
+喂到解码器中一步一步生成目标语言的翻译序列。预测时，每个当前时间步的输入来自于前一个时间步的预测。当预测出序列结束词元
+<code>&lt;eos&gt;</code> 时，预测结束。可以使用束搜索 (beam search)
+增加预测准确性。</p>
+<p><br></p>
+<h2 id="attention-mechanism">Attention Mechanism</h2>
+<p>动机：Seq2Seq
+架构的问题是，输入序列越长，作为输入表征编码的上下文变量就越容易失去其影响力。为了解决这个问题，注意力机制为解码器中的每个时间步都设计一个上下文变量
+<span class="math inline">\(c_{t&#39;}\)</span>，从而提高预测准确性。</p>
+<p>模型：若干值 (values) <span class="math inline">\(v_1,...,v_T\)</span> 有若干键值 (keys) <span class="math inline">\(k_1,...,k_T\)</span>。偏好为 <span class="math inline">\(k_q\)</span>。带着这个偏好，我们查询 (query)
+前述的 key-value 对，并将我们的注意力 (attention)
+按照偏好进行分配。符合我们偏好的线索会得到更大的注意力权重，反之亦然。注意力权重的计算方法被函数
+<span class="math inline">\(\alpha(k_i,k_q)\)</span> 表示，其和一般为
+<span class="math inline">\(1\)</span>。加权求和后生成对该线索序列的印象
+<span class="math inline">\(f(x)\)</span>。 <span class="math display">\[
+\begin{aligned}
+\text{\{keys,values\}}&amp;: \{(k_1,v_1), (k_2,v_2),...,(k_T,v_T)\} \\
+\text{query}&amp;: k_q \\
+\text{context}&amp;: f(k_q)=\sum_i \alpha(k_q,k_i)v_i=\sum_i
+\text{softmax}(a(k_q,k_i))v_i
+\end{aligned}
+\]</span> 在 Seq2Seq 架构应用注意力机制：</p>
+<ul>
+<li>编码器产生的隐状态 <span class="math inline">\(h_1,...,h_T\)</span>
+既是 keys 又是 values。</li>
+<li>解码器在时间步 <span class="math inline">\(t&#39;\)</span>
+将上一步的预测 <span class="math inline">\(o_{t&#39;-1}\)</span> 或真值
+<span class="math inline">\(y_{t&#39;-1}\)</span> 或隐状态作为
+query，计算出每个编码器隐状态 <span class="math inline">\(h_1,...,h_T\)</span> 对应的注意力分数 <span class="math inline">\(a_1,...,a_T\)</span>。对注意力分数应用 softmax
+后得到注意力权重 <span class="math inline">\(\alpha_1,...,\alpha_T\)</span>。加权求和后得到的
+<span class="math inline">\(f(k_q)\)</span> 与当前步的输入 <span class="math inline">\(o_{t&#39;-1}\)</span> 或 <span class="math inline">\(y_{t&#39;-1}\)</span>
+一起喂到解码器中生成当前步的预测输出。</li>
+</ul>
+<p>注意力分数：平均分数 (相当于没有注意力)，Nadaraya-Watson
+高斯核回归分数 (可加入可学习的参数)，加型注意力 (additive
+attention，加入参数后合并进入一个单输出单隐藏层的 MLP)，点积注意力
+(scaled dot-product attention，需要将 query 与 key 设置成相同长度)</p>
+<p><br></p>
+<h2 id="self-attention-and-positional-encoding">Self-Attention and
+Positional Encoding</h2>
+<p>自注意力机制可以说是注意力机制的一个子集。它与传统的注意力机制的区别在于，对于给定序列
+<span class="math inline">\(x_1,...,x_t\)</span>，<span class="math inline">\(x_i\)</span> 同时是 key, value 与
+query。序列对自己抽取特征获得 <span class="math inline">\(y_1,...,y_n\)</span>，其中 <span class="math inline">\(y_i=f(x_i,\{x_1,x_1\},...,\{x_n,x_n\})\)</span>。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<p>一些超级好的资料。</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=hYdO9CscNes&amp;list=PLJV_el3uVTsMhtt7_Y6sgTHGHp1Vb2P2J&amp;index=10">自注意力機制
+(Self-attention) - 李宏毅</a></li>
+<li><a href="https://medium.com/ai-academy-taiwan/attention-mechanism-fad735db3c2c#id_token=eyJhbGciOiJSUzI1NiIsImtpZCI6IjFmNDBmMGE4ZWYzZDg4MDk3OGRjODJmMjVjM2VjMzE3YzZhNWI3ODEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIyMTYyOTYwMzU4MzQtazFrNnFlMDYwczJ0cDJhMmphbTRsamRjbXMwMHN0dGcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiIyMTYyOTYwMzU4MzQtazFrNnFlMDYwczJ0cDJhMmphbTRsamRjbXMwMHN0dGcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTgxMjQzMzQ3NjU3NDEwNjIyMDUiLCJlbWFpbCI6Inh4ei43MjAzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYmYiOjE3MDU0ODg3MTUsIm5hbWUiOiJZWiBIdW5nIChIWVpTYWlrb3UpIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0k3UWpST2hzZEJHaG1DMDN2aEt4dHF3OVJ4SmJwXzNZU0I4SEh5YTBYZD1zOTYtYyIsImdpdmVuX25hbWUiOiJZWiIsImZhbWlseV9uYW1lIjoiSHVuZyIsImxvY2FsZSI6InpoLUNOIiwiaWF0IjoxNzA1NDg5MDE1LCJleHAiOjE3MDU0OTI2MTUsImp0aSI6Ijg0MzcxZGEyYmQ3ZjA1ODdlMTVhMmVkZTNiMjM3MmUwNTViY2I1YTcifQ.mjceJLqkR_uM-WcXyFIzl6lD80SnHMhizFLBblPRXoa8fZ9RHTqHpAXmkmoLMROOwgICT1LH15KUSK-3bKDSlOUdPqWcdMxW2Pri9NyvNJgQY4BohJUiO-ZuKJpi2OU1PipPz6V43nfskCqVChiuzhsKvvvbqaJesVG6R_GNYKbFMBK5KxaXiFVEDwgUTr4K04L6gWQAmpYAfJr4_kfv3Z5da1FUJ9gcxB3IX2wF-NMVrtIs7Dogwfjo_S9si94fz1dJAzDgYktMAT0P9tzxMR4maEpdOdr7ozP4ZRz8o06Wl33kXxEyAl5rJgNvPNx8bLTe7zhhEEIjFELMOqZZJw">Attention
+Mechanism - medium</a></li>
+<li>Dive Into Deep Learning</li>
+</ul>
+]]></content>
+      <categories>
+        <category>笔记</category>
+        <category>misc</category>
+      </categories>
+      <tags>
+        <tag>Machine Learning</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>我的第一次反向传播</title>
     <url>/2024/01/15/learning-review-1/</url>
     <content><![CDATA[<p>观察者 A：这个人类模型已经快要训练到第 21 个 epoch
