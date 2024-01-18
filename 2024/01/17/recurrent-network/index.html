@@ -33,7 +33,7 @@
 <meta property="og:description" content="和直来直去的 MLP，CNN 相比，RNN 理解起来难度确实大了不少。遂开一篇文章加深一下理解。计划是用尽量简洁的语言，梳理从 RNN 开始到 BERT 结束的几个著名 NLP 模型的学习路线。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-01-17T03:18:52.000Z">
-<meta property="article:modified_time" content="2024-01-17T13:47:23.720Z">
+<meta property="article:modified_time" content="2024-01-18T12:50:33.466Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Machine Learning">
 <meta name="twitter:card" content="summary">
@@ -169,7 +169,7 @@
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#rnn"><span class="nav-number">1.</span> <span class="nav-text">RNN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gru-%E4%B8%8E-lstm"><span class="nav-number">2.</span> <span class="nav-text">GRU 与 LSTM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#seq2seq-learning"><span class="nav-number">3.</span> <span class="nav-text">Seq2Seq Learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#attention-mechanism"><span class="nav-number">4.</span> <span class="nav-text">Attention Mechanism</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#self-attention-and-positional-encoding"><span class="nav-number">5.</span> <span class="nav-text">Self-Attention and
-Positional Encoding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Positional Encoding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#transformer"><span class="nav-number">6.</span> <span class="nav-text">Transformer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -431,7 +431,7 @@ padding)。</p>
 <span class="math inline">\(y_{t&#39;-1}\)</span> 或隐状态作为
 query，计算出每个编码器隐状态 <span class="math inline">\(h_1,...,h_T\)</span> 对应的注意力分数 <span class="math inline">\(a_1,...,a_T\)</span>。对注意力分数应用 softmax
 后得到注意力权重 <span class="math inline">\(\alpha_1,...,\alpha_T\)</span>。加权求和后得到的
-<span class="math inline">\(f(k_q)\)</span> 与当前步的输入 <span class="math inline">\(o_{t&#39;-1}\)</span> 或 <span class="math inline">\(y_{t&#39;-1}\)</span>
+<span class="math inline">\(f(k_q)\)</span> 与上一步的预测 <span class="math inline">\(o_{t&#39;-1}\)</span> 或真值 <span class="math inline">\(y_{t&#39;-1}\)</span>
 一起喂到解码器中生成当前步的预测输出。</li>
 </ul>
 <p>注意力分数：平均分数 (相当于没有注意力)，Nadaraya-Watson
@@ -444,6 +444,27 @@ Positional Encoding</h2>
 <p>自注意力机制可以说是注意力机制的一个子集。它与传统的注意力机制的区别在于，对于给定序列
 <span class="math inline">\(x_1,...,x_t\)</span>，<span class="math inline">\(x_i\)</span> 同时是 key, value 与
 query。序列对自己抽取特征获得 <span class="math inline">\(y_1,...,y_n\)</span>，其中 <span class="math inline">\(y_i=f(x_i,\{x_1,x_1\},...,\{x_n,x_n\})\)</span>。</p>
+<p>具体来说，在无参情况下，对于 <span class="math inline">\(X\in
+\R^{n\times d}\)</span>，其自注意力的计算方式是： <span class="math display">\[
+Y=f(X)=\text{softmax}(XX^T)X
+\]</span></p>
+<ul>
+<li><span class="math inline">\(XX^T\)</span> 得到 <span class="math inline">\(n\times n\)</span> 的方阵，<span class="math inline">\((i,j)\)</span> 处的元素表示第 <span class="math inline">\(x_i\)</span> 与 <span class="math inline">\(x_j\)</span> 的相关性</li>
+<li>逐行应用 softmax，把相关性转化为和为 1 的权重</li>
+<li>再与 <span class="math inline">\(X\)</span> 相乘，得到了每个行向量
+<span class="math inline">\(x_i\)</span>
+经过注意力机制加权求和后的表示</li>
+</ul>
+<p>为以上的三个 <span class="math inline">\(X\)</span>
+添加对应的可学习的参数 <span class="math inline">\(W_q,W_k,W_v\)</span>，就是自注意力的经典形式了
+<span class="math display">\[
+Q=W_qX,K=W_kX,V=W_vX \\
+\text{attention}(Q,K,V)=\text{softmax}(\frac{QK^T}{\sqrt{d_k}})V
+\]</span>
+自注意力对输入矩阵进行自乘，丢失了序列的顺序信息。选取合适的位置编码
+(positional encoding) 在输入中加入位置信息，使得其能够记忆位置信息。</p>
+<p><br></p>
+<h2 id="transformer">Transformer</h2>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <p>一些超级好的资料。</p>
@@ -452,6 +473,8 @@ query。序列对自己抽取特征获得 <span class="math inline">\(y_1,...,y_
 (Self-attention) - 李宏毅</a></li>
 <li><a target="_blank" rel="noopener" href="https://medium.com/ai-academy-taiwan/attention-mechanism-fad735db3c2c#id_token=eyJhbGciOiJSUzI1NiIsImtpZCI6IjFmNDBmMGE4ZWYzZDg4MDk3OGRjODJmMjVjM2VjMzE3YzZhNWI3ODEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIyMTYyOTYwMzU4MzQtazFrNnFlMDYwczJ0cDJhMmphbTRsamRjbXMwMHN0dGcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiIyMTYyOTYwMzU4MzQtazFrNnFlMDYwczJ0cDJhMmphbTRsamRjbXMwMHN0dGcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTgxMjQzMzQ3NjU3NDEwNjIyMDUiLCJlbWFpbCI6Inh4ei43MjAzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYmYiOjE3MDU0ODg3MTUsIm5hbWUiOiJZWiBIdW5nIChIWVpTYWlrb3UpIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0k3UWpST2hzZEJHaG1DMDN2aEt4dHF3OVJ4SmJwXzNZU0I4SEh5YTBYZD1zOTYtYyIsImdpdmVuX25hbWUiOiJZWiIsImZhbWlseV9uYW1lIjoiSHVuZyIsImxvY2FsZSI6InpoLUNOIiwiaWF0IjoxNzA1NDg5MDE1LCJleHAiOjE3MDU0OTI2MTUsImp0aSI6Ijg0MzcxZGEyYmQ3ZjA1ODdlMTVhMmVkZTNiMjM3MmUwNTViY2I1YTcifQ.mjceJLqkR_uM-WcXyFIzl6lD80SnHMhizFLBblPRXoa8fZ9RHTqHpAXmkmoLMROOwgICT1LH15KUSK-3bKDSlOUdPqWcdMxW2Pri9NyvNJgQY4BohJUiO-ZuKJpi2OU1PipPz6V43nfskCqVChiuzhsKvvvbqaJesVG6R_GNYKbFMBK5KxaXiFVEDwgUTr4K04L6gWQAmpYAfJr4_kfv3Z5da1FUJ9gcxB3IX2wF-NMVrtIs7Dogwfjo_S9si94fz1dJAzDgYktMAT0P9tzxMR4maEpdOdr7ozP4ZRz8o06Wl33kXxEyAl5rJgNvPNx8bLTe7zhhEEIjFELMOqZZJw">Attention
 Mechanism - medium</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/410776234">超详细图解
+self-attention - 知乎</a></li>
 <li>Dive Into Deep Learning</li>
 </ul>
 
