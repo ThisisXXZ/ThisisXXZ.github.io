@@ -25,30 +25,30 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="和直来直去的 MLP，CNN 相比，RNN 理解起来难度确实大了不少。遂开一篇文章加深一下理解。计划是用尽量简洁的语言，梳理从 RNN 开始到 BERT 结束的几个著名 NLP 模型的学习路线。">
+    <meta name="description" content="爬一下 SSL 这一条科技树。NLP 里的模型和直来直去的 MLP，CNN 相比，理解难度确实大了不少。遂开一篇文章加深一下理解。计划是用尽量简洁的语言，梳理从 RNN 开始到 BERT，GPT 结束的几个著名 NLP 模型的学习路线。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="从 RNN 开始说起">
-<meta property="og:url" content="https://www.thisisxxz.com/2024/01/17/recurrent-network/index.html">
+<meta property="og:title" content="从 RNN 到 BERT，GPT">
+<meta property="og:url" content="https://www.thisisxxz.com/2024/01/17/from-RNN-to-BERT/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="和直来直去的 MLP，CNN 相比，RNN 理解起来难度确实大了不少。遂开一篇文章加深一下理解。计划是用尽量简洁的语言，梳理从 RNN 开始到 BERT 结束的几个著名 NLP 模型的学习路线。">
+<meta property="og:description" content="爬一下 SSL 这一条科技树。NLP 里的模型和直来直去的 MLP，CNN 相比，理解难度确实大了不少。遂开一篇文章加深一下理解。计划是用尽量简洁的语言，梳理从 RNN 开始到 BERT，GPT 结束的几个著名 NLP 模型的学习路线。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://www.thisisxxz.com/2024/01/17/recurrent-network/transformer.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/01/17/from-RNN-to-BERT/transformer.png">
 <meta property="article:published_time" content="2024-01-17T03:18:52.000Z">
-<meta property="article:modified_time" content="2024-01-20T02:09:50.659Z">
+<meta property="article:modified_time" content="2024-01-21T12:50:23.681Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Machine Learning">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.thisisxxz.com/2024/01/17/recurrent-network/transformer.png">
+<meta name="twitter:image" content="https://www.thisisxxz.com/2024/01/17/from-RNN-to-BERT/transformer.png">
 
 
-<link rel="canonical" href="https://www.thisisxxz.com/2024/01/17/recurrent-network/">
+<link rel="canonical" href="https://www.thisisxxz.com/2024/01/17/from-RNN-to-BERT/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2024/01/17/recurrent-network/","path":"2024/01/17/recurrent-network/","title":"从 RNN 开始说起"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2024/01/17/from-RNN-to-BERT/","path":"2024/01/17/from-RNN-to-BERT/","title":"从 RNN 到 BERT，GPT"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>从 RNN 开始说起 | ThisisXXZ's Blog</title>
+<title>从 RNN 到 BERT，GPT | ThisisXXZ's Blog</title>
   
 
 
@@ -171,7 +171,7 @@
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#rnn"><span class="nav-number">1.</span> <span class="nav-text">RNN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gru-and-lstm"><span class="nav-number">2.</span> <span class="nav-text">GRU and LSTM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#seq2seq-learning"><span class="nav-number">3.</span> <span class="nav-text">Seq2Seq Learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#attention-mechanism"><span class="nav-number">4.</span> <span class="nav-text">Attention Mechanism</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#self-attention-and-positional-encoding"><span class="nav-number">5.</span> <span class="nav-text">Self-Attention and
-Positional Encoding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#transformer"><span class="nav-number">6.</span> <span class="nav-text">Transformer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#self-supervised-learning"><span class="nav-number">7.</span> <span class="nav-text">Self-Supervised Learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">8.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Positional Encoding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#transformer"><span class="nav-number">6.</span> <span class="nav-text">Transformer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#self-supervised-learning"><span class="nav-number">7.</span> <span class="nav-text">Self-Supervised Learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bert"><span class="nav-number">8.</span> <span class="nav-text">BERT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gpt"><span class="nav-number">9.</span> <span class="nav-text">GPT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">10.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -269,7 +269,7 @@ Positional Encoding</span></a></li><li class="nav-item nav-level-2"><a class="na
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2024/01/17/recurrent-network/">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2024/01/17/from-RNN-to-BERT/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
@@ -282,12 +282,12 @@ Positional Encoding</span></a></li><li class="nav-item nav-level-2"><a class="na
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="从 RNN 开始说起 | ThisisXXZ's Blog">
+      <meta itemprop="name" content="从 RNN 到 BERT，GPT | ThisisXXZ's Blog">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          从 RNN 开始说起
+          从 RNN 到 BERT，GPT
         </h1>
 
         <div class="post-meta-container">
@@ -335,9 +335,9 @@ Positional Encoding</span></a></li><li class="nav-item nav-level-2"><a class="na
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>和直来直去的 MLP，CNN 相比，RNN
-理解起来难度确实大了不少。遂开一篇文章加深一下理解。计划是用尽量简洁的语言，梳理从
-RNN 开始到 BERT 结束的几个著名 NLP 模型的学习路线。</p>
+    <div class="post-body" itemprop="articleBody"><p>爬一下 SSL 这一条科技树。NLP 里的模型和直来直去的 MLP，CNN
+相比，理解难度确实大了不少。遂开一篇文章加深一下理解。计划是用尽量简洁的语言，梳理从
+RNN 开始到 BERT，GPT 结束的几个著名 NLP 模型的学习路线。</p>
 <span id="more"></span>
 <p><br></p>
 <h2 id="rnn">RNN</h2>
@@ -467,9 +467,9 @@ Q=W_qX,K=W_kX,V=W_vX \\
 (positional encoding) 在输入中加入位置信息，使得其能够记忆位置信息。</p>
 <p><br></p>
 <h2 id="transformer">Transformer</h2>
-<p>结构：纯注意力编码器-解码器架构，各自有 <span class="math inline">\(n\)</span> 个 transformer 块。每块中使用多头 (自)
+<p>结构：纯注意力编码器-解码器架构，编码器/解码器各自有 <span class="math inline">\(n\)</span> 个 transformer 块。每块中使用多头 (自)
 注意力，层归一化，基于位置的前馈网络 (position-wise feed forward
-network)</p>
+network)。</p>
 <figure>
 <img data-src="transformer.png" alt="The Transformer architecture">
 <figcaption aria-hidden="true">The Transformer architecture</figcaption>
@@ -488,6 +488,71 @@ NLP 应用。</li>
 (autoregression) 机制。</p>
 <p><br></p>
 <h2 id="self-supervised-learning">Self-Supervised Learning</h2>
+<blockquote>
+<p>In SSL, the system learns to predict part of its input from other
+parts of it. In other words a portion of the input is used as a
+supervisory signal to a predictor fed with the remaining portion of the
+input.</p>
+</blockquote>
+<p>来自 Yann LeCun 的定义。</p>
+<p>自监督学习属于一种无监督学习。对于无标签的数据 <span class="math inline">\(x\)</span>，将其分为 <span class="math inline">\(x&#39;\)</span> 与 <span class="math inline">\(x&#39;&#39;\)</span> 两部分。把 <span class="math inline">\(x&#39;\)</span> 输入模型生成预测 <span class="math inline">\(y\)</span>，训练该模型使得 <span class="math inline">\(y\)</span> 与 <span class="math inline">\(x&#39;&#39;\)</span> 的差异尽量小。</p>
+<p>自监督学习前置任务 (pretext task)：</p>
+<ul>
+<li>遮盖词预测 (masked token prediction, MTP)：<span class="math inline">\(x&#39;\)</span> 是应用了随机遮盖后的文本，<span class="math inline">\(x&#39;&#39;\)</span>
+是被遮盖的文本。遮盖的形式可以是使用特殊的掩码 <code>&lt;MASK&gt;</code>
+或随机的选取其他字符进行替换。</li>
+<li>下句预测 (next sentence prediction,
+NSP)：从原始文本中生成大量二元组，每个二元组中有两个句子 <span class="math inline">\((w_1,w_2)\)</span>。向模型中输入
+<code>&lt;CLS&gt;</code> + <span class="math inline">\(w_1\)</span> +
+<code>&lt;SEP&gt;</code> + <span class="math inline">\(w_2\)</span>，预测 <span class="math inline">\(w_2\)</span> 是否是 <span class="math inline">\(w_1\)</span> 的下一句。</li>
+<li>句间顺序预测 (sentence order prediction,
+SOP)：从原始文本中生成大量句组。预测句组正确的排列顺序。</li>
+</ul>
+<p><br></p>
+<h2 id="bert">BERT</h2>
+<p>BERT 是 Bidirectional Encoder Representation from Transformer.</p>
+<p>结构：Transformer 的编码器后面连一个输出层。输出层的构造由下游任务
+(downstream task) 决定。</p>
+<p>原理：下游任务的带标签数据通常很少。BERT
+利用大量的无标签数据以自监督学习的方式进行<strong>预训练</strong>
+(pre-train) [Transformer
+编码器]，再使用下游任务较少的带标签数据进行<strong>微调</strong> (fine
+tune) [Transformer 编码器与输出层]。</p>
+<p>下游任务的输出层设计，一般是若干个线性层。具体见 <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=gh0hewYkjgo&amp;list=PLJV_el3uVTsMhtt7_Y6sgTHGHp1Vb2P2J&amp;index=19">李宏毅
+- 自督導式學習 (二)</a>：</p>
+<ul>
+<li>情感分析 (Sentiment analysis)：序列输入，类别输出。输出层作用在
+<code>&lt;CLS&gt;</code> 上。</li>
+<li>词性分析 (POS
+tagging)：序列输入，等长序列输出。输出层作用在每个元素上。</li>
+<li>自然语言推理 (Natural language
+inferencee)：输入两个序列，输出一个类别。输出层作用在
+<code>&lt;CLS&gt;</code> 上。</li>
+<li>基于文本提取的问答 (Extraction-based Question
+Answering)：输入两个序列 (文本序列，提问序列)，输出两个整数 <span class="math inline">\(s,e\)</span>，标记正确答案在文本中的位置。两种输出层，作用在文本元素上做内积。</li>
+</ul>
+<p>为何预训练+微调的 idea work？前置任务与下游任务明明完全不同呀？</p>
+<ul>
+<li>BERT 中的 Transformer 编码器承担了上下文词嵌入 (Contextualized word
+embedding) 的功能。是一个数据量更大，结构更复杂的 CBOW
+词嵌入。对于依赖上下文解答的下游任务，仅需要少量数据进行微调。</li>
+<li>词嵌入 (Word
+embedding)：将词表示为向量，意义相近的词具有相似的向量表示。上下文词嵌入在生成词向量时考虑上下文的影响。</li>
+<li>质疑与反驳：蛋白质，DNA，音乐分类；多语言 BERT 的跨语言对齐
+(Cross-ligual Alignment)：多语言遮盖填空预训练，英文 QA 微调，中文 QA
+测试，F1 分数可达 78.8。</li>
+</ul>
+<p><br></p>
+<h2 id="gpt">GPT</h2>
+<p>GPT 是 Generative Pre-trained Transformers。</p>
+<p>结构：基本上是 Transformer 的解码器。由于不是 Seq2Seq 架构，去掉每个
+Transformer 块中的交叉注意力 (Cross attention) 层。</p>
+<p>训练：预测下一个词元 (Predict next token task)。该任务符合
+Transformer 解码器的特点
+(单向性与生成能力)。使用庞大的语料库进行预训练。对于特定的下游任务，把任务提供的带标签数据转化为生成式任务，再进行微调。</p>
+<p>上下文学习 (In-context learning)：无需微调
+(即无需进行梯度下降)。将查询的问题与若干上下文演示样例连接在一起，形成带有提示的输入。(给出样例的个数：Zero-shot
+learning, One-shot learning, Few-shot learning)</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <p>一些超级好的资料。</p>
@@ -537,13 +602,13 @@ self-attention - 知乎</a></li>
   </li>
   <li class="post-copyright-link">
       <strong>Post link: </strong>
-      <a href="https://www.thisisxxz.com/2024/01/17/recurrent-network/" title="从 RNN 开始说起">https://www.thisisxxz.com/2024/01/17/recurrent-network/</a>
+      <a href="https://www.thisisxxz.com/2024/01/17/from-RNN-to-BERT/" title="从 RNN 到 BERT，GPT">https://www.thisisxxz.com/2024/01/17/from-RNN-to-BERT/</a>
       <!--copy buttom-->
       <span class="copy-path" title="Click to copy markdown-style reference"
       ><i
         style="cursor: pointer"
         class="fa fa-clipboard"
-        data-clipboard-text="[XXZ's Blog | 从 RNN 开始说起](https://www.thisisxxz.com/2024/01/17/recurrent-network/)"
+        data-clipboard-text="[XXZ's Blog | 从 RNN 到 BERT，GPT](https://www.thisisxxz.com/2024/01/17/from-RNN-to-BERT/)"
         aria-label="Markdown-style reference is now on your clipboard"
       ></i
     ></span>
@@ -689,17 +754,8 @@ self-attention - 知乎</a></li>
 
 
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
 
-<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/01/17/recurrent-network/"}</script>
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/01/17/from-RNN-to-BERT/"}</script>
 <script>
 document.addEventListener('page:loaded', () => {
   NexT.utils.loadComments(CONFIG.valine.el)
@@ -713,6 +769,15 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
