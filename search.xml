@@ -156,6 +156,152 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
+    <title>离散数学小记</title>
+    <url>/2024/01/24/COMP2121-1/</url>
+    <content><![CDATA[<blockquote>
+<p>我有时会向往去到离散的世界，因为在那里一切命题只有真假两种取值。</p>
+</blockquote>
+<p>COMP2121 Discrete Math 笔记。</p>
+<span id="more"></span>
+<p>教授是我很喜欢的 Ravi，但周二/四的九点半开课真的很折磨。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="数理逻辑-logic-and-proofs">数理逻辑 Logic and Proofs</h2>
+<h3 id="lecture-1">Lecture 1</h3>
+<p>引入问题：证明 <span class="math inline">\(\sqrt{2}\)</span>
+是无理数。方法是反证法 (proof by contradiction)
+与平方数的奇偶性。附：</p>
+<ul>
+<li>有理数的定义：A real number <span class="math inline">\(r\)</span>
+is rational if there exist integers <span class="math inline">\(p,q \
+(q\neq 0)\)</span> with no common factors, such that <span class="math inline">\(r=\frac{p}{q}\)</span>. 见 <a href="https://www.zhihu.com/question/20485843">这个回答</a>，使用同样的方法可推广到证明任意素数开根是无理数。</li>
+<li>有理数根定理 (Rational Root Theorem)：If <span class="math inline">\(p(x)\)</span> is a monic polynomial with integer
+coefficient, then the roots of <span class="math inline">\(p(x)\)</span>
+are either integers or irrational numbers. 构造 <span class="math inline">\(p(x)=x^2-2\)</span> 后应用该定理。</li>
+</ul>
+<p><strong>命题逻辑 (Propositional Logic)</strong>：aka Propositional
+Calculus。</p>
+<ul>
+<li>A Proposition is a statement that is either True (T) or False (F),
+but not both.</li>
+<li>Negation (NOT), <span class="math inline">\(\lnot{p}\)</span></li>
+<li>Conjunction (AND), <span class="math inline">\(p\land q\)</span>.
+Disjunction (OR), <span class="math inline">\(p\lor q\)</span>.
+Exclusive Or (XOR), <span class="math inline">\(p\oplus q\)</span></li>
+<li><strong>Implication</strong>, <span class="math inline">\(p\to
+q\)</span>. Bi-Conditionals, <span class="math inline">\(p
+\longleftrightarrow q\)</span></li>
+<li>Converse (逆命题), <span class="math inline">\(q\to p\)</span>.
+Contrapositive (逆否命题), <span class="math inline">\(\lnot q\to \lnot
+p\)</span>. Inverse (否命题), <span class="math inline">\(\lnot p \to
+\lnot q\)</span></li>
+</ul>
+<p>这里特别讲一下 Implication (<span class="math inline">\(p\to
+q\)</span>) 复合命题，它和我们熟悉的 NOT，OR，AND 是平级的。</p>
+<ul>
+<li><span class="math inline">\(p\)</span> 为 hypothesis 或
+premise，<span class="math inline">\(q\)</span> 为 conclusion 或
+consequence.</li>
+<li><span class="math inline">\(p\)</span> is
+<strong>sufficient</strong> for <span class="math inline">\(q\)</span>,
+<span class="math inline">\(q\)</span> is <strong>necessary</strong> for
+<span class="math inline">\(p\)</span>.
+初中死记硬背的充分必要到现在才完全理解。</li>
+<li><strong>false when <span class="math inline">\(p\)</span> is true
+and <span class="math inline">\(q\)</span> is false, and true
+otherwise</strong>. 也就是说，当前提 <span class="math inline">\(p\)</span> 为假时，implication 一定为真。</li>
+</ul>
+<p>关于 Theorem，Proposition，Lemma 与 Corollary：见<a href="https://www.zhihu.com/question/54918673">这篇回答</a>。</p>
+<p><br></p>
+<h3 id="lecture-2">Lecture 2</h3>
+<p>关于逻辑等价 (Logical Equivalences)：两个有相同 truth value 的
+propositions 是逻辑等价的。</p>
+<ul>
+<li><strong>Tautology</strong>：无论 propositional variables
+的值怎么取，值总为真的命题。</li>
+<li><strong>Contradiction</strong>：......值总为假的命题。</li>
+</ul>
+<p>三个最常用的 non-trivial 公式！</p>
+<ul>
+<li>Conditional-Disjunction Equivalence: <span class="math inline">\((p\to q)\equiv (\lnot{p}\lor q)\)</span></li>
+<li>Distributive Laws: <span class="math inline">\(p\lor (q\land
+r)\equiv (p\lor q)\land (p \lor r)\)</span> 与 <span class="math inline">\(p\land (q\lor r)\equiv (p\land q)\lor(p\land
+r)\)</span></li>
+<li>De Morgan's Laws: <span class="math inline">\(\lnot (p\land q)\equiv
+\lnot{p}\lor \lnot{q}\)</span> 与 <span class="math inline">\(\lnot(p\lor q)\equiv \lnot{p}\land
+\lnot{q}\)</span></li>
+</ul>
+<p>布尔可满足性问题 (Satisfiability)：一个复合命题是 satisfiable
+的当存在一种 truth values 对 propositional variables
+的分配方式，使得该复合命题为真。</p>
+<p><br></p>
+<h3 id="lecture-3">Lecture 3</h3>
+<p>前两节课重点在 Propositional Logic，这一节开始进入 Predicate
+Logic。</p>
+<p>Predicate Logic 引入了 Quantification 来构造更为复杂的命题。</p>
+<ul>
+<li>The Universal Quantifier <span class="math inline">\(\forall\)</span></li>
+<li>The Existential Quantifier <span class="math inline">\(\exists\)</span></li>
+<li>The Uniqueness Quantifier <span class="math inline">\(\exists!\)</span> or <span class="math inline">\(\exists_1\)</span></li>
+</ul>
+<p>使用 Quantifier 时，注意 propositional variables 所属的<strong>论域
+Domain</strong> (aka Domain of Discourse, or Universe of
+Discourse)。</p>
+<ul>
+<li>论域需要事先指出：例如，命题函数 (propositional function) <span class="math inline">\(P(x)\)</span> 表示 <span class="math inline">\(x\)</span> 很有高扬感。<span class="math inline">\(x\)</span>
+的论域是北宇治高校吹奏乐部的成员。在此基础上 <span class="math inline">\(\forall x P(x)\)</span>
+才有意义：对于所有吹奏乐部的成员，他们是很有高扬感的。</li>
+<li>试试再添加一个命题函数 <span class="math inline">\(Q(x)\)</span>：<span class="math inline">\(x\)</span> 吹上低音号。那么 <span class="math inline">\(\forall{x} (Q(x)\to P(x))\)</span>
+就表示：对于所有吹奏乐部的成员，如果他们吹上低音号，那么他们就很有高扬感。</li>
+</ul>
+<p>Quantifier 的 De Morgan's Laws: <span class="math inline">\(\lnot
+\forall{x}\equiv \exists{x}\)</span>, <span class="math inline">\(\lnot
+\exists{x}=\forall{x}\)</span>。如果是 Nested
+Quantifiers，全部取反即可。</p>
+<p><br></p>
+<h3 id="lecture-4">Lecture 4</h3>
+<p>先说 argument: argument 是一系列 propositions，分为最后的 conclusion
+和之前的所有 premises。为了证明 conclusion 的正确性，我们需要说明
+<strong>the truth of premises logically implies the truth of
+conclusion</strong>。</p>
+<p>Logically Implication: <strong><span class="math inline">\(p\)</span>
+logically implies <span class="math inline">\(q\)</span> (<span class="math inline">\(p \implies q\)</span>) if <span class="math inline">\(p\to q\)</span> is a tautology.</strong></p>
+<p>对 argument 进行推理时的几个重要的 Rules of Inference：</p>
+<ul>
+<li><em>Modus Ponens</em> (Affirming the Antecedent): tautology <span class="math inline">\((p\land (p\to q))\to q\)</span>. 肯定前件。</li>
+<li><em>Modus Tollens</em> (Denying the Consequent): tautology <span class="math inline">\((\lnot{q} \land (p\to q))\to \lnot{p}\)</span>.
+否定后件。</li>
+<li><em>Hypothetical Syllogism</em> (Chain Rule): tautology <span class="math inline">\(((p\to q)\land (q\to r))\to (p\to r)\)</span>.
+直言三段论。</li>
+<li><em>Disjunctive Syllogism</em> (Disjunction Elimination): tautology
+<span class="math inline">\(((p\lor q)\land \lnot p)\to q\)</span>.
+选言三段论。</li>
+<li><em>Addition</em>: tautology <span class="math inline">\(p\to (p\lor
+q)\)</span>.</li>
+<li>Simplification: tautology <span class="math inline">\((p\and q)\to
+p\)</span>. (前提为假一定为真。前提为真 <span class="math inline">\(p\)</span>, <span class="math inline">\(q\)</span>
+必全为真)</li>
+<li>Resolution: tautology <span class="math inline">\(((p\lor q)\land
+(\lnot{p}\lor r))\to (q\lor r)\)</span>. (分别对应 <span class="math inline">\(p\)</span> 与 <span class="math inline">\(\lnot
+p\)</span> 两种情况)</li>
+</ul>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info: COMP2121 Discrete Mathematics 2C, Lecturer: Prof.
+Ramanathan Ravishankar</p>
+<p>Course textbook: Kenneth H. Rosen (2019) <em>Discrete Mathematics and
+Its Application</em> (8th Edition)</p>
+]]></content>
+  </entry>
+  <entry>
     <title>Meanings of Life</title>
     <url>/2024/01/19/ANTH2350/</url>
     <content><![CDATA[<p>人类对意义永恒的追寻，究竟是否只是一场梦境？</p>
@@ -348,8 +494,7 @@ if not specified.</p>
 </ul>
 ]]></content>
       <categories>
-        <category>笔记</category>
-        <category>misc</category>
+        <category>杂感</category>
       </categories>
       <tags>
         <tag>Miscellaneous Notes</tag>
