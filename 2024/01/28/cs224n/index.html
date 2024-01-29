@@ -33,7 +33,7 @@
 <meta property="og:description" content="Manning 脸上总挂着若有若无的笑意，讲到兴奋处这笑便藏匿不住流泻到眼角，嘴边。他的澳洲口音使我联想到斜照着的阳光，和这阳光下刚刚开始融化的黄油：句与句之间连着丝，粘稠的恰到好处。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-01-28T03:09:47.000Z">
-<meta property="article:modified_time" content="2024-01-28T12:55:05.681Z">
+<meta property="article:modified_time" content="2024-01-29T13:48:18.995Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Machine Learning">
 <meta name="twitter:card" content="summary">
@@ -169,7 +169,7 @@
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#word-embeddings"><span class="nav-number">1.</span> <span class="nav-text">Word Embeddings</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#direct-prediction-word2vec"><span class="nav-number">1.1.</span> <span class="nav-text">Direct Prediction: Word2Vec</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#count-based-co-occurrence-matrix"><span class="nav-number">1.2.</span> <span class="nav-text">Count-based: Co-occurrence
-Matrix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#glove"><span class="nav-number">1.3.</span> <span class="nav-text">GloVe</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#neural-networks"><span class="nav-number">2.</span> <span class="nav-text">Neural Networks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Matrix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#glove"><span class="nav-number">1.3.</span> <span class="nav-text">GloVe</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#neural-networks"><span class="nav-number">2.</span> <span class="nav-text">Neural Networks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dependency-parsing"><span class="nav-number">3.</span> <span class="nav-text">Dependency Parsing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -486,7 +486,29 @@ W\sim U[-\sqrt{\frac{6}{n^{(l-1)}+n^{(l)}}},
 <li>指数衰减 <span class="math inline">\(\alpha(t)=\alpha_0
 e^{-kt}\)</span>, <span class="math inline">\(k\)</span> 为超参数。</li>
 </ul>
-<p>Momentum Update.</p>
+<p>Momentum Update. 一个小球的运动方向受当前受力方向 (当前梯度 <span class="math inline">\(\frac{\partial J}{\partial x}\)</span>)
+与原运动方向 (之前的所有梯度累积而成的动量 <span class="math inline">\(v\)</span>) 共同影响。学习率为 <span class="math inline">\(\alpha\)</span>，动量衰减率为 <span class="math inline">\(\mu\)</span>
+(梯度对动量的影响随时间的衰减率，<span class="math inline">\(t\)</span>
+个迭代之前的梯度对当前动量的影响为 <span class="math inline">\(\mu^t\)</span>)，<span class="math inline">\(\mu\)</span> 常取 0.9, 0.5 等值。 <span class="math display">\[
+\begin{aligned}
+v&amp;:=\mu v-\alpha \frac{\partial J(\theta)}{\partial x} \\
+x&amp;:=x+v
+\end{aligned}
+\]</span> Adaptive Optimization Methods. Each parameter has its own
+learning rate. Parameters that have not been updated much in the past
+are likelier to have higher learning rates. 以 AdaGrad 为例，某参数
+<span class="math inline">\(\theta_i\)</span> 在第 <span class="math inline">\(t\)</span> 次迭代的 (真) 学习率被前 <span class="math inline">\(t-1\)</span> 次的梯度历史影响。 <span class="math display">\[
+\theta_{t,i}=\theta_{t-1,i}-\frac{\alpha}{\sqrt{\sum_{\tau=1}^{t}g_{\tau,i}^2}}
+g_{t,i} \text{ where } g_{t,i}=\frac{\partial}{\partial \theta_{t,i}}
+J_t(\theta)
+\]</span> 注意到 AdaGrad 中 (真) 学习率是单调下降的。RMSProp 作为
+AdaGrad 的一个变种，利用了 moving average of squared gradients
+解决了这个问题。Adam 又是 RMSProp 的一个变种，它使用 momentum-like
+updates。</p>
+<p><br></p>
+<h2 id="dependency-parsing">Dependency Parsing</h2>
+<p>非常 linguistic 的内容。下学期想 enroll general linguistic
+那门课了。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
@@ -682,6 +704,15 @@ NLP with Deep Learning</a> (2021~2023)</p>
 
 
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
 
 <script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/01/28/cs224n/"}</script>
 <script>
@@ -697,15 +728,6 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
