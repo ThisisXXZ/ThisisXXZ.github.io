@@ -33,7 +33,7 @@
 <meta property="og:description" content="Manning 脸上总挂着若有若无的笑意，讲到兴奋处这笑便藏匿不住流泻到眼角，嘴边。他的澳洲口音使我联想到斜照着的阳光，和这阳光下刚刚开始融化的黄油：句与句之间连着丝，粘稠的恰到好处。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-01-28T03:09:47.000Z">
-<meta property="article:modified_time" content="2024-01-29T13:48:18.995Z">
+<meta property="article:modified_time" content="2024-01-31T06:47:43.458Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Machine Learning">
 <meta name="twitter:card" content="summary">
@@ -169,7 +169,7 @@
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#word-embeddings"><span class="nav-number">1.</span> <span class="nav-text">Word Embeddings</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#direct-prediction-word2vec"><span class="nav-number">1.1.</span> <span class="nav-text">Direct Prediction: Word2Vec</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#count-based-co-occurrence-matrix"><span class="nav-number">1.2.</span> <span class="nav-text">Count-based: Co-occurrence
-Matrix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#glove"><span class="nav-number">1.3.</span> <span class="nav-text">GloVe</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#neural-networks"><span class="nav-number">2.</span> <span class="nav-text">Neural Networks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dependency-parsing"><span class="nav-number">3.</span> <span class="nav-text">Dependency Parsing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Matrix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#glove"><span class="nav-number">1.3.</span> <span class="nav-text">GloVe</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#neural-networks"><span class="nav-number">2.</span> <span class="nav-text">Neural Networks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dependency-parsing"><span class="nav-number">3.</span> <span class="nav-text">Dependency Parsing</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#traditional-methods"><span class="nav-number">3.1.</span> <span class="nav-text">Traditional Methods</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#neural-dependency-parser"><span class="nav-number">3.2.</span> <span class="nav-text">Neural Dependency Parser</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#language-models"><span class="nav-number">4.</span> <span class="nav-text">Language Models</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -374,7 +374,7 @@ P(o|c)=\frac{\exp(u_o^Tv_c)}{\sum_{w\in \text{Vocab}} \exp(u_w^T v_c)}
 \]</span> 计算梯度 (以参数 <span class="math inline">\(v_c\)</span>
 为例，过程见 <a target="_blank" rel="noopener" href="https://web.stanford.edu/class/cs224n/slides/cs224n-2024-lecture01-wordvecs1-public.pdf">pp.39</a>)
 可以发现它本质上是 观测值 (observed) - 期望值 (expected)： <span class="math display">\[
-\frac{\partial}{\partial v_c} \log(P(o|c))=u_0-\sum_{x=1}^v P(x|c) u_x
+\frac{\partial}{\partial v_c} \log(P(o|c))=u_o-\sum_{x=1}^v P(x|c) u_x
 \]</span> 有 corpus，有目标函数 <span class="math inline">\(J(\theta)\)</span>，梯度下降更新 <span class="math inline">\(\theta\)</span> 即可。但在 naive softmax
 定义下，每次更新都要计算所有 <span class="math inline">\(\theta\)</span>
 的梯度，还要计算成本很高的 <span class="math inline">\(\sum_{w\in
@@ -509,6 +509,82 @@ updates。</p>
 <h2 id="dependency-parsing">Dependency Parsing</h2>
 <p>非常 linguistic 的内容。下学期想 enroll general linguistic
 那门课了。</p>
+<p>与机器语言不同，自然语言非常之
+ambiguous。避免歧义的前提是了解句子的结构 (典中典之 Students Get First
+Hand Job Experience)，因此句法分析 (syntactic structure analysis)
+成为了传统 NLP 领域中的一个重要任务。</p>
+<p>语法结构的两种模型：</p>
+<ul>
+<li>Constituency Structure (成分结构).</li>
+<li>Dependency Structure (依赖结构).</li>
+</ul>
+<p>Constituency Structure.
+基于句子中各词的词性和短语结构语法把单词组织成嵌套的结构 (nested
+structure)，把较小的语言成分按照规则组装为较大的语言成分，表达的意义也随之越来越复杂。</p>
+<p>Dependency Structure. 强调词与词之间的依赖关系。依赖关系是一条单向边
+<span class="math inline">\((w_i,w_j,v)\)</span>，表示 <span class="math inline">\(w_j\)</span> 依赖于 <span class="math inline">\(w_i\)</span>，依赖方式是 <span class="math inline">\(v\)</span> (<span class="math inline">\(\mathtt{prep,pobj,nsubjpass}\)</span>​,
+etc.)。<span class="math inline">\(w_i\)</span> 被称为 head
+(governor)，<span class="math inline">\(w_j\)</span> 被称为 dependent
+(modifier)。分析依赖关系连边后往往会形成一颗依赖树 (dependency
+tree)。</p>
+<p>Dependency Parsing
+问题基本来说就是训练一个能够对给定句子生成对应依赖树的模型。</p>
+<ul>
+<li><em>Learning</em>: Given a training set <span class="math inline">\(D\)</span> (e.g., <a target="_blank" rel="noopener" href="https://universaldependencies.org/">Stanford Universal
+Dependencies</a>) of sentences annotated with dependency graphs, induce
+a parsing model <span class="math inline">\(M\)</span> that can be used
+to parse new sentences.</li>
+<li><em>Parsing</em>: Given a parsing model <span class="math inline">\(M\)</span> and a sentence <span class="math inline">\(S\)</span>, derive the optimal dependency graph
+<span class="math inline">\(D\)</span> for <span class="math inline">\(S\)</span> according to <span class="math inline">\(M\)</span>.</li>
+</ul>
+<h3 id="traditional-methods">Traditional Methods</h3>
+<p>Dependency Parsing 的传统方法。</p>
+<ul>
+<li><ol start="1996" type="1">
+<li>DP, 复杂度 <span class="math inline">\(O(n^3)\)</span>。</li>
+</ol></li>
+<li><ol start="2005" type="1">
+<li>基于最小生成树的 parser MSTParser。生成 <span class="math inline">\(n^2\)</span> 条带依赖概率的边，再使用 MST
+进行选择。</li>
+</ol></li>
+<li><ol start="2003" type="1">
+<li>MaltParser: 采取 transition-based parsing 或 greedy deterministic
+dependency parsing。</li>
+</ol></li>
+</ul>
+<p>Greedy Deterministic Transition-Based Parsing. 该框架下 parser
+是一个自动机，贪心的进行状态转移。</p>
+<p>先定义状态 (state)：对于句子 <span class="math inline">\(S=w_1...w_n\)</span>，状态 <span class="math inline">\(c=(\sigma,\beta,A)\)</span>，<span class="math inline">\(\sigma\)</span> 是一个栈，<span class="math inline">\(\beta\)</span> 是一个 buffer，<span class="math inline">\(A\)</span> 存储所有依赖关系。初始状态 <span class="math inline">\(c_0\)</span> 为 <span class="math inline">\(([w_0]_{\sigma},[w_1,...,w_n]_{\beta},\emptyset)\)</span>，<span class="math inline">\(w_0\)</span> 是为方便创造的依赖树根
+ROOT。终止状态为 <span class="math inline">\((\sigma,[]_{\beta},A)\)</span>​。</p>
+<p>转移 (transitions) 共有三种：</p>
+<ul>
+<li><span class="math inline">\(\mathtt{SHIFT}\)</span>. 将 buffer
+中的第第一个词压入栈中。</li>
+<li><span class="math inline">\(\mathtt{LEFT\_ARC}_r\)</span>.
+若从栈顶开始的两个词为 <span class="math inline">\(w_j,w_i\)</span>，连一条边 <span class="math inline">\((w_j,r,w_i)\)</span> 并存入 <span class="math inline">\(A\)</span> 中，从栈中弹出 <span class="math inline">\(w_i\)</span>。</li>
+<li><span class="math inline">\(\mathtt{RIGHT\_ARC}_r\)</span>.
+...连一条边 <span class="math inline">\((w_i,r,w_j)\)</span> 存入 <span class="math inline">\(A\)</span> 中，从栈中弹出 <span class="math inline">\(w_j\)</span>。</li>
+</ul>
+<p>设计好了自动机的状态与转移，接下来应该有一个 deterministic
+的决策器指导对于某种状态应该采取什么转移。</p>
+<h3 id="neural-dependency-parser">Neural Dependency Parser</h3>
+<p>接下来就是 Manning 和他的学生 Chen Danqi 的<a target="_blank" rel="noopener" href="https://nlp.stanford.edu/pubs/emnlp2014-depparser.pdf">工作</a>了：他们设计了一个神经网络作为决策器。这个神经网络以从当前状态
+<span class="math inline">\(c=(\sigma,\beta,A)\)</span>​
+中抽取的特征作为输入进行一个三分类，根据输出决定下一次转移是 SHIFT，LEFT
+ARC，RIGHT ARC 中的哪一种。实验结果证明这种 parser
+的准确性和效率都大大提高了。</p>
+<p>一般来说，我们从当前自动机的状态 <span class="math inline">\(c\)</span> 中抽取三种特征：<span class="math inline">\(S_{word}\)</span> 即栈或 buffer 中的某些词，<span class="math inline">\(S_{tag}\)</span> 即这些词对应的词性 (POS, Part of
+Speech)，<span class="math inline">\(S_{label}\)</span>​ 即这些词的
+dependents 和对应的依赖关系。</p>
+<p>把这三种特征表示成向量 <span class="math inline">\(x^w,x^t,x^l\)</span> 并 concatenate
+成一个低维稠密的分布式向量 <span class="math inline">\([x^w,x^t,x^l]\)</span> 喂到 NN 中，经过一个隐藏层
+(激活函数是 cubic function) 和 softmax 层后得到结果。</p>
+<p>题外话，看到 Chen Danqi
+这个名字我隐约觉得有点熟悉，查了下才知道她是隔壁雅礼的真 · IOI
+巨佬，在高中就发明了 CDQ 分治和插头 DP 这些折磨后世的算法，现在是
+Princeton 的 NLP group co-leader......真跪了。</p>
+<p><br></p>
+<h2 id="language-models">Language Models</h2>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
