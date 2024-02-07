@@ -156,6 +156,118 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
+    <title>记计算机体系结构</title>
+    <url>/2024/02/05/COMP2120-1/</url>
+    <content><![CDATA[<p>困啊，困，困到眼皮咀嚼眼珠，下巴亲吻桌面，意识在困倦中被熬成一锅浓粥，试图清醒过来却拔出粘稠的丝。老师破碎的英语断断续续的传来，像深山中精怪的呼唤；屏幕上的
+PPT 变幻扭曲出炫光的轮廓，透过公式和图像我恍惚看到了神谕。</p>
+<span id="more"></span>
+<p>COMP2120 Computer Organization 笔记。无聊的课程前轰然倒塌的我。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="digital-logic">Digital Logic</h2>
+<p>Boolean Algebra. 该部分与 COMP2121
+之前的命题逻辑部分高度重合。值得注意的是逻辑与 <span class="math inline">\(\land\)</span> 常被表示为 <span class="math inline">\(\times\)</span>，逻辑或 <span class="math inline">\(\lor\)</span> 被表示为 <span class="math inline">\(+\)</span>，否定 (NOT) <span class="math inline">\(\lnot A\)</span> 被表示为取补 (complement) <span class="math inline">\(\overline{A}\)</span>。</p>
+<p>Functionally complete sets. (三元) AND, OR, NOT. (二元) AND, NOT/OR,
+NOT. (一元) NAND/NOR.</p>
+<p>Implementation of Boolean function. 将真值表转化为布尔表达式。常用
+sum of products (SOP) 方法：</p>
+<ul>
+<li><strong>minterm: </strong> 一个包含所有变量的累乘 (AND) 项。</li>
+<li>对所有函数值 <span class="math inline">\(F=1\)</span> 的 minterm，为
+0 的变量取反，为 1 的变量不变，再求和得到布尔表达式。</li>
+</ul>
+<p>S-R Latch. 有点像 flip flops，作为记忆单元。</p>
+<p>Karnaugh Map. 卡诺图，用于化简复杂的布尔表达式。</p>
+<ul>
+<li>二元 <span class="math inline">\(2^1\times 2^1\)</span>，三元 <span class="math inline">\(2^1\times 2^2\)</span>，四元 <span class="math inline">\(2^2\times 2^2\)</span>。</li>
+<li>为保证变量的连续变化，表头采用格雷码 (Gray code) 排列。</li>
+<li>选出 (数量尽量少的) 若干个全 1 矩形。矩形大小必须是 <span class="math inline">\(2^n\)</span>，可以相互重叠或者 wrap around
+图的边界。</li>
+<li>每个矩形对应一个 minterm，忽略 0 和 1
+均取到的变量，其他的变量按照之前的规则取反/保留。</li>
+</ul>
+<p><br></p>
+<h2 id="number-representation">Number Representation</h2>
+<p>radix-<span class="math inline">\(10\)</span> to radix-<span class="math inline">\(r\)</span>. 对于十进制数 <span class="math inline">\(A.B\)</span>，分别处理其 integer part 与
+fractional part。</p>
+<ul>
+<li><span class="math inline">\(A\)</span>: 经典的 quotient remainder
+方法。短除后得到的余数记得倒着写。</li>
+<li><span class="math inline">\(0.B\)</span>: 不断乘 <span class="math inline">\(r\)</span>，取整数部分直到 <span class="math inline">\(B=0\)</span>。</li>
+</ul>
+<p>binary to hexadecimal.
+从左到右，四个一组，二进制中的每四个数码对应十六进制中的一个数码。记住
+<span class="math inline">\(A-F\)</span> 对应 <span class="math inline">\(10-15\)</span>。</p>
+<p>binary to octal. 从左到右，三个一组。</p>
+<p>Excess <span class="math inline">\(K\)</span> (aka Offset Binary,
+Biased Representation). 加 <span class="math inline">\(K\)</span>​ 后再求
+bit pattern 表示。</p>
+<p>Sign-Magnitude Representation. 难以计算，<span class="math inline">\(0\)</span> 有两种表示。</p>
+<p>One's Complement.</p>
+<ul>
+<li>正数：同 unsigned bit pattern。</li>
+<li>负数：将 unsigned bit pattern 取反。本质上 <span class="math inline">\(-x\)</span> 被 <span class="math inline">\(2^n-1-x\)</span>​ 表示。</li>
+<li>仍然存在 <span class="math inline">\(+0\)</span> 与 <span class="math inline">\(-0\)</span> 表示，加法实现还是不够直接。</li>
+</ul>
+<p>Two's Complement.</p>
+<ul>
+<li>正数：同 unsigned bit pattern。</li>
+<li>负数：将 unsigned bit pattern 取反后加一。本质上 <span class="math inline">\(-x\)</span> 被 <span class="math inline">\(2^n-x\)</span>​ 表示。</li>
+<li><span class="math inline">\(0\)</span> 的表示唯一。由于 <span class="math inline">\(10...0_n\)</span> 的意义空缺，将其分配给 <span class="math inline">\(-2^{n-1}\)</span>。因此 2's Complement
+的表示范围比之前的两种方法多 <span class="math inline">\(1\)</span>：<span class="math inline">\([-2^{n-1},
+2^{n-1}-1]\)</span>。加法计算简洁。</li>
+<li>Range Extension：使用 sign bit 进行填充。</li>
+</ul>
+<p><strong>Floating-Point Representation</strong> (Chapter 4.2).
+与定点数表示 (Fixed-Point Representation)
+相对。定点数表示规定了小数点前后 (整数部分与小数部分)
+占据的位数，因此无法较精确的表示 large numbers 或 small
+fractions。浮点数表示则没有这样的限制。</p>
+<p>浮点数表示本质上是二进制下的科学记数法。以 32
+位为例，一个浮点数表示分为三部分：</p>
+<ul>
+<li>Sign of Significand (1 bit) <span class="math inline">\(S\)</span>：符号位。</li>
+<li>Biased Exponent (8 bits) <span class="math inline">\(E\)</span>：幂数位，通常采用 excess-127
+表示。</li>
+<li>Significand (23 bits) <span class="math inline">\(M\)</span>：又称
+mantissa，有效数字位。类似科学记数法，有效数字被 normalize 为 <span class="math inline">\(1.\text{xx...x}\)</span>。由于 <span class="math inline">\(1\)</span>​​ 总是出现在首位，它将会被省略。</li>
+</ul>
+<p>浮点数表示的实值 (actual value) 计算。</p>
+<ul>
+<li>一般来说，实值的计算符合公式 <span class="math inline">\((-1)^S\times 1.M \times 2^{E-127}\)</span>。</li>
+<li>IEEE 标准下的特殊值 (special values)：exponent 为全 <span class="math inline">\(0\)</span> 或全 <span class="math inline">\(1\)</span>。
+<ul>
+<li>subnormal values：被 exponent 全 <span class="math inline">\(0\)</span> 标记，公式变为 <span class="math inline">\((-1)^S\times 0.M\times 2^{-126}\)</span>。</li>
+<li>infinity and Not-a-Number (NaN)：被 exponent 全 <span class="math inline">\(1\)</span> 标记。若 <span class="math inline">\(M\)</span> 为全 <span class="math inline">\(0\)</span>，表示 <span class="math inline">\((-1)^S \infty\)</span>；若 <span class="math inline">\(M\)</span> 非全 <span class="math inline">\(0\)</span>，表示 Not-a-Number。</li>
+</ul></li>
+<li>由此可见，有效的 exponent range 在 <span class="math inline">\([1,254]\)</span> 间。这代表 normal values
+的幂数范围在 <span class="math inline">\([-126,127]\)</span> 间。</li>
+</ul>
+<p><br></p>
+<h2 id="number-arithmetic">Number Arithmetic</h2>
+<p>虽然很佩服研究出这些繁琐规则的人，但对这一部分是真的感不起兴趣。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info: COMP2120, Prof. Zhao Qi</p>
+<p>Course textbook: William Stallings, <em>Computer Organization and
+Architecture (10th edition)</em></p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>Computer Architecture</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Multivariable Calculus &amp; Linear Algebra</title>
     <url>/2024/02/02/MATH2014-1/</url>
     <content><![CDATA[<p>有点出于功利的目的选了这门数学。由于提供回放，从开学到现在还没有
@@ -333,8 +445,8 @@ Application</em>.</p>
   <entry>
     <title>CS224N NLP with Deep Learning</title>
     <url>/2024/01/28/cs224n/</url>
-    <content><![CDATA[<p>Manning
-脸上总挂着若有若无的笑意，讲到兴奋处这笑便藏匿不住流泻到眼角，嘴边。他的澳洲口音使我联想到斜照着的阳光，和这阳光下刚刚开始融化的黄油：句与句之间连着丝，粘稠的恰到好处。</p>
+    <content><![CDATA[<p>讲课的老师是大名鼎鼎的 Christopher Manning，NLP
+领域的开拓者之一。我很喜欢他的澳洲口音，不像英式口音的生疏内敛，也不像美式口音的横冲直撞。听他讲课有一种在乡下听老爷子谈天说地之感。</p>
 <span id="more"></span>
 <p><br></p>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
@@ -814,7 +926,18 @@ r)\equiv (p\lor q)\land (p \lor r)\)</span> 与 <span class="math inline">\(p\la
 r)\)</span></li>
 <li>De Morgan's Laws: <span class="math inline">\(\lnot (p\land q)\equiv
 \lnot{p}\lor \lnot{q}\)</span> 与 <span class="math inline">\(\lnot(p\lor q)\equiv \lnot{p}\land
-\lnot{q}\)</span></li>
+\lnot{q}\)</span>​</li>
+</ul>
+<p>还有关于 implication 和 bi-implication 的常用公式：</p>
+<ul>
+<li>Contrapositive. <span class="math inline">\((p\to q)\equiv (\lnot
+p\to \lnot q)\)</span></li>
+<li>Bi-Implication. <span class="math inline">\((p\leftrightarrow
+q)\equiv (\lnot p\leftrightarrow \lnot q)\equiv (p\land q)\lor (\lnot
+p\land \lnot q)\)</span></li>
+<li>Distributive Laws. <span class="math inline">\(p\to (q\land r)\equiv
+(p\to q)\land (p\to r)\)</span> 与 <span class="math inline">\((p\to
+r)\land (q\to r)\equiv (p\lor q)\to r\)</span></li>
 </ul>
 <p>布尔可满足性问题 (Satisfiability)：一个复合命题是 satisfiable
 的当存在一种 truth values 对 propositional variables
@@ -931,6 +1054,7 @@ hypothesis.</li>
 </ul>
 <p><br></p>
 <h2 id="集合论-set-and-relations">集合论 Set and Relations</h2>
+<p><span class="math inline">\(\mathbb{Q}\)</span></p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
@@ -1190,7 +1314,8 @@ lecture，一定要及时止损，放弃
 attend。但同时，如果教授很会讲课，一定要记得带纸笔做一点
 digest，跟着教授的节奏来，这是为了<strong>消除课后总结这一步骤</strong>。</p>
 <p>这一学期有我很喜欢的 Ravi，2120 也是一个清华出身的年轻 AP
-负责，所以我乐观的认为这学期的 lecture 质量应该不会很差。</p>
+负责，所以我乐观的认为这学期的 lecture 质量应该不会很差。(我错了，除了
+Ravi 的课其他都难以言喻)</p>
 <p>【言弾 コトダマ 】</p>
 <ul>
 <li>教授是 PPT reader
