@@ -27,13 +27,13 @@
 
     <meta name="description" content="COMP3270 笔记。当看到 agenda 是每周一次 3.5 hr 的 lecture 时，我就知道这注定是一节自学课了。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Artificial Intelligence 综述">
+<meta property="og:title" content="Artificial Intelligence 笔记">
 <meta property="og:url" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
 <meta property="og:description" content="COMP3270 笔记。当看到 agenda 是每周一次 3.5 hr 的 lecture 时，我就知道这注定是一节自学课了。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-01-12T07:29:57.000Z">
-<meta property="article:modified_time" content="2024-02-02T11:37:10.218Z">
+<meta property="article:modified_time" content="2024-02-18T14:57:57.120Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="AI &amp; ML">
 <meta name="twitter:card" content="summary">
@@ -43,10 +43,10 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2024/01/12/COMP3270-1/","path":"2024/01/12/COMP3270-1/","title":"Artificial Intelligence 综述"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2024/01/12/COMP3270-1/","path":"2024/01/12/COMP3270-1/","title":"Artificial Intelligence 笔记"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Artificial Intelligence 综述 | ThisisXXZ's Blog</title>
+<title>Artificial Intelligence 笔记 | ThisisXXZ's Blog</title>
   
 
 
@@ -279,12 +279,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Artificial Intelligence 综述 | ThisisXXZ's Blog">
+      <meta itemprop="name" content="Artificial Intelligence 笔记 | ThisisXXZ's Blog">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Artificial Intelligence 综述
+          Artificial Intelligence 笔记
         </h1>
 
         <div class="post-meta-container">
@@ -381,11 +381,91 @@ optimality。</p>
 Dijkstra 中的 <span class="math inline">\(\text{distance(x)}\)</span>
 与贪心搜索中的 <span class="math inline">\(\text{heuristic(y)}\)</span>。当在节点 <span class="math inline">\(x\)</span> 扩展节点 <span class="math inline">\(y\)</span> 时，计算 <span class="math inline">\(y\)</span> 在 PQ 中的权重 <span class="math inline">\(f(y)=\text{distance(x)}+w_{x\to
 y}+\text{heuristic}(y)\)</span>。在介绍完盲目的 Dijkstra
-与短视的贪心搜索之后，这个想法应当是很自然的。但这个新的启发函数 <span class="math inline">\(f\)</span> 又带来了两个问题：</p>
+与短视的贪心搜索之后，这个想法应当是很自然的。</p>
+<p>但是，Dijkstra 具有最优性
+(optimality，即保证搜索得到的可行解是最优解)，贪婪搜索则不具有。为了使
+A* 继承最优性，我们需要添加两个约束，从 TSA 到 GSA 约束由弱到强。</p>
 <ul>
-<li>Admissible</li>
-<li>Consistent</li>
+<li><p><strong>A*-TSA is optimal if an admissible heuristic is
+used.</strong></p>
+<p>启发函数 <span class="math inline">\(h(x)\)</span> 是 admissible
+的当且仅当 <span class="math inline">\(0\leq h(x)\leq h^*
+(x)\)</span>，其中 <span class="math inline">\(h^{*}(x)\)</span> 是
+<span class="math inline">\(x\)</span>
+到最近目标状态的实际距离。想像将最优路径上某点的 <span class="math inline">\(h(x)\)</span>
+设为无限大，该点将永远无法被扩展。而如果某点的 <span class="math inline">\(h(x)\)</span> 较小，算法将向 Dijkstra
+退化，最优化能够得到保证。详细证明见 Search.pdf pp.79。</p></li>
+<li><p><strong>A*-GSA is optimal if a consistent heuristic is
+used.</strong></p>
+<p>启发函数 <span class="math inline">\(h(x)\)</span> 是 consistent
+的当且仅当对任意一条有向边 <span class="math inline">\(a\to
+c\)</span>，都有 <span class="math inline">\(h(a)-h(c)\leq
+\text{cost}(a\to c)\)</span>。它带来的结论是 <span class="math inline">\(f(a)\leq f(c)\)</span>，也就是在任意一条路径上
+<span class="math inline">\(f\)</span> 是单调不减的。consistency
+保证了首次被扩展的节点的路径就是到该节点的最优路径。</p></li>
 </ul>
+<p>局部搜索 (Local Search)。</p>
+<p>局部搜索解决的是 identification problem (识别问题)。与 planning
+problem
+相对，这类问题只关心得到最终的目标状态，而不关心通向目标的路径。局部搜索评估并修改
+(evaluate and modify) 当前状态，而不是从起始状态开始系统的
+(systematically) 探索路径。例子：八皇后问题。</p>
+<ul>
+<li>状态 state</li>
+<li>后继状态 successors</li>
+<li>代价函数 cost
+function：若采用贪心的转移，选择代价函数最小的后继进行转移。</li>
+</ul>
+<p>约束满足问题 (Constraint Satisfaction Problems, CSPs)。若干变量
+(每个变量有对应 domain) [vertices]，若干约束
+[arcs]。为变量赋值使得所有的约束都能被满足。解的 consistency 与
+completeness。</p>
+<p>解：Backtracking (回溯)，本质 DFS。为提高搜索效率，需要对搜索树
+(变量的域) 进行<strong>剪枝 (pruning)</strong>。</p>
+<ul>
+<li>Filtering &amp; Forward Checking (FC). update domains to prune the
+search tree.</li>
+<li>FC 的问题：只考虑值域，未考虑约束，无法提前发现某些必败局面。介绍
+<strong>arc consistency</strong>：约束 <span class="math inline">\(x\to
+y\)</span> 是 consistent 的当且仅当对 <span class="math inline">\(x\)</span> (域) 的每个取值，<span class="math inline">\(y\)</span> 都存在不违背约束的取值。注意当 <span class="math inline">\(x\)</span> 失去某个值时，<span class="math inline">\(x\to y\)</span> 可能变得 inconsistent。</li>
+<li><strong>Constraint Propagation</strong>. repeatedly enforces arc
+consistency (aka constraint consistency). e.g., AC-3
+算法。传播体现在递归的过程：当 check <span class="math inline">\(x\to
+y\)</span> inconsistent 时，pruning <span class="math inline">\(x\)</span> 来维持约束；此时再递归地 check 所有指向
+<span class="math inline">\(x\)</span> 的约束。食用方法：每 assign 一个
+value，进行一次 AC-3，对变量的可行域剪枝。若返回 true，继续搜索，返回
+false，回溯。</li>
+<li>AC-3 中的一个细节：若约束 <span class="math inline">\(x\to
+y\)</span> inconsistent 且 <span class="math inline">\(x\)</span>
+被剪枝后，无需 check 约束 <span class="math inline">\(y\to x\)</span>
+是否 consistent。原因是对 <span class="math inline">\(x\)</span>
+剪枝已经保证了 <span class="math inline">\(x\)</span>，<span class="math inline">\(y\)</span> 的<strong>相容</strong> (这真的是对
+consistency 的一个最准确的翻译)。</li>
+</ul>
+<p>进一步提高搜索效率的 trick：设置 variable ordering 与 value
+ordering。</p>
+<ul>
+<li>variable ordering: choose <strong>which variable</strong> to assign
+values with? - fail-first heuristic
+<ul>
+<li><strong>Minimum Remaining Values</strong> (MRV): the variable with
+fewest legal left values.</li>
+<li>MRV 的 tie-breaker (Deg): the variable with the most constraints on
+remaining variables. <strong>degree heuristic</strong></li>
+</ul></li>
+<li>value ordering: choose <strong>which value</strong> to assign to a
+variable?
+<ul>
+<li><strong>Least Constraining Value</strong> (LCV): the value that
+rules out the fewest values in the remaining variables</li>
+</ul></li>
+</ul>
+<p>关于 fail-first heuristic 与
+MRV：受到约束最多的变量也最容易耗尽所有可能的值从而引起回溯，所以应优先进行赋值。关于
+LCV：尽量维持剩余变量面对约束的灵活性。</p>
+<p>解澳大利亚省份染色问题的真 · 搜索算法：Backtracking + AC-3 + MRV
+&amp; Deg + LCV。</p>
+<p>对抗搜索 (Adversarial Search)。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
@@ -432,13 +512,13 @@ Intelligence: A Modern Approach</em> (4th Edition)</p>
   </li>
   <li class="post-copyright-link">
       <strong>Post link: </strong>
-      <a href="https://www.thisisxxz.com/2024/01/12/COMP3270-1/" title="Artificial Intelligence 综述">https://www.thisisxxz.com/2024/01/12/COMP3270-1/</a>
+      <a href="https://www.thisisxxz.com/2024/01/12/COMP3270-1/" title="Artificial Intelligence 笔记">https://www.thisisxxz.com/2024/01/12/COMP3270-1/</a>
       <!--copy buttom-->
       <span class="copy-path" title="Click to copy markdown-style reference"
       ><i
         style="cursor: pointer"
         class="fa fa-clipboard"
-        data-clipboard-text="[XXZ's Blog | Artificial Intelligence 综述](https://www.thisisxxz.com/2024/01/12/COMP3270-1/)"
+        data-clipboard-text="[XXZ's Blog | Artificial Intelligence 笔记](https://www.thisisxxz.com/2024/01/12/COMP3270-1/)"
         aria-label="Markdown-style reference is now on your clipboard"
       ></i
     ></span>
