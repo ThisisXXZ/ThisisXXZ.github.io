@@ -217,6 +217,7 @@ Nature.</p>
 <p>鹰身女妖/鸟妖 (<strong>Harpy</strong>).</p>
 <p>蛇人 (<strong>Yuan-Ti</strong>).</p>
 <p>食尸鬼 (<strong>Ghoul</strong>).</p>
+<p>豺狼人 (<strong>Gnoll</strong>).</p>
 <p><br></p>
 <h2 id="像吟游诗人一样说话非常用通用语词汇">像吟游诗人一样说话：非常用通用语词汇</h2>
 <p><strong>heresy</strong>. (持/信奉)异端/异教观点。</p>
@@ -1692,229 +1693,181 @@ Ravi 的课其他都难以言喻)</p>
 content.</p>
 </div>
 <p><br></p>
-<h2 id="search">Search</h2>
-<p>关于 State Space Graph 与 Search Tree。</p>
-<p>State Space Graph 是对某个搜索问题的数学建模 (mathematical
-representation)，它表示了所有状态与状态间的转移关系。Search Tree
-则建立在 State Space Graph 之上，它的根节点是起始状态 (start
-state)，所有叶子节点都是目标状态 (goal
-state)，每一条从根到叶子的路径都代表一个可能的转移路径。</p>
-<p>两种搜索风格 (taste)。</p>
-<p>Tree Search Algorithm (TSA) 与 Graph Search Algorithm (GSA)。TSA
-是不带 <code>visit[]</code> 数组的搜索，会重复访问节点。GSA 即带
-<code>visit[]</code> 数组的搜索。一般附在某种具体搜索算法的后面，如
-DFS-TSA 或 BFS-GSA 等。</p>
-<p>盲目搜索 (Uninformed/Blind Search)。</p>
+<h2 id="uninformed-search">Uninformed Search</h2>
+<p>State Space Graph 与 Search Tree。</p>
+<p>状态空间图用有向图对搜索问题进行建模，节点对应状态，边对应转移。搜索树则更关注搜索过程，每一条从根节点
+(起始状态) 到叶子节点 (目标状态)
+的路径都代表一个可能的转移路径，因此同一个状态在搜索树上可以多次出现。</p>
+<p>盲目搜索 (Uninformed Search)。对目标状态的位置没有认识。</p>
 <ul>
-<li>经典的 DFS (Depth-First Search) 与 BFS (Breadth-First
-Search)。此外还有一个很陌生的名词，UCS (Uniform-Cost
-Search)，它的策略是贪心的扩展当前 cost 最低的节点。定睛一看，这不就是
-Dijkstra 嘛！</li>
-<li>UCS，更准确的来说是 UCS-GSA，与 Dijkstra
-算法的唯一区别是存在一个目标状态。而 Dijkstra 是单源最短路，只强调
-source，不强调 sink。</li>
-<li>堆优化后的 Dijkstra 能达到 <span class="math inline">\(O(m\log{n})\)</span>
-的时间复杂度。虽然它能保证找到最短路，但仍然是盲目的，没有利用目标节点的位置信息。</li>
+<li><em>DFS</em>。总是选取搜索树上最深的节点进行扩展。不保证
+completeness 与 optimality。</li>
+<li><em>BFS</em>。总是选取搜索树上最浅的节点进行扩展。保证
+completeness，不保证 optimality。</li>
+<li><em>UCS</em>。总是选取搜索树上 <em>computed backward cost</em>
+最小的节点进行扩展。与 Dijkstra 的唯一区别是 uniform cost search
+在首次到达目标节点后退出。保证 completeness 与 optimality。</li>
 </ul>
-<p><strong>知情搜索 (Informed Search)，或是我们熟悉的<u>启发式搜索
-(Heuristic Search)</u>。</strong></p>
-<p>启发式函数 (Heuristic Function) <span class="math inline">\(h(x)\)</span>
-一般基于直觉或经验构建，<strong>它在可接受的开销内给出待解决的优化问题的一个可行解
-(接近但不一定是最优解)</strong>。以寻路问题为例，不妨将其定义为当前状态到目标状态的直线距离或曼哈顿距离。</p>
-<p>贪心搜索 (Greedy Search)：稍微更改一下 Dijkstra 中 PQ
-的排序规则，<span class="math inline">\(h(x)\)</span>
-较低的节点拥有更高的扩展优先度。问题：直线距离确实更近了，但到门口时却发现有一堵墙。这是启发式函数的局限性带来的。与
-Dijkstra (或 UCS-GSA) 相比，平均速度变快了，但无法保证解的
-optimality。</p>
-<p><strong>A* 搜索是 Dijkstra 与贪婪搜索的结合。</strong>它吸收了
-Dijkstra 中的 <span class="math inline">\(\text{distance(x)}\)</span>
-与贪心搜索中的 <span class="math inline">\(\text{heuristic(y)}\)</span>。当在节点 <span class="math inline">\(x\)</span> 扩展节点 <span class="math inline">\(y\)</span> 时，计算 <span class="math inline">\(y\)</span> 在 PQ 中的权重 <span class="math inline">\(f(y)=\text{distance(x)}+w_{x\to
-y}+\text{heuristic}(y)\)</span>。在介绍完盲目的 Dijkstra
-与短视的贪心搜索之后，这个想法应当是很自然的。</p>
-<p>但是，Dijkstra 具有最优性
-(optimality，即保证搜索得到的可行解是最优解)，贪婪搜索则不具有。为了使
-A* 继承最优性，我们需要添加两个约束，从 TSA 到 GSA 约束由弱到强。</p>
+<p><br></p>
+<h2 id="informed-search">Informed Search</h2>
+<p>Heuristic。当前状态到目标状态距离的评估，即 <em>estimated forward
+cost</em>，通常是一个放松后的原问题 (relaxed problem)
+的解。例如，寻路问题的启发常常是曼哈顿距离。</p>
 <ul>
-<li><p><strong>A*-TSA is optimal if an admissible heuristic is
-used.</strong></p>
-<p>启发函数 <span class="math inline">\(h(x)\)</span> 是 admissible
-的当且仅当 <span class="math inline">\(0\leq h(x)\leq h^*
-(x)\)</span>，其中 <span class="math inline">\(h^{*}(x)\)</span> 是
-<span class="math inline">\(x\)</span>
-到最近目标状态的实际距离。想像将最优路径上某点的 <span class="math inline">\(h(x)\)</span>
-设为无限大，该点将永远无法被扩展。而如果某点的 <span class="math inline">\(h(x)\)</span> 较小，算法将向 Dijkstra
-退化，最优化能够得到保证。详细证明见 Search.pdf pp.79。</p></li>
-<li><p><strong>A*-GSA is optimal if a consistent heuristic is
-used.</strong></p>
-<p>启发函数 <span class="math inline">\(h(x)\)</span> 是 consistent
-的当且仅当对任意一条有向边 <span class="math inline">\(a\to
-c\)</span>，都有 <span class="math inline">\(h(a)-h(c)\leq
-\text{cost}(a\to c)\)</span>。它带来的结论是 <span class="math inline">\(f(a)\leq f(c)\)</span>，也就是在任意一条路径上
-<span class="math inline">\(f\)</span> 是单调不减的。consistency
-保证了首次被扩展的节点的路径就是到该节点的最优路径。</p></li>
+<li><em>Greedy Search</em>。总是选取搜索树上 heuristic
+最小的节点进行扩展。不保证 completeness 与 optimality。</li>
+<li><em>A* Search</em>。定义 <em>total estimated cost</em> <span class="math inline">\(f(n)\)</span> 为 <em>total backward cost</em>
+<span class="math inline">\(g(n)\)</span> 与 <em>estimated forward
+cost</em> <span class="math inline">\(h(n)\)</span>
+之和，总是选取搜索树上 cost 最小的节点 [UCS + greedy]。</li>
 </ul>
-<p><strong><u>局部搜索 (Local Search)</u>。</strong></p>
-<p>局部搜索解决的是 identification problem (识别问题)。与 planning
-problem
-相对，这类问题只关心得到最终的目标状态，而不关心通向目标的路径。局部搜索评估并修改
-(evaluate and modify) 当前状态，而不是从起始状态开始系统的
-(systematically) 探索路径。例子：八皇后问题。</p>
+<p>保证 A* 搜索 optimality 的两个约束。admissibility 与
+consistency。</p>
 <ul>
-<li>状态 state</li>
-<li>后继状态 successors</li>
-<li>代价函数 cost
-function：若采用贪心的转移，选择代价函数最小的后继进行转移。</li>
+<li>A*-TSA optimality guaranteed by <em>admissibility</em> <span class="math inline">\(\forall n: 0\leq h(n)\leq
+h^{*}(n)\)</span>。证明见 <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note02.pdf">Informed
+Search</a> p.4。</li>
+<li>TSA (tree search) 常对同一节点进行多次扩展，效率极其低下。GSA (graph
+search) 引入 <em>reached
+set</em>，保证同一节点最多被扩展一次。但同时它又破坏了 A* 的最优性 (见
+p.5)。</li>
+<li>A*-GSA optimality guaranteed by <em>consistency</em> <span class="math inline">\(\forall A,C:h(A)-h(C)\leq
+cost(A,C)\)</span>​。underestimate 边权能够保证每次扩展的路径一定最优 (见
+p.6)。</li>
 </ul>
-<p>约束满足问题 (Constraint Satisfaction Problems, CSPs)。若干变量
-(每个变量有对应 domain) [vertices]，若干约束
-[arcs]。为变量赋值使得所有的约束都能被满足。解的 consistency 与
-completeness。</p>
-<p>解：回溯 (Backtracking)，本质 DFS。为提高搜索效率，需要对搜索树
-(变量的域) 进行<strong><u>剪枝 (pruning)</u></strong>。</p>
+<p>Dominance。</p>
+<p>对于两个 admissible/consistent 的 heuristic <span class="math inline">\(h_a\)</span> 与 <span class="math inline">\(h_b\)</span>，我们说 <span class="math inline">\(h_a\)</span> dominate over <span class="math inline">\(h_b\)</span> 当 <span class="math inline">\(\forall n:h_a(n)\geq h_b(n)\)</span>。可见
+heuristic 最优性 continuum 的两端为 <span class="math inline">\(h_l(n)=0\)</span> (<em>trivial
+heuristic</em>，退化为 ucs) 与 <span class="math inline">\(h_r(n)=h^{*}(n)\)</span> (一步到位)。</p>
+<p><br></p>
+<h2 id="constraint-satisfaction-problem-i">Constraint Satisfaction
+Problem I</h2>
+<p>约束满足问题 (Constraint Satisfaction Problem, CSPs)。CSP 是
+<em>identification</em> problem。与 <em>planning</em> problem
+相对，只关心具体的目标状态，不关心到达目标状态的路径。可以将 CSP 表示为
+constraint graph，节点对应变量，边对应约束。</p>
+<p>CSP 是 NP-hard 的，通过将 CSP 建模为搜索问题，再定义合适的
+heuristic，使得部分 CSP 能够在 feasible 的时间内求解。解 CSP
+采用的搜索策略是 <em>backtracking</em> search (回溯搜索)。</p>
+<p>回溯改进 i - <em>Filtering</em>。根据约束，对未赋值的变量的值域
+(domain of unassigned variables) 进行剪枝 (pruning)。</p>
 <ul>
-<li>Filtering &amp; Forward Checking (FC). update domains to prune the
-search tree.</li>
-<li>FC 的问题：只考虑值域，未考虑约束，无法提前发现某些必败局面。介绍
-<strong>arc consistency</strong>：约束 <span class="math inline">\(x\to
-y\)</span> 是 consistent 的当且仅当对 <span class="math inline">\(x\)</span> (域) 的每个取值，<span class="math inline">\(y\)</span> 都存在不违背约束的取值。注意当 <span class="math inline">\(x\)</span> 失去某个值时，<span class="math inline">\(x\to y\)</span> 可能变得 inconsistent。</li>
-<li><strong>Constraint Propagation</strong>. repeatedly enforces arc
-consistency (aka constraint consistency). e.g., AC-3
-算法。传播体现在递归的过程：当 check <span class="math inline">\(x\to
-y\)</span> inconsistent 时，pruning <span class="math inline">\(x\)</span> 来维持约束；此时再递归地 check 所有指向
-<span class="math inline">\(x\)</span> 的约束。食用方法：每 assign 一个
-value，进行一次 AC-3，对变量的可行域剪枝。若返回 true，继续搜索，返回
-false，回溯。</li>
-<li>AC-3 中的一个细节：若约束 <span class="math inline">\(x\to
-y\)</span> inconsistent 且 <span class="math inline">\(x\)</span>
-被剪枝后，无需 check 约束 <span class="math inline">\(y\to x\)</span>
-是否 consistent。原因是对 <span class="math inline">\(x\)</span>
-剪枝已经保证了 <span class="math inline">\(x\)</span>，<span class="math inline">\(y\)</span> 的<strong>相容</strong> (这真的是对
-consistency 的一个最准确的翻译)。</li>
+<li>naive filtering - <em>Forward
+checking</em>。每次赋值变量后，对共享约束的其他变量剪枝。</li>
+<li>AC-3 algorithm (Arc Consistency Algorithm #3)。对于 arc <span class="math inline">\(x\to
+y\)</span>，我们说它是<strong>相容</strong>的，当对 <span class="math inline">\(x\)</span> 值域中的每个值，<span class="math inline">\(y\)</span> 值域中都存在对应的不违背约束的值。AC-3
+算法在每次赋值变量后，enforces arc consistency
+得到所有未赋值变量的满足约束的<strong>最小的</strong>值域。能够更早的触发回溯，相应的增加了计算成本。</li>
 </ul>
-<p>进一步提高搜索效率的 trick：设置 variable ordering 与 value
-ordering。</p>
+<figure>
+<img data-src="AC-3.png" alt="Answer: arc consistency (相容性)满足 commutative law">
+<figcaption aria-hidden="true">Answer: arc consistency (相容性)满足
+commutative law</figcaption>
+</figure>
+<p>回溯改进 ii - <em>Ordering</em>。规定 variables and values involved
+的优先级。</p>
+<p>Variable Ordering: choose <strong>which variable</strong> to assign
+values with? - fail-first heuristic</p>
 <ul>
-<li>variable ordering: choose <strong>which variable</strong> to assign
-values with? - fail-first heuristic
+<li><em>Minimum Remaining Values</em> (MRV): the variable with fewest
+legal left values.</li>
+<li>tie-breaker of MRV (<em>degree heuristic</em>): the variable with
+the most constraints on remaining variables.</li>
+</ul>
+<p>Value Ordering: choose <strong>which value</strong> to assign to a
+variable?</p>
 <ul>
-<li><strong>Minimum Remaining Values</strong> (MRV): the variable with
-fewest legal left values.</li>
-<li>MRV 的 tie-breaker (Deg): the variable with the most constraints on
-remaining variables. <strong>degree heuristic</strong></li>
-</ul></li>
-<li>value ordering: choose <strong>which value</strong> to assign to a
-variable?
-<ul>
-<li><strong>Least Constraining Value</strong> (LCV): the value that
-rules out the fewest values in the remaining variables</li>
-</ul></li>
+<li><em>Least Constraining Value</em> (LCV): the value that rules out
+the fewest values in the remaining variables</li>
 </ul>
 <p>关于 fail-first heuristic 与
 MRV：受到约束最多的变量也最容易耗尽所有可能的值从而引起回溯，所以应优先进行赋值。关于
 LCV：尽量维持剩余变量面对约束的灵活性。</p>
-<p>解澳大利亚省份染色问题的真 · 搜索算法：Backtracking + AC-3 + MRV
-&amp; Deg + LCV。</p>
-<p><strong><u>对抗搜索 (Adversarial Search)</u></strong>。以一个游戏
-(game) 为背景，玩家双方进行博弈。</p>
+<p><br></p>
+<h2 id="constraint-satisfaction-problem-ii">Constraint Satisfaction
+Problem II</h2>
+<p>CSP 的另一种搜索策略：<em>Local Search</em>
+(局部搜索)。从一个随机状态开始进行迭代改进 (iterative
+improvement)；即随机的选择一个与约束产生冲突的变量，对其重新赋值，使得其与尽量少的约束产生冲突。不断进行这个过程直至所有的约束都得到满足。</p>
 <ul>
-<li><span class="math inline">\(s_0\)</span>. initial state, <span class="math inline">\(\{s\}\)</span>. states.</li>
-<li><span class="math inline">\(\text{player}(s)\)</span>. which player
-has the move?</li>
-<li><span class="math inline">\(\text{actions}(s)\)</span>. what legal
-moves a player can take?</li>
-<li><span class="math inline">\(\text{utility}(s,p)\)</span>. for player
-<span class="math inline">\(p\)</span>, game ends in terminal state
-<span class="math inline">\(s\)</span>​, the final numeric value is
-defined as <em>utility</em>.</li>
-</ul>
-<p>最小最大搜索 (Minimax Search)。对抗搜索的一种。两个采取最优策略的玩家
-(optimal/rational players) 交替行动，一个负责建构
-(最大化目标函数)，一个负责解构 (最小化目标函数)。 <span class="math display">\[
-\text{Minimax}(s)=
-\left\{
-\begin{matrix}
-\text{utility}(s) &amp; \text{ if  terminal-test}(s) \\
-\max_{a\in action(s)} \text{Minimax}(\text{result}(s,a)) &amp; \text{
-if  player}(s)=\max \\
-\min_{a\in action(s)} \text{Minimax}(\text{result}(s,a)) &amp; \text{
-if  player}(s)=\min
-\end{matrix}
-\right.
-\]</span> Minimax 搜索得到的结果不一定是最优的 (optimal
-play)，但其策略一定是最优的 (optimal
-strategy)。即，面对一个完美的敌手，使用 Minimax
-搜索进行对抗得到的结果一定最优。</p>
-<p>多代理博弈 (Multi-Agent Utilities)。这是 Minmax
-搜索的一般化：存在多个玩家。</p>
-<ul>
-<li>Utility vector for each state; Each player maximizes its own
-component.</li>
-<li>Give rise to cooperation and competition dynamically.</li>
-</ul>
-<p>深度限制搜索 (Depth-Limit Search, DLS)。设置深度限制 <span class="math inline">\(l\)</span>，搜索进行到博弈树上深度为 <span class="math inline">\(l\)</span> 的节点时，使用事先选择的估价函数
-(evaluation function) 对节点进行估价，不再探索其后代。</p>
-<ul>
-<li>时间复杂度由 <span class="math inline">\(O(b^m)\)</span> 下降到
-<span class="math inline">\(O(b^l)\)</span>，失去了策略最优性的保证。</li>
-<li>关于估价函数：最优的估价函数计算节点实际的 Minimax
-值。在设计时通常使用若干权重-特征对 <span class="math inline">\((w_i,f_i)\)</span>，对局面 <span class="math inline">\(s\)</span>，<span class="math inline">\(\text{eval}(s)=w_1f_1(s)+w_2f_2(s)+...+w_nf_n(s)\)</span></li>
-<li>两个 tradeoff：深度限制 <span class="math inline">\(l\)</span>
-与估价函数 <span class="math inline">\(e(s)\)</span>；估价函数设计中，特征的复杂度与计算的复杂度</li>
-<li>Horizon
-Effect：短视的估价函数可能会尝试挽回一个无法挽回的损失，从而付出更大的代价
-(Search.pdf pp.144，赔了主教又折兵)</li>
-</ul>
-<p><span class="math inline">\(\alpha\)</span>-<span class="math inline">\(\beta\)</span> 剪枝 (Alpha-Beta pruning)。重要的
-trick，维护两个变量 <span class="math inline">\(\alpha,
-\beta\)</span>：</p>
-<ul>
-<li><span class="math inline">\(\alpha\)</span>. best explored option
-along path to root for MAX. 当 MIN 行动时，只要节点的当前值 <span class="math inline">\(v\leq
-\alpha\)</span>，证明该节点在向上传递时一定会被 <span class="math inline">\(\alpha\)</span> 打断，剪枝。</li>
-<li><span class="math inline">\(\beta\)</span>. best explored option
-along path to root for MIN. 当 MAX 行动时，只要节点的当前值 <span class="math inline">\(v\geq
-\beta\)</span>，证明该节点在向上传递时一定会被 <span class="math inline">\(\beta\)</span> 打断，剪枝。</li>
-<li>pseudocode 见 Search.pdf pp.149，非常清晰。</li>
-</ul>
-<p>期望搜索 (Expectimax Search and Expectiminimax Search). 引入机会节点
-(chance node) 代替 MIN 节点或 MIN/MAX
-节点。连向机会节点的边权代表向该局面移动的概率。</p>
-<ul>
-<li>Expectimax Search 仅仅将 MIN
-节点替换为机会节点。模型：吃豆人，玩家可以选择吃豆人移动的方向，但怪物移动的方向是随机的。玩家-怪物处于一种主动-被动的博弈状态。</li>
-<li>Expectiminimax Search 将 MIN 节点与 MAX
-节点均替换为机会节点。模型：两个玩家互相博弈，但博弈的方式是掷骰子。</li>
-<li><a href="https://stackoverflow.com/questions/64901634/is-there-a-difference-between-what-is-called-expectimax-and-expectiminimax">这个回答</a>
-解释了这两种期望搜索间的细微区别。人与环境的博弈 v.s.
-两个人在环境下的博弈。</li>
+<li><em>Hill-Climbing Search</em> (爬山搜索)。从当前状态开始，不断地朝
+objective function 增加的方向往相邻状态转移。容易陷入 local maxima 与
+plateaux。</li>
+<li><em>Simulated Annealing Search</em>
+(模拟退火)。从当前状态开始随机移动。若这次移动使得 objective function
+增加，移动；若 objective function 减少，以概率 <span class="math inline">\(p\)</span> 移动。<span class="math inline">\(p\)</span>​
+被温度决定：该温度的值初始较高，随着迭代的进行将逐渐冷却。
+这意味着搜索允许在一开始 take more "bad moves".</li>
+<li><em>Genetic Algorithms</em> (遗传算法)。</li>
 </ul>
 <p><br></p>
-<h2 id="markov-decision-processes">Markov Decision Processes</h2>
-<p>马尔可夫决策过程 (Markov Decision Processes, MDP) 是对序列决策问题
-(Sequential Decision Problem) 的建模。在该过程中，智能体处在一个 fully
-observable 且 stochastic 的环境内。</p>
+<h2 id="search-with-other-agents-i">Search with Other Agents I</h2>
+<p>存在敌手 (adversaries) 的搜索问题是 <em>adversarial search
+problems</em>，或者更加喜闻乐见的，<em>games</em>。与普通的搜索问题相比，对抗搜索的解不是一个完整的解路径，而是一个
+<em>strategy</em> 或 <em>policy</em>。</p>
+<p>确定性零和博弈 (deterministic zero-sum games)
+的搜索策略：<em>minimax</em> 算法。即，后序遍历 (postorder traversal)
+博弈树，计算出所有节点的 <em>utility</em>。节点 <span class="math inline">\(s\)</span> 的 utility，或 <span class="math inline">\(\text{Minimax}(s)\)</span>，定义为玩家从 <span class="math inline">\(s\)</span> 出发能获得的 best possible
+outcome。</p>
+<p>minimax 算法得到的 strategy 在与一个理性敌手 (rational/optimal
+adversary) 博弈时是最优的。</p>
+<p>minimax 算法改进 i - <span class="math inline">\(\alpha\)</span>-<span class="math inline">\(\beta\)</span> pruning。</p>
+<figure>
+<img data-src="alpha-beta.png" alt="应用 alpha-beta 剪枝的 minimax 算法的效率能够提升两倍">
+<figcaption aria-hidden="true">应用 alpha-beta 剪枝的 minimax
+算法的效率能够提升两倍</figcaption>
+</figure>
+<p>minimax 算法改进 ii - <em>evaluation
+function</em>。估价函数的设计被广泛应用在 <em>depth-limited minimax</em>
+中，它仅遍历博弈树上深度 <span class="math inline">\(\leq l\)</span>
+的节点，实现 early termination；因此需要设计合适的估价函数，评估
+non-terminal 节点的 utilities。</p>
 <ul>
-<li><span class="math inline">\(s_0\)</span>. initial state. <span class="math inline">\(\{s\}\)</span> states.</li>
-<li><span class="math inline">\(A=\{a_1,...\}\)</span> a set of
-actions.</li>
-<li>Markov transition function <span class="math inline">\(T(s,a,s&#39;)\)</span> - the outcome of moving
-from <span class="math inline">\(s\)</span> to <span class="math inline">\(s&#39;\)</span> taking <span class="math inline">\(a\)</span>. <span class="math inline">\(P(s&#39;|s,a)\)</span> - the probability of moving
-from <span class="math inline">\(s\)</span> to <span class="math inline">\(s&#39;\)</span> taking <span class="math inline">\(a\)</span>.</li>
-<li>reward function <span class="math inline">\(R(s,a,s&#39;)\)</span></li>
+<li>从状态 <span class="math inline">\(s\)</span> 中提取若干特征 <span class="math inline">\(f\)</span>，每个特征有权重 <span class="math inline">\(w\)</span>。<span class="math inline">\(\text{eval}(s)=\sum w_if_i\)</span></li>
+<li>两个 tradeoff：深度限制 <span class="math inline">\(l\)</span>
+与估价函数 <span class="math inline">\(e(s)\)</span>​；估价函数设计中，特征的复杂度与计算成本</li>
+<li><em>Horizon
+Effect</em>：短视的估价函数可能会尝试挽回一个无法挽回的损失，从而付出更大的代价
+(Search.pdf pp.144，赔了主教又折兵)</li>
 </ul>
-<p>环境的 stochastic 使得智能体做出的行动导致的结果不一定符合预期；这种
-non-deterministic 的性质是 MDP
-与前述搜索问题的最大区别。(唯一比较相似的是 Expectimax 搜索)</p>
+<p><br></p>
+<h2 id="search-with-other-agents-ii">Search with Other Agents II</h2>
+<p>minimax 算法的缺陷 i - 总是假设敌手是理性的；无法处理带有 inherent
+randomness 的游戏 (掷骰子，棋牌游戏等)。<em>expectimax</em> 算法作为
+minimax 算法的 generalization，通过引入 <em>chance nodes</em>
+的概念来解决这个问题。</p>
+<p>传统 minimax 博弈树是 maximizer 与 minimizer 交替堆叠而成的；在
+expectimax 中 minimizer 被替换为 chance nodes。它所计算的是子节点的
+<em>expected utility</em>：<span class="math inline">\(\forall \text{
+chance states,} V(s)=\sum_{s\to
+s&#39;}p(s&#39;|s)V(s&#39;)\)</span>​。概率分布 <span class="math inline">\(p\)</span> 的计算基于我们对 suboptimal adversary
+的了解。</p>
+<p>expectimax 博弈树又可以向两个方向继续推广。</p>
 <ul>
-<li>Policy <span class="math inline">\(\pi\)</span>. Optimal Policy
-<span class="math inline">\(\pi^{*}\)</span> yields highest expected
-utility.</li>
-<li><span class="math inline">\(Q\)</span>-state.
-类似于机会节点，智能体已经决定了下一步行动，但环境的 stochastic
-性质使得该行动导向不同的结果 (存在一个概率分布)。类似 Expectimax
-搜索树，MDP 搜索树由普通局面和 <span class="math inline">\(Q\)</span>
-局面交替层叠而成。</li>
+<li><em>Mixed-layer
+types</em>。进一步增删/修改博弈树的交替层结构，实现多个 agents
+进行零和博弈。</li>
+<li><em>General games</em>。世界上绝大多数游戏并非零和博弈。对于具有
+<em>multi-agent utilities</em> 的游戏，在博弈树中引入 <em>utility
+vector</em> 实现多个 agents 进行非零和博弈，引发 agents
+间更复杂的对抗与合作。</li>
 </ul>
+<p>minimax 算法的缺陷 ii - 无法处理 branching factor <span class="math inline">\(b\)</span>​ 较大的游戏 (围棋)。<em>Monte Carlo Tree
+Search (MCTS)</em> 引入频率模拟概率的思想，进行 <em>evaluation by
+rollouts</em> 与 <em>selective search</em> (仅探索 parts of the
+tree)，对这类问题取得了较好的效果。</p>
+<p><em>UCB algorithm</em> 常作为 <em>MCTS UCT</em> 算法扩展搜索树的
+criterion，它反映了某个节点 promising 与 uncertain 间的 tradeoff。 当
+rollout 次数 <span class="math inline">\(N\to \infty\)</span>​ 时，MCTS
+UCT 的表现向 minimax agent 逼近。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># return next best move</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">monte_carlo_tree</span> search(root):</span><br><span class="line">    <span class="keyword">while</span> resources_left(time, computational power):</span><br><span class="line">        leaf = traverse(root)</span><br><span class="line">        simulation_result = rollout(leaf)</span><br><span class="line">        backpropagate(leaf, simulation_result)</span><br><span class="line">    <span class="keyword">return</span> best_child(root)</span><br><span class="line"></span><br><span class="line"><span class="comment"># return first unvisited node from root</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">traverse</span>(<span class="params">node</span>):</span><br><span class="line">    <span class="keyword">while</span> fully_expanded(node):</span><br><span class="line">        node = best_ucb(node)</span><br><span class="line">    <span class="keyword">return</span> pick_unvisited(node.children) <span class="keyword">or</span> node <span class="comment"># if node is terminal</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">rollout</span>(<span class="params">node</span>):</span><br><span class="line">    <span class="keyword">while</span> non_terminal(node):</span><br><span class="line">        node = rollout_policy(node)</span><br><span class="line">    <span class="keyword">return</span> result(node)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">rollout_policy</span>(<span class="params">node</span>):</span><br><span class="line">    <span class="keyword">return</span> pick_random(node.children)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">backpropagate</span>(<span class="params">node, result</span>):</span><br><span class="line">    <span class="keyword">if</span> is_root(node):    </span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    node.stats = update_stat(node, result)</span><br><span class="line">    backpropagate(node.parent, result)</span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">best_child</span>(<span class="params">node</span>):</span><br><span class="line">    <span class="keyword">return</span> most_visited(node.children)</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="mdps-i">MDPs I</h2>
+<p><em>Non-deterministic search</em>。Environment may <em>subject</em>
+the agent's actions to being <em>non-deterministic</em>；即，<span class="math inline">\(\text{result}(s,a)\)</span>​
+将产生多个可能的后继状态 (successors)。</p>
+<p>环境中存在一定程度的 inherent uncertainty；这类问题可被建模为
+<em>Markov decision processes (MDPs)</em>。</p>
 <p><br></p>
 <h2 id="note-reading">Note Reading</h2>
 <p>本节课课件内容的绝大部分是从 Berkeley CS188
@@ -1922,17 +1875,17 @@ utility.</li>
 notes，实为广大自学学子的福音。遂决定之后应当把听课的时间用来读
 notes；特此记录。</p>
 <ul>
-<li>[unchecked] <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note01.pdf">Uninformed
+<li>[checked] <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note01.pdf">Uninformed
 Search</a>.</li>
-<li>[unchecked] <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note02.pdf">Informed
+<li>[checked] <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note02.pdf">Informed
 Search</a>.</li>
-<li>[unchecked] <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note03.pdf">CSP
+<li>[checked] <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note03.pdf">CSP
 I</a>.</li>
-<li>[unchecked] <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note04.pdf">CSP
+<li>[checked] <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note04.pdf">CSP
 II</a>.</li>
-<li>[unchecked] <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note05.pdf">Search
+<li>[checked] <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note05.pdf">Search
 with Other Agents I</a>.</li>
-<li>[unchecked] <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note06.pdf">Search
+<li>[checked] <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note06.pdf">Search
 with Other Agents II</a>.</li>
 <li>[unchecked] <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note07.pdf">MDPs
 I</a></li>
@@ -1946,8 +1899,15 @@ if not specified.</p>
 <p>Course info: Code, COMP3270. Lecturer, Dr. Zhao Hengshuang.</p>
 <p>Course textbook: S. Russell &amp; P. Norvig, (2020), <em>Artificial
 Intelligence: A Modern Approach</em> (4th Edition)</p>
-<p><a href="https://inst.eecs.berkeley.edu/~cs188/fa22/">UCB CS 188
-<em>Introduction to Artificial Intelligence</em>, Fall 2022</a></p>
+<p>Other reference:</p>
+<ul>
+<li><a href="https://inst.eecs.berkeley.edu/~cs188/fa22/">UCB CS 188
+<em>Introduction to Artificial Intelligence</em>, Fall 2022</a></li>
+<li><a href="https://stackoverflow.com/questions/64901634/is-there-a-difference-between-what-is-called-expectimax-and-expectiminimax">the
+intricate difference between Expectimax and Expectiminimax</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/53948964">蒙特卡洛搜索树算法 -
+知乎</a></li>
+</ul>
 ]]></content>
       <categories>
         <category>笔记</category>
