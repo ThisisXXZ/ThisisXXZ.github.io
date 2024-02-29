@@ -32,11 +32,13 @@
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
 <meta property="og:description" content="困啊，困，困到眼皮咀嚼眼珠，下巴亲吻桌面，意识在困倦中被熬成一锅浓粥，试图清醒过来却拔出粘稠的丝。老师破碎的英语断断续续的传来，像深山中精怪的呼唤；屏幕上的 PPT 变幻扭曲出炫光的轮廓，透过公式和图像我恍惚看到了神谕。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/02/05/COMP2120-1/memory.png">
 <meta property="article:published_time" content="2024-02-05T06:43:24.000Z">
-<meta property="article:modified_time" content="2024-02-12T10:08:32.931Z">
+<meta property="article:modified_time" content="2024-02-29T12:43:41.920Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Computer Architecture">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.thisisxxz.com/2024/02/05/COMP2120-1/memory.png">
 
 
 <link rel="canonical" href="https://www.thisisxxz.com/2024/02/05/COMP2120-1/">
@@ -168,7 +170,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#digital-logic"><span class="nav-number">1.</span> <span class="nav-text">Digital Logic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#number-representation"><span class="nav-number">2.</span> <span class="nav-text">Number Representation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#number-arithmetic"><span class="nav-number">3.</span> <span class="nav-text">Number Arithmetic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#instruction-execution-cycle"><span class="nav-number">4.</span> <span class="nav-text">Instruction Execution Cycle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#digital-logic"><span class="nav-number">1.</span> <span class="nav-text">Digital Logic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#number-representation"><span class="nav-number">2.</span> <span class="nav-text">Number Representation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#number-arithmetic"><span class="nav-number">3.</span> <span class="nav-text">Number Arithmetic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#instruction-execution-cycle"><span class="nav-number">4.</span> <span class="nav-text">Instruction Execution Cycle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memory-hierarchy"><span class="nav-number">5.</span> <span class="nav-text">Memory Hierarchy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cache-memory"><span class="nav-number">6.</span> <span class="nav-text">Cache Memory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -433,8 +435,8 @@ tradeoff。精确度与 significand 的位数正相关，范围与 exponent
 <p><br></p>
 <h2 id="number-arithmetic">Number Arithmetic</h2>
 <p>虽然很佩服研究出这些繁琐规则的人，但对这一部分是真的感不起兴趣。</p>
-<p>具体参见 Tutorial-2 slides 与 Chapter 4.3-Number Representation and
-Arithmetic Part III。</p>
+<p>[具体参见 Tutorial-2 slides 与 Chapter 4.3-Number Representation and
+Arithmetic Part III]</p>
 <p><strong>Addition/Subtraction.</strong> (1-4 tutorial, 5 lecture)</p>
 <ul>
 <li>Excess-<span class="math inline">\(b\)</span>​ Representation.</li>
@@ -466,6 +468,64 @@ extension，按照乘数的符号位分类讨论，列出竖式进行计算。</
 <p><br></p>
 <h2 id="instruction-execution-cycle">Instruction Execution Cycle</h2>
 <p>详见 From NAND to Tetris 课程笔记，内容基本重合。</p>
+<p>与 Hack computer 的不同之处见 assignment 中提供的 <code>sim.py</code>
+和作业描述中的示意图。CPU 中有：</p>
+<ul>
+<li>PC (program counter)。在 byte addressing 模式下每轮隐式的 <span class="math inline">\(+4\)</span>。</li>
+<li>Register File。由少量快速寄存器组成，储存 CPU
+经常访问的数据。<code>RFIN</code> 写入，<code>RFOUT1</code> 与
+<code>RFOUT2</code> 输出。</li>
+<li>MAR (memory address register)，存储地址。</li>
+<li>MBR (memory buffer register)，存储从 memory 中提取的数据。常用
+<code>MBR &lt;- Mem[MAR]</code>。</li>
+<li>IR (instruction register)，存储 PC 指向的具体指令内容。常用
+<code>IR &lt;- Mem[PC//4]</code>。</li>
+<li>以上的寄存器被若干 data bus 连接起来。</li>
+</ul>
+<p>关于指令也有少许不同之处；细节还是参考 <code>sim.py</code>。</p>
+<ul>
+<li>1-word instruction. <code>ADD</code>, <code>SUB</code>,
+<code>OR</code>, <code>AND</code> 等指令均在 1 word (4 bytes)
+中指定了两个源地址与一个目标地址。</li>
+<li>2-words instruction. <code>LD</code>, <code>ST</code> 与 branch
+指令均是 2-words 指令。第一个 word 中指定的是 CPU 相关的地址
+(寄存器地址，在 <code>LD</code> 中为目标，在 <code>ST</code> 中为源) 与
+addressing mode，condition code 等指令本身的信息。第二个 word
+中通常指定的是 memory 相关的地址。</li>
+</ul>
+<p>关于 Interrupt。当 I/O 设备从外部被触发时，它将向 CPU 发送一个
+interrupt signal。系统受到该信号后将 freeze 当前程序的执行，转向
+interrupt handling，随后再 restore 原本的状态，继续执行程序。</p>
+<p><br></p>
+<h2 id="memory-hierarchy">Memory Hierarchy</h2>
+<p>memory 一直是性能瓶颈的主要来源。memory hierarchy
+在成本与性能间找到了一个平衡点。从金字塔的顶端到底端，memory
+的成本越来越低，容量越来越大；同时所需的 access time 增加，被 CPU (直接)
+访问的频率越来越低。</p>
+<ul>
+<li>registers of the CPU.</li>
+<li>on-chip cache memory [inside CPU chip].</li>
+<li>cache memory [on the motherboard].</li>
+<li>main memory [on the motherboard].</li>
+<li>external memory [secondary memory].</li>
+</ul>
+<p>对需要频繁访问的数据，例如 temporal locality 与 spatial
+locality；将它们从 lower level 复制到 higher level 中。</p>
+<p>关于 memory byte ordering - 对于 multi-byte data 有两种存储顺序：Big
+Endian Mode 与 Little Endian Mode。</p>
+<p>关于 memory 的种类。</p>
+<figure>
+<img data-src="memory.png" alt="Semiconductor Memory Type">
+<figcaption aria-hidden="true">Semiconductor Memory Type</figcaption>
+</figure>
+<p>memory 的性能 (performance) 评估。access time，memory cycle time 与
+transfer rate [见 Chapter 6 Memory Hierarchy pp.21-22]</p>
+<p>传输时的 error detection &amp; correction。对 a block of data
+添加一位 parity bit (校验码)，标识数据中 <span class="math inline">\(1\)</span> 的个数的奇偶性。correction 则需要更多
+bits，如 Hamming code。</p>
+<p><br></p>
+<h2 id="cache-memory">Cache Memory</h2>
+<p>Cache memory 是如何与 main memory 交互的？</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>

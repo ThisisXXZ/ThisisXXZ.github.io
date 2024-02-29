@@ -34,8 +34,9 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/AC-3.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/alpha-beta.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/bellman.png">
 <meta property="article:published_time" content="2024-01-12T07:29:57.000Z">
-<meta property="article:modified_time" content="2024-02-26T07:29:10.457Z">
+<meta property="article:modified_time" content="2024-02-29T12:38:17.844Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="AI &amp; ML">
 <meta name="twitter:card" content="summary">
@@ -529,6 +530,66 @@ the agent's actions to being <em>non-deterministic</em>；即，<span class="mat
 将产生多个可能的后继状态 (successors)。</p>
 <p>环境中存在一定程度的 inherent uncertainty；这类问题可被建模为
 <em>Markov decision processes (MDPs)</em>。</p>
+<ul>
+<li><em>discount factor</em> <span class="math inline">\(\gamma\)</span>。</li>
+<li><em>transition function</em> <span class="math inline">\(T(s,a,s&#39;)\)</span>​ - 返回一个概率。</li>
+<li><em>reward function</em> <span class="math inline">\(R(s, a,
+s&#39;)\)</span>​ - agent 的目标是在到达 terminal state
+前最大化获得的<strong>奖励之和</strong> (discounting or not)。<span class="math inline">\(U([s_0,a_0,s_1,a_1,...])=R(s_0,a_0,s_1)+\gamma
+R(s_1,a_1,s_2)+\gamma^2 R(s_2,a_2,s_3)...\)</span></li>
+</ul>
+<p>MDP 的性质。<strong>memoryless property</strong> aka Markov
+property。未来状态仅与当前状态有关，与状态的转移历史无关。即 <span class="math inline">\(T(s,a,s&#39;)=P(s&#39;|s,a)\)</span>​。</p>
+<p>MDP 搜索树。在 agent 采取行动之后，总有象征随机环境 (stochastic
+environment) 的 <em>Q-states</em> aka <em>action states</em> 对 agent
+的行动施加影响，生成多个可能的后继状态。与 expectimax 中的 chance nodes
+作用几乎一致：chance nodes 代表的是随机敌手，Q-states
+代表的是随机环境。Q-states 不计入 time step。</p>
+<p>为 agent 提供动机 (motivation) 防止 infinite utility。</p>
+<ul>
+<li><em>finite horizons</em>。agent
+应在限制的时间步之内取得最大奖励。</li>
+<li><em>discounting</em>。设置 discount factor <span class="math inline">\(\gamma\)</span>，agent 获得的奖励逐步衰减。</li>
+</ul>
+<p>MDP 的解。决策 <em>policy</em> <span class="math inline">\(\pi:S\to
+A\)</span>，对于给定的状态 <span class="math inline">\(s\)</span>，返回在当前状态应采取的行动 <span class="math inline">\(\pi(s)=a\)</span>。MDP 的最优决策 <span class="math inline">\(\pi^{*}\)</span>​ 将引导向 maximum expected total
+reward/utility。</p>
+<p><em>Bellman Equation</em>。定义状态 <span class="math inline">\(s\)</span> 的最优 utility <span class="math inline">\(U^{*}(s)\)</span> 与 Q-state <span class="math inline">\((s,a)\)</span> 的最优 utility <span class="math inline">\(Q^{*}(s,a)\)</span>：</p>
+<figure>
+<img data-src="bellman.png" alt="有没有感到一丝熟悉？">
+<figcaption aria-hidden="true">有没有感到一丝熟悉？</figcaption>
+</figure>
+<p>根据 Bellman Equation 能够得到一个 DP 求解的方法，称为 <em>value
+iteration</em>。它通过递推计算 <em>time-limited values</em> 的方式 (这是
+<em>finite horizons</em> 的自然要求)，得到任意状态 <span class="math inline">\(s\)</span> 在 <span class="math inline">\(k\)</span>​ 个时间步内能够取得的最大 discounting
+reward。</p>
+<ul>
+<li>初始化 <span class="math inline">\(U_0(s)=0, \forall s\in
+S\)</span>。这很自然，剩下 <span class="math inline">\(0\)</span>
+步时无奖励。</li>
+<li>根据 Bellman 方程递推。<span class="math inline">\(\forall s\in S,
+U_{k+1}(s)\leftarrow \max_a
+\sum_{s&#39;}T(s,a,s&#39;)[R(s,a,s&#39;)+\gamma
+U_k(s&#39;)]\)</span>​。</li>
+<li>重复递推直至收敛。terminate when <span class="math inline">\(U_{k+1}(s)=U_k(s)\)</span>。可以证明此时 <span class="math inline">\(U_k(s)=U^{*}(s)\)</span>，且当 <span class="math inline">\(\gamma\in (0,1]\)</span>​ 时必收敛 (见 note7 MDP-I
+p.7)。</li>
+</ul>
+<p>到这里所有的概念都很好理解，但我总觉得哪里不太对劲。仔细思考后我发现了诡异的源头：这不是我好厚米
+expectimax 吗？普通状态对应 maximizer，Q-states 对应 chance
+nodes，time-limited values 对应 depth-limited minimax。</p>
+<p>这些近乎同一的概念很自然的引出了怀疑：<strong>为什么不直接用
+expectimax 解 MDP，而要采用基于 DP 的 value
+iteration？</strong>我苦思冥想良久，一路追根溯源到了 CS188 2012 年的 <a target="_blank" rel="noopener" href="https://ai.berkeley.edu/~cs188/sp12/announcements.html">sources</a>，终于找到了答案。value
+iteration 是对 MDP 搜索树结构的
+exploitation，它将同一层的相同状态节点压缩到了一起，形成了一个具有深度的搜索图。</p>
+<p><strong>Value iteration is essentially a graph search version of
+Expectimax, </strong> but</p>
+<ul>
+<li>there are rewards in every step (rather than a utility just in the
+terminal node)</li>
+<li>ran bottom-up (rather than recursively)</li>
+<li>can handle infinite duration game</li>
+</ul>
 <p><br></p>
 <h2 id="note-reading">Note Reading</h2>
 <p>本节课课件内容的绝大部分是从 Berkeley CS188
@@ -568,6 +629,8 @@ Intelligence: A Modern Approach</em> (4th Edition)</p>
 intricate difference between Expectimax and Expectiminimax</a></li>
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/53948964">蒙特卡洛搜索树算法 -
 知乎</a></li>
+<li><a target="_blank" rel="noopener" href="https://ai.berkeley.edu/~cs188/sp12/slides/cs188%20lecture%208%20and%209%20--%20MDPs%202PP.pdf">Why
+don't we use expectimax to solve MDPs?</a></li>
 </ul>
 
     </div>
