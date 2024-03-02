@@ -470,7 +470,34 @@ transfer rate [见 Chapter 6 Memory Hierarchy pp.21-22]</p>
 bits，如 Hamming code。</p>
 <p><br></p>
 <h2 id="cache-memory">Cache Memory</h2>
-<p>Cache memory 是如何与 main memory 交互的？</p>
+<p>其实并不是很绕的东西，看 PPT
+硬是看了很久才搞清楚。笔记写了挺多，后来一看只觉杂乱无章。想了很久，发现通过伪代码描述
+address mapping 是一个最佳的选择。</p>
+<p>把 cache memory 与 main memory 想成两个数组 <code>cache</code> 与
+<code>memory</code>，<code>memory</code> 的空间远远大于
+<code>cache</code>，因此可以当作哈希表来用；但代价是访问
+<code>memory</code> 的速度极慢。为了最小化 CPU
+访问数据的平均速度，把访问次数较多的数据存入
+<code>cache</code>；具体存入 <code>cache</code> 的什么位置？这个问题就是
+address mapping 所要解决的。</p>
+<p><code>cache</code> 或 <code>memory</code> 储存的都是 data
+<em>block</em>，每个 block 中有 <span class="math inline">\(b\)</span>​
+个 bytes (若 word-addressed 就是 words)。</p>
+<p>single-level cache 的 principle 与 multi-level cache 是一致的。</p>
+<p><em>Fully associative</em>. 灵活，多对一，但效率低下。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">read</span>(<span class="params">addr, cache</span>):</span><br><span class="line">    <span class="comment"># BLOCK_SIZE: the number of bytes within a block</span></span><br><span class="line">    <span class="comment"># tag: aka block number</span></span><br><span class="line">    tag, offset = addr // BLOCK_SIZE, addr % BLOCK_SIZE</span><br><span class="line">    <span class="keyword">for</span> cache_line <span class="keyword">in</span> cache:</span><br><span class="line">        <span class="keyword">if</span> cache_line.tag == tag:</span><br><span class="line">            <span class="keyword">return</span> cache_line.data[offset]  <span class="comment"># search hit</span></span><br><span class="line">    data = memory[tag]</span><br><span class="line">    <span class="comment"># write data in cache with some append/replace policy</span></span><br><span class="line">    write(data, cache, some_append_policy)</span><br><span class="line">    <span class="keyword">return</span> data</span><br></pre></td></tr></table></figure>
+<p><em>Direct-Map Organization</em> aka <em>1-way Set
+Associative</em>.</p>
+<ul>
+<li>若 cache 大小为 <span class="math inline">\(m\)</span>，<code>memory[0], memory[m], memory[2m]...</code>
+均对应 <code>cache[0]</code></li>
+<li>大大提升了读取速度，但如果 CPU 同时需要 <code>memory[0]</code> 与
+<code>memory[m]</code>，一对一就成了诅咒。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">read</span>(<span class="params">addr, cache</span>):</span><br><span class="line">    block_number, offset = addr // BLOCK_SIZE, addr % BLOCK_SIZE</span><br><span class="line">    <span class="comment"># CACHE_SIZE: the number of cache lines in the cache, one block per line</span></span><br><span class="line">    tag, line_number = block_number // CACHE_SIZE, block_number % CACHE_SIZE</span><br><span class="line">    <span class="keyword">if</span> line_number <span class="keyword">in</span> cache:    <span class="comment"># memory[line_number] not empty</span></span><br><span class="line">        cache_line = cache[line_number]</span><br><span class="line">        <span class="keyword">if</span> cache_line.tag == tag:</span><br><span class="line">            <span class="keyword">return</span> cache_line.data[offset]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            data = memory[block_number]</span><br><span class="line">            write(data, tag, line_number, cache)  </span><br><span class="line">            <span class="keyword">return</span> data</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        data = memory[block_number]</span><br><span class="line">        write(data, tag, line_number, cache) </span><br><span class="line">        <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">write</span>(<span class="params">data, tag, line_number, cache</span>):</span><br><span class="line">    cache[line_number].tag, cache[line_number].data = tag, data</span><br></pre></td></tr></table></figure>
+<p><em>K-way Set Associative</em>. 引入 cache sets 综合了前两种 address
+mapping 机制。可以发现读取效率和灵活性的 tradeoff。核心关系 <span class="math inline">\(m=k\times v\)</span>。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">read</span>(<span class="params">addr, cache</span>):</span><br><span class="line">    block_number, offset = addr // BLOCK_SIZE, addr % BLOCK_SIZE</span><br><span class="line">    <span class="comment"># K-way: the number of cache lines in a cache set</span></span><br><span class="line">    <span class="comment"># SET_SIZE: the number of sets, SET_SIZE = CACHE_SIZE / K</span></span><br><span class="line">    tag, set_number = block // SET_SIZE, block_number % SET_SIZE</span><br><span class="line">    <span class="keyword">if</span> set_number <span class="keyword">in</span> cache:</span><br><span class="line">        cache_set = cache[set_number]</span><br><span class="line">        <span class="keyword">for</span> cache_line <span class="keyword">in</span> cache_set:</span><br><span class="line">            <span class="keyword">if</span> cache_line.tag == tag:</span><br><span class="line">                <span class="keyword">return</span> cache_line.data[offset]</span><br><span class="line">        data = memory[block_number]</span><br><span class="line">        write(data, tag, set_number, cache, some_append_policy)</span><br><span class="line">        <span class="keyword">return</span> data</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        data = memory[block_number]</span><br><span class="line">        write(data, tag, set_number, cache, some_append_policy)</span><br><span class="line">        <span class="keyword">return</span> data</span><br></pre></td></tr></table></figure>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
