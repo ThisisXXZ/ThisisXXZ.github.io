@@ -32,11 +32,14 @@
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
 <meta property="og:description" content="讲课的老师是大名鼎鼎的 Christopher Manning，NLP 领域的开拓者之一。我很喜欢他的澳洲口音，不像英式口音的生疏内敛，也不像美式口音的横冲直撞。听他讲课有一种在乡下听老爷子谈天说地之感。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/01/28/cs224n/multi-head.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/01/28/cs224n/transformer.png">
 <meta property="article:published_time" content="2024-01-28T03:09:47.000Z">
-<meta property="article:modified_time" content="2024-02-28T12:44:42.811Z">
+<meta property="article:modified_time" content="2024-03-05T12:42:37.725Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="AI &amp; ML">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.thisisxxz.com/2024/01/28/cs224n/multi-head.png">
 
 
 <link rel="canonical" href="https://www.thisisxxz.com/2024/01/28/cs224n/">
@@ -169,8 +172,7 @@
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#word-embeddings"><span class="nav-number">1.</span> <span class="nav-text">Word Embeddings</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#direct-prediction-word2vec"><span class="nav-number">1.1.</span> <span class="nav-text">Direct Prediction: Word2Vec</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#count-based-co-occurrence-matrix"><span class="nav-number">1.2.</span> <span class="nav-text">Count-based: Co-occurrence
-Matrix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#glove"><span class="nav-number">1.3.</span> <span class="nav-text">GloVe</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#neural-networks"><span class="nav-number">2.</span> <span class="nav-text">Neural Networks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dependency-parsing"><span class="nav-number">3.</span> <span class="nav-text">Dependency Parsing</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#traditional-methods"><span class="nav-number">3.1.</span> <span class="nav-text">Traditional Methods</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#neural-dependency-parser"><span class="nav-number">3.2.</span> <span class="nav-text">Neural Dependency Parser</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#language-models"><span class="nav-number">4.</span> <span class="nav-text">Language Models</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#traditional-implementations"><span class="nav-number">4.1.</span> <span class="nav-text">Traditional Implementations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#recurrent-neural-network"><span class="nav-number">4.2.</span> <span class="nav-text">Recurrent Neural Network</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gru-lstm"><span class="nav-number">4.3.</span> <span class="nav-text">GRU &amp; LSTM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#seq2seq-machine-translation"><span class="nav-number">5.</span> <span class="nav-text">Seq2Seq: Machine Translation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#self-attention-transformer"><span class="nav-number">6.</span> <span class="nav-text">Self-Attention &amp;
-Transformer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Matrix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#glove"><span class="nav-number">1.3.</span> <span class="nav-text">GloVe</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#neural-networks"><span class="nav-number">2.</span> <span class="nav-text">Neural Networks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dependency-parsing"><span class="nav-number">3.</span> <span class="nav-text">Dependency Parsing</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#traditional-methods"><span class="nav-number">3.1.</span> <span class="nav-text">Traditional Methods</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#neural-dependency-parser"><span class="nav-number">3.2.</span> <span class="nav-text">Neural Dependency Parser</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#language-models"><span class="nav-number">4.</span> <span class="nav-text">Language Models</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#traditional-implementations"><span class="nav-number">4.1.</span> <span class="nav-text">Traditional Implementations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#recurrent-neural-network"><span class="nav-number">4.2.</span> <span class="nav-text">Recurrent Neural Network</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gru-lstm"><span class="nav-number">4.3.</span> <span class="nav-text">GRU &amp; LSTM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#seq2seq-machine-translation"><span class="nav-number">5.</span> <span class="nav-text">Seq2Seq: Machine Translation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#self-attention"><span class="nav-number">6.</span> <span class="nav-text">Self-Attention</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#transformer-pieces"><span class="nav-number">7.</span> <span class="nav-text">Transformer Pieces</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#transformer"><span class="nav-number">8.</span> <span class="nav-text">Transformer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -745,8 +747,120 @@ bottleneck</em>。有没有方法得到质量更高的 contextual
 representation？</li>
 </ul>
 <p><br></p>
-<h2 id="self-attention-transformer">Self-Attention &amp;
-Transformer</h2>
+<h2 id="self-attention">Self-Attention</h2>
+<p>先说说 attention。attention 机制本质上是对 information 的 <em>softly
+looking up</em>。给出 query <span class="math inline">\(q\)</span>，与键值表 <span class="math inline">\(\mathbf{k}\)</span>-<span class="math inline">\(\mathbf{v}\)</span>。找到与 <span class="math inline">\(q\)</span> 最相似的键 <span class="math inline">\(k\)</span>，返回对应的值 <span class="math inline">\(v\)</span>。</p>
+<ul>
+<li>衡量相似度 (affinity) 的方法 - dot product <span class="math inline">\(q^{T}k\)</span>。</li>
+<li>softly 体现在 weighted average，即最终得到的是 <span class="math inline">\(\sum (q^{T}k_i)v_i\)</span>。</li>
+</ul>
+<p>引入 attention 机制，把 Seq2Seq 解码器每一轮的预测作为 query <span class="math inline">\(q\)</span>，编码器生成的所有隐状态 <span class="math inline">\(h_1,h_2,...,h_t\)</span> 既作为 keys 也作为
+values。将得到的 weighted average <span class="math inline">\(h\)</span>
+与 <span class="math inline">\(q\)</span>​ 一起喂到解码器的 FFN
+中生成新的预测。</p>
+<p>attention 机制生成了质量更高的 context vector，解决了 linear
+interaction distance 的问题；但 RNN 架构仍然与 GPU
+的并行性冲突。接下来的 self-attention 架构干脆舍弃了 RNN。</p>
+<p>self-attention 抛弃 RNN，直接对 <span class="math inline">\(x_1,x_2,...,x_n\)</span> 生成 contextual
+representation。<span class="math inline">\(\mathbf{x}\)</span> 同时作为
+query，keys 与 values。三个 learnable weights matrix <span class="math inline">\(\mathbf{K},\mathbf{Q},\mathbf{V}\)</span>，乘上
+<span class="math inline">\(\mathbf{x}\)</span> 生成 <span class="math inline">\(\mathbf{q},\mathbf{k},\mathbf{v}\)</span>。<span class="math inline">\(x_i\)</span> 对 <span class="math inline">\(x_j\)</span> 的注意力分数 <span class="math inline">\(\alpha_{ij}\)</span>，与最后生成的 contextual
+representation <span class="math inline">\(h_i\)</span>​ 为： <span class="math display">\[
+\alpha_{ij}=\frac{\exp(q_i^{T} k_j)}{\sum_{j&#39;=1}^n
+\exp(q_i^{T}k_{j&#39;})}, h_i=\sum \alpha_{ij}v_j
+\]</span> <br></p>
+<h2 id="transformer-pieces">Transformer Pieces</h2>
+<p>Transformer 模型是基于 self-attention 的 Seq2Seq 架构。从 RNN-based
+Seq2Seq 到 attention-based Seq2Seq，势必要做出一些适应。</p>
+<p><em><u>Position representations</u>.</em> 抛弃 RNN
+带来的第一个问题：丢失了位置关系。两个原因和两个解决方案：</p>
+<ul>
+<li>non-contextual embedding <span class="math inline">\(x_i=Ew_i\)</span> 并不涉及词序列 <span class="math inline">\(w_{1:n}\)</span>
+的位置关系。可以增加一个可学习的权重矩阵 <span class="math inline">\(P\in R^{t\times d}\)</span>，令 embedding <span class="math inline">\(\tilde{x_i}=P_i+x_i\)</span> 再做
+self-attention；让模型自己学习分辨相同的词在位置 <span class="math inline">\(i\)</span> 与在位置 <span class="math inline">\(j\)</span> 之间的区别。</li>
+<li>self-attention 的过程是位置无关的。可以在做 softmax
+计算注意力分数时增加 <em>linear biases</em>，<span class="math inline">\(\alpha_i=\text{softmax}\)</span><span class="math inline">\((k_{1:n}q_i+[-i, ..., -1, 0,
+-1,...,-(n-i)])\)</span>​。</li>
+</ul>
+<p><em><u>Element nonlinearity</u>.</em> 传统 RNN-based Seq2Seq 架构通过
+stacked RNNs (LSTMs) 来提升模型的复杂性，但 that's not the case for
+attention。stacked self-attention blocks 本质上与一个单独的
+self-attention block 没有区别。</p>
+<p>为使 stacked self-attention 起效果，transformer 在每个 self-attention
+block 后镶嵌了一个 FNN 来引入非线性性：<span class="math inline">\(h_{FF}=W_2
+\text{ReLU}(W_1h_{\text{self-attention}}+b_1)+b_2\)</span>。</p>
+<p><em><u>Future masking</u></em>. decoder 在训练时采用 teacher
+forcing：输入序列 <code>&lt;BOS&gt;, x[0], x[1], ..., x[t]</code>,
+decoder 将输出 <code>y[0], y[1], ..., y[t], &lt;EOS&gt;</code>，通过比较
+<code>x[i]</code> 与 <code>y[i]</code> 间的误差来计算
+loss。这很好的体现了 self-attention 的并行性，但同时也带来了 cheating
+的问题。</p>
+<p>并行性要求我们一股脑把预测序列 <code>x[0], x[1], ...x[t]</code> 输入
+decoder，但同时该序列也是答案序列。也就是说，作为语言模型的 decoder
+本应根据 <code>x[0], x[1], ..., x[i]</code> 生成 <code>x[i+1]</code>
+(这正是 RNN 的 nature)，但 self-attention 的特征使得它在生成
+<code>x[i+1]</code> 时能够直接看到正确答案。</p>
+<p>为了防止 decoder 作弊，在计算注意力分数时我们采用 future masking
+的策略： <span class="math display">\[
+\alpha_{i,j,\text{masked}}=
+\begin{cases}
+\alpha_{ij} \ \ j\leq i \\
+0 \ \ \ \ \  \text{otherwise}
+\end{cases}
+\]</span> <em><u>Multi-head Self-Attention</u></em>. 很神奇的
+technique。intuition 类似 CNN 中的多卷积核与多通道，对同一个输入 <span class="math inline">\(X\in R^{n\times
+d}\)</span>，多头自注意力能并行进行多次 self-attention，每个头有独立的
+<span class="math inline">\(K^{(l)}, Q^{(l)}, V^{(l)}\)</span>​
+参数，最后将所有头的结果合并起来，得到质量更高的 representation。</p>
+<p>简单来说，<span class="math inline">\(x_{1:n}\in
+R^{n,d}\)</span>，<span class="math inline">\(K,Q\in
+R^{d,d}\)</span>，将原本二维 <span class="math inline">\((n, d)\)</span>
+的 <span class="math inline">\(x_{1:n}K,x_{1:n}Q\)</span> reshape 成
+<span class="math inline">\((k,n,d/k)\)</span>：把矩阵切成 <span class="math inline">\(k\)</span> 条，每条是长为 <span class="math inline">\(n\)</span>，宽为 <span class="math inline">\(d/k\)</span> 的子矩阵。<span class="math inline">\(x_{1:n}K\)</span> 与 <span class="math inline">\(x_{1:n}Q\)</span> 中的 <span class="math inline">\(k\)</span> 条对应相乘，就能得到 <span class="math inline">\(k\)</span> 个 <span class="math inline">\((n,n)\)</span> 的注意力分数矩阵。注意，虽然做了
+<span class="math inline">\(k\)</span> 次 self-attention，但由于
+low-rankness，多头自注意力的时间成本并不会比单头高多少。</p>
+<figure>
+<img data-src="multi-head.png" alt="multi-head self-attention">
+<figcaption aria-hidden="true">multi-head self-attention</figcaption>
+</figure>
+<p><em><u>Layer normalization.</u></em>
+是一个我尝试理解但是失败了的玄学方法。我们知道 stacked self-attention
+blocks 把 <span class="math inline">\(x_{1:n}\)</span>
+一层一层往上传，LN 通常加在两个 self-attention blocks 之间，normalize
+<em>each token over all dimensions</em>。</p>
+<p>LN 对 token 本身进行 normalization，token 间互不影响，这是 Layer norm
+与 Batch norm 的最大区别。若某个 self-attention block 的输出为 <span class="math inline">\(h\in R^{n,d}\)</span>，想象 LN 对行而不是对列进行
+normalization，共 <span class="math inline">\(n\)</span> 次。</p>
+<p><em><u>Add &amp; Norm</u>.</em> 将 <em>Residual Connections</em> 加入
+LN。残差连接的 intuition - identity function 的梯度为 <span class="math inline">\(1\)</span>，缓解了深度神经网络的梯度消失问题；从
+identity function 开始学理论上也能够加速找到最优解的过程。</p>
+<p>输入 <span class="math inline">\(h_{1:n}\)</span>，Add &amp; Norm
+block 执行以下操作：其中 <span class="math inline">\(f\)</span> 可以是
+FFN 甚至 self-attention。 <span class="math display">\[
+h_{\text{pre-norm}}=f(\text{LN}(h))+h
+\]</span> <br></p>
+<h2 id="transformer">Transformer</h2>
+<p>现在 Transformer 的所有关键 components
+都已经介绍完毕了，可以开始拼图了！</p>
+<figure>
+<img data-src="transformer.png" alt="Transformer Architecture">
+<figcaption aria-hidden="true">Transformer Architecture</figcaption>
+</figure>
+<ul>
+<li>encoder 是编码模型。encoder-only 的架构常用于生成高质量的 contextual
+representation，因此不需要对 self-attention 应用 future masking。</li>
+<li>decoder 是自回归的语言模型 (autoregressive language
+model)。侧重于生成，需要应用 future masking。</li>
+<li>在 encoder-decoder 架构中，encoder 与 decoder 通过 <em>cross
+attention</em> 连接。cross attention 本质上是对 self-attention 之前的
+attention 概念的回归，即 encoder 提供 keys 与 values，decoder 提供
+queries。</li>
+</ul>
+<p>encoder-decoder transformer 常用于对 bidirectional context
+有着较高要求的应用，例如文本总结，机器翻译；但由于需要向 encoder 与
+decoder 分配参数，它的深度没法做到 decoder-only transformer 那么深。</p>
+<p>时下最流行的 transformer 均是 decoder-only 的，如 GPT
+(<em>generative</em> pretrained transformer) 系列模型。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
