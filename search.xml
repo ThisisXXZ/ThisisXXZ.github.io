@@ -509,6 +509,7 @@ doing?</em>，对方通常正经历困难/重大的事情。</p>
 <p><strong>Bless</strong> (祝福术).</p>
 <p><strong>Chain Lightning</strong> (闪电链).</p>
 <p><strong>Misty Step</strong> (迷踪步).</p>
+<p><strong>Guiding Bolt</strong> (曳光弹).</p>
 <p><br></p>
 <h2 id="博德之口特辑至上真神阴谋的背后">博德之口特辑：至上真神阴谋的背后</h2>
 <p>著名吟游诗人瓦罗 (Volo) 参与了本节的编纂，他曾经跟随塔夫 (Tav)
@@ -691,7 +692,8 @@ bit</strong>.</li>
 <p><strong>Multiplication/Division.</strong> (lecture)</p>
 <ul>
 <li>2's Complement Multiplication. 规则很复杂，总的来说是被乘数进行 sign
-extension，按照乘数的符号位分类讨论，列出竖式进行计算。</li>
+extension，按照乘数的符号位分类讨论，列出竖式进行计算。[见 Chapter 4.3
+p.3 multiplication in 2's complement]</li>
 <li>Floating-point Multiplication/Division.
 <ul>
 <li>Exponent 部分回到 Excess-<span class="math inline">\(b\)</span>
@@ -712,9 +714,9 @@ extension，按照乘数的符号位分类讨论，列出竖式进行计算。</
 <code>RFOUT2</code> 输出。</li>
 <li>MAR (memory address register)，存储地址。</li>
 <li>MBR (memory buffer register)，存储从 memory 中提取的数据。常用
-<code>MBR &lt;- Mem[MAR]</code>。</li>
+<code>MBR &lt;- Mem[MAR]</code> (operand fetch)。</li>
 <li>IR (instruction register)，存储 PC 指向的具体指令内容。常用
-<code>IR &lt;- Mem[PC//4]</code>。</li>
+<code>IR &lt;- Mem[PC//4]</code> (instruction fetch)。</li>
 <li>以上的寄存器被若干 data bus 连接起来。</li>
 </ul>
 <p>关于指令也有少许不同之处；细节还是参考 <code>sim.py</code>。</p>
@@ -722,11 +724,16 @@ extension，按照乘数的符号位分类讨论，列出竖式进行计算。</
 <li>1-word instruction. <code>ADD</code>, <code>SUB</code>,
 <code>OR</code>, <code>AND</code> 等指令均在 1 word (4 bytes)
 中指定了两个源地址与一个目标地址。</li>
-<li>2-words instruction. <code>LD</code>, <code>ST</code> 与 branch
-指令均是 2-words 指令。第一个 word 中指定的是 CPU 相关的地址
+<li>2-words instruction. <code>LD</code> (load), <code>ST</code> (store)
+均是 2-words 指令。第一个 word 指定了 operation code，CPU 地址
 (寄存器地址，在 <code>LD</code> 中为目标，在 <code>ST</code> 中为源) 与
-addressing mode，condition code 等指令本身的信息。第二个 word
-中通常指定的是 memory 相关的地址。</li>
+addressing mode (总是 <code>0xFF</code>)。第二个 word 指定了需交互的
+memory 的地址。</li>
+<li>2-word instruction. <code>BR</code> (unconditional), <code>BZ</code>
+(zero flag is true), <code>BNZ</code> (zero flag is not true) 这些
+branch 指令也是 2-words 指令。 第一个 word 指定了 operation
+code，condition code 与 addressing mode (总是 <code>0xFF</code>)。第二个
+word 指定了 jump 的目标地址。</li>
 </ul>
 <p>关于 Interrupt。当 I/O 设备从外部被触发时，它将向 CPU 发送一个
 interrupt signal。系统受到该信号后将 freeze 当前程序的执行，转向
@@ -775,7 +782,7 @@ address mapping 所要解决的。</p>
 个 bytes (若 word-addressed 就是 words)。</p>
 <p>single-level cache 的 principle 与 multi-level cache 是一致的。</p>
 <p><em>Fully associative</em>. 灵活，多对一，但效率低下。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">read</span>(<span class="params">addr, cache</span>):</span><br><span class="line">    <span class="comment"># BLOCK_SIZE: the number of bytes within a block</span></span><br><span class="line">    <span class="comment"># tag: aka block number</span></span><br><span class="line">    tag, offset = addr // BLOCK_SIZE, addr % BLOCK_SIZE</span><br><span class="line">    <span class="keyword">for</span> cache_line <span class="keyword">in</span> cache:</span><br><span class="line">        <span class="keyword">if</span> cache_line.tag == tag:</span><br><span class="line">            <span class="keyword">return</span> cache_line.data[offset]  <span class="comment"># search hit</span></span><br><span class="line">    data = memory[tag]</span><br><span class="line">    <span class="comment"># write data in cache with some append/replace policy</span></span><br><span class="line">    write(data, cache, some_append_policy)</span><br><span class="line">    <span class="keyword">return</span> data</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">read</span>(<span class="params">addr, cache</span>):</span><br><span class="line">    <span class="comment"># BLOCK_SIZE: the number of bytes within a block</span></span><br><span class="line">    <span class="comment"># tag: aka block number</span></span><br><span class="line">    tag, offset = addr // BLOCK_SIZE, addr % BLOCK_SIZE</span><br><span class="line">    <span class="keyword">for</span> cache_line <span class="keyword">in</span> cache:</span><br><span class="line">        <span class="keyword">if</span> cache_line.tag == tag:</span><br><span class="line">            <span class="keyword">return</span> cache_line.data[offset]  <span class="comment"># search hit</span></span><br><span class="line">    data = memory[tag]</span><br><span class="line">    <span class="comment"># write data in cache with some append/replace policy</span></span><br><span class="line">    write(data, cache, some_append_policy)</span><br><span class="line">    <span class="keyword">return</span> data[offset]</span><br></pre></td></tr></table></figure>
 <p><em>Direct-Map Organization</em> aka <em>1-way Set
 Associative</em>.</p>
 <ul>
@@ -784,10 +791,37 @@ Associative</em>.</p>
 <li>大大提升了读取速度，但如果 CPU 同时需要 <code>memory[0]</code> 与
 <code>memory[m]</code>，一对一就成了诅咒。</li>
 </ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">read</span>(<span class="params">addr, cache</span>):</span><br><span class="line">    block_number, offset = addr // BLOCK_SIZE, addr % BLOCK_SIZE</span><br><span class="line">    <span class="comment"># CACHE_SIZE: the number of cache lines in the cache, one block per line</span></span><br><span class="line">    tag, line_number = block_number // CACHE_SIZE, block_number % CACHE_SIZE</span><br><span class="line">    <span class="keyword">if</span> line_number <span class="keyword">in</span> cache:    <span class="comment"># memory[line_number] not empty</span></span><br><span class="line">        cache_line = cache[line_number]</span><br><span class="line">        <span class="keyword">if</span> cache_line.tag == tag:</span><br><span class="line">            <span class="keyword">return</span> cache_line.data[offset]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            data = memory[block_number]</span><br><span class="line">            write(data, tag, line_number, cache)  </span><br><span class="line">            <span class="keyword">return</span> data</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        data = memory[block_number]</span><br><span class="line">        write(data, tag, line_number, cache) </span><br><span class="line">        <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">write</span>(<span class="params">data, tag, line_number, cache</span>):</span><br><span class="line">    cache[line_number].tag, cache[line_number].data = tag, data</span><br></pre></td></tr></table></figure>
-<p><em>K-way Set Associative</em>. 引入 cache sets 综合了前两种 address
-mapping 机制。可以发现读取效率和灵活性的 tradeoff。核心关系 <span class="math inline">\(m=k\times v\)</span>。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">read</span>(<span class="params">addr, cache</span>):</span><br><span class="line">    block_number, offset = addr // BLOCK_SIZE, addr % BLOCK_SIZE</span><br><span class="line">    <span class="comment"># K-way: the number of cache lines in a cache set</span></span><br><span class="line">    <span class="comment"># SET_SIZE: the number of sets, SET_SIZE = CACHE_SIZE / K</span></span><br><span class="line">    tag, set_number = block // SET_SIZE, block_number % SET_SIZE</span><br><span class="line">    <span class="keyword">if</span> set_number <span class="keyword">in</span> cache:</span><br><span class="line">        cache_set = cache[set_number]</span><br><span class="line">        <span class="keyword">for</span> cache_line <span class="keyword">in</span> cache_set:</span><br><span class="line">            <span class="keyword">if</span> cache_line.tag == tag:</span><br><span class="line">                <span class="keyword">return</span> cache_line.data[offset]</span><br><span class="line">        data = memory[block_number]</span><br><span class="line">        write(data, tag, set_number, cache, some_append_policy)</span><br><span class="line">        <span class="keyword">return</span> data</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        data = memory[block_number]</span><br><span class="line">        write(data, tag, set_number, cache, some_append_policy)</span><br><span class="line">        <span class="keyword">return</span> data</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">read</span>(<span class="params">addr, cache</span>):</span><br><span class="line">    block_number, offset = addr // BLOCK_SIZE, addr % BLOCK_SIZE</span><br><span class="line">    <span class="comment"># CACHE_SIZE: the number of cache lines in the cache, one block per line</span></span><br><span class="line">    tag, line_number = block_number // CACHE_SIZE, block_number % CACHE_SIZE</span><br><span class="line">    <span class="keyword">if</span> line_number <span class="keyword">in</span> cache:    <span class="comment"># memory[line_number] not empty</span></span><br><span class="line">        cache_line = cache[line_number]</span><br><span class="line">        <span class="keyword">if</span> cache_line.tag == tag:</span><br><span class="line">            <span class="keyword">return</span> cache_line.data[offset]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            data = memory[block_number]</span><br><span class="line">            write(data, tag, line_number, cache)  </span><br><span class="line">            <span class="keyword">return</span> data[offset]</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        data = memory[block_number]</span><br><span class="line">        write(data, tag, line_number, cache) </span><br><span class="line">        <span class="keyword">return</span> data[offset]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">write</span>(<span class="params">data, tag, line_number, cache</span>):</span><br><span class="line">    cache[line_number].tag, cache[line_number].data = tag, data</span><br></pre></td></tr></table></figure>
+<p><em>K-way Set Associative</em>. 引入 cache sets
+综合了前两种地址映射机制。体现了读取效率和灵活性的 tradeoff。核心关系
+<span class="math inline">\(m=k\times v\)</span>。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">read</span>(<span class="params">addr, cache</span>):</span><br><span class="line">    block_number, offset = addr // BLOCK_SIZE, addr % BLOCK_SIZE</span><br><span class="line">    <span class="comment"># K-way: the number of cache lines in a cache set</span></span><br><span class="line">    <span class="comment"># SET_SIZE: the number of sets, SET_SIZE = CACHE_SIZE / K</span></span><br><span class="line">    tag, set_number = block // SET_SIZE, block_number % SET_SIZE</span><br><span class="line">    <span class="keyword">if</span> set_number <span class="keyword">in</span> cache:</span><br><span class="line">        cache_set = cache[set_number]</span><br><span class="line">        <span class="keyword">for</span> cache_line <span class="keyword">in</span> cache_set:</span><br><span class="line">            <span class="keyword">if</span> cache_line.tag == tag:</span><br><span class="line">                <span class="keyword">return</span> cache_line.data[offset]</span><br><span class="line">        data = memory[block_number]</span><br><span class="line">        write(data, tag, set_number, cache, some_append_policy)</span><br><span class="line">        <span class="keyword">return</span> data[offset]</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        data = memory[block_number]</span><br><span class="line">        write(data, tag, set_number, cache, some_append_policy)</span><br><span class="line">        <span class="keyword">return</span> data[offset]</span><br></pre></td></tr></table></figure>
+<p>常用的 replacement policy (direct map organization 的 set size 为
+<span class="math inline">\(1\)</span>，不需要 replacement
+policy)：<strong>FIFO</strong>
+(first-in-first-out)，<strong>LRU</strong> (least recently used) 与
+<strong>RR</strong> (random replacement)。</p>
+<p>两种 write policy。</p>
+<ul>
+<li><em>write through</em> - cache 与 main memory 的写入是 consistent
+的。问题：main memory 的写入较慢
+(但指令的执行并不会被其阻塞)，如果在写入完成之前，下一个指令要求访问该
+memory slot，就会产生冲突。</li>
+<li><em>write back</em> - 仅仅在 cache 中的某个 memory block
+被替换时更新 main memory。写入效率显著高于 write through。当存在 I/O
+operations 时，cache 与 main memory 的 inconsistency 会引发冲突。</li>
+</ul>
+<p>从 direct-map organization，到 k-way associative，再到 fully
+associative，<em>hit ratio</em> (<span class="math inline">\(1-\)</span><em>miss ratio</em>)
+越来越高，读写速率越来越慢。<strong>重要公式</strong> <span class="math inline">\(\text{average access time }=\text{ hit time
+}+\text{ miss ratio }\times\text{ miss penalty }\)</span>​</p>
+<ul>
+<li>hit time: 在该 cache layer，一次 search hit 所需的时间。</li>
+<li>miss ratio: search miss 发生的概率。</li>
+<li><em>miss penalty</em>: 若该 cache layer 是 L1，miss penalty 是 L2 的
+average access time。若该 cache layer 是 L3，miss penalty 是 main memory
+的 average access time。[见 Chapter 7.2 p.8 multi-level caches]</li>
+</ul>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
