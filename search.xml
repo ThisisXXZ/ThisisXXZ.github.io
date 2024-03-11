@@ -738,6 +738,26 @@ word 指定了 jump 的目标地址。</li>
 <p>关于 Interrupt。当 I/O 设备从外部被触发时，它将向 CPU 发送一个
 interrupt signal。系统受到该信号后将 freeze 当前程序的执行，转向
 interrupt handling，随后再 restore 原本的状态，继续执行程序。</p>
+<ul>
+<li>当 current instruction 结束后再 attend to interruption
+能够减少需要保存的 register 数量。</li>
+<li>将与 next instruction 有关的 register 存入栈中。
+<ul>
+<li><code>PUSH</code> flag register - the result of previous ALU
+operation (needed if next instruction is branch).</li>
+<li><code>PUSH</code> program counter</li>
+</ul></li>
+<li>令 program counter 指向 interrupt program，开始 attend to
+interruption。
+<ul>
+<li>在执行 interrupt routine 的过程中，若需要使用 register files 中的
+<code>Rk</code>，先 <code>PUSH Rk</code>。</li>
+</ul></li>
+<li>interrupt program 执行完毕，<code>POP Rk</code> 将 register file
+恢复到之前的状态。</li>
+<li><code>RETI</code> 指令 (RETurn from Interrupt)，<code>POP</code>
+flag register 并 <code>POP</code> program counter。</li>
+</ul>
 <p><br></p>
 <h2 id="memory-hierarchy">Memory Hierarchy</h2>
 <p>memory 一直是性能瓶颈的主要来源。memory hierarchy
@@ -1622,7 +1642,7 @@ NLP with Deep Learning</a> (2021~2023)</p>
 </blockquote>
 <p>COMP2121 Discrete Math 笔记。</p>
 <span id="more"></span>
-<p>教授是我很喜欢的 Ravi，但周二/四的九点半开课真的很折磨。</p>
+<p>教授是我很喜欢的 Ravi，但周一/四的九点半开课真的很折磨。</p>
 <p><br></p>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  It will <strong>NOT</strong> cover any exam or assignment related
@@ -1932,8 +1952,7 @@ Codomain.</li>
 <li>Onto Functions, or a Surjection (满射), Range = Codomain.</li>
 <li><strong>One-to-One Correspondence</strong>, or a Bijection
 (双射/对射), if both one-to-one and onto.</li>
-<li>Inverse Functions, if <span class="math inline">\(f\)</span>​ is a
-one-to-one correspondence.</li>
+<li>Inverse Functions, exist only if <span class="math inline">\(f\)</span>​ is a one-to-one correspondence.</li>
 </ul>
 <p><br></p>
 <h3 id="lecture-9">Lecture 9</h3>
@@ -1962,13 +1981,13 @@ n!\leq e\sqrt{n} (n/e)^n\)</span> for all <span class="math inline">\(n\in\mathb
 </ul>
 <p>Partial functions 与 Total functions.</p>
 <ul>
-<li>Domain 与 <strong>Domain of Definition (定义域)</strong>; 类似
+<li>Domain 与 <strong>Domain of Definition (定义域)</strong>；关系类似于
 Codomain 与 Range。e.g., <span class="math inline">\(f:\mathbb{Z}\to
-\mathbb{R}\)</span> where <span class="math inline">\(f(n)=\sqrt{n}\)</span>, Domain 为 <span class="math inline">\(\mathbb{Z}\)</span>, Domain of Definition 为 <span class="math inline">\(\mathbb{N}\)</span>.</li>
+\mathbb{R}\)</span> where <span class="math inline">\(f(n)=\sqrt{n}\)</span>, Domain 为 <span class="math inline">\(\mathbb{Z}\)</span>，Domain of Definition 为 <span class="math inline">\(\mathbb{N}\)</span>。</li>
 <li>Total function: Domain <span class="math inline">\(=\)</span> Domain
 of Definition. 反之为 Partial function。</li>
 </ul>
-<p>经典的 asymptotic order of growth.</p>
+<p>经典的 asymptotic order of growth. 符合条件的 <span class="math inline">\(C,k\)</span> 被称为 witnesses。</p>
 <ul>
 <li>Big-O notation. <span class="math inline">\(f(x)=O(g(x))\to\exists
 C,k \ \  s.t. \ \ \forall x&gt;k, |f(x)|\leq C|g(x)|\)</span>.</li>
@@ -1976,7 +1995,55 @@ C,k \ \  s.t. \ \ \forall x&gt;k, |f(x)|\leq C|g(x)|\)</span>.</li>
 \exists C,k, \ \ s.t. \ \ \forall x&gt;k,|f(x)|\geq
 C|g(x)|\)</span>.</li>
 <li>Big-Theta notation. <span class="math inline">\(f(x)=\Theta(g(x))\to
-f(x)=O(g(x))\land f(x)=\Omega(g(x))\)</span>.</li>
+f(x)=O(g(x))\land f(x)=\Omega(g(x))\)</span>​.</li>
+</ul>
+<p><br></p>
+<h3 id="lecture-10">Lecture 10</h3>
+<p>更多的 Big-O notation 与 Recurrence Relations。</p>
+<ul>
+<li>Sum of Functions。对于 <span class="math inline">\(f_1(x)=O(g_1(x))\)</span> 与 <span class="math inline">\(f_2(x)=O(g_2(x))\)</span>，有 <span class="math inline">\((f_1+f_2)(x)=O(g(x))\)</span>，其中 <span class="math inline">\(g(x)\)</span> 为 <span class="math inline">\(\max(|g_1(x)|, |g_2(x)|)\)</span>​。</li>
+<li>Product of Functions。对于 <span class="math inline">\(f_1(x)=O(g_1(x))\)</span> 与 <span class="math inline">\(f_2(x)=O(g_2(x))\)</span>，有 <span class="math inline">\((f_1f_2)(x)=O(g_1(x)g_2(x))\)</span>。</li>
+</ul>
+<p>Recurrence Relations 与 Recursively Defined
+Function。没什么好讲的。</p>
+<p><br></p>
+<h2 id="计数原理-basic-counting-principles">计数原理 Basic Counting
+Principles</h2>
+<h3 id="lecture-11">Lecture 11</h3>
+<p>大多数都是比较 trivial 的高中知识。</p>
+<ul>
+<li>The Product Rule (乘法原理)。分步处理思想。</li>
+<li>The Sum Rule (加法原理)。组合思想。</li>
+<li>Inclusion-Exclusion Principle (容斥原理)。集合数为 <span class="math inline">\(2\)</span>​ 时的特化是 Subtraction Rule
+(减法原理)。</li>
+<li>The Division Rule (除法原理)。<span class="math inline">\(f:A\to
+B\)</span> 且 <span class="math inline">\(f\)</span> 是 <span class="math inline">\(d\)</span>-to-<span class="math inline">\(1\)</span> 函数，<span class="math inline">\(|A|/d=|B|\)</span>。圆桌座位安排。</li>
+<li>Generalized Pigeonhole Principle (鸽巢原理/抽屉原理)。<span class="math inline">\(N\)</span> objects <span class="math inline">\(k\)</span> boxes, at least one box containing at
+least <span class="math inline">\(\lceil N/k \rceil\)</span>
+objects.</li>
+</ul>
+<p>一些值得研究的例题。</p>
+<ul>
+<li>[Lecure 11 pp.13]
+容斥原理。先取两个相连的点构成一条边，容斥原理证明这两个点延伸出去的点集的交集不为空，这就形成了一个三角形。</li>
+<li>[Lecture 11 pp.19] 鸽巢原理。大小为 <span class="math inline">\(n+1\)</span> 的集合中至少有两个元素模 <span class="math inline">\(n\)</span> 同余。这个方法理论上能够在 <span class="math inline">\(O(n)\)</span>
+的时间内构造出符合条件的解，并且可以证明这个解一定满足 <span class="math inline">\(11..100...0\)</span>​ 的形式。</li>
+<li>[Lecture 11 pp.21]
+广义鸽巢原理。把朋友/敌人视为鸽巢后分类讨论即可。</li>
+<li>[Lecture 11 pp.22] 鸽巢原理。分别构造两段前缀和 <span class="math inline">\(\{a_1,...,a_{30}\}\)</span> 与 <span class="math inline">\(\{a_1+14,...,a_{30}+14\}\)</span>，且这两段前缀和中的所有元素都满足
+<span class="math inline">\(\leq 45+14=59\)</span>。<span class="math inline">\(60\)</span> 个元素 <span class="math inline">\(59\)</span>
+个坑，至少有一对元素相等。又因为前缀和单调递增，这一对相等的元素一定分布在两段前缀和中。有
+<span class="math inline">\(a_j=a_i+14\)</span> 进而证明 <span class="math inline">\(n_{i+1}+...+n_j=a_j-a_i=14\)</span>。</li>
+</ul>
+<p><br></p>
+<h3 id="lecture-12">Lecture 12</h3>
+<p>基础的排列 (permutation) 与组合 (combination)
+计数。也是老朋友了。</p>
+<ul>
+<li># of <span class="math inline">\(r\)</span>-permutation of a set
+with <span class="math inline">\(n\)</span> elements <span class="math inline">\(P(n,r)=\frac{n!}{(n-r)!}\)</span></li>
+<li># of <span class="math inline">\(r\)</span>-combination of a set
+with <span class="math inline">\(n\)</span> elements <span class="math inline">\(C(n,r)=\frac{n!}{r!(n-r)!}\)</span></li>
 </ul>
 <p><br></p>
 <h2 id="reference">Reference</h2>
