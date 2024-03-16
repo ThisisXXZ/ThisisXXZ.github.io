@@ -36,7 +36,7 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/alpha-beta.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/bellman.png">
 <meta property="article:published_time" content="2024-01-12T07:29:57.000Z">
-<meta property="article:modified_time" content="2024-02-29T12:38:17.844Z">
+<meta property="article:modified_time" content="2024-03-15T11:46:44.627Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="AI &amp; ML">
 <meta name="twitter:card" content="summary">
@@ -174,7 +174,7 @@
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#uninformed-search"><span class="nav-number">1.</span> <span class="nav-text">Uninformed Search</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#informed-search"><span class="nav-number">2.</span> <span class="nav-text">Informed Search</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#constraint-satisfaction-problem-i"><span class="nav-number">3.</span> <span class="nav-text">Constraint Satisfaction
 Problem I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#constraint-satisfaction-problem-ii"><span class="nav-number">4.</span> <span class="nav-text">Constraint Satisfaction
-Problem II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#search-with-other-agents-i"><span class="nav-number">5.</span> <span class="nav-text">Search with Other Agents I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#search-with-other-agents-ii"><span class="nav-number">6.</span> <span class="nav-text">Search with Other Agents II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mdps-i"><span class="nav-number">7.</span> <span class="nav-text">MDPs I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#note-reading"><span class="nav-number">8.</span> <span class="nav-text">Note Reading</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Problem II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#search-with-other-agents-i"><span class="nav-number">5.</span> <span class="nav-text">Search with Other Agents I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#search-with-other-agents-ii"><span class="nav-number">6.</span> <span class="nav-text">Search with Other Agents II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#markov-decision-processes"><span class="nav-number">7.</span> <span class="nav-text">Markov Decision Processes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reinforcement-learning-i"><span class="nav-number">8.</span> <span class="nav-text">Reinforcement Learning I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#note-reading"><span class="nav-number">9.</span> <span class="nav-text">Note Reading</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">10.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -524,7 +524,7 @@ rollout 次数 <span class="math inline">\(N\to \infty\)</span>​ 时，MCTS
 UCT 的表现向 minimax agent 逼近。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># return next best move</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">monte_carlo_tree</span> search(root):</span><br><span class="line">    <span class="keyword">while</span> resources_left(time, computational power):</span><br><span class="line">        leaf = traverse(root)</span><br><span class="line">        simulation_result = rollout(leaf)</span><br><span class="line">        backpropagate(leaf, simulation_result)</span><br><span class="line">    <span class="keyword">return</span> best_child(root)</span><br><span class="line"></span><br><span class="line"><span class="comment"># return first unvisited node from root</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">traverse</span>(<span class="params">node</span>):</span><br><span class="line">    <span class="keyword">while</span> fully_expanded(node):</span><br><span class="line">        node = best_ucb(node)</span><br><span class="line">    <span class="keyword">return</span> pick_unvisited(node.children) <span class="keyword">or</span> node <span class="comment"># if node is terminal</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">rollout</span>(<span class="params">node</span>):</span><br><span class="line">    <span class="keyword">while</span> non_terminal(node):</span><br><span class="line">        node = rollout_policy(node)</span><br><span class="line">    <span class="keyword">return</span> result(node)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">rollout_policy</span>(<span class="params">node</span>):</span><br><span class="line">    <span class="keyword">return</span> pick_random(node.children)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">backpropagate</span>(<span class="params">node, result</span>):</span><br><span class="line">    <span class="keyword">if</span> is_root(node):    </span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    node.stats = update_stat(node, result)</span><br><span class="line">    backpropagate(node.parent, result)</span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">best_child</span>(<span class="params">node</span>):</span><br><span class="line">    <span class="keyword">return</span> most_visited(node.children)</span><br></pre></td></tr></table></figure>
 <p><br></p>
-<h2 id="mdps-i">MDPs I</h2>
+<h2 id="markov-decision-processes">Markov Decision Processes</h2>
 <p><em>Non-deterministic search</em>。Environment may <em>subject</em>
 the agent's actions to being <em>non-deterministic</em>；即，<span class="math inline">\(\text{result}(s,a)\)</span>​
 将产生多个可能的后继状态 (successors)。</p>
@@ -572,11 +572,13 @@ U_{k+1}(s)\leftarrow \max_a
 \sum_{s&#39;}T(s,a,s&#39;)[R(s,a,s&#39;)+\gamma
 U_k(s&#39;)]\)</span>​。</li>
 <li>重复递推直至收敛。terminate when <span class="math inline">\(U_{k+1}(s)=U_k(s)\)</span>。可以证明此时 <span class="math inline">\(U_k(s)=U^{*}(s)\)</span>，且当 <span class="math inline">\(\gamma\in (0,1]\)</span>​ 时必收敛 (见 note7 MDP-I
-p.7)。</li>
+p.7。intuition 是当 <span class="math inline">\(\gamma&lt;1\)</span>
+时树的深度越大，其值越可忽略)。</li>
 </ul>
-<p>到这里所有的概念都很好理解，但我总觉得哪里不太对劲。仔细思考后我发现了诡异的源头：这不是我好厚米
-expectimax 吗？普通状态对应 maximizer，Q-states 对应 chance
-nodes，time-limited values 对应 depth-limited minimax。</p>
+<p>到这里所有的概念都很好理解，但我总觉得哪里不太对劲。</p>
+<p>仔细思考后我发现了诡异的源头：这不就是 expectimax 吗？普通 states
+对应 maximizers，Q-states 对应 chance nodes，time-limited values 对应
+depth-limited minimax。</p>
 <p>这些近乎同一的概念很自然的引出了怀疑：<strong>为什么不直接用
 expectimax 解 MDP，而要采用基于 DP 的 value
 iteration？</strong>我苦思冥想良久，一路追根溯源到了 CS188 2012 年的 <a target="_blank" rel="noopener" href="https://ai.berkeley.edu/~cs188/sp12/announcements.html">sources</a>，终于找到了答案。value
@@ -590,6 +592,81 @@ terminal node)</li>
 <li>ran bottom-up (rather than recursively)</li>
 <li>can handle infinite duration game</li>
 </ul>
+<p>Policy extraction, Q-value iteration 与 policy iteration
+是几个比较同质化的概念。它们探讨的是在得到 <span class="math inline">\(U^{*}(s)\)</span> 后如何 derive 出最优策略 <span class="math inline">\(\pi^{*}(s)\)</span>。这个问题的答案即所谓的策略提取，非常简单：</p>
+<ul>
+<li>Policy extraction. <span class="math inline">\(\pi^{*}(s)=\text{argmax}_a
+Q^{*}(s,a)=\text{argmax}_a
+\sum_{s&#39;}T(s,a,s&#39;)[R(s,a,s&#39;)+\gamma
+U^{*}(s&#39;)]\)</span></li>
+<li>Q-value iteration. 可以发现，仅需计算 optimal Q-values 就能满足
+policy extraction 的需要。于是把 value iteration 替换为 Q-value
+iteration <span class="math inline">\(Q_{k+1}(s,a)=\sum_{s&#39;}T(s,a,s&#39;)[R(s,a,s&#39;)+\gamma
+\max_{a&#39;} Q_{k}(s&#39;,a&#39;)]\)</span>。与 value iteration
+唯一的区别是 <span class="math inline">\(\max\)</span>​ 的位置，这是因为
+take actions 与 transition 是一个先后的过程。</li>
+</ul>
+<p>Value/Q-value iteration 的复杂度是 <span class="math inline">\(O(S^2A)\)</span> 级别，计算花销还是挺大的。但
+policy extraction 只关心 <span class="math inline">\(\text{argmax}\)</span>，这说明许多 values
+的计算其实是 overcomputation；optimal policy 的收敛速度其实会比 optimal
+value 快很多。既然如此，不如直接在 policy 层面上进行迭代，这就是 policy
+iteration。</p>
+<p>Policy iteration 的三个步骤：</p>
+<ul>
+<li><em>Policy initialization</em>. 选取一个初始策略 <span class="math inline">\(\pi_0\)</span>。合适的选择能够加速收敛。</li>
+<li><em>Policy evaluation</em>. 对所有状态 <span class="math inline">\(s\)</span>，计算 <span class="math inline">\(U^{\pi_i}(s)=\sum_{s&#39;}T(s,\pi_i(s),s&#39;)[R(s,\pi_i(s),s&#39;)+\gamma
+U^{\pi_i}(s&#39;)]\)</span>。注意这里的计算是 expectimax 式 (top-down)
+而非 value iteration 式
+(bottom-up)。可以采用后者，但实际中前者速度较快。注意到策略评估的复杂度是
+<span class="math inline">\(O(S^2)\)</span>：因为初始策略的存在保证了一个状态
+<span class="math inline">\(s\)</span> 对应一个 action <span class="math inline">\(\pi_i(s)\)</span>。</li>
+<li><em>Policy improvement</em>. 实际上就是迭代啦！<span class="math inline">\(\pi_{i+1}=\text{argmax}_a
+\sum_{s&#39;}T(s,a,s&#39;)[R(s,a,s&#39;)+\gamma
+U^{\pi_i}(s&#39;)]\)</span>。迭代到 <span class="math inline">\(\pi_{i+1}=\pi_i\)</span> 时收敛到最优策略 <span class="math inline">\(\pi^{*}\)</span>。复杂度是 <span class="math inline">\(O(S^2A)\)</span>，和 value iteration
+一样，但迭代次数一般会减少很多。</li>
+</ul>
+<p><br></p>
+<h2 id="reinforcement-learning-i">Reinforcement Learning I</h2>
+<p>一些名词。</p>
+<ul>
+<li><em>offline planning</em> (离线规划)。agent 拥有对 transitions <span class="math inline">\(T\)</span> 与 rewards <span class="math inline">\(R\)</span> 的完整知识。</li>
+<li><em>online planning</em> (在线规划)。与 offline planning 相对。</li>
+<li>在 online planning 下解 MDP 问题: explore, learn then exploit。
+<ul>
+<li><strong>explore</strong>: agent 不断与环境交互，得到若干
+feedback。</li>
+<li><strong>learn</strong>: 即 reinforcement learning，从 feedback
+中学到 optimal policy。</li>
+<li><strong>exploit</strong>: 使用学到的 policy 取得尽量多的
+reward。</li>
+</ul></li>
+<li><em>sample</em>。feedback 的基本单元。agent 在 <span class="math inline">\(s\)</span> 采取行动 <span class="math inline">\(a\)</span>，来到 <span class="math inline">\(s&#39;\)</span>，获得奖励 <span class="math inline">\(r\)</span>，获得 sample <span class="math inline">\((s,a,s&#39;,r)\)</span>。</li>
+<li>episode。一次 explore 收集到的 collections of samples 是一个
+episode。</li>
+</ul>
+<p><em>Model-based learning</em>。通过 feedback 计算 <span class="math inline">\(\hat{T},\hat{R}\)</span> (对真实 <span class="math inline">\(T,R\)</span> 的估计)。<span class="math inline">\(\hat{T}(s,a,s&#39;)=n(s,a,s&#39;)/n(s,a)\)</span>，<span class="math inline">\(\hat{R}\)</span>
+则可以准确得到。根据大数定理，counting 次数越多，得到的 <span class="math inline">\(\hat{T}\)</span>​ 越准确。</p>
+<ul>
+<li>得到 <span class="math inline">\(\hat{T},\hat{R}\)</span>
+后，问题转化为 offline planning，使用 value/policy iteration 等方法得到
+<span class="math inline">\(\pi_{exploit}\)</span>​ 即可。</li>
+<li>Model-based learning
+容易理解，效率也较高，唯一的问题是需要大量的空间存储 episodes。</li>
+</ul>
+<p><em>Model-free learning</em>。不计算 <span class="math inline">\(T,R\)</span>，直接从 feedback 中学习最优策略 <span class="math inline">\(\pi^{*}\)</span> 。无模型学习分为两个步骤：</p>
+<ul>
+<li>Passive reinforcement learning - 被动强化学习的目的与 policy
+evaluation 一致。即，对于 <span class="math inline">\(\pi\)</span>，计算出该决策下所有状态 <span class="math inline">\(s\)</span> 的 utility <span class="math inline">\(U^{\pi}(s)\)</span>。两种方式：direct evaluation,
+temporal difference evaluation。</li>
+<li>Active reinforcement learning - 在 sufficient exploration 后，使用
+feedback 迭代更新得到最优决策。常用 Q-learning。</li>
+</ul>
+<p><em>Direct evaluation</em>。非常朴素的想法。在探索过程中维护一个
+table，表头为 <span class="math inline">\((s, \text{total reward},
+\text{times visited})\)</span>。在决策 <span class="math inline">\(\pi\)</span> 下 agent 不断游走，更新
+table，最后计算 <span class="math inline">\(U^{\pi}(s)=\text{total
+reward}/\text{times visited}\)</span>。</p>
+<p><em>Temporal difference evaluation</em>。</p>
 <p><br></p>
 <h2 id="note-reading">Note Reading</h2>
 <p>本节课课件内容的绝大部分是从 Berkeley CS188
@@ -609,8 +686,14 @@ II</a>.</li>
 with Other Agents I</a>.</li>
 <li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note06.pdf">Search
 with Other Agents II</a>.</li>
-<li>[unchecked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note07.pdf">MDPs
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note07.pdf">MDPs
 I</a></li>
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note08.pdf">MDPs
+II</a></li>
+<li>[unchecked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note09.pdf">RL
+I</a></li>
+<li>[unchecked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note10.pdf">RL
+II</a></li>
 </ul>
 <p><br></p>
 <h2 id="reference">Reference</h2>
