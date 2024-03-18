@@ -25,34 +25,30 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="癸卯小暑。    在虔信者愿望中诞生的神明脚下，我偷听到关于未来的只言片语。">
+    <meta name="description" content="又一个普通的清晨，支持向量机在决策树身旁醒来，发现全世界 Deep Neural Network 模型的 performance 下降了 100000 倍。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="在平江东山寺">
-<meta property="og:url" content="https://www.thisisxxz.com/2023/07/10/moment-230708/index.html">
+<meta property="og:title" content="机器学习之贰：SVM, 决策树与 KNN">
+<meta property="og:url" content="https://www.thisisxxz.com/2024/03/18/machine-learning-2/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="癸卯小暑。    在虔信者愿望中诞生的神明脚下，我偷听到关于未来的只言片语。">
+<meta property="og:description" content="又一个普通的清晨，支持向量机在决策树身旁醒来，发现全世界 Deep Neural Network 模型的 performance 下降了 100000 倍。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/07/10/moment-230708/1.jpg">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/07/10/moment-230708/2.jpg">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/07/10/moment-230708/3.jpg">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/07/10/moment-230708/4.jpg">
-<meta property="og:image" content="https://www.thisisxxz.com/2023/07/10/moment-230708/5.jpg">
-<meta property="article:published_time" content="2023-07-09T16:02:14.000Z">
-<meta property="article:modified_time" content="2023-11-09T11:48:45.470Z">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/03/18/machine-learning-2/margin.png">
+<meta property="article:published_time" content="2024-03-18T06:53:49.000Z">
+<meta property="article:modified_time" content="2024-03-18T13:03:09.667Z">
 <meta property="article:author" content="XXZ">
-<meta property="article:tag" content="Moments">
+<meta property="article:tag" content="AL &amp; ML">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.thisisxxz.com/2023/07/10/moment-230708/1.jpg">
+<meta name="twitter:image" content="https://www.thisisxxz.com/2024/03/18/machine-learning-2/margin.png">
 
 
-<link rel="canonical" href="https://www.thisisxxz.com/2023/07/10/moment-230708/">
+<link rel="canonical" href="https://www.thisisxxz.com/2024/03/18/machine-learning-2/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/07/10/moment-230708/","path":"2023/07/10/moment-230708/","title":"在平江东山寺"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2024/03/18/machine-learning-2/","path":"2024/03/18/machine-learning-2/","title":"机器学习之贰：SVM, 决策树与 KNN"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>在平江东山寺 | ThisisXXZ's Blog</title>
+<title>机器学习之贰：SVM, 决策树与 KNN | ThisisXXZ's Blog</title>
   
 
 
@@ -161,7 +157,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -174,6 +170,10 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#support-vector-machine-%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA"><span class="nav-number">1.</span> <span class="nav-text">Support Vector Machine
+支持向量机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mathematical-intuition"><span class="nav-number">1.1.</span> <span class="nav-text">Mathematical Intuition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#soft-margin-classification"><span class="nav-number">1.2.</span> <span class="nav-text">Soft Margin Classification</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kernel-trick"><span class="nav-number">1.3.</span> <span class="nav-text">Kernel Trick</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#decision-tree-random-forest-%E5%86%B3%E7%AD%96%E6%A0%91%E4%B8%8E%E9%9A%8F%E6%9C%BA%E6%A3%AE%E6%9E%97"><span class="nav-number">2.</span> <span class="nav-text">Decision Tree
+&amp; Random Forest 决策树与随机森林</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#k-th-nearest-neighbors-k-%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">K-th Nearest Neighbors K
+近邻算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -277,7 +277,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/07/10/moment-230708/">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2024/03/18/machine-learning-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
@@ -290,12 +290,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="在平江东山寺 | ThisisXXZ's Blog">
+      <meta itemprop="name" content="机器学习之贰：SVM, 决策树与 KNN | ThisisXXZ's Blog">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          在平江东山寺
+          机器学习之贰：SVM, 决策树与 KNN
         </h1>
 
         <div class="post-meta-container">
@@ -308,7 +308,7 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2023-07-10 00:02:14" itemprop="dateCreated datePublished" datetime="2023-07-10T00:02:14+08:00">2023-07-10</time>
+      <time title="Created: 2024-03-18 14:53:49" itemprop="dateCreated datePublished" datetime="2024-03-18T14:53:49+08:00">2024-03-18</time>
     </span>
 
   <span class="post-meta-item">
@@ -343,39 +343,118 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><blockquote class="blockquote-center">
-<p><strong>癸卯小暑。</strong></p>
-
-</blockquote>
-<center>
-<em>在虔信者愿望中诞生的神明脚下，我偷听到关于未来的只言片语。</em>
-</center>
+    <div class="post-body" itemprop="articleBody"><p>又一个普通的清晨，支持向量机在决策树身旁醒来，发现全世界 Deep Neural
+Network 模型的 performance 下降了 100000 倍。</p>
 <span id="more"></span>
 <p><br></p>
-<figure>
-<img data-src="1.jpg" alt="是日已过">
-<figcaption aria-hidden="true">是日已过</figcaption>
-</figure>
-<figure>
-<img data-src="2.jpg" alt="命亦随减">
-<figcaption aria-hidden="true">命亦随减</figcaption>
-</figure>
-<figure>
-<img data-src="3.jpg" alt="如少水鱼">
-<figcaption aria-hidden="true">如少水鱼</figcaption>
-</figure>
-<figure>
-<img data-src="4.jpg" alt="斯有何乐">
-<figcaption aria-hidden="true">斯有何乐</figcaption>
-</figure>
-<figure>
-<img data-src="5.jpg" alt="呢支签话咧……">
-<figcaption aria-hidden="true">呢支签话咧……</figcaption>
-</figure>
-<p><br></p>
-<div class="note success"><p>新成就：在寺庙里抽一次签！</p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
 </div>
 <p><br></p>
+<h2 id="support-vector-machine-支持向量机">Support Vector Machine
+支持向量机</h2>
+<h3 id="mathematical-intuition">Mathematical Intuition</h3>
+<p>引入：二维平面上点的二分类问题 (假设这些点是线性可分 linearly
+separable 的)。</p>
+<p>与 perceptron 不同，SVM 的 objective 并非最小化 misclassification
+errors，而是找到最优的 decision boundary (aka
+hyperplane)。所谓最优的定义是：samples
+到最优超平面的最小距离最大化。</p>
+<figure>
+<img data-src="margin.png" alt="像不像一条马路？这三条线常常被称为 street">
+<figcaption aria-hidden="true">像不像一条马路？这三条线常常被称为
+street</figcaption>
+</figure>
+<ul>
+<li>虚线：最优的 decision boundary aka
+<strong>hyperplane</strong>。</li>
+<li>两条实线：margin boundaries。margin boundaries 间的距离 <span class="math inline">\(2d\)</span> 被称为 <strong>margin</strong>。</li>
+<li>位于 margin boundaries 上的 samples 被称为 <strong>support
+vectors</strong> (支持向量)，定义了所有 samples
+到超平面距离的最小值。</li>
+</ul>
+<p>SVM 的 objective 即最大化 margin；也即最大化 support vectors 到
+hyperplane 的距离。</p>
+<p>先来复习一下高中数学。点 <span class="math inline">\(\mathbf{x}=(x_0,y_0)\)</span> 到直线 <span class="math inline">\(Ax+By+C=0\)</span> 的距离是： <span class="math display">\[
+\frac{|Ax_0+By_0+C|}{\sqrt{A^2+B^2}}
+\]</span> 不妨把分母写成 <span class="math inline">\(|w^Tx+b|\)</span>，其中 <span class="math inline">\(w^T\)</span> 是直线法向量的转置 <span class="math inline">\([A,B]\)</span>，<span class="math inline">\(b\)</span> 是直线的常数项 <span class="math inline">\(C\)</span>。这样推广到 <span class="math inline">\(n\)</span> 维： <span class="math display">\[
+\frac{|w^Tx+b|}{||w||}, \ ||w|| \text{ defines the L2-norm of } w
+\]</span> 定义 support vectors 到 hyperplane 的距离为 <span class="math inline">\(d\)</span> (margin 的一半)。二分类问题把 samples
+划分为两类 <span class="math inline">\(x_{pos}\)</span> 与 <span class="math inline">\(x_{neg}\)</span>。那么，对于所有 samples <span class="math inline">\(x\in X\)</span>，有： <span class="math display">\[
+\frac{w^Tx_{pos}+b}{||w||}\geq d,\frac{w^Tx_{neg}+b}{||w||}\leq -d
+\]</span> <span class="math inline">\(x_{pos}\)</span> 的 label 为 <span class="math inline">\(1\)</span>，<span class="math inline">\(x_{neg}\)</span> 的 label 为 <span class="math inline">\(-1\)</span>。利用这一点整合上述不等式： <span class="math display">\[
+y\frac{w^Tx+b}{||w||d}\geq 1
+\]</span> 是不是很优美？但此时 objective
+还不够明显。首先我们注意到对于同一个 hyperplane，<span class="math inline">\(w\)</span> (或 <span class="math inline">\(||w||\)</span>) 的值是不固定的；这是因为 <span class="math inline">\(Ax+By+C=0\)</span> 与 <span class="math inline">\((Ak)x+(Bk)y+Ck=0\)</span>
+表示的是同一条直线。为了消去常数 scaling 带来的自由度，我们不妨令 <span class="math inline">\(||w||d=1\)</span> 即 <span class="math inline">\(d=1/||w||\)</span>，原约束转化为： <span class="math display">\[
+y(w^Tx+b)\geq 1 \ s.t. \ d=\frac{1}{||w||}
+\]</span> 这下水落石出了！之前我们提到，SVM 的 objective 是最大化 margin
+<span class="math inline">\(2d\)</span>，即最小化 <span class="math inline">\(||w||\)</span>。为了后续计算的方便，我们定义 SVM
+的 objective function 为最小化 <span class="math inline">\(\frac{1}{2}||w||^2\)</span>。这样，一个二分类问题就转化为了最优化问题：
+<span class="math display">\[
+\text{solve argmin}_{w,b} \frac{1}{2}||w||^2 \ s.t. \text{ constraints }
+\forall_i \ y^{(i)}(w^Tx^{(i)}+b)\geq 1 \text{ are satisfied}
+\]</span> 这个最优化问题可以进一步采用 Lagrange Multipliers
+方法求解。这就是 SVM 的 mathmatical intuition 了。</p>
+<p>SVM 对 feature scaling 很敏感。通常应用 scaling 能 yield better
+results。</p>
+<h3 id="soft-margin-classification">Soft Margin Classification</h3>
+<p>所有约束都被严格满足的 SVM 被称为 Hard Margin
+Classification。这种模型显然是缺少灵活性的。</p>
+<ul>
+<li>如果 samples 是 linearly inseparable 的，找不到最优超平面。</li>
+<li>对 outliers 敏感。在 negative side 添加一个 positive outlier
+就会极大影响 hyperplane 的位置。</li>
+</ul>
+<p>Soft Margin Classification 允许 misclassification 的存在，但引入
+<strong>slack variable</strong> <span class="math inline">\(\xi\)</span>​​
+对其施加 penalty。</p>
+<p>定义 Hinge Lost Function 如下：当 sample 被正确分类时，penalty 为
+0，反之获得一个和与 hyperplane 距离成正比的 penalty： <span class="math display">\[
+\xi^{(i)}=\max(0,1-y^{(i)}(w^Tx^{(i)}+b))
+\]</span> 引入 slack penalty 系数 <span class="math inline">\(C\)</span>，Soft Margin Classification
+定义下的最优化问题转变为： <span class="math display">\[
+\text{argmin}_{w,b,\xi^{(i)}} \frac{1}{2}||w||^2+C(\sum_i \xi^{(i)}) \
+s.t. \text{ constraints } \forall_i \ y^{(i)}(w^Tx^{(i)}+b)\geq
+1-\xi^{(i)} \text{ are satisfied}
+\]</span> 这个形式实在很像 regularization，事实上也与其相关。增加 <span class="math inline">\(C\)</span> 将使模型的 bias 增加，variance
+减少。</p>
+<h3 id="kernel-trick">Kernel Trick</h3>
+<p>简单的介绍什么是核技巧。</p>
+<p>对于线性不可分的数据，将其原有的 features 进行重新组合 (生成若干
+nonlinear combinations)。以这种方式把数据投射到高维空间上 (project onto
+higher-dimensional space)；在那里数据可能变得线性可分。</p>
+<p>在使用 Lagrange Multipliers 解 SVM 优化问题时，我们常常需要计算两个
+samples 间的内积 <span class="math inline">\(x^{(i)T}x^{(j)}\)</span>。但当 <span class="math inline">\(x\)</span> 被投射到高维空间 <span class="math inline">\(\phi(x)\)</span> 后，<span class="math inline">\(\phi(x^{(i)})^T\cdot \phi(x^{(j)})\)</span>
+的计算将会变得十分昂贵。</p>
+<p>核函数 (kernel function) <span class="math inline">\(K\)</span>
+则是具有以下特殊性质的一类函数：<span class="math inline">\(K(x^{(i)},
+x^{(j)})=\phi(x^{(i)})^T\cdot
+\phi(x^{(j)})\)</span>。在应用核函数的情况下，我们还是只需要计算 <span class="math inline">\(x^{(i)T}x^{(j)}\)</span>，但实质上却达到了把数据投射到高维空间的效果。</p>
+<p>应用了核技巧的 SVM 被称为 Kernel SVM。常见核函数：</p>
+<ul>
+<li>线性核。</li>
+<li>多项式核。</li>
+<li><strong>高斯核</strong> <span class="math inline">\(K(x^{(i)},
+x^{(j)})=\exp(-\gamma||x^{(i)}-x^{(j)}||^2)\)</span>。tunable 参数 <span class="math inline">\(\gamma\)</span> 的作用见 [Chapter 3
+pp.67-69]。</li>
+</ul>
+<p><br></p>
+<h2 id="decision-tree-random-forest-决策树与随机森林">Decision Tree
+&amp; Random Forest 决策树与随机森林</h2>
+<p><br></p>
+<h2 id="k-th-nearest-neighbors-k-近邻算法">K-th Nearest Neighbors K
+近邻算法</h2>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info: COMP3314. Lecturer: Prof. Yizhou Yu.</p>
+<p>Course textbook: Mathematics for Machine Learning. M. Deisenroth, A.
+Faisal &amp; C.Ong.</p>
 
     </div>
 
@@ -413,13 +492,13 @@
   </li>
   <li class="post-copyright-link">
       <strong>Post link: </strong>
-      <a href="https://www.thisisxxz.com/2023/07/10/moment-230708/" title="在平江东山寺">https://www.thisisxxz.com/2023/07/10/moment-230708/</a>
+      <a href="https://www.thisisxxz.com/2024/03/18/machine-learning-2/" title="机器学习之贰：SVM, 决策树与 KNN">https://www.thisisxxz.com/2024/03/18/machine-learning-2/</a>
       <!--copy buttom-->
       <span class="copy-path" title="Click to copy markdown-style reference"
       ><i
         style="cursor: pointer"
         class="fa fa-clipboard"
-        data-clipboard-text="[XXZ's Blog | 在平江东山寺](https://www.thisisxxz.com/2023/07/10/moment-230708/)"
+        data-clipboard-text="[XXZ's Blog | 机器学习之贰：SVM, 决策树与 KNN](https://www.thisisxxz.com/2024/03/18/machine-learning-2/)"
         aria-label="Markdown-style reference is now on your clipboard"
       ></i
     ></span>
@@ -455,21 +534,18 @@
       </div>
     </div>
           <div class="post-tags">
-              <a href="/tags/Moments/" rel="tag"><i class="fa fa-tag"></i> Moments</a>
+              <a href="/tags/AL-ML/" rel="tag"><i class="fa fa-tag"></i> AL & ML</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2023/07/04/shell-rewire-stream/" rel="prev" title="关于 Shell 输入输出重定向的研究">
-                  <i class="fa fa-chevron-left"></i> 关于 Shell 输入输出重定向的研究
+                <a href="/2024/03/08/kow-up-collection/" rel="prev" title="The Collection of Kow'Up">
+                  <i class="fa fa-chevron-left"></i> The Collection of Kow'Up
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/08/02/moment-230723/" rel="next" title="在炎陵与茶陵 - 此后如竟没有炬火">
-                  在炎陵与茶陵 - 此后如竟没有炬火 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
@@ -560,7 +636,7 @@
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
 <script src="/js/third-party/math/mathjax.js"></script>
 
 
@@ -575,7 +651,7 @@
       new needShareButton('#needsharebutton-postbottom', pbOptions);
   </script>
 
-<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/07/10/moment-230708/"}</script>
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/03/18/machine-learning-2/"}</script>
 <script>
 document.addEventListener('page:loaded', () => {
   NexT.utils.loadComments(CONFIG.valine.el)
