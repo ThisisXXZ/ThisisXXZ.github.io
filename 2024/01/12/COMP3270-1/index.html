@@ -36,7 +36,7 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/alpha-beta.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/bellman.png">
 <meta property="article:published_time" content="2024-01-12T07:29:57.000Z">
-<meta property="article:modified_time" content="2024-03-15T11:46:44.627Z">
+<meta property="article:modified_time" content="2024-03-21T13:41:30.363Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="AI &amp; ML">
 <meta name="twitter:card" content="summary">
@@ -653,20 +653,80 @@ episode。</li>
 <li>Model-based learning
 容易理解，效率也较高，唯一的问题是需要大量的空间存储 episodes。</li>
 </ul>
-<p><em>Model-free learning</em>。不计算 <span class="math inline">\(T,R\)</span>，直接从 feedback 中学习最优策略 <span class="math inline">\(\pi^{*}\)</span> 。无模型学习分为两个步骤：</p>
+<p><em>Model-free learning</em>。不计算 <span class="math inline">\(T,R\)</span>，直接从 feedback 中学习最优策略 <span class="math inline">\(\pi^{*}\)</span> 。无模型学习分为两种类型：</p>
 <ul>
-<li>Passive reinforcement learning - 被动强化学习的目的与 policy
-evaluation 一致。即，对于 <span class="math inline">\(\pi\)</span>，计算出该决策下所有状态 <span class="math inline">\(s\)</span> 的 utility <span class="math inline">\(U^{\pi}(s)\)</span>。两种方式：direct evaluation,
-temporal difference evaluation。</li>
-<li>Active reinforcement learning - 在 sufficient exploration 后，使用
-feedback 迭代更新得到最优决策。常用 Q-learning。</li>
+<li>Passive reinforcement learning - policy evaluation 是 model-free
+的，但随后的 policy extraction 环节还是离不开对 <span class="math inline">\(T,R\)</span> 的 estimation。代表方法：direct
+evaluation, TD evaluation。</li>
+<li>Active reinforcement learning - 获取 <span class="math inline">\(\pi^{*}\)</span> 的全过程均是 model-free 的。以
+Q-learning 为代表。</li>
 </ul>
 <p><em>Direct evaluation</em>。非常朴素的想法。在探索过程中维护一个
 table，表头为 <span class="math inline">\((s, \text{total reward},
 \text{times visited})\)</span>。在决策 <span class="math inline">\(\pi\)</span> 下 agent 不断游走，更新
-table，最后计算 <span class="math inline">\(U^{\pi}(s)=\text{total
-reward}/\text{times visited}\)</span>。</p>
-<p><em>Temporal difference evaluation</em>。</p>
+table，最后计算 <span class="math inline">\(U^{\pi}(s)=\text{total} \
+\text{reward}/\text{times} \
+\text{visited}\)</span>。同样根据大数定理，探索的 episodes 越多，得到的
+<span class="math inline">\(U^{\pi}\)</span> 越准确。</p>
+<p><em>Temporal difference evaluation</em>。引入 <strong>exponential
+moving average</strong> 迭代的更新 <span class="math inline">\(U^{\pi}(s)\)</span>​，与 direct evaluation
+相比，不仅需要的 episodes 更少，收敛速度还会大幅加快。初始化 <span class="math inline">\(U_0^{\pi}=0\)</span>，在时间步 <span class="math inline">\(k\)</span>：</p>
+<ul>
+<li>agent 游走，收集 <span class="math inline">\(\text{sample}_k(s)=R(s,\pi(s),s&#39;)+\gamma
+U_{k-1}^{\pi}(s&#39;)\)</span>​。其中 <span class="math inline">\(\gamma\)</span> 是一个 discount。</li>
+<li>更新 estimate <span class="math inline">\(U^{\pi}_k(s)\leftarrow
+(1-\alpha)U_{k-1}^{\pi}(s)+\alpha\cdot
+\text{sample}_{k}(s)\)</span>​。</li>
+</ul>
+<p>展开第二个式子，可以发现 TD learning 的妙处：<span class="math inline">\(U_k^{\pi}\leftarrow \alpha [\sum_{i=1}^k
+(1-\alpha)^{k-i}\text{sample}_i]\)</span>​。随着时间步的增加，较早版本的
+sample 获得的权重以指数级别下降；而较早版本的 sample
+通常是不准确的。正是这一点加速了 <span class="math inline">\(U^{\pi}\)</span> 的收敛。</p>
+<p>学习率 <span class="math inline">\(\alpha\)</span>
+的设定也是有讲究的。一个典型的退火做法是初始化 <span class="math inline">\(\alpha=1\)</span>，再缓慢的降至 <span class="math inline">\(0\)</span>。</p>
+<p><em>Q-learning</em>。纯粹的 model-free learning。</p>
+<p>回顾下 policy extraction：<span class="math inline">\(\pi^{*}(s)=\text{argmax}_a
+Q^{*}(s,a)=\text{argmax}_a
+\sum_{s&#39;}T(s,a,s&#39;)[R(s,a,s&#39;)+\gamma
+U^{*}(s&#39;)]\)</span>。可以看到，前两种 passive RL 方法只能得到 <span class="math inline">\(U^{\pi}\)</span>，如果想要得到 <span class="math inline">\(\pi^{*}\)</span>，还是离不开求解 <span class="math inline">\(\tilde{T}, \tilde{R}\)</span>​ 与后续的 policy
+iteration。</p>
+<p>与 <em>Q-value iteration</em> 的 intuition 相同，Q learning 直接从 Q
+values 入手求解 <span class="math inline">\(\pi^{*}\)</span>。为了绕过
+<span class="math inline">\(T,R\)</span> 函数，又使用了与 TD learning
+同样的 exponential moving average 技巧。</p>
+<ul>
+<li>agent 游走，收集 <span class="math inline">\(\text{sample}_k(s,a)=R(s,a,s&#39;)+\gamma
+\max_{a&#39;}Q_{k-1}(s&#39;, a&#39;)\)</span>​。</li>
+<li>更新 <span class="math inline">\(Q_k(s,a)\leftarrow
+(1-\alpha)Q_{k-1}(s,a)+\alpha\cdot \text{sample}_k(s,a)\)</span>.</li>
+</ul>
+<p>与 TD 相同，<span class="math inline">\(Q_i\)</span> 将逐渐向最优的
+<span class="math inline">\(Q^{*}\)</span> 收敛。不同的是，agent
+在游走收集 sample 时，并不遵循一个特定的 <span class="math inline">\(\pi\)</span>；只要 explore 的时间够长，agent
+可以做出 suboptimal 甚至是 random 的移动，最后仍然能收敛到 <span class="math inline">\(Q^{*}\)</span>​。这一特点使得 Q-learning 成为一种
+<strong>off-policy learning</strong>，而前两种 passive RL 被称为
+<strong>on-policy learning</strong>。</p>
+<p><em>Approximate Q-Learning</em>。朴素的 Q-learning 需要储存所有 <span class="math inline">\(Q(s,a)\)</span>，在状态数非常多的情况下会带来很大的空间压力。Approximate
+方法试图学习到 <span class="math inline">\(Q(s,a)\)</span> 的特征表示
+(feature-based representation) <span class="math inline">\(\mathbf{w}^{T}\cdot \mathbf{f}(s,a)\)</span>，其中
+<span class="math inline">\(\mathbf{f}\)</span> 是当前状态 <span class="math inline">\((s,a)\)</span> 的特征向量，<span class="math inline">\(\mathbf{w}\)</span> 是每个特征的权重。</p>
+<p>这里就有一点 ML 的思想了：通过引入状态的特征表示，使得模型具有泛化
+(generalizing learning experience) 的能力。当前状态的特征 <span class="math inline">\(\mathbf{f}(s,a)\)</span>
+多是人工选取的，其所占的权重 <span class="math inline">\(\mathbf{w}\)</span>
+则通过一种类似梯度下降的方式进行更新。</p>
+<ul>
+<li>计算 <span class="math inline">\(\text{difference}=[R(s,a,s&#39;)+\gamma
+\max_{a&#39;}Q(s&#39;,a&#39;)]-Q(s,a)\)</span>，即 <span class="math inline">\(Q(s,a)\)</span> 的 sampled estimation
+与当前模型表示间的距离。</li>
+<li>更新权重 <span class="math inline">\(w_i\leftarrow \alpha\cdot
+\text{difference}\cdot f_i(s,a)\)</span>。</li>
+<li>更新权重本质上是在更新 <span class="math inline">\(Q(s,a)\leftarrow
+Q(s,a)+\alpha\cdot\text{difference}\)</span>。即，把模型拉向 sampled
+estimation 的方向。由于真实奖励 <span class="math inline">\(R(s,a,s&#39;)\)</span>
+的存在，这个方向在大部分情况下应当是指向 <span class="math inline">\(Q(s,a)\)</span>​ 的真实值的。</li>
+</ul>
+<p>这样，我们获得了一个泛化能力更强，且大幅度节省空间 (只需存储 <span class="math inline">\(\mathbf{f}, \mathbf{w}\)</span> 与少量的 Q-values
+表) 的 Q-learning 模型。</p>
 <p><br></p>
 <h2 id="note-reading">Note Reading</h2>
 <p>本节课课件内容的绝大部分是从 Berkeley CS188
@@ -690,7 +750,7 @@ with Other Agents II</a>.</li>
 I</a></li>
 <li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note08.pdf">MDPs
 II</a></li>
-<li>[unchecked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note09.pdf">RL
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note09.pdf">RL
 I</a></li>
 <li>[unchecked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note10.pdf">RL
 II</a></li>
