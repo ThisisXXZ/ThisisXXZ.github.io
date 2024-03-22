@@ -1381,6 +1381,34 @@ Jacobian <span class="math inline">\(J\)</span> 上。</p>
 循环的每一次累积都被 scale up 了 <span class="math inline">\(|J|\)</span> 倍。那么：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">unit_vol = du * dv * dw</span><br><span class="line">vol = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> u <span class="keyword">from</span> <span class="number">0</span> to ap:</span><br><span class="line">    <span class="keyword">for</span> v <span class="keyword">from</span> <span class="number">0</span> to bp:</span><br><span class="line">        <span class="keyword">for</span> w <span class="keyword">from</span> <span class="number">0</span> to cp:</span><br><span class="line">            x, y, z = recover_from(u, v, w)</span><br><span class="line">            J = determinant(partial(u, v, w) / partial(x, y, z))</span><br><span class="line">            vol += unit_vol / J</span><br></pre></td></tr></table></figure>
 <p><br></p>
+<h2 id="线性方程组与矩阵">线性方程组与矩阵</h2>
+<p>来到第 2 Part 了。前期的概念还是比较熟悉的，稍微过一过：</p>
+<ul>
+<li>SLE (System of Linear Equation)。线性方程组。</li>
+<li>Equation Operations。对应矩阵的初等行变换 (Row operation) <span class="math inline">\(R_i\leftrightarrow R_j, \alpha R_i, \alpha
+r_i+R_j\)</span>。</li>
+<li>Coefficient Matrix, Vector of Constants and Solution
+Vector。参数矩阵，常数向量与解向量。</li>
+<li>参数矩阵与常数向量拼在一起得到熟悉的 Augmented Matrix
+(增广矩阵)。</li>
+</ul>
+<p>矩阵通过 <strong>row reduction</strong> 得到它的 <strong>echelon
+form</strong> (aka row echelon form, 行阶梯型矩阵)。</p>
+<ul>
+<li>全 0 行位于矩阵的底部。</li>
+<li>第 <span class="math inline">\(i\)</span> 行的 pivot 位于第 <span class="math inline">\(j\)</span> <span class="math inline">\((i&lt;j)\)</span> 行的 pivot 的左侧。</li>
+<li>位于 pivot 同列下方的元素全为 0。</li>
+</ul>
+<p>进一步 row reduction 得到 <strong>the reduced echelon form</strong>
+(aka reduced row echelon form, 行简化阶梯型矩阵)。</p>
+<ul>
+<li>所有 pivot 均为 1。</li>
+<li>现在，pivot 同列下方与上方的元素均为 0；即 pivot column 只有 pivot
+为 1，其他都是 0。</li>
+</ul>
+<p>一个非 0 矩阵可能对应多个 echelon form；但是 reduced echelon form
+是<strong>唯一的</strong>。</p>
+<p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
