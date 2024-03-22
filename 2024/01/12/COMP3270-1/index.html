@@ -36,7 +36,7 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/alpha-beta.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/bellman.png">
 <meta property="article:published_time" content="2024-01-12T07:29:57.000Z">
-<meta property="article:modified_time" content="2024-03-21T13:41:30.363Z">
+<meta property="article:modified_time" content="2024-03-22T09:02:22.740Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="AI &amp; ML">
 <meta name="twitter:card" content="summary">
@@ -174,7 +174,7 @@
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#uninformed-search"><span class="nav-number">1.</span> <span class="nav-text">Uninformed Search</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#informed-search"><span class="nav-number">2.</span> <span class="nav-text">Informed Search</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#constraint-satisfaction-problem-i"><span class="nav-number">3.</span> <span class="nav-text">Constraint Satisfaction
 Problem I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#constraint-satisfaction-problem-ii"><span class="nav-number">4.</span> <span class="nav-text">Constraint Satisfaction
-Problem II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#search-with-other-agents-i"><span class="nav-number">5.</span> <span class="nav-text">Search with Other Agents I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#search-with-other-agents-ii"><span class="nav-number">6.</span> <span class="nav-text">Search with Other Agents II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#markov-decision-processes"><span class="nav-number">7.</span> <span class="nav-text">Markov Decision Processes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reinforcement-learning-i"><span class="nav-number">8.</span> <span class="nav-text">Reinforcement Learning I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#note-reading"><span class="nav-number">9.</span> <span class="nav-text">Note Reading</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">10.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Problem II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#search-with-other-agents-i"><span class="nav-number">5.</span> <span class="nav-text">Search with Other Agents I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#search-with-other-agents-ii"><span class="nav-number">6.</span> <span class="nav-text">Search with Other Agents II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#markov-decision-processes"><span class="nav-number">7.</span> <span class="nav-text">Markov Decision Processes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reinforcement-learning-i"><span class="nav-number">8.</span> <span class="nav-text">Reinforcement Learning I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reinforcement-learning-ii"><span class="nav-number">9.</span> <span class="nav-text">Reinforcement Learning II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#probability"><span class="nav-number">10.</span> <span class="nav-text">Probability</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#note-reading"><span class="nav-number">11.</span> <span class="nav-text">Note Reading</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">12.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -718,7 +718,7 @@ values 入手求解 <span class="math inline">\(\pi^{*}\)</span>。为了绕过
 <li>计算 <span class="math inline">\(\text{difference}=[R(s,a,s&#39;)+\gamma
 \max_{a&#39;}Q(s&#39;,a&#39;)]-Q(s,a)\)</span>，即 <span class="math inline">\(Q(s,a)\)</span> 的 sampled estimation
 与当前模型表示间的距离。</li>
-<li>更新权重 <span class="math inline">\(w_i\leftarrow \alpha\cdot
+<li>更新权重 <span class="math inline">\(w_i\leftarrow w_i+\alpha\cdot
 \text{difference}\cdot f_i(s,a)\)</span>。</li>
 <li>更新权重本质上是在更新 <span class="math inline">\(Q(s,a)\leftarrow
 Q(s,a)+\alpha\cdot\text{difference}\)</span>。即，把模型拉向 sampled
@@ -727,6 +727,46 @@ estimation 的方向。由于真实奖励 <span class="math inline">\(R(s,a,s&#3
 </ul>
 <p>这样，我们获得了一个泛化能力更强，且大幅度节省空间 (只需存储 <span class="math inline">\(\mathbf{f}, \mathbf{w}\)</span> 与少量的 Q-values
 表) 的 Q-learning 模型。</p>
+<p><br></p>
+<h2 id="reinforcement-learning-ii">Reinforcement Learning II</h2>
+<p>之前的所有 RL 算法得到最优决策 <span class="math inline">\(\pi^{*}\)</span> 的前提是 agent 进行了 sufficient
+exploration，但实际上这是一个很难达成的前提。在 RL 中一个重要的 tradeoff
+是 <strong>exploration vs exploitation</strong>。如何实现这个平衡？</p>
+<p><span class="math inline">\(\varepsilon\)</span>-<em>greedy
+policies</em>。以 <span class="math inline">\(\varepsilon\)</span>
+的概率随机行动 (explore)，以 <span class="math inline">\((1-\varepsilon)\)</span>​ 的概率进行 exploit。</p>
+<ul>
+<li><span class="math inline">\(\varepsilon\)</span>
+过大：即使学到了最优决策，agent 仍然表现得非常随机。</li>
+<li><span class="math inline">\(\varepsilon\)</span> 过小：agent 专注于
+exploit，Q-learning 等学习算法的收敛很慢。</li>
+</ul>
+<p><em>Exploration functions</em>。无需手动调参，是一种 adaptive
+的算法。将 Q-learning 写成如下形式： <span class="math display">\[
+Q(s,a)\leftarrow
+(1-\alpha)Q(s,a)+\alpha[R(s,a,s&#39;)+\gamma\max_{a&#39;}f(s&#39;,a&#39;)]
+\]</span> <span class="math inline">\(f\)</span> 是 exploration
+function。一个常见的定义是： <span class="math display">\[
+f(s&#39;,a&#39;)=Q(s&#39;,a&#39;)+\frac{k}{N(s&#39;,a&#39;)}
+\]</span> 当采样 sample 是 <span class="math inline">\((s,a,r,s&#39;)\)</span> 时，<span class="math inline">\(\max_{a&#39;}f(s&#39;,a&#39;)\)</span> 将自动在
+exploration 与 exploitation 间做出平衡。</p>
+<ul>
+<li>在学习初期，<span class="math inline">\(k/N(s&#39;,a&#39;)\)</span>
+将提供足够的 bonus 鼓励 agent 探索陌生的区域。</li>
+<li>随着学习的进行，<span class="math inline">\(k/N(s&#39;,a&#39;)\)</span> 将趋近于 0，<span class="math inline">\(f(s&#39;,a&#39;)\)</span> 回归到 <span class="math inline">\(Q(s&#39;,a&#39;)\)</span>​，使 exploitation
+逐渐回到舞台。</li>
+</ul>
+<p><em>Regret</em>。另一个衡量 RL 算法的指标，它累积了学习过程中产生的
+total mistake lost。某算法在 <span class="math inline">\(k\)</span>
+个时间步内学习到了最优决策 <span class="math inline">\(\pi^{*}\)</span>，它的 regret 定义为： <span class="math display">\[
+\text{regret}=\sum_{i=1}^k R(\pi^{*})-R(\pi_i)
+\]</span> 最小化 regret 不仅要求算法能够指导 agent
+学到最优决策，还要求该算法本身是最优的。</p>
+<p>举个例子，random exploration 与 exploration function 都能指导 agent
+学到最优决策，但 random exploration 的 regret 远远高于 exploration
+function。</p>
+<p><br></p>
+<h2 id="probability">Probability</h2>
 <p><br></p>
 <h2 id="note-reading">Note Reading</h2>
 <p>本节课课件内容的绝大部分是从 Berkeley CS188
@@ -752,8 +792,9 @@ I</a></li>
 II</a></li>
 <li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note09.pdf">RL
 I</a></li>
-<li>[unchecked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note10.pdf">RL
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note10.pdf">RL
 II</a></li>
+<li>[unchecked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note11.pdf">Probability</a></li>
 </ul>
 <p><br></p>
 <h2 id="reference">Reference</h2>
