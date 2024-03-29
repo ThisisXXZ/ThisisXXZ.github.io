@@ -34,7 +34,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.thisisxxz.com/2024/02/05/COMP2120-1/memory.png">
 <meta property="article:published_time" content="2024-02-05T06:43:24.000Z">
-<meta property="article:modified_time" content="2024-03-16T09:42:45.965Z">
+<meta property="article:modified_time" content="2024-03-29T12:37:40.610Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Computer Architecture">
 <meta name="twitter:card" content="summary">
@@ -170,7 +170,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#digital-logic"><span class="nav-number">1.</span> <span class="nav-text">Digital Logic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#number-representation"><span class="nav-number">2.</span> <span class="nav-text">Number Representation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#number-arithmetic"><span class="nav-number">3.</span> <span class="nav-text">Number Arithmetic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#instruction-execution-cycle"><span class="nav-number">4.</span> <span class="nav-text">Instruction Execution Cycle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memory-hierarchy"><span class="nav-number">5.</span> <span class="nav-text">Memory Hierarchy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cache-memory"><span class="nav-number">6.</span> <span class="nav-text">Cache Memory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#external-storage"><span class="nav-number">7.</span> <span class="nav-text">External Storage</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">8.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#digital-logic"><span class="nav-number">1.</span> <span class="nav-text">Digital Logic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#number-representation"><span class="nav-number">2.</span> <span class="nav-text">Number Representation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#number-arithmetic"><span class="nav-number">3.</span> <span class="nav-text">Number Arithmetic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#instruction-execution-cycle"><span class="nav-number">4.</span> <span class="nav-text">Instruction Execution Cycle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memory-hierarchy"><span class="nav-number">5.</span> <span class="nav-text">Memory Hierarchy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cache-memory"><span class="nav-number">6.</span> <span class="nav-text">Cache Memory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#external-storage"><span class="nav-number">7.</span> <span class="nav-text">External Storage</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#input-and-output"><span class="nav-number">8.</span> <span class="nav-text">Input and Output</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -499,29 +499,6 @@ branch 指令也是 2-words 指令。 第一个 word 指定了 operation
 code，condition code 与 addressing mode (总是 <code>0xFF</code>)。第二个
 word 指定了 jump 的目标地址。</li>
 </ul>
-<p>关于 Interrupt。当 I/O 设备从外部被触发时，它将向 CPU 发送一个
-interrupt signal。系统受到该信号后将 freeze 当前程序的执行，转向
-interrupt handling，随后再 restore 原本的状态，继续执行程序。</p>
-<ul>
-<li>当 current instruction 结束后再 attend to interruption
-能够减少需要保存的 register 数量。</li>
-<li>将与 next instruction 有关的 register 存入栈中。
-<ul>
-<li><code>PUSH</code> flag register - the result of previous ALU
-operation (needed if next instruction is branch).</li>
-<li><code>PUSH</code> program counter</li>
-</ul></li>
-<li>令 program counter 指向 interrupt program，开始 attend to
-interruption。
-<ul>
-<li>在执行 interrupt routine 的过程中，若需要使用 register files 中的
-<code>Rk</code>，先 <code>PUSH Rk</code>。</li>
-</ul></li>
-<li>interrupt program 执行完毕，<code>POP Rk</code> 将 register file
-恢复到之前的状态。</li>
-<li><code>RETI</code> 指令 (RETurn from Interrupt)，<code>POP</code>
-flag register 并 <code>POP</code> program counter。</li>
-</ul>
 <p><br></p>
 <h2 id="memory-hierarchy">Memory Hierarchy</h2>
 <p>memory 一直是性能瓶颈的主要来源。memory hierarchy
@@ -642,6 +619,73 @@ byte-level 或 bit-level striping，读取一个 block 需要访问所有磁盘)
 </ul>
 <p>关于 SSD (Solid State Disks/Drives, 固态硬盘/驱动器)。与 HDD
 相比，I/O 效率，访问速率都高，耗能少，耐久高。</p>
+<p><br></p>
+<h2 id="input-and-output">Input and Output</h2>
+<p>关于 I/O。</p>
+<p>学到这里越来越发现计组知识本身不难，关键在于找到其中的逻辑联系。可惜的是，课件中所展现出来的逻辑非常的
+unorganized
+(我本来想说课件简直是答辩，但其实它对于知识的描述和总结是很详实的，还是有其可取之处)。</p>
+<p>开场陈述：<strong>I/O Modules</strong> 可视作是<strong>外部设备
+(External Devices, aka Peripherals)</strong> 的接口；CPU (aka processor)
+通过和 I/O Modules 交互对外部设备进行操纵。</p>
+<p>CPU - I/O Modules interactions (direct)。</p>
+<ul>
+<li>CPU 通过读写 I/O Modules 中的两种 registers 来完成交互。
+<ul>
+<li><strong>The Control and Status Register</strong> <code>CSR</code> -
+存储了外部设备的状态信息 (读)，对外部设备的操作 (写)，可分散在同一个
+register 的多个 bits 中。</li>
+<li><strong>The Data Register</strong> -
+存储了其他数据，例如向外部设备的输入等 (读/写)。使用了 Data Buffering
+机制的 Data Register 常被称为 Buffer Register <code>BR</code>。</li>
+</ul></li>
+<li>I/O Modules 的种类。
+<ul>
+<li><strong>Port-mapped I/O</strong>。I/O Modules 中的 registers (如
+<code>CSR</code>, <code>BR</code>) 作为独立的 dedicated I/O ports
+的一部分，CPU 需要通过特定的指令对它们进行访问。</li>
+<li><strong>Memory-mapped I/O</strong>。I/O Modules 中的 registers 是
+memory map 的一部分，CPU 能通过普通的 memory read/write
+指令直接访问。</li>
+</ul></li>
+</ul>
+<p>CPU - External Devices interactions (indirect)；有三种交互方式。</p>
+<p><strong>Programmed I/O</strong>。特征是 CPU 在空循环中等待 External
+Device 完成 I/O operations。以 read operation 为例：</p>
+<ul>
+<li>CPU 向 I/O Modules 中的 <code>CSR</code> 发送一个 read 命令。</li>
+<li>CPU 从 <code>CSR</code> 中获取外部设备的状态。</li>
+<li>OK ? 从 <code>BR</code> 中读取数据 : 返回第二步继续循环。</li>
+</ul>
+<p><strong>Interrupt-Driven I/O</strong>。减轻 Programmed I/O 的 CPU
+资源浪费。[见 Chapter 9 Input and Output pp.16-20]
+这里只讲几个值得注意的细节。</p>
+<ul>
+<li>CPU 收到 interrupt signal
+后并不立即悬置程序，而是在当前指令执行完毕后再转向 interrupt
+attention。这是为了减少需要保存的 register 数量。</li>
+<li>需要保存到栈中的 registers：
+<ul>
+<li><strong>Processor Status Word</strong> <code>PSW</code>, aka flag
+register，即前一个 ALU 的 result。当下一个指令是 branch
+时将会用到这个值。</li>
+<li>Program Counter <code>PC</code>。</li>
+<li>所有在 interrupt routine 中被用到的 registers，在使用之前都将被 push
+到栈中进行保存。</li>
+</ul></li>
+<li>interrupt routine 的最后一个指令是 <strong>Return from
+Interrupt</strong> <code>RETI</code>，它将会恢复 <code>PSW</code>,
+<code>PC</code> 与所有备份在栈中的 registers (in a reverse order that
+they were saved)。</li>
+</ul>
+<p><strong>Direct Memory Access (DMA)</strong>。在 I/O Modules 中引入
+<strong>Input-Output Processor (IOP)</strong>。它无需 CPU
+的直接干预，能够直接访问 memory。需要解决的问题是 IOP 与 CPU
+的冲突：例如，它们需要同时访问同一块 memory。</p>
+<p>引入 Cycle Stealing (周期挪用) 机制。即 IOP 向 CPU 发送信号请求 CPU
+将 memory bus 的占用解除；如果 CPU 接下来的 cycle 无需访问
+memory，它将同意请求，IOP 则会取得 memory bus 的控制。IOP
+每次请求通常只占用一个或几个 cycles。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
@@ -840,6 +884,15 @@ Architecture (10th edition)</em></p>
 
 
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
 
 <script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/02/05/COMP2120-1/"}</script>
 <script>
@@ -855,15 +908,6 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
