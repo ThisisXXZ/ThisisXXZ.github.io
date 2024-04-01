@@ -35,8 +35,9 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/AC-3.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/alpha-beta.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/bellman.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/HMM.png">
 <meta property="article:published_time" content="2024-01-12T07:29:57.000Z">
-<meta property="article:modified_time" content="2024-03-22T09:02:22.740Z">
+<meta property="article:modified_time" content="2024-04-01T11:26:49.716Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="AI &amp; ML">
 <meta name="twitter:card" content="summary">
@@ -174,7 +175,7 @@
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#uninformed-search"><span class="nav-number">1.</span> <span class="nav-text">Uninformed Search</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#informed-search"><span class="nav-number">2.</span> <span class="nav-text">Informed Search</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#constraint-satisfaction-problem-i"><span class="nav-number">3.</span> <span class="nav-text">Constraint Satisfaction
 Problem I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#constraint-satisfaction-problem-ii"><span class="nav-number">4.</span> <span class="nav-text">Constraint Satisfaction
-Problem II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#search-with-other-agents-i"><span class="nav-number">5.</span> <span class="nav-text">Search with Other Agents I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#search-with-other-agents-ii"><span class="nav-number">6.</span> <span class="nav-text">Search with Other Agents II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#markov-decision-processes"><span class="nav-number">7.</span> <span class="nav-text">Markov Decision Processes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reinforcement-learning-i"><span class="nav-number">8.</span> <span class="nav-text">Reinforcement Learning I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reinforcement-learning-ii"><span class="nav-number">9.</span> <span class="nav-text">Reinforcement Learning II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#probability"><span class="nav-number">10.</span> <span class="nav-text">Probability</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#note-reading"><span class="nav-number">11.</span> <span class="nav-text">Note Reading</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">12.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Problem II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#search-with-other-agents-i"><span class="nav-number">5.</span> <span class="nav-text">Search with Other Agents I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#search-with-other-agents-ii"><span class="nav-number">6.</span> <span class="nav-text">Search with Other Agents II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#markov-decision-processes"><span class="nav-number">7.</span> <span class="nav-text">Markov Decision Processes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reinforcement-learning-i"><span class="nav-number">8.</span> <span class="nav-text">Reinforcement Learning I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reinforcement-learning-ii"><span class="nav-number">9.</span> <span class="nav-text">Reinforcement Learning II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#probability"><span class="nav-number">10.</span> <span class="nav-text">Probability</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#markov-models"><span class="nav-number">11.</span> <span class="nav-text">Markov Models</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hidden-markov-models"><span class="nav-number">12.</span> <span class="nav-text">Hidden Markov Models</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#note-reading"><span class="nav-number">13.</span> <span class="nav-text">Note Reading</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">14.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -767,6 +768,147 @@ total mistake lost。某算法在 <span class="math inline">\(k\)</span>
 function。</p>
 <p><br></p>
 <h2 id="probability">Probability</h2>
+<p>对概率论的 recap，只提几个陌生的概念。</p>
+<p>joint distribution <span class="math inline">\(P(A,B,C)\)</span>。</p>
+<ul>
+<li><strong>chain rule</strong>. <span class="math inline">\(P(A,B,C)=P(A)P(B|A)P(C|A,B)\)</span>.</li>
+<li><strong>marginal distribution</strong> 又称 <strong>summing
+out</strong>. <span class="math inline">\(P(A,B)=\sum_{c}P(A,B,C=c)\)</span>​.</li>
+</ul>
+<p>关于 independence。</p>
+<ul>
+<li><span class="math inline">\(A,B\)</span> is independent, <span class="math inline">\(P(A,B)=P(A)P(B)\)</span>.</li>
+<li><span class="math inline">\(A,B\)</span> is <strong>conditionally
+independent</strong> given <span class="math inline">\(C\)</span>, <span class="math inline">\(P(A,B|C)=P(A|C)P(B|C)\)</span>, or equivalently,
+<span class="math inline">\(P(A|C)\)</span><span class="math inline">\(=P(A|B,C)\)</span>. notation <span class="math inline">\(A\perp B|C\)</span>.</li>
+</ul>
+<p>新的模型 - <strong>joint distribution table</strong>。</p>
+<ul>
+<li>所能解决的新问题 - 观察到若干证据 <span class="math inline">\((e_1,...,e_n)\)</span>，结果为 <span class="math inline">\((Q_1,...,Q_m)\)</span>​ 的概率是？</li>
+<li>解决的方式 - <strong>probabilistic inference</strong>, aka
+probabilistic reasoning.</li>
+</ul>
+<p><strong>Inference by Enumeration</strong>. 最 intuitive
+的概率推断方式。给出 joint PDF，模型中的变量分为三类：</p>
+<ul>
+<li>Query variables <span class="math inline">\(Q_i\)</span> -
+未知变量，出现在条件概率 <span class="math inline">\(|\)</span>
+的左侧。</li>
+<li>Evidence variables <span class="math inline">\(e_i\)</span> -
+被观察到的值已知的变量，出现在条件概率 <span class="math inline">\(|\)</span> 的右侧。</li>
+<li>Hidden variables - 在当前问题下无关的变量，需要被 summing out。</li>
+</ul>
+<p>IBE 三步求解 <span class="math inline">\(P(Q_1,...,Q_m|e_1,...,e_n)\)</span>。</p>
+<ul>
+<li>在 joint PDF 中选出所有与 <span class="math inline">\(e\)</span>
+匹配的行。</li>
+<li>Sum out (marginalize) 所有隐变量。</li>
+<li>最后 normalize 得到的 sub table，就能得到要求的概率分布了。</li>
+</ul>
+<p>若共有 <span class="math inline">\(j\)</span> 个变量，每个变量平均有
+<span class="math inline">\(d\)</span> 种取值，IBE 的时空复杂度均为
+<span class="math inline">\(O(d^j)\)</span>。</p>
+<p><br></p>
+<h2 id="markov-models">Markov Models</h2>
+<p>[大量公式注意]</p>
+<p>马尔可夫模型/马尔可夫链。<strong>time-dependent</strong>
+probabilistic model。</p>
+<ul>
+<li><strong>initial distribution</strong> <span class="math inline">\(P(X_0)\)</span>。<span class="math inline">\(t=0\)</span> 时 <strong>state variables</strong>
+(以天气晴/雨为例) 的 PDF。</li>
+<li><strong>transition model</strong> <span class="math inline">\(P(X_{t+1}|X_t)\)</span>​。马尔可夫模型假设该转移模型是固定的
+(stationary assumption) 。</li>
+</ul>
+<p>给出第 <span class="math inline">\(0\)</span>
+天天气的概率分布，与连续两天中天气变化的概率分布，就能求出第 <span class="math inline">\(k\)</span> 天天气的概率分布。</p>
+<p>马尔可夫模型的无记忆性 (<strong>memoryless property</strong>) -
+<strong>Future doesn't depend on Past given Present.</strong> <span class="math display">\[
+X_{i+1}\perp \{X_0,...,X_{i-1}\}|X_i
+\]</span> 因此长为 <span class="math inline">\(n\)</span> 的马尔可夫链的
+joint distribution 是： <span class="math display">\[
+\begin{aligned}
+P(X_0,...,X_{n})&amp;=
+P(X_0)P(X_1|X_0)P(X_2|X_0,X_1)...P(X_{n}|X_0,...,X_{n-1}) \\
+&amp;= P(X_0)P(X_1|X_0)P(X_2|X_1)...P(X_{n}|X_{n-1}) \\
+&amp;= P(X_0) \prod_{i=0}^{n-1}P(X_{i+1}|X_i)
+\end{aligned}
+\]</span> 想要获得第 <span class="math inline">\(k\)</span>
+天天气的概率分布，一个 naive 的方法是求出 <span class="math inline">\(P(X_0,...,X_k)\)</span> 再 marginalize <span class="math inline">\(X_0,...,X_{k-1}\)</span>，但这样效率显然很低 <span class="math inline">\(O(d^k)\)</span>。<strong>Mini-Forward
+Algorithm</strong> 是一种迭代的方法，把复杂度优化至 <span class="math inline">\(O(kd^2)\)</span>。 <span class="math display">\[
+\begin{aligned}
+&amp;i=0\\
+&amp;P(X_{i+1})=\sum_{x_i}P(x_i,X_{i+1})=\sum_{x_i}P(X_{i+1}|x_i)P(x_i)
+\\
+&amp;i\to i+1 \text{ until } i=k
+\end{aligned}
+\]</span> 当 <span class="math inline">\(k\to \infty\)</span> 时，<span class="math inline">\(P(X_k)\)</span>​ 将收敛。我们将该收敛的概率分布称为
+<strong>Stationary
+Distribution</strong>。好消息是，不需要无穷无尽的迭代，我们可以根据性质直接把它解出来。
+<span class="math display">\[
+P(X_{k+1})=P(X_k)=\sum_{x_k}P(X_{k+1}|x_k)P(x_k)
+\]</span> 如果 <span class="math inline">\(X_k\)</span> 有 <span class="math inline">\(d\)</span> 种取值，展开上式可以得到 <span class="math inline">\(d\)</span> 个方程构成的 <span class="math inline">\(d\)</span> 元方程组。再来一个 <span class="math inline">\(\sum_{x_k} P(x_k)=1\)</span>，可以轻松解得
+stationary distribution <span class="math inline">\(P(X_k)\)</span>。</p>
+<p><br></p>
+<h2 id="hidden-markov-models">Hidden Markov Models</h2>
+<p>前一个例子里，天气作为 state 是一望而知的；但现实生活中大部分 state
+都是无法被直接观测到的，我们只能观测到与其有关的一些线索
+(evidence)。还是拿天气为例吧；但现在我们生活在柏拉图所说的洞穴里，无法直接观测到天气，只能看到火光映照出的影子有没有打伞。</p>
+<figure>
+<img data-src="HMM.png" alt="有没有觉得有点像 RNN?">
+<figcaption aria-hidden="true">有没有觉得有点像 RNN?</figcaption>
+</figure>
+<p>在马尔可夫模型的基础上，引入 <strong>evidence variables</strong>
+<span class="math inline">\(E_t\)</span>​ 就得到了隐马尔可夫模型
+(HMM)。</p>
+<ul>
+<li>initial distribution <span class="math inline">\(P(X_0)\)</span>。</li>
+<li>transition model <span class="math inline">\(P(X_{t+1}|X_t)\)</span>。</li>
+<li><strong>emission/sensor model</strong> <span class="math inline">\(P(E_t|X_t)\)</span>。隐马尔可夫模型同样假设
+emission model 是固定的。</li>
+</ul>
+<p>隐马尔可夫的无记忆性体现在 <span class="math inline">\(X_t\)</span>
+与 <span class="math inline">\(E_t\)</span> 两种变量上： <span class="math display">\[
+X_{i+1}\perp \{X_0,...,X_{i-1},E_1,...,E_i\}|X_i, \  E_{i+1}\perp
+\{X_0,...,X_i,E_1,...,E_i\}|X_{i+1}
+\]</span> 套到例子里，就是第 <span class="math inline">\(k\)</span>
+天的天气只与第 <span class="math inline">\(k-1\)</span> 天有关，第 <span class="math inline">\(k\)</span> 天打不打伞只与当天的天气有关。</p>
+<p>定义第 <span class="math inline">\(k\)</span> 天的 <strong>belief
+distribution</strong> <span class="math inline">\(B(X_k)\)</span> 为：
+<span class="math display">\[
+B(X_k)=P(X_k|e_1,...,e_{k})
+\]</span> 类似的有 <span class="math inline">\(B&#39;(X_k)\)</span>：
+<span class="math display">\[
+B&#39;(X_k)=P(X_k|e_1,...,e_{k-1})
+\]</span> 这里的定义很贝叶斯学派，对第 <span class="math inline">\(k\)</span> 天会不会下雨的 belief
+会根据观察到的线索而改变。<span class="math inline">\(B&#39;(X_k)\)</span> 与 <span class="math inline">\(B(X_k)\)</span> 是我们在观测到第 <span class="math inline">\(k\)</span> 天的线索 <span class="math inline">\(e_k\)</span> 前后对当天天气的 belief，从 <span class="math inline">\(B&#39;(X_k)\)</span> 到 <span class="math inline">\(B(X_k)\)</span> 的修正被称为 <strong>observation
+update</strong>。</p>
+<p>把 <span class="math inline">\(B(X_k)\)</span>
+按照条件概率的定义展开： <span class="math display">\[
+\begin{aligned}
+B(X_k)&amp;=P(X_k|e_1,...,e_k)\\
+&amp;=\frac{P(X_k,e_{k}|e_1,...,e_{k-1})}{P(e_k|e_1,...,e_{k-1})} \\
+&amp;\propto P(X_k,e_k|e_1,...,e_{k-1})\\
+&amp;= P(e_k|X_k,e_1,...,e_{k-1})P(X_k|e_1,...,e_{k-1})\\
+&amp;=P(e_k|X_k)B&#39;(X_k)
+\end{aligned}
+\]</span> 这就是 observation update 的方式了。由于分母 <span class="math inline">\(P(e_k|e_1,...,e_{k-1})\)</span>
+是常数而非概率分布，所以能够应用 <strong>delay normalization</strong> 的
+trick。因为 <span class="math inline">\(\sum_{x_k}
+B(X_k)=1\)</span>，先计算 <span class="math inline">\(P(e_k|X_k)B&#39;(X_k)\)</span>，最后再
+normalize。</p>
+<p>把 <span class="math inline">\(B&#39;(X_k)\)</span> 向前展开： <span class="math display">\[
+\begin{aligned}
+B&#39;(X_k)&amp;=\sum_{x_{k-1}}P(X_k,x_{k-1}|e_1,...,e_{k-1})\\
+&amp;=\sum_{x_{k-1}}P(X_k|x_{k-1},e_1,...,e_{k-1})P(x_{k-1}|e_1,...,e_{k-1})\\
+&amp;= \sum_{x_{k-1}} P(X_k|x_{k-1})B(x_{k-1})
+\end{aligned}
+\]</span> 这样从 <span class="math inline">\(B(X_{k-1})\)</span> 到
+<span class="math inline">\(B&#39;(X_k)\)</span>​ 的更新是根据 transition
+model 来的，被称为 <strong>time elapse update</strong>。</p>
+<p>把上面两个式子合起来，就得到了求 belief distribution <span class="math inline">\(B\)</span> 的迭代算法 <strong>Forward
+Algorithm</strong>。核心式子是： <span class="math display">\[
+B(X_k)\propto P(e_k|X_k)\sum_{x_{k-1}}P(X_k|x_{k-1})B(x_{k-1})
+\]</span></p>
 <p><br></p>
 <h2 id="note-reading">Note Reading</h2>
 <p>本节课课件内容的绝大部分是从 Berkeley CS188
@@ -794,7 +936,10 @@ II</a></li>
 I</a></li>
 <li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note10.pdf">RL
 II</a></li>
-<li>[unchecked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note11.pdf">Probability</a></li>
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note11.pdf">Probability</a></li>
+<li>[not in scope] Bayesian Networks, Decision Networks &amp; VPI</li>
+<li>[unchecked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note17.pdf">Hidden
+Markov Models</a></li>
 </ul>
 <p><br></p>
 <h2 id="reference">Reference</h2>
@@ -1005,6 +1150,15 @@ don't we use expectimax to solve MDPs?</a></li>
 
 
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
 
 <script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/01/12/COMP3270-1/"}</script>
 <script>
@@ -1020,15 +1174,6 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
