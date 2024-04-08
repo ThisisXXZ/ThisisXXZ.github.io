@@ -204,11 +204,13 @@ for dbt Core from a manual install</a>.</p>
 <p>[资料 2] - <a href="https://www.zhihu.com/column/c_1534619234272804865">echo
 的前端口袋 - 从 dbt core 基础到 dbt cloud 实现自动化</a>。</p>
 <p>[资料 3] - <a href="https://docs.getdbt.com/guides/bigquery?step=5">Connect dbt to
-BigQuery</a>. 难度很大的 GUI 类型 sample。</p>
+BigQuery</a>. 难度很大的 GUI 类型 sample (完成！第一次为 project
+贡献了代码)。</p>
 <ul>
 <li>(initialization) 用 playwright 自动化 dbt cloud 的登录
 (输入账户，密码，点击登录)。</li>
-<li>(evaluation) 用 dbt cloud CLI 评测项目的连接情况。</li>
+<li>(evaluation) 用 <a href="https://pypi.org/project/dbt-cloud-cli/">dbt-cloud CLI</a>
+评测项目的连接情况。</li>
 </ul>
 <p><br></p>
 <h2 id="常用命令">常用命令</h2>
@@ -2699,6 +2701,86 @@ vertices，<span class="math inline">\(n(n-1)/2\)</span> 条边。</li>
 Bipartite Graphs) 有 <span class="math inline">\(nm\)</span>​ 条边。</li>
 <li>二分图检查 - 节点黑白染色，相邻节点颜色不同。</li>
 </ul></li>
+</ul>
+<p><br></p>
+<h2 id="lecture-16">Lecture 16</h2>
+<p>一些杂七杂八的概念，包括图的匹配 (matching) 与衍生出的霍尔婚配定理
+(<strong>Hall's Marriage Theorem</strong>)，图的连通性和强连通分量
+(<strong>Strong Connected Components</strong>)。</p>
+<p>简单图的匹配 (Matching <span class="math inline">\(M\)</span> in a
+simple graph) 是一个边集，其中任意两条边都不共点 (no two edges are
+<strong>incident</strong> with the same vertex)。</p>
+<ul>
+<li><strong>Maximal</strong> Matching <span class="math inline">\(M\)</span>。极大匹配，无法再加入新边。</li>
+<li><strong>Maximum</strong> Matching <span class="math inline">\(M_m\)</span>。最大匹配，cardinality <span class="math inline">\(|M_m|\)</span>
+是所有匹配中最大的。最大匹配一定是极大匹配，极大匹配不一定是最大匹配。</li>
+</ul>
+<p>二分图完美匹配 (匈牙利算法，网络流 - 过去的记忆袭击了我)。二分图
+<span class="math inline">\((V_1,V_2)\)</span> 从 <span class="math inline">\(V_1\)</span> 到 <span class="math inline">\(V_2\)</span> 的完美匹配 (Complete Matching aka
+<strong>Perfect Matching</strong> from <span class="math inline">\(V_1\)</span> to <span class="math inline">\(V_2\)</span>) 指的是包含所有 <span class="math inline">\(V_1\)</span> 的匹配；因此有性质 <span class="math inline">\(|M|=|V_1|\)</span>​。</p>
+<p>霍尔婚配定理 (Hall's Marriage Theorem)。二分图 <span class="math inline">\((V_1,V_2)\)</span> 有从 <span class="math inline">\(V_1\)</span> 到 <span class="math inline">\(V_2\)</span>
+的完美匹配<strong>当且仅当</strong>对于所有 <span class="math inline">\(A\subseteq V_1\)</span>，都有 <span class="math inline">\(|N(A)|\geq |A|\)</span>，其中 <span class="math inline">\(N(A)\)</span> 定义为 <span class="math inline">\(A\)</span> 的邻接点 (二分图中显然有 <span class="math inline">\(N(A)\subseteq V_2\)</span>​)。</p>
+<ul>
+<li>(If prove) Strong Induction -
+两个完美匹配合成一个更大的完美匹配。(Only if prove) -
+鸽巢原理反证。</li>
+<li>[Lecture.16 pp.11] Denomination 作为 <span class="math inline">\(V_1\)</span>，牌堆作为 <span class="math inline">\(V_2\)</span>。对于任何 <span class="math inline">\(A\subseteq V_1\)</span>，<span class="math inline">\(\min(N(A))=4/4=1\)</span>。根据霍尔定理，一定存在完美匹配。</li>
+</ul>
+<p>关于子图。</p>
+<ul>
+<li>子图 (Subgraph) 与真子图 (Proper Subgraph)。<span class="math inline">\(G\)</span> 删边形成的图 <span class="math inline">\(G&#39;\)</span> 均为子图。</li>
+<li>导出子图 (<strong>Induced Subgraph</strong>)。<span class="math inline">\(G\)</span> 删点形成的图 <span class="math inline">\(G&#39;\)</span>
+均为导出子图。导出子图一定是子图，子图不一定是导出子图。</li>
+<li>边缩 (<strong>Edge
+Contractions</strong>)。删掉某条边并把该边的两个顶点缩成一个。</li>
+</ul>
+<p>关于路径 (Path) 与回路 (circuit or
+cycle)。简单路径/回路指的是相同边最多出现一次。</p>
+<p>无向图的连通性。</p>
+<ul>
+<li>无向图的连通性。对于任意 <span class="math inline">\(u,v\in
+V\)</span>，存在一条 <span class="math inline">\(u-v\)</span>​
+路径。</li>
+<li>无向图 <span class="math inline">\(G\)</span> 的<strong>极大连通子图
+(maximal connected subgraph)</strong> <span class="math inline">\(H\)</span> 称为<strong>连通块/连通分量 (connected
+component)</strong>。若 <span class="math inline">\(G\)</span>
+有两个以上的连通块，它一定是不连通的。</li>
+<li>割点 (<strong>Cut vertex, aka articulation point</strong>) 与桥
+(<strong>Cut edge aka
+bridge</strong>)。删去后使图不连通。类似的，有点割集 (<strong>vertex
+cut/separating set</strong>) 与边割集 (<strong>edge cut</strong>)。</li>
+</ul>
+<p>有向图的连通性。</p>
+<ul>
+<li>有向图是强连通 (<strong>strongly connected</strong>) 的，当对于任意
+<span class="math inline">\(u,v\in V\)</span>，存在 <span class="math inline">\(u\to v\)</span> 与 <span class="math inline">\(v\to u\)</span> 路径。</li>
+<li>有向图是弱连通 (<strong>weakly connected</strong>) 的，当它的
+underlying 无向图是连通的。</li>
+<li>有向图 <span class="math inline">\(G\)</span>
+的<strong>极大强连通子图 (maximal strongly connected subgraph)</strong>
+<span class="math inline">\(H\)</span> 被称为<strong>强连通块/强连通分量
+(strongly connected components)</strong>。若 <span class="math inline">\(G\)</span>
+有两个以上的强连通分量，它一定不是强连通的。</li>
+</ul>
+<p>关于图的连通度。</p>
+<ul>
+<li>点连通度 (<strong>Vertex Connectivity</strong>)。非完全图 <span class="math inline">\(G\)</span> 的点联通度 <span class="math inline">\(\kappa(G)\)</span> 定义为其最小点割集的
+cardinality。当 <span class="math inline">\(\kappa(G)\geq k\)</span>
+时，我们说 <span class="math inline">\(G\)</span> 是 <span class="math inline">\(k\)</span>-连通 (<span class="math inline">\(k\)</span>​​-connected) 的。</li>
+<li>完全图 <span class="math inline">\(K_n\)</span> 是没有点割集的，定义
+<span class="math inline">\(\kappa(K_n)=n-1\)</span>。定义单点图 <span class="math inline">\(K_1\)</span> 与非连通图的 <span class="math inline">\(\kappa(G)=0\)</span>。</li>
+<li>边连通度 (<strong>Edge Connectivity</strong>)。图 <span class="math inline">\(G\)</span> (这里没有完全/非完全的限制) 的边连通度
+<span class="math inline">\(\lambda(G)\)</span> 定义为其最小边割集的
+cardinality。</li>
+<li>完全图 <span class="math inline">\(K_n\)</span> 有边割集且 <span class="math inline">\(\lambda(K_n)=n-1\)</span>。特殊定义单点图 <span class="math inline">\(K_1\)</span> 与非连通图的 <span class="math inline">\(\lambda(G)=0\)</span>​。</li>
+</ul>
+<p>连通度关系 <span class="math inline">\(\kappa(G)\leq \lambda(G)\leq
+\min_{v\in V}\text{deg}(v)\)</span>。</p>
+<ul>
+<li>第二个 <span class="math inline">\(\leq\)</span>：总可以删掉度数最小的点的所有邻边。</li>
+<li>第一个 <span class="math inline">\(\leq\)</span>：一定能保证至多删去
+<span class="math inline">\(\lambda(G)\)</span> 个点就能使得图不连通 -
+删去边割集中每座桥的一个顶点。</li>
 </ul>
 <p><br></p>
 <h2 id="reference">Reference</h2>
