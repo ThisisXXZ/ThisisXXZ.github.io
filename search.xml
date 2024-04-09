@@ -156,6 +156,128 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
+    <title>机器学习之叁：PCA 与 LDA</title>
+    <url>/2024/04/09/machine-learning-3/</url>
+    <content><![CDATA[<p>准备写这篇笔记的时候正好刷到了 MeAqua 的<a href="https://www.bilibili.com/video/BV1kM4m1Q73k/?share_source=copy_web&amp;vd_source=26439628a7917defefc1510b4d8e41fa">突击联动录播</a>。记忆的锚点一瞬展开；我恍惚看向窗外，对面是五年前那个狭小的出租屋，夏日午后的阳光斜斜照在书桌上。摆头的风扇，被手机压住的试卷的边角不时被吹起。耳边传来的还是那么令人安心的吵闹嬉笑声，但那个抱着屏幕傻笑的少年已经不见踪影。</p>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="feature-extraction">Feature Extraction</h2>
+<p>区分两个概念：Feature <strong>Extraction</strong> 与 Feature
+<strong>Selection</strong>。</p>
+<p>两者都属于 Dimensionality Reduction
+的范畴，但前者将自动把数据投影到一个全新的特征空间，后者通常需要特征工程的参与
+(人为的设计特征的选取方案)，保留大量原有的特征。</p>
+<p>接下来介绍的 PCA 与 LDA，都属于 Feature Extraction 的算法。</p>
+<p><br></p>
+<h2 id="principal-component-analysis">Principal Component Analysis</h2>
+<p>(研究了一天。线代不好地动山摇) Pre-requisite:</p>
+<ul>
+<li>协方差矩阵 (<strong>Covariance Matrix</strong>)</li>
+<li>简单的矩阵求导 (Derivative of a Matrix)
+<ul>
+<li><span class="math inline">\(\frac{d}{dx} Ax=A\)</span></li>
+<li><span class="math inline">\(\frac{d}{dx} x^T Ax=2Ax\)</span></li>
+</ul></li>
+<li>拉格朗日乘子法 (Lagrange Multiplier)</li>
+</ul>
+<p>PCA 的目的是在 <span class="math inline">\(d\)</span>
+维特征空间中找到 <span class="math inline">\(k\)</span> (<span class="math inline">\(k&lt;&lt;d\)</span>) 个单位正交基 <span class="math inline">\(\{u_1,u_2,...,u_k\}\)</span>，使得投影到这 <span class="math inline">\(k\)</span> 维空间的数据点的方差最大。这能够实现由
+<span class="math inline">\(d\)</span> 到 <span class="math inline">\(k\)</span>​ 降维的同时，尽可能的保留较多的信息
+(方差越大，熵越大)。</p>
+<p>Shape 参考表：</p>
+<ul>
+<li>列向量 <span class="math inline">\(x_n:d\times 1\)</span>。​</li>
+<li>列向量 <span class="math inline">\(u_j:d\times 1\)</span>。​</li>
+<li>协方差矩阵 <span class="math inline">\(S:d\times d\)</span>，其中
+<span class="math inline">\(S_{i,j}\)</span> 是第 <span class="math inline">\(i\)</span> 维与第 <span class="math inline">\(j\)</span>​ 维间的协方差。</li>
+<li>主成分矩阵/转换矩阵/降维矩阵/投影矩阵 <span class="math inline">\(\mathbf{U}=\{u_1,u_2,...,u_k\}:d\times
+k\)</span>。</li>
+</ul>
+<p>由于 <span class="math inline">\(\{u_1,u_2,...,u_k\}\)</span>
+是单位正交基，第 <span class="math inline">\(n\)</span> 个数据 <span class="math inline">\(x_n\)</span> 在第 <span class="math inline">\(j\)</span> 个基上的投影是 <span class="math inline">\(u_j^{T}x_n\)</span>。那么数据集在第 <span class="math inline">\(j\)</span> 维的方差是： <span class="math display">\[
+\begin{aligned}
+\frac{1}{N} \sum_{n=1}^{N} (u_j^{T}x_n-u_j^{T}\overline{x})^2
+&amp;=\frac{1}{N}\sum_{n=1}^N[u_j^T (x_n-\overline{x})]^2\\
+&amp;=\frac{1}{N}\sum_{n=1}^N u_j^T
+(x_n-\overline{x})(x_n-\overline{x})^T u_j\\
+&amp;=u_j^{T}[\frac{1}{N}(x_n-\overline{x})(x_n-\overline{x})^T]u_j \\
+&amp;= u_j^T Su_j
+\end{aligned}
+\]</span> 建立最优化模型：求一系列 <span class="math inline">\(\mathbf{U}=\{u_1,u_2,...,u_k\}\)</span>，使得：
+<span class="math display">\[
+\max f(\{u_1,u_2,...,u_k\})=\sum_{j=1}^k u_j^T Su_j \ \ s.t. \ \
+u_j^Tu_j=1
+\]</span> 对每一维应用拉格朗日乘子，在第 <span class="math inline">\(j\)</span> 维有： <span class="math display">\[
+\begin{aligned}
+\frac{df}{du_j}+\lambda_j(1-u_j^Tu_j)&amp;=0 \\
+2Su_j-2\lambda_j u_j&amp;=0 \\
+Su_j&amp;=\lambda_ju_j
+\end{aligned}
+\]</span> 等等，这不是我们熟悉的 Eigen Decomposition 吗？这么看来，<span class="math inline">\(u_j\)</span> 是协方差矩阵 <span class="math inline">\(S\)</span> 的一个特征向量，<span class="math inline">\(\lambda_j\)</span> 是它对应的特征值。把所有 <span class="math inline">\(k\)</span> 维都考虑进来，写成矩阵形式： <span class="math display">\[
+\begin{bmatrix} | &amp; | &amp;{...}&amp;| \\
+Su_1 &amp; Su_2 &amp;{...}&amp; Su_k \\
+|&amp;|&amp;{...}&amp;|\end{bmatrix}=
+\begin{bmatrix} | &amp; | &amp;{...}&amp;| \\
+\lambda_1 u_1 &amp; \lambda_2u_2&amp;{...}&amp; \lambda_k u_k \\
+| &amp; | &amp;{...}&amp; |\end{bmatrix}
+\]</span> 左右两个矩阵的 shape 都是 <span class="math inline">\(d\times
+k\)</span>。同时左乘一个 <span class="math inline">\(\mathbf{U}^T\)</span>，有： <span class="math display">\[
+\begin{aligned}
+\begin{bmatrix}-&amp;u_1&amp;-\\
+-&amp;u_2&amp;-\\
+-&amp;:&amp;-\\
+-&amp;u_k&amp;-\end{bmatrix}\begin{bmatrix} | &amp; | &amp;{...}&amp;|
+\\
+Su_1 &amp; Su_2 &amp;{...}&amp; Su_k \\
+|&amp;|&amp;{...}&amp;|\end{bmatrix}&amp;=
+\begin{bmatrix}-&amp;u_1&amp;-\\
+-&amp;u_2&amp;-\\
+-&amp;:&amp;-\\
+-&amp;u_k&amp;-\end{bmatrix}
+\begin{bmatrix} | &amp; | &amp;{...}&amp;| \\
+\lambda_1 u_1 &amp; \lambda_2u_2&amp;{...}&amp; \lambda_k u_k \\
+| &amp; | &amp;{...}&amp; |\end{bmatrix} \\
+\sum_{j=1}^k u_j^TSu_j&amp;=\sum_{j=1}^k \lambda_j u_j^Tu_j \ \ s.t. \ \
+u_j^Tu_j=1 \\
+\sum_{j=1}^k u_j^TSu_j&amp;=\lambda_1+\lambda_2+{...}+\lambda_k
+\end{aligned}
+\]</span>
+对比一下上面我们建立的最优化模型：等式左边不就是我们要求最大化的项吗？</p>
+<p>转化过后，这个问题就很好解决了：特征分解协方差矩阵 <span class="math inline">\(S\)</span>
+后，再做单位正交化；从大到小排序所有特征值，取前 <span class="math inline">\(k\)</span> 个，就获得了 <span class="math inline">\(\{\lambda_1,\lambda_2,...,\lambda_k\}\)</span>。这
+<span class="math inline">\(k\)</span>
+个特征值对应的单位正交特征向量，就是要求的 <span class="math inline">\(\mathbf{U}=\{u_1,u_2,...,u_k\}\)</span>​。</p>
+<p>用计算好的主成分矩阵乘上原 <span class="math inline">\(d\)</span>
+维数据集 <span class="math inline">\(\mathbf{U}^T
+\mathbf{X}\)</span>，就得到了降到 <span class="math inline">\(k\)</span>
+维的，且方差最大的新数据集。</p>
+<p><br></p>
+<h2 id="linear-discriminant-analysis">Linear Discriminant Analysis</h2>
+<p>PCA 是 unsupervised 的降维算法，LDA 则需要得到数据的 labels。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info: COMP3314. Lecturer: Prof. Yizhou Yu.</p>
+<p>Course textbook: Mathematics for Machine Learning. M. Deisenroth, A.
+Faisal &amp; C.Ong.</p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>Mathematics</tag>
+        <tag>AI &amp; ML</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Re：从零开始的打标注生活</title>
     <url>/2024/03/31/spider-2/</url>
     <content><![CDATA[<p>这个学期开始在实验室打杂了。遇到一个愿意手把手带本科生的 PhD
@@ -5825,7 +5947,7 @@ Theorem) - John Liu</a>.</li>
       </tags>
   </entry>
   <entry>
-    <title>Nand2Tetris I, Hebrew University - Computer Architecture</title>
+    <title>Nand2Tetris I - Computer Architecture</title>
     <url>/2023/09/24/nand2tetris-3/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
 <p>The computer that will emerge from this project will be as simple as
@@ -6042,7 +6164,7 @@ Principles.</a></p>
 ]]></content>
       <categories>
         <category>笔记 (归档)</category>
-        <category>From NAND to Tetris, HUJI</category>
+        <category>From NAND to Tetris, HebrewU</category>
       </categories>
       <tags>
         <tag>Computer Architecture</tag>
@@ -6848,7 +6970,7 @@ if not specified.</p>
       </tags>
   </entry>
   <entry>
-    <title>Nand2Tetris I, Hebrew University - Machine Language</title>
+    <title>Nand2Tetris I - Machine Language</title>
     <url>/2023/09/14/nand2tetris-2/</url>
     <content><![CDATA[<p>(胡言乱语时刻)
 学习的越深入，越感觉到计算机真是神的造物；阴与阳，黑与白，假与真，0 与
@@ -7116,7 +7238,7 @@ Principles.</a></p>
 ]]></content>
       <categories>
         <category>笔记 (归档)</category>
-        <category>From NAND to Tetris, HUJI</category>
+        <category>From NAND to Tetris, HebrewU</category>
       </categories>
       <tags>
         <tag>Programming Languages</tag>
@@ -7124,7 +7246,7 @@ Principles.</a></p>
       </tags>
   </entry>
   <entry>
-    <title>Nand2Tetris I, Hebrew University - ALU &amp; Memory</title>
+    <title>Nand2Tetris I - ALU &amp; Memory</title>
     <url>/2023/09/06/nand2tetris-1/</url>
     <content><![CDATA[<p>这门课将带领我们使用普通的与非门 (NAND gate) 从零开始搭建一个完整的
 general-purpose
@@ -7435,7 +7557,7 @@ Principles.</a></p>
 ]]></content>
       <categories>
         <category>笔记 (归档)</category>
-        <category>From NAND to Tetris, HUJI</category>
+        <category>From NAND to Tetris, HebrewU</category>
       </categories>
       <tags>
         <tag>Computer Architecture</tag>
@@ -8036,7 +8158,7 @@ Training</h2>
       </tags>
   </entry>
   <entry>
-    <title>COMP3357 notes P3 - Hard Problems</title>
+    <title>加密学之叁 - Hard Problems</title>
     <url>/2023/06/05/COMP3357-3/</url>
     <content><![CDATA[<p>COMP3357 digest 的 P3 部分，主要介绍密码学中的几个困难问题 (hard
 problems) 与一个重要的 cryptographic primitive: 单向函数 (one-way
@@ -8380,7 +8502,7 @@ if not specified.</p>
       </tags>
   </entry>
   <entry>
-    <title>COMP3357 notes P2 - Group &amp; Number Theory</title>
+    <title>加密学之贰 - Group &amp; Number Theory</title>
     <url>/2023/06/02/COMP3357-2/</url>
     <content><![CDATA[<p>COMP3357 digest 的 P2 部分，主要介绍群论 (group theory)，数论 (number
 theory) 的相关知识以及它们在加密学中的应用。</p>
@@ -8803,7 +8925,7 @@ if not specified.</p>
       </tags>
   </entry>
   <entry>
-    <title>COMP3357 notes P1 - Cryptographic Primitives</title>
+    <title>加密学之壹 - Cryptographic Primitives</title>
     <url>/2023/06/02/COMP3357-1/</url>
     <content><![CDATA[<p>这一学期糊里糊涂选到了 CS 的高阶课
 COMP3357，虽然死了很多脑细胞，但是学到了很多。加密学很有意思，Ravi
