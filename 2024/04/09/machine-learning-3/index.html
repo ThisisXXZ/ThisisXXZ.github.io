@@ -33,7 +33,7 @@
 <meta property="og:description" content="准备写这篇笔记的时候正好刷到了 MeAqua 的突击联动录播。记忆的锚点一瞬展开；我恍惚看向窗外，对面是五年前那个狭小的出租屋，夏日午后的阳光斜斜照在书桌上。摆头的风扇，被手机压住的试卷的边角不时被吹起。耳边传来的还是那么令人安心的吵闹嬉笑声，但那个抱着屏幕傻笑的少年已经不见踪影。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-04-09T02:44:29.000Z">
-<meta property="article:modified_time" content="2024-04-09T16:35:06.157Z">
+<meta property="article:modified_time" content="2024-04-10T03:52:26.610Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Mathematics">
 <meta property="article:tag" content="AI &amp; ML">
@@ -386,10 +386,16 @@ k\)</span>。</li>
 &amp;=\frac{1}{N}\sum_{n=1}^N[u_j^T (x_n-\overline{x})]^2\\
 &amp;=\frac{1}{N}\sum_{n=1}^N u_j^T
 (x_n-\overline{x})(x_n-\overline{x})^T u_j\\
-&amp;=u_j^{T}[\frac{1}{N}(x_n-\overline{x})(x_n-\overline{x})^T]u_j \\
+&amp;=u_j^{T}[\frac{1}{N}\sum_{n=1}^N(x_n-\overline{x})(x_n-\overline{x})^T]u_j
+\\
 &amp;= u_j^T Su_j
 \end{aligned}
-\]</span> 建立最优化模型：求一系列 <span class="math inline">\(\mathbf{U}=\{u_1,u_2,...,u_k\}\)</span>，使得：
+\]</span> 在代码实现中，常常先对 <span class="math inline">\(\mathbf{X}\)</span> 应用 standardization 得到
+<span class="math inline">\(\mathbf{X}&#39;\)</span>，这里就可以直接使用
+<span class="math inline">\(\frac{1}{N}\sum x_n&#39;
+x_n&#39;^{T}\)</span> 构建协方差矩阵。标准化的另一个好处是消除 PCA
+对均值的敏感性。</p>
+<p>建立最优化模型：求一系列 <span class="math inline">\(\mathbf{U}=\{u_1,u_2,...,u_k\}\)</span>​，使得：
 <span class="math display">\[
 \max f(\{u_1,u_2,...,u_k\})=\sum_{j=1}^k u_j^T Su_j \ \ s.t. \ \
 u_j^Tu_j=1
@@ -435,11 +441,55 @@ u_j^Tu_j=1 \\
 个特征值对应的单位正交特征向量，就是要求的 <span class="math inline">\(\mathbf{U}=\{u_1,u_2,...,u_k\}\)</span>​。</p>
 <p>用计算好的主成分矩阵乘上原 <span class="math inline">\(d\)</span>
 维数据集 <span class="math inline">\(\mathbf{U}^T
-\mathbf{X}\)</span>，就得到了降到 <span class="math inline">\(k\)</span>
-维的，且方差最大的新数据集。</p>
+\mathbf{X}\)</span>，就得到了降到 <span class="math inline">\(k\)</span>​​
+维且方差最大的新数据集。</p>
+<p>代码实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line"></span><br><span class="line">X, y = df_wine.iloc[:, <span class="number">1</span>:].values, df_wine.iloc[:, <span class="number">0</span>].values</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.3</span>, stratify=y)</span><br><span class="line"></span><br><span class="line"><span class="comment"># step 1: standardization</span></span><br><span class="line">scaler = StandardScaler()</span><br><span class="line">X_train_std = scaler.fit_transform(X_train)</span><br><span class="line">X_test_std = scaler.fit_transform(X_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># step 2: construct the covariance matrix</span></span><br><span class="line">cov_mat = np.cov(X_train_std.T)</span><br><span class="line"></span><br><span class="line"><span class="comment"># step 3: eigen decomposition</span></span><br><span class="line">eigen_Vals, eigen_vecs = np.linalg.eig(cov_mat)</span><br><span class="line"></span><br><span class="line"><span class="comment"># step 4: sort eigenvalues</span></span><br><span class="line">eigen_pairs = [(np.<span class="built_in">abs</span>(eigen_vals[i]), eigen_vecs[:, i]) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(eigen_vals))]</span><br><span class="line">eigen_pairs.sort(key=<span class="keyword">lambda</span> k: k[<span class="number">0</span>], reverse=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># step 5: construct principal component matrix, k=2</span></span><br><span class="line">w = np.hstack((eigen_pairs[<span class="number">0</span>][<span class="number">1</span>][:, np.newaxis],</span><br><span class="line">               eigen_pairs[<span class="number">1</span>][<span class="number">1</span>][:, np.newaxis]))</span><br><span class="line"></span><br><span class="line"><span class="comment"># step 6: apply projection</span></span><br><span class="line">X_train_pca = X_train_std.dot(w)</span><br><span class="line">X_test_pca = X_test_std.dot(w)</span><br></pre></td></tr></table></figure>
+<p>另外一种就是直接调包啦。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.decomposition <span class="keyword">import</span> PCA</span><br><span class="line">pca = PCA(n_components=<span class="number">2</span>)</span><br><span class="line">X_train_pca = pca.fit_transform(X_train_std)</span><br><span class="line">X_test_pca = pca.fit_transform(X_test_pca)</span><br><span class="line"><span class="comment"># pca.explained_variance_ratio_: check explained variance for each principal component</span></span><br></pre></td></tr></table></figure>
 <p><br></p>
 <h2 id="linear-discriminant-analysis">Linear Discriminant Analysis</h2>
-<p>PCA 是 unsupervised 的降维算法，LDA 则需要得到数据的 labels。</p>
+<p>PCA 是 unsupervised 的降维算法，LDA 则是 supervised
+的，需要得到数据的 labels。</p>
+<p>不同于 PCA 最大化方差，LDA
+希望原始数据在投影到低维后能够使得同类的数据尽可能聚集，不同类的数据尽可能分散，即最大化
+<strong>Class Separability</strong>。</p>
+<p>LDA 假设数据 normally
+distributed，且每一类数据都有相同的协方差矩阵；由此可见，如果不同类的数据之间<strong>方差</strong>差异较大，PCA
+效果好；<strong>均值</strong>差异较大，LDA 效果好。</p>
+<p>LDA 的数学推导和 PCA 很相似，还是构建最优化模型 - 拉格朗日乘子 -
+特征分解这一系列过程。</p>
+<p>LDA 的重心在于均值，因此它使用<strong>散度矩阵 (scatter
+matrix)</strong> 而非协变量矩阵来描述维度间的关系。</p>
+<p>Shape 参考表：</p>
+<ul>
+<li>列向量 <span class="math inline">\(x:1\times d\)</span>​。</li>
+<li>列向量 - 全局均值向量 <span class="math inline">\(\overline{m}:1\times d\)</span>。</li>
+<li>列向量 - 第 <span class="math inline">\(i\)</span> 类数据的均值向量
+<span class="math inline">\(\overline{m_i}:1\times d\)</span>。</li>
+<li>第 <span class="math inline">\(i\)</span> 类数据的散度矩阵 <span class="math inline">\(\mathbf{S}_i:d\times d\)</span>​。</li>
+<li>类内散度矩阵 (<strong>within-class SM</strong>) <span class="math inline">\(\mathbf{S}_w\)</span> 与类间散度矩阵
+(<strong>between-class SM</strong>) <span class="math inline">\(\mathbf{S}_b:d\times d\)</span>。</li>
+</ul>
+<p>类内与类间散度矩阵的求法。 <span class="math display">\[
+\begin{aligned}
+\overline{m_i}&amp;=\frac{1}{n_i}\sum_{x\in D_i}x, \
+\overline{m}=\frac{1}{N}\sum x \\
+\mathbf{S}_i&amp;=\sum_{x\in D_i}(x-\overline{m_i})(x-\overline{m_i})^T
+\\
+\mathbf{S}_W&amp;=\sum_{i=1}^c \mathbf{S}_i \\
+\mathbf{S}_B&amp;=\sum_{i=1}^c
+(\overline{m_i}-\overline{m})(\overline{m_i}-\overline{m})^T
+\end{aligned}
+\]</span> 定义 Class Separability 为 <span class="math inline">\(\mathbf{S}_W^{-1}\mathbf{S}_B\)</span>：最大化类间散布
+(分子)，最小化类内散布 (分母)。构建最优化模型：求一系列 <span class="math inline">\(\mathbf{U}=\{u_1,u_2,...,u_k\}\)</span>，使得：
+<span class="math display">\[
+\max f(\{u_1,u_2,...,u_k\})=\sum_{j=1}^k u_j^T
+\mathbf{S}_W^{-1}\mathbf{S}_Bu_j \ \ s.t. \ \ u_j^Tu_j=1
+\]</span> 接下来的推导就和 PCA 一样了，把协方差矩阵 <span class="math inline">\(S\)</span> 替换为 Class Separability 矩阵 <span class="math inline">\(\mathbf{S}_W^{-1}\mathbf{S}_B\)</span>
+即可：特征分解后，取前 <span class="math inline">\(k\)</span>​
+大特征值对应的单位正交特征向量构建转换矩阵。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.discriminant_analysis <span class="keyword">import</span> LinearDiscriminantAnalysis <span class="keyword">as</span> LDA</span><br><span class="line">lda = LDA(n_components=<span class="number">2</span>)</span><br><span class="line">X_train_lda = lda.fit_transform(X_train_std, y_train)</span><br><span class="line">X_test_lda = lda.transform(X_test_std)</span><br></pre></td></tr></table></figure>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
@@ -449,6 +499,15 @@ if not specified.</p>
 <p>Course info: COMP3314. Lecturer: Prof. Yizhou Yu.</p>
 <p>Course textbook: Mathematics for Machine Learning. M. Deisenroth, A.
 Faisal &amp; C.Ong.</p>
+<p>参考：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=dhK8nbtii6I&amp;t=626s">ritvikmath
+- PCA the underlying math</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=e73033jZTCI">ritivikmath -
+the Derivative of a Matrix</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=152tSYtiQbw">ritivikmath -
+the Covariance Matrix</a>.</li>
+</ul>
 
     </div>
 
