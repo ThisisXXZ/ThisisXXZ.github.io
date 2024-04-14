@@ -1042,7 +1042,7 @@ doing?</em>，对方通常正经历困难/重大的事情。</p>
       </tags>
   </entry>
   <entry>
-    <title>记计算机体系结构</title>
+    <title>计算机组成小记</title>
     <url>/2024/02/05/COMP2120-1/</url>
     <content><![CDATA[<p>困啊，困，困到眼皮咀嚼眼珠，下巴亲吻桌面，意识在困倦中被熬成一锅浓粥，试图清醒过来却拔出粘稠的丝。老师破碎的英语断断续续的传来，像深山中精怪的呼唤；屏幕上的
 PPT 变幻扭曲出炫光的轮廓，透过公式和图像我恍惚看到了神谕。</p>
@@ -4008,6 +4008,77 @@ Algorithm</strong>。核心式子是： <span class="math display">\[
 B(X_k)\propto P(e_k|X_k)\sum_{x_{k-1}}P(X_k|x_{k-1})B(x_{k-1})
 \]</span></p>
 <p><br></p>
+<h2 id="particle-filtering">Particle Filtering</h2>
+<p>很神奇的算法。当 <span class="math inline">\(|X|\)</span> 非常大时
+(例如 <span class="math inline">\(X\)</span> 是 continuous 的)，直接在
+Markov 或 HMM 模型上跑 inference 时间开销太大。Particle Filtering
+的核心思想在于使用 <span class="math inline">\(N \ \
+(N&lt;&lt;|X|)\)</span> 个粒子 (particles) 来近似概率分布 <span class="math inline">\(B(X)\)</span>​​。 这里的粒子
+(<strong>particles</strong>)，实际上就是样本 (samples)。</p>
+<p>用一定数量的样本来近似地表示状态，这无疑是很具蒙特卡洛精神的。除此之外，PF
+几乎就和 HMM 的 forward algorithm 一致了。</p>
+<p>初始化：随机取样，获得初始的 particle list。</p>
+<ul>
+<li><em>Time Elapse Update</em> - 对每个粒子 <span class="math inline">\(x_i\)</span> 应用 <span class="math inline">\(P(X_{i+1}|x_i)\)</span> 转移得到下一个时间步的
+particle list。</li>
+<li><em>Observation Update</em> - 在 sensor model <span class="math inline">\(P(E_i|X_i)\)</span> 下，若当前观测到 <span class="math inline">\(e_i\)</span>，为粒子 <span class="math inline">\(x_i\)</span> 分配权重 <span class="math inline">\(P(e_i|x_i)\)</span>。normalize 整个 particle list
+后，它近似的是当前步的 belief distribution <span class="math inline">\(B(X)\)</span>。</li>
+<li><em>Resampling</em> - 根据该近似分布 <span class="math inline">\(B(X)\)</span>​ 重新取样，得到新的 particle
+list。</li>
+</ul>
+<p>PF 常应用于 Robot Localization 中，我们拥有
+Map，但是机器人的位置未知。还有更高级的 SLAM (Simultaneous Localization
+and Mapping) 问题，which Map 与机器人的位置都是未知的，需要使用 Kalman
+Filtering 解决。</p>
+<p><a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note18.pdf">Particle
+Filtering</a> note 中有一个关于天气的详细例子，讲的很清楚。</p>
+<p><br></p>
+<h2 id="viterbi-algorithm">Viterbi Algorithm</h2>
+<p>在 HMM 模型中，Forward Algorithm 用于求解 <span class="math inline">\(P(X_N|e_{1:N})\)</span>，Viterbi Algorithm
+则用于求解概率最大的隐状态序列 (hidden state trajectory)，即 <span class="math inline">\(\text{arg}\max_{x_{1:N}}P(x_{1:N}|e_{1:N})\)</span>，或等价的
+<span class="math inline">\(\arg
+\max_{x_{1:N}}P(x_{1:N},e_{1:N})\)</span>。</p>
+<figure>
+<img data-src="state_trellis.png" alt="HMM 的转移图即所谓的 state trellis">
+<figcaption aria-hidden="true">HMM 的转移图即所谓的 state
+trellis</figcaption>
+</figure>
+<p>定义从层 <span class="math inline">\(X_{t-1}\)</span> 到 <span class="math inline">\(X_t\)</span> 的边权为 <span class="math inline">\(P(X_t|X_{t-1})P(E_t|X_t)\)</span>，很容易发现，从
+<span class="math inline">\(X_1\)</span> 到 <span class="math inline">\(X_N\)</span>
+的路径的概率为其<strong>边权之积</strong>。这可以由路径 <span class="math inline">\(X_{1:N}\)</span> 的概率分布 <span class="math inline">\(P(X_{1:N},e_{1:N})\)</span>
+的马尔可夫展开式看出来： <span class="math display">\[
+P(X_{1:N},e_{1:N})=P(X_1)P(e_1|X_1)\prod_{t=2}^NP(X_t|X_{t-1})P(e_t|X_t)
+\]</span> 我们要求的则是这么一个序列 <span class="math inline">\(\{x_1,x_2,...,x_N\}\)</span>，满足： <span class="math display">\[
+\arg \max_{x_1,x_2,...,x_N} P(x_{1:N},e_{1:N})
+\]</span> 直接求 joint distribution table <span class="math inline">\(P(X_{1:N},e_{1:N})\)</span>
+再提取是一种方法，但时空复杂度都是指数级的 <span class="math inline">\(O(d^N)\)</span>。Viterbi Algorithm 则采用 DP
+的思想把复杂度降到 <span class="math inline">\(O(dN)\)</span>。</p>
+<p>First Pass - 从头到尾扫，求 <span class="math inline">\(m_t[x_t]\)</span>。<span class="math inline">\(m_t[x_t]\)</span> 的定义是，给定时刻 <span class="math inline">\(t\)</span> 的取值 <span class="math inline">\(X_t=x_t\)</span> 与一系列观测 <span class="math inline">\(e_1,e_2,...,e_t\)</span>，路径 <span class="math inline">\(X_{1:t}\)</span> 的最大概率。即，确定了末尾元素
+<span class="math inline">\(x_t\)</span> 后，所有 <span class="math inline">\(x_1,x_2,...,x_{t-1},x_t\)</span>
+中概率最大的序列所对应的概率。 <span class="math display">\[
+\begin{aligned}
+m_t[x_t]&amp;=\max_{x_{1:t-1}}P(x_{1:t}, e_{1:t})\\
+&amp;=\max_{x_{1:t-1}} P(e_t|x_t)P(x_t|x_{t-1})P(x_{1:t-1},e_{1:t-1})\\
+&amp;=P(e_t|x_t)\max_{x_{1:t-1}}P(x_t|x_{t-1})P(x_{1:t-1},e_{1:t-1})\\
+&amp;=P(e_t|x_t)\max_{x_{t-1}}P(x_t|x_{t-1})\max_{x_{1:t-2}}P(x_{1:t-1},e_{1:t-1})\\
+&amp;=P(e_t|x_t)\max_{x_{t-1}}P(x_t|x_{t-1})m_{t-1}[x_{t-1}]
+\end{aligned}
+\]</span> Second Pass - 从尾扫到头，求 <span class="math inline">\(a_t[x_t]\)</span>。<span class="math inline">\(a_t[x_t]\)</span> 的定义是，给定末尾元素 <span class="math inline">\(x_t\)</span>，使得 <span class="math inline">\(x_1,x_2,...,x_t\)</span>
+序列概率最大的最佳的次末尾元素 <span class="math inline">\(x_{t-1}\)</span>。 <span class="math display">\[
+\begin{aligned}
+a_t[x_t]&amp;=P(e_t|x_t)\arg
+\max_{x_{t-1}}P(x_t|x_{t-1})m_{t-1}[x_{t-1}]\\
+&amp;=\arg \max_{x_{t-1}}P(x_t|x_{t-1})m_{t-1}[x_{t-1}]
+\end{aligned}
+\]</span> 求得 <span class="math inline">\(a,m\)</span> 后，我们就可以
+reconstruct 出概率最大的隐变量序列了：若序列长度为 <span class="math inline">\(N\)</span>，选择令 <span class="math inline">\(m_N\)</span> 最大的 <span class="math inline">\(x_N\)</span>，向前迭代 <span class="math inline">\(x_{N-1}:= a_N[x_N]\)</span>，直到 <span class="math inline">\(\{x_1,x_2,...,x_N\}\)</span> 构建完毕。</p>
+<p><br></p>
+<h2 id="bayes-nets-i">Bayes Nets I</h2>
+<p><br></p>
+<h2 id="bayes-nets-ii">Bayes Nets II</h2>
+<p><br></p>
+<h2 id="bayes-nets-iii">Bayes Nets III</h2>
+<p><br></p>
 <h2 id="note-reading">Note Reading</h2>
 <p>本节课课件内容的绝大部分是从 Berkeley CS188
 的公开课件中蒯下来的，并且经过我的调查，Berkeley 还提供了丰富翔实的课程
@@ -4035,9 +4106,16 @@ I</a></li>
 <li>[checked] <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note10.pdf">RL
 II</a></li>
 <li>[checked] <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note11.pdf">Probability</a></li>
-<li>[not in scope] Bayesian Networks, Decision Networks &amp; VPI</li>
-<li>[unchecked] <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note17.pdf">Hidden
+<li>[checked] <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note17.pdf">Hidden
 Markov Models</a></li>
+<li>[checked] <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note18.pdf">Particle
+Filtering</a></li>
+<li>[unchecked] <a href="https://inst.eecs.berkeley.edu/~cs188/sp24/assets/notes/cs188-sp24-note11.pdf">Bayes
+Nets: Representation</a></li>
+<li>[unchecked] <a href="https://inst.eecs.berkeley.edu/~cs188/sp24/assets/notes/cs188-sp24-note12.pdf">Bayes
+Nets: Inference</a></li>
+<li>[unchecked] <a href="https://inst.eecs.berkeley.edu/~cs188/sp24/assets/notes/cs188-sp24-note13.pdf">Bayes
+Nets: Sampling</a></li>
 </ul>
 <p><br></p>
 <h2 id="reference">Reference</h2>
