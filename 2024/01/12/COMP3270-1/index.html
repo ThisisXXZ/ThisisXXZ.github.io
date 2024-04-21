@@ -38,7 +38,7 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/HMM.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/state_trellis.png">
 <meta property="article:published_time" content="2024-01-12T07:29:57.000Z">
-<meta property="article:modified_time" content="2024-04-14T11:23:17.218Z">
+<meta property="article:modified_time" content="2024-04-14T15:17:41.395Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="AI &amp; ML">
 <meta name="twitter:card" content="summary">
@@ -980,6 +980,34 @@ a_t[x_t]&amp;=P(e_t|x_t)\arg
 reconstruct 出概率最大的隐变量序列了：若序列长度为 <span class="math inline">\(N\)</span>，选择令 <span class="math inline">\(m_N\)</span> 最大的 <span class="math inline">\(x_N\)</span>，向前迭代 <span class="math inline">\(x_{N-1}:= a_N[x_N]\)</span>，直到 <span class="math inline">\(\{x_1,x_2,...,x_N\}\)</span> 构建完毕。</p>
 <p><br></p>
 <h2 id="bayes-nets-i">Bayes Nets I</h2>
+<p>还是挺有意思的。<span class="math inline">\(N\)</span> 个变量，值域
+(<strong>domain</strong>) 大小为 <span class="math inline">\(d\)</span>，那么 joint distribution <span class="math inline">\(P(X_1,X_2,...,X_N)\)</span> table 的大小是指数
+<span class="math inline">\(d^N\)</span>
+级别的。贝叶斯网络则利用变量间的 conditional independence
+关系，大大节省了存储空间。</p>
+<p>贝叶斯网络包括：</p>
+<ul>
+<li>一个 DAG，每个顶点对应一个随机变量 <span class="math inline">\(X\)</span>。</li>
+<li>一系列条件概率表 (<strong>conditional probability table</strong>,
+CPT) <span class="math inline">\(P(X|A_1,...,A_n)\)</span>，其中 <span class="math inline">\(A_i\)</span> 是 <span class="math inline">\(X\)</span> 的第 <span class="math inline">\(i\)</span> 个 parent。这也就是说，每个 CPT 包含
+<span class="math inline">\(n+2\)</span> 列，<span class="math inline">\(n\)</span> 列 for <span class="math inline">\(P(A_i)\)</span>，<span class="math inline">\(1\)</span> 列 for <span class="math inline">\(P(X)\)</span>，<span class="math inline">\(1\)</span> 列 for <span class="math inline">\(P(X|A_1,...,A_n)\)</span>。</li>
+</ul>
+<p>贝叶斯网络有什么性质呢？</p>
+<ul>
+<li><strong>Each node is conditionally independent of all its ancestor
+nodes (non-descendants) in the graph, given all of its
+parents.</strong></li>
+<li><strong>Each node is conditionally independent of all other
+variables given its Markov blanket.</strong> A variable’s Markov blanket
+consists of parents, children, children’s other parents.</li>
+</ul>
+<p>这两个性质保证了 joint distribution <span class="math inline">\(P(X_1,...,X_N)\)</span> 按照 DAG
+的拓扑序累积所有变量的 CPTs 计算得出： <span class="math display">\[
+P(X_1,X_2,...,X_N)=\prod_{i=1}^N P(X_i|\text{parents}(X_i))
+\]</span> 值得注意的一点是，<span class="math inline">\(X\to Y\)</span>
+(<span class="math inline">\(X\)</span> 是 <span class="math inline">\(Y\)</span> 的 parent) 并不一定代表 <span class="math inline">\(X,Y\)</span> 间存在因果关系 (casual
+relationship)，或是 <span class="math inline">\(Y\)</span> 依赖于 <span class="math inline">\(X\)</span>。贝叶斯网络上的一条边只能说明 <span class="math inline">\(X,Y\)</span> 间存在<strong>某种关系 (some
+relationship)</strong>。</p>
 <p><br></p>
 <h2 id="bayes-nets-ii">Bayes Nets II</h2>
 <p><br></p>
@@ -1016,7 +1044,7 @@ II</a></li>
 Markov Models</a></li>
 <li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note18.pdf">Particle
 Filtering</a></li>
-<li>[unchecked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/sp24/assets/notes/cs188-sp24-note11.pdf">Bayes
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/sp24/assets/notes/cs188-sp24-note11.pdf">Bayes
 Nets: Representation</a></li>
 <li>[unchecked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/sp24/assets/notes/cs188-sp24-note12.pdf">Bayes
 Nets: Inference</a></li>
@@ -1232,15 +1260,6 @@ don't we use expectimax to solve MDPs?</a></li>
 
 
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
 
 <script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/01/12/COMP3270-1/"}</script>
 <script>
@@ -1256,6 +1275,15 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>

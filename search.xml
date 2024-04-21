@@ -397,10 +397,23 @@ BigQuery</a>. 难度很大的 GUI 类型 sample (完成！第一次为 project
 <li>(evaluation) 用 <a href="https://pypi.org/project/dbt-cloud-cli/">dbt-cloud CLI</a>
 评测项目的连接情况。</li>
 </ul>
+<p>关于模型 (models) 的概念。</p>
 <p><br></p>
-<h2 id="常用命令">常用命令</h2>
-<p>把文件从主机移到虚拟机。</p>
-<p><code>vmrun -T ws -gu user -gp password CopyFileFromHostToGuest "C:\Users\XXZ\Documents\Virtual Machines\OSWorld\OSWorld.vmx" [file_loc] /home/user</code></p>
+<h2 id="shell-命令相关">Shell 命令相关</h2>
+<p>添加环境变量。</p>
+<ul>
+<li><code>vi ~/.bashrc</code></li>
+<li>添加 <code>export [variable_name]=[variable_value]</code></li>
+<li><code>source ~/.bashrc</code></li>
+</ul>
+<p>在 shell script 中执行需要输入密码的 <code>sudo</code>
+命令：<code>echo [password] | sudo -S [command]</code></p>
+<p>使用 shell 命令修改系统时间 (将时间修改到 6 小时之后)。</p>
+<ul>
+<li><code>sudo timedatectl set-ntp false</code> 关闭网络时间同步协议 NTP
+(Network Time Protocol)。</li>
+<li><code>sudo date -s "+6 hours"</code></li>
+</ul>
 <p><br></p>
 ]]></content>
       <categories>
@@ -1935,6 +1948,82 @@ y_1 &amp; y_2 &amp; y_3\end{pmatrix}
 </ul>
 <p><br></p>
 <h2 id="特征分解">特征分解</h2>
+<p>方阵 <span class="math inline">\(A\)</span> 的特征向量
+(<strong>eigenvector</strong>) <span class="math inline">\(\mathbf{x}\)</span> (<span class="math inline">\(\mathbf{x}\neq\mathbf{0}\)</span>) 满足 <span class="math inline">\(Ax=\lambda x\)</span> for some <span class="math inline">\(\lambda\)</span>。该常数 <span class="math inline">\(\lambda\)</span> 被称为特征向量 <span class="math inline">\(\mathbf{x}\)</span> 对应的特征值
+(<strong>eigenvalue</strong>)。</p>
+<p><span class="math inline">\(\lambda\)</span> 是 <span class="math inline">\(A\)</span> 的 eigenvalue 当且仅当方程 <span class="math inline">\((A-\lambda I)x=0\)</span>
+存在非平凡解；我们知道，这一条件等价于 homogenous SLE
+存在无数组解，等价于 <span class="math inline">\(\det(A-\lambda
+I_n)=0\)</span>​ (<strong>characteristic equation</strong>)。</p>
+<p>三角形矩阵 (triangular matrix) 的 eigenvalues 是它主对角线上的
+entries。</p>
+<p>方阵的对角化 (<strong>diagonalization</strong>)。我们说方阵 <span class="math inline">\(A\)</span> 是 diagonalizable 的，或者 <span class="math inline">\(A\)</span> is similar to a diagonal matrix，当
+<span class="math inline">\(A=PDP^{-1}\)</span>，其中 <span class="math inline">\(P\)</span> 是一个可逆阵 (invertible matrix)，<span class="math inline">\(D\)</span>​ 是一个对角阵 (diagonal matrix)。</p>
+<p>几个重要定理。</p>
+<p><strong><span class="math inline">\(n\times n\)</span> 方阵 <span class="math inline">\(A\)</span> 是 diagonalizable 的，当且仅当 <span class="math inline">\(A\)</span> 有 <span class="math inline">\(n\)</span> 个 linearly independent
+eigenvectors</strong>。将 <span class="math inline">\(A\)</span>
+特征分解为 <span class="math inline">\(AP=PD\)</span>，其中 <span class="math inline">\(P\)</span> 为 eigenvectors matrix，<span class="math inline">\(D\)</span> 为 eigenvalue matrix。</p>
+<ul>
+<li>if part 证明：diagonalizable 意味着 <span class="math inline">\(A=PDP^{-1}\)</span>，既然 <span class="math inline">\(P\)</span> 是 invertible 的，<span class="math inline">\(P\)</span> 一定由 <span class="math inline">\(n\)</span> 个 linearly independent
+的向量组成。</li>
+<li>only if part 证明：<span class="math inline">\(AP=PD\)</span>，既然
+<span class="math inline">\(P\)</span> 由 <span class="math inline">\(n\)</span> 个 linearly independent
+的向量组成，<span class="math inline">\(P\)</span> 有逆 <span class="math inline">\(P^{-1}\)</span>。所以 <span class="math inline">\(A\)</span> 一定有 <span class="math inline">\(A=PDP^{-1}\)</span>。</li>
+</ul>
+<p><strong>对应不同 eigenvalues 的 eigenvectors 是 linearly independent
+的。</strong></p>
+<p>证明：induction。若该定理在 <span class="math inline">\(k\)</span> 组
+eigenvectors/eigenvalues 上成立，证明其在 <span class="math inline">\(k+1\)</span> 亦成立。 <span class="math display">\[
+\begin{aligned}
+c_1x_1+c_2x_2+{...}+c_{k+1}x_{k+1}&amp;=0 \\
+\text{eq. 1 }
+\  c_1\lambda_1x_1+c_2\lambda_2x_2+{...}+c_{k+1}\lambda_{k+1}x_{k+1}&amp;=0
+\\
+\text{eq. 2 } \ c_1
+\lambda_{k+1}x_1+c_2\lambda_{k+1}x_2+{...}+c_{k+1}\lambda_{k+1}x_{k+1}&amp;=0\\
+\text{eq. 1 - eq.2} \ \sum_{i=1}^k
+c_i(\lambda_{k+1}-\lambda_i)x_i&amp;=0
+\end{aligned}
+\]</span> 定理在 <span class="math inline">\(k\)</span> 成立，又有 <span class="math inline">\(\lambda\)</span> 两两不同 (<span class="math inline">\(\lambda_{k+1}-\lambda_i\neq 0\)</span>)，一定有
+<span class="math inline">\(c_1=c_2={...}=c_k=0\)</span>。代回原式得
+<span class="math inline">\(c_{k+1}x_{k+1}\neq 0\)</span>。又因为
+eigenvectors 一定是非零向量，得 <span class="math inline">\(c_{k+1}=0\)</span>。所以原方程仅有平凡解 <span class="math inline">\(c_1=c_2={...}=c_{k+1}=0\)</span>，定理在 <span class="math inline">\(k+1\)</span>​ 处成立得证。</p>
+<p>OK 整理一下。现在我们知道 <span class="math inline">\(A\)</span> 有
+<span class="math inline">\(n\)</span> 个线性独立的 eigenvectors
+意味着它可对角化；又有对应不同 eigenvalues 的 eigenvectors
+线性独立。很容易 derive 出如果对应<strong>相同</strong> eigenvalue 的
+eigenvectors 线性独立，那么 <span class="math inline">\(A\)</span>
+就是可对角化的！</p>
+<p>这就引出了第三条定理：<span class="math inline">\(n\times n\)</span>
+方阵 <span class="math inline">\(A\)</span> 是可对角化的，当且仅当对于
+<span class="math inline">\(A\)</span> 的所有 eigenvalues，都有 <span class="math inline">\(AM_\lambda=GM_\lambda\)</span>​。</p>
+<ul>
+<li><span class="math inline">\(AM_\lambda\)</span> (<strong>Algebraic
+Multiplicities 代数重数</strong>) - 特征值 <span class="math inline">\(\lambda\)</span>​ 出现的次数。</li>
+<li><span class="math inline">\(GM_\lambda\)</span> (<strong>Geometric
+Multiplicities 几何重数</strong>) - 特征值 <span class="math inline">\(\lambda\)</span>
+所对应特征向量所形成的极大线性无关组的大小，或矩阵 <span class="math inline">\([A-\lambda I]\)</span>
+的<strong>零空间维数</strong> (化成 reduced row echelon
+形式后的全零行数目)。</li>
+</ul>
+<p><span class="math inline">\(AM_{\lambda}=GM_{\lambda}\)</span>，则说明 <span class="math inline">\(\lambda\)</span>
+对应的特征向量矩阵是满秩的，因此对应 <span class="math inline">\(\lambda\)</span>​ 的所有 eigenvectors
+都是线性独立的。</p>
+<p>一些 Chapter 3 的题目小总结。</p>
+<ul>
+<li>question bank q.72 (d)。构造 <span class="math inline">\((I-A)(A^{k-1}+A^{k}+{...}+A^{2}+A+I)=I-A^k=I\)</span>。</li>
+<li>question bank q.84 (c). 这一类的题目一定要利用 EMO
+与行列式变化的关系。</li>
+<li>概念问题：若 <span class="math inline">\(v_1,v_2\in
+R^3\)</span>，<span class="math inline">\(\text{span}\{v_1,v_2\}\)</span> 并不等于 <span class="math inline">\(R^2\)</span>，而是 <span class="math inline">\(R^3\)</span> 中的一个二维平面。</li>
+</ul>
+<p>关于 SLE 可解性的研究。<span class="math inline">\(m\)</span>
+个线性方程，<span class="math inline">\(n\)</span> 个变量，系数矩阵
+<span class="math inline">\(A\in R^{m\times n}\)</span>，增广矩阵 <span class="math inline">\([A|b]\in R^{m\times (n+1)}\)</span>。</p>
+<figure>
+<img data-src="SLE.jpg" alt="系数矩阵与增广矩阵的秩是确定可解性的关键性质">
+<figcaption aria-hidden="true">系数矩阵与增广矩阵的秩是确定可解性的关键性质</figcaption>
+</figure>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
@@ -3154,6 +3243,69 @@ q.2]</li>
 </ul></li>
 </ul>
 <p><br></p>
+<h3 id="lecture-18">Lecture 18</h3>
+<p>图的着色问题与色数。</p>
+<p><strong>简单图的着色问题 (Coloring of a simple Graph)</strong> -
+任意两个相邻顶点不同色。定义 <span class="math inline">\(\chi(G)\)</span> 为图 <span class="math inline">\(G\)</span>​ 的<strong>色数 (Chromatic
+Number)</strong>，即对该图进行着色所需的最少颜色数。</p>
+<p>著名的四色问题 (Four Color Theorem) - 任意平面图 (<strong>planar
+graph</strong>) [stay tuned] <span class="math inline">\(G\)</span> 的
+<span class="math inline">\(\chi(G)\leq 4\)</span>。</p>
+<p>几个显然的结论。</p>
+<ul>
+<li>完全图 <span class="math inline">\(K_n\)</span> 的 <span class="math inline">\(\chi(K_n)=4\)</span>。</li>
+<li>二分图 <span class="math inline">\(G\)</span> 的 <span class="math inline">\(\chi(G)=2\)</span>。</li>
+<li>偶环 <span class="math inline">\(C_{2k}\)</span> 的 <span class="math inline">\(\chi(C_{2k})=2\)</span>。</li>
+<li>奇环 <span class="math inline">\(C_{2k+1}\)</span> 的 <span class="math inline">\(\chi(C_{2k+1})=3\)</span>​。</li>
+<li>对于任意 <span class="math inline">\(G\)</span> 都有 <span class="math inline">\(1\leq \chi(G)\leq n\)</span>，只有无边图 <span class="math inline">\(G\)</span> 满足 <span class="math inline">\(\chi(G)=1\)</span>。</li>
+<li><span class="math inline">\(\chi(G)(\chi(G)-1)\leq
+2m\)</span>。这是因为任意两个 color class 间至少有一条边连接。</li>
+<li><strong>Clique</strong> - 完全子图。<span class="math inline">\(\chi(G)\geq \omega(G)\)</span>, where <span class="math inline">\(\omega(G)\)</span> 代表 <span class="math inline">\(G\)</span>​ 中最大 clique 的大小。</li>
+<li><span class="math inline">\(\chi(G)\leq \Delta(G)+1\)</span>, where
+<span class="math inline">\(\Delta(G)=\max \deg(v)\)</span>。</li>
+</ul>
+<p>Zykov Relations - <span class="math inline">\(\chi(G)=\min\{\chi(G+uv),\chi(G/uv)\}\)</span>。其中
+<span class="math inline">\(G+uv\)</span> 是加边 <span class="math inline">\(\{u,v\}\)</span> 后形成的新图，<span class="math inline">\(G/uv\)</span> 是 contract 边 <span class="math inline">\(uv\)</span> 后形成的新图。</p>
+<ul>
+<li>前者 - <span class="math inline">\(G\)</span> 中 <span class="math inline">\(u,v\)</span> 异色。</li>
+<li>后者 - <span class="math inline">\(G\)</span> 中 <span class="math inline">\(u,v\)</span> 同色。</li>
+</ul>
+<p><br></p>
+<h3 id="lecture-19">Lecture 19</h3>
+<p>关于<strong>平面图 (planar
+graph)</strong>。这个概念倒是第一次听说。</p>
+<p>如果图 <span class="math inline">\(G\)</span> 能画在平面 <span class="math inline">\(S\)</span> 上，且除<strong>顶点外无边相交 (without
+any edges crossing)</strong>，我们说该图 <span class="math inline">\(G\)</span> 是能嵌入 <span class="math inline">\(S\)</span>
+的平面图。这种「画」的方式被称为<strong>平面表示 (planar
+representation)</strong>。</p>
+<p>有 planar representation <span class="math inline">\(\iff\)</span>
+planar graph。有 non-planar representation <span class="math inline">\(\not\Rightarrow\)</span> non-planar graph。</p>
+<p><strong>欧拉公式 (Euler's Formula)</strong> - 若 <span class="math inline">\(G\)</span> 是连通的简单平面图，<span class="math inline">\(e=|E|, v=|V|, r\)</span> 是 <span class="math inline">\(G\)</span> 的平面表示中划分出的区域数，有 <span class="math inline">\(r=e-v+2\)</span>。</p>
+<p>证明：平面图中的区域一定是一个 cycle。不断删环，每删一条边 (<span class="math inline">\(e:=e-1\)</span>)，就有一个环被打开 <span class="math inline">\((r:=r-1)\)</span>；直到图 <span class="math inline">\(G\)</span> 变为一棵树。此时有 <span class="math inline">\(r=1,e-v=-1\)</span> 满足 <span class="math inline">\(r=e-v+2\)</span>。</p>
+<p>欧拉公式的推论 - 若 <span class="math inline">\(G\)</span>
+是连通的简单平面图 with <span class="math inline">\(v\geq 3\)</span>，有
+<span class="math inline">\(e\leq 3v-6\)</span>。且 <span class="math inline">\(G\)</span> 存在一个顶点 <span class="math inline">\(\deg(v)\leq 5\)</span>。</p>
+<p>证明：简单平面图中的一个区域<strong>至少被三条边包围</strong>，因此有
+<span class="math inline">\(3r\leq\sum
+\deg(v)\)</span>。根据握手定则，有 <span class="math inline">\(2e=\sum
+\deg(v)\)</span>。所以有 <span class="math inline">\(3r\leq
+2e\)</span>，又 <span class="math inline">\(r=e-v+2\)</span> ，所以有
+<span class="math inline">\(e=3v-6\)</span>。</p>
+<ul>
+<li>多重平面图 (multigraph)
+又如何？由于重边的存在，一个区域至少被<strong>两条边</strong>包围，因此有
+<span class="math inline">\(2r\leq 2e\)</span>。</li>
+<li>伪平面图 (pseudo graph)
+又如何？由于自环的存在，一个区域至少被<strong>一条边</strong>包围，因此有
+<span class="math inline">\(r\leq 2e\)</span>。</li>
+<li>[Lecture 18 pp.43 q1] 假设 <span class="math inline">\(K_{3,3}\)</span>
+又如何？由于奇环不存在，一个区域至少被<strong>四条边</strong>包围，因此有
+<span class="math inline">\(4r\leq 2e\)</span>。</li>
+</ul>
+<p><strong>库拉托夫斯基定理 (Kuratowski's Theorem)</strong> - <span class="math inline">\(G\)</span>
+为非平面图<strong>当且仅当</strong>它含有与 <span class="math inline">\(K_5\)</span> 或 <span class="math inline">\(K_{3,3}\)</span> 同胚 (homeomorphic) 的子图。当然
+<span class="math inline">\(K_5\)</span> 与完全二分图 <span class="math inline">\(K_{3,3}\)</span> 一定是非平面的。</p>
+<p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
@@ -4074,6 +4226,34 @@ a_t[x_t]&amp;=P(e_t|x_t)\arg
 reconstruct 出概率最大的隐变量序列了：若序列长度为 <span class="math inline">\(N\)</span>，选择令 <span class="math inline">\(m_N\)</span> 最大的 <span class="math inline">\(x_N\)</span>，向前迭代 <span class="math inline">\(x_{N-1}:= a_N[x_N]\)</span>，直到 <span class="math inline">\(\{x_1,x_2,...,x_N\}\)</span> 构建完毕。</p>
 <p><br></p>
 <h2 id="bayes-nets-i">Bayes Nets I</h2>
+<p>还是挺有意思的。<span class="math inline">\(N\)</span> 个变量，值域
+(<strong>domain</strong>) 大小为 <span class="math inline">\(d\)</span>，那么 joint distribution <span class="math inline">\(P(X_1,X_2,...,X_N)\)</span> table 的大小是指数
+<span class="math inline">\(d^N\)</span>
+级别的。贝叶斯网络则利用变量间的 conditional independence
+关系，大大节省了存储空间。</p>
+<p>贝叶斯网络包括：</p>
+<ul>
+<li>一个 DAG，每个顶点对应一个随机变量 <span class="math inline">\(X\)</span>。</li>
+<li>一系列条件概率表 (<strong>conditional probability table</strong>,
+CPT) <span class="math inline">\(P(X|A_1,...,A_n)\)</span>，其中 <span class="math inline">\(A_i\)</span> 是 <span class="math inline">\(X\)</span> 的第 <span class="math inline">\(i\)</span> 个 parent。这也就是说，每个 CPT 包含
+<span class="math inline">\(n+2\)</span> 列，<span class="math inline">\(n\)</span> 列 for <span class="math inline">\(P(A_i)\)</span>，<span class="math inline">\(1\)</span> 列 for <span class="math inline">\(P(X)\)</span>，<span class="math inline">\(1\)</span> 列 for <span class="math inline">\(P(X|A_1,...,A_n)\)</span>。</li>
+</ul>
+<p>贝叶斯网络有什么性质呢？</p>
+<ul>
+<li><strong>Each node is conditionally independent of all its ancestor
+nodes (non-descendants) in the graph, given all of its
+parents.</strong></li>
+<li><strong>Each node is conditionally independent of all other
+variables given its Markov blanket.</strong> A variable’s Markov blanket
+consists of parents, children, children’s other parents.</li>
+</ul>
+<p>这两个性质保证了 joint distribution <span class="math inline">\(P(X_1,...,X_N)\)</span> 按照 DAG
+的拓扑序累积所有变量的 CPTs 计算得出： <span class="math display">\[
+P(X_1,X_2,...,X_N)=\prod_{i=1}^N P(X_i|\text{parents}(X_i))
+\]</span> 值得注意的一点是，<span class="math inline">\(X\to Y\)</span>
+(<span class="math inline">\(X\)</span> 是 <span class="math inline">\(Y\)</span> 的 parent) 并不一定代表 <span class="math inline">\(X,Y\)</span> 间存在因果关系 (casual
+relationship)，或是 <span class="math inline">\(Y\)</span> 依赖于 <span class="math inline">\(X\)</span>。贝叶斯网络上的一条边只能说明 <span class="math inline">\(X,Y\)</span> 间存在<strong>某种关系 (some
+relationship)</strong>。</p>
 <p><br></p>
 <h2 id="bayes-nets-ii">Bayes Nets II</h2>
 <p><br></p>
@@ -4110,7 +4290,7 @@ II</a></li>
 Markov Models</a></li>
 <li>[checked] <a href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note18.pdf">Particle
 Filtering</a></li>
-<li>[unchecked] <a href="https://inst.eecs.berkeley.edu/~cs188/sp24/assets/notes/cs188-sp24-note11.pdf">Bayes
+<li>[checked] <a href="https://inst.eecs.berkeley.edu/~cs188/sp24/assets/notes/cs188-sp24-note11.pdf">Bayes
 Nets: Representation</a></li>
 <li>[unchecked] <a href="https://inst.eecs.berkeley.edu/~cs188/sp24/assets/notes/cs188-sp24-note12.pdf">Bayes
 Nets: Inference</a></li>

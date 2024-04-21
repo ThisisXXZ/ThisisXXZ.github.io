@@ -35,8 +35,9 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2024/02/02/MATH2014-1/lagrange.jpg">
 <meta property="og:image" content="https://www.thisisxxz.com/2024/02/02/MATH2014-1/triple-integral.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2024/02/02/MATH2014-1/cramer-rule.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/02/02/MATH2014-1/SLE.jpg">
 <meta property="article:published_time" content="2024-02-02T12:10:28.000Z">
-<meta property="article:modified_time" content="2024-04-12T14:45:02.122Z">
+<meta property="article:modified_time" content="2024-04-21T08:44:17.728Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Mathematics">
 <meta name="twitter:card" content="summary">
@@ -870,6 +871,82 @@ y_1 &amp; y_2 &amp; y_3\end{pmatrix}
 </ul>
 <p><br></p>
 <h2 id="特征分解">特征分解</h2>
+<p>方阵 <span class="math inline">\(A\)</span> 的特征向量
+(<strong>eigenvector</strong>) <span class="math inline">\(\mathbf{x}\)</span> (<span class="math inline">\(\mathbf{x}\neq\mathbf{0}\)</span>) 满足 <span class="math inline">\(Ax=\lambda x\)</span> for some <span class="math inline">\(\lambda\)</span>。该常数 <span class="math inline">\(\lambda\)</span> 被称为特征向量 <span class="math inline">\(\mathbf{x}\)</span> 对应的特征值
+(<strong>eigenvalue</strong>)。</p>
+<p><span class="math inline">\(\lambda\)</span> 是 <span class="math inline">\(A\)</span> 的 eigenvalue 当且仅当方程 <span class="math inline">\((A-\lambda I)x=0\)</span>
+存在非平凡解；我们知道，这一条件等价于 homogenous SLE
+存在无数组解，等价于 <span class="math inline">\(\det(A-\lambda
+I_n)=0\)</span>​ (<strong>characteristic equation</strong>)。</p>
+<p>三角形矩阵 (triangular matrix) 的 eigenvalues 是它主对角线上的
+entries。</p>
+<p>方阵的对角化 (<strong>diagonalization</strong>)。我们说方阵 <span class="math inline">\(A\)</span> 是 diagonalizable 的，或者 <span class="math inline">\(A\)</span> is similar to a diagonal matrix，当
+<span class="math inline">\(A=PDP^{-1}\)</span>，其中 <span class="math inline">\(P\)</span> 是一个可逆阵 (invertible matrix)，<span class="math inline">\(D\)</span>​ 是一个对角阵 (diagonal matrix)。</p>
+<p>几个重要定理。</p>
+<p><strong><span class="math inline">\(n\times n\)</span> 方阵 <span class="math inline">\(A\)</span> 是 diagonalizable 的，当且仅当 <span class="math inline">\(A\)</span> 有 <span class="math inline">\(n\)</span> 个 linearly independent
+eigenvectors</strong>。将 <span class="math inline">\(A\)</span>
+特征分解为 <span class="math inline">\(AP=PD\)</span>，其中 <span class="math inline">\(P\)</span> 为 eigenvectors matrix，<span class="math inline">\(D\)</span> 为 eigenvalue matrix。</p>
+<ul>
+<li>if part 证明：diagonalizable 意味着 <span class="math inline">\(A=PDP^{-1}\)</span>，既然 <span class="math inline">\(P\)</span> 是 invertible 的，<span class="math inline">\(P\)</span> 一定由 <span class="math inline">\(n\)</span> 个 linearly independent
+的向量组成。</li>
+<li>only if part 证明：<span class="math inline">\(AP=PD\)</span>，既然
+<span class="math inline">\(P\)</span> 由 <span class="math inline">\(n\)</span> 个 linearly independent
+的向量组成，<span class="math inline">\(P\)</span> 有逆 <span class="math inline">\(P^{-1}\)</span>。所以 <span class="math inline">\(A\)</span> 一定有 <span class="math inline">\(A=PDP^{-1}\)</span>。</li>
+</ul>
+<p><strong>对应不同 eigenvalues 的 eigenvectors 是 linearly independent
+的。</strong></p>
+<p>证明：induction。若该定理在 <span class="math inline">\(k\)</span> 组
+eigenvectors/eigenvalues 上成立，证明其在 <span class="math inline">\(k+1\)</span> 亦成立。 <span class="math display">\[
+\begin{aligned}
+c_1x_1+c_2x_2+{...}+c_{k+1}x_{k+1}&amp;=0 \\
+\text{eq. 1 }
+\  c_1\lambda_1x_1+c_2\lambda_2x_2+{...}+c_{k+1}\lambda_{k+1}x_{k+1}&amp;=0
+\\
+\text{eq. 2 } \ c_1
+\lambda_{k+1}x_1+c_2\lambda_{k+1}x_2+{...}+c_{k+1}\lambda_{k+1}x_{k+1}&amp;=0\\
+\text{eq. 1 - eq.2} \ \sum_{i=1}^k
+c_i(\lambda_{k+1}-\lambda_i)x_i&amp;=0
+\end{aligned}
+\]</span> 定理在 <span class="math inline">\(k\)</span> 成立，又有 <span class="math inline">\(\lambda\)</span> 两两不同 (<span class="math inline">\(\lambda_{k+1}-\lambda_i\neq 0\)</span>)，一定有
+<span class="math inline">\(c_1=c_2={...}=c_k=0\)</span>。代回原式得
+<span class="math inline">\(c_{k+1}x_{k+1}\neq 0\)</span>。又因为
+eigenvectors 一定是非零向量，得 <span class="math inline">\(c_{k+1}=0\)</span>。所以原方程仅有平凡解 <span class="math inline">\(c_1=c_2={...}=c_{k+1}=0\)</span>，定理在 <span class="math inline">\(k+1\)</span>​ 处成立得证。</p>
+<p>OK 整理一下。现在我们知道 <span class="math inline">\(A\)</span> 有
+<span class="math inline">\(n\)</span> 个线性独立的 eigenvectors
+意味着它可对角化；又有对应不同 eigenvalues 的 eigenvectors
+线性独立。很容易 derive 出如果对应<strong>相同</strong> eigenvalue 的
+eigenvectors 线性独立，那么 <span class="math inline">\(A\)</span>
+就是可对角化的！</p>
+<p>这就引出了第三条定理：<span class="math inline">\(n\times n\)</span>
+方阵 <span class="math inline">\(A\)</span> 是可对角化的，当且仅当对于
+<span class="math inline">\(A\)</span> 的所有 eigenvalues，都有 <span class="math inline">\(AM_\lambda=GM_\lambda\)</span>​。</p>
+<ul>
+<li><span class="math inline">\(AM_\lambda\)</span> (<strong>Algebraic
+Multiplicities 代数重数</strong>) - 特征值 <span class="math inline">\(\lambda\)</span>​ 出现的次数。</li>
+<li><span class="math inline">\(GM_\lambda\)</span> (<strong>Geometric
+Multiplicities 几何重数</strong>) - 特征值 <span class="math inline">\(\lambda\)</span>
+所对应特征向量所形成的极大线性无关组的大小，或矩阵 <span class="math inline">\([A-\lambda I]\)</span>
+的<strong>零空间维数</strong> (化成 reduced row echelon
+形式后的全零行数目)。</li>
+</ul>
+<p><span class="math inline">\(AM_{\lambda}=GM_{\lambda}\)</span>，则说明 <span class="math inline">\(\lambda\)</span>
+对应的特征向量矩阵是满秩的，因此对应 <span class="math inline">\(\lambda\)</span>​ 的所有 eigenvectors
+都是线性独立的。</p>
+<p>一些 Chapter 3 的题目小总结。</p>
+<ul>
+<li>question bank q.72 (d)。构造 <span class="math inline">\((I-A)(A^{k-1}+A^{k}+{...}+A^{2}+A+I)=I-A^k=I\)</span>。</li>
+<li>question bank q.84 (c). 这一类的题目一定要利用 EMO
+与行列式变化的关系。</li>
+<li>概念问题：若 <span class="math inline">\(v_1,v_2\in
+R^3\)</span>，<span class="math inline">\(\text{span}\{v_1,v_2\}\)</span> 并不等于 <span class="math inline">\(R^2\)</span>，而是 <span class="math inline">\(R^3\)</span> 中的一个二维平面。</li>
+</ul>
+<p>关于 SLE 可解性的研究。<span class="math inline">\(m\)</span>
+个线性方程，<span class="math inline">\(n\)</span> 个变量，系数矩阵
+<span class="math inline">\(A\in R^{m\times n}\)</span>，增广矩阵 <span class="math inline">\([A|b]\in R^{m\times (n+1)}\)</span>。</p>
+<figure>
+<img data-src="SLE.jpg" alt="系数矩阵与增广矩阵的秩是确定可解性的关键性质">
+<figcaption aria-hidden="true">系数矩阵与增广矩阵的秩是确定可解性的关键性质</figcaption>
+</figure>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
@@ -1069,15 +1146,6 @@ Application</em>.</p>
 
 
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
 
 <script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/02/02/MATH2014-1/"}</script>
 <script>
@@ -1093,6 +1161,15 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
