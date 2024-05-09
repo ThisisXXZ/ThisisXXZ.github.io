@@ -34,7 +34,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.thisisxxz.com/2024/02/05/COMP2120-1/memory.png">
 <meta property="article:published_time" content="2024-02-05T06:43:24.000Z">
-<meta property="article:modified_time" content="2024-04-14T04:50:33.149Z">
+<meta property="article:modified_time" content="2024-05-09T16:15:08.813Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Computer Architecture">
 <meta name="twitter:card" content="summary">
@@ -170,7 +170,8 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#digital-logic"><span class="nav-number">1.</span> <span class="nav-text">Digital Logic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#number-representation"><span class="nav-number">2.</span> <span class="nav-text">Number Representation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#number-arithmetic"><span class="nav-number">3.</span> <span class="nav-text">Number Arithmetic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#instruction-execution-cycle"><span class="nav-number">4.</span> <span class="nav-text">Instruction Execution Cycle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memory-hierarchy"><span class="nav-number">5.</span> <span class="nav-text">Memory Hierarchy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cache-memory"><span class="nav-number">6.</span> <span class="nav-text">Cache Memory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#external-storage"><span class="nav-number">7.</span> <span class="nav-text">External Storage</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#input-and-output"><span class="nav-number">8.</span> <span class="nav-text">Input and Output</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#digital-logic"><span class="nav-number">1.</span> <span class="nav-text">Digital Logic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#number-representation"><span class="nav-number">2.</span> <span class="nav-text">Number Representation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#number-arithmetic"><span class="nav-number">3.</span> <span class="nav-text">Number Arithmetic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#instruction-execution-cycle"><span class="nav-number">4.</span> <span class="nav-text">Instruction Execution Cycle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memory-hierarchy"><span class="nav-number">5.</span> <span class="nav-text">Memory Hierarchy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cache-memory"><span class="nav-number">6.</span> <span class="nav-text">Cache Memory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#external-storage"><span class="nav-number">7.</span> <span class="nav-text">External Storage</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#input-and-output"><span class="nav-number">8.</span> <span class="nav-text">Input and Output</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#instruction-set-addressing"><span class="nav-number">9.</span> <span class="nav-text">Instruction Set &amp;
+Addressing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">10.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -689,6 +690,73 @@ they were saved)。</li>
 将 memory bus 的占用解除；如果 CPU 接下来的 cycle 无需访问
 memory，它将同意请求，IOP 则会取得 memory bus 的控制。IOP
 每次请求通常只占用一个或几个 cycles。</p>
+<p><br></p>
+<h2 id="instruction-set-addressing">Instruction Set &amp;
+Addressing</h2>
+<p>一些指令我们已经很熟悉了，在 Instruction Execution Cycle
+那一章节有过介绍。</p>
+<p>机器指令 (machine instruction) 的操作码 (operation code, opcode)
+被各式各样的 <strong>mnemonics</strong>
+表记。不同的机器可能有不同的缩写策略，但这些指令都能够大致分为以下几类：</p>
+<ul>
+<li>data transfer - e.g. <code>MOV</code>, <code>LD</code>,
+<code>ST</code></li>
+<li>arithmetic - e.g., <code>ADD</code>, <code>SUB</code></li>
+<li>logical - e.g., <code>AND</code>, <code>OR</code>,
+<code>NOT</code></li>
+<li>transfer of control - <code>BR</code> for branch, <code>CALL</code>,
+<code>RET</code> for procedure</li>
+</ul>
+<p>这里稍微分辨一下 arithmetic 和 logical 两种指令的区别：算术指令把
+operands 视作数字，而逻辑指令把 operands 视作 bit pattern -
+也就是说，逻辑指令直接操纵二进制串。</p>
+<p>何以见得呢？考虑逻辑左/右移指令 (logical shift) 与算数左/右移指令
+(arithmetic shift) 的区别。逻辑 shift 指令直接移动对应的 bit
+pattern，左移在 LSB 补零，右移在 MSB 补零。而算数 shift 指令会专门复制
+sign bit 上的值不移动；这是因为算数 shift
+指令本质上是对其所代表的数字进行乘 2 或除 2。</p>
+<p>指令集架构 (instruction set architecture)。精简指令集运算 (Reduced
+Instruction Set Computing, RISC) - MIPS, ARM；复杂指令集运算 (Complex
+Instruction Set Computing, CISC) - x86, x86-64。</p>
+<p><strong>寻址模式 (addressing modes)</strong>
+是指令集架构的重要组成部分，抽象了指令的寻址过程 (tradeoff
+是更复杂的硬件实现)。这里的寻址对象当然是 memory
+里的地址；现代处理器提供了大量
+registers，大大降低了寻址需求。因此，常用的寻址模式被削减到了几种。</p>
+<p>几个符号表记的规定：</p>
+<ul>
+<li><code>A</code> = contents of an address field in the
+instruction.</li>
+<li><code>R</code> = contents of an address field in the instruction
+that refers to a register.</li>
+<li><code>EA</code> = <strong>actual (effective) address</strong> of the
+location containing the referenced operand.</li>
+<li><code>(X)</code> = contents of memory location <code>X</code>.</li>
+</ul>
+<p><em>Immediate Addressing</em> (立即寻址) - 即命令直接提供
+<strong>operand 的真实值</strong>。又称 <em>literal mode</em>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Value = A</span><br><span class="line">MOV #200, R6</span><br><span class="line">ADD R2, #4, R2</span><br></pre></td></tr></table></figure>
+<p><em>Direct/Absolute Addressing</em> (直接寻址) - 命令提供
+<strong>operand 的地址，而非值</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># EA = A</span><br><span class="line">MOV A, R1 # Move the content at A to R1</span><br></pre></td></tr></table></figure>
+<p><em>Indirect Addressing</em> (间接寻址) -
+就是指针啦！命令提供<strong>一个地址，该地址中的值指向 operand
+的地址</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># EA = (A)</span><br><span class="line">MOV (A), R1 # Move the content pointed by the value at address A to R1. R1 = mem[A]</span><br></pre></td></tr></table></figure>
+<p><em>Register Addressing</em> (寄存器寻址) - operand 的值储存在
+general registers 中 (8 到 32 个)。register
+的超快访问使其成为了现代处理器中使用得最多的寻址模式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># EA = R</span><br><span class="line">MOV R1, R2 # move the content of R1 to R2</span><br></pre></td></tr></table></figure>
+<p><em>Register Indirect Addressing</em> (寄存器间接寻址) - 就是把
+<strong>register 存储的值作为指针指向 operand 的地址</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># EA = (R)</span><br><span class="line">MOV (R1), R2 # Move the content of mem[R1] to R2</span><br></pre></td></tr></table></figure>
+<p><em>Displacement Addressing</em> (位移寻址) - <strong>operand
+的地址被 register + 某个 offset 表示</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># EA = A + (R)</span><br><span class="line">MOV A(R1), R2 # move the content at address A+R1 to R2. R2 = A[R1]</span><br></pre></td></tr></table></figure>
+<p><em>Stack Addressing</em> (栈寻址) - 部分机器提供 <code>PUSH</code>
+与 <code>POP</code> 命令，用来访问栈。特殊的栈指针 (stack pointer)
+<code>SP</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># EA = top of stack</span><br><span class="line">PUSH R4:</span><br><span class="line">    SUB SP, #4, SP</span><br><span class="line">    MOV R4, (SP)</span><br><span class="line">POP R3:</span><br><span class="line">    MOV (SP), R3</span><br><span class="line">    ADD SP, #4, SP</span><br></pre></td></tr></table></figure>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>

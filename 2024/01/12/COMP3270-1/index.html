@@ -40,7 +40,7 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/bayes_inference.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/outcome_tree.png">
 <meta property="article:published_time" content="2024-01-12T07:29:57.000Z">
-<meta property="article:modified_time" content="2024-05-05T04:19:38.911Z">
+<meta property="article:modified_time" content="2024-05-08T09:16:55.879Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="AI &amp; ML">
 <meta name="twitter:card" content="summary">
@@ -961,7 +961,7 @@ P(X_{1:N},e_{1:N})=P(X_1)P(e_1|X_1)\prod_{t=2}^NP(X_t|X_{t-1})P(e_t|X_t)
 \]</span> 直接求 joint distribution table <span class="math inline">\(P(X_{1:N},e_{1:N})\)</span>
 再提取是一种方法，但时空复杂度都是指数级的 <span class="math inline">\(O(d^N)\)</span>。Viterbi Algorithm 则采用 DP
 的思想把复杂度降到 <span class="math inline">\(O(dN)\)</span>。</p>
-<p>First Pass - 从头到尾扫，求 <span class="math inline">\(m_t[x_t]\)</span>。<span class="math inline">\(m_t[x_t]\)</span> 的定义是，给定时刻 <span class="math inline">\(t\)</span> 的取值 <span class="math inline">\(X_t=x_t\)</span> 与一系列观测 <span class="math inline">\(e_1,e_2,...,e_t\)</span>，路径 <span class="math inline">\(X_{1:t}\)</span> 的最大概率。即，确定了末尾元素
+<p>从头到尾扫，求 <span class="math inline">\(m_t[x_t]\)</span>。<span class="math inline">\(m_t[x_t]\)</span> 的定义是，给定时刻 <span class="math inline">\(t\)</span> 的取值 <span class="math inline">\(X_t=x_t\)</span> 与一系列观测 <span class="math inline">\(e_1,e_2,...,e_t\)</span>，路径 <span class="math inline">\(X_{1:t}\)</span> 的最大概率。即，确定了末尾元素
 <span class="math inline">\(x_t\)</span> 后，所有 <span class="math inline">\(x_1,x_2,...,x_{t-1},x_t\)</span>
 中概率最大的序列所对应的概率。 <span class="math display">\[
 \begin{aligned}
@@ -971,7 +971,7 @@ m_t[x_t]&amp;=\max_{x_{1:t-1}}P(x_{1:t}, e_{1:t})\\
 &amp;=P(e_t|x_t)\max_{x_{t-1}}P(x_t|x_{t-1})\max_{x_{1:t-2}}P(x_{1:t-1},e_{1:t-1})\\
 &amp;=P(e_t|x_t)\max_{x_{t-1}}P(x_t|x_{t-1})m_{t-1}[x_{t-1}]
 \end{aligned}
-\]</span> Second Pass - 从尾扫到头，求 <span class="math inline">\(a_t[x_t]\)</span>。<span class="math inline">\(a_t[x_t]\)</span> 的定义是，给定末尾元素 <span class="math inline">\(x_t\)</span>，使得 <span class="math inline">\(x_1,x_2,...,x_t\)</span>
+\]</span> 与此同时记录 <span class="math inline">\(a_t[x_t]\)</span>。<span class="math inline">\(a_t[x_t]\)</span> 的定义是，给定末尾元素 <span class="math inline">\(x_t\)</span>，使得 <span class="math inline">\(x_1,x_2,...,x_t\)</span>
 序列概率最大的最佳的次末尾元素 <span class="math inline">\(x_{t-1}\)</span>。 <span class="math display">\[
 \begin{aligned}
 a_t[x_t]&amp;=P(e_t|x_t)\arg
