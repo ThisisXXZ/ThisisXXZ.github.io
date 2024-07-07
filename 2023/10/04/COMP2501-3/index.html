@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Data Wrangling 的下一步就是 Data Visualization。这一节我们将引入 ggplot2 开源包，学习其极其新手友好的语法，用仅仅几行代码创造出各式各样的图表与 summary。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Introduction to DS - R 语言初探之叁">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/10/04/COMP2501-3/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="Data Wrangling 的下一步就是 Data Visualization。这一节我们将引入 ggplot2 开源包，学习其极其新手友好的语法，用仅仅几行代码创造出各式各样的图表与 summary。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-10-04T12:29:32.000Z">
+<meta property="article:modified_time" content="2024-07-07T08:47:24.139Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Programming Languages">
+<meta property="article:tag" content="Data Science">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2023/10/04/COMP2501-3/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/10/04/COMP2501-3/","path":"2023/10/04/COMP2501-3/","title":"Introduction to DS - R 语言初探之叁"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Introduction to DS - R 语言初探之叁 | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">39</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">17</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#graph-components"><span class="nav-number">1.</span> <span class="nav-text">Graph Components</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#layers"><span class="nav-number">2.</span> <span class="nav-text">Layers</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#geometry-layer"><span class="nav-number">2.1.</span> <span class="nav-text">Geometry layer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#adding-text"><span class="nav-number">2.2.</span> <span class="nav-text">Adding text</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#scales"><span class="nav-number">2.3.</span> <span class="nav-text">Scales</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#labels-and-titles"><span class="nav-number">2.4.</span> <span class="nav-text">Labels and titles</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#catogories-as-colors"><span class="nav-number">2.5.</span> <span class="nav-text">Catogories as colors</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#global-aesthetic-mappings"><span class="nav-number">3.</span> <span class="nav-text">Global Aesthetic Mappings</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#visualization-data-distribution"><span class="nav-number">4.</span> <span class="nav-text">Visualization Data
+Distribution</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#barplot"><span class="nav-number">5.</span> <span class="nav-text">Barplot</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ecdf-histogram"><span class="nav-number">6.</span> <span class="nav-text">eCDF &amp; Histogram</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cumulative-distribution-functions"><span class="nav-number">6.1.</span> <span class="nav-text">Cumulative distribution
+functions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#histogram"><span class="nav-number">6.2.</span> <span class="nav-text">Histogram</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#smoothed-density"><span class="nav-number">6.3.</span> <span class="nav-text">Smoothed density</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#boxplot"><span class="nav-number">7.</span> <span class="nav-text">Boxplot</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">8.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/10/04/COMP2501-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Introduction to DS - R 语言初探之叁 | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Introduction to DS - R 语言初探之叁
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-10-04 20:29:32" itemprop="dateCreated datePublished" datetime="2023-10-04T20:29:32+08:00">2023-10-04</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Data Wrangling 的下一步就是 Data Visualization。这一节我们将引入
+<code>ggplot2</code>
+开源包，学习其极其新手友好的语法，用仅仅几行代码创造出各式各样的图表与
+summary。</p>
+<span id="more"></span>
+<p>在开始之前，使用 <code>library(ggplot2)</code> 导入
+<code>ggplot2</code> 包。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="graph-components">Graph Components</h2>
+<p>在 <code>ggplot2</code> 包中图表的组分包括：</p>
+<ul>
+<li>data component.</li>
+<li>geometry component. (图表本身，如 scatterplot, barplot, histogram,
+boxplot...)</li>
+<li><strong>Aesthetic mapping</strong>. 是一系列 <em>visual
+cues</em>，决定了数据在图表上 present 的方式。
+<ul>
+<li>map observations to <span class="math inline">\(x\)</span>- or <span class="math inline">\(y\)</span>-scale visual cues.</li>
+<li>map variables to color visual cue.</li>
+<li>other graph styling......</li>
+</ul></li>
+</ul>
+<p><br></p>
+<h2 id="layers">Layers</h2>
+<p>在 <code>ggplot2</code> 包中我们通过添加 layers
+的方式「组装」出一个图表；每一个 layer 都是一个函数。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DATA <span class="operator">|&gt;</span> ggplot<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> <span class="operator">&lt;</span>LAYER <span class="number">1</span><span class="operator">&gt;</span> <span class="operator">+</span> <span class="operator">&lt;</span>LAYER <span class="number">2</span><span class="operator">&gt;</span> <span class="operator">+</span> ... <span class="operator">+</span> <span class="operator">&lt;</span>LAYER N<span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="geometry-layer">Geometry layer</h3>
+<p><code>&lt;LAYER 1&gt;</code> 通常是一个 geometry layer，形如
+<code>geom_X()</code>，其中 <code>X</code> 是图表的类型，如
+<code>geom_point</code>, <code>geom_bar</code> 与
+<code>geom_histogram</code>。</p>
+<p>以 <code>geom_point</code> 为例：我们需要向 <code>geom_point()</code>
+函数传入 data 与一种 mapping。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p <span class="operator">&lt;-</span> murders <span class="operator">|&gt;</span> ggplot<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>x <span class="operator">=</span> population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> y <span class="operator">=</span> total<span class="punctuation">)</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>以上的代码对应一个 <span class="math inline">\(x\)</span> 轴为
+<code>population/10^6</code>, <span class="math inline">\(y\)</span>
+轴为 <code>total</code> 的 scatterplot。</p>
+<p>注意 <code>aes()</code> 函数：它将为传入的两个 variable 构建
+aesthetic mapping。此外，它也是 <code>ggplot2</code>
+包中少数能够直接识别 variable 的函数，我们可以直接传入
+<code>total</code> 而不用写成 <code>murders$total</code>。</p>
+<p><code>geom_point()</code> 函数还支持传入其他的参数，例如
+<code>size</code>:</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p <span class="operator">&lt;-</span> murders <span class="operator">|&gt;</span> ggplot<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>x <span class="operator">=</span> population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> y <span class="operator">=</span> total<span class="punctuation">)</span><span class="punctuation">,</span> size <span class="operator">=</span> <span class="number">2</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>注意 <code>size</code> 并不是 mapping，它是应用在所有 points 上的一个
+styling rule；因此它必须写在 <code>aes()</code> 函数之外，作为
+<code>geom_point()</code> 函数的参数而非 <code>aes()</code>
+函数的参数。</p>
+<h3 id="adding-text">Adding text</h3>
+<p><code>geom_label</code> 与 <code>geom_text</code>
+函数允许我们为图表中的数据添加文本说明。它们的区别在于前者所添加的文本有一个矩形边框，而后者没有。</p>
+<p>我们也许只想为某些数据添加文本说明，因此 text 不是应用在所有 points
+上的 general styling rule。我们需要通过 mapping 指定需要添加 text
+的数据。(这意味着 <code>label</code> 是 <code>aes()</code>
+函数的参数而非 <code>geom_text()</code> 的。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">p <span class="operator">+</span> geom_text<span class="punctuation">(</span>aes<span class="punctuation">(</span>population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> total<span class="punctuation">,</span> label <span class="operator">=</span> abb<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">p <span class="operator">+</span> geom_text<span class="punctuation">(</span>aes<span class="punctuation">(</span><span class="number">10</span><span class="punctuation">,</span> <span class="number">100</span><span class="punctuation">,</span> label <span class="operator">=</span> <span class="string">&quot;x=10, y=100&quot;</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>任何 layer 函数除 <code>data</code> 与 <code>aes</code>
+以外往往还能接受其他类型的参数，<code>geom_text</code>
+也不例外。上述代码表示的图表中，文本与 data points
+经常发生重合。为提升观感，我们传入 <code>nudge_x</code> 参数使其在 <span class="math inline">\(x\)</span> 方向产生偏移。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p <span class="operator">+</span> geom_text<span class="punctuation">(</span>aes<span class="punctuation">(</span>population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> total<span class="punctuation">,</span> label <span class="operator">=</span> abb<span class="punctuation">)</span><span class="punctuation">,</span> nudge_x <span class="operator">=</span> <span class="number">1.5</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<h3 id="scales">Scales</h3>
+<p><code>scale_x_continuous</code> 与 <code>scale_y_continuous</code>
+函数允许我们操作图表的标度 (scale)。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">p <span class="operator">+</span> scale_x_continuous<span class="punctuation">(</span>trans <span class="operator">=</span> <span class="string">&quot;log10&quot;</span><span class="punctuation">)</span> <span class="operator">+</span> scale_y_continuous<span class="punctuation">(</span>trans <span class="operator">=</span> <span class="string">&quot;log10&quot;</span><span class="punctuation">)</span></span><br><span class="line">p <span class="operator">+</span> scale_x_log10<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> scale_y_log10<span class="punctuation">(</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<h3 id="labels-and-titles">Labels and titles</h3>
+<p>使用 <code>xlab</code> 与 <code>ylab</code> 函数修改图表在 <span class="math inline">\(x\)</span> 轴与 <span class="math inline">\(y\)</span> 轴方向上的标签；使用
+<code>ggtitle</code> 函数为图表添加标题。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">p <span class="operator">&lt;-</span> p <span class="operator">+</span> scale_x_log10<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    scale_y_log10<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    xlab<span class="punctuation">(</span><span class="string">&quot;Population in millions (log scale)&quot;</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    ylab<span class="punctuation">(</span><span class="string">&quot;Total number of murders (log scale)&quot;</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    ggtitle<span class="punctuation">(</span><span class="string">&quot;US Gun Muders in 2010&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<h3 id="catogories-as-colors">Catogories as colors</h3>
+<p>我们再添加一层 <code>geom_point</code> layer
+来改变图表中数据点的颜色。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p <span class="operator">+</span> geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> total<span class="punctuation">)</span><span class="punctuation">,</span> color <span class="operator">=</span> <span class="string">&quot;red&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>注意，<code>geom_point</code> 中 <code>aes</code>
+参数是不可省略的，即使从逻辑上来说，「改变数据点的颜色」这一功能看上去并不需要提供
+mapping 信息。[stay tuned for global aesthetic mapping]</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p <span class="operator">+</span> geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> total<span class="punctuation">,</span> col <span class="operator">=</span> region<span class="punctuation">)</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>以上代码根据每个 observation 的 <code>region</code>
+为数据点染色；相同 <code>region</code>
+的数据点将具有相同的颜色。在这里，color 又成了一种 aesthetic
+mapping，作为 <code>aes()</code> 函数的参数 <code>col</code> 而非
+<code>geom_point()</code> 函数的参数。</p>
+<table>
+<colgroup>
+<col style="width: 31%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">aesthetic</th>
+<th style="text-align: center;">aesthetic mapping</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">往往应用于全体数据</td>
+<td style="text-align: center;">可以应用于全体数据或部分数据</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">值是常量</td>
+<td style="text-align: center;">值是数据中的某个变量</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">作为 layer 函数的参数</td>
+<td style="text-align: center;">作为 <code>aes()</code>
+函数的参数参与生成 aes mapping</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<h2 id="global-aesthetic-mappings">Global Aesthetic Mappings</h2>
+<p>综合以上的
+layers，我们组装出了一个好看的图表。其完整的，不包含中间变量的代码如下：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">p <span class="operator">&lt;-</span> murders <span class="operator">|&gt;</span> ggplot<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>x <span class="operator">=</span> population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> y <span class="operator">=</span> total<span class="punctuation">)</span><span class="punctuation">,</span> size <span class="operator">=</span> <span class="number">2</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">    geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> total<span class="punctuation">,</span> col <span class="operator">=</span> region<span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    geom_text<span class="punctuation">(</span>aes<span class="punctuation">(</span>population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> total<span class="punctuation">,</span> label <span class="operator">=</span> abb<span class="punctuation">)</span><span class="punctuation">,</span> nudge_x <span class="operator">=</span> <span class="number">0.5</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    scale_x_log10<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    scale_y_log10<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    xlab<span class="punctuation">(</span><span class="string">&quot;Population in millions (log scale)&quot;</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    ylab<span class="punctuation">(</span><span class="string">&quot;Total number of murders (log scale)&quot;</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    ggtitle<span class="punctuation">(</span><span class="string">&quot;US Gun Muders in 2010&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>可以见到，<code>aes(x = population/10^6, y = total)</code> 这一
+aesthetic mapping 共出现了三次。</p>
+<p><code>ggplot2</code> 允许我们在 <code>ggplot()</code> 函数中定义
+global aesthetic mapping，之后所有未指明 aesthetic mapping
+的函数都将使用该 global aesthetic mapping 作为参数。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">p <span class="operator">&lt;-</span> murders <span class="operator">|&gt;</span> ggplot<span class="punctuation">(</span>aes<span class="punctuation">(</span>x <span class="operator">=</span> population<span class="operator">/</span><span class="number">10</span><span class="operator">^</span><span class="number">6</span><span class="punctuation">,</span> y <span class="operator">=</span> total<span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    geom_point<span class="punctuation">(</span>size <span class="operator">=</span> <span class="number">2</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    geom_point<span class="punctuation">(</span>aes<span class="punctuation">(</span>col <span class="operator">=</span> region<span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    geom_text<span class="punctuation">(</span>nudge_x <span class="operator">=</span> <span class="number">0.5</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<p>是不是清晰简洁多了。当然，global aesthetic mapping 也是可以被
+override 的。</p>
+<p><br></p>
+<h2 id="visualization-data-distribution">Visualization Data
+Distribution</h2>
+<div class="note info no-icon"><p>The most basic statistical summary of a list of objects or numbers is
+its <em>distribution</em>.</p>
+</div>
+<p>散点图描述的是数据集中的某个因变量 <span class="math inline">\(y\)</span> 随自变量 <span class="math inline">\(x\)</span>
+而变化的大致趋势，主要用于变量间的相关性分析；而描述数据的分布
+(distribution) 我们则有另外的选择，如 bar plot, eCDF, histogram 与
+boxplot。</p>
+<p>首先我们来澄清一个概念：数据集中变量的类型。</p>
+<ul>
+<li><em>Categorical</em> type. (generally) small groups with many data
+points in each group.
+<ul>
+<li>Ordinal: ordered values. E.g. Spiciness: (mild, medium, hot).</li>
+<li>Non-ordinal: unordered values. E.g. Region: (west, central, north
+east, south).</li>
+</ul></li>
+<li><em>Numerical</em> type. (generally) large groups with few data
+points in each group.
+<ul>
+<li>Discrete numerics.</li>
+<li>Continuous numerics.</li>
+</ul></li>
+</ul>
+<p><br></p>
+<h2 id="barplot">Barplot</h2>
+<p>On <em>categorical type</em> of variables, barplot shows for each
+group the number of data points whose belong to this group.</p>
+<p>情景：统计 northeast，central，south，west 四个 <code>region</code>
+的州占美国总犯罪率的比例。</p>
+<p>注意，barplot 是针对 categorical type variables 而言的；其对
+numerical type
+效用不大。考虑统计班级内所有同学身高的分布这一情景：由于两学生身高完全一致的情况相当罕见，对应的
+barplot 中绝大部分的 vertical bar 高度均为 <span class="math inline">\(1\)</span>。这并不能提供很有效的 data
+summary。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">murders <span class="operator">|&gt;</span> ggplot<span class="punctuation">(</span>aes<span class="punctuation">(</span>region<span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">+</span> geom_bar<span class="punctuation">(</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="ecdf-histogram">eCDF &amp; Histogram</h2>
+<h3 id="cumulative-distribution-functions">Cumulative distribution
+functions</h3>
+<p>累积分布函数图 (eCDF, emipirical cumulative distribution funcion)
+描述了某个 numerical variable <span class="math inline">\(x\)</span>
+的累积分布情况，即 <span class="math inline">\(F(a)=\Pr(x\leq
+a)\)</span>。</p>
+<p><span class="math inline">\(\Pr(x\leq a)\)</span> 表示 <span class="math inline">\(x\leq a\)</span> 的
+possibility；我们可以将其视为所有满足 <span class="math inline">\(x\leq
+a\)</span> 的数据点占所有数据的比例。</p>
+<p>eCDF 能够很好的描述 numerical variable 的分布，但并不直观。</p>
+<h3 id="histogram">Histogram</h3>
+<p>直方图 (histogram) 建立在 <em>bins</em> 的概念之上；我们将 span of
+data 分割为若干个等长的，不重叠的 <em>bins</em>，并计算落在每个 bins
+中的 data points 个数，并将其作为每个 bin 所对应的 bar 的高度。</p>
+<p>实际上，我们通过划分 bins 的方式人为创造出一个 categorical
+variable。Histogram 本质上就是一个以 bin 作为 categorical variable
+绘制出的 barplot。</p>
+<p>需要注意的是，histogram 展现出 numerical variable
+分布的同时也损失了一部分关于这些数据的信息；我们无法通过 histogram
+区分位于一个 bin 内的数据点的区别。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">heights <span class="operator">|&gt;</span> filter<span class="punctuation">(</span>sex <span class="operator">==</span> <span class="string">&quot;Female&quot;</span><span class="punctuation">)</span> <span class="operator">|&gt;</span></span><br><span class="line">           ggplot<span class="punctuation">(</span>aes<span class="punctuation">(</span>height<span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">           geom_histogram<span class="punctuation">(</span>binwidth <span class="operator">=</span> <span class="number">1</span><span class="punctuation">,</span> fill <span class="operator">=</span> <span class="string">&quot;blue&quot;</span><span class="punctuation">,</span> col <span class="operator">=</span> <span class="string">&quot;black&quot;</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">           xlab<span class="punctuation">(</span><span class="string">&quot;Female heights in inches&quot;</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">           ggtitle<span class="punctuation">(</span><span class="string">&quot;Histogram&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<h3 id="smoothed-density">Smoothed density</h3>
+<p>将 histogram 的每个 bar 的顶端连起来，形成的图表称为 smooth density
+plot。它的合理性基于 estimate。Smoothed density plot 相对于 histogram
+的优点在于它能够更加直观的比较两个分布间的差异。</p>
+<p>smoothed density plot 舍弃了 bar 而采用 curve 来描述分布，这不仅更加
+visually appealing，还使得我们能用 normal distribution 来拟合 smoothed
+density plot；即，我们可以用平均值 <span class="math inline">\(\mu\)</span> 与标准差 <span class="math inline">\(\sigma\)</span>
+来近似的描述某个符合正态分布的数据集对应的 smoothed density plot。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">heights <span class="operator">|&gt;</span> filter<span class="punctuation">(</span>sex <span class="operator">==</span> <span class="string">&quot;Female&quot;</span><span class="punctuation">)</span> <span class="operator">|&gt;</span></span><br><span class="line">           ggplot<span class="punctuation">(</span>aes<span class="punctuation">(</span>height<span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">           geom_density<span class="punctuation">(</span>fill <span class="operator">=</span> <span class="string">&quot;blue&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="boxplot">Boxplot</h2>
+<p>箱型图 (boxplot) 是一种 five-number data
+summary，该五个值分别是下限，上限与三种 <em>quartiles</em> (the 25th,
+50th and 75th percentiles)。</p>
+<p>此外，boxplot 中还有一系列 <em>outliers</em> (异常值)，它们不属于 box
+的范围。</p>
+<ul>
+<li>Interquartile range (IQ): the difference between the 25th <span class="math inline">\((Q1)\)</span> and 75th <span class="math inline">\((Q3)\)</span>.</li>
+<li>下限: <span class="math inline">\(Q1-1.5IQ\)</span>, 上限: <span class="math inline">\(Q3+1.5IQ\)</span>.</li>
+<li>所有 <span class="math inline">\(&gt;\)</span> 上限与 <span class="math inline">\(&lt;\)</span> 下限的数据点都是 outliers。</li>
+</ul>
+<p>不要混淆上/下限与最大/最小值的概念；上限与下限是 boxplot
+中人为规定的边界，而不是某个具体的数据点。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p>Code: COMP2501, Lecturer: Dr. H.F. Ting.</p>
+<p>Course textbook:</p>
+<p><a target="_blank" rel="noopener" href="http://rafalab.dfci.harvard.edu/dsbook/">Data Analysis and
+Prediction Algorithms with R - Rafael A. Irizarry</a>.</p>
+<!-- flag of hidden posts -->
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2023/10/04/COMP2501-3/" title="Introduction to DS - R 语言初探之叁">https://www.thisisxxz.com/2023/10/04/COMP2501-3/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | Introduction to DS - R 语言初探之叁](https://www.thisisxxz.com/2023/10/04/COMP2501-3/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Programming-Languages/" rel="tag"><i class="fa fa-tag"></i> Programming Languages</a>
+              <a href="/tags/Data-Science/" rel="tag"><i class="fa fa-tag"></i> Data Science</a>
+          </div>
+
+        
+
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/10/04/COMP2501-3/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>
