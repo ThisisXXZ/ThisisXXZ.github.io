@@ -25,28 +25,28 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="5.23.2023 恭喜我在茫茫的电子之海中找到了一个属于自己的小岛。 你是？  谁问你了？  HKU sophomore junior majoring in Computer Science.  这里是？  互联网中最不起眼的一隅；即使是这样的角落也有千千万万个。但它的的确确是*完全*属于我的。   Notes. Thoughts. Moments.   全">
-<meta property="og:type" content="website">
-<meta property="og:title" content="ABOUT">
-<meta property="og:url" content="https://www.thisisxxz.com/about/index.html">
+    <meta name="description" content="计算理论 (Theory of Computation) 当之无愧是计算机科学王冠上的明珠；考虑到我贫瘠的智商，以后估计不会朝 TCS 方向来走；但对这些优雅的理论有一个最基本的了解应当是 CS 学生的素养。 讽刺的是，你坑十几年前就没有开设这门课了，只得留待交换来上。老师是印度人，口音很重，我听完整节课才明白他口中的「GEO」其实是「zero」；但课还是讲得十分清楚，颇有 Ravi 之风">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自动人形会梦见 NP 完全问题吗">
+<meta property="og:url" content="https://www.thisisxxz.com/2024/08/16/cs3231/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="5.23.2023 恭喜我在茫茫的电子之海中找到了一个属于自己的小岛。 你是？  谁问你了？  HKU sophomore junior majoring in Computer Science.  这里是？  互联网中最不起眼的一隅；即使是这样的角落也有千千万万个。但它的的确确是*完全*属于我的。   Notes. Thoughts. Moments.   全">
+<meta property="og:description" content="计算理论 (Theory of Computation) 当之无愧是计算机科学王冠上的明珠；考虑到我贫瘠的智商，以后估计不会朝 TCS 方向来走；但对这些优雅的理论有一个最基本的了解应当是 CS 学生的素养。 讽刺的是，你坑十几年前就没有开设这门课了，只得留待交换来上。老师是印度人，口音很重，我听完整节课才明白他口中的「GEO」其实是「zero」；但课还是讲得十分清楚，颇有 Ravi 之风">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-05-23T13:22:12.000Z">
-<meta property="article:modified_time" content="2024-08-14T08:25:53.853Z">
+<meta property="article:published_time" content="2024-08-16T12:31:10.000Z">
+<meta property="article:modified_time" content="2024-08-16T13:50:16.166Z">
 <meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Theoretical Computer Science">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://www.thisisxxz.com/about/">
+<link rel="canonical" href="https://www.thisisxxz.com/2024/08/16/cs3231/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"en","comments":"","permalink":"https://www.thisisxxz.com/about/index.html","path":"about/index.html","title":"ABOUT"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2024/08/16/cs3231/","path":"2024/08/16/cs3231/","title":"自动人形会梦见 NP 完全问题吗"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>ABOUT | ThisisXXZ's Blog
-</title>
+<title>自动人形会梦见 NP 完全问题吗 | ThisisXXZ's Blog</title>
   
 
 
@@ -155,7 +155,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -168,6 +168,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#preliminaries"><span class="nav-number">1.</span> <span class="nav-text">Preliminaries</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dfa-nfa-and-regex"><span class="nav-number">2.</span> <span class="nav-text">DFA, NFA and RegEx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -266,136 +267,253 @@
 
     </div>
 
-    <div class="main-inner page posts-expand">
-    <ul class="sub-menu menu">
-      
-  <li class="menu-item menu-item-anime"><a href="/about/anime/" rel="section"><i class="fa fa-film fa-fw"></i>Anime</a></li>
+    <div class="main-inner post posts-expand">
 
 
-      
-  <li class="menu-item menu-item-books"><a href="/about/books/" rel="section"><i class="fa fa-book fa-fw"></i>Books</a></li>
+  
 
 
-      
-  <li class="menu-item menu-item-games"><a href="/about/games/" rel="section"><i class="fa fa-gamepad fa-fw"></i>Games</a></li>
+<div class="post-block">
+  
+  
 
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2024/08/16/cs3231/">
 
-      
-  <li class="menu-item menu-item-playlist"><a href="/about/playlist/" rel="section"><i class="fa fa-music fa-fw"></i>Playlist</a></li>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
 
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
 
-    </ul>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="自动人形会梦见 NP 完全问题吗 | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          自动人形会梦见 NP 完全问题吗
+        </h1>
 
+        <div class="post-meta-container">
+          <div class="post-meta">
 
-    
-    
-    
-    <div class="post-block" lang="en"><header class="post-header">
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
 
-<h1 class="post-title" itemprop="name headline">ABOUT
-</h1>
+      <time title="Created: 2024-08-16 20:31:10" itemprop="dateCreated datePublished" datetime="2024-08-16T20:31:10+08:00">2024-08-16</time>
+    </span>
 
-<div class="post-meta-container">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
 </div>
 
-</header>
+        </div>
+      </header>
 
-      
-      
-      <div class="post-body">
-          <p>5.23.2023 恭喜我在茫茫的电子之海中找到了一个属于自己的小岛。</p>
-<h2 id="你是">你是？</h2>
-<center>
-<em>谁问你了？</em>
-</center>
-<p>HKU <del>sophomore</del> junior majoring in Computer Science.</p>
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>计算理论 (Theory of Computation)
+当之无愧是计算机科学王冠上的明珠；考虑到我贫瘠的智商，以后估计不会朝 TCS
+方向来走；但对这些优雅的理论有一个最基本的了解应当是 CS 学生的素养。</p>
+<p>讽刺的是，你坑十几年前就没有开设这门课了，只得留待交换来上。老师是印度人，口音很重，我听完整节课才明白他口中的「GEO」其实是「zero」；但课还是讲得十分清楚，颇有
+Ravi 之风。</p>
+<span id="more"></span>
 <p><br></p>
-<h2 id="这里是">这里是？</h2>
-<center>
-<em>互联网中最不起眼的一隅；即使是这样的角落也有千千万万个。但它的的确确是*完全*属于我的。</em>
-</center>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="preliminaries">Preliminaries</h2>
+<p>关于 formal proof 的一些 recap，一些自动机理论概念的 notations
+与定义。</p>
+<p>关于 strings/languages 的可数性质：</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://thisisxxz.com/categories/笔记/">Notes</a>.</li>
-<li><a target="_blank" rel="noopener" href="https://thisisxxz.com/categories/杂感/">Thoughts</a>.</li>
-<li><a target="_blank" rel="noopener" href="https://thisisxxz.com/categories/%E5%85%89%E7%8E%89/">Moments</a>.</li>
+<li>Number of strings over any non-empty alphabet is
+<strong>countable</strong>. e.g., length then lexicographic order.</li>
+<li>Number of languages over any non-empty alphabet is
+<strong>uncountable</strong>. Remember that language is just <strong>a
+subset of the set of all strings</strong>.</li>
 </ul>
 <p><br></p>
-<h2 id="全-cg-鉴赏">全 CG 鉴赏</h2>
-<center>
-<em>我始终不敢抬头看：惟愿这些足迹能领我向正确的道路。</em>
-</center>
-<h6 id="programming-languages-the-university-of-washington">Programming
-Languages, the University of Washington</h6>
-<p><a target="_blank" rel="noopener" href="https://thisisxxz.com/categories/notes/courses/Programming-Languages-UW/">see
-notes here</a>.
-去年休学期间上的一门课，印象很深刻。找个时间把笔记转移过来。(8.3.2023
-转移完毕)</p>
-<p>虽然是 PL 的入门课，但见到自己隐隐约约在使用的各种 programming
-techniques 被系统化，概念化的时候总是令人兴奋的。无论你未来是否想专攻 PL
-方向，这门课都值得一上；并且，接触的编程语言越多，相关的知识储备越丰富，就越能深刻的领悟到这门课的精髓。</p>
-<h6 id="程序设计与算法专项课程北京大学">程序设计与算法专项课程，北京大学</h6>
-<p>也是去年休学无聊期间刷的一门课。对 C++
-这门语言有了更深的认识，接触了各种 OOP
-概念，包括多态，虚函数，模板类/类模板等等。虽然讲得很好，但毕竟是十几年前开设的课程了，难免有些陈旧，上课的时候一股年代感扑面而来。</p>
-<p>最有成就感的还是独立完成了课程中的一个超大 project：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/VeniVidiVici/p/16200911.html">OpenJudge
-3433 R:魔兽世界终极版</a>。写了近 1000
-行的代码，当时提交通过的兴奋现在还历历在目。</p>
-<h6 id="cryptography-the-university-of-hong-kong">Cryptography, the
-University of Hong Kong</h6>
-<p><a target="_blank" rel="noopener" href="https://thisisxxz.com/categories/notes/courses/Cryptography-HKU/">see
-notes here</a>.
-在整个大一生涯中收获最多的一门课，深入了解了密码学及其原理。讲师 Ravi
-和助教都十分的认真负责，给分 fair 且
-lenient。在学习的过程中也常常会被密码系统设计的精妙所震撼。只是如果未来想要涉足这一领域，恐怕需要很高的智商。</p>
-<p>平时分拉满，可惜的是期末发挥得不是很好；最后
-A，也算是一个满意的成绩了。</p>
-<h6 id="algorithms-princeton-university-i-ii">Algorithms, Princeton
-University I &amp; II</h6>
-<p><a target="_blank" rel="noopener" href="https://thisisxxz.com/categories/notes/courses/Algorithms-Princeton/">see
-notes here</a>. <a target="_blank" rel="noopener" href="https://sedgewick.io/">Robert Sedgewick</a>
-教授真的是一位大牛；就如 CSdiy
-中提到的一样，他的确有着把算法讲的深入浅出的魔力。之前一直模模糊糊的
-maxflow，Red-Black tree，Prim
-等算法仿佛被揭开了面纱；不如说它们本来就应该这样清晰，优雅而美丽。这让我意识到对于天资一般的人来说，有一个好老师是多么的重要。</p>
-<p>不仅是教学上，Sedgewick
-教授在学术上也硕果累累，以至于他参与设计的算法经常出现在课程中。我有印象的就有
-Shellsort 的某个特殊序列, 3-way quicksort, Red-Black tree (Orz), Ternary
-trie 等等。</p>
-<p>令我印象最深刻的还是最后一节关于 intractability
-的介绍；这令我得以一窥理论计算机科学的魅力。为什么那么多人热衷于将计算机科学浪漫化，答案就在其中：对问题可解性的研究确实触及到了许多非常本质的问题，也是这门学科最接近哲学的一个角度。</p>
-<h6 id="the-missing-semester-of-your-cs-education-mit">The Missing
-Semester of Your CS Education, MIT</h6>
-<p>的确是计算机教育中缺失的一课；课程中涵盖了许多有用的工具，如果之前有使用的经验，上起来会更加有共鸣。三个老师都讲得很好，其中最喜欢的还是
-Anish，讲的特别清楚。</p>
-<p><a target="_blank" rel="noopener" href="https://thisisxxz.com/categories/notes/courses/Missing-Semester-MIT/">see
-notes here</a>. 总的来说收获最多的应该是 data wrangling 与 Git
-这两小节。特别推荐课件里提到的网站 Learn Git Branch，做完感觉对 Git
-的理解提升了一个层次。从这节课开始决定使用 Vim (虽然是 Vim for
-VSCode)，希望能够坚持下去！</p>
-<h6 id="from-nand-to-tetris-hebrew-university">From Nand to Tetris,
-Hebrew University</h6>
-<p><a target="_blank" rel="noopener" href="https://thisisxxz.com/categories/%E7%AC%94%E8%AE%B0/From-NAND-to-Tetris-HUJI/">see
-notes here</a>.
-第一部分已完成。完成了从逻辑门抽象到汇编语言的伟大一步！</p>
-<h6 id="machine-learning-specialization-stanford-deeplearning.ai">Machine
-Learning Specialization, Stanford &amp; DeepLearning.AI</h6>
-<p>已完成。作为机器学习的入门课很好，吴恩达非常亲切，水平也很高，能把复杂的概念讲的像
-1+1 一样直白。就是 Coursera 自动扣款阿米诺斯了。</p>
-<h6 id="cs224n-natural-language-processing-with-deep-learning-stanford">CS224N:
-Natural Language Processing with Deep Learning, Stanford</h6>
-<p>学习中......</p>
+<h2 id="dfa-nfa-and-regex">DFA, NFA and RegEx</h2>
+<p>DFA (Deterministic Finite Automata, <em>确定性有限自动机</em>)</p>
+<ul>
+<li><span class="math inline">\(A=(Q, \Sigma, \delta, q_0,
+F)\)</span></li>
+<li>从左至右：finite <strong>states</strong>, finite <strong>input
+symbols</strong>, <strong>transition functions</strong>,
+<strong>starting state</strong>, <strong>final/accepting
+states</strong>.</li>
+</ul>
+<p>Extending transitions function to strings. 很符合直觉，把 strings
+作为一连串 symbols 输入自动机。</p>
+<ul>
+<li>Basis. <span class="math inline">\(\hat\delta(q,
+\epsilon)=q\)</span></li>
+<li>Induction. <span class="math inline">\(\hat\delta(q,
+xa)=\delta(\hat\delta(q,x), a)\)</span></li>
+<li>自然的，有 language(s) accepted by DFA <span class="math inline">\(L(A)=\{w|\hat\delta(q_0, w)\in F\}\)</span></li>
+<li>类似的，定义 <strong>dead states</strong> <span class="math inline">\(q\)</span> for all <span class="math inline">\(w\in \Sigma^*\)</span>, <span class="math inline">\(\hat\delta(q, w)\notin F\)</span></li>
+<li><strong>unreachable states</strong> <span class="math inline">\(q\)</span> for all <span class="math inline">\(w\in \Sigma^*\)</span>, <span class="math inline">\(\hat\delta(q_0, w)\neq q\)</span></li>
+</ul>
+<p>NFA (Nondeterministic Finite State Automata,
+<em>非确定性有限状态自动机</em>) - 与 DFA 的区别在于 transition function
+maps the input to <strong>a set of states</strong>.</p>
+<ul>
+<li>language(s) accepted by NFA <span class="math inline">\(L(A)=\{w|\hat\delta(q_0,w)\cap F\neq
+\emptyset\}\)</span>.</li>
+</ul>
+<p><strong>Equivalence of NFA and DFA</strong>. NFAs and DFAs are
+equivalent in terms of the languages they can recognize, even though
+DFAs may require more states (potentially exponentially more) than
+NFAs.</p>
 <p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info: CS3231. Professor: Sanjay Jain.</p>
+<p>Course textbook: <em>Introduction to Automata Theory, Languages and
+Computation (3rd Edition)</em>, Hopcraft, Motwani &amp; Ullman, (2014),
+Pearson</p>
+<p>Course website: https://www.comp.nus.edu.sg/~sanjay/cs3231.html</p>
 
-      </div>
+    </div>
+
+    <div>
       
-      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
       
     </div>
 
     
     
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2024/08/16/cs3231/" title="自动人形会梦见 NP 完全问题吗">https://www.thisisxxz.com/2024/08/16/cs3231/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | 自动人形会梦见 NP 完全问题吗](https://www.thisisxxz.com/2024/08/16/cs3231/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Theoretical-Computer-Science/" rel="tag"><i class="fa fa-tag"></i> Theoretical Computer Science</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/08/13/ph2112/" rel="prev" title="非经典逻辑">
+                  <i class="fa fa-chevron-left"></i> 非经典逻辑
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
 </div>
   </main>
 
@@ -474,7 +592,7 @@ Natural Language Processing with Deep Learning, Stanford</h6>
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
 <script src="/js/third-party/math/mathjax.js"></script>
 
 
@@ -489,7 +607,7 @@ Natural Language Processing with Deep Learning, Stanford</h6>
       new needShareButton('#needsharebutton-postbottom', pbOptions);
   </script>
 
-<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/about/"}</script>
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/08/16/cs3231/"}</script>
 <script>
 document.addEventListener('page:loaded', () => {
   NexT.utils.loadComments(CONFIG.valine.el)
