@@ -33,7 +33,7 @@
 <meta property="og:description" content="计算理论 (Theory of Computation) 当之无愧是计算机科学王冠上的明珠；考虑到我贫瘠的智商，以后估计不会朝 TCS 方向来走；但对这些优雅的理论有一个最基本的了解应当是 CS 学生的素养。 讽刺的是，你坑近二十年前就没有开设这门课了 [1]，只得留待交换来上。老师是印度人，口音很重，我听完整节课才明白他口中的「GEO」其实是「zero」；但课还是讲得十分清楚，颇有 R">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-08-16T12:31:10.000Z">
-<meta property="article:modified_time" content="2024-08-31T13:31:34.550Z">
+<meta property="article:modified_time" content="2024-09-07T13:04:41.950Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Theoretical Computer Science">
 <meta name="twitter:card" content="summary">
@@ -169,7 +169,7 @@
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#preliminaries"><span class="nav-number">1.</span> <span class="nav-text">Preliminaries</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dfa-nfa-and-regex"><span class="nav-number">2.</span> <span class="nav-text">DFA, NFA and RegEx</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dfa-nfa-equivalence"><span class="nav-number">2.1.</span> <span class="nav-text">DFA &amp; NFA: Equivalence</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dfa-to-regex"><span class="nav-number">2.2.</span> <span class="nav-text">DFA to RegEx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#regex-to-epsilon-nfa"><span class="nav-number">2.3.</span> <span class="nav-text">RegEx to \(\epsilon\)-NFA</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#minimization-of-dfa"><span class="nav-number">3.</span> <span class="nav-text">Minimization of DFA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#equivalence-classes"><span class="nav-number">3.1.</span> <span class="nav-text">Equivalence Classes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#distinguishable-pairs"><span class="nav-number">3.2.</span> <span class="nav-text">Distinguishable Pairs</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#properties-of-regular-languages"><span class="nav-number">4.</span> <span class="nav-text">Properties of Regular
-Languages</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pumping-lemma"><span class="nav-number">4.1.</span> <span class="nav-text">Pumping Lemma</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#closure-properties"><span class="nav-number">4.2.</span> <span class="nav-text">Closure Properties</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Languages</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pumping-lemma"><span class="nav-number">4.1.</span> <span class="nav-text">Pumping Lemma</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#closure-properties"><span class="nav-number">4.2.</span> <span class="nav-text">Closure Properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#homomorphism"><span class="nav-number">4.3.</span> <span class="nav-text">Homomorphism</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#context-free-grammars-cfg"><span class="nav-number">5.</span> <span class="nav-text">Context Free Grammars (CFG)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#right-linear-grammars"><span class="nav-number">5.1.</span> <span class="nav-text">Right-Linear Grammars</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ambiguous-grammars"><span class="nav-number">5.2.</span> <span class="nav-text">Ambiguous Grammars</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#push-down-automata-pda"><span class="nav-number">6.</span> <span class="nav-text">Push Down Automata (PDA)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -377,15 +377,8 @@ subset of the set of all strings</strong>.</li>
 <h2 id="dfa-nfa-and-regex">DFA, NFA and RegEx</h2>
 <p>关于 <span class="math inline">\(\epsilon\)</span>-transition。不输入任何 symbol
 的转移。<span class="math inline">\(\epsilon\)</span> closure <span class="math inline">\(\text{Eclose}(q)\)</span>。</p>
-<p>关于 regular language。字母表 <span class="math inline">\(\Sigma\)</span> 中所有的 regular languages
-符合如下的递归定义：</p>
-<ul>
-<li>empty language <span class="math inline">\(\emptyset\)</span>.</li>
-<li>singleton language <span class="math inline">\(\{a\}\)</span> for
-each <span class="math inline">\(a\in \Sigma\)</span>.</li>
-<li>若 <span class="math inline">\(A\)</span> 是 regular language，<span class="math inline">\(A^{*}\)</span> 同样也是。</li>
-<li>若 <span class="math inline">\(A\)</span> 和 <span class="math inline">\(B\)</span> 是 regular language，<span class="math inline">\(A\cup B\)</span> (union) 与 <span class="math inline">\(A\cdot B\)</span> (concatenation) 同样也是。</li>
-</ul>
+<p>regular language is a set of strings, regular expression <span class="math inline">\(M\)</span> is a representation of regular language
+<span class="math inline">\(L(M)\)</span>.</p>
 <h3 id="dfa-nfa-equivalence">DFA &amp; NFA: Equivalence</h3>
 <p>NFAs and DFAs are equivalent in terms of the languages they can
 recognize, even though DFAs may require more states (potentially
@@ -414,8 +407,7 @@ holds.</p>
 <span class="math inline">\(A\)</span> 接受字符串 <span class="math inline">\(w\)</span>。</p>
 <h3 id="dfa-to-regex">DFA to RegEx</h3>
 <p>本质 DP。对于给定的 DFA <span class="math inline">\(A=(Q,\Sigma,\delta,q_{start},
-F)\)</span>，不妨定义 <span class="math inline">\(Q=\{1,2,...,n\}\)</span> 且 <span class="math inline">\(q_{start}=1\)</span>。定义 <span class="math inline">\(R_{i,j}^k\)</span> 为从 <span class="math inline">\(i\)</span> 到 <span class="math inline">\(j\)</span>，只能经过标号 <span class="math inline">\(\leq k\)</span> 状态的路径所对应的 regular
-expression。</p>
+F)\)</span>，不妨定义 <span class="math inline">\(Q=\{1,2,...,n\}\)</span> 且 <span class="math inline">\(q_{start}=1\)</span>。定义 <span class="math inline">\(R_{i,j}^k\)</span> 为从 <span class="math inline">\(i\)</span> 到 <span class="math inline">\(j\)</span>，只能经过标号 <span class="math inline">\(\leq k\)</span> 状态的路径所对应的 RegEx。</p>
 <p>Base case. 定义 <span class="math inline">\(R_{i,j}^0\)</span></p>
 <ul>
 <li>If <span class="math inline">\(i\neq j\)</span>. <span class="math inline">\(R_{i,j}^0=a_1+a_2+...+a_m\)</span> for all <span class="math inline">\(\delta(i,a_r)=j\)</span>.</li>
@@ -425,8 +417,7 @@ all <span class="math inline">\(\delta(i,a_r)=i\)</span>.</li>
 <p>Induction case. <span class="math inline">\(R_{i,j}^{k+1}=R_{i,j}^k+R_{i,k+1}^k(R_{k+1,k+1}^k)^{*}R_{k+1,j}^k\)</span></p>
 <p>那么该 DFA 所对应的 regular expression 为 <span class="math inline">\(L(A)=\sum_{j\in F} R_{1,j}^n\)</span></p>
 <h3 id="regex-to-epsilon-nfa">RegEx to <span class="math inline">\(\epsilon\)</span>-NFA</h3>
-<p>对于给定的 regular expression，构建 start state 与 final state 唯一的
-<span class="math inline">\(\epsilon\)</span>-NFA。</p>
+<p>对于给定的 RegEx，构建 start state 与 final state 唯一的 <span class="math inline">\(\epsilon\)</span>-NFA。</p>
 <p>Base case.</p>
 <ul>
 <li><span class="math inline">\(\emptyset\)</span>. <span class="math inline">\(A=(\{q_0,q_f\},
@@ -520,6 +511,94 @@ L_2,L_1\cdot L_2,L_1^*\)</span></li>
 L_2,L_1-L_2,\overline{L}=\Sigma^*-L, L^R\)</span></li>
 <li><span class="math inline">\(h\)</span> is a homomorphism, if <span class="math inline">\(L\)</span> is regular, so is <span class="math inline">\(h(L)\)</span></li>
 </ul>
+<h3 id="homomorphism">Homomorphism</h3>
+<p><span class="math inline">\(\Sigma\)</span> and <span class="math inline">\(\Gamma\)</span> are two alphabets. Define
+homomorphism <span class="math inline">\(h:\Sigma\to\Gamma^*\)</span>
+such that,</p>
+<ul>
+<li><span class="math inline">\(h(\epsilon)=\epsilon\)</span></li>
+<li>(extend to string) <span class="math inline">\(h(aw)=h(a)\cdot
+h(w)\)</span></li>
+</ul>
+<p>If <span class="math inline">\(L\)</span> is regular then <span class="math inline">\(h(L)=\{h(w)|w\in L\}\)</span> is also regular.</p>
+<p>新的证明模式：若 <span class="math inline">\(M\)</span> 是 <span class="math inline">\(L\)</span> 的 RegEx，定义 <span class="math inline">\(R(M)\)</span> 满足以下条件 (RegEx 的性质) 并说明
+<span class="math inline">\(R(M)\)</span> 所对应的是 <span class="math inline">\(h(L(M))\)</span>。即，通过说明 <span class="math inline">\(h(L(M))\)</span> 存在 RegEx 的形式证明 <span class="math inline">\(h(L(M))\)</span> 本身是 regular language。</p>
+<ul>
+<li><span class="math inline">\(R(\emptyset)=\emptyset\)</span></li>
+<li><span class="math inline">\(R(\epsilon)=\epsilon\)</span></li>
+<li><span class="math inline">\(R(a)=h(a)\)</span> for <span class="math inline">\(a\in \Sigma\)</span></li>
+<li><span class="math inline">\(R(M+N)=R(M)+R(N)\)</span></li>
+<li><span class="math inline">\(R(M\cdot N)=R(M)\cdot R(N)\)</span></li>
+<li><span class="math inline">\(R(M^*)=(R(M))^*\)</span></li>
+</ul>
+<p>Base case. <span class="math inline">\(L(R(\emptyset))=h(L(\emptyset))=\emptyset,
+L(R(\epsilon))=h(L(\epsilon))=\epsilon,
+L(R(a))=h(L(a))=h(a)\)</span>.</p>
+<p>Induction case. 完整的证明应当包括 <span class="math inline">\(M+N,M\cdot N,M^*\)</span>。这里以证明 <span class="math inline">\(M+N\)</span> 为例：若 <span class="math inline">\(L(R(M))=h(L(M))\)</span> 且 <span class="math inline">\(L(R(N))=h(L(N))\)</span>，求证 <span class="math inline">\(L(R(M+N))=h(L(M+N))\)</span>。 <span class="math display">\[
+\begin{aligned}
+L(R(M+N))&amp;=L(R(M)+R(N)) \ \ \text{by definition} \\
+&amp;= L(R(M)) + L(R(N)) \\
+&amp;= h(L(M))+h(L(N)) \\
+&amp;= h(L(M+N))
+\end{aligned}
+\]</span> 注意把握好 regular language 与 RegEx 间的关系。这里就
+implicitly 应用了 <span class="math inline">\(L(M+N)=L(M)+L(N)\)</span>。</p>
+<p><br></p>
+<h2 id="context-free-grammars-cfg">Context Free Grammars (CFG)</h2>
+<p>Context-Free Grammars (CFG) 是一种<strong>语法</strong>，通过
+derivation 过程生成对应的 language。</p>
+<ul>
+<li>CFG <span class="math inline">\(G=(V,T,P,S)\)</span>.</li>
+<li><span class="math inline">\(L(G)=\{w\in T^{*}|S\Rightarrow^*_G
+w  \}\)</span>. 即，从 start symbol <span class="math inline">\(S\)</span> 开始，能够 derive 出字符串 <span class="math inline">\(w\in\)</span> terminals <span class="math inline">\(T^*\)</span>.</li>
+<li>If <span class="math inline">\(S\Rightarrow^*_G \alpha\)</span>,
+<span class="math inline">\(\alpha\)</span> is called a
+<strong>sentential form</strong> (without any non-terminals).</li>
+</ul>
+<h3 id="right-linear-grammars">Right-Linear Grammars</h3>
+<p>A CFG is right-linear if all the productions in it are of the
+form,</p>
+<ul>
+<li><span class="math inline">\(A\to wB\)</span> for <span class="math inline">\(B\in V\)</span> and <span class="math inline">\(w\in T^*\)</span>, or</li>
+<li><span class="math inline">\(A\to w\)</span>, for <span class="math inline">\(w\in T^*\)</span></li>
+</ul>
+<p>右线性文法的两个重要性质：</p>
+<ul>
+<li><strong>Every regular language can be generated by some right-linear
+grammar</strong>.</li>
+<li><strong>Language generated by a right-linear grammar is
+regular</strong>.</li>
+</ul>
+<p>证明 <span class="math inline">\(1\)</span>：若 regular language
+<span class="math inline">\(L\)</span> 被 DFA <span class="math inline">\(A=(Q,\Sigma,\delta,q_0,F)\)</span> 识别，根据
+<span class="math inline">\(A\)</span> 一定能构造出 right-linear CFG
+<span class="math inline">\(G\)</span>.</p>
+<ul>
+<li><span class="math inline">\(G=(Q,\Sigma,P,q_0)\)</span></li>
+<li>If <span class="math inline">\(\delta(q,a)=p\)</span>, then there is
+a production in <span class="math inline">\(P\)</span> of the form <span class="math inline">\(q\to ap\)</span>.</li>
+<li>If <span class="math inline">\(q\in F\)</span>, then <span class="math inline">\(q\to \epsilon\)</span>.</li>
+</ul>
+<p>通过一个简单的 induction by length 可以得到 <span class="math inline">\(\hat\delta(q_0,w)\in F \iff q_0\Rightarrow^*_G
+w\)</span>.</p>
+<p>证明 <span class="math inline">\(2\)</span>：给定 right-linear CFG
+<span class="math inline">\(G=(V,\Sigma,P,S)\)</span>，证明 <span class="math inline">\(G\)</span> derive 出的 language <span class="math inline">\(L(G)\)</span> 一定能被某 NFA <span class="math inline">\(A\)</span> 识别。</p>
+<ul>
+<li><span class="math inline">\(A=(V,\Sigma,\delta,S,F)\)</span></li>
+<li>If <span class="math inline">\((A\to aB)\in P\)</span>, then <span class="math inline">\(B\in \delta(A,a)\)</span>.</li>
+<li><span class="math inline">\(F=\{A|(A\to\epsilon)\in
+P\}\)</span>.</li>
+</ul>
+<p>相似的，可证得 <span class="math inline">\(A\Rightarrow_G^* wB \iff
+B\in\hat\delta(A,w)\)</span>，那么有 <span class="math inline">\(S\Rightarrow_G^* w\iff \hat\delta(S,w)\cap F\neq
+\emptyset\)</span>.</p>
+<h3 id="ambiguous-grammars">Ambiguous Grammars</h3>
+<p>在模糊文法中，同一个字符串可能有多种不同的
+derivations。我们可以通过定义 operator precedence 等规则来消除文法中的
+ambiguity。但也存在 inherently ambiguous languages，它对应的文法总是
+ambiguous 的。</p>
+<p><br></p>
+<h2 id="push-down-automata-pda">Push Down Automata (PDA)</h2>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
