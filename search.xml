@@ -159,6 +159,140 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
+    <title>自动人形会梦见 NP 完全问题吗？(习题)</title>
+    <url>/2024/09/11/cs3231-ex/</url>
+    <content><![CDATA[<p>埃癸斯 (<em>Aegis</em>) 虽然是高性能的反暗影压制兵装 (<em>Anti-Shadow
+Suppression
+Weapon</em>)，但她的逻辑推理方面并未得到特殊强化。在辰巳人工岛的月光馆学园插班入学后，埃癸斯常常感觉自己跟不上课程进度。</p>
+<p>埃癸斯尤其不擅的学科是计算理论 (<em>Theory of
+Computation</em>)；她认为，作为人工智慧的自己，底层是程式的逻辑；既然如此，自己无法完成计算理论作业的试题，和任何机器都解决不了停机问题是相同的原理。</p>
+<p>作为特别课外活动部 (S.E.E.S, <em>Specialized Extracurricular
+Execution Squad</em>) 的
+Leader，你察觉到埃癸斯只是在找借口。为了课外活动部的未来，你必须对她展开特别辅导。</p>
+<span id="more"></span>
+<p><br></p>
+<h2 id="tutorial-1">Tutorial 1</h2>
+<p>Q1. Prove <span class="math inline">\((A^*)^+=(A^+)^*=A^*\)</span></p>
+<p>Note that <span class="math inline">\(\epsilon \in A^*\)</span>.
+Thus, <span class="math inline">\((A^*)^+=(A^*)^*\)</span>.</p>
+<p>Also, if <span class="math inline">\(B\subseteq C\)</span>, then
+<span class="math inline">\(B^*\subseteq C^*\)</span>. Thus, we
+immediately have <span class="math inline">\(A^*\subseteq (A^+)^*
+\subseteq (A^*)^*=(A^*)^+\)</span>.</p>
+<p>Hence, it suffices to show that <span class="math inline">\((A^*)^*\subseteq A^*\)</span>. Suppose <span class="math inline">\(w\in (A^*)^*\)</span></p>
+<p>Let <span class="math inline">\(w_1,w_2,...,w_k\)</span> be such that
+<span class="math inline">\(w=w_1w_2...w_k\)</span> and each <span class="math inline">\(w_i\in A^*\)</span>. For each <span class="math inline">\(i\)</span>, let <span class="math inline">\(w_{i,1},w_{i,2},...,w_{i,r_i}\)</span> be such
+that <span class="math inline">\(w_i=w_{i,1}w_{i,2}...w_{i,r_i}\)</span>
+and each <span class="math inline">\(w_{i,j}\in A\)</span>.</p>
+<p>Thus, we have that <span class="math inline">\(w=w_{1,1}w_{1,2}...w_{1,r_1}w_{2,1}...w_{2,r_2}...w_{k,1}...w_{k,r_k}\)</span>,
+where each <span class="math inline">\(w_{i,j}\in A\)</span>. Thus,
+<span class="math inline">\(w\in A^*\)</span>.</p>
+<p><br></p>
+<h2 id="tutorial-2">Tutorial 2</h2>
+<p><strong>Q1.</strong> For a DFA <span class="math inline">\(A=(Q,\Sigma,\delta,q_0,F)\)</span>, let <span class="math inline">\(\hat\delta\)</span> be as defined in class. Show
+that <span class="math inline">\(\hat\delta(q,xy)=\hat\delta(\hat\delta(q,x),y)\)</span>,
+for all strings <span class="math inline">\(x,y\)</span> over <span class="math inline">\(\Sigma^*\)</span>, and all states <span class="math inline">\(q\in Q\)</span>.</p>
+<p>By induction on <span class="math inline">\(|y|\)</span>. Clearly,
+for <span class="math inline">\(y=\epsilon\)</span>, the statement
+holds.</p>
+<p>Suppose the statement holds for <span class="math inline">\(y=w\)</span>. Then for <span class="math inline">\(y=wa\)</span>, with <span class="math inline">\(a\in \Sigma\)</span>, we have, <span class="math display">\[
+\begin{aligned}
+\hat\delta(q,xwa)&amp;=\delta(\hat\delta(q,xw), a) \\
+&amp;= \delta(\hat\delta(\hat\delta(q, x), w), a) \\
+&amp;= \hat\delta(\hat\delta(q,x), wa) \\
+&amp;= \hat\delta(\hat\delta(q,x),y)
+\end{aligned}
+\]</span> <strong>Q2.</strong> Prove <span class="math inline">\(L((R+S)^*)=L((R^*S^*)^*)\)</span>, for any regular
+expression <span class="math inline">\(R\)</span> and <span class="math inline">\(S\)</span>.</p>
+<p>Showing <span class="math inline">\(\subseteq\)</span>:</p>
+<p><span class="math inline">\(L(R)\subseteq L(R^*S^*)\)</span> and
+<span class="math inline">\(L(S)\subseteq L(R^*S^*)\)</span>, therefore
+<span class="math inline">\(L(R+S)\subseteq L(R^*S^*)\)</span>.</p>
+<p>Thus <span class="math inline">\(L((R+S)^*)\subseteq
+L((R^*S^*)^*)\)</span>.</p>
+<p>Showing <span class="math inline">\(\supseteq\)</span>:</p>
+<p><span class="math inline">\(L((R^*S^*)^*)\subseteq
+L(((R+S)^*(R+S)^*)^*)\subseteq L(((R+S)^*)^*)=L((R+S)^*)\)</span>.</p>
+<p>Therefore <span class="math inline">\(L(R+S)^*=L((R^*S^*)^*)\)</span>.</p>
+<p>Misc. Notice <span class="math inline">\(q\in
+\text{Eclose}(q)\)</span>. Practice DFA to RegEx.</p>
+<p><br></p>
+<h2 id="tutorial-3">Tutorial 3</h2>
+<p><strong>Q1.</strong> <u>True</u> or False. If <span class="math inline">\(L\)</span> is a regular language, then <span class="math inline">\(L^R=\{x^R|x\in L\}\)</span> is also a regular
+language.</p>
+<p><em>First method</em>. Given a regular expression <span class="math inline">\(S\)</span>, we show how to construct <span class="math inline">\(S^R\)</span> such that <span class="math inline">\(L(S)^R=L(S^R)\)</span>.</p>
+<p>Base case. <span class="math inline">\(a^R=a, \epsilon^R=\epsilon,
+\emptyset^R=\emptyset\)</span>.</p>
+<p>Induction. Suppose the statement holds for <span class="math inline">\(A,B\)</span>, then for,</p>
+<ul>
+<li>prove <span class="math inline">\(L((A+B)^R)=L(A+B)^R\)</span> using
+property <span class="math inline">\((A+B)^R=A^R+B^R\)</span></li>
+<li>prove <span class="math inline">\(L((A\cdot B)^R)=L(A\cdot
+B)^R\)</span> using property <span class="math inline">\((A\cdot
+B)^R=B^R\cdot A^R\)</span></li>
+<li>prove <span class="math inline">\(L((A^*)^R)=L(A^*)^R\)</span> using
+property <span class="math inline">\((A^*)^R=(A^R)^*\)</span></li>
+</ul>
+<p><em>Second method</em>. Suppose <span class="math inline">\(A=(Q,\Sigma,\delta,q_0,F)\)</span> is a DFA for
+<span class="math inline">\(L\)</span>. Construct an <span class="math inline">\(\epsilon\)</span>-NFA for <span class="math inline">\(L^R\)</span> as follows.</p>
+<p><span class="math inline">\(A^N=(Q\cup \{q_0&#39;\},
+\Sigma,\delta_N,q_0&#39;,\{q_0\})\)</span>, where</p>
+<ul>
+<li><span class="math inline">\(\delta_N(q_0&#39;,\epsilon)=F\)</span></li>
+<li>for <span class="math inline">\(q\in Q,a\in \Sigma\)</span>, <span class="math inline">\(\delta_N(q,a)=\{q&#39;:\delta(q&#39;,a)=q\}\)</span>.
+Other transitions sets are <span class="math inline">\(\emptyset\)</span>.</li>
+</ul>
+<p>By induction on <span class="math inline">\(|w|\)</span> we show
+that, for <span class="math inline">\(q,q&#39; \in Q\)</span>, <span class="math inline">\(\hat\delta(q,w)=q&#39;\)</span> iff <span class="math inline">\(q\in \delta_N(q&#39;,w^R)\)</span>. Thus <span class="math inline">\(\hat\delta(q_0,w)\in F\)</span> iff <span class="math inline">\(q_0\in\cup_{q\in F}\hat{\delta_N}(q,w^R)\)</span>.
+Thus, <span class="math inline">\(A_N\)</span> accepts <span class="math inline">\(L^R\)</span>.</p>
+<p><strong>Q2.</strong> True or <u>False</u>. If <span class="math inline">\(L_1\)</span> is regular and <span class="math inline">\(L_2\subseteq L_1\)</span>, then <span class="math inline">\(L_2\)</span> is regular.</p>
+<p>Take <span class="math inline">\(L_1=\Sigma^*\)</span>, and <span class="math inline">\(L_2\)</span> to be some non-regular subset of
+<span class="math inline">\(\Sigma^*\)</span>.</p>
+<blockquote>
+<p>Acceptance is two-way: every string accepted by a DFA is in the
+language, <em>and</em> every string rejected by a DFA is not in the
+language.</p>
+</blockquote>
+<p><strong>Q3.</strong> (hard) For any language <span class="math inline">\(L\)</span>, define <span class="math inline">\(\text{HALF}(L)=\{w|(\exists u)[wu\in L \text{ and
+} |w|=|u|]\}\)</span>. Show that if <span class="math inline">\(L\)</span> is regular, then <span class="math inline">\(\text{HALF}(L)\)</span> is regular.</p>
+<p>Let <span class="math inline">\(A=(\delta_A,Q,q_0,F)\)</span> be a
+DFA for <span class="math inline">\(L\)</span> with some alphabet <span class="math inline">\(\Sigma\)</span>.</p>
+<p>Then define <span class="math inline">\(B\)</span> as follows:</p>
+<ul>
+<li>The states <span class="math inline">\(Q_B\)</span> of <span class="math inline">\(B\)</span> are of the form <span class="math inline">\([q,S]\)</span> where <span class="math inline">\(q\in Q\)</span> and <span class="math inline">\(S\subseteq Q\)</span>.</li>
+<li>The initial state of <span class="math inline">\(B\)</span> is <span class="math inline">\([q_0,F]\)</span>.</li>
+<li><span class="math inline">\(\delta_B([q,S],a)=[\delta_A(q,a),T]\)</span> where
+<span class="math inline">\(T=\{p\in Q:\exists b\in \Sigma:\exists
+p&#39;\in S:\delta_A(p,b)=p&#39;\}\)</span>.</li>
+<li>The accepting states of <span class="math inline">\(B\)</span> are
+<span class="math inline">\(F_B=\{[q,S]:q\in S\}\)</span>.</li>
+</ul>
+<p>Then we have the following invariant by construction: all reachable
+states <span class="math inline">\([q,S]\)</span> after some input are
+such that <span class="math inline">\(q\)</span> is the state that <span class="math inline">\(A\)</span> would be in after reading that input,
+and the states in <span class="math inline">\(S\)</span> are all those
+states such that there is a path from that state to an accepting state
+(in <span class="math inline">\(A\)</span>) that has the same length as
+the input that was read.</p>
+<p>So when we are in a state <span class="math inline">\([q,S]\)</span>
+wIth <span class="math inline">\(q\in S\)</span> after reading some
+input <span class="math inline">\(w_1\)</span>, we know that <span class="math inline">\(q\)</span> is the state of <span class="math inline">\(A\)</span> after reading <span class="math inline">\(w_1\)</span> and as <span class="math inline">\(q\in S\)</span> there is some input <span class="math inline">\(w_2\)</span> with <span class="math inline">\(|w_1|=|w_2|\)</span> that induces a path from
+<span class="math inline">\(q\)</span> to an accepting state, which
+means that <span class="math inline">\(w_1w_2\in L\)</span>, and so
+<span class="math inline">\(w_1\in \text{HALF}(L)\)</span>.</p>
+<p>Source: <a href="https://math.stackexchange.com/questions/1539658/automata-prove-that-if-l-is-regular-than-halfl-is-regular-too">StackExchange
+- Automata | Prove that if L is regular than half(L) is regular
+too</a></p>
+<p><br></p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>Theoretical Computer Science</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>我的拖鞋时尚物语果然有问题。</title>
     <url>/2024/08/17/gec1042/</url>
     <content><![CDATA[<p>这堂课将是我成为时尚达人，潮流先锋的第一步！</p>
@@ -428,7 +562,7 @@ and Express Power</em>, Primary Source Volume IV: Issue II</li>
       </tags>
   </entry>
   <entry>
-    <title>自动人形会梦见 NP 完全问题吗</title>
+    <title>自动人形会梦见 NP 完全问题吗？(笔记)</title>
     <url>/2024/08/16/cs3231/</url>
     <content><![CDATA[<p>计算理论 (Theory of Computation)
 当之无愧是计算机科学王冠上的明珠；考虑到我贫瘠的智商，以后估计不会朝 TCS
