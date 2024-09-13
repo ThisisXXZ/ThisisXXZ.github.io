@@ -33,7 +33,7 @@
 <meta property="og:description" content="计算理论 (Theory of Computation) 当之无愧是计算机科学王冠上的明珠；考虑到我贫瘠的智商，以后估计不会朝 TCS 方向来走；但对这些优雅的理论有一个最基本的了解应当是 CS 学生的素养。 讽刺的是，你坑近二十年前就没有开设这门课了 [1]，只得留待交换来上。老师是印度人，口音很重，我听完整节课才明白他口中的「GEO」其实是「zero」；但课还是讲得十分清楚，颇有 R">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-08-16T12:31:10.000Z">
-<meta property="article:modified_time" content="2024-09-11T12:23:27.974Z">
+<meta property="article:modified_time" content="2024-09-13T13:56:25.923Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Theoretical Computer Science">
 <meta name="twitter:card" content="summary">
@@ -169,7 +169,7 @@
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#preliminaries"><span class="nav-number">1.</span> <span class="nav-text">Preliminaries</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dfa-nfa-and-regex"><span class="nav-number">2.</span> <span class="nav-text">DFA, NFA and RegEx</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dfa-nfa-equivalence"><span class="nav-number">2.1.</span> <span class="nav-text">DFA &amp; NFA: Equivalence</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dfa-to-regex"><span class="nav-number">2.2.</span> <span class="nav-text">DFA to RegEx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#regex-to-epsilon-nfa"><span class="nav-number">2.3.</span> <span class="nav-text">RegEx to \(\epsilon\)-NFA</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#minimization-of-dfa"><span class="nav-number">3.</span> <span class="nav-text">Minimization of DFA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#equivalence-classes"><span class="nav-number">3.1.</span> <span class="nav-text">Equivalence Classes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#distinguishable-pairs"><span class="nav-number">3.2.</span> <span class="nav-text">Distinguishable Pairs</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#properties-of-regular-languages"><span class="nav-number">4.</span> <span class="nav-text">Properties of Regular
-Languages</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pumping-lemma"><span class="nav-number">4.1.</span> <span class="nav-text">Pumping Lemma</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#closure-properties"><span class="nav-number">4.2.</span> <span class="nav-text">Closure Properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#homomorphism"><span class="nav-number">4.3.</span> <span class="nav-text">Homomorphism</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#context-free-grammars-cfg"><span class="nav-number">5.</span> <span class="nav-text">Context Free Grammars (CFG)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#right-linear-grammars"><span class="nav-number">5.1.</span> <span class="nav-text">Right-Linear Grammars</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ambiguous-grammars"><span class="nav-number">5.2.</span> <span class="nav-text">Ambiguous Grammars</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#push-down-automata-pda"><span class="nav-number">6.</span> <span class="nav-text">Push Down Automata (PDA)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Languages</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pumping-lemma"><span class="nav-number">4.1.</span> <span class="nav-text">Pumping Lemma</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#closure-properties"><span class="nav-number">4.2.</span> <span class="nav-text">Closure Properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#homomorphism"><span class="nav-number">4.3.</span> <span class="nav-text">Homomorphism</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#context-free-grammars-cfg"><span class="nav-number">5.</span> <span class="nav-text">Context Free Grammars (CFG)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#right-linear-grammars"><span class="nav-number">5.1.</span> <span class="nav-text">Right-Linear Grammars</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ambiguous-grammars"><span class="nav-number">5.2.</span> <span class="nav-text">Ambiguous Grammars</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#push-down-automata-pda"><span class="nav-number">6.</span> <span class="nav-text">Push Down Automata (PDA)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#equivalent-pdas"><span class="nav-number">6.1.</span> <span class="nav-text">Equivalent PDAs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#equivalence-of-cfgs-and-pdas"><span class="nav-number">6.2.</span> <span class="nav-text">Equivalence of CFGs and PDAs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deterministic-pda"><span class="nav-number">6.3.</span> <span class="nav-text">Deterministic PDA</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -599,6 +599,44 @@ ambiguity。但也存在 inherently ambiguous languages，它对应的文法总�
 ambiguous 的。</p>
 <p><br></p>
 <h2 id="push-down-automata-pda">Push Down Automata (PDA)</h2>
+<p>下推自动机。带一个容量无限栈 (作为 memory) 的 <span class="math inline">\(\epsilon\)</span>-NFA。</p>
+<ul>
+<li><span class="math inline">\(P=(Q,\Sigma,\Gamma,\delta,q_0,Z_0,F)\)</span></li>
+<li><span class="math inline">\(\Sigma\)</span>: Alphabet set, <span class="math inline">\(\Gamma\)</span>: Stack alphabet set. <span class="math inline">\(Z_0\)</span>: the only initial symbol on the
+stack.</li>
+<li><span class="math inline">\((p,\gamma)\in \delta(q,a,X)\)</span>: in
+state <span class="math inline">\(p\)</span>, reading <span class="math inline">\(a\)</span>, with top of stack being <span class="math inline">\(X\)</span>, the machine's new state is <span class="math inline">\(p\)</span>, <span class="math inline">\(X\)</span>
+is popped and <span class="math inline">\(\gamma\)</span> is pushed. (if
+<span class="math inline">\(\gamma=RS\)</span>, <span class="math inline">\(S\)</span> is pushed first, then <span class="math inline">\(R\)</span>)</li>
+<li>Instantaneous description <span class="math inline">\((q,w,a)\)</span> denotes current state is <span class="math inline">\(q\)</span>, input left to read is <span class="math inline">\(w\)</span>, and <span class="math inline">\(\alpha\)</span> being the top of the stack. <span class="math inline">\((q,aw,X\alpha)\vdash (p, w,\beta\alpha)\)</span>
+if <span class="math inline">\((p, \beta)\in \delta(q, a,X)\)</span>.
+Extend <span class="math inline">\(\vdash\)</span> to <span class="math inline">\(\vdash^*\)</span>.</li>
+</ul>
+<h3 id="equivalent-pdas">Equivalent PDAs</h3>
+<p>PDA 按照不同的 language acceptance 方式分为两种。</p>
+<ul>
+<li>By final state: <span class="math inline">\(\{w|(q_0,w,Z_0)\vdash^*(q_f,\epsilon,\alpha),
+\text{ for some }q_f\in F\}\)</span>.</li>
+<li>By empty stack: <span class="math inline">\(\{w|(q_0,w,Z_0)\vdash^*(q,\epsilon,\epsilon)\text{
+for some }q\in Q\}\)</span>.</li>
+</ul>
+<p>其实这两种 PDA 是等价的。</p>
+<p>From empty-set to final-state PDA - initially put a special symbol
+onto the stack. (give control to empty-set PDA), if ever see the top of
+stack as that symbol (seize control), then go to final state.</p>
+<p>From final-state to empty-set PDA - place a transition from final
+state to a special state which empties the stack.</p>
+<ul>
+<li>for all <span class="math inline">\(p\in F\)</span> and <span class="math inline">\(Z\in \Gamma\cup\{X_0\}\)</span>, <span class="math inline">\(\delta_E(p,\epsilon,Z)\)</span> contains <span class="math inline">\((p_f,\epsilon)\)</span></li>
+<li>(pop until empty) for all <span class="math inline">\(Z\in
+\Gamma\cup \{X_0\}\)</span>, <span class="math inline">\(\delta_E(p_f,\epsilon,Z)\)</span> contains <span class="math inline">\((p_f,\epsilon)\)</span></li>
+</ul>
+<h3 id="equivalence-of-cfgs-and-pdas">Equivalence of CFGs and PDAs</h3>
+<p>CFG 和 PDA 本质等价。</p>
+<p>First show how to <em>accept a CFG with PDA</em>.</p>
+<p>Next show <em>each language accepted by a PDA can be accepted by a
+CFG</em>.</p>
+<h3 id="deterministic-pda">Deterministic PDA</h3>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
@@ -803,6 +841,15 @@ Design 最后一次开设是在 Autumn 2016。</em>」</p>
 
 
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
 
 <script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/08/16/cs3231/"}</script>
 <script>
@@ -818,15 +865,6 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
