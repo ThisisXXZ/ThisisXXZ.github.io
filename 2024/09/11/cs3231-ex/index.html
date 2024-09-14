@@ -32,11 +32,13 @@
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
 <meta property="og:description" content="埃癸斯 (Aegis) 虽然是高性能的反暗影压制兵装 (Anti-Shadow Suppression Weapon)，但她在逻辑推理方面并未得到特殊强化。在辰巳人工岛的月光馆学园插班入学后，埃癸斯常常感觉自己跟不上课程进度。 埃癸斯尤其不擅的学科是计算理论 (Theory of Computation)；她认为，作为人工智慧的自己，底层是程式的逻辑；既然如此，自己无法完成计算理论作业的试">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/09/11/cs3231-ex/4-2.jpg">
 <meta property="article:published_time" content="2024-09-11T12:24:00.000Z">
-<meta property="article:modified_time" content="2024-09-12T08:51:05.288Z">
+<meta property="article:modified_time" content="2024-09-14T08:04:39.211Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Theoretical Computer Science">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.thisisxxz.com/2024/09/11/cs3231-ex/4-2.jpg">
 
 
 <link rel="canonical" href="https://www.thisisxxz.com/2024/09/11/cs3231-ex/">
@@ -168,7 +170,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-1"><span class="nav-number">1.</span> <span class="nav-text">Tutorial 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-2"><span class="nav-number">2.</span> <span class="nav-text">Tutorial 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-3"><span class="nav-number">3.</span> <span class="nav-text">Tutorial 3</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-1"><span class="nav-number">1.</span> <span class="nav-text">Tutorial 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-2"><span class="nav-number">2.</span> <span class="nav-text">Tutorial 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-3"><span class="nav-number">3.</span> <span class="nav-text">Tutorial 3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-4"><span class="nav-number">4.</span> <span class="nav-text">Tutorial 4</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -467,6 +469,37 @@ means that <span class="math inline">\(w_1w_2\in L\)</span>, and so
 - Automata | Prove that if L is regular than half(L) is regular
 too</a></p>
 <p><br></p>
+<h2 id="tutorial-4">Tutorial 4</h2>
+<p><strong>Q1</strong>. Give a CFG for language <span class="math inline">\(L=\{w:\#(a\in w)=\#(b\in w)\}\)</span>, <span class="math inline">\(\Sigma=\{a,b\}\)</span>. <span class="math display">\[
+S\to aSb|bSa|SS|\epsilon
+\]</span> <strong>Q2</strong>. Give an unambiguous CFG for the above
+language.</p>
+<p>design three minimal states:</p>
+<ul>
+<li><span class="math inline">\(T\)</span>: balance state, where <span class="math inline">\(\#a=\#b\)</span>.</li>
+<li><span class="math inline">\(A\)</span>: imbalance state, where <span class="math inline">\(\#a=\#b+1\)</span>.</li>
+<li><span class="math inline">\(B\)</span>: imbalance state, where <span class="math inline">\(\#b=\#a +1\)</span>.</li>
+</ul>
+<p>To eliminate ambiguity, we need to <strong>prevent partial
+derivations from achieving the state prematurely</strong>, that is,
+<strong>no non-empty proper prefix has the same property of the whole
+string</strong>. <span class="math display">\[
+\begin{aligned}
+&amp;S\to \epsilon|TS \\
+&amp;T\to aB|bA \\
+&amp;A\to a|bAA \\
+&amp;B\to b|aBB
+\end{aligned}
+\]</span> <span class="math inline">\(T\)</span> only achieves <span class="math inline">\(\#a=\#b\)</span> if if is fully expanded, so are
+<span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span>.</p>
+<figure>
+<img data-src="4-2.jpg" alt="The recursive productions correct the initial imbalance without allowing it to balance out prematurely">
+<figcaption aria-hidden="true">The recursive productions correct the
+initial imbalance without allowing it to balance out
+prematurely</figcaption>
+</figure>
+<p>参见上图，按照上述的递归结构，由位置 <span class="math inline">\((x,y)\)</span> 开始，找到之后的第一个 <span class="math inline">\((x_T,y)\)</span>，把 <span class="math inline">\([x,x_T]\)</span> 划分为 <span class="math inline">\(T\)</span>。同理，找到之后的第一个 <span class="math inline">\((x_A,y+1)\)</span>，把 <span class="math inline">\([x,x_A]\)</span> 划分为 <span class="math inline">\(A\)</span>；找到之后的第一个 <span class="math inline">\((x_B,y-1)\)</span>，把 <span class="math inline">\([x,x_B]\)</span> 划分为 <span class="math inline">\(B\)</span>。</p>
+<p><br></p>
 
     </div>
 
@@ -653,15 +686,6 @@ too</a></p>
 
 
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
 
 <script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/09/11/cs3231-ex/"}</script>
 <script>
@@ -677,6 +701,15 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
