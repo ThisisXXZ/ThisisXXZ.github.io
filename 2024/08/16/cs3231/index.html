@@ -33,7 +33,7 @@
 <meta property="og:description" content="计算理论 (Theory of Computation) 当之无愧是计算机科学王冠上的明珠；考虑到我贫瘠的智商，以后估计不会朝 TCS 方向来走；但对这些优雅的理论有一个最基本的了解应当是 CS 学生的素养。 讽刺的是，你坑近二十年前就没有开设这门课了 [1]，只得留待交换来上。老师是印度人，口音很重，我听完整节课才明白他口中的「GEO」其实是「zero」；但课还是讲得十分清楚，颇有 R">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-08-16T12:31:10.000Z">
-<meta property="article:modified_time" content="2024-09-17T13:03:52.832Z">
+<meta property="article:modified_time" content="2024-09-21T13:33:16.903Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Theoretical Computer Science">
 <meta name="twitter:card" content="summary">
@@ -170,7 +170,7 @@
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#preliminaries"><span class="nav-number">1.</span> <span class="nav-text">Preliminaries</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dfa-nfa-and-regex"><span class="nav-number">2.</span> <span class="nav-text">DFA, NFA and RegEx</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dfa-nfa-equivalence"><span class="nav-number">2.1.</span> <span class="nav-text">DFA &amp; NFA: Equivalence</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dfa-to-regex"><span class="nav-number">2.2.</span> <span class="nav-text">DFA to RegEx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#regex-to-epsilon-nfa"><span class="nav-number">2.3.</span> <span class="nav-text">RegEx to \(\epsilon\)-NFA</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#minimization-of-dfa"><span class="nav-number">3.</span> <span class="nav-text">Minimization of DFA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#equivalence-classes"><span class="nav-number">3.1.</span> <span class="nav-text">Equivalence Classes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#distinguishable-pairs"><span class="nav-number">3.2.</span> <span class="nav-text">Distinguishable Pairs</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#parallel-simulation-of-2-dfas"><span class="nav-number">4.</span> <span class="nav-text">Parallel Simulation of
 2-DFAs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#properties-of-regular-languages"><span class="nav-number">5.</span> <span class="nav-text">Properties of Regular
-Languages</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pumping-lemma"><span class="nav-number">5.1.</span> <span class="nav-text">Pumping Lemma</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#properties"><span class="nav-number">5.2.</span> <span class="nav-text">Properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#homomorphism"><span class="nav-number">5.3.</span> <span class="nav-text">Homomorphism</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#context-free-grammars-cfg"><span class="nav-number">6.</span> <span class="nav-text">Context Free Grammars (CFG)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#right-linear-grammars"><span class="nav-number">6.1.</span> <span class="nav-text">Right-Linear Grammars</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ambiguous-grammars"><span class="nav-number">6.2.</span> <span class="nav-text">Ambiguous Grammars</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#push-down-automata-pda"><span class="nav-number">7.</span> <span class="nav-text">Push Down Automata (PDA)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#equivalent-pdas"><span class="nav-number">7.1.</span> <span class="nav-text">Equivalent PDAs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#equivalence-of-cfgs-and-pdas"><span class="nav-number">7.2.</span> <span class="nav-text">Equivalence of CFGs and PDAs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deterministic-pda-dpda"><span class="nav-number">7.3.</span> <span class="nav-text">Deterministic PDA (DPDA)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">8.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Languages</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pumping-lemma"><span class="nav-number">5.1.</span> <span class="nav-text">Pumping Lemma</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#properties"><span class="nav-number">5.2.</span> <span class="nav-text">Properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#homomorphism"><span class="nav-number">5.3.</span> <span class="nav-text">Homomorphism</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#context-free-grammars-cfg"><span class="nav-number">6.</span> <span class="nav-text">Context Free Grammars (CFG)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#right-linear-grammars"><span class="nav-number">6.1.</span> <span class="nav-text">Right-Linear Grammars</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ambiguous-grammars"><span class="nav-number">6.2.</span> <span class="nav-text">Ambiguous Grammars</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#push-down-automata-pda"><span class="nav-number">7.</span> <span class="nav-text">Push Down Automata (PDA)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#equivalent-pdas"><span class="nav-number">7.1.</span> <span class="nav-text">Equivalent PDAs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#equivalence-of-cfgs-and-pdas"><span class="nav-number">7.2.</span> <span class="nav-text">Equivalence of CFGs and PDAs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deterministic-pda-dpda"><span class="nav-number">7.3.</span> <span class="nav-text">Deterministic PDA (DPDA)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#properties-of-cfgs"><span class="nav-number">8.</span> <span class="nav-text">Properties of CFGs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#useful-symbols"><span class="nav-number">8.1.</span> <span class="nav-text">Useful Symbols</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#chomsky-normal-form"><span class="nav-number">8.2.</span> <span class="nav-text">Chomsky Normal Form</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pumping-lemma-for-cfl"><span class="nav-number">8.3.</span> <span class="nav-text">Pumping Lemma for CFL</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -709,6 +709,96 @@ non-empty, for all <span class="math inline">\(a\in\Sigma\)</span>,
 DPDA.</li>
 </ul>
 <p><br></p>
+<h2 id="properties-of-cfgs">Properties of CFGs</h2>
+<h3 id="useful-symbols">Useful Symbols</h3>
+<p>三个定义。</p>
+<ul>
+<li>Symbol <span class="math inline">\(A\)</span> is
+<strong>useful</strong> if it appears as <span class="math inline">\(S\Rightarrow ^*_G \alpha A\beta \Rightarrow^*_G
+w\)</span> for some <span class="math inline">\(w\in T^*\)</span>.</li>
+<li>Symbol <span class="math inline">\(A\)</span> is
+<strong>generating</strong> if <span class="math inline">\(A\Rightarrow_G^* w\)</span>, for some <span class="math inline">\(w\in T^*\)</span>.</li>
+<li>Symbol <span class="math inline">\(A\)</span> is
+<strong>reachable</strong> if <span class="math inline">\(S\Rightarrow^*_G \alpha A\beta\)</span>, for some
+<span class="math inline">\(\alpha,\beta \in (V\cup T)^*\)</span>.</li>
+</ul>
+<p>A symbol is useful <em>only if</em> it is reachable and generating
+(vice versa need not be the case).</p>
+<p>因此，给定一个 <span class="math inline">\(G=(V,T,P,S)\)</span> which
+generates at least one string，通过以下两步可以创造一个等价的 (生成的
+language 与 <span class="math inline">\(G\)</span> 相同)
+CFG，且它不包含任何 useless symbols。</p>
+<ul>
+<li>eliminate all symbols (and productions involving these symbols) that
+are non-generating.</li>
+<li>eliminate all symbols (and productions involving these symbols) that
+are non-reachable.</li>
+</ul>
+<h3 id="chomsky-normal-form">Chomsky Normal Form</h3>
+<p><strong>Chomsky Normal Form</strong>: All productions are of the form
+<span class="math inline">\(A\to BC\)</span> or <span class="math inline">\(A\to a\)</span> (where <span class="math inline">\(a\in T\)</span> and <span class="math inline">\(A,B,C\in V\)</span>).</p>
+<p>All CFGs can be converted to Chomsky Normal Form.</p>
+<ul>
+<li>Eliminate <span class="math inline">\(\epsilon\)</span>
+productions.</li>
+<li>Eliminate unit productions.</li>
+<li>Convert all productions into the following forms:
+<ul>
+<li>productions of length <span class="math inline">\(2\)</span>: <span class="math inline">\(A\to BC\)</span> where <span class="math inline">\(B,C\)</span> are non-terminals.</li>
+<li>productions of length <span class="math inline">\(1\)</span>: <span class="math inline">\(A\to a\)</span> where <span class="math inline">\(a\)</span> is a terminal.</li>
+</ul></li>
+</ul>
+<p>首先来看第一步：消除所有 <span class="math inline">\(\epsilon\)</span> productions。重复以下过程，直到
+<span class="math inline">\(G\)</span> 中不存在任何 <span class="math inline">\(\epsilon\)</span> production：</p>
+<ul>
+<li>Identify <strong>nullable</strong> state. e.g., If <span class="math inline">\(A\to\epsilon\)</span>, then <span class="math inline">\(A\)</span> is nullable.</li>
+<li>Remove <span class="math inline">\(\epsilon\)</span> production
+associated to the nullable state. e.g., remove <span class="math inline">\(A\to \epsilon\)</span>.</li>
+<li>For each production <span class="math inline">\(B\to\alpha\)</span>,
+replace it with all possible <span class="math inline">\(B\to\alpha&#39;\)</span> resulted in possibly
+deleting some of the nullable non-terminals. e.g., <span class="math inline">\(S\to ASA|aB|a\)</span> is replaced by <span class="math inline">\(S\to ASA|SA|AS|A|aB|a\)</span>.</li>
+</ul>
+<p>接下来是第二步：消除所有 unit productions。重复以下过程，直到 <span class="math inline">\(G\)</span> 中不存在任何 unit production：</p>
+<ul>
+<li>Identify non-terminal pair. e.g., If <span class="math inline">\(A\to B\)</span>, then <span class="math inline">\((A,B)\)</span> is a pair.</li>
+<li>Remove unit production associated to the pair. e.g., remove <span class="math inline">\(A\to B\)</span>.</li>
+<li>For each <strong>non-unit productions</strong> of the form <span class="math inline">\(B\to \gamma\)</span>, add production <span class="math inline">\(A\to \gamma\)</span>.</li>
+</ul>
+<p>经以上两步处理，<span class="math inline">\(G\)</span> 中所有的
+productions <span class="math inline">\(A\to \alpha\)</span>
+都表现为以下两个形式。</p>
+<ul>
+<li><span class="math inline">\(|\alpha|=1\)</span>，此时 <span class="math inline">\(\alpha\)</span> 一定是 terminal。</li>
+<li><span class="math inline">\(|\alpha|=|\alpha_1\alpha_2...\alpha_n|=n\geq
+2\)</span>，<span class="math inline">\(\alpha_i\)</span> 既可以是
+terminal 又可以是 non-terminal。</li>
+</ul>
+<p>此时我们应用第三步，将第二种形式再进一步化成 <span class="math inline">\(A\to BC\)</span> 且 <span class="math inline">\(B,C\)</span> 均为 non-terminal 的形式：Given
+production <span class="math inline">\(A\to X_1X_2...X_k\)</span> is
+changed to the following set of productions with new non-terminals <span class="math inline">\(B_i,Z_i\)</span>:</p>
+<ul>
+<li><span class="math inline">\(A\to Z_1B_2,\)</span></li>
+<li><span class="math inline">\(B_2\to Z_2B_3,...,\)</span></li>
+<li><span class="math inline">\(B_{k-1}\to Z_{k-1}B_k,\)</span> (two
+non-terminals, the second form)</li>
+<li><span class="math inline">\(Z_i\to X_i\)</span> if <span class="math inline">\(X_i\in T\)</span> (one terminal, the first
+form)</li>
+<li><span class="math inline">\(Z_i=T_i\)</span> if <span class="math inline">\(X_i\in V\)</span></li>
+</ul>
+<p>乔姆斯基范式下的 CFG <span class="math inline">\(G\)</span>
+的优美性质：其 parse tree 是一颗二叉树！若该二叉树的最大深度为 <span class="math inline">\(s\)</span>，<span class="math inline">\(G\)</span>
+所生成语言的 size 是 <span class="math inline">\(O(2^{s-1})\)</span>
+级别的。</p>
+<h3 id="pumping-lemma-for-cfl">Pumping Lemma for CFL</h3>
+<p>Let <span class="math inline">\(L\)</span> be a CFL (Context Free
+Language, languages generated by CFG). Then there exists a constant
+<span class="math inline">\(n\)</span> such that, if <span class="math inline">\(z\)</span> is any string in <span class="math inline">\(L\)</span> such that <span class="math inline">\(|z|\geq n\)</span>, then we can write <span class="math inline">\(z=uvwxy\)</span> such that,</p>
+<ul>
+<li><span class="math inline">\(|vwx|\leq n\)</span></li>
+<li><span class="math inline">\(vx\neq \epsilon\)</span></li>
+<li>For all <span class="math inline">\(i\geq 0\)</span>, <span class="math inline">\(uv^iwx^iy\in L\)</span>.</li>
+</ul>
+<p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
@@ -912,15 +1002,6 @@ Design 最后一次开设是在 Autumn 2016。</em>」</p>
 
 
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
 
 <script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/08/16/cs3231/"}</script>
 <script>
@@ -936,6 +1017,15 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>

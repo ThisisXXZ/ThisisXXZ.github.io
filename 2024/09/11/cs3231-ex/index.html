@@ -34,7 +34,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.thisisxxz.com/2024/09/11/cs3231-ex/4-2.jpg">
 <meta property="article:published_time" content="2024-09-11T12:24:00.000Z">
-<meta property="article:modified_time" content="2024-09-14T08:04:39.211Z">
+<meta property="article:modified_time" content="2024-09-21T15:19:15.394Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Theoretical Computer Science">
 <meta name="twitter:card" content="summary">
@@ -170,7 +170,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-1"><span class="nav-number">1.</span> <span class="nav-text">Tutorial 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-2"><span class="nav-number">2.</span> <span class="nav-text">Tutorial 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-3"><span class="nav-number">3.</span> <span class="nav-text">Tutorial 3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-4"><span class="nav-number">4.</span> <span class="nav-text">Tutorial 4</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-1"><span class="nav-number">1.</span> <span class="nav-text">Tutorial 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-2"><span class="nav-number">2.</span> <span class="nav-text">Tutorial 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-3"><span class="nav-number">3.</span> <span class="nav-text">Tutorial 3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-4"><span class="nav-number">4.</span> <span class="nav-text">Tutorial 4</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-5"><span class="nav-number">5.</span> <span class="nav-text">Tutorial 5</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -500,6 +500,85 @@ prematurely</figcaption>
 </figure>
 <p>参见上图，按照上述的递归结构，由位置 <span class="math inline">\((x,y)\)</span> 开始，找到之后的第一个 <span class="math inline">\((x_T,y)\)</span>，把 <span class="math inline">\([x,x_T]\)</span> 划分为 <span class="math inline">\(T\)</span>。同理，找到之后的第一个 <span class="math inline">\((x_A,y+1)\)</span>，把 <span class="math inline">\([x,x_A]\)</span> 划分为 <span class="math inline">\(A\)</span>；找到之后的第一个 <span class="math inline">\((x_B,y-1)\)</span>，把 <span class="math inline">\([x,x_B]\)</span> 划分为 <span class="math inline">\(B\)</span>。</p>
 <p><br></p>
+<h2 id="tutorial-5">Tutorial 5</h2>
+<p>记住以下原则：</p>
+<ul>
+<li>所有的 symbols 都被 consume 都需要被
+consume；不存在提前「退出」。</li>
+<li>若不指定 transition，默认向 dead states 转移。</li>
+<li>对于给定的 <span class="math inline">\(L\)</span>，DFA/NFA/PDA 接受
+<span class="math inline">\(L\)</span> 中的所有字符串，拒绝所有非 <span class="math inline">\(L\)</span> 的字符串。</li>
+</ul>
+<p><strong>Q1</strong>. Give a NPDA for <span class="math inline">\(L=\{w|\#_a(w)&gt;\#_b(w)\}\)</span>, <span class="math inline">\(\Sigma=\{a,b\}\)</span>.</p>
+<p>NPDA: <span class="math inline">\((\{q_0,q_1\},\{a,b\},\{a,b,Z_0\},\delta,q_0,Z_0,\{q_1\})\)</span>,
+Acceptance by final state.</p>
+<ul>
+<li><span class="math inline">\(\delta(q_0,a,Z_0)=\{(q_0,a,aZ_0)\}\)</span>, <span class="math inline">\(\delta(q_0,b,Z_0)=\{(q_0,bZ_0)\}\)</span></li>
+<li><span class="math inline">\(\delta(q_0,a,b)=\{(q_0,\epsilon)\}\)</span>, <span class="math inline">\(\delta(q_0,a,a)=\{(q_0,aa)\}\)</span></li>
+<li><span class="math inline">\(\delta(q_0,b,a)=\{(q_0,\epsilon)\}\)</span>, <span class="math inline">\(\delta(q_0,b,b)=\{(q_0,bb)\}\)</span></li>
+<li><span class="math inline">\(\delta(q_0,\epsilon,a)=\{(q_1,\epsilon)\}\)</span></li>
+</ul>
+<p><strong>Q2</strong>. Give a NPDA for <span class="math inline">\(L=\{a^ib^jc^k|i=j \text{ or }j=k\}\)</span>, <span class="math inline">\(\Sigma=\{a,b,c\}\)</span>.</p>
+<p>NPDA: <span class="math inline">\((\{q_0,q_1,...,q_7\},\{a,b,c\},
+\{a,b,Z_0\},\delta,q_0,Z_0,\{q_3,q_7\})\)</span>, Acceptance by final
+state.</p>
+<ul>
+<li><span class="math inline">\(\delta(q_0,\epsilon,Z_0)=\{(q_1,Z_0),
+(q_4,Z_0)\}\)</span> (check <span class="math inline">\(i=j\)</span> or
+<span class="math inline">\(j=k\)</span>?)</li>
+<li><span class="math inline">\(\delta(q_1,\epsilon,Z_0)=\{(q_3,Z_0)\}\)</span>
+(check <span class="math inline">\(i=j=0\)</span>)</li>
+<li><span class="math inline">\(\delta(q_1,a,Z_0)=\{(q_1,aZ_0)\}\)</span>, <span class="math inline">\(\delta(q_1,a,a)=\{(q_1,aa)\}\)</span> (check <span class="math inline">\(i\)</span>)</li>
+<li><span class="math inline">\(\delta(q_1,b,a)=\{(q_2,\epsilon\}\)</span>, <span class="math inline">\(\delta(q_2,b,a)=\{(q_2,\epsilon)\}\)</span> (check
+<span class="math inline">\(i=j\)</span>)</li>
+<li><span class="math inline">\(\delta(q_2,\epsilon,Z_0)=\{(q_3,Z_0)\}\)</span>,
+<span class="math inline">\(\delta(q_3,c,Z_0)=\{(q_3,Z_0)\}\)</span>
+(ensure only <span class="math inline">\(c\)</span> appears in the last
+part)</li>
+<li><span class="math inline">\(\delta(q_4,a,Z_0)=\{(q_4,Z_0)\}\)</span>
+(ensure only <span class="math inline">\(a\)</span> appears in the first
+part)</li>
+<li><span class="math inline">\(\delta(q_4,\epsilon,Z_0)=\{(q_7,Z_0)\}\)</span>
+(check <span class="math inline">\(j=k=0\)</span>)</li>
+<li><span class="math inline">\(\delta(q_4,b,Z_0)=\{(q_5,bZ_0)\}\)</span>, <span class="math inline">\(\delta(q_5,b,b)=\{(q_5,bb)\}\)</span> (check <span class="math inline">\(j\)</span>)</li>
+<li><span class="math inline">\(\delta(q_5,c,b)=\{(q_6,\epsilon)\}\)</span>, <span class="math inline">\(\delta(q_6,c,b)=\{(q_6,\epsilon)\}\)</span>, <span class="math inline">\(\delta(q_6,\epsilon,Z_0)=\{(q_7,\epsilon)\}\)</span>
+(check <span class="math inline">\(j=k\)</span>)</li>
+</ul>
+<p><strong>Q3</strong>. Give a NPDA for <span class="math inline">\(L=\{w_1cw_2|w_1,w_2\in\{a,b\}^* \text{ and }
+w_1\neq w_2^R\}\)</span>, <span class="math inline">\(\Sigma=\{a,b,c\}\)</span>.</p>
+<p>三种情况：</p>
+<ul>
+<li><span class="math inline">\(w_1,w_2^R\)</span> mismatch.</li>
+<li><span class="math inline">\(|w_1|&gt;|w_2^R|\)</span> but matched
+before - some symbols will remain in the stack.</li>
+<li><span class="math inline">\(|w_1|&lt;|w_2^R|\)</span> but matched
+before - consume more symbols when the stack is already empty.</li>
+</ul>
+<p>NPDA: <span class="math inline">\((\{q_0,q_1,q_2\},\{a,b,c\},
+\{a,b,Z_0\}, \delta,q_0,Z_0,\{q_2,q_3\})\)</span>, Acceptance by final
+state.</p>
+<ul>
+<li><span class="math inline">\(\delta(q_0,a,Z)=\{(q_0,aZ)\}\)</span>,
+<span class="math inline">\(\delta(q_0,b,Z)=\{(q_0,bZ)\}\)</span>, for
+<span class="math inline">\(Z\in \{a,b,Z_0\}\)</span> (record <span class="math inline">\(w_1\)</span>)</li>
+<li><span class="math inline">\(\delta(q_0,c,Z)=\{(q_1,Z)\}\)</span>,
+for <span class="math inline">\(Z\in\{a,b,Z_0\}\)</span></li>
+<li><span class="math inline">\(\delta(q_1,a,a)=\{(q_1,\epsilon)\}\)</span>, <span class="math inline">\(\delta(q_1,b,b)=\{(q_1,\epsilon)\}\)</span> (match
+<span class="math inline">\(w_2^R\)</span> with <span class="math inline">\(w_1\)</span>)</li>
+<li><span class="math inline">\(\delta(q_1,a,b)=\{(q_2,\epsilon)\}\)</span>, <span class="math inline">\(\delta(q_1,b,a)=\{(q_2,\epsilon)\}\)</span> (cond.
+1 - accept, but need to consume the whole string)</li>
+<li><span class="math inline">\(\delta(q_1,a,Z_0)=\{(q_2,Z_0)\}\)</span>, <span class="math inline">\(\delta(q_1,b,Z_0)=\{(q_2,Z_0)\}\)</span> (cond.
+3)</li>
+<li><span class="math inline">\(\delta(q_1,\epsilon,a)=\{(q_3,\epsilon)\}\)</span>,
+<span class="math inline">\(\delta(q_1,\epsilon,b)=\{(q_3,\epsilon)\}\)</span>
+(cond. 2)</li>
+<li><span class="math inline">\(\delta(q_2,a,X)=\{(q_2,X)\}\)</span>,
+<span class="math inline">\(\delta(q_2,b,X)=\{(q_2,X)\}\)</span>, for
+<span class="math inline">\(X\in\{a,b,Z_0\}\)</span></li>
+</ul>
+<p><span class="math inline">\(q_2\)</span>: accept, but can consume
+more symbols. <span class="math inline">\(q_3\)</span>: accept, but must
+not consume any symbol (or go to dead states).</p>
 
     </div>
 
@@ -689,15 +768,6 @@ prematurely</figcaption>
 
 
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
 
 <script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/09/11/cs3231-ex/"}</script>
 <script>
@@ -713,6 +783,15 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>

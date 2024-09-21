@@ -413,6 +413,85 @@ prematurely</figcaption>
 </figure>
 <p>参见上图，按照上述的递归结构，由位置 <span class="math inline">\((x,y)\)</span> 开始，找到之后的第一个 <span class="math inline">\((x_T,y)\)</span>，把 <span class="math inline">\([x,x_T]\)</span> 划分为 <span class="math inline">\(T\)</span>。同理，找到之后的第一个 <span class="math inline">\((x_A,y+1)\)</span>，把 <span class="math inline">\([x,x_A]\)</span> 划分为 <span class="math inline">\(A\)</span>；找到之后的第一个 <span class="math inline">\((x_B,y-1)\)</span>，把 <span class="math inline">\([x,x_B]\)</span> 划分为 <span class="math inline">\(B\)</span>。</p>
 <p><br></p>
+<h2 id="tutorial-5">Tutorial 5</h2>
+<p>记住以下原则：</p>
+<ul>
+<li>所有的 symbols 都被 consume 都需要被
+consume；不存在提前「退出」。</li>
+<li>若不指定 transition，默认向 dead states 转移。</li>
+<li>对于给定的 <span class="math inline">\(L\)</span>，DFA/NFA/PDA 接受
+<span class="math inline">\(L\)</span> 中的所有字符串，拒绝所有非 <span class="math inline">\(L\)</span> 的字符串。</li>
+</ul>
+<p><strong>Q1</strong>. Give a NPDA for <span class="math inline">\(L=\{w|\#_a(w)&gt;\#_b(w)\}\)</span>, <span class="math inline">\(\Sigma=\{a,b\}\)</span>.</p>
+<p>NPDA: <span class="math inline">\((\{q_0,q_1\},\{a,b\},\{a,b,Z_0\},\delta,q_0,Z_0,\{q_1\})\)</span>,
+Acceptance by final state.</p>
+<ul>
+<li><span class="math inline">\(\delta(q_0,a,Z_0)=\{(q_0,a,aZ_0)\}\)</span>, <span class="math inline">\(\delta(q_0,b,Z_0)=\{(q_0,bZ_0)\}\)</span></li>
+<li><span class="math inline">\(\delta(q_0,a,b)=\{(q_0,\epsilon)\}\)</span>, <span class="math inline">\(\delta(q_0,a,a)=\{(q_0,aa)\}\)</span></li>
+<li><span class="math inline">\(\delta(q_0,b,a)=\{(q_0,\epsilon)\}\)</span>, <span class="math inline">\(\delta(q_0,b,b)=\{(q_0,bb)\}\)</span></li>
+<li><span class="math inline">\(\delta(q_0,\epsilon,a)=\{(q_1,\epsilon)\}\)</span></li>
+</ul>
+<p><strong>Q2</strong>. Give a NPDA for <span class="math inline">\(L=\{a^ib^jc^k|i=j \text{ or }j=k\}\)</span>, <span class="math inline">\(\Sigma=\{a,b,c\}\)</span>.</p>
+<p>NPDA: <span class="math inline">\((\{q_0,q_1,...,q_7\},\{a,b,c\},
+\{a,b,Z_0\},\delta,q_0,Z_0,\{q_3,q_7\})\)</span>, Acceptance by final
+state.</p>
+<ul>
+<li><span class="math inline">\(\delta(q_0,\epsilon,Z_0)=\{(q_1,Z_0),
+(q_4,Z_0)\}\)</span> (check <span class="math inline">\(i=j\)</span> or
+<span class="math inline">\(j=k\)</span>?)</li>
+<li><span class="math inline">\(\delta(q_1,\epsilon,Z_0)=\{(q_3,Z_0)\}\)</span>
+(check <span class="math inline">\(i=j=0\)</span>)</li>
+<li><span class="math inline">\(\delta(q_1,a,Z_0)=\{(q_1,aZ_0)\}\)</span>, <span class="math inline">\(\delta(q_1,a,a)=\{(q_1,aa)\}\)</span> (check <span class="math inline">\(i\)</span>)</li>
+<li><span class="math inline">\(\delta(q_1,b,a)=\{(q_2,\epsilon\}\)</span>, <span class="math inline">\(\delta(q_2,b,a)=\{(q_2,\epsilon)\}\)</span> (check
+<span class="math inline">\(i=j\)</span>)</li>
+<li><span class="math inline">\(\delta(q_2,\epsilon,Z_0)=\{(q_3,Z_0)\}\)</span>,
+<span class="math inline">\(\delta(q_3,c,Z_0)=\{(q_3,Z_0)\}\)</span>
+(ensure only <span class="math inline">\(c\)</span> appears in the last
+part)</li>
+<li><span class="math inline">\(\delta(q_4,a,Z_0)=\{(q_4,Z_0)\}\)</span>
+(ensure only <span class="math inline">\(a\)</span> appears in the first
+part)</li>
+<li><span class="math inline">\(\delta(q_4,\epsilon,Z_0)=\{(q_7,Z_0)\}\)</span>
+(check <span class="math inline">\(j=k=0\)</span>)</li>
+<li><span class="math inline">\(\delta(q_4,b,Z_0)=\{(q_5,bZ_0)\}\)</span>, <span class="math inline">\(\delta(q_5,b,b)=\{(q_5,bb)\}\)</span> (check <span class="math inline">\(j\)</span>)</li>
+<li><span class="math inline">\(\delta(q_5,c,b)=\{(q_6,\epsilon)\}\)</span>, <span class="math inline">\(\delta(q_6,c,b)=\{(q_6,\epsilon)\}\)</span>, <span class="math inline">\(\delta(q_6,\epsilon,Z_0)=\{(q_7,\epsilon)\}\)</span>
+(check <span class="math inline">\(j=k\)</span>)</li>
+</ul>
+<p><strong>Q3</strong>. Give a NPDA for <span class="math inline">\(L=\{w_1cw_2|w_1,w_2\in\{a,b\}^* \text{ and }
+w_1\neq w_2^R\}\)</span>, <span class="math inline">\(\Sigma=\{a,b,c\}\)</span>.</p>
+<p>三种情况：</p>
+<ul>
+<li><span class="math inline">\(w_1,w_2^R\)</span> mismatch.</li>
+<li><span class="math inline">\(|w_1|&gt;|w_2^R|\)</span> but matched
+before - some symbols will remain in the stack.</li>
+<li><span class="math inline">\(|w_1|&lt;|w_2^R|\)</span> but matched
+before - consume more symbols when the stack is already empty.</li>
+</ul>
+<p>NPDA: <span class="math inline">\((\{q_0,q_1,q_2\},\{a,b,c\},
+\{a,b,Z_0\}, \delta,q_0,Z_0,\{q_2,q_3\})\)</span>, Acceptance by final
+state.</p>
+<ul>
+<li><span class="math inline">\(\delta(q_0,a,Z)=\{(q_0,aZ)\}\)</span>,
+<span class="math inline">\(\delta(q_0,b,Z)=\{(q_0,bZ)\}\)</span>, for
+<span class="math inline">\(Z\in \{a,b,Z_0\}\)</span> (record <span class="math inline">\(w_1\)</span>)</li>
+<li><span class="math inline">\(\delta(q_0,c,Z)=\{(q_1,Z)\}\)</span>,
+for <span class="math inline">\(Z\in\{a,b,Z_0\}\)</span></li>
+<li><span class="math inline">\(\delta(q_1,a,a)=\{(q_1,\epsilon)\}\)</span>, <span class="math inline">\(\delta(q_1,b,b)=\{(q_1,\epsilon)\}\)</span> (match
+<span class="math inline">\(w_2^R\)</span> with <span class="math inline">\(w_1\)</span>)</li>
+<li><span class="math inline">\(\delta(q_1,a,b)=\{(q_2,\epsilon)\}\)</span>, <span class="math inline">\(\delta(q_1,b,a)=\{(q_2,\epsilon)\}\)</span> (cond.
+1 - accept, but need to consume the whole string)</li>
+<li><span class="math inline">\(\delta(q_1,a,Z_0)=\{(q_2,Z_0)\}\)</span>, <span class="math inline">\(\delta(q_1,b,Z_0)=\{(q_2,Z_0)\}\)</span> (cond.
+3)</li>
+<li><span class="math inline">\(\delta(q_1,\epsilon,a)=\{(q_3,\epsilon)\}\)</span>,
+<span class="math inline">\(\delta(q_1,\epsilon,b)=\{(q_3,\epsilon)\}\)</span>
+(cond. 2)</li>
+<li><span class="math inline">\(\delta(q_2,a,X)=\{(q_2,X)\}\)</span>,
+<span class="math inline">\(\delta(q_2,b,X)=\{(q_2,X)\}\)</span>, for
+<span class="math inline">\(X\in\{a,b,Z_0\}\)</span></li>
+</ul>
+<p><span class="math inline">\(q_2\)</span>: accept, but can consume
+more symbols. <span class="math inline">\(q_3\)</span>: accept, but must
+not consume any symbol (or go to dead states).</p>
 ]]></content>
       <categories>
         <category>笔记</category>
@@ -1123,6 +1202,96 @@ non-empty, for all <span class="math inline">\(a\in\Sigma\)</span>,
 <li>Any language accepted by an <strong>empty-stack DPDA</strong> has
 <strong>prefix property</strong>: For every <span class="math inline">\(x,y\)</span> in the language, <span class="math inline">\(x\)</span> is not a prefix of <span class="math inline">\(y\)</span>. e.g., language <span class="math inline">\(\{a.aa\}\)</span> is not accepted by any
 DPDA.</li>
+</ul>
+<p><br></p>
+<h2 id="properties-of-cfgs">Properties of CFGs</h2>
+<h3 id="useful-symbols">Useful Symbols</h3>
+<p>三个定义。</p>
+<ul>
+<li>Symbol <span class="math inline">\(A\)</span> is
+<strong>useful</strong> if it appears as <span class="math inline">\(S\Rightarrow ^*_G \alpha A\beta \Rightarrow^*_G
+w\)</span> for some <span class="math inline">\(w\in T^*\)</span>.</li>
+<li>Symbol <span class="math inline">\(A\)</span> is
+<strong>generating</strong> if <span class="math inline">\(A\Rightarrow_G^* w\)</span>, for some <span class="math inline">\(w\in T^*\)</span>.</li>
+<li>Symbol <span class="math inline">\(A\)</span> is
+<strong>reachable</strong> if <span class="math inline">\(S\Rightarrow^*_G \alpha A\beta\)</span>, for some
+<span class="math inline">\(\alpha,\beta \in (V\cup T)^*\)</span>.</li>
+</ul>
+<p>A symbol is useful <em>only if</em> it is reachable and generating
+(vice versa need not be the case).</p>
+<p>因此，给定一个 <span class="math inline">\(G=(V,T,P,S)\)</span> which
+generates at least one string，通过以下两步可以创造一个等价的 (生成的
+language 与 <span class="math inline">\(G\)</span> 相同)
+CFG，且它不包含任何 useless symbols。</p>
+<ul>
+<li>eliminate all symbols (and productions involving these symbols) that
+are non-generating.</li>
+<li>eliminate all symbols (and productions involving these symbols) that
+are non-reachable.</li>
+</ul>
+<h3 id="chomsky-normal-form">Chomsky Normal Form</h3>
+<p><strong>Chomsky Normal Form</strong>: All productions are of the form
+<span class="math inline">\(A\to BC\)</span> or <span class="math inline">\(A\to a\)</span> (where <span class="math inline">\(a\in T\)</span> and <span class="math inline">\(A,B,C\in V\)</span>).</p>
+<p>All CFGs can be converted to Chomsky Normal Form.</p>
+<ul>
+<li>Eliminate <span class="math inline">\(\epsilon\)</span>
+productions.</li>
+<li>Eliminate unit productions.</li>
+<li>Convert all productions into the following forms:
+<ul>
+<li>productions of length <span class="math inline">\(2\)</span>: <span class="math inline">\(A\to BC\)</span> where <span class="math inline">\(B,C\)</span> are non-terminals.</li>
+<li>productions of length <span class="math inline">\(1\)</span>: <span class="math inline">\(A\to a\)</span> where <span class="math inline">\(a\)</span> is a terminal.</li>
+</ul></li>
+</ul>
+<p>首先来看第一步：消除所有 <span class="math inline">\(\epsilon\)</span> productions。重复以下过程，直到
+<span class="math inline">\(G\)</span> 中不存在任何 <span class="math inline">\(\epsilon\)</span> production：</p>
+<ul>
+<li>Identify <strong>nullable</strong> state. e.g., If <span class="math inline">\(A\to\epsilon\)</span>, then <span class="math inline">\(A\)</span> is nullable.</li>
+<li>Remove <span class="math inline">\(\epsilon\)</span> production
+associated to the nullable state. e.g., remove <span class="math inline">\(A\to \epsilon\)</span>.</li>
+<li>For each production <span class="math inline">\(B\to\alpha\)</span>,
+replace it with all possible <span class="math inline">\(B\to\alpha&#39;\)</span> resulted in possibly
+deleting some of the nullable non-terminals. e.g., <span class="math inline">\(S\to ASA|aB|a\)</span> is replaced by <span class="math inline">\(S\to ASA|SA|AS|A|aB|a\)</span>.</li>
+</ul>
+<p>接下来是第二步：消除所有 unit productions。重复以下过程，直到 <span class="math inline">\(G\)</span> 中不存在任何 unit production：</p>
+<ul>
+<li>Identify non-terminal pair. e.g., If <span class="math inline">\(A\to B\)</span>, then <span class="math inline">\((A,B)\)</span> is a pair.</li>
+<li>Remove unit production associated to the pair. e.g., remove <span class="math inline">\(A\to B\)</span>.</li>
+<li>For each <strong>non-unit productions</strong> of the form <span class="math inline">\(B\to \gamma\)</span>, add production <span class="math inline">\(A\to \gamma\)</span>.</li>
+</ul>
+<p>经以上两步处理，<span class="math inline">\(G\)</span> 中所有的
+productions <span class="math inline">\(A\to \alpha\)</span>
+都表现为以下两个形式。</p>
+<ul>
+<li><span class="math inline">\(|\alpha|=1\)</span>，此时 <span class="math inline">\(\alpha\)</span> 一定是 terminal。</li>
+<li><span class="math inline">\(|\alpha|=|\alpha_1\alpha_2...\alpha_n|=n\geq
+2\)</span>，<span class="math inline">\(\alpha_i\)</span> 既可以是
+terminal 又可以是 non-terminal。</li>
+</ul>
+<p>此时我们应用第三步，将第二种形式再进一步化成 <span class="math inline">\(A\to BC\)</span> 且 <span class="math inline">\(B,C\)</span> 均为 non-terminal 的形式：Given
+production <span class="math inline">\(A\to X_1X_2...X_k\)</span> is
+changed to the following set of productions with new non-terminals <span class="math inline">\(B_i,Z_i\)</span>:</p>
+<ul>
+<li><span class="math inline">\(A\to Z_1B_2,\)</span></li>
+<li><span class="math inline">\(B_2\to Z_2B_3,...,\)</span></li>
+<li><span class="math inline">\(B_{k-1}\to Z_{k-1}B_k,\)</span> (two
+non-terminals, the second form)</li>
+<li><span class="math inline">\(Z_i\to X_i\)</span> if <span class="math inline">\(X_i\in T\)</span> (one terminal, the first
+form)</li>
+<li><span class="math inline">\(Z_i=T_i\)</span> if <span class="math inline">\(X_i\in V\)</span></li>
+</ul>
+<p>乔姆斯基范式下的 CFG <span class="math inline">\(G\)</span>
+的优美性质：其 parse tree 是一颗二叉树！若该二叉树的最大深度为 <span class="math inline">\(s\)</span>，<span class="math inline">\(G\)</span>
+所生成语言的 size 是 <span class="math inline">\(O(2^{s-1})\)</span>
+级别的。</p>
+<h3 id="pumping-lemma-for-cfl">Pumping Lemma for CFL</h3>
+<p>Let <span class="math inline">\(L\)</span> be a CFL (Context Free
+Language, languages generated by CFG). Then there exists a constant
+<span class="math inline">\(n\)</span> such that, if <span class="math inline">\(z\)</span> is any string in <span class="math inline">\(L\)</span> such that <span class="math inline">\(|z|\geq n\)</span>, then we can write <span class="math inline">\(z=uvwxy\)</span> such that,</p>
+<ul>
+<li><span class="math inline">\(|vwx|\leq n\)</span></li>
+<li><span class="math inline">\(vx\neq \epsilon\)</span></li>
+<li>For all <span class="math inline">\(i\geq 0\)</span>, <span class="math inline">\(uv^iwx^iy\in L\)</span>.</li>
 </ul>
 <p><br></p>
 <h2 id="reference">Reference</h2>
