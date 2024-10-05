@@ -32,11 +32,13 @@
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
 <meta property="og:description" content="计算理论 (Theory of Computation) 当之无愧是计算机科学王冠上的明珠；考虑到我贫瘠的智商，以后估计不会朝 TCS 方向来走；但对这些优雅的理论有一个最基本的了解应当是 CS 学生的素养。 讽刺的是，你坑近二十年前就没有开设这门课了 [1]，只得留待交换来上。老师是印度人，口音很重，我听完整节课才明白他口中的「GEO」其实是「zero」；但课还是讲得十分清楚，颇有 R">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/08/16/cs3231/PL_figure.png">
 <meta property="article:published_time" content="2024-08-16T12:31:10.000Z">
-<meta property="article:modified_time" content="2024-09-21T13:33:16.903Z">
+<meta property="article:modified_time" content="2024-10-05T08:03:09.850Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Theoretical Computer Science">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.thisisxxz.com/2024/08/16/cs3231/PL_figure.png">
 
 
 <link rel="canonical" href="https://www.thisisxxz.com/2024/08/16/cs3231/">
@@ -170,7 +172,7 @@
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#preliminaries"><span class="nav-number">1.</span> <span class="nav-text">Preliminaries</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dfa-nfa-and-regex"><span class="nav-number">2.</span> <span class="nav-text">DFA, NFA and RegEx</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dfa-nfa-equivalence"><span class="nav-number">2.1.</span> <span class="nav-text">DFA &amp; NFA: Equivalence</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dfa-to-regex"><span class="nav-number">2.2.</span> <span class="nav-text">DFA to RegEx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#regex-to-epsilon-nfa"><span class="nav-number">2.3.</span> <span class="nav-text">RegEx to \(\epsilon\)-NFA</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#minimization-of-dfa"><span class="nav-number">3.</span> <span class="nav-text">Minimization of DFA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#equivalence-classes"><span class="nav-number">3.1.</span> <span class="nav-text">Equivalence Classes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#distinguishable-pairs"><span class="nav-number">3.2.</span> <span class="nav-text">Distinguishable Pairs</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#parallel-simulation-of-2-dfas"><span class="nav-number">4.</span> <span class="nav-text">Parallel Simulation of
 2-DFAs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#properties-of-regular-languages"><span class="nav-number">5.</span> <span class="nav-text">Properties of Regular
-Languages</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pumping-lemma"><span class="nav-number">5.1.</span> <span class="nav-text">Pumping Lemma</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#properties"><span class="nav-number">5.2.</span> <span class="nav-text">Properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#homomorphism"><span class="nav-number">5.3.</span> <span class="nav-text">Homomorphism</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#context-free-grammars-cfg"><span class="nav-number">6.</span> <span class="nav-text">Context Free Grammars (CFG)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#right-linear-grammars"><span class="nav-number">6.1.</span> <span class="nav-text">Right-Linear Grammars</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ambiguous-grammars"><span class="nav-number">6.2.</span> <span class="nav-text">Ambiguous Grammars</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#push-down-automata-pda"><span class="nav-number">7.</span> <span class="nav-text">Push Down Automata (PDA)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#equivalent-pdas"><span class="nav-number">7.1.</span> <span class="nav-text">Equivalent PDAs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#equivalence-of-cfgs-and-pdas"><span class="nav-number">7.2.</span> <span class="nav-text">Equivalence of CFGs and PDAs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deterministic-pda-dpda"><span class="nav-number">7.3.</span> <span class="nav-text">Deterministic PDA (DPDA)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#properties-of-cfgs"><span class="nav-number">8.</span> <span class="nav-text">Properties of CFGs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#useful-symbols"><span class="nav-number">8.1.</span> <span class="nav-text">Useful Symbols</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#chomsky-normal-form"><span class="nav-number">8.2.</span> <span class="nav-text">Chomsky Normal Form</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pumping-lemma-for-cfl"><span class="nav-number">8.3.</span> <span class="nav-text">Pumping Lemma for CFL</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Languages</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pumping-lemma"><span class="nav-number">5.1.</span> <span class="nav-text">Pumping Lemma</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#properties"><span class="nav-number">5.2.</span> <span class="nav-text">Properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#homomorphism"><span class="nav-number">5.3.</span> <span class="nav-text">Homomorphism</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#context-free-grammars-cfg"><span class="nav-number">6.</span> <span class="nav-text">Context Free Grammars (CFG)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#right-linear-grammars"><span class="nav-number">6.1.</span> <span class="nav-text">Right-Linear Grammars</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ambiguous-grammars"><span class="nav-number">6.2.</span> <span class="nav-text">Ambiguous Grammars</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#push-down-automata-pda"><span class="nav-number">7.</span> <span class="nav-text">Push Down Automata (PDA)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#equivalent-pdas"><span class="nav-number">7.1.</span> <span class="nav-text">Equivalent PDAs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#equivalence-of-cfgs-and-pdas"><span class="nav-number">7.2.</span> <span class="nav-text">Equivalence of CFGs and PDAs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deterministic-pda-dpda"><span class="nav-number">7.3.</span> <span class="nav-text">Deterministic PDA (DPDA)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#properties-of-cfgs"><span class="nav-number">8.</span> <span class="nav-text">Properties of CFGs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#useful-symbols"><span class="nav-number">8.1.</span> <span class="nav-text">Useful Symbols</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#chomsky-normal-form"><span class="nav-number">8.2.</span> <span class="nav-text">Chomsky Normal Form</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pumping-lemma-for-cfl"><span class="nav-number">8.3.</span> <span class="nav-text">Pumping Lemma for CFL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#closure-properties"><span class="nav-number">8.4.</span> <span class="nav-text">Closure Properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cyk-algorithm"><span class="nav-number">8.5.</span> <span class="nav-text">CYK Algorithm</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -798,6 +800,81 @@ Language, languages generated by CFG). Then there exists a constant
 <li><span class="math inline">\(vx\neq \epsilon\)</span></li>
 <li>For all <span class="math inline">\(i\geq 0\)</span>, <span class="math inline">\(uv^iwx^iy\in L\)</span>.</li>
 </ul>
+<p>Proof (所有 pumping lemma 证明的重点都在于重复). Given Chomsky Normal
+Form grammar <span class="math inline">\(G=(V,T,P,S)\)</span> for <span class="math inline">\(L-\{\epsilon\}\)</span>. Let <span class="math inline">\(m=|V|\)</span>. Let <span class="math inline">\(n=2^m\)</span>.</p>
+<p>Suppose a string <span class="math inline">\(z\in L\)</span> of
+length at least <span class="math inline">\(n=2^m\)</span> is given.
+Consider the parse tree for <span class="math inline">\(z\)</span>, it
+must have a path from the root to a leaf of length at least <span class="math inline">\(m+1\)</span> (完全二叉树深度最小，但仍有 <span class="math inline">\(m+1\)</span>).</p>
+<p>In this path, among the last <span class="math inline">\(m+1\)</span>
+non-terminals, <strong>there must be two non-terminals which are the
+same</strong> (by pigeonhole principle).</p>
+<figure>
+<img data-src="PL_figure.png" alt="repetition: A\Rightarrow^* A">
+<figcaption aria-hidden="true">repetition: <span class="math inline">\(A\Rightarrow^* A\)</span></figcaption>
+</figure>
+<p>Then, <span class="math inline">\(z=uvwxy\)</span>, where <span class="math inline">\(S\Rightarrow ^*_G uAy \Rightarrow _G^* uvAxy
+\Rightarrow uvwxy\)</span>.</p>
+<ul>
+<li>Thus, we have <span class="math inline">\(A\Rightarrow ^*_G
+vAx,A\Rightarrow_G^* w\)</span></li>
+<li>Thus, <span class="math inline">\(A\Rightarrow_G^*v^iAx^i\Rightarrow_G^*
+v^iwx^i\)</span></li>
+<li>Thus, <span class="math inline">\(S\Rightarrow_G^*
+uAy\Rightarrow_G^*uv^iwx^iy\)</span> for all <span class="math inline">\(i\)</span> [condition 3]</li>
+</ul>
+<p>Since <span class="math inline">\(A\)</span> is a subtree of <span class="math inline">\(S\)</span>, the length of <span class="math inline">\(vwx\)</span> is at most <span class="math inline">\(2^m=n\)</span> [condition 1] Since <span class="math inline">\(G\)</span> is in Chomsky Normal Form, it does not
+have any unit productions or <span class="math inline">\(\epsilon\)</span> productions. Therefore, as <span class="math inline">\(A\Rightarrow_G^* vAx\)</span>, <span class="math inline">\(vx\neq \epsilon\)</span> [condition 2]</p>
+<h3 id="closure-properties">Closure Properties</h3>
+<p><strong>Substitution</strong> (类似 homomorphism).</p>
+<p>Consider mapping each terminal <span class="math inline">\(a\)</span>
+to a CFL <span class="math inline">\(L_a\)</span>, <span class="math inline">\(s(a)=L_a\)</span>. For a string <span class="math inline">\(w\)</span>, define <span class="math inline">\(s(w)\)</span> as follows:</p>
+<ul>
+<li><span class="math inline">\(s(\epsilon)=\{\epsilon\}\)</span></li>
+<li><span class="math inline">\(s(wa)=s(w)\times s(a)\)</span>, for
+<span class="math inline">\(a\in\Sigma, w\in \Sigma^*\)</span></li>
+</ul>
+<p>If <span class="math inline">\(L\)</span> is CFL over <span class="math inline">\(\Sigma\)</span> and <span class="math inline">\(s\)</span> is a substitution on <span class="math inline">\(\Sigma\)</span> such that <span class="math inline">\(s(a)=L_a\)</span> is CFL for each <span class="math inline">\(a\in\Sigma\)</span>. Then, <span class="math inline">\(\cup_{w\in L}s(w)\)</span> is a CFL
+(证明很简单，把原 <span class="math inline">\(P\)</span> 中所有的 <span class="math inline">\(A\to a\)</span> 替换成 <span class="math inline">\(A\to S_a\)</span>：<span class="math inline">\(S_a\)</span> 是 <span class="math inline">\(L_a\)</span> 对应的 starting state).</p>
+<p><strong>Reversal</strong>.</p>
+<p>If <span class="math inline">\(L\)</span> is CFL, then <span class="math inline">\(L^R\)</span> is CFL (将原 <span class="math inline">\(P\)</span> 中所有的 <span class="math inline">\(A\to \alpha\)</span> 替换成 <span class="math inline">\(A\to\alpha^R\)</span>)</p>
+<p><strong>Union</strong>.</p>
+<p>If <span class="math inline">\(L\)</span> is CFL and <span class="math inline">\(R\)</span> is regular, then <span class="math inline">\(L\cap R\)</span> is CFL.</p>
+<p>证明：parallel simulation of PDA for <span class="math inline">\(L\)</span> and DFA for <span class="math inline">\(R\)</span>.</p>
+<ul>
+<li>For <span class="math inline">\(Z\in \Gamma,p\in Q,q\in
+Q&#39;\)</span>, <span class="math inline">\(\delta&#39;&#39;((p,q),\epsilon,Z)=\delta(p,\epsilon,Z)\times
+\{q\}\)</span></li>
+<li>For <span class="math inline">\(a\in\Sigma,Z\in \Gamma,p\in Q,q\in
+Q&#39;\)</span>: <span class="math inline">\(\delta&#39;&#39;((p,q),a,Z)=\delta(p,a,Z)\times
+\{\delta&#39;(q,a)\}\)</span></li>
+</ul>
+<p>注意<strong>一定是 CFL <span class="math inline">\(\cap\)</span>
+PDA，不能是 CFL <span class="math inline">\(\cap\)</span>
+CFL</strong>。例如，<span class="math inline">\(L_1=\{a^nb^nc^m:m,n\geq
+1\}\)</span> 与 <span class="math inline">\(L_2=\{a^mb^nc^n:m,n\geq
+1\}\)</span> 均是 CFL (忽略 <span class="math inline">\(m\)</span>，判断
+<span class="math inline">\(n=n\)</span>)，但 <span class="math inline">\(L_3=L_1\cap L_2=\{a^nb^nc^n:n\geq 1\}\)</span>
+不是 context free 的 (单栈 PDA
+只能处理两个长度相等的符号，三个就不行了)。</p>
+<p><strong>Empty</strong>.</p>
+<p>A CFL is <span class="math inline">\(\emptyset\)</span> if <span class="math inline">\(S\)</span> is a useless symbol. Otherwise it is
+non-empty.</p>
+<h3 id="cyk-algorithm">CYK Algorithm</h3>
+<p>CYK 算法 (<em>Cocke-Younger-Kasami</em> algorithm) 用于 CFL 的
+membership testing (判断某个字串 <span class="math inline">\(w\)</span>
+是否属于给定的 CFL <span class="math inline">\(L\)</span>)。它是一个
+<span class="math inline">\(O(n^3)\)</span> 的 DP 算法。</p>
+<p>将 <span class="math inline">\(L\)</span> 化为 Chomsky Normal
+Form。对于 <span class="math inline">\(w=a_1...a_n\)</span>，定义 <span class="math inline">\(X_{i,j}\)</span> 为所有能生成 <span class="math inline">\(a_ia_{i+1}...a_j\)</span> 的 non-terminals。</p>
+<ul>
+<li>Base case. <span class="math inline">\(X_{i,i}\)</span> is the set
+of non-terminals which generate <span class="math inline">\(a_i\)</span>.</li>
+<li>Induction step. <span class="math inline">\(X_{i,j}\)</span>
+contains all <span class="math inline">\(A\)</span> such that <span class="math inline">\(A\to BC\)</span> and <span class="math inline">\(B\in X_{i,k}, C\in X_{k+1,j}\)</span>, for <span class="math inline">\(i\leq k&lt;j\)</span>.</li>
+</ul>
+<p><span class="math inline">\(w=a_1...a_n\)</span> is in the language
+iff <span class="math inline">\(X_{1,n}\)</span> contains <span class="math inline">\(S\)</span>.</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
@@ -1002,15 +1079,6 @@ Design 最后一次开设是在 Autumn 2016。</em>」</p>
 
 
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
 
 <script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/08/16/cs3231/"}</script>
 <script>
@@ -1026,6 +1094,15 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
