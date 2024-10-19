@@ -847,6 +847,128 @@ contains <span class="math inline">\(2\)</span> 和 <span class="math inline">\(
 <img data-src="t7.png" alt="This guy is a genius">
 <figcaption aria-hidden="true">This guy is a genius</figcaption>
 </figure>
+<p><br></p>
+<h2 id="tutorial-8-turing-machine">Tutorial 8 (Turing Machine)</h2>
+<p><strong>Q1.</strong> Given a Turing Machine which converts a binary
+number to equivalent unary number.</p>
+<p>Following is a two-tape machine. 2nd tape is used only for writing
+<span class="math inline">\(1\)</span>, so symbol read there does not
+matter. On the 1st tape, the start state is <span class="math inline">\(q_0\)</span>:</p>
+<ul>
+<li>In state <span class="math inline">\(q_0\)</span>: we move to the
+right end of input, and go to state <span class="math inline">\(q_1\)</span></li>
+<li>In state <span class="math inline">\(q_1\)</span>: mimic subtraction
+by <span class="math inline">\(1\)</span>, rewrite <span class="math inline">\(...10^i\)</span> to <span class="math inline">\(...01^i\)</span>, append another <span class="math inline">\(1\)</span> on the 2nd tape, and go back to <span class="math inline">\(q_0\)</span></li>
+</ul>
+<table>
+<colgroup>
+<col style="width: 6%">
+<col style="width: 31%">
+<col style="width: 31%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: center;"></th>
+<th><span class="math inline">\((0,X)\)</span></th>
+<th><span class="math inline">\((1,X)\)</span></th>
+<th style="text-align: center;"><span class="math inline">\((B,X)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><span class="math inline">\(q_0\)</span></td>
+<td><span class="math inline">\(q_0\)</span>, <span class="math inline">\((0,X)\)</span>, <span class="math inline">\((R,S)\)</span></td>
+<td><span class="math inline">\(q_0\)</span>, <span class="math inline">\((1,X)\)</span>, <span class="math inline">\((R,S)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(q_1\)</span>, <span class="math inline">\((B,X)\)</span>, <span class="math inline">\((L,S)\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span class="math inline">\(q_1\)</span></td>
+<td><span class="math inline">\(q_1\)</span>, <span class="math inline">\((1,X)\)</span>, <span class="math inline">\((L,S)\)</span></td>
+<td><span class="math inline">\(q_0\)</span>, <span class="math inline">\((0,1)\)</span>, <span class="math inline">\((R,R)\)</span></td>
+<td style="text-align: center;">Halt</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Q2</strong>. Design a Turing Machine to accept <span class="math inline">\(\{a^n|n\text{ is a prime}\}\)</span>.</p>
+<p>Tape <span class="math inline">\(1\)</span> holds <span class="math inline">\(n\)</span>, and tape <span class="math inline">\(2\)</span> holds the divisors from <span class="math inline">\(n-1\)</span> to <span class="math inline">\(2\)</span>.</p>
+<ol type="1">
+<li>Initially input <span class="math inline">\(a^n\)</span> is in tape
+<span class="math inline">\(1\)</span>.</li>
+<li>In input contains only <span class="math inline">\(0\)</span> or
+<span class="math inline">\(1\)</span> <span class="math inline">\(a\)</span>, then reject.</li>
+<li>Copy input to tape <span class="math inline">\(2\)</span>.</li>
+<li>Decrement the number of <span class="math inline">\(a\)</span>'s in
+tape <span class="math inline">\(2\)</span> by <span class="math inline">\(1\)</span>.</li>
+<li>If tape <span class="math inline">\(2\)</span> contains only one
+<span class="math inline">\(a\)</span>, then accept (input is a
+prime).</li>
+<li>Move to left end of the strings in tape <span class="math inline">\(1\)</span> and tape <span class="math inline">\(2\)</span>.</li>
+<li>Move step by step, in both tape <span class="math inline">\(1\)</span> and tape <span class="math inline">\(2\)</span>, to right, until one of them hits a
+blank.
+<ul>
+<li>If both tapes hit blank at the same time, then reject (<span class="math inline">\(n\)</span> is divisible by that divisor).</li>
+<li>If tape <span class="math inline">\(2\)</span> hits blank first
+then, move to the left end of the string of tape <span class="math inline">\(2\)</span>, and go to step 7.</li>
+<li>If tape <span class="math inline">\(1\)</span> hits blank first
+then, go to step 4 (<span class="math inline">\(n\)</span> is not
+divisible by current divisor).</li>
+</ul></li>
+</ol>
+<p><strong>Q3</strong>. Consider any partial function <span class="math inline">\(f\)</span>, and define a language <span class="math inline">\(L_f=\{x\#y|x\in\text{domain}(f) \text{ and }
+f(x)=y\}\)</span>. Show that <span class="math inline">\(f\)</span> is
+partial recursive if <span class="math inline">\(L_f\)</span> is RE.</p>
+<p>Suppose <span class="math inline">\(M&#39;\)</span> is the machine
+which accepts <span class="math inline">\(L_f\)</span>, then <span class="math inline">\(M\)</span> on input <span class="math inline">\(x\)</span> uses the following algorithm to
+determine its answer. <span class="math display">\[
+\begin{aligned}
+&amp;\text{For } t=0 \text{ to }\infty \\
+&amp;\text{For all } y \text{ of length at most }t \\
+&amp; \ \ \ \ \ \ \ \ \text{If } M&#39;\text{ accepts } x\#y \text{
+within } t\text{ steps, then output } y \\
+&amp;\text{EndFor} \\
+&amp;\text{EndFor}
+\end{aligned}
+\]</span> To check whether <span class="math inline">\(M&#39;\)</span>
+accepts <span class="math inline">\(x\#y\)</span> within <span class="math inline">\(t\)</span> steps, we can introduce a new counter
+tape and place <span class="math inline">\(t\)</span> in unary on that
+tape, and place the head of the tape at the beginning of the number. In
+each step of <span class="math inline">\(M&#39;\)</span>, one moves the
+head right. If <span class="math inline">\(M&#39;\)</span> accepts
+before reaching the blank at the end of <span class="math inline">\(t\)</span>, then we knoe that it accepts within
+<span class="math inline">\(t\)</span> steps.</p>
+<p>Also note that <span class="math inline">\(M\)</span> needs to keep a
+copy of <span class="math inline">\(x\#y\)</span> before simulating
+<span class="math inline">\(M&#39;\)</span>.</p>
+<p>重点：除了枚举 <span class="math inline">\(y\)</span>
+之外，为什么要枚举一个步数上界 <span class="math inline">\(t\)</span>？如果选择的 <span class="math inline">\(y\)</span> 是错的，<span class="math inline">\(M&#39;\)</span> 可能不会停机！</p>
+<p><strong>Q4</strong>. Is a 2-stack non-deterministic PDA as powerful
+as non-deterministic TM?</p>
+<p>这道题最复杂的部分想出来了，就只简单的写一些。</p>
+<ul>
+<li>2-stack NPDA <span class="math inline">\(\Rightarrow\)</span> NTM:
+ID <span class="math inline">\(\alpha q\beta\)</span> of TM will be
+represented in the 2-NPDA by keeping <span class="math inline">\(\alpha\)</span> in stack 1 (with first letter of
+<span class="math inline">\(\alpha\)</span> at the bottom of stack) and
+<span class="math inline">\(\beta\)</span> in stack 2 (with first letter
+of <span class="math inline">\(\beta\)</span> at the top of stack).
+Stack starting symbol <span class="math inline">\(Z\)</span> represents
+surrounding blanks.</li>
+<li>NTM <span class="math inline">\(\Rightarrow\)</span> 2-stack NPDA:
+Use two working tape, simulating two stacks respectively. The head of
+each tape represents the top of the stack.</li>
+</ul>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info: CS3231. Professor: Sanjay Jain.</p>
+<p>Course textbook: <em>Introduction to Automata Theory, Languages and
+Computation (3rd Edition)</em>, Hopcraft, Motwani &amp; Ullman, (2014),
+Pearson</p>
+<p>Course website: https://www.comp.nus.edu.sg/~sanjay/cs3231.html</p>
 ]]></content>
       <categories>
         <category>笔记</category>
@@ -1764,7 +1886,7 @@ contains all <span class="math inline">\(A\)</span> such that <span class="math 
 <p><span class="math inline">\(w=a_1...a_n\)</span> is in the language
 iff <span class="math inline">\(X_{1,n}\)</span> contains <span class="math inline">\(S\)</span>.</p>
 <p><br></p>
-<h2 id="turing-machine">Turing Machine</h2>
+<h2 id="turing-machine-some-concepts">Turing Machine: Some Concepts</h2>
 <p>Turing Machine <span class="math inline">\(M=(Q,\Sigma,\Gamma,\delta,q_0,B,F)\)</span></p>
 <ul>
 <li><span class="math inline">\(\Sigma\)</span>: input alphabet set.
@@ -1789,36 +1911,13 @@ F\}\)</span>.</p>
 <li><span class="math inline">\(f(x)\)</span> 是图灵机在输入 <span class="math inline">\(x\)</span> 上停机后纸带上的结果。</li>
 <li>This reveals that machine <em>may</em> never halt.</li>
 </ul>
+<p>Coding of Turing Machine. Since Turing machines can be represented by
+finite descriptions (such as code or a set of rules), it is possible to
+enumerate them in an ordered way.</p>
 <p><strong>Church-Turing Thesis</strong>. Whatever can be computed by an
 algorithmic device (in function computation sense, or language
 acceptance sense), can be done by a Turing Machine.</p>
-<h3 id="languages-functions-and-codings">Languages, Functions and
-Codings</h3>
-<p><span class="math inline">\(L\)</span> is <em>recursively
-enumerable</em> (RE), or <em>computably enumerable</em> (CE), if some TM
-accepts the language <span class="math inline">\(L\)</span>.</p>
-<p>A language <span class="math inline">\(L\)</span> is
-<em>recursive</em>, or <em>decidable</em>, if some TM accepts the
-language <span class="math inline">\(L\)</span>, and <strong>halts on
-all the inputs</strong>.</p>
-<p>A function <span class="math inline">\(f\)</span> is <em>partial
-recursive</em>, or <em>partially computable</em>, if some TM computes
-the function (if halts on all the inputs on which <span class="math inline">\(f\)</span> is defined, and it does not halt on
-inputs on which <span class="math inline">\(f\)</span> is not
-defined).</p>
-<p>A function <span class="math inline">\(f\)</span> is
-<em>recursive</em>, or <em>computable</em>, if some TM computes the
-function, and <span class="math inline">\(f\)</span> is defined on all
-elements of <span class="math inline">\(\Sigma^*\)</span>
-(图灵机一定会停机).</p>
-<p>我们可以用某种方式将图灵机编码成一串数字。</p>
-<ul>
-<li><span class="math inline">\(M_i\)</span> denotes the Turing Machine
-with code number <span class="math inline">\(i\)</span>.</li>
-<li><span class="math inline">\(W_i=L(M_i)\)</span> denotes the language
-accepted by Turing Machine with code number <span class="math inline">\(i\)</span>.</li>
-</ul>
-<h3 id="semi-infinite-tapes">Semi-Infinite Tapes</h3>
+<h3 id="semi-infinite-tape-tm">Semi-Infinite-Tape TM</h3>
 <p>想象一下把纸带对折，以最左边的 cell 为界，纸带被分为 upper track 与
 lower track。显然，lower track
 中的「往右」实际上对应着原纸带中的「往左」。</p>
@@ -1853,7 +1952,7 @@ to <span class="math inline">\(Y\)</span> if on lower track]</li>
 <li><span class="math inline">\(\delta&#39;((q,D),(X,*))=((q&#39;,D),(Y,*),L)\)</span></li>
 </ul></li>
 </ul>
-<h3 id="multi-tapes">Multi Tapes</h3>
+<h3 id="multi-tapes-tm">Multi-Tapes TM</h3>
 <p><span class="math inline">\(k\)</span> 个无限长纸带，<span class="math inline">\(k\)</span> 个读写头，<span class="math inline">\(\delta:(Q\backslash F)\times \Gamma^k \to Q\times
 \Gamma^k \times \{L,R\}^k\)</span>.</p>
 <p>This model intuitively seems much more powerful than the single-tape
@@ -1871,6 +1970,105 @@ such that <span class="math inline">\(q_0 x\vdash^* \alpha q_f
 <p>与 DFA/NFA 相同，DTM simulates NTM；其通过 BFS 遍历 NTM 的
 computation tree 直到找到对应的接受路径。因此一般而言，与 NTM 等价的 DTM
 的计算复杂度是 exponential 级别的。</p>
+<h3 id="recursive-enumerable-language">Recursive Enumerable
+Language</h3>
+<ul>
+<li><span class="math inline">\(L\)</span> is <em>recursively
+enumerable</em> (RE), or <em>computably enumerable</em> (CE), if some TM
+accepts the language <span class="math inline">\(L\)</span>.</li>
+<li>A language <span class="math inline">\(L\)</span> is
+<em>recursive</em>, or <em>decidable</em>, if some TM accepts the
+language <span class="math inline">\(L\)</span>, and <strong>halts on
+all the inputs</strong>.</li>
+<li>A function <span class="math inline">\(f\)</span> is <em>partial
+recursive</em>, or <em>partially computable</em>, if some TM computes
+the function (if halts on all the inputs on which <span class="math inline">\(f\)</span> is defined, and it does not halt on
+inputs on which <span class="math inline">\(f\)</span> is not
+defined).</li>
+<li>A function <span class="math inline">\(f\)</span> is
+<em>recursive</em>, or <em>computable</em>, if some Turing Machine
+computes the function, and <span class="math inline">\(f\)</span> is
+defined on all elements of <span class="math inline">\(\Sigma^*\)</span>
+(图灵机一定会停机).</li>
+</ul>
+<p>Construct a Non-RE Language (<strong>Diagonal Language</strong>)
+<span class="math inline">\(L_d=\{w_i:w_i\notin L(M_i)\}\)</span>. Here,
+all Turing Machines are listed in order <span class="math inline">\(M_0,M_1,M_2,...\)</span></p>
+<p>Define <span class="math inline">\(L_u\)</span> (<strong>Universal
+Language</strong>) as <span class="math inline">\(L_u=\{w_i:w_i\in
+L(M_i)\}\)</span>. Then, <span class="math inline">\(\overline{L_u}\)</span> is also non-RE (prove by
+reduce <span class="math inline">\(L_d\)</span> to <span class="math inline">\(\overline{L_u}\)</span>).</p>
+<p>Theorem 1. If <span class="math inline">\(L\)</span> is recursive,
+then <span class="math inline">\(\overline{L}\)</span> is recursive.</p>
+<ul>
+<li>WLOG assume Turing Machine <span class="math inline">\(M\)</span>
+accepts <span class="math inline">\(L\)</span>, and there is only one
+accepting state.</li>
+<li>Create a new state <span class="math inline">\(q_{new}\)</span>.</li>
+<li>Construct <span class="math inline">\(M&#39;\)</span> accepting
+<span class="math inline">\(\overline{L}\)</span> as follows: for any
+non-accepting state <span class="math inline">\(q\)</span> and any
+letter <span class="math inline">\(a\)</span>, if <span class="math inline">\(\delta(q,a)\)</span> is not defined in <span class="math inline">\(M\)</span>, then let <span class="math inline">\(\delta(q,a)=q_{new}\)</span>. Other transitions in
+<span class="math inline">\(M&#39;\)</span> are as in <span class="math inline">\(M\)</span>.</li>
+<li>Finally, let <span class="math inline">\(q_{new}\)</span> to be the
+only accepting state in <span class="math inline">\(M&#39;\)</span>.</li>
+</ul>
+<p>Theorem 2. <span class="math inline">\(L\)</span> is recursive iff
+<span class="math inline">\(L\)</span> is RE and <span class="math inline">\(\overline{L}\)</span> is RE.</p>
+<p><span class="math inline">\(\Rightarrow\)</span> part: Since <span class="math inline">\(L\)</span> is recursive, <span class="math inline">\(\overline{L}\)</span> is also recursive (Theorem
+1), therefore <span class="math inline">\(L\)</span> and <span class="math inline">\(\overline{L}\)</span> are both RE.</p>
+<p><span class="math inline">\(\Leftarrow\)</span> part: Suppose <span class="math inline">\(M\)</span> accepts <span class="math inline">\(L\)</span> and <span class="math inline">\(M&#39;\)</span> accepts <span class="math inline">\(\overline{L}\)</span>. Construct <span class="math inline">\(M&#39;&#39;\)</span> as follows:</p>
+<ul>
+<li><span class="math inline">\(M&#39;&#39;(x)\)</span> copies <span class="math inline">\(x\)</span> into two different tapes.</li>
+<li>Then it runs parallel simulation - <span class="math inline">\(M(x)\)</span> on the first tape, <span class="math inline">\(M&#39;(x)\)</span> on the second tape.</li>
+<li>If at any point <span class="math inline">\(M(x)\)</span> accepts,
+then <span class="math inline">\(M&#39;&#39;\)</span> accepts. If <span class="math inline">\(M&#39;(x)\)</span> accepts, then <span class="math inline">\(M&#39;&#39;\)</span> <strong>halts</strong> and
+rejects.</li>
+</ul>
+<p><br></p>
+<h2 id="universal-turing-machine">Universal Turing Machine</h2>
+<p>Universal Turing Machine (UTM) accepts <strong>Universal
+Language</strong> <span class="math inline">\(L_u=\{(M,w):M\text{
+accepts }w\}\)</span>.</p>
+<p>先引入 Turing Machine 的 coding scheme:</p>
+<ul>
+<li>Denote tape symbols as <span class="math inline">\(X_1,X_2,...,X_s\)</span> (e.g., <span class="math inline">\(X_1\)</span> for 0, <span class="math inline">\(X_2\)</span> for 1, <span class="math inline">\(X_3\)</span> for blank)</li>
+<li>Denote directions as <span class="math inline">\(L=D_1,R=D_2\)</span></li>
+<li>Encode a transition <span class="math inline">\(\delta(q_i,X_j)=(q_k,X_l,D_m)\)</span> as <span class="math inline">\(0^i10^j10^k10^l10^m\)</span></li>
+<li>Encode the TM as <span class="math inline">\(C_111C_211C_3...C_n\)</span> where <span class="math inline">\(C_i\)</span> is the <span class="math inline">\(i\)</span>-th transition.</li>
+</ul>
+<p>为使输入字符串 <span class="math inline">\(w\)</span> 与 <span class="math inline">\(M\)</span> 的编码一致，同样将 <span class="math inline">\(w\)</span> 按照上述方式 (1 与 3) 编码：<span class="math inline">\(10^1\)</span> for 0, <span class="math inline">\(10^2\)</span> for 1, <span class="math inline">\(10^3\)</span> for blank。</p>
+<p>UTM has the following tapes.</p>
+<ul>
+<li><strong>Input tape</strong>: <span class="math inline">\(M\#w\)</span></li>
+<li><strong>Working tape</strong>: initialized with encoded <span class="math inline">\(w\)</span>. read-write head on this tape always
+points to <span class="math inline">\(1\)</span></li>
+<li><strong>State tape</strong>: initialized with <span class="math inline">\(0\)</span> (represent starting state <span class="math inline">\(q_1\)</span>)</li>
+<li><strong>Scratch tape</strong></li>
+</ul>
+<p>UTM simulates <span class="math inline">\(M(x)\)</span> as
+follows.</p>
+<ul>
+<li>Suppose the State tape has <span class="math inline">\(0^i\)</span>.</li>
+<li>Suppose the head on the Working tape is at the start of <span class="math inline">\(10^j1\)</span>.</li>
+<li>Search the code of <span class="math inline">\(M\)</span> on the
+Input tape of the form <span class="math inline">\(0^i10^j10^k10^l10^m\)</span>, where on both sides
+we have either blanks or <span class="math inline">\(11\)</span>.</li>
+<li>Change the content of State tape to <span class="math inline">\(0^k\)</span> (done using copying).</li>
+<li>Change the string from <span class="math inline">\(10^j1\)</span> to
+<span class="math inline">\(10^k1\)</span> on the Working tape. (mark
+the current <span class="math inline">\(1\)</span> to a special symbol
+<span class="math inline">\(*\)</span>, copy the content into Scratch
+tape - instead of copying the portion <span class="math inline">\(*0^j1\)</span>, write <span class="math inline">\(*0^k1\)</span>, then copy the Scratch tape back to
+the Working tape)</li>
+<li>Revert the special symbol <span class="math inline">\(*\)</span> to
+<span class="math inline">\(1\)</span>, and move the head on the Working
+tape to the previous/next <span class="math inline">\(1\)</span>
+depending on the value of <span class="math inline">\(m\)</span>.</li>
+</ul>
+<p>When <span class="math inline">\(M\)</span> halts, UTM can tell if it
+is in the single accepting state and so moves to an accepting state of
+its own.</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>

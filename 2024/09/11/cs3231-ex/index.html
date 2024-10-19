@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2024/09/11/cs3231-ex/4-2.jpg">
 <meta property="og:image" content="https://www.thisisxxz.com/2024/09/11/cs3231-ex/t7.png">
 <meta property="article:published_time" content="2024-09-11T12:24:00.000Z">
-<meta property="article:modified_time" content="2024-10-12T11:20:43.027Z">
+<meta property="article:modified_time" content="2024-10-19T04:12:52.891Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Theoretical Computer Science">
 <meta name="twitter:card" content="summary">
@@ -172,7 +172,7 @@
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-1-regex"><span class="nav-number">1.</span> <span class="nav-text">Tutorial 1 (RegEx)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-2-dfa"><span class="nav-number">2.</span> <span class="nav-text">Tutorial 2 (DFA)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-3-rl"><span class="nav-number">3.</span> <span class="nav-text">Tutorial 3 (RL)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-4-cfg"><span class="nav-number">4.</span> <span class="nav-text">Tutorial 4 (CFG)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-5-pda"><span class="nav-number">5.</span> <span class="nav-text">Tutorial 5 (PDA)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-6-chomsky-normal-form"><span class="nav-number">6.</span> <span class="nav-text">Tutorial 6 (Chomsky Normal
-Form)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-7-cfl"><span class="nav-number">7.</span> <span class="nav-text">Tutorial 7 (CFL)</span></a></li></ol></div>
+Form)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-7-cfl"><span class="nav-number">7.</span> <span class="nav-text">Tutorial 7 (CFL)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-8-turing-machine"><span class="nav-number">8.</span> <span class="nav-text">Tutorial 8 (Turing Machine)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -740,6 +740,128 @@ contains <span class="math inline">\(2\)</span> 和 <span class="math inline">\(
 <img data-src="t7.png" alt="This guy is a genius">
 <figcaption aria-hidden="true">This guy is a genius</figcaption>
 </figure>
+<p><br></p>
+<h2 id="tutorial-8-turing-machine">Tutorial 8 (Turing Machine)</h2>
+<p><strong>Q1.</strong> Given a Turing Machine which converts a binary
+number to equivalent unary number.</p>
+<p>Following is a two-tape machine. 2nd tape is used only for writing
+<span class="math inline">\(1\)</span>, so symbol read there does not
+matter. On the 1st tape, the start state is <span class="math inline">\(q_0\)</span>:</p>
+<ul>
+<li>In state <span class="math inline">\(q_0\)</span>: we move to the
+right end of input, and go to state <span class="math inline">\(q_1\)</span></li>
+<li>In state <span class="math inline">\(q_1\)</span>: mimic subtraction
+by <span class="math inline">\(1\)</span>, rewrite <span class="math inline">\(...10^i\)</span> to <span class="math inline">\(...01^i\)</span>, append another <span class="math inline">\(1\)</span> on the 2nd tape, and go back to <span class="math inline">\(q_0\)</span></li>
+</ul>
+<table>
+<colgroup>
+<col style="width: 6%">
+<col style="width: 31%">
+<col style="width: 31%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: center;"></th>
+<th><span class="math inline">\((0,X)\)</span></th>
+<th><span class="math inline">\((1,X)\)</span></th>
+<th style="text-align: center;"><span class="math inline">\((B,X)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><span class="math inline">\(q_0\)</span></td>
+<td><span class="math inline">\(q_0\)</span>, <span class="math inline">\((0,X)\)</span>, <span class="math inline">\((R,S)\)</span></td>
+<td><span class="math inline">\(q_0\)</span>, <span class="math inline">\((1,X)\)</span>, <span class="math inline">\((R,S)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(q_1\)</span>, <span class="math inline">\((B,X)\)</span>, <span class="math inline">\((L,S)\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span class="math inline">\(q_1\)</span></td>
+<td><span class="math inline">\(q_1\)</span>, <span class="math inline">\((1,X)\)</span>, <span class="math inline">\((L,S)\)</span></td>
+<td><span class="math inline">\(q_0\)</span>, <span class="math inline">\((0,1)\)</span>, <span class="math inline">\((R,R)\)</span></td>
+<td style="text-align: center;">Halt</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Q2</strong>. Design a Turing Machine to accept <span class="math inline">\(\{a^n|n\text{ is a prime}\}\)</span>.</p>
+<p>Tape <span class="math inline">\(1\)</span> holds <span class="math inline">\(n\)</span>, and tape <span class="math inline">\(2\)</span> holds the divisors from <span class="math inline">\(n-1\)</span> to <span class="math inline">\(2\)</span>.</p>
+<ol type="1">
+<li>Initially input <span class="math inline">\(a^n\)</span> is in tape
+<span class="math inline">\(1\)</span>.</li>
+<li>In input contains only <span class="math inline">\(0\)</span> or
+<span class="math inline">\(1\)</span> <span class="math inline">\(a\)</span>, then reject.</li>
+<li>Copy input to tape <span class="math inline">\(2\)</span>.</li>
+<li>Decrement the number of <span class="math inline">\(a\)</span>'s in
+tape <span class="math inline">\(2\)</span> by <span class="math inline">\(1\)</span>.</li>
+<li>If tape <span class="math inline">\(2\)</span> contains only one
+<span class="math inline">\(a\)</span>, then accept (input is a
+prime).</li>
+<li>Move to left end of the strings in tape <span class="math inline">\(1\)</span> and tape <span class="math inline">\(2\)</span>.</li>
+<li>Move step by step, in both tape <span class="math inline">\(1\)</span> and tape <span class="math inline">\(2\)</span>, to right, until one of them hits a
+blank.
+<ul>
+<li>If both tapes hit blank at the same time, then reject (<span class="math inline">\(n\)</span> is divisible by that divisor).</li>
+<li>If tape <span class="math inline">\(2\)</span> hits blank first
+then, move to the left end of the string of tape <span class="math inline">\(2\)</span>, and go to step 7.</li>
+<li>If tape <span class="math inline">\(1\)</span> hits blank first
+then, go to step 4 (<span class="math inline">\(n\)</span> is not
+divisible by current divisor).</li>
+</ul></li>
+</ol>
+<p><strong>Q3</strong>. Consider any partial function <span class="math inline">\(f\)</span>, and define a language <span class="math inline">\(L_f=\{x\#y|x\in\text{domain}(f) \text{ and }
+f(x)=y\}\)</span>. Show that <span class="math inline">\(f\)</span> is
+partial recursive if <span class="math inline">\(L_f\)</span> is RE.</p>
+<p>Suppose <span class="math inline">\(M&#39;\)</span> is the machine
+which accepts <span class="math inline">\(L_f\)</span>, then <span class="math inline">\(M\)</span> on input <span class="math inline">\(x\)</span> uses the following algorithm to
+determine its answer. <span class="math display">\[
+\begin{aligned}
+&amp;\text{For } t=0 \text{ to }\infty \\
+&amp;\text{For all } y \text{ of length at most }t \\
+&amp; \ \ \ \ \ \ \ \ \text{If } M&#39;\text{ accepts } x\#y \text{
+within } t\text{ steps, then output } y \\
+&amp;\text{EndFor} \\
+&amp;\text{EndFor}
+\end{aligned}
+\]</span> To check whether <span class="math inline">\(M&#39;\)</span>
+accepts <span class="math inline">\(x\#y\)</span> within <span class="math inline">\(t\)</span> steps, we can introduce a new counter
+tape and place <span class="math inline">\(t\)</span> in unary on that
+tape, and place the head of the tape at the beginning of the number. In
+each step of <span class="math inline">\(M&#39;\)</span>, one moves the
+head right. If <span class="math inline">\(M&#39;\)</span> accepts
+before reaching the blank at the end of <span class="math inline">\(t\)</span>, then we knoe that it accepts within
+<span class="math inline">\(t\)</span> steps.</p>
+<p>Also note that <span class="math inline">\(M\)</span> needs to keep a
+copy of <span class="math inline">\(x\#y\)</span> before simulating
+<span class="math inline">\(M&#39;\)</span>.</p>
+<p>重点：除了枚举 <span class="math inline">\(y\)</span>
+之外，为什么要枚举一个步数上界 <span class="math inline">\(t\)</span>？如果选择的 <span class="math inline">\(y\)</span> 是错的，<span class="math inline">\(M&#39;\)</span> 可能不会停机！</p>
+<p><strong>Q4</strong>. Is a 2-stack non-deterministic PDA as powerful
+as non-deterministic TM?</p>
+<p>这道题最复杂的部分想出来了，就只简单的写一些。</p>
+<ul>
+<li>2-stack NPDA <span class="math inline">\(\Rightarrow\)</span> NTM:
+ID <span class="math inline">\(\alpha q\beta\)</span> of TM will be
+represented in the 2-NPDA by keeping <span class="math inline">\(\alpha\)</span> in stack 1 (with first letter of
+<span class="math inline">\(\alpha\)</span> at the bottom of stack) and
+<span class="math inline">\(\beta\)</span> in stack 2 (with first letter
+of <span class="math inline">\(\beta\)</span> at the top of stack).
+Stack starting symbol <span class="math inline">\(Z\)</span> represents
+surrounding blanks.</li>
+<li>NTM <span class="math inline">\(\Rightarrow\)</span> 2-stack NPDA:
+Use two working tape, simulating two stacks respectively. The head of
+each tape represents the top of the stack.</li>
+</ul>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info: CS3231. Professor: Sanjay Jain.</p>
+<p>Course textbook: <em>Introduction to Automata Theory, Languages and
+Computation (3rd Edition)</em>, Hopcraft, Motwani &amp; Ullman, (2014),
+Pearson</p>
+<p>Course website: https://www.comp.nus.edu.sg/~sanjay/cs3231.html</p>
 
     </div>
 
