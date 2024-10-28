@@ -33,8 +33,9 @@
 <meta property="og:description" content="计算理论 (Theory of Computation) 当之无愧是计算机科学王冠上的明珠；考虑到我贫瘠的智商，以后估计不会朝 TCS 方向来走；但对这些优雅的理论有一个最基本的了解应当是 CS 学生的素养。 讽刺的是，你坑近二十年前就没有开设这门课了 [1]，只得留待交换来上。老师是印度人，口音很重，我听完整节课才明白他口中的「GEO」其实是「zero」；但课还是讲得十分清楚，颇有 R">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.thisisxxz.com/2024/08/16/cs3231/PL_figure.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/08/16/cs3231/MPCP.png">
 <meta property="article:published_time" content="2024-08-16T12:31:10.000Z">
-<meta property="article:modified_time" content="2024-10-23T09:49:35.688Z">
+<meta property="article:modified_time" content="2024-10-28T13:30:02.526Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Theoretical Computer Science">
 <meta name="twitter:card" content="summary">
@@ -173,7 +174,7 @@
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#preliminaries"><span class="nav-number">1.</span> <span class="nav-text">Preliminaries</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dfa-nfa-and-regex"><span class="nav-number">2.</span> <span class="nav-text">DFA, NFA and RegEx</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dfa-nfa-equivalence"><span class="nav-number">2.1.</span> <span class="nav-text">DFA &amp; NFA: Equivalence</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dfa-to-regex"><span class="nav-number">2.2.</span> <span class="nav-text">DFA to RegEx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#regex-to-epsilon-nfa"><span class="nav-number">2.3.</span> <span class="nav-text">RegEx to \(\epsilon\)-NFA</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#minimization-of-dfa"><span class="nav-number">3.</span> <span class="nav-text">Minimization of DFA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#equivalence-classes"><span class="nav-number">3.1.</span> <span class="nav-text">Equivalence Classes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#distinguishable-pairs"><span class="nav-number">3.2.</span> <span class="nav-text">Distinguishable Pairs</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#parallel-simulation-of-2-dfas"><span class="nav-number">4.</span> <span class="nav-text">Parallel Simulation of
 2-DFAs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#properties-of-regular-languages"><span class="nav-number">5.</span> <span class="nav-text">Properties of Regular
 Languages</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pumping-lemma"><span class="nav-number">5.1.</span> <span class="nav-text">Pumping Lemma</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#properties"><span class="nav-number">5.2.</span> <span class="nav-text">Properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#homomorphism"><span class="nav-number">5.3.</span> <span class="nav-text">Homomorphism</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#context-free-grammars-cfg"><span class="nav-number">6.</span> <span class="nav-text">Context Free Grammars (CFG)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#right-linear-grammars"><span class="nav-number">6.1.</span> <span class="nav-text">Right-Linear Grammars</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ambiguous-grammars"><span class="nav-number">6.2.</span> <span class="nav-text">Ambiguous Grammars</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#push-down-automata-pda"><span class="nav-number">7.</span> <span class="nav-text">Push Down Automata (PDA)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#equivalent-pdas"><span class="nav-number">7.1.</span> <span class="nav-text">Equivalent PDAs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#equivalence-of-cfgs-and-pdas"><span class="nav-number">7.2.</span> <span class="nav-text">Equivalence of CFGs and PDAs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deterministic-pda-dpda"><span class="nav-number">7.3.</span> <span class="nav-text">Deterministic PDA (DPDA)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#properties-of-cfgs"><span class="nav-number">8.</span> <span class="nav-text">Properties of CFGs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#useful-symbols"><span class="nav-number">8.1.</span> <span class="nav-text">Useful Symbols</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#chomsky-normal-form"><span class="nav-number">8.2.</span> <span class="nav-text">Chomsky Normal Form</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pumping-lemma-for-cfl"><span class="nav-number">8.3.</span> <span class="nav-text">Pumping Lemma for CFL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#closure-properties"><span class="nav-number">8.4.</span> <span class="nav-text">Closure Properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cyk-algorithm"><span class="nav-number">8.5.</span> <span class="nav-text">CYK Algorithm</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#turing-machine-some-concepts"><span class="nav-number">9.</span> <span class="nav-text">Turing Machine: Some Concepts</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#semi-infinite-tape-tm"><span class="nav-number">9.1.</span> <span class="nav-text">Semi-Infinite-Tape TM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multi-tapes-tm"><span class="nav-number">9.2.</span> <span class="nav-text">Multi-Tapes TM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nondeterministic-tm"><span class="nav-number">9.3.</span> <span class="nav-text">Nondeterministic TM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#recursive-enumerable-language"><span class="nav-number">9.4.</span> <span class="nav-text">Recursive Enumerable
-Language</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#universal-turing-machine"><span class="nav-number">10.</span> <span class="nav-text">Universal Turing Machine</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">11.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Language</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#universal-turing-machine"><span class="nav-number">10.</span> <span class="nav-text">Universal Turing Machine</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#decidability"><span class="nav-number">11.</span> <span class="nav-text">Decidability</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#reduction"><span class="nav-number">11.1.</span> <span class="nav-text">Reduction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tms-accepting-empty-set"><span class="nav-number">11.2.</span> <span class="nav-text">TMs accepting empty set</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rices-theorem"><span class="nav-number">11.3.</span> <span class="nav-text">Rice&#39;s Theorem</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#posts-correspondence-problem"><span class="nav-number">11.4.</span> <span class="nav-text">Post&#39;s Correspondence Problem</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">12.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -986,9 +987,11 @@ defined on all elements of <span class="math inline">\(\Sigma^*\)</span>
 <span class="math inline">\(L_d=\{w_i:w_i\notin L(M_i)\}\)</span>. Here,
 all Turing Machines are listed in order <span class="math inline">\(M_0,M_1,M_2,...\)</span></p>
 <p>Define <span class="math inline">\(L_u\)</span> (<strong>Universal
-Language</strong>) as <span class="math inline">\(L_u=\{w_i:w_i\in
-L(M_i)\}\)</span>. Then, <span class="math inline">\(\overline{L_u}\)</span> is also non-RE (prove by
-reduce <span class="math inline">\(L_d\)</span> to <span class="math inline">\(\overline{L_u}\)</span>).</p>
+Language</strong>) as <span class="math inline">\(L_u=\{(M,w):M \text{
+accepts } w\}\)</span>. Then, <span class="math inline">\(\overline{L_u}\)</span> is also non-RE. Proof:
+<span class="math inline">\(\overline{L_u}=\{(M,w): M \text{ does not
+accept } w\}\)</span>, therefore if there is a TM <span class="math inline">\(M\)</span> accepting <span class="math inline">\(\overline{L_u}\)</span>, we can construct a TM
+<span class="math inline">\(M&#39;\)</span> accepting <span class="math inline">\(L_d\)</span> using <span class="math inline">\(M\)</span> as a subroutine.</p>
 <p>Theorem 1. If <span class="math inline">\(L\)</span> is recursive,
 then <span class="math inline">\(\overline{L}\)</span> is recursive.</p>
 <ul>
@@ -1053,13 +1056,149 @@ the current <span class="math inline">\(1\)</span> to a special symbol
 tape - instead of copying the portion <span class="math inline">\(*0^j1\)</span>, write <span class="math inline">\(*0^k1\)</span>, then copy the Scratch tape back to
 the Working tape)</li>
 <li>Revert the special symbol <span class="math inline">\(*\)</span> to
-<span class="math inline">\(1\)</span>, and move the head on the Working
-tape to the previous/next <span class="math inline">\(1\)</span>
+<span class="math inline">\(1\)</span>, move the head on the Working
+tape to the previous or next <span class="math inline">\(1\)</span>
 depending on the value of <span class="math inline">\(m\)</span>.</li>
 </ul>
 <p>When <span class="math inline">\(M\)</span> halts, UTM can tell if it
 is in the single accepting state and so moves to an accepting state of
 its own.</p>
+<p><br></p>
+<h2 id="decidability">Decidability</h2>
+<h3 id="reduction">Reduction</h3>
+<p><span class="math inline">\(P_1\)</span> reduces to <span class="math inline">\(P_2\)</span> (<span class="math inline">\(P_1\leq
+_m P_2\)</span>) if some recursive function <span class="math inline">\(f\)</span> behaves as follows: <span class="math inline">\(x\in P_1\)</span> iff <span class="math inline">\(f(x)\in P_2\)</span>.</p>
+<p>Some properties:</p>
+<ul>
+<li>If <span class="math inline">\(P_2\)</span> is recursive, then so is
+<span class="math inline">\(P_1\)</span></li>
+<li>If <span class="math inline">\(P_2\)</span> is RE, then so is <span class="math inline">\(P_1\)</span></li>
+<li>If <span class="math inline">\(P_1\)</span> is undecidable, then so
+is <span class="math inline">\(P_2\)</span></li>
+<li>If <span class="math inline">\(P_1\)</span> is non-RE, then so is
+<span class="math inline">\(P_2\)</span></li>
+</ul>
+<h3 id="tms-accepting-empty-set">TMs accepting empty set</h3>
+<p>Let <span class="math inline">\(L_e=\{M:L(M)=\emptyset\}\)</span>,
+<span class="math inline">\(L_{ne}=\{M:L(M)\neq
+\emptyset\}\)</span>.</p>
+<ul>
+<li>Theorem: <span class="math inline">\(L_{ne}\)</span> is RE (存在 TM
+只接受 non-empty TMs).</li>
+<li>Theorem: <span class="math inline">\(L_e\)</span> is not
+recursive.</li>
+<li>Corollary: <span class="math inline">\(L_e\)</span> is not RE
+(<strong>不存在 TM 只接受 empty TMs</strong>).</li>
+</ul>
+<p>Proof of <span class="math inline">\(L_{ne}\)</span> is RE: Construct
+<span class="math inline">\(M&#39;\)</span> to accept <span class="math inline">\(M\)</span> that <span class="math inline">\(L(M)\neq \emptyset\)</span>. <span class="math display">\[
+\begin{aligned}
+&amp;\text{For } t=0\text{ to }\infty \\
+&amp;\text{For }i=0 \text{ to } t \\
+&amp; \ \ \ \ \ \ \ \text{If } M(w_i) \text{ accepts within } t \text{
+steps, then accept. } \\
+&amp;\text{Endfor} \\
+&amp;\text{Endfor}
+\end{aligned}
+\]</span> Step 上界 <span class="math inline">\(t\)</span> 的引入保证
+<span class="math inline">\(M&#39;\)</span> 在输入某个 <span class="math inline">\(L(M)\neq \emptyset\)</span> 的 <span class="math inline">\(M\)</span> 时不会陷入无限循环。</p>
+<p>Proof of <span class="math inline">\(L_e\)</span> is not RE: Reduce
+<span class="math inline">\(\overline{L_u}\)</span> to <span class="math inline">\(L_e\)</span>. Given the input <span class="math inline">\(M\#w\)</span>, construct a
+<strong>non-input</strong> TM <span class="math inline">\(M&#39;\)</span> (没有输入，或者说输入 <span class="math inline">\(x\)</span> 不影响输出) <span class="math display">\[
+\begin{aligned}
+&amp; M&#39;(x) \ \ (x \text{ is not involved}) \\
+&amp;\text{For }t=0 \text{ to } \infty \\
+&amp; \ \ \ \ \ \ \ \text{If } M(w) \text{ accepts within } t \text{
+steps, then accept. } \\
+&amp;\text{Endfor} \\
+&amp;\text{End } M&#39;
+\end{aligned}
+\]</span> 注意 <span class="math inline">\(M&#39;\)</span>
+这一图灵机是否接受输入 <span class="math inline">\(x\)</span> 与 <span class="math inline">\(x\)</span> 本身无关；它仅与 <span class="math inline">\(w\in L(M)\)</span> 有关。</p>
+<ul>
+<li>若 <span class="math inline">\(w\in L(M)\)</span>，即 <span class="math inline">\(M\# w\notin \overline{L_u}\)</span>，<span class="math inline">\(M&#39;\)</span> 接受任意字符串，即 <span class="math inline">\(M&#39;\notin L_e\)</span></li>
+<li>若 <span class="math inline">\(w\notin L(M)\)</span>，即 <span class="math inline">\(M\#w\in \overline{L_u}\)</span>，<span class="math inline">\(M&#39;\)</span> 不接受任意字符串，即 <span class="math inline">\(M&#39;\in L_e\)</span></li>
+</ul>
+<h3 id="rices-theorem">Rice's Theorem</h3>
+<p>Suppose <span class="math inline">\(P\)</span> is a non-trivial
+property about RE languages. Then <span class="math inline">\(L_p\)</span> is undecidable.</p>
+<ul>
+<li><em>non-trivial</em> property: at least one RE language satisfies
+<span class="math inline">\(P\)</span>, and at least one RE language
+doesn't satisfy <span class="math inline">\(P\)</span>.</li>
+<li><span class="math inline">\(L_p=\{M|L(M) \text{ satisfies property }
+P\}\)</span>.</li>
+</ul>
+<p>Proof.</p>
+<p>Suppose <span class="math inline">\(P\)</span> is a non-trivial
+property about RE languages. WLOG assume <span class="math inline">\(\emptyset\)</span> satisfies <span class="math inline">\(P\)</span> (otherwise switch <span class="math inline">\(P\)</span> to <span class="math inline">\(\overline{P}\)</span>). Suppose <span class="math inline">\(L\)</span> is an RE language that does not satisfy
+<span class="math inline">\(P\)</span>. Let <span class="math inline">\(M&#39;&#39;\)</span> be the machine which accepts
+<span class="math inline">\(L\)</span>.</p>
+<p>Define <span class="math inline">\(f:f(M)=M&#39;\)</span> as follows.
+<span class="math display">\[
+\begin{aligned}
+&amp;M&#39;(x) \\
+&amp;\text{For }t=0 \text{ to } \infty  \\
+&amp;\text{For }i=0 \text{ to } t \\
+&amp;\ \ \ \ \ \ \ \text{If } M(w_i) \text{ accepts within }t \text{
+steps and  } \\
+&amp; \ \ \ \ \ \ \ M&#39;&#39;(x) \text{ accepts with in }t \text{
+steps, then accept } x \\
+&amp;\text{EndFor} \\
+&amp;\text{EndFor}
+\end{aligned}
+\]</span> We can see that <span class="math inline">\(L_e\leq_m
+L_p\)</span>.</p>
+<ul>
+<li>If <span class="math inline">\(L(M)=\emptyset \in L_e\)</span>, then
+<span class="math inline">\(L(M&#39;)=\emptyset \in L_p\)</span>.</li>
+<li>If <span class="math inline">\(L(M)\neq \emptyset \notin
+L_e\)</span>, then <span class="math inline">\(L(M&#39;)=L\notin
+L_p\)</span>.</li>
+</ul>
+<p>As <span class="math inline">\(L_e\)</span> is not RE, we have that
+<span class="math inline">\(L_p\)</span> is also not RE.</p>
+<h3 id="posts-correspondence-problem">Post's Correspondence Problem</h3>
+<p>PCP: 给定两个字符串表 (list of strings) <span class="math inline">\(A=w_1,w_2,...,w_k\)</span> 与 <span class="math inline">\(B=x_1,x_2,...,x_k\)</span>；波斯特对应问题的解是一个序列
+<span class="math inline">\(i_1,i_2,...,i_m \ (m&gt;0)\)</span> 使得
+<span class="math inline">\(w_{i_1}w_{i_2}...w_{i_m}=x_{i_1}x_{i_2}...x_{i_m}\)</span></p>
+<p>MPCP: 在 PCP
+基础之上规定两个字串的首个字符串是一种特定组合。举例来说，规定必须使用
+<span class="math inline">\(w_1\)</span> 与 <span class="math inline">\(x_1\)</span>，MPCP 的解序列将使得 <span class="math inline">\(w_1w_{i_1}w_{i_2}...w_{i_m}=x_1x_{i_1}x_{i_2}...x_{i_m}\)</span></p>
+<p>Argument 1. MPCP <span class="math inline">\(\leq_m\)</span> PCP.</p>
+<p>对于任意 MPCP 问题，我们能够构造一个等价的 PCP 问题；若该 PCP
+问题有解，相应的 MPCP 问题亦有解。</p>
+<p>MPCP 问题：给定 <span class="math inline">\(A=w_1,w_2,...,w_k\)</span> 与 <span class="math inline">\(B=x_1,x_2,...,x_k\)</span> 要求起始字符串组合为
+<span class="math inline">\(w_i\)</span> 与 <span class="math inline">\(x_j\)</span>。按照如下方式构造 PCP 问题的字符串表
+<span class="math inline">\(A&#39;=w_0&#39;,w_1&#39;,...,w_{k+1}&#39;\)</span>
+与 <span class="math inline">\(B=x_0&#39;,x_1&#39;,...,x_{k+1}&#39;\)</span>。</p>
+<ul>
+<li><span class="math inline">\(w_i&#39;=\)</span> inserting <span class="math inline">\(*\)</span> <strong>after each symbol</strong> in
+<span class="math inline">\(w_i\)</span></li>
+<li><span class="math inline">\(x_i&#39;=\)</span> inserting <span class="math inline">\(*\)</span> <strong>before each symbol</strong> in
+<span class="math inline">\(x_i\)</span></li>
+<li><span class="math inline">\(w_0&#39;=*w_i&#39;,x_0&#39;=x_j&#39;\)</span>
+(灵魂)</li>
+<li><span class="math inline">\(w&#39;_{k+1}=\$\)</span>, <span class="math inline">\(x_{k+1}&#39;=*\$\)</span></li>
+</ul>
+<p>不得不说真的很妙。如果在 <span class="math inline">\(A&#39;,B&#39;\)</span> 上 PCP
+有解，首先可以观察到的是解序列一定以 <span class="math inline">\(0\)</span> 开头，以 <span class="math inline">\(k+1\)</span> 结尾：这是由 <span class="math inline">\(*\)</span> 与 <span class="math inline">\(\$\)</span> 的巧妙安排决定的。若解序列为 <span class="math inline">\(0,i_1,i_2,...,i_m,k+1\)</span>，那么对应的 MPCP
+问题的解序列为 <span class="math inline">\(i,i_1,i_2,...,i_m\)</span>
+(for <span class="math inline">\(A\)</span>) 与 <span class="math inline">\(j,i_1,i_2,...,i_m\)</span> (for <span class="math inline">\(B\)</span>)。</p>
+<p>Argument 2. <span class="math inline">\(L_u\leq_m\)</span> MPCP.</p>
+<p>给定输入 <span class="math inline">\(M\#w\)</span>，我们的目的是构造一个等价的 MPCP
+问题：若该 MPCP 问题有解，<span class="math inline">\(M\)</span> 接受
+<span class="math inline">\(w\)</span>。这就将 <span class="math inline">\(L_u\)</span> 归约到了 MPCP 问题上。构造方式
+(真的很妙啊！)</p>
+<figure>
+<img data-src="MPCP.png" alt="Turing Machine to MPCP">
+<figcaption aria-hidden="true">Turing Machine to MPCP</figcaption>
+</figure>
+<p>若该 MPCP 有解，我们可以看到每个由 <span class="math inline">\(\#\)</span> 包围起来的 section 都是某一步的
+instantaneous description；并且直观上来说，是 <span class="math inline">\(A\)</span> 形成的字符串在「追赶」<span class="math inline">\(B\)</span> 形成的字符串 (毕竟一开始是 <span class="math inline">\(\#\)</span> v.s. <span class="math inline">\(\#q_0w\#\)</span>)。</p>
+<p>什么时候算「追上」了呢？就是 <span class="math inline">\(A\)</span>
+的 ID 到达 accepting state 的时候。此时 <span class="math inline">\(A\)</span> 中的 <span class="math inline">\(XqY,Xq, qX\)</span> 都换一个 <span class="math inline">\(B\)</span> 中的 <span class="math inline">\(q\)</span>，两者之间的差距越来越小，直到 <span class="math inline">\(A\)</span> 中被消除到只剩一个 <span class="math inline">\(q\)</span>；此时 <span class="math inline">\(q\#\#\)</span> 换一个 <span class="math inline">\(B\)</span> 中的 <span class="math inline">\(\#\)</span>，两字符串完全一致。</p>
+<p>MPCP 中这一「追赶」的过程对应的正是 <span class="math inline">\(M\)</span> 在输入 <span class="math inline">\(w\)</span> 上的转移过程。具体来说，<span class="math inline">\(A\)</span> 是前一步，<span class="math inline">\(B\)</span> 是后一步；如果 <span class="math inline">\(A\)</span> 最终能追赶上 <span class="math inline">\(B\)</span> (MPCP 有解)，那么 <span class="math inline">\(M\)</span> 也能够到达 accepting state (<span class="math inline">\(M\)</span> accepts <span class="math inline">\(w\)</span>)。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>

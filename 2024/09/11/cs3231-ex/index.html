@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2024/09/11/cs3231-ex/4-2.jpg">
 <meta property="og:image" content="https://www.thisisxxz.com/2024/09/11/cs3231-ex/t7.png">
 <meta property="article:published_time" content="2024-09-11T12:24:00.000Z">
-<meta property="article:modified_time" content="2024-10-19T04:12:52.891Z">
+<meta property="article:modified_time" content="2024-10-27T07:43:52.443Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Theoretical Computer Science">
 <meta name="twitter:card" content="summary">
@@ -172,7 +172,8 @@
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-1-regex"><span class="nav-number">1.</span> <span class="nav-text">Tutorial 1 (RegEx)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-2-dfa"><span class="nav-number">2.</span> <span class="nav-text">Tutorial 2 (DFA)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-3-rl"><span class="nav-number">3.</span> <span class="nav-text">Tutorial 3 (RL)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-4-cfg"><span class="nav-number">4.</span> <span class="nav-text">Tutorial 4 (CFG)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-5-pda"><span class="nav-number">5.</span> <span class="nav-text">Tutorial 5 (PDA)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-6-chomsky-normal-form"><span class="nav-number">6.</span> <span class="nav-text">Tutorial 6 (Chomsky Normal
-Form)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-7-cfl"><span class="nav-number">7.</span> <span class="nav-text">Tutorial 7 (CFL)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-8-turing-machine"><span class="nav-number">8.</span> <span class="nav-text">Tutorial 8 (Turing Machine)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Form)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-7-cfl"><span class="nav-number">7.</span> <span class="nav-text">Tutorial 7 (CFL)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-8-turing-machine-i"><span class="nav-number">8.</span> <span class="nav-text">Tutorial 8 (Turing Machine I)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-9-turing-machine-ii"><span class="nav-number">9.</span> <span class="nav-text">Tutorial 9 (Turing Machine
+II)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-10"><span class="nav-number">10.</span> <span class="nav-text">Tutorial 10</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">11.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -741,7 +742,7 @@ contains <span class="math inline">\(2\)</span> 和 <span class="math inline">\(
 <figcaption aria-hidden="true">This guy is a genius</figcaption>
 </figure>
 <p><br></p>
-<h2 id="tutorial-8-turing-machine">Tutorial 8 (Turing Machine)</h2>
+<h2 id="tutorial-8-turing-machine-i">Tutorial 8 (Turing Machine I)</h2>
 <p><strong>Q1.</strong> Given a Turing Machine which converts a binary
 number to equivalent unary number.</p>
 <p>Following is a two-tape machine. 2nd tape is used only for writing
@@ -851,6 +852,26 @@ surrounding blanks.</li>
 Use two working tape, simulating two stacks respectively. The head of
 each tape represents the top of the stack.</li>
 </ul>
+<p><br></p>
+<h2 id="tutorial-9-turing-machine-ii">Tutorial 9 (Turing Machine
+II)</h2>
+<p><strong>Q1.</strong> Let <span class="math inline">\(L_5=\{M:L(M)\text{ has }\leq 5 \text{
+elements}\}\)</span>, show how to reduce <span class="math inline">\(L_e\)</span> to <span class="math inline">\(L_5\)</span>.</p>
+<p>注意，这门课中 reduction 概念似乎与 COMP3357
+不太一样；重要的是找到这一映射函数 <span class="math inline">\(f\)</span>，满足对于任意 <span class="math inline">\(x\in L_e\)</span>，<span class="math inline">\(f(x)\in L_5\)</span>；对于任意 <span class="math inline">\(x \notin L_e\)</span>，<span class="math inline">\(f(x)\notin L_5\)</span>。 <span class="math display">\[
+\begin{aligned}
+&amp;f: M\to M&#39; \\
+&amp;M&#39;(x) \\
+&amp;\text{For }t=0 \text{ to } \infty \\
+&amp;\text{For }i=0 \text{ to } t \\
+&amp;\ \ \ \ \ \ \ \ \text{If } M(w_i) \text{ accepts within }t \text{
+steps, then accept} \\
+&amp;\text{Endfor} \\
+&amp;\text{Endfor} \\
+\end{aligned}
+\]</span> 给定 <span class="math inline">\(M\)</span>，构造 <span class="math inline">\(M&#39;\)</span>；若 <span class="math inline">\(M\in L_e\)</span>，<span class="math inline">\(M&#39;\)</span> 不接受任何输入，因此 <span class="math inline">\(L(M&#39;)=\emptyset\leq 5\)</span>，<span class="math inline">\(M&#39;\in L_5\)</span>；若 <span class="math inline">\(M\notin L_e\)</span>，<span class="math inline">\(M&#39;\)</span> 接受任何输入，因此 <span class="math inline">\(L(M&#39;)=\Sigma^* &gt;5\)</span>，<span class="math inline">\(M&#39;\notin L_5\)</span>。</p>
+<p><br></p>
+<h2 id="tutorial-10">Tutorial 10</h2>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
