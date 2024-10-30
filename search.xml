@@ -470,6 +470,46 @@ the ideal number of births, and also strove to fight against traditional
 preference for sons.</li>
 </ul>
 <p><br></p>
+<h2 id="child-policy-one-two-to-three">Child Policy: One, Two, to
+Three</h2>
+<p><em>PRC China</em></p>
+<p>One-Child Policy (1979-2015): Origin and Legacy.</p>
+<ul>
+<li>建国前：
+<ul>
+<li>农耕传统: China's long history of agriculture relies on
+manpower.</li>
+<li>人多好办事: Mao saw manpower as crucial for China's development and
+global competitiveness.</li>
+</ul></li>
+<li>1956 年，「计划生育」概念首次被提出</li>
+<li>1979 年，一孩政策与改革开放 (Reform and Opening-Up Policy)
+同时期提出</li>
+<li>Legacy:
+<ul>
+<li>negative: harsh measures, increased female infanticide =&gt; huge
+gender disparity, undocumented additional children (黑孩子)</li>
+<li>positive: woman are liberated from traditional reproductive
+responsibilities, unleashed labor force</li>
+</ul></li>
+</ul>
+<p>Two &amp; Three-Child Policy: Challenges Today.</p>
+<ul>
+<li>Purpose: tackle social problems - gender imbalance, aging
+population, decreased labor force</li>
+<li>Reality: "Failed" in some sense.
+<ul>
+<li>increased gender discrimination: more pressure on working woman</li>
+<li>single woman discrimination (独身女性无生育权)</li>
+<li>financial strain on multiple-children family</li>
+</ul></li>
+</ul>
+<p>怎样的 mindset 才是建立在尊重的基础之上的？</p>
+<blockquote>
+<p><em>People are not machines whose reproductive systems can be turned
+on or off at will</em>. - John Oliver</p>
+</blockquote>
+<p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  References in the article are from corresponding course materials
@@ -2261,6 +2301,49 @@ instantaneous description；并且直观上来说，是 <span class="math inline
 <p>什么时候算「追上」了呢？就是 <span class="math inline">\(A\)</span>
 的 ID 到达 accepting state 的时候。此时 <span class="math inline">\(A\)</span> 中的 <span class="math inline">\(XqY,Xq, qX\)</span> 都换一个 <span class="math inline">\(B\)</span> 中的 <span class="math inline">\(q\)</span>，两者之间的差距越来越小，直到 <span class="math inline">\(A\)</span> 中被消除到只剩一个 <span class="math inline">\(q\)</span>；此时 <span class="math inline">\(q\#\#\)</span> 换一个 <span class="math inline">\(B\)</span> 中的 <span class="math inline">\(\#\)</span>，两字符串完全一致。</p>
 <p>MPCP 中这一「追赶」的过程对应的正是 <span class="math inline">\(M\)</span> 在输入 <span class="math inline">\(w\)</span> 上的转移过程。具体来说，<span class="math inline">\(A\)</span> 是前一步，<span class="math inline">\(B\)</span> 是后一步；如果 <span class="math inline">\(A\)</span> 最终能追赶上 <span class="math inline">\(B\)</span> (MPCP 有解)，那么 <span class="math inline">\(M\)</span> 也能够到达 accepting state (<span class="math inline">\(M\)</span> accepts <span class="math inline">\(w\)</span>)。</p>
+<h3 id="undecidable-cfgs">Undecidable CFGs</h3>
+<p>PCP 问题又可视作一个歧义语法的判断问题。给出字符串表 <span class="math inline">\(A=w_1,...,w_k\)</span> 与 <span class="math inline">\(B=x_1,...,x_k\)</span>，我们再添加一个 index list
+<span class="math inline">\(I=\{a_1,a_2,...,a_k\}\)</span>；其中 <span class="math inline">\(I\cap \Sigma=\emptyset\)</span>。定义以下语法
+<span class="math inline">\(G\)</span>： <span class="math display">\[
+\begin{aligned}
+&amp;S\to A \\
+&amp;S\to B\\
+&amp;A\to w_iAa_i, \text{ for }1\leq i\leq k \\
+&amp;A\to w_ia_i,\text{ for }1\leq i\leq k \\
+&amp;B\to x_iBa_i, \text{ for }1\leq i\leq k\\
+&amp;B\to x_ia_i, \text{ for }1\leq i\leq k
+\end{aligned}
+\]</span> 该语法又可分为两个子语法 <span class="math inline">\(G_A\)</span> (仅与 <span class="math inline">\(A\)</span> 有关的部分)，<span class="math inline">\(G_B\)</span> (仅与 <span class="math inline">\(B\)</span>
+有关的部分)；由此可以得出一系列结论链条：<span class="math inline">\(L(G_A)\cap L(G_B)\neq \emptyset\)</span> iff <span class="math inline">\(G\)</span> is ambiguous iff PCP has a
+solution.</p>
+<p>很好理解：若 <span class="math inline">\(L(G_A)\cap L(G_B)\)</span>
+交集不为空，那么其中任意一个字符串的 index 部分都表示一个 PCP
+问题的解；且由于 <span class="math inline">\(G\)</span> 在 <span class="math inline">\(G_A\)</span> 与 <span class="math inline">\(G_B\)</span> 方向都能生成相同的字符串，说明 <span class="math inline">\(G\)</span> 是歧义的。由于 PCP
+问题的不可判定性，我们进一步证明了 <span class="math inline">\(G\)</span> 的歧义与否与 <span class="math inline">\(L(G_A)\cap L(G_B)\)</span>
+非空与否均是不可判定的。</p>
+<p>可以证明 <span class="math inline">\(L(G_A),L(G_B),
+\overline{L(G_A)}, \overline{L(G_B)}\)</span> 均为 CFG。</p>
+<p>从 PCP 问题的不可判定开始，我们又可以引入一系列与 CFG
+相关的不可判定问题：</p>
+<ul>
+<li>给出 CFGs <span class="math inline">\(G_1\)</span> 与 <span class="math inline">\(G_2\)</span>，判定 <span class="math inline">\(L(G_1)\cap L(G_2)=\emptyset\)</span>
+<ul>
+<li>无法判定！e.g., 取 <span class="math inline">\(G_1=G_A,G_2=G_B\)</span> 即可。</li>
+</ul></li>
+<li>给出 CFGs <span class="math inline">\(G_1\)</span> 与 <span class="math inline">\(G_2\)</span>，判定 <span class="math inline">\(L(G_1)=L(G_2)\)</span>
+<ul>
+<li>无法判定！e.g., 取 <span class="math inline">\(L(G_1)=\overline{L(G_A)}\cup\overline{L(G_B)}=\overline{L(G_A)\cap
+L(G_B)}\)</span>；而 <span class="math inline">\(L(G_2)\)</span> 则是
+<span class="math inline">\((\Sigma\cup I)^*\)</span> (全集)。</li>
+</ul></li>
+<li>给出 CFG <span class="math inline">\(G\)</span> 与 RE <span class="math inline">\(R\)</span>，判定 <span class="math inline">\(L(G)=L(R)\)</span>
+<ul>
+<li>无法判定！与问题 2 类似。</li>
+</ul></li>
+<li>Given CFGs <span class="math inline">\(G,G_1,G_2\)</span> 与 RE
+<span class="math inline">\(R\)</span>，<span class="math inline">\(L(G)=T^*,L(G_2)\subseteq L(G_1),L(R)\subseteq
+L(G)\)</span> 均不可判定。</li>
+</ul>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
