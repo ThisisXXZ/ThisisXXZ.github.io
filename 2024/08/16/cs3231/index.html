@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2024/08/16/cs3231/PL_figure.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2024/08/16/cs3231/MPCP.png">
 <meta property="article:published_time" content="2024-08-16T12:31:10.000Z">
-<meta property="article:modified_time" content="2024-11-11T10:14:34.702Z">
+<meta property="article:modified_time" content="2024-11-19T13:16:07.962Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Theoretical Computer Science">
 <meta name="twitter:card" content="summary">
@@ -263,7 +263,7 @@ Language</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav
               <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
             </li>
             <li class="links-of-blogroll-item">
-              <a href="https://qinchonghanzuibang.github.io/" title="https:&#x2F;&#x2F;qinchonghanzuibang.github.io&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
             </li>
             <li class="links-of-blogroll-item">
               <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
@@ -1223,7 +1223,10 @@ solution.</p>
 问题的不可判定性，我们进一步证明了 <span class="math inline">\(G\)</span> 的歧义与否与 <span class="math inline">\(L(G_A)\cap L(G_B)\)</span>
 非空与否均是不可判定的。</p>
 <p>可以证明 <span class="math inline">\(L(G_A),L(G_B),
-\overline{L(G_A)}, \overline{L(G_B)}\)</span> 均为 CFG。</p>
+\overline{L(G_A)}, \overline{L(G_B)}\)</span> 均为 CFG。注意，general
+CFG <span class="math inline">\(G\)</span> 取反并不一定是
+CFG，是这里的特殊 CFG <span class="math inline">\(G_A,G_B\)</span>
+取反后仍为 CFG。</p>
 <p>从 PCP 问题的不可判定开始，我们又可以引入一系列与 CFG
 相关的不可判定问题：</p>
 <ul>
@@ -1254,7 +1257,7 @@ L(G)\)</span> 均不可判定。</li>
 <span class="math inline">\(M\)</span> on input <span class="math inline">\(x\)</span> before halting (if <span class="math inline">\(M\)</span> does not halt on <span class="math inline">\(x\)</span>, <span class="math inline">\(Time_M(x)=\infty\)</span>)</li>
 <li>If <span class="math inline">\(M\)</span> is non-deterministic TM,
 <span class="math inline">\(Time_M(x)\)</span> denotes the
-<strong>maximum</strong> time on any oath, even non-accepting.</li>
+<strong>maximum</strong> time on any path, even non-accepting.</li>
 <li>If <span class="math inline">\(M\)</span> is <span class="math inline">\(T(n)\)</span> time bounded, <span class="math inline">\(Time_M(x)\leq T(n)\)</span> for all <span class="math inline">\(|x|=n\)</span>.</li>
 </ul>
 <p>TM <span class="math inline">\(M\)</span> 的空间复杂度：</p>
@@ -1264,6 +1267,26 @@ number of cells touched by <span class="math inline">\(M\)</span> on
 input <span class="math inline">\(x\)</span>. Usually we only consider
 the cells on work tapes (excluding input &amp; output tape). If <span class="math inline">\(M\)</span> does not halt on <span class="math inline">\(x\)</span>, <span class="math inline">\(Space_M(x)=\infty\)</span>.</li>
 <li>If <span class="math inline">\(M\)</span> is <span class="math inline">\(S(n)\)</span> space bounded, <span class="math inline">\(Space_M(x)\leq S(n)\)</span>.</li>
+</ul>
+<p>为什么在计算复杂度时可以忽略常数 <span class="math inline">\(c\)</span>？可以证明图灵机总是可以进行 Tape
+Compression (空间上的常数省略) 与 Linear Speedup
+(时间上的常数省略)。</p>
+<ul>
+<li>Tape Compression. WLOG fix <span class="math inline">\(c&gt;0\)</span>. If a language <span class="math inline">\(L\)</span> is accepted by a machine <span class="math inline">\(M\)</span>, with <span class="math inline">\(k\)</span> tapes, that is <span class="math inline">\(S(n)\)</span> space bounded, then <span class="math inline">\(L\)</span> is accepted by a machine <span class="math inline">\(M&#39;\)</span>, with <span class="math inline">\(k\)</span> tapes, that is <span class="math inline">\(\lceil c S(n)\rceil\)</span> space bounded.</li>
+<li>Linear Speedup. WLOG fix <span class="math inline">\(c&gt;0\)</span>. Suppose <span class="math inline">\(L\)</span> is accepted by a machine <span class="math inline">\(M\)</span>, with <span class="math inline">\(k\geq
+2\)</span> tapes, that is <span class="math inline">\(T(n)\)</span> time
+bounded, where <span class="math inline">\(\lim_{n\to\infty}T(n)/n=\infty\)</span>. Then
+<span class="math inline">\(L\)</span> is also accepted by a machine
+<span class="math inline">\(M&#39;\)</span> that is <span class="math inline">\(\lceil cT(n)\rceil\)</span> time bounded.</li>
+</ul>
+<p>几大 complexity class 之间的关系。</p>
+<ul>
+<li><span class="math inline">\(\text{DTIME}(S(n))\subseteq
+\text{DSPACE}(S(n))\)</span></li>
+<li>If <span class="math inline">\(L\)</span> is in <span class="math inline">\(\text{DSPACE}(S(n))\)</span>, and <span class="math inline">\(S(n)\geq \log n\)</span>, then there exists a
+constant <span class="math inline">\(c\)</span>, which depends on <span class="math inline">\(L\)</span>, such that <span class="math inline">\(L\)</span> is in <span class="math inline">\(\text{DTIME}(c^{S(n)})\)</span>.</li>
+<li>If <span class="math inline">\(L\)</span> is in <span class="math inline">\(\text{NTIME}(T(n))\)</span> then there exists a
+constant <span class="math inline">\(c\)</span>, which depends on <span class="math inline">\(L\)</span>. such that <span class="math inline">\(L\)</span> is in <span class="math inline">\(\text{DTIME}(c^{T(n)})\)</span>.</li>
 </ul>
 <h3 id="np">NP</h3>
 <p>P &amp; NP.</p>
@@ -1317,7 +1340,7 @@ L\)</span></li>
 Set, Hamiltonian Circuit, Partition, Set Cover, Traveling Salesman
 Problem (权重和 <span class="math inline">\(\leq B\)</span>
 的哈密顿回路)。</p>
-<p>著名的 <span class="math inline">\(P=NP\)</span> 问题：</p>
+<p><span class="math inline">\(P=NP\)</span> 问题：</p>
 <ul>
 <li>If one of the NP-complete problem is solvable in poly-time (<span class="math inline">\(\exists L\in NPC\land L\in P\)</span>), then all
 the problems in NP are solvable in poly-time (<span class="math inline">\(P=NP\)</span>).</li>
@@ -1330,6 +1353,9 @@ x_i\)</span>，<span class="math inline">\(m\)</span>
 个三角形，每个三角形对应一个 clause 中的三个
 literals。连边策略很显然：该图的 Vertex Cover 解对应的是原 3-SAT
 的一个解。</p>
+<p>独立集 (Independent Set) 问题：独立集中的点两两不相连。给出 <span class="math inline">\(G=(V,E)\)</span>，如果 <span class="math inline">\(G\)</span> 有一个大小为 <span class="math inline">\(k\)</span> 的 vertex cover，那么它有一个大小为
+<span class="math inline">\(|V|-k\)</span> 的独立集，且 <span class="math inline">\(G&#39;=(V,E^c)\)</span> 有一个大小为 <span class="math inline">\(|V|-k\)</span> 的 clique。</p>
+<p>那么有 <span class="math inline">\(V&#39;\)</span> 是 <span class="math inline">\(G\)</span> 的 vertex cover <span class="math inline">\(\iff\)</span> <span class="math inline">\(V-V&#39;\)</span> 是 <span class="math inline">\(G\)</span> 的独立集 <span class="math inline">\(\iff\)</span> <span class="math inline">\(V-V&#39;\)</span> 是 <span class="math inline">\(G&#39;\)</span> 的 clique。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>

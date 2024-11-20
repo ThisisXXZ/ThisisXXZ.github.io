@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2024/09/11/cs3231-ex/4-2.jpg">
 <meta property="og:image" content="https://www.thisisxxz.com/2024/09/11/cs3231-ex/t7.png">
 <meta property="article:published_time" content="2024-09-11T12:24:00.000Z">
-<meta property="article:modified_time" content="2024-11-01T06:03:13.846Z">
+<meta property="article:modified_time" content="2024-11-20T10:33:07.373Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Theoretical Computer Science">
 <meta name="twitter:card" content="summary">
@@ -173,7 +173,7 @@
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-1-regex"><span class="nav-number">1.</span> <span class="nav-text">Tutorial 1 (RegEx)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-2-dfa"><span class="nav-number">2.</span> <span class="nav-text">Tutorial 2 (DFA)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-3-rl"><span class="nav-number">3.</span> <span class="nav-text">Tutorial 3 (RL)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-4-cfg"><span class="nav-number">4.</span> <span class="nav-text">Tutorial 4 (CFG)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-5-pda"><span class="nav-number">5.</span> <span class="nav-text">Tutorial 5 (PDA)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-6-chomsky-normal-form"><span class="nav-number">6.</span> <span class="nav-text">Tutorial 6 (Chomsky Normal
 Form)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-7-cfl"><span class="nav-number">7.</span> <span class="nav-text">Tutorial 7 (CFL)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-8-turing-machine-i"><span class="nav-number">8.</span> <span class="nav-text">Tutorial 8 (Turing Machine I)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-9-turing-machine-ii"><span class="nav-number">9.</span> <span class="nav-text">Tutorial 9 (Turing Machine
-II)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-10"><span class="nav-number">10.</span> <span class="nav-text">Tutorial 10</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">11.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+II)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-10-decidability"><span class="nav-number">10.</span> <span class="nav-text">Tutorial 10 (Decidability)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tutorial-1112-complexity"><span class="nav-number">11.</span> <span class="nav-text">Tutorial 11&#x2F;12 (Complexity)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">12.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -262,7 +262,7 @@ II)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#t
               <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
             </li>
             <li class="links-of-blogroll-item">
-              <a href="https://qinchonghanzuibang.github.io/" title="https:&#x2F;&#x2F;qinchonghanzuibang.github.io&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
             </li>
             <li class="links-of-blogroll-item">
               <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
@@ -920,13 +920,100 @@ Thus there exists a Turing Machine <span class="math inline">\(H\)</span> that c
 <p>Since <span class="math inline">\(D\)</span> is also a Turing
 Machine, it has its corresponding index <span class="math inline">\(d\)</span>. Let's now analyze the case of <span class="math inline">\(D\)</span> taking <span class="math inline">\(d\)</span> as an input.</p>
 <ul>
-<li>If <span class="math inline">\(D\)</span> enters a infinite loop,
-i.e., <span class="math inline">\(D\)</span> does not halt on <span class="math inline">\(w_d\)</span>, it contradicts to <span class="math inline">\(H\)</span>'s output that <span class="math inline">\((M_d,w_d)=(D,w_d)\)</span> is accepted.</li>
+<li>If <span class="math inline">\(D\)</span> does not halt on <span class="math inline">\(w_d\)</span>, it contradicts to <span class="math inline">\(H\)</span>'s output that <span class="math inline">\((M_d,w_d)=(D,w_d)\)</span> is accepted.</li>
 <li>If <span class="math inline">\(D\)</span> halts on <span class="math inline">\(w_d\)</span>, i.e., <span class="math inline">\(D\)</span> halts on <span class="math inline">\(w_d\)</span>, it contradicts to <span class="math inline">\(H\)</span>'s output that <span class="math inline">\((W,w_d)\)</span> is rejected.</li>
 </ul>
 <p>A contradiction. Therefore the Halting Problem is not decidable.</p>
 <p><br></p>
-<h2 id="tutorial-10">Tutorial 10</h2>
+<h2 id="tutorial-10-decidability">Tutorial 10 (Decidability)</h2>
+<p><strong>Q1. </strong> <span class="math inline">\(W_i\)</span>
+denotes the language accepted by the TM with code <span class="math inline">\(i\)</span>, that is <span class="math inline">\(W_i=L(M_i)\)</span>. Alphabet of the machine is
+<span class="math inline">\(\Sigma=\{a,b\}\)</span>, <span class="math inline">\(w_i\)</span> denotes the <span class="math inline">\(i\)</span>-th string (that is, string with code
+<span class="math inline">\(i\)</span>). Show that <span class="math inline">\(L=\{1^i|W_i\text{ is infinite}\}\)</span> is not
+RE.</p>
+<p>WLOG rewrite <span class="math inline">\(L=\{M_i|L(M_i)\text{ is
+infinite}\}\)</span>.</p>
+<p>Construct <span class="math inline">\(M&#39;\)</span> as follows.</p>
+<p><span class="math inline">\(M&#39;(x)\)</span> Suppose <span class="math inline">\(t\)</span> is such that <span class="math inline">\(w_t=x\)</span>.</p>
+<ul>
+<li>If there exists a <span class="math inline">\(j\leq t\)</span> such
+that <span class="math inline">\(M(w_j)\)</span> accepts within <span class="math inline">\(t\)</span> steps, then reject.</li>
+<li>Otherwise accept.</li>
+</ul>
+<p>If <span class="math inline">\(M\in L_e\)</span>, <span class="math inline">\(M&#39;\)</span> accepts any string, thus <span class="math inline">\(M&#39;=\Sigma^*\in L_{inf}\)</span>. If <span class="math inline">\(M\notin L_e\)</span>, <span class="math inline">\(M&#39;\)</span> is finite (if <span class="math inline">\(M\)</span> accepts some string <span class="math inline">\(w_j\)</span> within <span class="math inline">\(t\)</span> steps, it will rejects all <span class="math inline">\(w_{k}\)</span> that <span class="math inline">\(k\geq t\)</span>), thus <span class="math inline">\(M&#39;\notin L_{inf}\)</span>.</p>
+<p><strong>Q2.</strong> Given two DFA's <span class="math inline">\(M\)</span> and <span class="math inline">\(M&#39;\)</span>, is <span class="math inline">\(L(M)\cap L(M&#39;)=\emptyset\)</span>
+decidable?</p>
+<p>学 PCP 学傻了。我的傻瓜解：DFA 是 regular，自然也是 CFG，那么 <span class="math inline">\(L(M)\cap L(M&#39;)=\emptyset\)</span> 自然是 not
+decidable 的。</p>
+<p>然而 <span class="math inline">\(L(M)\cap
+L(M&#39;)=\emptyset\)</span> 不可决定是对于 general CFG
+而言的。这个问题很明显能通过构造 <span class="math inline">\(M&#39;&#39;\)</span> 接受 <span class="math inline">\(L(M)\)</span> 与 <span class="math inline">\(L(M&#39;)\)</span>
+的交集进行判定。我在想什么！</p>
+<p><strong>Q3. </strong> Given a TM <span class="math inline">\(M&#39;\)</span>, and a DFA <span class="math inline">\(M\)</span>, is <span class="math inline">\(L(M&#39;)\cap L(M)=\emptyset\)</span>.</p>
+<p>能够构造出 parallel simulation 不代表其为空是 decidable 的！Construct
+<span class="math inline">\(M&#39;&#39;\)</span> as follows. <span class="math inline">\(M&#39;&#39;(x)\)</span>:</p>
+<ul>
+<li>Simulates <span class="math inline">\(M&#39;\)</span> on <span class="math inline">\(w\)</span> and</li>
+<li>Simultaneously checks if <span class="math inline">\(w\)</span> is
+accepted by <span class="math inline">\(M\)</span></li>
+</ul>
+<p><span class="math inline">\(M&#39;&#39;(x)\)</span> 接受 <span class="math inline">\(L(M&#39;)\cap L(M)\)</span>：<span class="math inline">\(M&#39;&#39;\)</span> can be as general as any TM,
+therefore deciding <span class="math inline">\(L(M&#39;&#39;)=\emptyset\)</span> is equivalent to
+deciding whther a general TM <span class="math inline">\(M&#39;&#39;\in
+L_{e}\)</span>. Not decidable.</p>
+<p><strong>Q4.</strong> Prove or disprove: If <span class="math inline">\(L^*\)</span> is recursive, then <span class="math inline">\(L\)</span> is recursive.</p>
+<p>No.</p>
+<p>Consider the following counterexample <span class="math inline">\(L=\{0,1\}\cup \{0^i1^j:M_i\text{ halts on
+}w_j\}\)</span>. <span class="math inline">\(L\)</span> is an extension
+of halting problem, therefore it is undecidable.</p>
+<p>However, <span class="math inline">\(L^*=\{0,1\}^*\)</span>, this
+language is decidable, even regular.</p>
+<p><br></p>
+<h2 id="tutorial-1112-complexity">Tutorial 11/12 (Complexity)</h2>
+<p><strong>Q1</strong>. Show that the following problem is
+NP-complete:</p>
+<ul>
+<li>INSTANCE: A number of <span class="math inline">\(k\)</span> of
+processors, and a set <span class="math inline">\(J=\{J_1,J_2,...,J_r\}\)</span> of jobs where job
+<span class="math inline">\(J_i\)</span> has running time <span class="math inline">\(T_i\)</span>, and an overall deadline <span class="math inline">\(D\)</span>.</li>
+<li>QUESTION: Is there a way to schedule the jobs on the <span class="math inline">\(k\)</span>-processors (non-preemptively, i.e., a
+job has to run on the processor it is allocated to until completion)
+such that the total time taken to finish all the jobs is at most <span class="math inline">\(D\)</span>?</li>
+</ul>
+<p>NP (不要忘记这一步！): It is easy to see that the processor
+scheduling problem is in NP. Just guess a schedule (i.e., assignment of
+jobs to processors), and verify that each job is assigned to some
+processor and each processor's load is at most <span class="math inline">\(D\)</span>.</p>
+<p>NP hardness: we reduce the <strong>partition problem</strong> to
+processor scheduling problem.</p>
+<p>Given partition problem <span class="math inline">\(A=\{a_1,a_2,...,a_n\}\)</span>, where <span class="math inline">\(s(a)\)</span> denotes the size of <span class="math inline">\(a\in A\)</span>.</p>
+<p>Then, construct the processor scheduling problem as follows.</p>
+<p>There are <span class="math inline">\(k=2\)</span> processors. <span class="math inline">\(J=A=\{a_1,a_2,...,a_n\}\)</span>, and the time
+<span class="math inline">\(T_i\)</span> taken for job <span class="math inline">\(a_i\in J\)</span> is <span class="math inline">\(s(a_i)\)</span>. The deadline is <span class="math inline">\([\sum_{a\in A}s(a)/2]\)</span>.</p>
+<p>Now it is easy to verify that there is an equal partition of <span class="math inline">\(A\)</span> iff the job scheduling problem has a
+solution.</p>
+<p><strong>Q2</strong>. Show that <span class="math inline">\(\text{DSPACE}(n^2)\)</span> is a proper subset of
+<span class="math inline">\(\text{DSPACE}(n^3)\)</span>.</p>
+<blockquote>
+<p>Space Hierarchy: Suppose <span class="math inline">\(S_2(n)\)</span>
+and <span class="math inline">\(S_1(n)\)</span> are both <span class="math inline">\(\geq \log n\)</span>, <span class="math inline">\(S_2(n)\)</span> is fully space constructible and
+<span class="math display">\[
+\lim_{n\to\infty} \frac{S_1(n)}{S_2(n)}=0
+\]</span> Then there is a language in <span class="math inline">\(\text{DSAPCE}(S_2(n))-\text{DSAPCE}(S_1(n))\)</span></p>
+</blockquote>
+<p><span class="math inline">\(n^3\)</span> is fully space constructible
+as it can be computed within space <span class="math inline">\(n^3\)</span>.</p>
+<p>As <span class="math inline">\(\lim_{n\to\infty}\frac{n^2}{n^3}=0\)</span>, using
+space hierarcy theorem, we have that <span class="math inline">\(\text{DSPACE}(n^3)-\text{DSPACE}(n^2)\neq
+\emptyset\)</span>. As trivially, <span class="math inline">\(\text{DSPACE}(n^2)\subseteq
+\text{DSPACE}(n^3)\)</span>.</p>
+<blockquote>
+<p>Time Hierarchy: Suppose <span class="math inline">\(T_1(n)\)</span>
+and <span class="math inline">\(T_2(n)\)</span> are both <span class="math inline">\(\geq (1+\epsilon)n\)</span>, <span class="math inline">\(T_2(n)\)</span> is fully time constructible and
+<span class="math display">\[
+\lim_{n\to\infty} \frac{T_1(n)*\log(T_1(n))}{T_2(n)}=0
+\]</span> Then there is a language in <span class="math inline">\(\text{DTIME}(T_2(n))-\text{DTIME}(T_1(n))\)</span></p>
+</blockquote>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
