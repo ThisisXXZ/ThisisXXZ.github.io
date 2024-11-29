@@ -543,1695 +543,382 @@ if not specified.</p>
       </tags>
   </entry>
   <entry>
-    <title>自动人形会梦见 NP 完全问题吗？(习题)</title>
-    <url>/2024/09/11/cs3231-ex/</url>
-    <content><![CDATA[<p>埃癸斯 (<em>Aegis</em>) 虽然是高性能的反暗影压制兵装 (<em>Anti-Shadow
-Suppression
-Weapon</em>)，但她在逻辑推理方面并未得到特殊强化。在辰巳人工岛的月光馆学园插班入学后，埃癸斯常常感觉自己跟不上课程进度。</p>
-<span id="more"></span>
-<p>埃癸斯尤其不擅的学科是计算理论 (<em>Theory of
-Computation</em>)；她认为，作为人工智慧的自己，底层是程式的逻辑；既然如此，自己无法完成计算理论作业的试题，和任何机器都解决不了停机问题是相同的原理。</p>
-<p>作为特别课外活动部 (S.E.E.S, <em>Specialized Extracurricular
-Execution Squad</em>) 的
-Leader，你察觉到埃癸斯只是在找借口。为了课外活动部的未来，你必须对她展开特别辅导。</p>
-<p><br></p>
-<h2 id="tutorial-1-regex">Tutorial 1 (RegEx)</h2>
-<p>Q1. Prove <span class="math inline">\((A^*)^+=(A^+)^*=A^*\)</span></p>
-<p>Note that <span class="math inline">\(\epsilon \in A^*\)</span>.
-Thus, <span class="math inline">\((A^*)^+=(A^*)^*\)</span>.</p>
-<p>Also, if <span class="math inline">\(B\subseteq C\)</span>, then
-<span class="math inline">\(B^*\subseteq C^*\)</span>. Thus, we
-immediately have <span class="math inline">\(A^*\subseteq (A^+)^*
-\subseteq (A^*)^*=(A^*)^+\)</span>.</p>
-<p>Hence, it suffices to show that <span class="math inline">\((A^*)^*\subseteq A^*\)</span>. Suppose <span class="math inline">\(w\in (A^*)^*\)</span></p>
-<p>Let <span class="math inline">\(w_1,w_2,...,w_k\)</span> be such that
-<span class="math inline">\(w=w_1w_2...w_k\)</span> and each <span class="math inline">\(w_i\in A^*\)</span>. For each <span class="math inline">\(i\)</span>, let <span class="math inline">\(w_{i,1},w_{i,2},...,w_{i,r_i}\)</span> be such
-that <span class="math inline">\(w_i=w_{i,1}w_{i,2}...w_{i,r_i}\)</span>
-and each <span class="math inline">\(w_{i,j}\in A\)</span>.</p>
-<p>Thus, we have that <span class="math inline">\(w=w_{1,1}w_{1,2}...w_{1,r_1}w_{2,1}...w_{2,r_2}...w_{k,1}...w_{k,r_k}\)</span>,
-where each <span class="math inline">\(w_{i,j}\in A\)</span>. Thus,
-<span class="math inline">\(w\in A^*\)</span>.</p>
-<p><br></p>
-<h2 id="tutorial-2-dfa">Tutorial 2 (DFA)</h2>
-<p><strong>Q1.</strong> For a DFA <span class="math inline">\(A=(Q,\Sigma,\delta,q_0,F)\)</span>, let <span class="math inline">\(\hat\delta\)</span> be as defined in class. Show
-that <span class="math inline">\(\hat\delta(q,xy)=\hat\delta(\hat\delta(q,x),y)\)</span>,
-for all strings <span class="math inline">\(x,y\)</span> over <span class="math inline">\(\Sigma^*\)</span>, and all states <span class="math inline">\(q\in Q\)</span>.</p>
-<p>By induction on <span class="math inline">\(|y|\)</span>. Clearly,
-for <span class="math inline">\(y=\epsilon\)</span>, the statement
-holds.</p>
-<p>Suppose the statement holds for <span class="math inline">\(y=w\)</span>. Then for <span class="math inline">\(y=wa\)</span>, with <span class="math inline">\(a\in \Sigma\)</span>, we have, <span class="math display">\[
-\begin{aligned}
-\hat\delta(q,xwa)&amp;=\delta(\hat\delta(q,xw), a) \\
-&amp;= \delta(\hat\delta(\hat\delta(q, x), w), a) \\
-&amp;= \hat\delta(\hat\delta(q,x), wa) \\
-&amp;= \hat\delta(\hat\delta(q,x),y)
-\end{aligned}
-\]</span> <strong>Q2.</strong> Prove <span class="math inline">\(L((R+S)^*)=L((R^*S^*)^*)\)</span>, for any regular
-expression <span class="math inline">\(R\)</span> and <span class="math inline">\(S\)</span>.</p>
-<p>Showing <span class="math inline">\(\subseteq\)</span>:</p>
-<p><span class="math inline">\(L(R)\subseteq L(R^*S^*)\)</span> and
-<span class="math inline">\(L(S)\subseteq L(R^*S^*)\)</span>, therefore
-<span class="math inline">\(L(R+S)\subseteq L(R^*S^*)\)</span>.</p>
-<p>Thus <span class="math inline">\(L((R+S)^*)\subseteq
-L((R^*S^*)^*)\)</span>.</p>
-<p>Showing <span class="math inline">\(\supseteq\)</span>:</p>
-<p><span class="math inline">\(L((R^*S^*)^*)\subseteq
-L(((R+S)^*(R+S)^*)^*)\subseteq L(((R+S)^*)^*)=L((R+S)^*)\)</span>.</p>
-<p>Therefore <span class="math inline">\(L(R+S)^*=L((R^*S^*)^*)\)</span>.</p>
-<p>Misc. Notice <span class="math inline">\(q\in
-\text{Eclose}(q)\)</span>. Practice DFA to RegEx.</p>
-<p><br></p>
-<h2 id="tutorial-3-rl">Tutorial 3 (RL)</h2>
-<p><strong>Q1.</strong> <u>True</u> or False. If <span class="math inline">\(L\)</span> is a regular language, then <span class="math inline">\(L^R=\{x^R|x\in L\}\)</span> is also a regular
-language.</p>
-<p><em>First method</em>. Given a regular expression <span class="math inline">\(S\)</span>, we show how to construct <span class="math inline">\(S^R\)</span> such that <span class="math inline">\(L(S)^R=L(S^R)\)</span>.</p>
-<p>Base case. <span class="math inline">\(a^R=a, \epsilon^R=\epsilon,
-\emptyset^R=\emptyset\)</span>.</p>
-<p>Induction. Suppose the statement holds for <span class="math inline">\(A,B\)</span>, then for,</p>
-<ul>
-<li>prove <span class="math inline">\(L((A+B)^R)=L(A+B)^R\)</span> using
-property <span class="math inline">\((A+B)^R=A^R+B^R\)</span></li>
-<li>prove <span class="math inline">\(L((A\cdot B)^R)=L(A\cdot
-B)^R\)</span> using property <span class="math inline">\((A\cdot
-B)^R=B^R\cdot A^R\)</span></li>
-<li>prove <span class="math inline">\(L((A^*)^R)=L(A^*)^R\)</span> using
-property <span class="math inline">\((A^*)^R=(A^R)^*\)</span></li>
-</ul>
-<p><em>Second method</em>. Suppose <span class="math inline">\(A=(Q,\Sigma,\delta,q_0,F)\)</span> is a DFA for
-<span class="math inline">\(L\)</span>. Construct an <span class="math inline">\(\epsilon\)</span>-NFA for <span class="math inline">\(L^R\)</span> as follows.</p>
-<p><span class="math inline">\(A^N=(Q\cup \{q_0&#39;\},
-\Sigma,\delta_N,q_0&#39;,\{q_0\})\)</span>, where</p>
-<ul>
-<li><span class="math inline">\(\delta_N(q_0&#39;,\epsilon)=F\)</span></li>
-<li>for <span class="math inline">\(q\in Q,a\in \Sigma\)</span>, <span class="math inline">\(\delta_N(q,a)=\{q&#39;:\delta(q&#39;,a)=q\}\)</span>.
-Other transitions sets are <span class="math inline">\(\emptyset\)</span>.</li>
-</ul>
-<p>By induction on <span class="math inline">\(|w|\)</span> we show
-that, for <span class="math inline">\(q,q&#39; \in Q\)</span>, <span class="math inline">\(\hat\delta(q,w)=q&#39;\)</span> iff <span class="math inline">\(q\in \delta_N(q&#39;,w^R)\)</span>. Thus <span class="math inline">\(\hat\delta(q_0,w)\in F\)</span> iff <span class="math inline">\(q_0\in\cup_{q\in F}\hat{\delta_N}(q,w^R)\)</span>.
-Thus, <span class="math inline">\(A_N\)</span> accepts <span class="math inline">\(L^R\)</span>.</p>
-<p><strong>Q2.</strong> True or <u>False</u>. If <span class="math inline">\(L_1\)</span> is regular and <span class="math inline">\(L_2\subseteq L_1\)</span>, then <span class="math inline">\(L_2\)</span> is regular.</p>
-<p>Take <span class="math inline">\(L_1=\Sigma^*\)</span>, and <span class="math inline">\(L_2\)</span> to be some non-regular subset of
-<span class="math inline">\(\Sigma^*\)</span>.</p>
-<blockquote>
-<p>Acceptance is two-way: every string accepted by a DFA is in the
-language, <em>and</em> every string rejected by a DFA is not in the
-language.</p>
-</blockquote>
-<p><strong>Q3.</strong> (hard) For any language <span class="math inline">\(L\)</span>, define <span class="math inline">\(\text{HALF}(L)=\{w|(\exists u)[wu\in L \text{ and
-} |w|=|u|]\}\)</span>. Show that if <span class="math inline">\(L\)</span> is regular, then <span class="math inline">\(\text{HALF}(L)\)</span> is regular.</p>
-<p>Let <span class="math inline">\(A=(\delta_A,Q,q_0,F)\)</span> be a
-DFA for <span class="math inline">\(L\)</span> with some alphabet <span class="math inline">\(\Sigma\)</span>.</p>
-<p>Then define <span class="math inline">\(B\)</span> as follows:</p>
-<ul>
-<li>The states <span class="math inline">\(Q_B\)</span> of <span class="math inline">\(B\)</span> are of the form <span class="math inline">\([q,S]\)</span> where <span class="math inline">\(q\in Q\)</span> and <span class="math inline">\(S\subseteq Q\)</span>.</li>
-<li>The initial state of <span class="math inline">\(B\)</span> is <span class="math inline">\([q_0,F]\)</span>.</li>
-<li><span class="math inline">\(\delta_B([q,S],a)=[\delta_A(q,a),T]\)</span> where
-<span class="math inline">\(T=\{p\in Q:\exists b\in \Sigma:\exists
-p&#39;\in S:\delta_A(p,b)=p&#39;\}\)</span>.</li>
-<li>The accepting states of <span class="math inline">\(B\)</span> are
-<span class="math inline">\(F_B=\{[q,S]:q\in S\}\)</span>.</li>
-</ul>
-<p>Then we have the following invariant by construction: all reachable
-states <span class="math inline">\([q,S]\)</span> after some input are
-such that <span class="math inline">\(q\)</span> is the state that <span class="math inline">\(A\)</span> would be in after reading that input,
-and the states in <span class="math inline">\(S\)</span> are all those
-states such that there is a path from that state to an accepting state
-(in <span class="math inline">\(A\)</span>) that has the same length as
-the input that was read.</p>
-<p>So when we are in a state <span class="math inline">\([q,S]\)</span>
-wIth <span class="math inline">\(q\in S\)</span> after reading some
-input <span class="math inline">\(w_1\)</span>, we know that <span class="math inline">\(q\)</span> is the state of <span class="math inline">\(A\)</span> after reading <span class="math inline">\(w_1\)</span> and as <span class="math inline">\(q\in S\)</span> there is some input <span class="math inline">\(w_2\)</span> with <span class="math inline">\(|w_1|=|w_2|\)</span> that induces a path from
-<span class="math inline">\(q\)</span> to an accepting state, which
-means that <span class="math inline">\(w_1w_2\in L\)</span>, and so
-<span class="math inline">\(w_1\in \text{HALF}(L)\)</span>.</p>
-<p>Source: <a href="https://math.stackexchange.com/questions/1539658/automata-prove-that-if-l-is-regular-than-halfl-is-regular-too">StackExchange
-- Automata | Prove that if L is regular than half(L) is regular
-too</a></p>
-<p><br></p>
-<h2 id="tutorial-4-cfg">Tutorial 4 (CFG)</h2>
-<p><strong>Q1</strong>. Give a CFG for language <span class="math inline">\(L=\{w:\#(a\in w)=\#(b\in w)\}\)</span>, <span class="math inline">\(\Sigma=\{a,b\}\)</span>. <span class="math display">\[
-S\to aSb|bSa|SS|\epsilon
-\]</span> <strong>Q2</strong>. Give an unambiguous CFG for the above
-language.</p>
-<p>design three minimal states:</p>
-<ul>
-<li><span class="math inline">\(T\)</span>: balance state, where <span class="math inline">\(\#a=\#b\)</span>.</li>
-<li><span class="math inline">\(A\)</span>: imbalance state, where <span class="math inline">\(\#a=\#b+1\)</span>.</li>
-<li><span class="math inline">\(B\)</span>: imbalance state, where <span class="math inline">\(\#b=\#a +1\)</span>.</li>
-</ul>
-<p>To eliminate ambiguity, we need to <strong>prevent partial
-derivations from achieving the state prematurely</strong>, that is,
-<strong>no non-empty proper prefix has the same property of the whole
-string</strong>. <span class="math display">\[
-\begin{aligned}
-&amp;S\to \epsilon|TS \\
-&amp;T\to aB|bA \\
-&amp;A\to a|bAA \\
-&amp;B\to b|aBB
-\end{aligned}
-\]</span> <span class="math inline">\(T\)</span> only achieves <span class="math inline">\(\#a=\#b\)</span> if if is fully expanded, so are
-<span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span>.</p>
-<figure>
-<img data-src="4-2.jpg" alt="The recursive productions correct the initial imbalance without allowing it to balance out prematurely">
-<figcaption aria-hidden="true">The recursive productions correct the
-initial imbalance without allowing it to balance out
-prematurely</figcaption>
-</figure>
-<p>参见上图，按照上述的递归结构，由位置 <span class="math inline">\((x,y)\)</span> 开始，找到之后的第一个 <span class="math inline">\((x_T,y)\)</span>，把 <span class="math inline">\([x,x_T]\)</span> 划分为 <span class="math inline">\(T\)</span>。同理，找到之后的第一个 <span class="math inline">\((x_A,y+1)\)</span>，把 <span class="math inline">\([x,x_A]\)</span> 划分为 <span class="math inline">\(A\)</span>；找到之后的第一个 <span class="math inline">\((x_B,y-1)\)</span>，把 <span class="math inline">\([x,x_B]\)</span> 划分为 <span class="math inline">\(B\)</span>。</p>
-<p><br></p>
-<h2 id="tutorial-5-pda">Tutorial 5 (PDA)</h2>
-<p>记住以下原则：</p>
-<ul>
-<li>所有的 symbols 都被 consume 都需要被
-consume；不存在提前「退出」。</li>
-<li>若不指定 transition，默认向 dead states 转移。</li>
-<li>对于给定的 <span class="math inline">\(L\)</span>，DFA/NFA/PDA 接受
-<span class="math inline">\(L\)</span> 中的所有字符串，拒绝所有非 <span class="math inline">\(L\)</span> 的字符串。</li>
-</ul>
-<p><strong>Q1</strong>. Give a NPDA for <span class="math inline">\(L=\{w|\#_a(w)&gt;\#_b(w)\}\)</span>, <span class="math inline">\(\Sigma=\{a,b\}\)</span>.</p>
-<p>NPDA: <span class="math inline">\((\{q_0,q_1\},\{a,b\},\{a,b,Z_0\},\delta,q_0,Z_0,\{q_1\})\)</span>,
-Acceptance by final state.</p>
-<ul>
-<li><span class="math inline">\(\delta(q_0,a,Z_0)=\{(q_0,a,aZ_0)\}\)</span>, <span class="math inline">\(\delta(q_0,b,Z_0)=\{(q_0,bZ_0)\}\)</span></li>
-<li><span class="math inline">\(\delta(q_0,a,b)=\{(q_0,\epsilon)\}\)</span>, <span class="math inline">\(\delta(q_0,a,a)=\{(q_0,aa)\}\)</span></li>
-<li><span class="math inline">\(\delta(q_0,b,a)=\{(q_0,\epsilon)\}\)</span>, <span class="math inline">\(\delta(q_0,b,b)=\{(q_0,bb)\}\)</span></li>
-<li><span class="math inline">\(\delta(q_0,\epsilon,a)=\{(q_1,\epsilon)\}\)</span></li>
-</ul>
-<p><strong>Q2</strong>. Give a NPDA for <span class="math inline">\(L=\{a^ib^jc^k|i=j \text{ or }j=k\}\)</span>, <span class="math inline">\(\Sigma=\{a,b,c\}\)</span>.</p>
-<p>NPDA: <span class="math inline">\((\{q_0,q_1,...,q_7\},\{a,b,c\},
-\{a,b,Z_0\},\delta,q_0,Z_0,\{q_3,q_7\})\)</span>, Acceptance by final
-state.</p>
-<ul>
-<li><span class="math inline">\(\delta(q_0,\epsilon,Z_0)=\{(q_1,Z_0),
-(q_4,Z_0)\}\)</span> (non-deterministically check <span class="math inline">\(i=j\)</span> or <span class="math inline">\(j=k\)</span>?)</li>
-<li><span class="math inline">\(\delta(q_1,\epsilon,Z_0)=\{(q_3,Z_0)\}\)</span>
-(check <span class="math inline">\(i=j=0\)</span>)</li>
-<li><span class="math inline">\(\delta(q_1,a,Z_0)=\{(q_1,aZ_0)\}\)</span>, <span class="math inline">\(\delta(q_1,a,a)=\{(q_1,aa)\}\)</span> (check <span class="math inline">\(i\)</span>)</li>
-<li><span class="math inline">\(\delta(q_1,b,a)=\{(q_2,\epsilon\}\)</span>, <span class="math inline">\(\delta(q_2,b,a)=\{(q_2,\epsilon)\}\)</span> (check
-<span class="math inline">\(i=j\)</span>)</li>
-<li><span class="math inline">\(\delta(q_2,\epsilon,Z_0)=\{(q_3,Z_0)\}\)</span>,
-<span class="math inline">\(\delta(q_3,c,Z_0)=\{(q_3,Z_0)\}\)</span>
-(ensure only <span class="math inline">\(c\)</span> appears in the last
-part)</li>
-<li><span class="math inline">\(\delta(q_4,a,Z_0)=\{(q_4,Z_0)\}\)</span>
-(ensure only <span class="math inline">\(a\)</span> appears in the first
-part)</li>
-<li><span class="math inline">\(\delta(q_4,\epsilon,Z_0)=\{(q_7,Z_0)\}\)</span>
-(check <span class="math inline">\(j=k=0\)</span>)</li>
-<li><span class="math inline">\(\delta(q_4,b,Z_0)=\{(q_5,bZ_0)\}\)</span>, <span class="math inline">\(\delta(q_5,b,b)=\{(q_5,bb)\}\)</span> (check <span class="math inline">\(j\)</span>)</li>
-<li><span class="math inline">\(\delta(q_5,c,b)=\{(q_6,\epsilon)\}\)</span>, <span class="math inline">\(\delta(q_6,c,b)=\{(q_6,\epsilon)\}\)</span>, <span class="math inline">\(\delta(q_6,\epsilon,Z_0)=\{(q_7,\epsilon)\}\)</span>
-(check <span class="math inline">\(j=k\)</span>)</li>
-</ul>
-<p><strong>Q3</strong>. Give a NPDA for <span class="math inline">\(L=\{w_1cw_2|w_1,w_2\in\{a,b\}^* \text{ and }
-w_1\neq w_2^R\}\)</span>, <span class="math inline">\(\Sigma=\{a,b,c\}\)</span>.</p>
-<p>三种情况：</p>
-<ul>
-<li><span class="math inline">\(w_1,w_2^R\)</span> mismatch.</li>
-<li><span class="math inline">\(|w_1|&gt;|w_2^R|\)</span> but matched
-before - some symbols will remain in the stack.</li>
-<li><span class="math inline">\(|w_1|&lt;|w_2^R|\)</span> but matched
-before - consume more symbols when the stack is already empty.</li>
-</ul>
-<p>NPDA: <span class="math inline">\((\{q_0,q_1,q_2\},\{a,b,c\},
-\{a,b,Z_0\}, \delta,q_0,Z_0,\{q_2,q_3\})\)</span>, Acceptance by final
-state.</p>
-<ul>
-<li><span class="math inline">\(\delta(q_0,a,Z)=\{(q_0,aZ)\}\)</span>,
-<span class="math inline">\(\delta(q_0,b,Z)=\{(q_0,bZ)\}\)</span>, for
-<span class="math inline">\(Z\in \{a,b,Z_0\}\)</span> (record <span class="math inline">\(w_1\)</span>)</li>
-<li><span class="math inline">\(\delta(q_0,c,Z)=\{(q_1,Z)\}\)</span>,
-for <span class="math inline">\(Z\in\{a,b,Z_0\}\)</span></li>
-<li><span class="math inline">\(\delta(q_1,a,a)=\{(q_1,\epsilon)\}\)</span>, <span class="math inline">\(\delta(q_1,b,b)=\{(q_1,\epsilon)\}\)</span> (match
-<span class="math inline">\(w_2^R\)</span> with <span class="math inline">\(w_1\)</span>)</li>
-<li><span class="math inline">\(\delta(q_1,a,b)=\{(q_2,\epsilon)\}\)</span>, <span class="math inline">\(\delta(q_1,b,a)=\{(q_2,\epsilon)\}\)</span> (cond.
-1 - accept, but need to consume the whole string)</li>
-<li><span class="math inline">\(\delta(q_1,a,Z_0)=\{(q_2,Z_0)\}\)</span>, <span class="math inline">\(\delta(q_1,b,Z_0)=\{(q_2,Z_0)\}\)</span> (cond.
-3)</li>
-<li><span class="math inline">\(\delta(q_1,\epsilon,a)=\{(q_3,\epsilon)\}\)</span>,
-<span class="math inline">\(\delta(q_1,\epsilon,b)=\{(q_3,\epsilon)\}\)</span>
-(cond. 2)</li>
-<li><span class="math inline">\(\delta(q_2,a,X)=\{(q_2,X)\}\)</span>,
-<span class="math inline">\(\delta(q_2,b,X)=\{(q_2,X)\}\)</span>, for
-<span class="math inline">\(X\in\{a,b,Z_0\}\)</span></li>
-</ul>
-<p><span class="math inline">\(q_2\)</span>: accept, but can consume
-more symbols. <span class="math inline">\(q_3\)</span>: accept, but must
-not consume any symbol (or go to dead states).</p>
-<p><strong>Q4</strong>. Formally defina a two stack NPDA. Is it more
-powerful than one stack NPDA, that is, can it accept something which
-cannot be accepted by one stack NPDA?</p>
-<p>A two stack NPDA <span class="math inline">\((Q,\Sigma,\Gamma_1,\Gamma_2,\delta,q_0,Z_0,Y_0,F)\)</span>,
-where <span class="math inline">\(Z_0\in
-\Gamma_1,Y_0\in\Gamma_2\)</span> are the initial symbols on the two
-stacks. Transition function <span class="math inline">\(\delta\)</span>
-maps from <span class="math inline">\(Q\times\Sigma\cap\{\epsilon\}\times \Gamma_1\times
-\Gamma_2\)</span> to a subset of <span class="math inline">\(Q\times
-\Gamma_1^*\times \Gamma_2^*\)</span>.</p>
-<p>Intuitively, <span class="math inline">\(\delta(q,a,X,Y)\)</span>
-containing <span class="math inline">\((p, \alpha,\beta)\)</span> means
-that when the two stack NPDA consumes <span class="math inline">\(a\)</span> from the input, has <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> on the top of the first and second
-stack, then it goes to state <span class="math inline">\(p\)</span>
-while pushing <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> on the two stacks respectively,
-after popping <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> from the stacks.</p>
-<p>Instantaneous description of two stack NPDA: <span class="math inline">\((q,aw,X\alpha,Y\beta)\vdash
-(p,w,\alpha&#39;\alpha,\beta&#39;\beta)\)</span>, if <span class="math inline">\(\delta(q,a,X,Y)\)</span> contains <span class="math inline">\((p,\alpha&#39;,\beta&#39;)\)</span>. <span class="math inline">\(ID\vdash^*ID&#39;\)</span> can then be defined by
-considering <span class="math inline">\(0\)</span> or more steps of
-<span class="math inline">\(\vdash\)</span>.</p>
-<p><span class="math inline">\(L(NPDA)=\{w:(q_0,w,Z_0,Y_0)\vdash^*
-(q_f,\epsilon,\alpha,\beta):q_f\in F,
-\alpha\in\Gamma_1^*,\beta\in\Gamma_2^*\}\)</span>, Acceptance by final
-state,</p>
-<p>Two stack NPDA can accept <span class="math inline">\(\{a^nb^nc^n:n\geq 0\}\)</span> (not context-free)
-while one stack NPDA cannot. Two stack NPDA accepts it by first pushing
-<span class="math inline">\(a\)</span>'s in both the stacks, and then
-comparing <span class="math inline">\(b\)</span>'s in the first stack
-and then comparing <span class="math inline">\(c\)</span>'s in the
-second stack. In fact, two stacks are enough to simulate a Turing
-Machine, and thus is as powerful as any computing device.</p>
-<p><br></p>
-<h2 id="tutorial-6-chomsky-normal-form">Tutorial 6 (Chomsky Normal
-Form)</h2>
-<p>Eliminate useless symbols 时，一定是<strong>先 remove non-generating
-symbols, 再 remove unreachable symbols</strong>；顺序很重要。</p>
-<p><strong>Q1</strong>. <span class="math inline">\(L=\{\alpha\alpha:\alpha\in \{a,b\}^*\}\)</span> is
-not a CFL.</p>
-<p>Suppose by way of contradiction that <span class="math inline">\(L\)</span> is a CFL. Then, let <span class="math inline">\(n&gt;1\)</span> be as in the pumping lemma. Now
-consider <span class="math inline">\(z=a^{n+1}b^{n+1}a^{n+1}b^{n+1}\)</span>. Let <span class="math inline">\(z=uvwxy\)</span> be as in the pumping lemma.</p>
-<p>Case 1: <span class="math inline">\(vwx\)</span> is contained in
-either <span class="math inline">\(a^{n+1}\)</span> or <span class="math inline">\(b^{n+1}\)</span>. (very obvious)</p>
-<p>Case 2: <span class="math inline">\(vwx\)</span> is contained in the
-first <span class="math inline">\(a^{n+1}b^{n+1}\)</span>. In this case,
-<span class="math inline">\(uwy\)</span> is of the form <span class="math inline">\(a^{n+1-k}b^{n+1-s}a^{n+1}b^{n+1}\)</span>, where
-<span class="math inline">\(vx=a^kb^s\)</span>, and thus <span class="math inline">\(0&lt;k+s\leq n\)</span>. Let <span class="math inline">\(i=0\)</span>, we check whether <span class="math inline">\(uwy\in L\)</span>.</p>
-<p>It cannot be written as <span class="math inline">\(\alpha\alpha\)</span>. Suppose otherwise, then the
-second <span class="math inline">\(\alpha\)</span> must end with <span class="math inline">\(b^{n+1}\)</span> (as <span class="math inline">\(|\alpha|=\frac{4n+4-k-s}{2}&gt;n\)</span>). Thus,
-the first <span class="math inline">\(\alpha\)</span> ends somewhere in
-the first sequence of <span class="math inline">\(b\)</span>'s: <span class="math inline">\(b^{n+1-s}\)</span>.</p>
-<p>Thus, the second <span class="math inline">\(\alpha\)</span> ends
-with <span class="math inline">\(a^{n+1}b^{n+1}\)</span>.</p>
-<p>But this means <span class="math inline">\(|\alpha|\geq
-2n+2\)</span>, and thus <span class="math inline">\(k+s\leq 0\)</span>,
-a contradiction.</p>
-<p>Case 3: <span class="math inline">\(vwx\)</span> is contained in
-<span class="math inline">\(b^{n+1}a^{n+1}\)</span> part of <span class="math inline">\(z\)</span> (same logic as case 2).</p>
-<p>Case 4: <span class="math inline">\(vwx\)</span> is contained in the
-second <span class="math inline">\(a^{n+1}b^{n+1}\)</span> part of <span class="math inline">\(z\)</span> (same logic as case 2).</p>
-<p><strong>Q2</strong>. Prove that <span class="math inline">\(L=\{w:w\in \{a,b,c\}^*  \text{ and }
-\#_a(w)=\#_b(w)=\#_c(w)\}\)</span> is not a CFL.</p>
-<p>Suppose by way of contradiction that <span class="math inline">\(L\)</span> is a CFL.</p>
-<p>Given a regular language <span class="math inline">\(R=a^*b^*c^*\)</span>, by the closure property of
-CFL, <span class="math inline">\(L\cap
-a^*b^*c^*=\{a^nb^nc^n:n\geq0\}\)</span> would also be a CFL, which leads
-to a contradiction. (单栈 PDA 不能处理三个长度相等的符号)</p>
-<p><br></p>
-<h2 id="tutorial-7-cfl">Tutorial 7 (CFL)</h2>
-<p><strong>Q1</strong>. Prove or disprove that the language <span class="math inline">\(\{a^ib^jc^kd^l|i=0\text{ or }
-j=k=l\}\)</span>.</p>
-<p>Suppose by way of contradiction, otherwise. Consider the intersection
-of the language in the question with <span class="math inline">\(\{ab^jc^kd^l|j=k=l\}\)</span> must be
-context-free.</p>
-<p>Consider the substitution, <span class="math inline">\(s(a)=\epsilon,s(b)=a, s(c)=b, s(d)=c\)</span>. The
-resulting language <span class="math inline">\(\{a^jb^kc^l|j=k=l\}\)</span> must be context-free.
-Contradiction.</p>
-<p>Thus, the language given in question is not context-free.</p>
-<p><strong>Q2</strong>. Prove or disprove that the language <span class="math inline">\(\{udv:u,v\in\{a,b,c\}^*\text{ and } u \text{ is a
-substring of }v\}\)</span>.</p>
-<p>上一道题是构造 <span class="math inline">\(a^nb^nc^n\)</span>，这一道题则是构造 <span class="math inline">\(\alpha\alpha\)</span>。</p>
-<p>Suppose by way of contradiction, otherwise. Let <span class="math inline">\(L&#39;=L\cap c\{a,b\}^* cdc\{a,b\}^*c\)</span>,
-then, the intersection <span class="math inline">\(L&#39;=\{cwcdcwc:w\in
-\{a,b\}^*\}\)</span> must be context free.</p>
-<p>Now considering the substitution, <span class="math inline">\(s(c)=s(d)=\epsilon, s(a)=a, s(b)=b\)</span>, and
-<span class="math inline">\(s(L&#39;)=\{ww:w\in \{a,b\}^*\}\)</span>
-must be context-free. Contradiction.</p>
-<p>Thus, the language given in question is not context-free.</p>
-<p><strong>Q3</strong>. For a language <span class="math inline">\(L\)</span>, Let <span class="math inline">\(Prefix(L)=\{x:(\exists y)[xy\in L]\}\)</span>.
-Prove or disprove: If <span class="math inline">\(L\)</span> is
-context-free, then <span class="math inline">\(Prefix(L)\)</span> is
-also context-free.</p>
-<p>Suppose <span class="math inline">\((V,\Sigma,S,P)\)</span> is the
-Chomsky Normal grammar for <span class="math inline">\(L\)</span>
-without any useless symbols. The new grammar for <span class="math inline">\(Prefix(L)\)</span> is <span class="math inline">\((V\cup \{A^p:A\in V\},\Sigma,S^p,P&#39;)\)</span>,
-where <span class="math inline">\(P&#39;\)</span> is defined as
-follows.</p>
-<p>Intuitively, <span class="math inline">\(A^p\)</span> generates
-prefixes of all strings which are generated by <span class="math inline">\(A\)</span>.</p>
-<ul>
-<li>For each production <span class="math inline">\(A\to \alpha\)</span>
-in <span class="math inline">\(P\)</span>.
-<ul>
-<li><span class="math inline">\(A\to \alpha\)</span> is in <span class="math inline">\(P&#39;\)</span></li>
-<li><span class="math inline">\(A^p\to \alpha\)</span> is in <span class="math inline">\(P&#39;\)</span></li>
-</ul></li>
-<li>For each production <span class="math inline">\(A\to BC\)</span> in
-<span class="math inline">\(P\)</span>.
-<ul>
-<li><span class="math inline">\(A\to B^p\)</span> is in <span class="math inline">\(P&#39;\)</span></li>
-<li><span class="math inline">\(A\to BC^p\)</span> is in <span class="math inline">\(P&#39;\)</span></li>
-</ul></li>
-</ul>
-<p>We then remove all unit-productions in <span class="math inline">\(P&#39;\)</span>, this will result in a Chomsky
-Normal form grammar for <span class="math inline">\(Prefix(L)\)</span>.
-Therefore, <span class="math inline">\(Prefix(L)\)</span> is also
-context-free.</p>
-<p><strong>Q4</strong>. Prove Odgen's Lemma: Let <span class="math inline">\(L\)</span> be a CFL, then there exists a constant
-<span class="math inline">\(n\)</span> such that the following holds for
-any string <span class="math inline">\(z\)</span> of length at least
-<span class="math inline">\(n\)</span> in <span class="math inline">\(L\)</span>. If we mark at least <span class="math inline">\(n\)</span> positions in <span class="math inline">\(z\)</span> to be distinguished, then we can write
-<span class="math inline">\(z=uvwxy\)</span> such that:</p>
-<ul>
-<li><span class="math inline">\(vwx\)</span> has at most <span class="math inline">\(n\)</span> distinguished positions.</li>
-<li><span class="math inline">\(vw\)</span> has at least one
-distinguished position.</li>
-<li>For all <span class="math inline">\(i\)</span>, <span class="math inline">\(uv^iwx^iy\in L\)</span>.</li>
-</ul>
-<p>Proof. (只取精髓部分) Let <span class="math inline">\(m\)</span> be
-the number of non-terminals, <span class="math inline">\(n=2^{m+1}\)</span>.</p>
-<p>Consider the derivation tree of <span class="math inline">\(z\)</span>. Suppose we've converted the grammar to
-Chomsky Normal Form, the tree is binary. Call any node of <span class="math inline">\(s\)</span> a <em>branch point</em> if both of its
-sons have distinguished descendents.</p>
-<p>Claim. There exists a path with at least <span class="math inline">\(k+1\)</span> <em>branch points</em> on the path.
-We start at the top,</p>
-<ul>
-<li>If only one son of a node has distinguished descendants, then go in
-the direction of that son.</li>
-<li>If both sons of a node have distinguished descendants, then go in
-the direction of the son with more distinguished descendants.</li>
-</ul>
-<p>第二种节点均为 <em>branch points</em>。并且，每经过一个 <em>branch
-point</em>，distinguished descendants
-的数量最多会减少一半。因此，该路径上 <em>branch points</em> 的数量 <span class="math inline">\(\geq \log
-2^{m+1}=m+1\)</span>。考虑取该路径上的最后 <span class="math inline">\(m+1\)</span> 个 <em>branch
-points</em>；根据鸽巢原理，至少存在两个 <em>branch points</em>
-对应的是同一个 non-terminal state。</p>
-<p>剩余证明见 <a href="https://www.classes.cs.uchicago.edu/archive/2015/winter/28000-1/Lec10.pdf">Uchicago
-280000-1 Lec.10</a>.</p>
-<p><strong>Q5</strong>. Use Ogden's Lemma to show that <span class="math inline">\(\{0^r1^s2^t|r=s\text{ and } s\neq t\}\)</span> is
-not context-free.</p>
-<p>想到了，但没完全想到。</p>
-<p>Consider the string <span class="math inline">\(z=0^n1^n2^{n!+n}\)</span>. Let <span class="math inline">\(0\)</span>'s be distinguished positions. Let <span class="math inline">\(z=uvwxy\)</span>. Note that if <span class="math inline">\(v\)</span> or <span class="math inline">\(x\)</span> contain two distinct symbols from <span class="math inline">\(\{0,1,2\}\)</span>, then clearly <span class="math inline">\(uv^2wx^2y\notin L\)</span>. Thus, <span class="math inline">\(v\in 0^*\)</span>. Furthermore, if <span class="math inline">\(x\notin 1^+\)</span> or if <span class="math inline">\(|x|\neq |v|\)</span>, then, <span class="math inline">\(uv^2wx^2y\)</span> contains different number of
-<span class="math inline">\(0\)</span>'s than <span class="math inline">\(1\)</span>'s. Thus, we have that <span class="math inline">\(|v|=|x|&gt;0\)</span>, and <span class="math inline">\(v\in 0^+, x\in 1^+\)</span>. Now, let <span class="math inline">\(m=|v|\)</span>, Then, <span class="math inline">\(uv^{1+n!/m}wx^{1+n!/m}y=0^{n!+n}1^{n!+n}2^{n!+n}\notin
-L\)</span>. A contradiction.</p>
-<p>一直困扰着我的问题的答案 (<span class="math inline">\(x\)</span> 同时
-contains <span class="math inline">\(2\)</span> 和 <span class="math inline">\(3\)</span>，pump 以后总是能保证 <span class="math inline">\(s\neq t\)</span> 怎么办？)</p>
-<figure>
-<img data-src="t7.png" alt="This guy is a genius">
-<figcaption aria-hidden="true">This guy is a genius</figcaption>
-</figure>
-<p><br></p>
-<h2 id="tutorial-8-turing-machine-i">Tutorial 8 (Turing Machine I)</h2>
-<p><strong>Q1.</strong> Given a Turing Machine which converts a binary
-number to equivalent unary number.</p>
-<p>Following is a two-tape machine. 2nd tape is used only for writing
-<span class="math inline">\(1\)</span>, so symbol read there does not
-matter. On the 1st tape, the start state is <span class="math inline">\(q_0\)</span>:</p>
-<ul>
-<li>In state <span class="math inline">\(q_0\)</span>: we move to the
-right end of input, and go to state <span class="math inline">\(q_1\)</span></li>
-<li>In state <span class="math inline">\(q_1\)</span>: mimic subtraction
-by <span class="math inline">\(1\)</span>, rewrite <span class="math inline">\(...10^i\)</span> to <span class="math inline">\(...01^i\)</span>, append another <span class="math inline">\(1\)</span> on the 2nd tape, and go back to <span class="math inline">\(q_0\)</span></li>
-</ul>
-<table>
-<colgroup>
-<col style="width: 6%">
-<col style="width: 31%">
-<col style="width: 31%">
-<col style="width: 31%">
-</colgroup>
-<thead>
-<tr>
-<th style="text-align: center;"></th>
-<th><span class="math inline">\((0,X)\)</span></th>
-<th><span class="math inline">\((1,X)\)</span></th>
-<th style="text-align: center;"><span class="math inline">\((B,X)\)</span></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: center;"><span class="math inline">\(q_0\)</span></td>
-<td><span class="math inline">\(q_0\)</span>, <span class="math inline">\((0,X)\)</span>, <span class="math inline">\((R,S)\)</span></td>
-<td><span class="math inline">\(q_0\)</span>, <span class="math inline">\((1,X)\)</span>, <span class="math inline">\((R,S)\)</span></td>
-<td style="text-align: center;"><span class="math inline">\(q_1\)</span>, <span class="math inline">\((B,X)\)</span>, <span class="math inline">\((L,S)\)</span></td>
-</tr>
-<tr>
-<td style="text-align: center;"><span class="math inline">\(q_1\)</span></td>
-<td><span class="math inline">\(q_1\)</span>, <span class="math inline">\((1,X)\)</span>, <span class="math inline">\((L,S)\)</span></td>
-<td><span class="math inline">\(q_0\)</span>, <span class="math inline">\((0,1)\)</span>, <span class="math inline">\((R,R)\)</span></td>
-<td style="text-align: center;">Halt</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Q2</strong>. Design a Turing Machine to accept <span class="math inline">\(\{a^n|n\text{ is a prime}\}\)</span>.</p>
-<p>Tape <span class="math inline">\(1\)</span> holds <span class="math inline">\(n\)</span>, and tape <span class="math inline">\(2\)</span> holds the divisors from <span class="math inline">\(n-1\)</span> to <span class="math inline">\(2\)</span>.</p>
-<ol type="1">
-<li>Initially input <span class="math inline">\(a^n\)</span> is in tape
-<span class="math inline">\(1\)</span>.</li>
-<li>In input contains only <span class="math inline">\(0\)</span> or
-<span class="math inline">\(1\)</span> <span class="math inline">\(a\)</span>, then reject.</li>
-<li>Copy input to tape <span class="math inline">\(2\)</span>.</li>
-<li>Decrement the number of <span class="math inline">\(a\)</span>'s in
-tape <span class="math inline">\(2\)</span> by <span class="math inline">\(1\)</span>.</li>
-<li>If tape <span class="math inline">\(2\)</span> contains only one
-<span class="math inline">\(a\)</span>, then accept (input is a
-prime).</li>
-<li>Move to left end of the strings in tape <span class="math inline">\(1\)</span> and tape <span class="math inline">\(2\)</span>.</li>
-<li>Move step by step, in both tape <span class="math inline">\(1\)</span> and tape <span class="math inline">\(2\)</span>, to right, until one of them hits a
-blank.
-<ul>
-<li>If both tapes hit blank at the same time, then reject (<span class="math inline">\(n\)</span> is divisible by that divisor).</li>
-<li>If tape <span class="math inline">\(2\)</span> hits blank first
-then, move to the left end of the string of tape <span class="math inline">\(2\)</span>, and go to step 7.</li>
-<li>If tape <span class="math inline">\(1\)</span> hits blank first
-then, go to step 4 (<span class="math inline">\(n\)</span> is not
-divisible by current divisor).</li>
-</ul></li>
-</ol>
-<p><strong>Q3</strong>. Consider any partial function <span class="math inline">\(f\)</span>, and define a language <span class="math inline">\(L_f=\{x\#y|x\in\text{domain}(f) \text{ and }
-f(x)=y\}\)</span>. Show that <span class="math inline">\(f\)</span> is
-partial recursive if <span class="math inline">\(L_f\)</span> is RE.</p>
-<p>Suppose <span class="math inline">\(M&#39;\)</span> is the machine
-which accepts <span class="math inline">\(L_f\)</span>, then <span class="math inline">\(M\)</span> on input <span class="math inline">\(x\)</span> uses the following algorithm to
-determine its answer. <span class="math display">\[
-\begin{aligned}
-&amp;\text{For } t=0 \text{ to }\infty \\
-&amp;\text{For all } y \text{ of length at most }t \\
-&amp; \ \ \ \ \ \ \ \ \text{If } M&#39;\text{ accepts } x\#y \text{
-within } t\text{ steps, then output } y \\
-&amp;\text{EndFor} \\
-&amp;\text{EndFor}
-\end{aligned}
-\]</span> To check whether <span class="math inline">\(M&#39;\)</span>
-accepts <span class="math inline">\(x\#y\)</span> within <span class="math inline">\(t\)</span> steps, we can introduce a new counter
-tape and place <span class="math inline">\(t\)</span> in unary on that
-tape, and place the head of the tape at the beginning of the number. In
-each step of <span class="math inline">\(M&#39;\)</span>, one moves the
-head right. If <span class="math inline">\(M&#39;\)</span> accepts
-before reaching the blank at the end of <span class="math inline">\(t\)</span>, then we knoe that it accepts within
-<span class="math inline">\(t\)</span> steps.</p>
-<p>Also note that <span class="math inline">\(M\)</span> needs to keep a
-copy of <span class="math inline">\(x\#y\)</span> before simulating
-<span class="math inline">\(M&#39;\)</span>.</p>
-<p>重点：除了枚举 <span class="math inline">\(y\)</span>
-之外，为什么要枚举一个步数上界 <span class="math inline">\(t\)</span>？如果选择的 <span class="math inline">\(y\)</span> 是错的，<span class="math inline">\(M&#39;\)</span> 可能不会停机！</p>
-<p><strong>Q4</strong>. Is a 2-stack non-deterministic PDA as powerful
-as non-deterministic TM?</p>
-<p>这道题最复杂的部分想出来了，就只简单的写一些。</p>
-<ul>
-<li>2-stack NPDA <span class="math inline">\(\Rightarrow\)</span> NTM:
-ID <span class="math inline">\(\alpha q\beta\)</span> of TM will be
-represented in the 2-NPDA by keeping <span class="math inline">\(\alpha\)</span> in stack 1 (with first letter of
-<span class="math inline">\(\alpha\)</span> at the bottom of stack) and
-<span class="math inline">\(\beta\)</span> in stack 2 (with first letter
-of <span class="math inline">\(\beta\)</span> at the top of stack).
-Stack starting symbol <span class="math inline">\(Z\)</span> represents
-surrounding blanks.</li>
-<li>NTM <span class="math inline">\(\Rightarrow\)</span> 2-stack NPDA:
-Use two working tape, simulating two stacks respectively. The head of
-each tape represents the top of the stack.</li>
-</ul>
-<p><br></p>
-<h2 id="tutorial-9-turing-machine-ii">Tutorial 9 (Turing Machine
-II)</h2>
-<p><strong>Q1.</strong> Let <span class="math inline">\(L_5=\{M:L(M)\text{ has }\leq 5 \text{
-elements}\}\)</span>, show how to reduce <span class="math inline">\(L_e\)</span> to <span class="math inline">\(L_5\)</span>.</p>
-<p>注意，这门课中 reduction 概念似乎与 COMP3357
-不太一样；重要的是找到这一映射函数 <span class="math inline">\(f\)</span>，满足对于任意 <span class="math inline">\(x\in L_e\)</span>，<span class="math inline">\(f(x)\in L_5\)</span>；对于任意 <span class="math inline">\(x \notin L_e\)</span>，<span class="math inline">\(f(x)\notin L_5\)</span>。 <span class="math display">\[
-\begin{aligned}
-&amp;f: M\to M&#39; \\
-&amp;M&#39;(x) \\
-&amp;\text{For }t=0 \text{ to } \infty \\
-&amp;\text{For }i=0 \text{ to } t \\
-&amp;\ \ \ \ \ \ \ \ \text{If } M(w_i) \text{ accepts within }t \text{
-steps, then accept} \\
-&amp;\text{Endfor} \\
-&amp;\text{Endfor} \\
-\end{aligned}
-\]</span> 给定 <span class="math inline">\(M\)</span>，构造 <span class="math inline">\(M&#39;\)</span>；若 <span class="math inline">\(M\in L_e\)</span>，<span class="math inline">\(M&#39;\)</span> 不接受任何输入，因此 <span class="math inline">\(L(M&#39;)=\emptyset\leq 5\)</span>，<span class="math inline">\(M&#39;\in L_5\)</span>；若 <span class="math inline">\(M\notin L_e\)</span>，<span class="math inline">\(M&#39;\)</span> 接受任何输入，因此 <span class="math inline">\(L(M&#39;)=\Sigma^* &gt;5\)</span>，<span class="math inline">\(M&#39;\notin L_5\)</span>。</p>
-<p><strong>Q2</strong>. 分 (a), (b), (c), (d) 四小问。</p>
-<p>(a). Show that every finite language is recursive.</p>
-<p><strong>Every finite language is regular, and thus context-free and
-recursive</strong>.</p>
-<p>(b). 太简单，<span class="math inline">\(L\)</span> is recursive iff
-<span class="math inline">\(\overline{L}\)</span> is recursive.</p>
-<p>(c). Suppose that <span class="math inline">\(L\)</span> is a
-recursive language and <span class="math inline">\(D\)</span> is a
-finite language. Then show that <span class="math inline">\(L\triangle
-D\)</span> must be recursive. (<span class="math inline">\(\triangle\)</span> denotes symmetric difference:
-<span class="math inline">\(L\triangle D=(L-D)\cup (D-L)\)</span>)</p>
-<p>使用 (a) 中的结论，<span class="math inline">\(D\)</span> 既然
-finite，一定 recursive。所以 <span class="math inline">\(L,D,\overline{L}, \overline{D}\)</span> 均是
-recursive 的。不难发现 <span class="math inline">\(L-D=L\cap
-\overline{D}\)</span>, <span class="math inline">\(D-L=D\cap\overline{L}\)</span>，再利用 recursive
-在 and, or 下的 closure，证明 <span class="math inline">\(\triangle\)</span> 同样也 closure。</p>
-<p>(d). Suppose <span class="math inline">\(L\)</span> is a recursively
-enumerable language which is not recursive. Suppose <span class="math inline">\(M\)</span> is a Turing Machine which accepts <span class="math inline">\(L\)</span>. Then show that there must be
-infinitely many inputs on which <span class="math inline">\(M\)</span>
-does not halt.</p>
-<p>Suppose by way of contradiction that <span class="math inline">\(M\)</span> halts on all but finitely many inputs.
-Suppose <span class="math inline">\(D\)</span> is the set of finitely
-many inputs on which <span class="math inline">\(M\)</span> does not
-halt. Define <span class="math inline">\(M&#39;(x)\)</span> as follows:
-<span class="math display">\[
-\begin{aligned}
-&amp;M&#39;(x): \\
-&amp;\ \ \ \ \ \ \text{If } x\in D, \text{then halt and reject}. \\
-&amp;\ \ \ \ \ \ \text{If }x\notin D, \text{then simulate } M(x).
-\text{Accept/Reject iff } M(x) \text{ accepts/rejects}. \\
-&amp;\text{End}
-\end{aligned}
-\]</span> 我们构造出的 <span class="math inline">\(M&#39;\)</span>
-总会停机，且只接受 <span class="math inline">\(L\)</span>，这与 <span class="math inline">\(L\)</span> 是 RE 的前提冲突。据反证法，<span class="math inline">\(M\)</span> 所不能停机的输入是无限的。</p>
-<p><strong>Q3.</strong> (证明停机问题不可判定！) Halting Problem is
-defined as follows. Given input <span class="math inline">\(i,j\)</span>, does <span class="math inline">\(M_i\)</span> halt on input <span class="math inline">\(w_j\)</span>? Show that the halting problem is not
-decidable.</p>
-<p>Suppose by way of contradiction that halting problem is decidable.
-Thus there exists a Turing Machine <span class="math inline">\(H\)</span> that can accept <span class="math inline">\(L=\{(i,j):M_i\text{ halts on }w_j\}\)</span>.</p>
-<p>Construct a paradoxical Turing Machine <span class="math inline">\(D\)</span>: It takes an index <span class="math inline">\(k\)</span>, then simualtes <span class="math inline">\(H(k,k)\)</span>.</p>
-<ul>
-<li>If <span class="math inline">\(H\)</span> accepts <span class="math inline">\((k,k)\)</span>, i.e, <span class="math inline">\(M_k\)</span> halts on <span class="math inline">\(w_k\)</span>, then <span class="math inline">\(D\)</span> enters an infinite loop.</li>
-<li>If <span class="math inline">\(H\)</span> rejects <span class="math inline">\((k,k)\)</span>, i.e., <span class="math inline">\(M_k\)</span> does not halt on <span class="math inline">\(w_k\)</span>, then <span class="math inline">\(D\)</span> halts.</li>
-</ul>
-<p>Since <span class="math inline">\(D\)</span> is also a Turing
-Machine, it has its corresponding index <span class="math inline">\(d\)</span>. Let's now analyze the case of <span class="math inline">\(D\)</span> taking <span class="math inline">\(d\)</span> as an input.</p>
-<ul>
-<li>If <span class="math inline">\(D\)</span> does not halt on <span class="math inline">\(w_d\)</span>, it contradicts to <span class="math inline">\(H\)</span>'s output that <span class="math inline">\((M_d,w_d)=(D,w_d)\)</span> is accepted.</li>
-<li>If <span class="math inline">\(D\)</span> halts on <span class="math inline">\(w_d\)</span>, i.e., <span class="math inline">\(D\)</span> halts on <span class="math inline">\(w_d\)</span>, it contradicts to <span class="math inline">\(H\)</span>'s output that <span class="math inline">\((W,w_d)\)</span> is rejected.</li>
-</ul>
-<p>A contradiction. Therefore the Halting Problem is not decidable.</p>
-<p><br></p>
-<h2 id="tutorial-10-decidability">Tutorial 10 (Decidability)</h2>
-<p><strong>Q1. </strong> <span class="math inline">\(W_i\)</span>
-denotes the language accepted by the TM with code <span class="math inline">\(i\)</span>, that is <span class="math inline">\(W_i=L(M_i)\)</span>. Alphabet of the machine is
-<span class="math inline">\(\Sigma=\{a,b\}\)</span>, <span class="math inline">\(w_i\)</span> denotes the <span class="math inline">\(i\)</span>-th string (that is, string with code
-<span class="math inline">\(i\)</span>). Show that <span class="math inline">\(L=\{1^i|W_i\text{ is infinite}\}\)</span> is not
-RE.</p>
-<p>WLOG rewrite <span class="math inline">\(L=\{M_i|L(M_i)\text{ is
-infinite}\}\)</span>.</p>
-<p>Construct <span class="math inline">\(M&#39;\)</span> as follows.</p>
-<p><span class="math inline">\(M&#39;(x)\)</span> Suppose <span class="math inline">\(t\)</span> is such that <span class="math inline">\(w_t=x\)</span>.</p>
-<ul>
-<li>If there exists a <span class="math inline">\(j\leq t\)</span> such
-that <span class="math inline">\(M(w_j)\)</span> accepts within <span class="math inline">\(t\)</span> steps, then reject.</li>
-<li>Otherwise accept.</li>
-</ul>
-<p>If <span class="math inline">\(M\in L_e\)</span>, <span class="math inline">\(M&#39;\)</span> accepts any string, thus <span class="math inline">\(M&#39;=\Sigma^*\in L_{inf}\)</span>. If <span class="math inline">\(M\notin L_e\)</span>, <span class="math inline">\(M&#39;\)</span> is finite (if <span class="math inline">\(M\)</span> accepts some string <span class="math inline">\(w_j\)</span> within <span class="math inline">\(t\)</span> steps, it will rejects all <span class="math inline">\(w_{k}\)</span> that <span class="math inline">\(k\geq t\)</span>), thus <span class="math inline">\(M&#39;\notin L_{inf}\)</span>.</p>
-<p><strong>Q2.</strong> Given two DFA's <span class="math inline">\(M\)</span> and <span class="math inline">\(M&#39;\)</span>, is <span class="math inline">\(L(M)\cap L(M&#39;)=\emptyset\)</span>
-decidable?</p>
-<p>学 PCP 学傻了。我的傻瓜解：DFA 是 regular，自然也是 CFG，那么 <span class="math inline">\(L(M)\cap L(M&#39;)=\emptyset\)</span> 自然是 not
-decidable 的。</p>
-<p>然而 <span class="math inline">\(L(M)\cap
-L(M&#39;)=\emptyset\)</span> 不可决定是对于 general CFG
-而言的。这个问题很明显能通过构造 <span class="math inline">\(M&#39;&#39;\)</span> 接受 <span class="math inline">\(L(M)\)</span> 与 <span class="math inline">\(L(M&#39;)\)</span>
-的交集进行判定。我在想什么！</p>
-<p><strong>Q3. </strong> Given a TM <span class="math inline">\(M&#39;\)</span>, and a DFA <span class="math inline">\(M\)</span>, is <span class="math inline">\(L(M&#39;)\cap L(M)=\emptyset\)</span>.</p>
-<p>能够构造出 parallel simulation 不代表其为空是 decidable 的！Construct
-<span class="math inline">\(M&#39;&#39;\)</span> as follows. <span class="math inline">\(M&#39;&#39;(x)\)</span>:</p>
-<ul>
-<li>Simulates <span class="math inline">\(M&#39;\)</span> on <span class="math inline">\(w\)</span> and</li>
-<li>Simultaneously checks if <span class="math inline">\(w\)</span> is
-accepted by <span class="math inline">\(M\)</span></li>
-</ul>
-<p><span class="math inline">\(M&#39;&#39;(x)\)</span> 接受 <span class="math inline">\(L(M&#39;)\cap L(M)\)</span>：<span class="math inline">\(M&#39;&#39;\)</span> can be as general as any TM,
-therefore deciding <span class="math inline">\(L(M&#39;&#39;)=\emptyset\)</span> is equivalent to
-deciding whther a general TM <span class="math inline">\(M&#39;&#39;\in
-L_{e}\)</span>. Not decidable.</p>
-<p><strong>Q4.</strong> Prove or disprove: If <span class="math inline">\(L^*\)</span> is recursive, then <span class="math inline">\(L\)</span> is recursive.</p>
-<p>No.</p>
-<p>Consider the following counterexample <span class="math inline">\(L=\{0,1\}\cup \{0^i1^j:M_i\text{ halts on
-}w_j\}\)</span>. <span class="math inline">\(L\)</span> is an extension
-of halting problem, therefore it is undecidable.</p>
-<p>However, <span class="math inline">\(L^*=\{0,1\}^*\)</span>, this
-language is decidable, even regular.</p>
-<p><br></p>
-<h2 id="tutorial-1112-complexity">Tutorial 11/12 (Complexity)</h2>
-<p><strong>Q1</strong>. Show that the following problem is
-NP-complete:</p>
-<ul>
-<li>INSTANCE: A number of <span class="math inline">\(k\)</span> of
-processors, and a set <span class="math inline">\(J=\{J_1,J_2,...,J_r\}\)</span> of jobs where job
-<span class="math inline">\(J_i\)</span> has running time <span class="math inline">\(T_i\)</span>, and an overall deadline <span class="math inline">\(D\)</span>.</li>
-<li>QUESTION: Is there a way to schedule the jobs on the <span class="math inline">\(k\)</span>-processors (non-preemptively, i.e., a
-job has to run on the processor it is allocated to until completion)
-such that the total time taken to finish all the jobs is at most <span class="math inline">\(D\)</span>?</li>
-</ul>
-<p>NP (不要忘记这一步！): It is easy to see that the processor
-scheduling problem is in NP. Just guess a schedule (i.e., assignment of
-jobs to processors), and verify that each job is assigned to some
-processor and each processor's load is at most <span class="math inline">\(D\)</span>.</p>
-<p>NP hardness: we reduce the <strong>partition problem</strong> to
-processor scheduling problem.</p>
-<p>Given partition problem <span class="math inline">\(A=\{a_1,a_2,...,a_n\}\)</span>, where <span class="math inline">\(s(a)\)</span> denotes the size of <span class="math inline">\(a\in A\)</span>.</p>
-<p>Then, construct the processor scheduling problem as follows.</p>
-<p>There are <span class="math inline">\(k=2\)</span> processors. <span class="math inline">\(J=A=\{a_1,a_2,...,a_n\}\)</span>, and the time
-<span class="math inline">\(T_i\)</span> taken for job <span class="math inline">\(a_i\in J\)</span> is <span class="math inline">\(s(a_i)\)</span>. The deadline is <span class="math inline">\([\sum_{a\in A}s(a)/2]\)</span>.</p>
-<p>Now it is easy to verify that there is an equal partition of <span class="math inline">\(A\)</span> iff the job scheduling problem has a
-solution.</p>
-<p><strong>Q2</strong>. Show that <span class="math inline">\(\text{DSPACE}(n^2)\)</span> is a proper subset of
-<span class="math inline">\(\text{DSPACE}(n^3)\)</span>.</p>
-<blockquote>
-<p>Space Hierarchy: Suppose <span class="math inline">\(S_2(n)\)</span>
-and <span class="math inline">\(S_1(n)\)</span> are both <span class="math inline">\(\geq \log n\)</span>, <span class="math inline">\(S_2(n)\)</span> is fully space constructible and
-<span class="math display">\[
-\lim_{n\to\infty} \frac{S_1(n)}{S_2(n)}=0
-\]</span> Then there is a language in <span class="math inline">\(\text{DSAPCE}(S_2(n))-\text{DSAPCE}(S_1(n))\)</span></p>
-</blockquote>
-<p><span class="math inline">\(n^3\)</span> is fully space constructible
-as it can be computed within space <span class="math inline">\(n^3\)</span>.</p>
-<p>As <span class="math inline">\(\lim_{n\to\infty}\frac{n^2}{n^3}=0\)</span>, using
-space hierarcy theorem, we have that <span class="math inline">\(\text{DSPACE}(n^3)-\text{DSPACE}(n^2)\neq
-\emptyset\)</span>. As trivially, <span class="math inline">\(\text{DSPACE}(n^2)\subseteq
-\text{DSPACE}(n^3)\)</span>.</p>
-<blockquote>
-<p>Time Hierarchy: Suppose <span class="math inline">\(T_1(n)\)</span>
-and <span class="math inline">\(T_2(n)\)</span> are both <span class="math inline">\(\geq (1+\epsilon)n\)</span>, <span class="math inline">\(T_2(n)\)</span> is fully time constructible and
-<span class="math display">\[
-\lim_{n\to\infty} \frac{T_1(n)*\log(T_1(n))}{T_2(n)}=0
-\]</span> Then there is a language in <span class="math inline">\(\text{DTIME}(T_2(n))-\text{DTIME}(T_1(n))\)</span></p>
-</blockquote>
-<p><br></p>
-<h2 id="reference">Reference</h2>
-<div class="note warning"><p>  This article is a self-administered course note.</p>
-<p>  References in the article are from corresponding course materials
-if not specified.</p>
-</div>
-<p>Course info: CS3231. Professor: Sanjay Jain.</p>
-<p>Course textbook: <em>Introduction to Automata Theory, Languages and
-Computation (3rd Edition)</em>, Hopcraft, Motwani &amp; Ullman, (2014),
-Pearson</p>
-<p>Course website: https://www.comp.nus.edu.sg/~sanjay/cs3231.html</p>
-]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>Theoretical Computer Science</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>自动人形会梦见 NP 完全问题吗？(笔记)</title>
+    <title>自动人形会梦见 NP 完全问题吗？</title>
     <url>/2024/08/16/cs3231/</url>
     <content><![CDATA[<p>计算理论 (Theory of Computation)
 当之无愧是计算机科学王冠上的明珠；考虑到我贫瘠的智商，以后估计不会朝 TCS
 方向来走；但对这些优雅的理论有一个最基本的了解应当是 CS 学生的素养。</p>
 <p>讽刺的是，你坑近二十年前就没有开设这门课了
-[<font color="#0000FF">1</font>]，只得留待交换来上。老师是印度人，口音很重，我听完整节课才明白他口中的「GEO」其实是「zero」；但课还是讲得十分清楚，颇有
-Ravi 之风。</p>
+[<font color="#0000FF">1</font>]，只得留待交换来上。老师是印度人，口音很重，我听完整节课才明白他口中的「GEO」其实是「zero」。</p>
 <span id="more"></span>
+<p>完整的笔记和错题集归档在<a href="https://www.cnblogs.com/VeniVidiVici/p/18572613">博客园</a>，这里就留下一点比较精华的东西吧！</p>
 <p><br></p>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
 <p>  It will <strong>NOT</strong> cover any exam or assignment related
 content.</p>
 </div>
 <p><br></p>
-<h2 id="preliminaries">Preliminaries</h2>
-<p>关于 formal proof 的一些 recap，一些自动机理论概念的 notations
-与定义。</p>
-<p><strong>字母表 (alphabet)</strong> <span class="math inline">\(\Sigma\)</span>, <strong>符号/字符
-(symbol)</strong>, <strong>字符串 (string)</strong> 与<strong>语言
-(language)</strong> <span class="math inline">\(L\subseteq
-\Sigma^{*}\)</span>。</p>
-<p>关于 strings/languages 的可数性质：</p>
+<h2 id="dfa-nfa">DFA &amp; NFA</h2>
+<p><br>DFA (Deterministic Finite Automaton)
+确定有限状态自动机：有向图，一个开始状态 (starting
+state)，若干个接受状态 (accepting state)。边上带 label
+用来标示转移。<strong>每个状态出度为 1</strong> (出度为 0 的状态默认向
+dead state 转移)。</p>
+<p>NFA (Non-deterministic Finite Automaton) 非确定有限状态自动机：DFA
+<strong>但每个状态出度可以大于 1</strong>。并且它的不确定性允许空转移
+<span class="math inline">\(\epsilon\)</span>-transition，即不带 label
+的边。</p>
+<hr>
+<p>NFA 与 DFA 在 language recognition 意义上等价。</p>
 <ul>
-<li>Number of strings over any non-empty alphabet is
-<strong>countable</strong>. e.g., length then lexicographic order.</li>
-<li>Number of languages over any non-empty alphabet is
-<strong>uncountable</strong>. Remember that language is just <strong>a
-subset of the set of all strings</strong>.</li>
+<li>DFA 显然是出度为 1 的 NFA。</li>
+<li>NFA 转 DFA 稍微麻烦点：因为 <span class="math inline">\(|\delta(q,\alpha)|\geq 1\)</span>，我们直接令
+<span class="math inline">\(\delta_D(\{q\},\alpha)=\{\delta(q,\alpha)\}\)</span>，把集合视为一个状态。重定义的转移
+<span class="math inline">\(\delta_D\)</span> 如下：<span class="math inline">\(\delta_D(Q,\alpha)=\{\cup_{q\in
+Q}\delta(q,\alpha)\}\)</span>。这样，<strong>新 DFA 的状态数量要
+exponentially more than 原 NFA</strong>。</li>
 </ul>
+<hr>
+<p>什么是正则语言 (Regular Language) -
+首先要知道什么是语言，语言就是满足某种规律的<strong>字符串集合</strong>
+- <strong>正则语言就是能被 DFA/NFA 识别的语言</strong>。</p>
+<p>我们熟悉的正则表达式 (Regular Expression)
+是一种可以描述正则语言规律的表达式，简单来说，就是用单个字符串 (表达式)
+来表示字符串集合
+(语言)。因此也可以这样说：<strong>正则语言是可以被正则表达式表示的语言</strong>。</p>
+<p>符合直觉地，任意 DFA
+可以转化为一个正则表达式；任意正则表达式可以转化为一个 <span class="math inline">\(\epsilon\)</span>​-NFA (具体 DP
+方法见归档笔记)。</p>
+<hr>
+<p>怎样把 DFA 化为最简形式 (minimization of DFA)，即，等价 DFA
+中状态数最少的？</p>
+<p>又是 DP。定义 <span class="math inline">\(f_{i,j}=1/0\)</span> 为状态
+<span class="math inline">\(i\)</span> 与状态 <span class="math inline">\(j\)</span> 是否 distinguishable。初始化：</p>
+<ul>
+<li><span class="math inline">\(f_{s,t}=1\)</span> where <span class="math inline">\(t\in T\)</span>。显然起始状态与接收状态是可被空串
+<span class="math inline">\(\epsilon\)</span> 分辨的。</li>
+<li><span class="math inline">\(f_{i,j}=0\)</span> otherwise。</li>
+</ul>
+<p>开始 DP，已知使用长度为 <span class="math inline">\(x\)</span>
+的字符串时分辨情况为 <span class="math inline">\(f\)</span>，推出使用长度为 <span class="math inline">\(x+1\)</span> 时的字符串时的分辨情况
+(为了节省空间，这里 <span class="math inline">\(f\)</span>
+其实省略了长度维度 <span class="math inline">\(x\)</span>)。转移方程
+<span class="math inline">\(f_{p,q}=1\)</span> if <span class="math inline">\(\exists \alpha,
+f(\delta(p,\alpha),\delta(q,\alpha))=1\)</span>。不断增加长度直到 <span class="math inline">\(f\)</span> 收敛，我们就获得了所有的
+indistinguishable pairs (被 <span class="math inline">\(f\)</span>
+标记为 0)；在原 DFA 中合并每一对不可分辨状态对即可。</p>
 <p><br></p>
-<h2 id="dfa-nfa-and-regex">DFA, NFA and RegEx</h2>
-<p>关于 <span class="math inline">\(\epsilon\)</span>-transition。不输入任何 symbol
-的转移。<span class="math inline">\(\epsilon\)</span> closure <span class="math inline">\(\text{Eclose}(q)\)</span>。</p>
-<p>regular language is a set of strings, regular expression <span class="math inline">\(M\)</span> is a representation of regular language
-<span class="math inline">\(L(M)\)</span>.</p>
-<h3 id="dfa-nfa-equivalence">DFA &amp; NFA: Equivalence</h3>
-<p>NFAs and DFAs are equivalent in terms of the languages they can
-recognize, even though DFAs may require more states (potentially
-exponentially more) than NFAs.</p>
-<p>首先 DFA 一定是 NFA。</p>
-<p>对于给定的 NFA <span class="math inline">\(A=(Q,\Sigma,
-\delta,q_0,F)\)</span> 构建等价的 DFA <span class="math inline">\(A_D=(Q_D,\Sigma,\delta_D,\{q_0\},F_D)\)</span>。定义
-<span class="math inline">\(Q_D=\{S|S\subseteq Q\}\)</span> (因此 <span class="math inline">\(|Q_D|\)</span> 是 <span class="math inline">\(O(2^{|Q|})\)</span> 级别的)，<span class="math inline">\(F_D=\{S|S\subseteq Q \text{ and } S\cap F\neq
-\emptyset\}\)</span>，<span class="math inline">\(\delta_D(S,a)=\bigcup_{q\in
-S}\delta(q,a)\)</span>。</p>
-<p>Claim. If for all string <span class="math inline">\(w\)</span>,
-<span class="math inline">\(\hat\delta_D(\{q_0\},w)=\hat\delta(q_0,w)\)</span>,
-then <span class="math inline">\(\hat\delta_D(\{q_0\},wa)=\hat\delta(q_0,wa)\)</span>
-also holds.</p>
-<p>Base case. <span class="math inline">\(w=\epsilon\)</span>, <span class="math inline">\(\hat\delta_D(\{q_0\},\epsilon)=\{q_0\}=\hat\delta(q_0,\epsilon)\)</span>
-holds.</p>
-<p>Induction case. <span class="math display">\[
-\begin{aligned}
-\hat\delta_D(\{q_0\},wa)&amp;=\delta_D(\hat\delta_D(\{q_0\},w),a) \\
-&amp;=\bigcup_{q\in\hat\delta_D(\{q_0\},w)}\delta(q,a) \\
-&amp;=\bigcup_{q\in \hat\delta(q_0,w)} \delta(q,a) \\
-&amp;=\hat\delta(q_0,wa)
-\end{aligned}
-\]</span> 因此我们构建出的 DFA <span class="math inline">\(A_D\)</span>
-能够接受字符串 <span class="math inline">\(w\)</span>，当且仅当 NFA
-<span class="math inline">\(A\)</span> 接受字符串 <span class="math inline">\(w\)</span>。</p>
-<h3 id="dfa-to-regex">DFA to RegEx</h3>
-<p>本质 DP。对于给定的 DFA <span class="math inline">\(A=(Q,\Sigma,\delta,q_{start},
-F)\)</span>，不妨定义 <span class="math inline">\(Q=\{1,2,...,n\}\)</span> 且 <span class="math inline">\(q_{start}=1\)</span>。定义 <span class="math inline">\(R_{i,j}^k\)</span> 为从 <span class="math inline">\(i\)</span> 到 <span class="math inline">\(j\)</span>，只能经过标号 <span class="math inline">\(\leq k\)</span> 状态的路径所对应的 RegEx。</p>
-<p>Base case. 定义 <span class="math inline">\(R_{i,j}^0\)</span></p>
-<ul>
-<li>If <span class="math inline">\(i\neq j\)</span>. <span class="math inline">\(R_{i,j}^0=a_1+a_2+...+a_m\)</span> for all <span class="math inline">\(\delta(i,a_r)=j\)</span>.</li>
-<li>If <span class="math inline">\(i=j\)</span>. <span class="math inline">\(R_{i,j}^0=\epsilon+a_1+a_2+...+a_m\)</span> for
-all <span class="math inline">\(\delta(i,a_r)=i\)</span>.</li>
-</ul>
-<p>Induction case. <span class="math inline">\(R_{i,j}^{k+1}=R_{i,j}^k+R_{i,k+1}^k(R_{k+1,k+1}^k)^{*}R_{k+1,j}^k\)</span></p>
-<p>那么该 DFA 所对应的 regular expression 为 <span class="math inline">\(L(A)=\sum_{j\in F} R_{1,j}^n\)</span></p>
-<h3 id="regex-to-epsilon-nfa">RegEx to <span class="math inline">\(\epsilon\)</span>-NFA</h3>
-<p>对于给定的 RegEx，构建 start state 与 final state 唯一的 <span class="math inline">\(\epsilon\)</span>-NFA。</p>
-<p>Base case.</p>
-<ul>
-<li><span class="math inline">\(\emptyset\)</span>. <span class="math inline">\(A=(\{q_0,q_f\},
-\Sigma,\delta,q_0,\{q_f\})\)</span> where <span class="math inline">\(\delta\)</span> is an empty transition.</li>
-<li><span class="math inline">\(\epsilon\)</span>. <span class="math inline">\(A=(\{q_0,q_f\},
-\Sigma,\delta,q_0,\{q_f\})\)</span> where <span class="math inline">\(\delta(q_0,\epsilon)=q_f\)</span>.</li>
-<li><span class="math inline">\(a\)</span>. <span class="math inline">\(A=(\{q_0,q_f\},
-\Sigma,\delta,q_0,\{q_f\})\)</span> where <span class="math inline">\(\delta(q_0,a)=q_f\)</span>.</li>
-</ul>
-<p>Induction case. 对于 <span class="math inline">\(r_1\)</span> 对应的
-<span class="math inline">\(A_1=(Q_1,\Sigma,q_0^1,\delta_1,F_1)\)</span>
-与 <span class="math inline">\(r_2\)</span> 对应的 <span class="math inline">\(A_2=(Q_2,\Sigma,q_0^2,\delta_2,F_2)\)</span>，分别为
-<span class="math inline">\(r_1+r_2\)</span>, <span class="math inline">\(r_1\cdot r_2\)</span>, <span class="math inline">\(r_1^*\)</span> 构造新的 <span class="math inline">\(\epsilon\)</span>-NFA <span class="math inline">\(A=(\{q_0,q_f\}\cup Q_1\cup
-Q_2,\Sigma,\delta,q_0,\{q_f\})\)</span>。</p>
-<ul>
-<li><span class="math inline">\(r_1+r_2\)</span>. 添加 <span class="math inline">\(\delta(q_0,\epsilon)=\{q_0^1,q_0^2\}\)</span>,
-<span class="math inline">\(\epsilon(q_f^1,\epsilon)=\{q_f\}\)</span>
-for all <span class="math inline">\(q_f^1\in F_1\)</span>, <span class="math inline">\(\delta(q_f^2,\epsilon)=\{q_f\}\)</span> for all
-<span class="math inline">\(q_f^2\in F_2\)</span>。</li>
-<li><span class="math inline">\(r_1\cdot r_2\)</span>. 添加 <span class="math inline">\(\delta(q_0,\epsilon)=\{q_0^1\}\)</span>, <span class="math inline">\(\delta(q_f^1,\epsilon)=\{q_0^2\}\)</span> for all
-<span class="math inline">\(q_f^1\in F_1\)</span>, <span class="math inline">\(\delta(q_f^2,\epsilon)=\{q_f\}\)</span> for all
-<span class="math inline">\(q_f^2\in F_2\)</span>。</li>
-<li><span class="math inline">\(r_1^*\)</span>. 添加 <span class="math inline">\(\delta(q_0,\epsilon)=\{q_0^1, q_f\}\)</span>,
-<span class="math inline">\(\delta(q_f^1,\epsilon)=\{q_0^1,q_f\}\)</span> for
-all <span class="math inline">\(q_f^1\in F_1\)</span>.</li>
-</ul>
-<p><br></p>
-<h2 id="minimization-of-dfa">Minimization of DFA</h2>
-<h3 id="equivalence-classes">Equivalence Classes</h3>
-<p>给定 regular language <span class="math inline">\(L\)</span>。</p>
-<ul>
-<li><span class="math inline">\(u\equiv_L w\)</span> iff for all <span class="math inline">\(x\)</span>, <span class="math inline">\(ux\in
-L\)</span> iff <span class="math inline">\(wx\in L\)</span>.</li>
-<li><span class="math inline">\(\equiv_L\)</span> is an
-<strong>equivalence relation</strong> - it is reflexive, symmetric, and
-transitive.</li>
-<li>通过 equivalence classes <span class="math inline">\(\text{equiv}(w)\)</span> 构造 minimal DFA <span class="math inline">\((Q, \Sigma, \delta,q_0,F)\)</span>
-<ul>
-<li><span class="math inline">\(Q=\{\text{equiv}(w):w\in
-\Sigma^*\}\)</span></li>
-<li><span class="math inline">\(q_0=\text{equiv}(\epsilon)\)</span></li>
-<li><span class="math inline">\(F=\{\text{equiv}(w):w\in
-L\}\)</span></li>
-<li><span class="math inline">\(\delta(\text{equiv}(w),
-a)=\text{equiv}(wa)\)</span></li>
-</ul></li>
-</ul>
-<p>该方法对给定的 regular language <span class="math inline">\(L\)</span> 构造一个 unique 且 minimal 的 DFA <span class="math inline">\(A\)</span> from scratch。</p>
-<h3 id="distinguishable-pairs">Distinguishable Pairs</h3>
-<p>给定 DFA <span class="math inline">\(A=(Q,\Sigma,\delta,q_0,F)\)</span>。通过合并
-non-distinguishable pairs 的方式找到其对应的 minimal
-DFA。其实，本质上就是找到一个将 <span class="math inline">\(\equiv_A\)</span> 划分为 finer equivalence classes
-<span class="math inline">\(\equiv_L\)</span> 的过程。</p>
-<ul>
-<li>Base case. <span class="math inline">\(\epsilon\)</span> of length
-<span class="math inline">\(0\)</span> distinguishes the accepting and
-non-accepting states.</li>
-<li>Induction case. suppose the algorithm finds all pairs of states
-distinguished using strings of length at most <span class="math inline">\(k\)</span>, then, consider states <span class="math inline">\((p,q)\)</span> distinguished using string <span class="math inline">\(w=ax\)</span> of length <span class="math inline">\(k+1\)</span>.</li>
-<li>If the pair <span class="math inline">\((\delta(p,a),\delta(q,a))\)</span> are
-distinguishable, then <span class="math inline">\((p,q)\)</span> are
-distinguishable.</li>
-</ul>
-<p>画一张 <span class="math inline">\(|Q|\times |Q|\)</span>
-的表格标记所有的 distinguishable
-pairs，并按照上述的长度归纳法把它们都找出来；剩下的 pairs 即是
-non-distinguishable pairs，把它们合并即可。</p>
-<p><br></p>
-<h2 id="parallel-simulation-of-2-dfas">Parallel Simulation of
-2-DFAs</h2>
-<p>Given <span class="math inline">\(A=(Q,\Sigma,\delta,q_0,F)\)</span>
-and <span class="math inline">\(A&#39;=(Q’,
-\Sigma,\delta&#39;,q_0&#39;,F&#39;)\)</span>.</p>
-<p>Construct <span class="math inline">\(A&#39;&#39;=(Q\times
-Q&#39;,\Sigma,\delta&#39;&#39;,(q_0,q_0&#39;),F&#39;&#39;)\)</span>,
-where <span class="math inline">\(\delta&#39;&#39;((q,q&#39;),a)=(\delta(q,a),\delta&#39;(q&#39;,a))\)</span>.
-DFA <span class="math inline">\(A&#39;&#39;\)</span> simulates the two
-DFAs <span class="math inline">\(A\)</span> and <span class="math inline">\(A&#39;\)</span> in parallel.</p>
-<ul>
-<li>If we take <span class="math inline">\(F&#39;&#39;=F\times
-F&#39;\)</span>, then the new DFA <span class="math inline">\(A&#39;&#39;\)</span> accepts <span class="math inline">\(L(A)\cap L(A&#39;)\)</span>.</li>
-<li>If we take <span class="math inline">\(F&#39;&#39;=F\times
-Q&#39;\cup Q\times F&#39;\)</span>, then the new DFA <span class="math inline">\(A&#39;&#39;\)</span> accepts <span class="math inline">\(L(A)\cup L(A&#39;)\)</span>.</li>
-<li>Appropriate choice of <span class="math inline">\(F&#39;&#39;\)</span> results in other boolean
-combination of languages accepted by <span class="math inline">\(A\)</span> and <span class="math inline">\(A&#39;\)</span>.</li>
-</ul>
-<p><br></p>
-<h2 id="properties-of-regular-languages">Properties of Regular
-Languages</h2>
-<h3 id="pumping-lemma">Pumping Lemma</h3>
-<p>Let <span class="math inline">\(L\)</span> be a regular language.
-There exists a constant <span class="math inline">\(n\)</span> such that
-for every string in <span class="math inline">\(L\)</span> satisfying
-<span class="math inline">\(|w|\geq n\)</span>, we can break <span class="math inline">\(w\)</span> into three strings <span class="math inline">\(w=xyz\)</span>, such that,</p>
+<h2 id="pumping-lemma-for-rl">Pumping Lemma for RL</h2>
+<p>Pumping Lemma (泵引理) 将会伴随整个计算理论课程，在这里我将首先介绍其
+RL 版本。</p>
+<p>若 <span class="math inline">\(L\)</span> 是正则语言，那么存在某常数
+<span class="math inline">\(n\)</span> 使得对于任意长度 <span class="math inline">\(\geq n\)</span> 的字符串 <span class="math inline">\(w\in L\)</span>，我们都能找到一种方式将其分解为
+<span class="math inline">\(w=xyz\)</span>，并满足：</p>
 <ul>
 <li><span class="math inline">\(y\neq \epsilon\)</span></li>
 <li><span class="math inline">\(|xy|\leq n\)</span></li>
-<li>For all <span class="math inline">\(k\geq 0\)</span>, the string
-<span class="math inline">\(xy^kz\)</span> is also in <span class="math inline">\(L\)</span></li>
+<li>对所有整数 <span class="math inline">\(k\geq 0\)</span>，字符串
+<span class="math inline">\(xy^kz\in L\)</span></li>
 </ul>
-<p>这里的 <span class="math inline">\(n\)</span> 实际上就是 <span class="math inline">\(L\)</span> 对应的 DFA 中 states 的数目，即 <span class="math inline">\(n=|Q|\)</span>。只要 <span class="math inline">\(L\)</span> 中存在长度 <span class="math inline">\(\geq n\)</span> 的字符串，说明 DFA 中一定存在环
-(鸽巢原理)；该环对应的就是 <span class="math inline">\(y\)</span>。</p>
-<p>Pumping lemma 一般用来证否，即，通过找到某个长度 <span class="math inline">\(\geq n\)</span> 的字符串 <span class="math inline">\(xyz\)</span>，其扩增过后的 <span class="math inline">\(xy^kz\notin L\)</span>，进而说明 <span class="math inline">\(L\)</span> 并非 regular language。</p>
-<h3 id="properties">Properties</h3>
-<p>Closure Properties.</p>
-<ul>
-<li>之前提到的，若 <span class="math inline">\(L_1,L_2\)</span> 是
-regular language，so are <span class="math inline">\(L_1\cup
-L_2,L_1\cdot L_2,L_1^*\)</span></li>
-<li>so are <span class="math inline">\(L_1\cap
-L_2,L_1-L_2,\overline{L}=\Sigma^*-L, L^R\)</span></li>
-<li><span class="math inline">\(h\)</span> is a homomorphism, if <span class="math inline">\(L\)</span> is regular, so is <span class="math inline">\(h(L)\)</span></li>
-</ul>
-<p>Calculation Properties.</p>
-<ul>
-<li><span class="math inline">\(M+N=N+M\)</span>, <span class="math inline">\(L(M+N)=LM+LN\)</span></li>
-<li><span class="math inline">\(L+L=L\)</span>, <span class="math inline">\((L^*)^*=L^*\)</span>, <span class="math inline">\(L^+=LL^*=L^*L\)</span>, <span class="math inline">\(L^*=\epsilon+L^+\)</span></li>
-<li><span class="math inline">\((L+M)^*=(L^*M^*)^*\)</span></li>
-</ul>
-<h3 id="homomorphism">Homomorphism</h3>
-<p><span class="math inline">\(\Sigma\)</span> and <span class="math inline">\(\Gamma\)</span> are two alphabets. Define
-homomorphism <span class="math inline">\(h:\Sigma\to\Gamma^*\)</span>
-such that,</p>
-<ul>
-<li><span class="math inline">\(h(\epsilon)=\epsilon\)</span></li>
-<li>(extend to string) <span class="math inline">\(h(aw)=h(a)\cdot
-h(w)\)</span></li>
-</ul>
-<p>If <span class="math inline">\(L\)</span> is regular then <span class="math inline">\(h(L)=\{h(w)|w\in L\}\)</span> is also regular.</p>
-<p>新的证明模式：若 <span class="math inline">\(M\)</span> 是 <span class="math inline">\(L\)</span> 的 RegEx，定义 <span class="math inline">\(R(M)\)</span> 满足以下条件 (RegEx 的性质) 并说明
-<span class="math inline">\(R(M)\)</span> 所对应的是 <span class="math inline">\(h(L(M))\)</span>。即，通过说明 <span class="math inline">\(h(L(M))\)</span> 存在 RegEx 的形式证明 <span class="math inline">\(h(L(M))\)</span> 本身是 regular language。</p>
-<ul>
-<li><span class="math inline">\(R(\emptyset)=\emptyset\)</span></li>
-<li><span class="math inline">\(R(\epsilon)=\epsilon\)</span></li>
-<li><span class="math inline">\(R(a)=h(a)\)</span> for <span class="math inline">\(a\in \Sigma\)</span></li>
-<li><span class="math inline">\(R(M+N)=R(M)+R(N)\)</span></li>
-<li><span class="math inline">\(R(M\cdot N)=R(M)\cdot R(N)\)</span></li>
-<li><span class="math inline">\(R(M^*)=(R(M))^*\)</span></li>
-</ul>
-<p>Base case. <span class="math inline">\(L(R(\emptyset))=h(L(\emptyset))=\emptyset,
-L(R(\epsilon))=h(L(\epsilon))=\epsilon,
-L(R(a))=h(L(a))=h(a)\)</span>.</p>
-<p>Induction case. 完整的证明应当包括 <span class="math inline">\(M+N,M\cdot N,M^*\)</span>。这里以证明 <span class="math inline">\(M+N\)</span> 为例：若 <span class="math inline">\(L(R(M))=h(L(M))\)</span> 且 <span class="math inline">\(L(R(N))=h(L(N))\)</span>，求证 <span class="math inline">\(L(R(M+N))=h(L(M+N))\)</span>。 <span class="math display">\[
-\begin{aligned}
-L(R(M+N))&amp;=L(R(M)+R(N)) \ \ \text{by definition} \\
-&amp;= L(R(M)) + L(R(N)) \\
-&amp;= h(L(M))+h(L(N)) \\
-&amp;= h(L(M+N))
-\end{aligned}
-\]</span> 注意把握好 regular language 与 RegEx 间的关系。这里就
-implicitly 应用了 <span class="math inline">\(L(M+N)=L(M)+L(N)\)</span>。</p>
+<p>这里 <span class="math inline">\(y^k\)</span> 表示将子串 <span class="math inline">\(y\)</span> 重复 <span class="math inline">\(k\)</span> 次。</p>
+<p>这应该是所有泵引理中最容易证明的一个了：考虑某个能够识别 <span class="math inline">\(L\)</span> 的 DFA，令 <span class="math inline">\(n=|Q|+1\)</span> (<span class="math inline">\(|Q|\)</span> 为该 DFA 的状态数)。对于长度 <span class="math inline">\(\geq n\)</span> 的某个 <span class="math inline">\(w\in
+L\)</span>，根据鸽巢原理我们能够肯定至少存在一个状态 <span class="math inline">\(q_{rep}\)</span>
+被经过了两次。这意味着在转移过程中一定出现了某个环 (<span class="math inline">\(q_{rep}\)</span> 作为该环的扭结)。我们令 <span class="math inline">\(y\)</span> 等于这个环对应的字符串即可。</p>
+<p>所有正则语言都满足泵引理，但也存在满足泵引理的非正则语言。因此泵引理常用来证否：若找到某个长度
+<span class="math inline">\(\geq n\)</span> 的字符串，不存在任意一种
+<span class="math inline">\(xyz\)</span> 的划分方式能使得对于所有 <span class="math inline">\(k\)</span>，<span class="math inline">\(xy^kz\in
+L\)</span>，那么 <span class="math inline">\(L\)</span> 不是正则的。</p>
 <p><br></p>
-<h2 id="context-free-grammars-cfg">Context Free Grammars (CFG)</h2>
-<p>Context-Free Grammars (CFG) 是一种<strong>语法</strong>，通过
-derivation 过程生成对应的 language。</p>
-<ul>
-<li>CFG <span class="math inline">\(G=(V,T,P,S)\)</span>.</li>
-<li><span class="math inline">\(L(G)=\{w\in T^{*}|S\Rightarrow^*_G
-w  \}\)</span>. 即，从 start symbol <span class="math inline">\(S\)</span> 开始，能够 derive 出字符串 <span class="math inline">\(w\in\)</span> terminals <span class="math inline">\(T^*\)</span>.</li>
-<li>If <span class="math inline">\(S\Rightarrow^*_G \alpha\)</span>,
-<span class="math inline">\(\alpha\)</span> is called a
-<strong>sentential form</strong> (without any non-terminals).</li>
-</ul>
-<h3 id="right-linear-grammars">Right-Linear Grammars</h3>
-<p>A CFG is right-linear if all the productions in it are of the
-form,</p>
-<ul>
-<li><span class="math inline">\(A\to wB\)</span> for <span class="math inline">\(B\in V\)</span> and <span class="math inline">\(w\in T^*\)</span>, or</li>
-<li><span class="math inline">\(A\to w\)</span>, for <span class="math inline">\(w\in T^*\)</span></li>
-</ul>
-<p>右线性文法的两个重要性质：</p>
-<ul>
-<li><strong>Every regular language can be generated by some right-linear
-grammar</strong>.</li>
-<li><strong>Language generated by a right-linear grammar is
-regular</strong>.</li>
-</ul>
-<p>证明 <span class="math inline">\(1\)</span>：若 regular language
-<span class="math inline">\(L\)</span> 被 DFA <span class="math inline">\(A=(Q,\Sigma,\delta,q_0,F)\)</span> 识别，根据
-<span class="math inline">\(A\)</span> 一定能构造出 right-linear CFG
-<span class="math inline">\(G\)</span>.</p>
-<ul>
-<li><span class="math inline">\(G=(Q,\Sigma,P,q_0)\)</span></li>
-<li>If <span class="math inline">\(\delta(q,a)=p\)</span>, then there is
-a production in <span class="math inline">\(P\)</span> of the form <span class="math inline">\(q\to ap\)</span>.</li>
-<li>If <span class="math inline">\(q\in F\)</span>, then <span class="math inline">\(q\to \epsilon\)</span>.</li>
-</ul>
-<p>通过一个简单的 induction by length 可以得到 <span class="math inline">\(\hat\delta(q_0,w)\in F \iff q_0\Rightarrow^*_G
-w\)</span>.</p>
-<p>证明 <span class="math inline">\(2\)</span>：给定 right-linear CFG
-<span class="math inline">\(G=(V,\Sigma,P,S)\)</span>，证明 <span class="math inline">\(G\)</span> derive 出的 language <span class="math inline">\(L(G)\)</span> 一定能被某 NFA <span class="math inline">\(A\)</span> 识别。</p>
-<ul>
-<li><span class="math inline">\(A=(V,\Sigma,\delta,S,F)\)</span></li>
-<li>If <span class="math inline">\((A\to aB)\in P\)</span>, then <span class="math inline">\(B\in \delta(A,a)\)</span>.</li>
-<li><span class="math inline">\(F=\{A|(A\to\epsilon)\in
-P\}\)</span>.</li>
-</ul>
-<p>相似的，可证得 <span class="math inline">\(A\Rightarrow_G^* wB \iff
-B\in\hat\delta(A,w)\)</span>，那么有 <span class="math inline">\(S\Rightarrow_G^* w\iff \hat\delta(S,w)\cap F\neq
-\emptyset\)</span>.</p>
-<h3 id="ambiguous-grammars">Ambiguous Grammars</h3>
-<p>在模糊文法中，同一个字符串可能有多种不同的
-derivations。我们可以通过定义 operator precedence 等规则来消除文法中的
-ambiguity。但也存在 inherently ambiguous languages，它对应的文法总是
-ambiguous 的。</p>
+<h2 id="pda">PDA</h2>
+<p>PDA (Push Down Automata)
+下推自动机是一种外置一个无限长的数据栈的有限状态自动机。转移条件不仅与当前读入的字符有关，也与栈顶元素有关。</p>
+<p>转移 <span class="math inline">\((q,\gamma)\in \delta(p,a,X)\)</span>
+表示，当前状态为 <span class="math inline">\(p\)</span>，栈顶元素为
+<span class="math inline">\(X\)</span>；此时读入字符 <span class="math inline">\(a\)</span>；NPDA <em>能够</em> (DPDA
+则是<em>仅能</em>) 转移至状态 <span class="math inline">\(q\)</span>，且
+<span class="math inline">\(X\)</span> 从栈中弹出，<span class="math inline">\(\gamma\)</span> 被压入栈中。</p>
+<p>引入一种新的 notation，瞬时描述 (instantaneous
+description)。它是一个三元组 <span class="math inline">\((q,w,a)\)</span> 表示当前状态为 <span class="math inline">\(q\)</span>，剩余需要读入的字符串为 <span class="math inline">\(w\)</span>，当前栈顶元素为 <span class="math inline">\(a\)</span>。使用 <span class="math inline">\(\vdash\)</span> (单步) 或 <span class="math inline">\(\vdash^*\)</span> 进行转移。</p>
+<hr>
+<p><strong>上下文无关语言 (Context-Free Language) 是能够被 PDA
+识别的语言</strong>。<strong>任意 CFL 都能被上下文无关语法 (Context-Free
+Grammar) 表达</strong>，或者，更准确地说，生成。</p>
+<p>PDA - CFL - CFG 的关系与 DFA - RL - RE 的关系近似。</p>
+<p>同样的，对任意 CFG 都能构造一个等价的空栈 PDA 来识别，对任意 PDA
+都能构造一个等价的 CFG 生成相同的语言。证明见归档笔记，利用了 NPDA
+的非确定性。</p>
+<hr>
+<p>CFG <span class="math inline">\(G\)</span> 由四部分构成，<span class="math inline">\(V\)</span> (变量，variables)，<span class="math inline">\(T\)</span> (终止符，terminals)，<span class="math inline">\(S\)</span> (起始符，start symbol) 与 <span class="math inline">\(P\)</span> (生成规则，production rules，<span class="math inline">\(\to\)</span>)。</p>
+<p><span class="math inline">\(G\)</span> 所生成的 CFL <span class="math inline">\(L(G)=\{w\in T^*|S\Rightarrow^*
+w\}\)</span>。从起始符开始，根据若干生成规则不断转移
+(引入变量，消去变量，引入终止符)，直至生成最终的字符串
+(全由终止符构成，无法再生成)，这一过程被称为<strong>派生
+(derivation)</strong>。显然，派生过程可以用一颗树来描述，该树被称为 CFG
+的<strong>分析树 (parse tree)</strong>，或具体语法树 (concrete syntax
+tree)。</p>
+<p>若同一个字符串存在两种派生方式
+(存在两种形态有异的分析树)，我们说该语法是<strong>歧义的
+(ambiguous)</strong>。</p>
 <p><br></p>
-<h2 id="push-down-automata-pda">Push Down Automata (PDA)</h2>
-<p>下推自动机。带一个容量无限栈 (作为 memory) 的 <span class="math inline">\(\epsilon\)</span>-NFA。</p>
+<h2 id="chomsky-normal-form">Chomsky Normal Form</h2>
+<p>乔姆斯基范式 (Chomsky Normal Form) 是一种特殊的 CFG 范式，它规定该
+CFG
+的<strong>分析树是一颗二叉树</strong>。从生成规则上看，乔姆斯基范式要求每一种生成规则都满足以下形式：</p>
 <ul>
-<li><span class="math inline">\(P=(Q,\Sigma,\Gamma,\delta,q_0,Z_0,F)\)</span></li>
-<li><span class="math inline">\(\Sigma\)</span>: Alphabet set, <span class="math inline">\(\Gamma\)</span>: Stack alphabet set. <span class="math inline">\(Z_0\)</span>: the only initial symbol on the
-stack.</li>
-<li><span class="math inline">\((p,\gamma)\in \delta(q,a,X)\)</span>: in
-state <span class="math inline">\(p\)</span>, reading <span class="math inline">\(a\)</span>, with top of stack being <span class="math inline">\(X\)</span>, the machine's new state is <span class="math inline">\(p\)</span>, <span class="math inline">\(X\)</span>
-is popped and <span class="math inline">\(\gamma\)</span> is pushed. (if
-<span class="math inline">\(\gamma=RS\)</span>, <span class="math inline">\(S\)</span> is pushed first, then <span class="math inline">\(R\)</span>)</li>
-<li>Instantaneous description <span class="math inline">\((q,w,a)\)</span> denotes current state is <span class="math inline">\(q\)</span>, input left to read is <span class="math inline">\(w\)</span>, and <span class="math inline">\(\alpha\)</span> being the top of the stack. <span class="math inline">\((q,aw,X\alpha)\vdash (p, w,\beta\alpha)\)</span>
-if <span class="math inline">\((p, \beta)\in \delta(q, a,X)\)</span>.
-Extend <span class="math inline">\(\vdash\)</span> to <span class="math inline">\(\vdash^*\)</span>.</li>
+<li><span class="math inline">\(A\to BC\)</span> (<span class="math inline">\(A,B,C\)</span> 均为变量 <span class="math inline">\(\in V\)</span>)</li>
+<li><span class="math inline">\(A\to \alpha\)</span> (<span class="math inline">\(A\)</span> 为变量 <span class="math inline">\(\in
+V\)</span>，<span class="math inline">\(\alpha\)</span> 为终止符 <span class="math inline">\(\in T\)</span>)</li>
 </ul>
-<h3 id="equivalent-pdas">Equivalent PDAs</h3>
-<p>PDA 按照不同的 language acceptance 方式分为两种。</p>
+<p>任意 CFG 都能转化为乔姆斯基范式。</p>
+<p>第一步：消除所有空生成 (<span class="math inline">\(\epsilon\)</span>
+productions)，即 <span class="math inline">\(A\to\epsilon\)</span>
+这样的规则。</p>
 <ul>
-<li>By final state: <span class="math inline">\(\{w|(q_0,w,Z_0)\vdash^*(q_f,\epsilon,\alpha),
-\text{ for some }q_f\in F\}\)</span>.</li>
-<li>By empty stack: <span class="math inline">\(\{w|(q_0,w,Z_0)\vdash^*(q,\epsilon,\epsilon)\text{
-for some }q\in Q\}\)</span>.</li>
+<li>去掉所有的 <span class="math inline">\(A\to \epsilon\)</span>
+规则，并把 <span class="math inline">\(A\)</span> 标记为空变量 (nullable
+variables)。</li>
+<li>检查其他的规则，若规则 <span class="math inline">\(B\to s\)</span>
+中，<span class="math inline">\(s\)</span> 包含空变量，则排列的
+(permutation) 删去这些空变量。举个例子 <span class="math inline">\(S\to
+ASA\)</span>，删去后产生四个新规则 <span class="math inline">\(S\to
+ASA|SA|AS|S\)</span>。</li>
 </ul>
-<p>其实这两种 PDA 是等价的。</p>
-<p>From empty-set to final-state PDA - initially put a special symbol
-onto the stack. (give control to empty-set PDA), if ever see the top of
-stack as that symbol (seize control), then go to final state.</p>
-<p>From final-state to empty-set PDA - place a transition from final
-state to a special state which empties the stack.</p>
+<p>第二步：消除所有单元生成 (unit productions)，即 <span class="math inline">\(A\to B\)</span>，<span class="math inline">\(A,B\)</span> 均为变量这样的规则。直接去掉所有的
+<span class="math inline">\(A\to B\)</span> 规则，如果有 <span class="math inline">\(B\to s\)</span>，则添加 <span class="math inline">\(A\to s\)</span>。</p>
+<p>经以上两步，<span class="math inline">\(G\)</span> 中所有的生成规则
+<span class="math inline">\(A\to s\)</span> 都表现成以下两种形式：</p>
 <ul>
-<li>for all <span class="math inline">\(p\in F\)</span> and <span class="math inline">\(Z\in \Gamma\cup\{X_0\}\)</span>, <span class="math inline">\(\delta_E(p,\epsilon,Z)\)</span> contains <span class="math inline">\((p_f,\epsilon)\)</span></li>
-<li>(pop until empty) for all <span class="math inline">\(Z\in
-\Gamma\cup \{X_0\}\)</span>, <span class="math inline">\(\delta_E(p_f,\epsilon,Z)\)</span> contains <span class="math inline">\((p_f,\epsilon)\)</span></li>
+<li><span class="math inline">\(|s|=1\)</span>，此时 <span class="math inline">\(s\)</span> 一定是单个终止符。</li>
+<li><span class="math inline">\(|s|=|s_1s_2...s_n|=n\geq
+2\)</span>，<span class="math inline">\(s_i\)</span>
+是终止符或者变量。</li>
 </ul>
-<h3 id="equivalence-of-cfgs-and-pdas">Equivalence of CFGs and PDAs</h3>
-<p>CFG 和 PDA 本质等价。</p>
-<p>First show how to <em>accept a CFG with an empty-stack PDA</em>
-(easy).</p>
-<p>Given <span class="math inline">\(G=(V,T,P,S)\)</span>, construct
-<span class="math inline">\(PDA=(\{q_0\},\Sigma,\Gamma,\delta,q_0,S,F)\)</span>,
-where</p>
+<p>第三步：把所有生成规则转化为 <span class="math inline">\(A\to
+BC\)</span> 或 <span class="math inline">\(A\to \alpha\)</span>
+的形式。举例来说，给定 <span class="math inline">\(A\to
+s_1s_2...s_n\)</span>，我们从 <span class="math inline">\(i=1\)</span>
+开始逐个进行拆解：</p>
 <ul>
-<li><span class="math inline">\(\Sigma=T\)</span></li>
-<li><span class="math inline">\(\Gamma=V\cup T\)</span></li>
-<li>For all <span class="math inline">\(a\in \Sigma\)</span>, <span class="math inline">\(\delta(q_0,a,a)=\{(q_0,\epsilon)\}\)</span>
-[terminal alphabet is eliminated directly]</li>
-<li>For all <span class="math inline">\(A\in V\)</span>, <span class="math inline">\(\delta(q_0,\epsilon,A)=\{(q_0,\gamma):A\to \gamma
-\text{ in } P\}\)</span> [non-terminal alphabet is substituted]</li>
-</ul>
-<p>Next show <em>each language accepted by an empty-set PDA can be
-accepted by a CFG</em> (hard).</p>
-<p>Given <span class="math inline">\(PDA=(Q,\Sigma,\Gamma,\delta,q_0,Z_0,F)\)</span>,
-construct grammar <span class="math inline">\(G=(V,
-\Sigma,R,S)\)</span>, where</p>
-<ul>
-<li><span class="math inline">\(V=\{S\}\cup\{[qZp]:p,q\in Q,Z\in
-\Gamma\}\)</span></li>
-<li>For each <span class="math inline">\(p\in Q\)</span>, <span class="math inline">\(S\to [q_0Z_0p]\)</span> [in state <span class="math inline">\(q\)</span>, with top of the stack being <span class="math inline">\(Z_0\)</span>, going to state <span class="math inline">\(p\)</span>]</li>
-<li>If <span class="math inline">\(\delta(q,a,X)\)</span> contains <span class="math inline">\((r, Y_1...Y_k)\)</span>, <span class="math inline">\([qXr_k]\to
-a[rY_1r_1][r_1Y_2r_2]...[r_{k-1}Y_kr_k]\)</span>, for all <span class="math inline">\(r_1,r_2,...,r_k\in Q\)</span>. [produce <span class="math inline">\(a\)</span>, but need to get rid of <span class="math inline">\(Y_1...Y_k\)</span> one by one. The actual
-discarding path is permutated.]</li>
-<li>Notice if <span class="math inline">\(k=0\)</span>, <span class="math inline">\([qXr]\to a\)</span></li>
-</ul>
-<p>According to the above definition, <span class="math inline">\([qXr]\)</span> generates <span class="math inline">\(w\)</span> iff <span class="math inline">\((q,w,X)\vdash^*(r, \epsilon,\epsilon)\)</span>
-(stack being emptied), if inducted on number of steps of PDA or
-derivation in the CFG.</p>
-<h3 id="deterministic-pda-dpda">Deterministic PDA (DPDA)</h3>
-<p>与原始定义的 NPDA 不同，DPDA,</p>
-<ul>
-<li>there is at most one element in <span class="math inline">\(\delta(q,a,Z)\)</span></li>
-<li>if <span class="math inline">\(\delta(q,\epsilon,X)\)</span> is
-non-empty, for all <span class="math inline">\(a\in\Sigma\)</span>,
-<span class="math inline">\(\delta(q,a,X)\)</span> is empty.</li>
-</ul>
-<p>三个性质：</p>
-<ul>
-<li>不同于等价的 DFA/NFA，存在能被 NPDA 接受但无法被任何 DPDA
-接受的语言。</li>
-<li>(退化为 DFA/NFA) Every regular language can be accepted by a
-<strong>final-state DPDA</strong>.</li>
-<li>Any language accepted by an <strong>empty-stack DPDA</strong> has
-<strong>prefix property</strong>: For every <span class="math inline">\(x,y\)</span> in the language, <span class="math inline">\(x\)</span> is not a prefix of <span class="math inline">\(y\)</span>. e.g., language <span class="math inline">\(\{a.aa\}\)</span> is not accepted by any
-DPDA.</li>
+<li>若 <span class="math inline">\(s_1\)</span> 是变量，<span class="math inline">\(A\to s_1B_2\)</span></li>
+<li>若 <span class="math inline">\(s_2\)</span> 是变量，<span class="math inline">\(B_2\to s_2B_3\)</span></li>
+<li>以此类推，若 <span class="math inline">\(s_i\)</span> 是变量，<span class="math inline">\(B_i\to s_iB_{i+1}\)</span></li>
+<li>若某个 <span class="math inline">\(s_i\)</span> 是终止符，令 <span class="math inline">\(B_i\to Z_iB_{i+1}\)</span>，其中 <span class="math inline">\(Z_i\to s_i\)</span></li>
 </ul>
 <p><br></p>
-<h2 id="properties-of-cfgs">Properties of CFGs</h2>
-<h3 id="useful-symbols">Useful Symbols</h3>
-<p>三个定义。</p>
-<ul>
-<li>Symbol <span class="math inline">\(A\)</span> is
-<strong>useful</strong> if it appears as <span class="math inline">\(S\Rightarrow ^*_G \alpha A\beta \Rightarrow^*_G
-w\)</span> for some <span class="math inline">\(w\in T^*\)</span>.</li>
-<li>Symbol <span class="math inline">\(A\)</span> is
-<strong>generating</strong> if <span class="math inline">\(A\Rightarrow_G^* w\)</span>, for some <span class="math inline">\(w\in T^*\)</span>.</li>
-<li>Symbol <span class="math inline">\(A\)</span> is
-<strong>reachable</strong> if <span class="math inline">\(S\Rightarrow^*_G \alpha A\beta\)</span>, for some
-<span class="math inline">\(\alpha,\beta \in (V\cup T)^*\)</span>.</li>
-</ul>
-<p>A symbol is useful <em>only if</em> it is reachable and generating
-(vice versa need not be the case).</p>
-<p>因此，给定一个 <span class="math inline">\(G=(V,T,P,S)\)</span> which
-generates at least one string，通过以下两步可以创造一个等价的 (生成的
-language 与 <span class="math inline">\(G\)</span> 相同)
-CFG，且它不包含任何 useless symbols。</p>
-<ul>
-<li>eliminate all symbols (and productions involving these symbols) that
-are non-generating.</li>
-<li>eliminate all symbols (and productions involving these symbols) that
-are non-reachable.</li>
-</ul>
-<h3 id="chomsky-normal-form">Chomsky Normal Form</h3>
-<p><strong>Chomsky Normal Form</strong>: All productions are of the form
-<span class="math inline">\(A\to BC\)</span> or <span class="math inline">\(A\to a\)</span> (where <span class="math inline">\(a\in T\)</span> and <span class="math inline">\(A,B,C\in V\)</span>).</p>
-<p>All CFGs can be converted to Chomsky Normal Form.</p>
-<ul>
-<li>Eliminate <span class="math inline">\(\epsilon\)</span>
-productions.</li>
-<li>Eliminate unit productions.</li>
-<li>Convert all productions into the following forms:
-<ul>
-<li>productions of length <span class="math inline">\(2\)</span>: <span class="math inline">\(A\to BC\)</span> where <span class="math inline">\(B,C\)</span> are non-terminals.</li>
-<li>productions of length <span class="math inline">\(1\)</span>: <span class="math inline">\(A\to a\)</span> where <span class="math inline">\(a\)</span> is a terminal.</li>
-</ul></li>
-</ul>
-<p>首先来看第一步：消除所有 <span class="math inline">\(\epsilon\)</span> productions。重复以下过程，直到
-<span class="math inline">\(G\)</span> 中不存在任何 <span class="math inline">\(\epsilon\)</span> production：</p>
-<ul>
-<li>Identify <strong>nullable</strong> state. e.g., If <span class="math inline">\(A\to\epsilon\)</span>, then <span class="math inline">\(A\)</span> is nullable.</li>
-<li>Remove <span class="math inline">\(\epsilon\)</span> production
-associated to the nullable state. e.g., remove <span class="math inline">\(A\to \epsilon\)</span>.</li>
-<li>For each production <span class="math inline">\(B\to\alpha\)</span>,
-replace it with all possible <span class="math inline">\(B\to\alpha&#39;\)</span> resulted in possibly
-deleting some of the nullable non-terminals. e.g., <span class="math inline">\(S\to ASA|aB|a\)</span> is replaced by <span class="math inline">\(S\to ASA|SA|AS|S|aB|a\)</span>.</li>
-</ul>
-<p>接下来是第二步：消除所有 unit productions。重复以下过程，直到 <span class="math inline">\(G\)</span> 中不存在任何 unit production：</p>
-<ul>
-<li>Identify non-terminal pair. e.g., If <span class="math inline">\(A\to B\)</span>, then <span class="math inline">\((A,B)\)</span> is a pair.</li>
-<li>Remove unit production associated to the pair. e.g., remove <span class="math inline">\(A\to B\)</span>.</li>
-<li>For each <strong>non-unit productions</strong> of the form <span class="math inline">\(B\to \gamma\)</span>, add production <span class="math inline">\(A\to \gamma\)</span>.</li>
-</ul>
-<p>经以上两步处理，<span class="math inline">\(G\)</span> 中所有的
-productions <span class="math inline">\(A\to \alpha\)</span>
-都表现为以下两个形式。</p>
-<ul>
-<li><span class="math inline">\(|\alpha|=1\)</span>，此时 <span class="math inline">\(\alpha\)</span> 一定是 terminal。</li>
-<li><span class="math inline">\(|\alpha|=|\alpha_1\alpha_2...\alpha_n|=n\geq
-2\)</span>，<span class="math inline">\(\alpha_i\)</span> 既可以是
-terminal 又可以是 non-terminal。</li>
-</ul>
-<p>此时我们应用第三步，将第二种形式再进一步化成 <span class="math inline">\(A\to BC\)</span> 且 <span class="math inline">\(B,C\)</span> 均为 non-terminal 的形式：Given
-production <span class="math inline">\(A\to X_1X_2...X_k\)</span> is
-changed to the following set of productions with new non-terminals <span class="math inline">\(B_i,Z_i\)</span>:</p>
-<ul>
-<li><span class="math inline">\(A\to Z_1B_2,\)</span></li>
-<li><span class="math inline">\(B_2\to Z_2B_3,...,\)</span></li>
-<li><span class="math inline">\(B_{k-1}\to Z_{k-1}B_k,\)</span> (two
-non-terminals, the second form)</li>
-<li><span class="math inline">\(Z_i\to X_i\)</span> if <span class="math inline">\(X_i\in T\)</span> (one terminal, the first
-form)</li>
-<li><span class="math inline">\(Z_i=T_i\)</span> if <span class="math inline">\(X_i\in V\)</span></li>
-</ul>
-<p>乔姆斯基范式下的 CFG <span class="math inline">\(G\)</span>
-的优美性质：其 parse tree 是一颗二叉树！若该二叉树的最大深度为 <span class="math inline">\(s\)</span>，<span class="math inline">\(G\)</span>
-所生成语言的 size 是 <span class="math inline">\(O(2^{s-1})\)</span>
-级别的。</p>
-<h3 id="pumping-lemma-for-cfl">Pumping Lemma for CFL</h3>
-<p>Let <span class="math inline">\(L\)</span> be a CFL (Context Free
-Language, languages generated by CFG). Then there exists a constant
-<span class="math inline">\(n\)</span> such that, if <span class="math inline">\(z\)</span> is any string in <span class="math inline">\(L\)</span> such that <span class="math inline">\(|z|\geq n\)</span>, then we can write <span class="math inline">\(z=uvwxy\)</span> such that,</p>
+<h2 id="pumping-lemma-for-cfl">Pumping Lemma for CFL</h2>
+<p>来了！关于上下文无关语言 CFL 的泵引理。</p>
+<p>若 <span class="math inline">\(L\)</span>
+是上下文无关语言，那么存在某常数 <span class="math inline">\(n\)</span>
+使得对于任意长度 <span class="math inline">\(\geq n\)</span> 的字符串
+<span class="math inline">\(z\in
+L\)</span>，我们都能找到一种方式将其分解为 <span class="math inline">\(z=uvwxy\)</span>，并满足：</p>
 <ul>
 <li><span class="math inline">\(|vwx|\leq n\)</span></li>
 <li><span class="math inline">\(vx\neq \epsilon\)</span></li>
-<li>For all <span class="math inline">\(i\geq 0\)</span>, <span class="math inline">\(uv^iwx^iy\in L\)</span>.</li>
+<li>对所有整数 <span class="math inline">\(k\geq 0\)</span>，字符串
+<span class="math inline">\(uv^kwx^ky \in L\)</span></li>
 </ul>
-<p>Proof (所有 pumping lemma 证明的重点都在于重复). Given Chomsky Normal
-Form grammar <span class="math inline">\(G=(V,T,P,S)\)</span> for <span class="math inline">\(L-\{\epsilon\}\)</span>. Let <span class="math inline">\(m=|V|\)</span>. Let <span class="math inline">\(n=2^m\)</span>.</p>
-<p>Suppose a string <span class="math inline">\(z\in L\)</span> of
-length at least <span class="math inline">\(n=2^m\)</span> is given.
-Consider the parse tree for <span class="math inline">\(z\)</span>, it
-must have a path from the root to a leaf of length at least <span class="math inline">\(m+1\)</span> (完全二叉树深度最小，但仍有 <span class="math inline">\(m+1\)</span>).</p>
-<p>In this path, among the last <span class="math inline">\(m+1\)</span>
-non-terminals, <strong>there must be two non-terminals which are the
-same</strong> (by pigeonhole principle).</p>
+<p>这一泵引理证明起来就有点复杂了。给定 CFG <span class="math inline">\(G=(V,T,P,S)\)</span> 且 <span class="math inline">\(L(G)=L\)</span>。令 <span class="math inline">\(m=|V|\)</span> (变量数)，<span class="math inline">\(n=2^m\)</span>。</p>
+<p>考虑一个长度 <span class="math inline">\(&gt;n=2^m\)</span> 的字符串
+<span class="math inline">\(z\in
+L\)</span>，它的分析树中一定至少存在一条从根到叶的路径，其长度 <span class="math inline">\(\geq m+1\)</span>
+(即使分析树是完全二叉树，此时深度最小，为 <span class="math inline">\(m+1\)</span>)。</p>
+<p>考虑这一路径上的后 <span class="math inline">\(m+1\)</span> 个变量
+(从底部往上数)，根据鸽巢原理，其中至少存在一对同样的变量，记为 <span class="math inline">\(A\)</span>。</p>
 <figure>
 <img data-src="PL_figure.png" alt="repetition: A\Rightarrow^* A">
 <figcaption aria-hidden="true">repetition: <span class="math inline">\(A\Rightarrow^* A\)</span></figcaption>
 </figure>
-<p>Then, <span class="math inline">\(z=uvwxy\)</span>, where <span class="math inline">\(S\Rightarrow ^*_G uAy \Rightarrow _G^* uvAxy
-\Rightarrow uvwxy\)</span>.</p>
+<p>见上图，我们按照这种方式进行分割 <span class="math inline">\(S\Rightarrow_G^* uAy\Rightarrow^*_G
+uvAxy\Rightarrow_G^* uvwxy\)</span>。</p>
 <ul>
-<li>Thus, we have <span class="math inline">\(A\Rightarrow ^*_G
-vAx,A\Rightarrow_G^* w\)</span></li>
-<li>Thus, <span class="math inline">\(A\Rightarrow_G^*v^iAx^i\Rightarrow_G^*
-v^iwx^i\)</span></li>
-<li>Thus, <span class="math inline">\(S\Rightarrow_G^*
-uAy\Rightarrow_G^*uv^iwx^iy\)</span> for all <span class="math inline">\(i\)</span> [condition 3]</li>
-</ul>
-<p>Since <span class="math inline">\(A\)</span> is a subtree of <span class="math inline">\(S\)</span>, the length of <span class="math inline">\(vwx\)</span> is at most <span class="math inline">\(2^m=n\)</span> [condition 1] Since <span class="math inline">\(G\)</span> is in Chomsky Normal Form, it does not
-have any unit productions or <span class="math inline">\(\epsilon\)</span> productions. Therefore, as <span class="math inline">\(A\Rightarrow_G^* vAx\)</span>, <span class="math inline">\(vx\neq \epsilon\)</span> [condition 2]</p>
-<h3 id="closure-properties">Closure Properties</h3>
-<p><strong>Substitution</strong> (类似 homomorphism).</p>
-<p>Consider mapping each terminal <span class="math inline">\(a\)</span>
-to a CFL <span class="math inline">\(L_a\)</span>, <span class="math inline">\(s(a)=L_a\)</span>. For a string <span class="math inline">\(w\)</span>, define <span class="math inline">\(s(w)\)</span> as follows:</p>
-<ul>
-<li><span class="math inline">\(s(\epsilon)=\{\epsilon\}\)</span></li>
-<li><span class="math inline">\(s(wa)=s(w)\times s(a)\)</span>, for
-<span class="math inline">\(a\in\Sigma, w\in \Sigma^*\)</span></li>
-</ul>
-<p>If <span class="math inline">\(L\)</span> is CFL over <span class="math inline">\(\Sigma\)</span> and <span class="math inline">\(s\)</span> is a substitution on <span class="math inline">\(\Sigma\)</span> such that <span class="math inline">\(s(a)=L_a\)</span> is CFL for each <span class="math inline">\(a\in\Sigma\)</span>. Then, <span class="math inline">\(\cup_{w\in L}s(w)\)</span> is a CFL
-(证明很简单，把原 <span class="math inline">\(P\)</span> 中所有的 <span class="math inline">\(A\to a\)</span> 替换成 <span class="math inline">\(A\to S_a\)</span>：<span class="math inline">\(S_a\)</span> 是 <span class="math inline">\(L_a\)</span> 对应的 starting state).</p>
-<p><strong>Reversal</strong>.</p>
-<p>If <span class="math inline">\(L\)</span> is CFL, then <span class="math inline">\(L^R\)</span> is CFL (将原 <span class="math inline">\(P\)</span> 中所有的 <span class="math inline">\(A\to \alpha\)</span> 替换成 <span class="math inline">\(A\to\alpha^R\)</span>)</p>
-<p><strong>Union</strong>.</p>
-<p>If <span class="math inline">\(L\)</span> is CFL and <span class="math inline">\(R\)</span> is regular, then <span class="math inline">\(L\cap R\)</span> is CFL.</p>
-<p>证明：parallel simulation of PDA for <span class="math inline">\(L\)</span> and DFA for <span class="math inline">\(R\)</span>.</p>
-<ul>
-<li>For <span class="math inline">\(Z\in \Gamma,p\in Q,q\in
-Q&#39;\)</span>, <span class="math inline">\(\delta&#39;&#39;((p,q),\epsilon,Z)=\delta(p,\epsilon,Z)\times
-\{q\}\)</span></li>
-<li>For <span class="math inline">\(a\in\Sigma,Z\in \Gamma,p\in Q,q\in
-Q&#39;\)</span>: <span class="math inline">\(\delta&#39;&#39;((p,q),a,Z)=\delta(p,a,Z)\times
-\{\delta&#39;(q,a)\}\)</span></li>
-</ul>
-<p>注意<strong>一定是 CFL <span class="math inline">\(\cap\)</span>
-RL，不能是 CFL <span class="math inline">\(\cap\)</span>
-CFL</strong>。例如，<span class="math inline">\(L_1=\{a^nb^nc^m:m,n\geq
-1\}\)</span> 与 <span class="math inline">\(L_2=\{a^mb^nc^n:m,n\geq
-1\}\)</span> 均是 CFL (忽略 <span class="math inline">\(m\)</span>，判断
-<span class="math inline">\(n=n\)</span>)，但 <span class="math inline">\(L_3=L_1\cap L_2=\{a^nb^nc^n:n\geq 1\}\)</span>
-不是 context free 的 (单栈 PDA
-只能处理两个长度相等的符号，三个就不行了)。</p>
-<p><strong>Empty</strong>.</p>
-<p>A CFL is <span class="math inline">\(\emptyset\)</span> if <span class="math inline">\(S\)</span> is a useless symbol. Otherwise it is
-non-empty.</p>
-<h3 id="cyk-algorithm">CYK Algorithm</h3>
-<p>CYK 算法 (<em>Cocke-Younger-Kasami</em> algorithm) 用于 CFL 的
-membership testing (判断某个字串 <span class="math inline">\(w\)</span>
-是否属于给定的 CFL <span class="math inline">\(L\)</span>)。它是一个
-<span class="math inline">\(O(n^3)\)</span> 的 DP 算法。</p>
-<p>将 <span class="math inline">\(L\)</span> 化为 Chomsky Normal
-Form。对于 <span class="math inline">\(w=a_1...a_n\)</span>，定义 <span class="math inline">\(X_{i,j}\)</span> 为所有能生成 <span class="math inline">\(a_ia_{i+1}...a_j\)</span> 的 non-terminals。</p>
-<ul>
-<li>Base case. <span class="math inline">\(X_{i,i}\)</span> is the set
-of non-terminals which generate <span class="math inline">\(a_i\)</span>.</li>
-<li>Induction step. <span class="math inline">\(X_{i,j}\)</span>
-contains all <span class="math inline">\(A\)</span> such that <span class="math inline">\(A\to BC\)</span> and <span class="math inline">\(B\in X_{i,k}, C\in X_{k+1,j}\)</span>, for <span class="math inline">\(i\leq k&lt;j\)</span>.</li>
-</ul>
-<p><span class="math inline">\(w=a_1...a_n\)</span> is in the language
-iff <span class="math inline">\(X_{1,n}\)</span> contains <span class="math inline">\(S\)</span>.</p>
-<p><br></p>
-<h2 id="turing-machine-some-concepts">Turing Machine: Some Concepts</h2>
-<p>Turing Machine <span class="math inline">\(M=(Q,\Sigma,\Gamma,\delta,q_0,B,F)\)</span></p>
-<ul>
-<li><span class="math inline">\(\Sigma\)</span>: input alphabet set.
-<span class="math inline">\(\Gamma\)</span>: tape alphabet. <span class="math inline">\(\Sigma\subseteq \Gamma\)</span>.</li>
-<li><span class="math inline">\(\delta: Q\times \Gamma \to Q\times
-\Gamma\times \{L,R\}\)</span> (state, read <span class="math inline">\(\to\)</span> new_state, write, move
-left/right)</li>
-<li><span class="math inline">\(B\)</span>: blank symbol, <span class="math inline">\(B\in \Gamma-\Sigma\)</span></li>
-<li><span class="math inline">\(F\)</span>: set of final states. <span class="math inline">\(F\subseteq Q\)</span></li>
-</ul>
-<p>Instantaneous Description. <span class="math inline">\(x_0x_1,...,x_{n-1}qx_nx_{n+1}...x_m\)</span>
-(无限长纸带，读写头对应的状态)</p>
-<p>TM accepts <span class="math inline">\(x\)</span> iff <span class="math inline">\(q_0 x \vdash^* \alpha q_f\beta\)</span>
-(只要在转移过程中能够到达 <span class="math inline">\(q_f\in
-F\)</span>，纸带上的字符串 <span class="math inline">\(x\)</span>
-即可视为被对应的图灵机接受；<strong>与 DFA/PDA 不同，不需要 consume
-<span class="math inline">\(x\)</span> 中的所有字符</strong>)。<span class="math inline">\(L(M)=\{x|q_0 x \vdash^* \alpha q_f \beta, q_f\in
-F\}\)</span>.</p>
-<p>Function computed by Turing Machine.</p>
-<ul>
-<li>Machine <strong>halts</strong> on input <span class="math inline">\(x\)</span> iff <span class="math inline">\(f(x)\)</span> is defined.</li>
-<li><span class="math inline">\(f(x)\)</span> 是图灵机在输入 <span class="math inline">\(x\)</span> 上停机后纸带上的结果。</li>
-<li>This reveals that machine <em>may</em> never halt.</li>
-</ul>
-<p>Coding of Turing Machine. Since Turing machines can be represented by
-finite descriptions (such as code or a set of rules), it is possible to
-enumerate them in an ordered way.</p>
-<p><strong>Church-Turing Thesis</strong>. Whatever can be computed by an
-algorithmic device (in function computation sense, or language
-acceptance sense), can be done by a Turing Machine.</p>
-<h3 id="semi-infinite-tape-tm">Semi-Infinite-Tape TM</h3>
-<p>想象一下把纸带对折，以最左边的 cell 为界，纸带被分为 upper track 与
-lower track。显然，lower track
-中的「往右」实际上对应着原纸带中的「往左」。</p>
-<p>Turing machines with semi-infinite tape are equivalent to standard
-Turing machines.</p>
-<p>对 standard TM 的 simulation 如下 (新增 <span class="math inline">\(U,D\)</span> 标记 upper track, lower/down
-track)：</p>
-<p>Initialization. <span class="math inline">\(\delta(q_S,(X,B))=((q_0,U),(X,*),S)\)</span>: From
-<span class="math inline">\(q_S\)</span>, read <span class="math inline">\((X,B)\)</span>, goes to state <span class="math inline">\((q_0,U)\)</span> [<span class="math inline">\(q_0\)</span> on upper track], write <span class="math inline">\(X\)</span> on upper track, <span class="math inline">\(*\)</span> on lower track, do not move.</p>
-<p>Simulation. Below <span class="math inline">\(X,Z\in \Gamma\)</span>
-and <span class="math inline">\(m\in\{L,R\}\)</span>.</p>
-<ul>
-<li>If <span class="math inline">\(\delta(q,X)=(q&#39;,Y,m)\)</span>
-[不在分界线上]
-<ul>
-<li>upper track. <span class="math inline">\(\delta&#39;((q,U),(X,Z))=((q&#39;,U),(Y,Z),m)\)</span>
-[rewrite <span class="math inline">\(X\)</span> to <span class="math inline">\(Y\)</span> if on upper track]</li>
-<li>lower track. <span class="math inline">\(\delta&#39;((q,D),(Z,X))=((q&#39;,D),(Z,Y),
-\overline{m})\)</span> [rewrite <span class="math inline">\(X\)</span>
-to <span class="math inline">\(Y\)</span> if on lower track]</li>
-</ul></li>
-<li>If <span class="math inline">\(\delta(q,X)=(q&#39;,Y,R)\)</span>
-[lower track 上的分界线]
-<ul>
-<li><span class="math inline">\(\delta&#39;((q,U),(X,*))=((q&#39;,U),(Y,*),R)\)</span></li>
-<li><span class="math inline">\(\delta&#39;((q,D),(X,*))=((q&#39;,U),(Y,*),R)\)</span></li>
-</ul></li>
-<li>If <span class="math inline">\(\delta(q,X)=(q&#39;,Y,L)\)</span>
-[upper track 上的分界线]
-<ul>
-<li><span class="math inline">\(\delta&#39;((q,U),(X,*))=((q&#39;,D),(Y,*),L)\)</span></li>
-<li><span class="math inline">\(\delta&#39;((q,D),(X,*))=((q&#39;,D),(Y,*),L)\)</span></li>
-</ul></li>
-</ul>
-<h3 id="multi-tapes-tm">Multi-Tapes TM</h3>
-<p><span class="math inline">\(k\)</span> 个无限长纸带，<span class="math inline">\(k\)</span> 个读写头，<span class="math inline">\(\delta:(Q\backslash F)\times \Gamma^k \to Q\times
-\Gamma^k \times \{L,R\}^k\)</span>.</p>
-<p>This model intuitively seems much more powerful than the single-tape
-model, but any multi-tape machine—no matter how many tapes—can be
-simulated by a single-tape machine using quadratically more
-computation.</p>
-<h3 id="nondeterministic-tm">Nondeterministic TM</h3>
-<p>在非确定性图灵机中，<span class="math inline">\(\delta(q,a)\)</span>
-成为一个集合 (a finite set of possibilities)。</p>
-<p>修改 Instantaneous Description 的定义：For any current ID, there
-maybe finite number of possible next ID. <span class="math inline">\(x\)</span> is accepted by non-deterministic TM iff
-there exists an accepting state <span class="math inline">\(q_f\)</span>
-such that <span class="math inline">\(q_0 x\vdash^* \alpha q_f
-\beta\)</span>.</p>
-<p>与 DFA/NFA 相同，DTM simulates NTM；其通过 BFS 遍历 NTM 的
-computation tree 直到找到对应的接受路径。因此一般而言，与 NTM 等价的 DTM
-的计算复杂度是 exponential 级别的。</p>
-<h3 id="recursive-enumerable-language">Recursive Enumerable
-Language</h3>
-<ul>
-<li><span class="math inline">\(L\)</span> is <em>recursively
-enumerable</em> (RE), or <em>computably enumerable</em> (CE), if some TM
-accepts the language <span class="math inline">\(L\)</span>.</li>
-<li>A language <span class="math inline">\(L\)</span> is
-<em>recursive</em>, or <em>decidable</em>, if some TM accepts the
-language <span class="math inline">\(L\)</span>, and <strong>halts on
-all the inputs</strong>.</li>
-<li>A function <span class="math inline">\(f\)</span> is <em>partial
-recursive</em>, or <em>partially computable</em>, if some TM computes
-the function (if halts on all the inputs on which <span class="math inline">\(f\)</span> is defined, and it does not halt on
-inputs on which <span class="math inline">\(f\)</span> is not
-defined).</li>
-<li>A function <span class="math inline">\(f\)</span> is
-<em>recursive</em>, or <em>computable</em>, if some Turing Machine
-computes the function, and <span class="math inline">\(f\)</span> is
-defined on all elements of <span class="math inline">\(\Sigma^*\)</span>
-(图灵机一定会停机).</li>
-</ul>
-<p>Construct a Non-RE Language (<strong>Diagonal Language</strong>)
-<span class="math inline">\(L_d=\{w_i:w_i\notin L(M_i)\}\)</span>. Here,
-all Turing Machines are listed in order <span class="math inline">\(M_0,M_1,M_2,...\)</span></p>
-<p>Define <span class="math inline">\(L_u\)</span> (<strong>Universal
-Language</strong>) as <span class="math inline">\(L_u=\{(M,w):M \text{
-accepts } w\}\)</span>. Then, <span class="math inline">\(\overline{L_u}\)</span> is also non-RE. Proof:
-<span class="math inline">\(\overline{L_u}=\{(M,w): M \text{ does not
-accept } w\}\)</span>, therefore if there is a TM <span class="math inline">\(M\)</span> accepting <span class="math inline">\(\overline{L_u}\)</span>, we can construct a TM
-<span class="math inline">\(M&#39;\)</span> accepting <span class="math inline">\(L_d\)</span> using <span class="math inline">\(M\)</span> as a subroutine.</p>
-<p>Theorem 1. If <span class="math inline">\(L\)</span> is recursive,
-then <span class="math inline">\(\overline{L}\)</span> is recursive.</p>
-<ul>
-<li>WLOG assume Turing Machine <span class="math inline">\(M\)</span>
-accepts <span class="math inline">\(L\)</span>, and there is only one
-accepting state.</li>
-<li>Create a new state <span class="math inline">\(q_{new}\)</span>.</li>
-<li>Construct <span class="math inline">\(M&#39;\)</span> accepting
-<span class="math inline">\(\overline{L}\)</span> as follows: for any
-non-accepting state <span class="math inline">\(q\)</span> and any
-letter <span class="math inline">\(a\)</span>, if <span class="math inline">\(\delta(q,a)\)</span> is not defined in <span class="math inline">\(M\)</span>, then let <span class="math inline">\(\delta(q,a)=q_{new}\)</span>. Other transitions in
-<span class="math inline">\(M&#39;\)</span> are as in <span class="math inline">\(M\)</span>.</li>
-<li>Finally, let <span class="math inline">\(q_{new}\)</span> to be the
-only accepting state in <span class="math inline">\(M&#39;\)</span>.</li>
-</ul>
-<p>Theorem 2. <span class="math inline">\(L\)</span> is recursive iff
-<span class="math inline">\(L\)</span> is RE and <span class="math inline">\(\overline{L}\)</span> is RE.</p>
-<p><span class="math inline">\(\Rightarrow\)</span> part: Since <span class="math inline">\(L\)</span> is recursive, <span class="math inline">\(\overline{L}\)</span> is also recursive (Theorem
-1), therefore <span class="math inline">\(L\)</span> and <span class="math inline">\(\overline{L}\)</span> are both RE.</p>
-<p><span class="math inline">\(\Leftarrow\)</span> part: Suppose <span class="math inline">\(M\)</span> accepts <span class="math inline">\(L\)</span> and <span class="math inline">\(M&#39;\)</span> accepts <span class="math inline">\(\overline{L}\)</span>. Construct <span class="math inline">\(M&#39;&#39;\)</span> as follows:</p>
-<ul>
-<li><span class="math inline">\(M&#39;&#39;(x)\)</span> copies <span class="math inline">\(x\)</span> into two different tapes.</li>
-<li>Then it runs parallel simulation - <span class="math inline">\(M(x)\)</span> on the first tape, <span class="math inline">\(M&#39;(x)\)</span> on the second tape.</li>
-<li>If at any point <span class="math inline">\(M(x)\)</span> accepts,
-then <span class="math inline">\(M&#39;&#39;\)</span> accepts. If <span class="math inline">\(M&#39;(x)\)</span> accepts, then <span class="math inline">\(M&#39;&#39;\)</span> <strong>halts</strong> and
-rejects.</li>
+<li>条件一：<span class="math inline">\(A\)</span> 是 <span class="math inline">\(S\)</span> 的深为 <span class="math inline">\(m+1\)</span> 的子树，其叶子数量 (<span class="math inline">\(|vwx|\)</span>) 不会超过 <span class="math inline">\(2^m=n\)</span></li>
+<li>条件二：<span class="math inline">\(A\)</span> 子树非空，一定能保证
+<span class="math inline">\(vx\neq \epsilon\)</span></li>
+<li>条件三：既然有 <span class="math inline">\(A\Rightarrow_G^*
+vAx\)</span> 且 <span class="math inline">\(A\Rightarrow_G^*
+w\)</span>，先不断使用式一 <span class="math inline">\(A\Rightarrow_G^*
+v^kAx^k\)</span>，再使用式二 <span class="math inline">\(v^kAx^k\Rightarrow_G^* v^kwx^k\)</span>。于是有
+<span class="math inline">\(S\Rightarrow_G^* uAy\Rightarrow_G^*
+uv^kwx^ky\)</span>；既然该字符串能被 <span class="math inline">\(G\)</span> 产生，它同样属于原 CFL <span class="math inline">\(L\)</span>。</li>
 </ul>
 <p><br></p>
-<h2 id="universal-turing-machine">Universal Turing Machine</h2>
-<p>Universal Turing Machine (UTM) accepts <strong>Universal
-Language</strong> <span class="math inline">\(L_u=\{(M,w):M\text{
-accepts }w\}\)</span>.</p>
-<p>先引入 Turing Machine 的 coding scheme:</p>
-<ul>
-<li>Denote tape symbols as <span class="math inline">\(X_1,X_2,...,X_s\)</span> (e.g., <span class="math inline">\(X_1\)</span> for 0, <span class="math inline">\(X_2\)</span> for 1, <span class="math inline">\(X_3\)</span> for blank)</li>
-<li>Denote directions as <span class="math inline">\(L=D_1,R=D_2\)</span></li>
-<li>Encode a transition <span class="math inline">\(\delta(q_i,X_j)=(q_k,X_l,D_m)\)</span> as <span class="math inline">\(0^i10^j10^k10^l10^m\)</span></li>
-<li>Encode the TM as <span class="math inline">\(C_111C_211C_3...C_n\)</span> where <span class="math inline">\(C_i\)</span> is the <span class="math inline">\(i\)</span>-th transition.</li>
-</ul>
-<p>为使输入字符串 <span class="math inline">\(w\)</span> 与 <span class="math inline">\(M\)</span> 的编码一致，同样将 <span class="math inline">\(w\)</span> 按照上述方式 (1 与 3) 编码：<span class="math inline">\(10^1\)</span> for 0, <span class="math inline">\(10^2\)</span> for 1, <span class="math inline">\(10^3\)</span> for blank。</p>
-<p>UTM has the following tapes.</p>
-<ul>
-<li><strong>Input tape</strong>: <span class="math inline">\(M\#w\)</span></li>
-<li><strong>Working tape</strong>: initialized with encoded <span class="math inline">\(w\)</span>. read-write head on this tape always
-points to <span class="math inline">\(1\)</span></li>
-<li><strong>State tape</strong>: initialized with <span class="math inline">\(0\)</span> (represent starting state <span class="math inline">\(q_1\)</span>)</li>
-<li><strong>Scratch tape</strong></li>
-</ul>
-<p>UTM simulates <span class="math inline">\(M(x)\)</span> as
-follows.</p>
-<ul>
-<li>Suppose the State tape has <span class="math inline">\(0^i\)</span>.</li>
-<li>Suppose the head on the Working tape is at the start of <span class="math inline">\(10^j1\)</span>.</li>
-<li>Search the code of <span class="math inline">\(M\)</span> on the
-Input tape of the form <span class="math inline">\(0^i10^j10^k10^l10^m\)</span>, where on both sides
-we have either blanks or <span class="math inline">\(11\)</span>.</li>
-<li>Change the content of State tape to <span class="math inline">\(0^k\)</span> (done using copying).</li>
-<li>Change the string from <span class="math inline">\(10^j1\)</span> to
-<span class="math inline">\(10^k1\)</span> on the Working tape. (mark
-the current <span class="math inline">\(1\)</span> to a special symbol
-<span class="math inline">\(*\)</span>, copy the content into Scratch
-tape - instead of copying the portion <span class="math inline">\(*0^j1\)</span>, write <span class="math inline">\(*0^k1\)</span>, then copy the Scratch tape back to
-the Working tape)</li>
-<li>Revert the special symbol <span class="math inline">\(*\)</span> to
-<span class="math inline">\(1\)</span>, move the head on the Working
-tape to the previous or next <span class="math inline">\(1\)</span>
-depending on the value of <span class="math inline">\(m\)</span>.</li>
-</ul>
-<p>When <span class="math inline">\(M\)</span> halts, UTM can tell if it
-is in the single accepting state and so moves to an accepting state of
-its own.</p>
+<h2 id="turing-machine">Turing Machine</h2>
+<p>来到最强大的通用计算模型图灵机 (Turing Machine) 了。</p>
+<p>无限长的纸带 (tape)，读写头 (read-write head)
+在该纸带上进行转移。转移方程如下：<span class="math inline">\(\delta(p,\alpha)=(q,
+\beta,L/R)\)</span>。意义为：图灵机在状态 <span class="math inline">\(p\)</span>，当前读到的字符为 <span class="math inline">\(\alpha\)</span>；那么图灵机转移到状态 <span class="math inline">\(q\)</span>，读写头将当前单元的字符 <span class="math inline">\(\alpha\)</span> 更改为 <span class="math inline">\(\beta\)</span>，读写头向左/右移动一个单元。</p>
+<p>读写头若到达任意接受状态 (accepting
+state)，纸带上的字符串被视为接受。与 DFA/PDA
+不同，图灵机不要求访问纸带上的所有字符 (前两个自动机均要求 consume
+输入字符串的所有字符)。这一特性决定了图灵机可能在转移过程中陷入死循环，即，不<strong>停机
+(halt)</strong>。</p>
+<p>图灵机的瞬时描述 (instantaneous description)：<span class="math inline">\(x_0x_1...x_{n-1}qx_n...x_m\)</span>。实际上就是把图灵机的状态
+<span class="math inline">\(q\)</span> 插入纸带的内容 <span class="math inline">\(x_0x_1...x_m\)</span> 里！其实挺形象的。</p>
+<p>图灵机存在许多变种：半无限带式图灵机 (semi-infinite tape
+TM)，多带图灵机 (multi-tape TM)，非确定性图灵机 (nondeterministic
+TM)；但它们在语言识别意义上均与单带确定性图灵机等价
+(区别在于时空复杂度)。</p>
+<hr>
+<p><strong>通用图灵机 (Universal TM)</strong> 是能够识别<strong>通用语言
+(Universal Language)</strong> <span class="math inline">\(L_u=\{(M,w):M\text{ accepts } w\}\)</span>
+的图灵机。输入模式为 <span class="math inline">\(M\#w\)</span>。</p>
+<p>这里要涉及一个概念，<strong>图灵机的编码 (coding
+scheme)</strong>。简单理解就是把图灵机编码成一个字符串；我们甚至可以通过遍历所有字符串来列举所有图灵机。</p>
+<p>通用图灵机所做的只是 simulate <span class="math inline">\(M(w)\)</span>，若 <span class="math inline">\(M\)</span> 接受 <span class="math inline">\(w\)</span>，通用图灵机也接受。</p>
 <p><br></p>
 <h2 id="decidability">Decidability</h2>
-<h3 id="reduction">Reduction</h3>
-<p><span class="math inline">\(P_1\)</span> reduces to <span class="math inline">\(P_2\)</span> (<span class="math inline">\(P_1\leq
-_m P_2\)</span>) if some recursive function <span class="math inline">\(f\)</span> behaves as follows: <span class="math inline">\(x\in P_1\)</span> iff <span class="math inline">\(f(x)\in P_2\)</span>.</p>
-<p>Some properties:</p>
+<p>几个概念。</p>
 <ul>
-<li>If <span class="math inline">\(P_2\)</span> is recursive, then so is
-<span class="math inline">\(P_1\)</span></li>
-<li>If <span class="math inline">\(P_2\)</span> is RE, then so is <span class="math inline">\(P_1\)</span></li>
-<li>If <span class="math inline">\(P_1\)</span> is undecidable, then so
-is <span class="math inline">\(P_2\)</span></li>
-<li>If <span class="math inline">\(P_1\)</span> is non-RE, then so is
-<span class="math inline">\(P_2\)</span></li>
+<li>递归可枚举语言 (Recursively Enumerable Language)
+是能<strong>被图灵机识别的语言</strong>。</li>
+<li>递归语言 (Recursive Language)，或可判定语言 (Decidable
+Language)，是能<strong>被图灵机识别，且在所有输入上都能停机的语言</strong>。</li>
+<li>部分递归函数 (Partial Recursive Function) <span class="math inline">\(f\)</span> — 很明显 TM 是一个函数，输入是 TM
+处理前的纸带，输出是 TM 处理后的纸带 — 是能被图灵机计算，且该图灵机在
+<span class="math inline">\(f\)</span> 的定义域上停机，在 <span class="math inline">\(f\)</span> 的定义域外不停机的函数。</li>
+<li>递归函数 (Recursive Function) <span class="math inline">\(f\)</span>
+— 是能被图灵机计算，且该图灵机在所有输入上都停机的函数。</li>
 </ul>
-<h3 id="tms-accepting-empty-set">TMs accepting empty set</h3>
-<p>Let <span class="math inline">\(L_e=\{M:L(M)=\emptyset\}\)</span>,
-<span class="math inline">\(L_{ne}=\{M:L(M)\neq
-\emptyset\}\)</span>.</p>
+<p>显然，比起递归可枚举，递归是一个更强的约束。</p>
+<p>一些有趣的结论：<strong>对角语言 (Diagonal Language)</strong> <span class="math inline">\(L_d=\{w_i:w_i\notin L(M_i)\}\)</span>
+(注意，字符串可以被列举，图灵机的编码也可以被列举) 是 non-RE
+语言。通用语言的补 <span class="math inline">\(\overline{L_u}=\{(M,w):M\text{ doesn&#39;t accept
+}w\}\)</span> 也是 non-RE 语言。非空图灵机语言 <span class="math inline">\(L_{ne}=\{M:L(M)\neq \emptyset\}\)</span> 是 RE
+语言，但空图灵机语言 <span class="math inline">\(L_e=\{M:L(M)=\emptyset\}\)</span> 是 non-RE
+语言：这意味着我们无法判断一个给定的图灵机是否为空 (empty language
+problem)。</p>
+<hr>
+<p>规约 (Reduction)：<span class="math inline">\(P_1\)</span> 规约为
+<span class="math inline">\(P_2\)</span> (表记 <span class="math inline">\(P_1\leq_m P_2\)</span>) 若存在某个递归函数 <span class="math inline">\(f\)</span> 满足 <span class="math inline">\(x\in
+P_1\)</span> 当且仅当 <span class="math inline">\(f(x)\in
+P_2\)</span>。规约关系说明了：</p>
 <ul>
-<li>Theorem: <span class="math inline">\(L_{ne}\)</span> is RE (存在 TM
-只接受 non-empty TMs).</li>
-<li>Theorem: <span class="math inline">\(L_e\)</span> is not
-recursive.</li>
-<li>Corollary: <span class="math inline">\(L_e\)</span> is not RE
-(<strong>不存在 TM 只接受 empty TMs</strong>).</li>
+<li>如果 <span class="math inline">\(P_2\)</span> 是递归的，<span class="math inline">\(P_1\)</span> 也是递归的</li>
+<li>如果 <span class="math inline">\(P_2\)</span> 是递归可枚举的，<span class="math inline">\(P_1\)</span> 也是</li>
+<li>如果 <span class="math inline">\(P_1\)</span> 是不可判定的，<span class="math inline">\(P_2\)</span> 也是</li>
+<li>如果 <span class="math inline">\(P_1\)</span> 不是递归可枚举的
+(non-RE)，<span class="math inline">\(P_2\)</span> 也不是</li>
 </ul>
-<p>Proof of <span class="math inline">\(L_{ne}\)</span> is RE: Construct
-<span class="math inline">\(M&#39;\)</span> to accept <span class="math inline">\(M\)</span> that <span class="math inline">\(L(M)\neq \emptyset\)</span>. <span class="math display">\[
-\begin{aligned}
-&amp;\text{For } t=0\text{ to }\infty \\
-&amp;\text{For }i=0 \text{ to } t \\
-&amp; \ \ \ \ \ \ \ \text{If } M(w_i) \text{ accepts within } t \text{
-steps, then accept. } \\
-&amp;\text{Endfor} \\
-&amp;\text{Endfor}
-\end{aligned}
-\]</span> Step 上界 <span class="math inline">\(t\)</span> 的引入保证
-<span class="math inline">\(M&#39;\)</span> 在输入某个 <span class="math inline">\(L(M)\neq \emptyset\)</span> 的 <span class="math inline">\(M\)</span> 时不会陷入无限循环。</p>
-<p>Proof of <span class="math inline">\(L_e\)</span> is not RE: Reduce
-<span class="math inline">\(\overline{L_u}\)</span> to <span class="math inline">\(L_e\)</span>. Given the input <span class="math inline">\(M\#w\)</span>, construct a
-<strong>non-input</strong> TM <span class="math inline">\(M&#39;\)</span> (没有输入，或者说输入 <span class="math inline">\(x\)</span> 不影响输出) <span class="math display">\[
-\begin{aligned}
-&amp; M&#39;(x) \ \ (x \text{ is not involved}) \\
-&amp;\text{For }t=0 \text{ to } \infty \\
-&amp; \ \ \ \ \ \ \ \text{If } M(w) \text{ accepts within } t \text{
-steps, then accept. } \\
-&amp;\text{Endfor} \\
-&amp;\text{End } M&#39;
-\end{aligned}
-\]</span> 注意 <span class="math inline">\(M&#39;\)</span>
-这一图灵机是否接受输入 <span class="math inline">\(x\)</span> 与 <span class="math inline">\(x\)</span> 本身无关；它仅与 <span class="math inline">\(w\in L(M)\)</span> 有关。</p>
+<p>一开始我是把这个规约按照 COMP3357
+中的那个规约理解的，后来发现两者不太一样。见后文关于 Karp Reduction 与
+Cook Reduction 的讨论。</p>
+<hr>
+<p>莱斯定理 (Rice's Theorem)：递归可枚举语言的所有非平凡性质
+(non-trivial property) 都是不可判定的。</p>
 <ul>
-<li>若 <span class="math inline">\(w\in L(M)\)</span>，即 <span class="math inline">\(M\# w\notin \overline{L_u}\)</span>，<span class="math inline">\(M&#39;\)</span> 接受任意字符串，即 <span class="math inline">\(M&#39;\notin L_e\)</span></li>
-<li>若 <span class="math inline">\(w\notin L(M)\)</span>，即 <span class="math inline">\(M\#w\in \overline{L_u}\)</span>，<span class="math inline">\(M&#39;\)</span> 不接受任意字符串，即 <span class="math inline">\(M&#39;\in L_e\)</span></li>
+<li>非平凡性质 <span class="math inline">\(p\)</span>：至少有一个 RE
+语言满足 <span class="math inline">\(p\)</span>，也至少存在一个 RE
+语言不满足 <span class="math inline">\(p\)</span>。</li>
+<li><span class="math inline">\(L_p=\{M|L(M)\text{ satisfies property
+}P\}\)</span> 是不可判定的。</li>
 </ul>
-<h3 id="rices-theorem">Rice's Theorem</h3>
-<p>Suppose <span class="math inline">\(P\)</span> is a non-trivial
-property about RE languages. Then <span class="math inline">\(L_p\)</span> is undecidable.</p>
-<ul>
-<li><em>non-trivial</em> property: at least one RE language satisfies
-<span class="math inline">\(P\)</span>, and at least one RE language
-doesn't satisfy <span class="math inline">\(P\)</span>.</li>
-<li><span class="math inline">\(L_p=\{M|L(M) \text{ satisfies property }
-P\}\)</span>.</li>
-</ul>
-<p>Proof.</p>
-<p>Suppose <span class="math inline">\(P\)</span> is a non-trivial
-property about RE languages. WLOG assume <span class="math inline">\(\emptyset\)</span> satisfies <span class="math inline">\(P\)</span> (otherwise switch <span class="math inline">\(P\)</span> to <span class="math inline">\(\overline{P}\)</span>). Suppose <span class="math inline">\(L\)</span> is an RE language that does not satisfy
-<span class="math inline">\(P\)</span>. Let <span class="math inline">\(M&#39;&#39;\)</span> be the machine which accepts
-<span class="math inline">\(L\)</span>.</p>
-<p>Define <span class="math inline">\(f:f(M)=M&#39;\)</span> as follows.
-<span class="math display">\[
-\begin{aligned}
-&amp;M&#39;(x) \\
-&amp;\text{For }t=0 \text{ to } \infty  \\
-&amp;\text{For }i=0 \text{ to } t \\
-&amp;\ \ \ \ \ \ \ \text{If } M(w_i) \text{ accepts within }t \text{
-steps and  } \\
-&amp; \ \ \ \ \ \ \ M&#39;&#39;(x) \text{ accepts with in }t \text{
-steps, then accept } x \\
-&amp;\text{EndFor} \\
-&amp;\text{EndFor}
-\end{aligned}
-\]</span> We can see that <span class="math inline">\(L_e\leq_m
-L_p\)</span>.</p>
-<ul>
-<li>If <span class="math inline">\(L(M)=\emptyset \in L_e\)</span>, then
-<span class="math inline">\(L(M&#39;)=\emptyset \in L_p\)</span>.</li>
-<li>If <span class="math inline">\(L(M)\neq \emptyset \notin
-L_e\)</span>, then <span class="math inline">\(L(M&#39;)=L\notin
-L_p\)</span>.</li>
-</ul>
-<p>As <span class="math inline">\(L_e\)</span> is not recursive, we have
-that <span class="math inline">\(L_p\)</span> is also not recursive.</p>
-<h3 id="posts-correspondence-problem">Post's Correspondence Problem</h3>
-<p>PCP: 给定两个字符串表 (list of strings) <span class="math inline">\(A=w_1,w_2,...,w_k\)</span> 与 <span class="math inline">\(B=x_1,x_2,...,x_k\)</span>；波斯特对应问题的解是一个序列
-<span class="math inline">\(i_1,i_2,...,i_m \ (m&gt;0)\)</span> 使得
-<span class="math inline">\(w_{i_1}w_{i_2}...w_{i_m}=x_{i_1}x_{i_2}...x_{i_m}\)</span></p>
-<p>MPCP: 在 PCP
-基础之上规定两个字串的首个字符串是一种特定组合。举例来说，规定必须使用
-<span class="math inline">\(w_1\)</span> 与 <span class="math inline">\(x_1\)</span>，MPCP 的解序列将使得 <span class="math inline">\(w_1w_{i_1}w_{i_2}...w_{i_m}=x_1x_{i_1}x_{i_2}...x_{i_m}\)</span></p>
-<p>Argument 1. MPCP <span class="math inline">\(\leq_m\)</span> PCP.</p>
-<p>对于任意 MPCP 问题，我们能够构造一个等价的 PCP 问题；若该 PCP
-问题有解，相应的 MPCP 问题亦有解。</p>
-<p>MPCP 问题：给定 <span class="math inline">\(A=w_1,w_2,...,w_k\)</span> 与 <span class="math inline">\(B=x_1,x_2,...,x_k\)</span> 要求起始字符串组合为
-<span class="math inline">\(w_i\)</span> 与 <span class="math inline">\(x_j\)</span>。按照如下方式构造 PCP 问题的字符串表
-<span class="math inline">\(A&#39;=w_0&#39;,w_1&#39;,...,w_{k+1}&#39;\)</span>
-与 <span class="math inline">\(B=x_0&#39;,x_1&#39;,...,x_{k+1}&#39;\)</span>。</p>
-<ul>
-<li><span class="math inline">\(w_i&#39;=\)</span> inserting <span class="math inline">\(*\)</span> <strong>after each symbol</strong> in
-<span class="math inline">\(w_i\)</span></li>
-<li><span class="math inline">\(x_i&#39;=\)</span> inserting <span class="math inline">\(*\)</span> <strong>before each symbol</strong> in
-<span class="math inline">\(x_i\)</span></li>
-<li><span class="math inline">\(w_0&#39;=*w_i&#39;,x_0&#39;=x_j&#39;\)</span>
-(灵魂)</li>
-<li><span class="math inline">\(w&#39;_{k+1}=\$\)</span>, <span class="math inline">\(x_{k+1}&#39;=*\$\)</span></li>
-</ul>
-<p>不得不说真的很妙。如果在 <span class="math inline">\(A&#39;,B&#39;\)</span> 上 PCP
-有解，首先可以观察到的是解序列一定以 <span class="math inline">\(0\)</span> 开头，以 <span class="math inline">\(k+1\)</span> 结尾：这是由 <span class="math inline">\(*\)</span> 与 <span class="math inline">\(\$\)</span> 的巧妙安排决定的。若解序列为 <span class="math inline">\(0,i_1,i_2,...,i_m,k+1\)</span>，那么对应的 MPCP
-问题的解序列为 <span class="math inline">\(i,i_1,i_2,...,i_m\)</span>
-(for <span class="math inline">\(A\)</span>) 与 <span class="math inline">\(j,i_1,i_2,...,i_m\)</span> (for <span class="math inline">\(B\)</span>)。</p>
-<p>Argument 2. <span class="math inline">\(L_u\leq_m\)</span> MPCP.</p>
-<p>给定输入 <span class="math inline">\(M\#w\)</span>，我们的目的是构造一个等价的 MPCP
-问题：若该 MPCP 问题有解，<span class="math inline">\(M\)</span> 接受
-<span class="math inline">\(w\)</span>。这就将 <span class="math inline">\(L_u\)</span> 归约到了 MPCP 问题上。构造方式
-(真的很妙啊！)</p>
-<figure>
-<img data-src="MPCP.png" alt="Turing Machine to MPCP">
-<figcaption aria-hidden="true">Turing Machine to MPCP</figcaption>
-</figure>
-<p>若该 MPCP 有解，我们可以看到每个由 <span class="math inline">\(\#\)</span> 包围起来的 section 都是某一步的
-instantaneous description；并且直观上来说，是 <span class="math inline">\(A\)</span> 形成的字符串在「追赶」<span class="math inline">\(B\)</span> 形成的字符串 (毕竟一开始是 <span class="math inline">\(\#\)</span> v.s. <span class="math inline">\(\#q_0w\#\)</span>)。</p>
-<p>什么时候算「追上」了呢？就是 <span class="math inline">\(A\)</span>
-的 ID 到达 accepting state 的时候。此时 <span class="math inline">\(A\)</span> 中的 <span class="math inline">\(XqY,Xq, qX\)</span> 都换一个 <span class="math inline">\(B\)</span> 中的 <span class="math inline">\(q\)</span>，两者之间的差距越来越小，直到 <span class="math inline">\(A\)</span> 中被消除到只剩一个 <span class="math inline">\(q\)</span>；此时 <span class="math inline">\(q\#\#\)</span> 换一个 <span class="math inline">\(B\)</span> 中的 <span class="math inline">\(\#\)</span>，两字符串完全一致。</p>
-<p>MPCP 中这一「追赶」的过程对应的正是 <span class="math inline">\(M\)</span> 在输入 <span class="math inline">\(w\)</span> 上的转移过程。具体来说，<span class="math inline">\(A\)</span> 是前一步，<span class="math inline">\(B\)</span> 是后一步；如果 <span class="math inline">\(A\)</span> 最终能追赶上 <span class="math inline">\(B\)</span> (MPCP 有解)，那么 <span class="math inline">\(M\)</span> 也能够到达 accepting state (<span class="math inline">\(M\)</span> accepts <span class="math inline">\(w\)</span>)。</p>
-<h3 id="undecidable-cfgs">Undecidable CFGs</h3>
-<p>PCP 问题又可视作一个歧义语法的判断问题。给出字符串表 <span class="math inline">\(A=w_1,...,w_k\)</span> 与 <span class="math inline">\(B=x_1,...,x_k\)</span>，我们再添加一个 index list
-<span class="math inline">\(I=\{a_1,a_2,...,a_k\}\)</span>；其中 <span class="math inline">\(I\cap \Sigma=\emptyset\)</span>。定义以下语法
-<span class="math inline">\(G\)</span>： <span class="math display">\[
-\begin{aligned}
-&amp;S\to A \\
-&amp;S\to B\\
-&amp;A\to w_iAa_i, \text{ for }1\leq i\leq k \\
-&amp;A\to w_ia_i,\text{ for }1\leq i\leq k \\
-&amp;B\to x_iBa_i, \text{ for }1\leq i\leq k\\
-&amp;B\to x_ia_i, \text{ for }1\leq i\leq k
-\end{aligned}
-\]</span> 该语法又可分为两个子语法 <span class="math inline">\(G_A\)</span> (仅与 <span class="math inline">\(A\)</span> 有关的部分)，<span class="math inline">\(G_B\)</span> (仅与 <span class="math inline">\(B\)</span>
-有关的部分)；由此可以得出一系列结论链条：<span class="math inline">\(L(G_A)\cap L(G_B)\neq \emptyset\)</span> iff <span class="math inline">\(G\)</span> is ambiguous iff PCP has a
-solution.</p>
-<p>很好理解：若 <span class="math inline">\(L(G_A)\cap L(G_B)\)</span>
-交集不为空，那么其中任意一个字符串的 index 部分都表示一个 PCP
-问题的解；且由于 <span class="math inline">\(G\)</span> 在 <span class="math inline">\(G_A\)</span> 与 <span class="math inline">\(G_B\)</span> 方向都能生成相同的字符串，说明 <span class="math inline">\(G\)</span> 是歧义的。由于 PCP
-问题的不可判定性，我们进一步证明了 <span class="math inline">\(G\)</span> 的歧义与否与 <span class="math inline">\(L(G_A)\cap L(G_B)\)</span>
-非空与否均是不可判定的。</p>
-<p>可以证明 <span class="math inline">\(L(G_A),L(G_B),
-\overline{L(G_A)}, \overline{L(G_B)}\)</span> 均为 CFG。注意，general
-CFG <span class="math inline">\(G\)</span> 取反并不一定是
-CFG，是这里的特殊 CFG <span class="math inline">\(G_A,G_B\)</span>
-取反后仍为 CFG。</p>
-<p>从 PCP 问题的不可判定开始，我们又可以引入一系列与 CFG
-相关的不可判定问题：</p>
-<ul>
-<li>给出 CFGs <span class="math inline">\(G_1\)</span> 与 <span class="math inline">\(G_2\)</span>，判定 <span class="math inline">\(L(G_1)\cap L(G_2)=\emptyset\)</span>
-<ul>
-<li>无法判定！e.g., 取 <span class="math inline">\(G_1=G_A,G_2=G_B\)</span> 即可。</li>
-</ul></li>
-<li>给出 CFGs <span class="math inline">\(G_1\)</span> 与 <span class="math inline">\(G_2\)</span>，判定 <span class="math inline">\(L(G_1)=L(G_2)\)</span>
-<ul>
-<li>无法判定！e.g., 取 <span class="math inline">\(L(G_1)=\overline{L(G_A)}\cup\overline{L(G_B)}=\overline{L(G_A)\cap
-L(G_B)}\)</span>；而 <span class="math inline">\(L(G_2)\)</span> 则是
-<span class="math inline">\((\Sigma\cup I)^*\)</span> (全集)。</li>
-</ul></li>
-<li>给出 CFG <span class="math inline">\(G\)</span> 与 RE <span class="math inline">\(R\)</span>，判定 <span class="math inline">\(L(G)=L(R)\)</span>
-<ul>
-<li>无法判定！与问题 2 类似。</li>
-</ul></li>
-<li>Given CFGs <span class="math inline">\(G,G_1,G_2\)</span> 与 RE
-<span class="math inline">\(R\)</span>，<span class="math inline">\(L(G)=T^*,L(G_2)\subseteq L(G_1),L(R)\subseteq
-L(G)\)</span> 均不可判定。</li>
-</ul>
+<p>莱斯定理的详细证明见归档笔记，比较巧妙，可以将这个问题归约到空语言问题
+(empty language problem) 上。</p>
+<p>我们知道通用语言是递归可枚举的，但是它是可判定的吗？另一个在课上提到的例子是将波斯特对应问题
+(Post's Correspondence Problem) 归约到通用语言。PCP
+是著名的不可判定问题，因此我们能够确定通用语言递归可枚举，但不可判定。这个例子的证明也很巧妙，可见归档笔记，感觉我长了五个脑子也想不出来。</p>
 <p><br></p>
-<h2 id="np-problems">NP Problems</h2>
-<h3 id="complexity">Complexity</h3>
-<p>TM <span class="math inline">\(M\)</span> 的时间复杂度：</p>
+<h2 id="halting-problem">Halting Problem</h2>
+<p>著名的停机问题，这个必须得记录一下。</p>
 <ul>
-<li>If <span class="math inline">\(M\)</span> is deterministic TM, <span class="math inline">\(Time_M(x)\)</span> is the number of steps used by
-<span class="math inline">\(M\)</span> on input <span class="math inline">\(x\)</span> before halting (if <span class="math inline">\(M\)</span> does not halt on <span class="math inline">\(x\)</span>, <span class="math inline">\(Time_M(x)=\infty\)</span>)</li>
-<li>If <span class="math inline">\(M\)</span> is non-deterministic TM,
-<span class="math inline">\(Time_M(x)\)</span> denotes the
-<strong>maximum</strong> time on any path, even non-accepting.</li>
-<li>If <span class="math inline">\(M\)</span> is <span class="math inline">\(T(n)\)</span> time bounded, <span class="math inline">\(Time_M(x)\leq T(n)\)</span> for all <span class="math inline">\(|x|=n\)</span>.</li>
+<li>INSTANCE：下标 <span class="math inline">\(i,j\)</span></li>
+<li>PROBLEM：第 <span class="math inline">\(i\)</span> 个图灵机 <span class="math inline">\(M_i\)</span> 是否在输入第 <span class="math inline">\(j\)</span> 个字符串 <span class="math inline">\(w_j\)</span> 后停机？</li>
 </ul>
-<p>TM <span class="math inline">\(M\)</span> 的空间复杂度：</p>
+<p>反证法。假设停机问题是可判定的，那么一定存在某个图灵机 <span class="math inline">\(H\)</span> 接受 <span class="math inline">\(L=\{(i,j):M_i\text{ halts on } w_j\}\)</span>
+且在所有输入上停机。</p>
+<p>构造一个悖论图灵机 (Paradoxical Turing Machine) <span class="math inline">\(D\)</span>，输入某个下标 <span class="math inline">\(k\)</span>，模拟 <span class="math inline">\(H(k,k)\)</span>：</p>
 <ul>
-<li><span class="math inline">\(Space_M(x)\)</span> is the maximum
-number of cells touched by <span class="math inline">\(M\)</span> on
-input <span class="math inline">\(x\)</span>. Usually we only consider
-the cells on work tapes (excluding input &amp; output tape). If <span class="math inline">\(M\)</span> does not halt on <span class="math inline">\(x\)</span>, <span class="math inline">\(Space_M(x)=\infty\)</span>.</li>
-<li>If <span class="math inline">\(M\)</span> is <span class="math inline">\(S(n)\)</span> space bounded, <span class="math inline">\(Space_M(x)\leq S(n)\)</span>.</li>
+<li>若 <span class="math inline">\(H\)</span> 接受 <span class="math inline">\((k,k)\)</span>，即，<span class="math inline">\(M_k\)</span> 在 <span class="math inline">\(w_k\)</span> 上停机，则令 <span class="math inline">\(D\)</span> 陷入死循环 (不停机)</li>
+<li>若 <span class="math inline">\(H\)</span> 拒绝 <span class="math inline">\((k,k)\)</span>，即，<span class="math inline">\(M_k\)</span> 在 <span class="math inline">\(w_k\)</span> 上不停机，则令 <span class="math inline">\(D\)</span> 停机</li>
 </ul>
-<p>为什么在计算复杂度时可以忽略常数 <span class="math inline">\(c\)</span>？可以证明图灵机总是可以进行 Tape
-Compression (空间上的常数省略) 与 Linear Speedup
-(时间上的常数省略)。</p>
+<p><span class="math inline">\(D\)</span>
+本身也是图灵机，这说明它可以被编码并且有对应的下标 <span class="math inline">\(d\)</span>。现在我们分析一下 <span class="math inline">\(D(d)\)</span> 的表现：</p>
 <ul>
-<li>Tape Compression. WLOG fix <span class="math inline">\(c&gt;0\)</span>. If a language <span class="math inline">\(L\)</span> is accepted by a machine <span class="math inline">\(M\)</span>, with <span class="math inline">\(k\)</span> tapes, that is <span class="math inline">\(S(n)\)</span> space bounded, then <span class="math inline">\(L\)</span> is accepted by a machine <span class="math inline">\(M&#39;\)</span>, with <span class="math inline">\(k\)</span> tapes, that is <span class="math inline">\(\lceil c S(n)\rceil\)</span> space bounded.</li>
-<li>Linear Speedup. WLOG fix <span class="math inline">\(c&gt;0\)</span>. Suppose <span class="math inline">\(L\)</span> is accepted by a machine <span class="math inline">\(M\)</span>, with <span class="math inline">\(k\geq
-2\)</span> tapes, that is <span class="math inline">\(T(n)\)</span> time
-bounded, where <span class="math inline">\(\lim_{n\to\infty}T(n)/n=\infty\)</span>. Then
-<span class="math inline">\(L\)</span> is also accepted by a machine
-<span class="math inline">\(M&#39;\)</span> that is <span class="math inline">\(\lceil cT(n)\rceil\)</span> time bounded.</li>
+<li>若 <span class="math inline">\(D\)</span> 不在 <span class="math inline">\(w_d\)</span> 上停机，说明 <span class="math inline">\(H\)</span> 接受 <span class="math inline">\((d,d)\)</span>，即 <span class="math inline">\(M_d\Rightarrow D\)</span> 在 <span class="math inline">\(w_d\)</span> 上停机！悖论产生</li>
+<li>若 <span class="math inline">\(D\)</span> 在 <span class="math inline">\(w_d\)</span> 上停机，说明 <span class="math inline">\(H\)</span> 拒绝 <span class="math inline">\((d,d)\)</span>，即 <span class="math inline">\(M_d\Rightarrow D\)</span> 不在 <span class="math inline">\(w_d\)</span> 上停机！悖论产生</li>
 </ul>
-<p>几大 complexity class 之间的关系。</p>
+<p>推出矛盾。假设为假：因此停机问题是不可判定问题。</p>
+<p><br></p>
+<h2 id="p-np">P &amp; NP</h2>
+<p>来正式认识一下 P 与 NP 问题。</p>
+<p>P 问题：所有能够被一个<strong>确定性图灵机 (Deterministic
+TM)</strong> 在<strong>多项式时间</strong>内求解的问题。</p>
+<p>NP 问题：所有能够被一个<strong>非确定性图灵机 (Nondeterministic
+TM)</strong> 在<strong>多项式时间</strong>内求解的问题。</p>
+<p>显然有 <span class="math inline">\(P\subseteq NP\)</span>。P
+问题代表的是一种可解性
+(任何经典意义上的多项式算法都能被视作一个确定性图灵机)，那么 NP
+问题代表的是什么呢？</p>
+<p>命题：若 <span class="math inline">\(L\in
+NP\)</span>，存在一个确定性多项式时间的<strong>可计算谓词 (computable
+predicate)</strong> <span class="math inline">\(P(x,y)\)</span>，与一个多项式 <span class="math inline">\(q(\cdot)\)</span>，满足： <span class="math display">\[
+x\in L \iff \exists y: |y|\leq q(|x|) \text{ such that } P(x,y)=1
+\]</span> 证明很符合直觉。我们知道 NTM 的转移是不确定的，即，<span class="math inline">\(|\delta(q,\alpha)|\geq 0\)</span>。作为理论模型的
+NTM 能够平行探索 (parallel exploration) 所有可能性，但这样的神力并不
+physically 存在。因此，一个真正可计算的方案是用 <span class="math inline">\(y\)</span> 消除 NTM 的非确定性，即，<span class="math inline">\(y\)</span> 标志着 NTM
+下一步选择哪一个可能性进行转移，类似于导航：如果 NTM 接受了 <span class="math inline">\(x\)</span>，令 <span class="math inline">\(P(x,y)=1\)</span>，否则 <span class="math inline">\(P(x,y)=0\)</span>。因为 NTM 能在多项式时间内接受
+<span class="math inline">\(x\)</span>，显然 <span class="math inline">\(y\)</span> 的长度也是多项式级别的。</p>
+<p>我们把这样的 <span class="math inline">\(y\)</span> 称为 <span class="math inline">\(x\)</span> 的<strong>证明 (proof, or
+certificate)</strong>。虽然我们无法在多项式时间内判定 <span class="math inline">\(x\in L\)</span> (NTM
+不存在)，但可以在多项式时间内<strong>验证 (verify)</strong> 给定的 <span class="math inline">\(y\)</span> 是否能使得 <span class="math inline">\(P(x,y)=1\)</span>。</p>
+<p>因此，有人说 NP 问题代表的是一种<strong>可验证性
+(verifiable)</strong>。找出解的过程也许是困难的，但验证解的过程是简单的。这也是
+<span class="math inline">\(P\neq NP\)</span>
+的一个重要理论基础：我们真的能够相信，验证一个问题的解与找出一个问题的解有着相同的难度吗？</p>
+<p>或者说，「真理的存在」一定代表着「真理是可被认识」的吗？</p>
+<p><br></p>
+<h2 id="npc">NPC</h2>
+<p>定义 <strong>Karp 规约 (Karp Reduction)</strong> <span class="math inline">\(L_1\leq_m^p
+L_2\)</span>：存在多项式时间可计算的函数 <span class="math inline">\(f\)</span>，满足 <span class="math inline">\(x\in
+L_1 \iff f(x)\in L_2\)</span>。因此有时 Karp
+规约也被称为<strong>多项式时间规约 (Poly-Time Reduction)</strong>。</p>
+<blockquote>
+<p>我们在加密学 COMP3357 中接触到的规约是 <strong>Cook 规约 (Cook
+Reduction)</strong>；其特征是所调用的<strong>预言机 (Oracle)</strong>
+是一个确定性多项式时间的机器，且可以被调用任意次数。而在本节课中提到的
+Karp 规约仅能调用预言机一次。</p>
+</blockquote>
+<p>NP 困难问题 (NP Hard) <span class="math inline">\(L_{hard}\)</span>
+满足：<span class="math inline">\(\forall L&#39; \in NP.L&#39;\leq_m^p
+L_{hard}\)</span>。</p>
+<p>NP 完全问题 (NP Complete) <span class="math inline">\(L_{comp}\)</span> 满足：</p>
 <ul>
-<li><span class="math inline">\(\text{DTIME}(S(n))\subseteq
-\text{DSPACE}(S(n))\)</span></li>
-<li>If <span class="math inline">\(L\)</span> is in <span class="math inline">\(\text{DSPACE}(S(n))\)</span>, and <span class="math inline">\(S(n)\geq \log n\)</span>, then there exists a
-constant <span class="math inline">\(c\)</span>, which depends on <span class="math inline">\(L\)</span>, such that <span class="math inline">\(L\)</span> is in <span class="math inline">\(\text{DTIME}(c^{S(n)})\)</span>.</li>
-<li>If <span class="math inline">\(L\)</span> is in <span class="math inline">\(\text{NTIME}(T(n))\)</span> then there exists a
-constant <span class="math inline">\(c\)</span>, which depends on <span class="math inline">\(L\)</span>. such that <span class="math inline">\(L\)</span> is in <span class="math inline">\(\text{DTIME}(c^{T(n)})\)</span>.</li>
+<li><span class="math inline">\(L_{comp}\in NP\)</span></li>
+<li><span class="math inline">\(L_{comp}\in NP\text{ Hard}\)</span>，即
+<span class="math inline">\(\forall L&#39;\in NP,L&#39;\leq_m^p
+L_{comp}\)</span></li>
 </ul>
-<h3 id="np">NP</h3>
-<p>P &amp; NP.</p>
+<p>注意，NP hard 问题不一定是 NP 问题 (它可以比 NP
+问题更困难，即，其答案都是难以验证的)，但 NP complete 问题一定是 NP
+问题。</p>
+<p>由于所有的 NP 问题都能归约到 NPC 问题，若任意一个 NPC
+问题在多项式时间上可解 (<span class="math inline">\(\exists L\in
+NPC,L\in P\)</span>)，整个 NP 问题集都将在多项式时间上可解 (<span class="math inline">\(P=NP\)</span>)。</p>
+<p>著名的 NPC 问题：</p>
 <ul>
-<li><span class="math inline">\(P=\{L|\text{ some }poly(n) \text{
-bounded deterministic DTM accepts }L\}\)</span></li>
-<li><span class="math inline">\(LP=\{L|\text{ some }poly(n)\text{
-bounded NDTM accepts }L\}\)</span></li>
+<li>可满足性问题 Satisfiability，e.g., 3-SAT</li>
+<li>三维匹配问题 3D Matching</li>
+<li>顶点覆盖问题 Vertex Cover (一个顶点覆盖所有邻接的顶点)</li>
+<li>最大割问题 MAX-CUT</li>
+<li>K-问题 K-Clique (图中是否存在一个规模为 <span class="math inline">\(k\)</span> 的团/完全子图)</li>
+<li>独立集问题 Independent Set (独立集中任意两个顶点都不相连)</li>
+<li>哈密顿回路问题 Hamiltonian Circuit (每个顶点会且仅会被访问一次)</li>
+<li>划分问题 Partition (正整数集合的等和分割)</li>
+<li>集合覆盖问题 Set Cover</li>
+<li>旅行商问题 Traveling Salesman Problem, TSP (权重和 <span class="math inline">\(\leq B\)</span> 的哈密顿回路)</li>
 </ul>
-<p>Proposition. If <span class="math inline">\(L\in NP\)</span>, then
-there exists a deterministic polynomial time <strong>computable
-predicate</strong> <span class="math inline">\(P(x,y)\)</span>, and a
-polynomial <span class="math inline">\(q(\cdot)\)</span> such that:
-<span class="math display">\[
-x\in L \iff \exists y:|y|\leq q(|x|) \text{ such that } P(x,y)=1
-\]</span> Proof. If <span class="math inline">\(L\in NP\)</span>, there
-exists a <span class="math inline">\(q(n)\)</span> time bounded NDTM
-<span class="math inline">\(N\)</span> accepting <span class="math inline">\(L\)</span>. WLOG assume that <span class="math inline">\(N\)</span> has exactly two choices in each state
-(<span class="math inline">\(|\delta(q,\alpha)|=2\)</span>), and <span class="math inline">\(y\)</span> is a 01 string.</p>
-<p>We <strong>verify</strong> <span class="math inline">\(P(x,y)\)</span> as follows.</p>
-<ul>
-<li>Let <span class="math inline">\(y=y_1y_2...y_m\)</span>. If <span class="math inline">\(m&gt;q(|x|)\)</span>, then reject.</li>
-<li>Otherwise simulate <span class="math inline">\(N\)</span>, where at
-step <span class="math inline">\(i\)</span>, choose the next state based
-on whether <span class="math inline">\(y_i\)</span> is <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span> (we can say <span class="math inline">\(y\)</span> guide through <span class="math inline">\(x\)</span>'s matching in <span class="math inline">\(N\)</span>)</li>
-<li>If in the end <span class="math inline">\(N\)</span> stays in an
-accepting state (<span class="math inline">\(N\)</span> accepts in the
-above simulation), <span class="math inline">\(P(x,y)=1\)</span>.</li>
-</ul>
-<p>根据以上的 simulation，如果 <span class="math inline">\(x\in
-L\)</span>，那么一定存在某个 <span class="math inline">\(y\)</span> 满足
-<span class="math inline">\(|y|\leq q(|x|)\)</span>，使得 <span class="math inline">\(P(x,y)=1\)</span>。我们将这样的 <span class="math inline">\(y\)</span> 称为 <span class="math inline">\(x\in
-L\)</span> 的一个 <em>certificate</em> 或 <em>proof</em>。据此，有人把
-NP 问题定义为 a class of languages for which "proofs" can be easily (in
-polynomial time) verified.</p>
-<h3 id="np-completeness">NP-Completeness</h3>
-<p>定义 reduction <span class="math inline">\(L_1\leq_m^p L_2\)</span>:
-there exists a poly-time computable function <span class="math inline">\(f\)</span> such that <span class="math inline">\(x\in L_1\iff f(x)\in L_2\)</span>. The relation
-<span class="math inline">\(\leq_m^p\)</span> is reflexive and
-transitive.</p>
-<p>我们说 <span class="math inline">\(L\)</span> 是 NP-complete
-的当前仅当：</p>
-<ul>
-<li><span class="math inline">\(L\in NP\)</span></li>
-<li><span class="math inline">\(\forall L&#39;\in NP, L&#39;\leq_m^p
-L\)</span></li>
-</ul>
-<p>NP-hard 问题仅仅满足 (2)，不要求其是 NP 问题。</p>
-<p>著名的 NP-complete 问题：Satisfiability (e.g., 3-SAT), 3D Matching
-(三分图匹配), Vertex Cover, MAX-CUT (最大割问题), K-Clique, Independent
-Set, Hamiltonian Circuit, Partition, Set Cover, Traveling Salesman
-Problem (权重和 <span class="math inline">\(\leq B\)</span>
-的哈密顿回路)。</p>
-<p><span class="math inline">\(P=NP\)</span> 问题：</p>
-<ul>
-<li>If one of the NP-complete problem is solvable in poly-time (<span class="math inline">\(\exists L\in NPC\land L\in P\)</span>), then all
-the problems in NP are solvable in poly-time (<span class="math inline">\(P=NP\)</span>).</li>
-<li>If <span class="math inline">\(P\neq NP\)</span>, then none of the
-NP-complete problems are solvable in poly-time.</li>
-</ul>
-<p>将 3-SAT 问题归约到 Vertex Cover 问题：若有 <span class="math inline">\(n\)</span> 个变量，<span class="math inline">\(m\)</span> 个 3-SAT clauses，构造出一个点数为
-<span class="math inline">\(2n+3m\)</span> 的图，分别是 <span class="math inline">\(n\)</span> 个 <span class="math inline">\(x_i\)</span>，<span class="math inline">\(n\)</span> 个 <span class="math inline">\(\lnot
+<p>3-SAT 归约到顶点覆盖问题。有 <span class="math inline">\(n\)</span>
+个变量，<span class="math inline">\(m\)</span> 个 3-SAT
+clauses，构造出一个点数为 <span class="math inline">\(2n+3m\)</span>
+的图，分别是 <span class="math inline">\(n\)</span> 个 <span class="math inline">\(x_i\)</span>，<span class="math inline">\(n\)</span> 个 <span class="math inline">\(\lnot
 x_i\)</span>，<span class="math inline">\(m\)</span>
 个三角形，每个三角形对应一个 clause 中的三个
-literals。连边策略很显然：该图的 Vertex Cover 解对应的是原 3-SAT
-的一个解。</p>
-<p>独立集 (Independent Set) 问题：独立集中的点两两不相连。给出 <span class="math inline">\(G=(V,E)\)</span>，如果 <span class="math inline">\(G\)</span> 有一个大小为 <span class="math inline">\(k\)</span> 的 vertex cover，那么它有一个大小为
-<span class="math inline">\(|V|-k\)</span> 的独立集，且 <span class="math inline">\(G&#39;=(V,E^c)\)</span> 有一个大小为 <span class="math inline">\(|V|-k\)</span> 的 clique。</p>
-<p>那么有 <span class="math inline">\(V&#39;\)</span> 是 <span class="math inline">\(G\)</span> 的 vertex cover <span class="math inline">\(\iff\)</span> <span class="math inline">\(V-V&#39;\)</span> 是 <span class="math inline">\(G\)</span> 的独立集 <span class="math inline">\(\iff\)</span> <span class="math inline">\(V-V&#39;\)</span> 是 <span class="math inline">\(G&#39;\)</span> 的 clique。</p>
+literals。连边策略很显然：该图的顶点覆盖对应的是原 3-SAT 的一个解。</p>
+<p>三个图论 NPC 问题 (Vertex Cover, Independent Set, K-Clique)
+的规约关系：如果图 <span class="math inline">\(G=(V,E)\)</span>
+有一个规模为 <span class="math inline">\(k\)</span>
+的顶点覆盖，那么它有一个规模为 <span class="math inline">\(|V|-k\)</span> 的独立集，且 <span class="math inline">\(\overline{G}=(V,E^c)\)</span> 有一个大小为 <span class="math inline">\(|V|-k\)</span> 的完全子图。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
