@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="书接上文，我们进入了本系列课程的第 II Part。本节侧重于图论方面的知识，介绍了：  一些基本概念 (终于知道 BFS 中的 B 是什么了)  Undirected Graphs, Directed Graphs (Digraphs), Directed Acyclic Graphs (DAG). Depth-First Search (DFS), Breadth-First S">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Algorithms II, Princeton University, P4">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/08/06/algorithm-4/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="书接上文，我们进入了本系列课程的第 II Part。本节侧重于图论方面的知识，介绍了：  一些基本概念 (终于知道 BFS 中的 B 是什么了)  Undirected Graphs, Directed Graphs (Digraphs), Directed Acyclic Graphs (DAG). Depth-First Search (DFS), Breadth-First S">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/06/algorithm-4/topo.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/06/algorithm-4/scc.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/06/algorithm-4/kernal.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/06/algorithm-4/MST.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/06/algorithm-4/kruskal.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/06/algorithm-4/kclustering.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/06/algorithm-4/prim.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/06/algorithm-4/SPT.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/06/algorithm-4/CPM.png">
+<meta property="article:published_time" content="2023-08-06T08:50:21.000Z">
+<meta property="article:modified_time" content="2024-02-02T11:32:12.000Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Algorithms">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.thisisxxz.com/2023/08/06/algorithm-4/topo.png">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2023/08/06/algorithm-4/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/08/06/algorithm-4/","path":"2023/08/06/algorithm-4/","title":"Algorithms II, Princeton University, P4"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Algorithms II, Princeton University, P4 | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#graph-terminology"><span class="nav-number">1.</span> <span class="nav-text">Graph Terminology</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#graph-processing-design"><span class="nav-number">2.</span> <span class="nav-text">Graph Processing Design</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#topological-sort"><span class="nav-number">3.</span> <span class="nav-text">Topological Sort</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#kahns-algorithm"><span class="nav-number">3.1.</span> <span class="nav-text">Kahn&#39;s Algorithm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#depth-first-search-approach"><span class="nav-number">3.2.</span> <span class="nav-text">Depth-First Search Approach</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#directed-cycle-detection"><span class="nav-number">3.3.</span> <span class="nav-text">Directed Cycle Detection</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#strong-components"><span class="nav-number">4.</span> <span class="nav-text">Strong Components</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#minimum-spanning-trees"><span class="nav-number">5.</span> <span class="nav-text">Minimum Spanning Trees</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cut-property"><span class="nav-number">5.1.</span> <span class="nav-text">Cut Property</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#greedy-mst-algorithms"><span class="nav-number">5.2.</span> <span class="nav-text">Greedy MST Algorithms</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kruskals-algorithm"><span class="nav-number">6.</span> <span class="nav-text">Kruskal&#39;s Algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#single-link-clustering"><span class="nav-number">6.1.</span> <span class="nav-text">Single-link Clustering</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#prims-algorithm"><span class="nav-number">7.</span> <span class="nav-text">Prim&#39;s Algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#lazy-implementation"><span class="nav-number">7.1.</span> <span class="nav-text">Lazy Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#eager-implementation"><span class="nav-number">7.2.</span> <span class="nav-text">Eager Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shortest-paths"><span class="nav-number">8.</span> <span class="nav-text">Shortest Paths</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#shortest-paths-optimality-conditions"><span class="nav-number">8.1.</span> <span class="nav-text">Shortest-paths Optimality
+Conditions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#generic-shortest-paths-algorithm"><span class="nav-number">8.2.</span> <span class="nav-text">Generic Shortest-paths
+Algorithm</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dijkstras-algorithm"><span class="nav-number">9.</span> <span class="nav-text">Dijkstra&#39;s Algorithm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#longest-paths-in-dag"><span class="nav-number">10.</span> <span class="nav-text">Longest Paths in DAG</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bellman-ford-algorithm"><span class="nav-number">11.</span> <span class="nav-text">Bellman-Ford Algorithm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">12.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/08/06/algorithm-4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Algorithms II, Princeton University, P4 | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Algorithms II, Princeton University, P4
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-08-06 16:50:21" itemprop="dateCreated datePublished" datetime="2023-08-06T16:50:21+08:00">2023-08-06</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>书接上文，我们进入了<a target="_blank" rel="noopener" href="https://thisisxxz.com/categories/%E7%AC%94%E8%AE%B0/Algorithms-Princeton/">本系列课程</a>的第
+II Part。本节侧重于图论方面的知识，介绍了：</p>
+<ul>
+<li>一些基本概念 (<del>终于知道 BFS 中的 B 是什么了</del>)
+<ul>
+<li>Undirected Graphs, Directed Graphs (<em>Digraphs</em>), Directed
+<u>Acyclic</u> Graphs (DAG).</li>
+<li>Depth-First Search (DFS), <u>Breadth</u>-First Search (BFS),
+Topological Sort.</li>
+</ul></li>
+<li>Shortest Path Algorithms.</li>
+<li>Minimum Spanning Trees (MSTs).</li>
+<li>Connected Component, Strong (Connected) Component.</li>
+</ul>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="graph-terminology">Graph Terminology</h2>
+<p>图论概念的中英文对照表：这些概念的介绍将被省去，因为实在是太过基础了。</p>
+<ul>
+<li>Graph. Set of <em>vertices</em> (顶点) connected pairwise by
+<em>edges</em> (边).</li>
+<li>Path. Sequence of vertices connected by edges.</li>
+<li>Cycle. Path whose first and last vertices are the same.</li>
+<li>Directed graphs (Digraph). Set of vertices connected pairwise by
+<em>directed</em> edges.</li>
+</ul>
+<p>Cycle-related problems.</p>
+<ul>
+<li>Is there a cycle in the graph?</li>
+<li><em>Euler tour</em> (欧拉回路): It there a cycle that uses each edge
+exactly once.</li>
+<li><em>Hamilton tour</em> (哈密顿回路): Is there a cycle that uses each
+vertex exactly once.</li>
+</ul>
+<p>Connectivity problems.</p>
+<ul>
+<li>Connectivity. Is there a way to connect all of the vertices?</li>
+<li>MST. What is the best way to connect all of the vertices?</li>
+<li>Biconnectivity. Is there a vertex whose removal <em>disconnects</em>
+the graph?</li>
+</ul>
+<p>Graph representation problems.</p>
+<ul>
+<li>Graph <em>isomorphism</em>. Are two graphs identical except for
+vertex names?</li>
+<li><em>Planarity</em>. Can we lay out a graph in the plane without
+crossing edges?</li>
+<li>Topological sort. Can we draw a diagraph so that all edges point
+upwards?</li>
+</ul>
+<p><br></p>
+<h2 id="graph-processing-design">Graph Processing Design</h2>
+<p>Graph API.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Graph</span> &#123;</span><br><span class="line">    Graph(<span class="type">int</span> V);                     <span class="comment">// create an empty graph with V vertices</span></span><br><span class="line">    Graph(In in);                    <span class="comment">// create a graph from input stream</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">addEdge</span><span class="params">(<span class="type">int</span> v, <span class="type">int</span> w)</span>;        <span class="comment">// add an edge v-w</span></span><br><span class="line">    Iterable&lt;Integer&gt; <span class="title function_">adj</span><span class="params">(<span class="type">int</span> v)</span>;    <span class="comment">// vertices adjacent to v</span></span><br><span class="line">    <span class="type">int</span> <span class="title function_">V</span><span class="params">()</span>;                        <span class="comment">// number of vertices</span></span><br><span class="line">    <span class="type">int</span> <span class="title function_">E</span><span class="params">()</span>;                        <span class="comment">// number of edges</span></span><br><span class="line">    String <span class="title function_">toString</span><span class="params">()</span>;                <span class="comment">// string representation</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Adjacency-matrix graph representation. (邻接矩阵表示)</p>
+<p>Adjacency-list (undirected) graph representation. (邻接表表示)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Graph</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> V;</span><br><span class="line">    <span class="keyword">private</span> Bag&lt;Integer&gt;[] adj;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Graph</span><span class="params">(<span class="type">int</span> V)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.V = V;</span><br><span class="line">        adj = (Bag&lt;Integer&gt;[]) <span class="keyword">new</span> <span class="title class_">Bag</span>[V];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> <span class="number">0</span>; v &lt; V; ++v)</span><br><span class="line">            adj[v] = <span class="keyword">new</span> <span class="title class_">Bag</span>&lt;Integer&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addEdge</span><span class="params">(<span class="type">int</span> v, <span class="type">int</span> w)</span> &#123;</span><br><span class="line">        adj[v].add(w);</span><br><span class="line">        adj[w].add(v);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> Iterable&lt;Integer&gt; <span class="title function_">adj</span><span class="params">(<span class="type">int</span> v)</span> &#123; <span class="keyword">return</span> adj[v]; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="note info no-icon"><p>Design pattern for graph processing. <em>Decouple</em> graph data
+type from graph processing.</p>
+<ul>
+<li>Create a <code>Graph</code> object.</li>
+<li>Pass the <code>Graph</code> to a graph-processing routine.</li>
+<li>Query the graph-processing routine for information.</li>
+</ul>
+</div>
+<p>经典的设计原则：对某个数据结构的操作 (processing)
+与该数据结构本身的定义应当是分开的。例如，若我们想要对图进行
+DFS，相较于在 <code>Graph</code> 类内部定义 <code>depthFirstPaths</code>
+方法，定义一个 <code>DepthFirstPaths</code> 类并与 <code>Graph</code>
+类对象进行交互是一个更优美的设计。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DepthFirstSearch</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span>[] marked;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DepthFirstSearch</span><span class="params">(Graph G, <span class="type">int</span> s)</span> &#123;</span><br><span class="line">        marked = <span class="keyword">new</span> <span class="title class_">boolean</span>[G.V()];</span><br><span class="line">        dfs(G, s);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(Graph G, <span class="type">int</span> v)</span> &#123;</span><br><span class="line">        marked[v] = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> w : G.adj(v))</span><br><span class="line">            <span class="keyword">if</span> (!marked[w])    dfs(G, w);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">visited</span><span class="params">(<span class="type">int</span> v)</span> &#123; <span class="keyword">return</span> marked[v]; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="topological-sort">Topological Sort</h2>
+<div class="note info no-icon"><p>Topological sort. Redraw DAG so all edges point upwards (or to the
+same direction).</p>
+</div>
+<figure>
+<img data-src="topo.png" alt="What it means by &quot;Redraw&quot;">
+<figcaption aria-hidden="true">What it means by "Redraw"</figcaption>
+</figure>
+<p>拓扑序是这样一个序列：对 DAG 上的每一条有向边 <span class="math inline">\(u \to v\)</span>，拓扑序中 <span class="math inline">\(u\)</span> 都必定在 <span class="math inline">\(v\)</span> 之前出现。如果文明 6 中的科技树是一个
+DAG，那么其拓扑序就是一种可能的点科技树的顺序。</p>
+<h3 id="kahns-algorithm">Kahn's Algorithm</h3>
+<p>一个很经典的求拓扑序的算法是 Kahn 算法：</p>
+<ul>
+<li>初始将所有 indegree 为 0 的 vertices 加入队列。</li>
+<li>当队列非空时，弹出 vertice <span class="math inline">\(v\)</span>。</li>
+<li>在 DAG 中删除 <span class="math inline">\(v\)</span> 与以 <span class="math inline">\(v\)</span> 为起点的有向边。实现上我们仅需维护
+indegree 数组：对于每一条有向边 <span class="math inline">\(v \to
+w\)</span>，删除 <span class="math inline">\(v\)</span> 意味着 <span class="math inline">\(w\)</span> 的 indegree 减一。若更新后 <span class="math inline">\(w\)</span> 的 indegree 为 0，则把 <span class="math inline">\(w\)</span> 加入队列。</li>
+<li>重复上述步骤直至队列为空。</li>
+</ul>
+<p>从队列中弹出的 vertices 的顺序即为一种可能的拓扑序。</p>
+<p>Kahn 算法的理解非常的 intuitive；其本身就是一个 trivial
+的拓扑排序过程。</p>
+<h3 id="depth-first-search-approach">Depth-First Search Approach</h3>
+<div class="note info no-icon"><p>Proposition. Reverse <u>DFS postorder</u> of a DAG is a topological
+order.</p>
+</div>
+<p>In <em>postorder</em>, a vertice is marked only when its subvertices
+are marked.</p>
+<p>这个结论异常的简单且优美，仔细想一想也是很符合直觉的。证明如下：考虑任意有向边
+<span class="math inline">\(v \to w\)</span>，当 <code>dfs(v)</code>
+被调用时，分别有三种情况：</p>
+<ul>
+<li>Case 1: <code>dfs(w)</code> has already been called and returned.
+Thus <span class="math inline">\(w\)</span> was done before <span class="math inline">\(v\)</span>.</li>
+<li>Case 2: <code>dfs(w)</code> has not yet been called. Then
+<code>dfs(w)</code> will get called directly or indirecely by
+<code>dfs(v)</code> and will finish before <code>dfs(v)</code>. Thus
+<span class="math inline">\(w\)</span> will be done before <span class="math inline">\(v\)</span>.</li>
+<li>Case 3: <code>dfs(w)</code> has already been called but has not yet
+returned. This cannot happen in a DAG.</li>
+</ul>
+<p>因此，在 DAG 的 postorder 中，一条有向边 <span class="math inline">\(v \to w\)</span> 能够保证 <span class="math inline">\(w\)</span> 在 <span class="math inline">\(v\)</span> 之前；因此在 reverse postorder 中 <span class="math inline">\(w\)</span> 一定在 <span class="math inline">\(v\)</span> 之后。这正好符合 topological order
+的定义。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DepthFirstOrder</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span>[] marked;</span><br><span class="line">    <span class="keyword">private</span> ArrayList&lt;Integer&gt; postorder;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DepthFirstOrder</span><span class="params">(Digraph G)</span> &#123;</span><br><span class="line">        postorder = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;Integer&gt;();</span><br><span class="line">        marked = <span class="keyword">new</span> <span class="title class_">boolean</span>[G.V()];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> <span class="number">0</span>; v &lt; G.V(); ++v)</span><br><span class="line">            <span class="keyword">if</span> (!marked[v])    dfs(G, v);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(Digraph G, <span class="type">int</span> v)</span> &#123;</span><br><span class="line">        marked[v] = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> w : G.adj(v))</span><br><span class="line">            <span class="keyword">if</span> (!marked[w])    dfs(G, w);</span><br><span class="line">        postorder.add(v);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> Iterable&lt;Integer&gt; <span class="title function_">reversePost</span><span class="params">()</span> &#123;</span><br><span class="line">        Collections.reverse(postorder);</span><br><span class="line">        <span class="keyword">return</span> postorder;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="directed-cycle-detection">Directed Cycle Detection</h3>
+<div class="note info no-icon"><p>Proposition. A diagraph has a topological order iff no directed
+cycle.</p>
+</div>
+<p>很好理解，只有 DAG 有拓扑序；若使用 dfs
+对有环图求拓扑序将进入死循环。</p>
+<p>关于判环，有一个优美的算法：将每个节点染成白，灰，黑三种颜色。白色节点是还未入
+dfs 栈的节点，灰色节点是当前 dfs 栈中的节点，黑色节点是已经弹出 dfs
+栈的节点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">DepthFirstOrder</span><span class="params">(Digraph G)</span> &#123;</span><br><span class="line">    marked = <span class="keyword">new</span> <span class="title class_">int</span>[G.V()];    <span class="comment">// 0 for white, 1 for grey, 2 for black</span></span><br><span class="line">    hasCycle = <span class="literal">false</span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(Digraph G, <span class="type">int</span> v)</span> &#123;</span><br><span class="line">    marked[v] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> w : G.adj(v)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (marked[w] == <span class="number">0</span>)    dfs(G, w);</span><br><span class="line">        <span class="keyword">if</span> (marked[w] == <span class="number">1</span>)    hasCycle = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    marked[v] = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>关于判环还有许多其他的应用：precedence scheduling，Java compiler 中的
+cyclic inheritance 判断与 Excel 中的 spreadsheet recalculation。</p>
+<p><br></p>
+<h2 id="strong-components">Strong Components</h2>
+<div class="note info no-icon"><p>Strongly Connected. Vertices <span class="math inline">\(v\)</span>
+and <span class="math inline">\(w\)</span> are <em>strongly
+connected</em> if there is both a directed path from <span class="math inline">\(v\)</span> to <span class="math inline">\(w\)</span> and a directed path from <span class="math inline">\(w\)</span> to <span class="math inline">\(v\)</span>.</p>
+</div>
+<p>强连通关系具有以下性质：</p>
+<ul>
+<li>Reflexivity. <span class="math inline">\(v\)</span> is strongly
+connected to <span class="math inline">\(v\)</span>.</li>
+<li>Symmetry. If <span class="math inline">\(v\)</span> is strongly
+connected to <span class="math inline">\(w\)</span>, then <span class="math inline">\(w\)</span> is strongly connected to <span class="math inline">\(v\)</span>.</li>
+<li>Transitivity. If <span class="math inline">\(v\)</span> is strongly
+connected to <span class="math inline">\(w\)</span> and <span class="math inline">\(w\)</span> to <span class="math inline">\(x\)</span>, then <span class="math inline">\(v\)</span> is strongly connected to <span class="math inline">\(x\)</span>.</li>
+</ul>
+<p>这三个性质决定了 strong component (强连通分量) 的定义。</p>
+<div class="note info no-icon"><p>Def. A strong component is a maximal subset of strongly-connected
+vertices.</p>
+</div>
+<p><img data-src="scc.png"></p>
+<p>接下来我们来介绍 Kosaraju-Sharir 算法：其通过对 DAG <span class="math inline">\(G\)</span> 的两次 DFS 求出其所有的 strong
+components。具体来说，该算法将计算出一个数组 <code>id</code>，属于同一个
+strong components 的节点具有相同的 <code>id</code>。</p>
+<ul>
+<li>Phase 1: run DFS on <span class="math inline">\(G^R\)</span> to
+compute reverse postorder.</li>
+<li>Phase 2: run DFS on <span class="math inline">\(G\)</span>,
+considering vertices in order given by first DFS.</li>
+</ul>
+<p><span class="math inline">\(G^R\)</span> 是图 <span class="math inline">\(G\)</span> 的 reverse graph (反向图)：其通过反转
+<span class="math inline">\(G\)</span> 中的所有有向边生成。利用 Strong
+components in <span class="math inline">\(G\)</span> are the same as in
+<span class="math inline">\(G^R\)</span> 这一性质，我们得到了对 kernal
+DAG of <span class="math inline">\(G\)</span> 的一种染色顺序。</p>
+<div class="note info no-icon"><p>Kernal DAG. Contract each strong component into a single vertex.
+(Tarjan 缩点)</p>
+</div>
+<p><img data-src="kernal.png"></p>
+<p>如图，按照逆拓扑序对 kernal DAG of <span class="math inline">\(G\)</span> 进行染色能够保证 strong components
+之间的颜色不会相互干扰；而 <u><span class="math inline">\(G\)</span>
+的逆拓扑序就是 <span class="math inline">\(G^R\)</span> 的拓扑序</u>，即
+<span class="math inline">\(G^R\)</span> 的 reverse
+postorder。附上知乎上的<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/58926821">这个回答</a>，讲的很精辟。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">KosarajuSharirSCC</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> marked[];</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span>[] id;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> count;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">KosarajuSharirSCC</span><span class="params">(Digraph G)</span> &#123;</span><br><span class="line">        marked = <span class="keyword">new</span> <span class="title class_">boolean</span>[G.V()];</span><br><span class="line">        id = <span class="keyword">new</span> <span class="title class_">int</span>[G.V()];</span><br><span class="line">        <span class="type">DepthFirstOrder</span> <span class="variable">dfs</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DepthFirstOrder</span>(G.reverse());</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> v : dfs.reversePost()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!marked[v]) &#123;</span><br><span class="line">                dfs(G, v);</span><br><span class="line">                count++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(Digraph G, <span class="type">int</span> v)</span> &#123;</span><br><span class="line">        marked[v] = <span class="literal">true</span>;</span><br><span class="line">        id[v] = count;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> w : G.adj(v))</span><br><span class="line">            <span class="keyword">if</span> (!marked[w])    dfs(G, w);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">stronglyConnected</span><span class="params">(<span class="type">int</span> v, <span class="type">int</span> w)</span> &#123; <span class="keyword">return</span> id[v] == id[w]; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="minimum-spanning-trees">Minimum Spanning Trees</h2>
+<p>Given a undirected graph <span class="math inline">\(G\)</span> with
+positive edges weights (connected).</p>
+<div class="note info no-icon"><p>A spanning tree of <span class="math inline">\(G\)</span> is a
+subgraph <span class="math inline">\(T\)</span> that is both a
+<em>tree</em> (connected and acyclic) and <em>spanning</em> (includes
+all of the vertices).</p>
+</div>
+<p>Our goal is to find a min weight spanning tree, i.e., minimum
+spanning tree.</p>
+<h3 id="cut-property">Cut Property</h3>
+<p>We make the simplifying assumptions: (1) Edge weights are distinct.
+(2) Graph is connected. Under such assumptions MST exists and is
+unique.</p>
+<div class="note info no-icon"><p>A <em>cut</em> in a graph is a partiton of its vertices into two
+nonempty sets. A <em>crossing edge</em> connects a vertex in one set
+with a vertex in the other.</p>
+</div>
+<p><img data-src="MST.png"></p>
+<p>如图，cut 将顶点分为灰色与白色两个点集，所有连接这两个点集的边都是
+crossing edge。MST 有这样一个性质：<u>Given any cut, the crossing edge
+of min weight is in the MST.</u></p>
+<p>我们用反证法对该性质进行证明：假设 min-weight crossing edge <span class="math inline">\(e\)</span> 并不在 MST 中。</p>
+<ul>
+<li>Adding <span class="math inline">\(e\)</span> to MST creates a
+cycle.</li>
+<li>Some other edge <span class="math inline">\(f\)</span> in cycle must
+be a crossing tree.</li>
+<li>Removing <span class="math inline">\(f\)</span> and adding <span class="math inline">\(e\)</span> is also a spanning tree.</li>
+<li>Since weight of <span class="math inline">\(e\)</span> is less than
+the weight of <span class="math inline">\(f\)</span>, that spanning tree
+is lower weight.</li>
+<li>Contradiction!</li>
+</ul>
+<h3 id="greedy-mst-algorithms">Greedy MST Algorithms</h3>
+<p>利用 MST 的 cut property，我们能设计这样一个理论上的贪心算法：</p>
+<ul>
+<li>Start with all edges colored gray.</li>
+<li>Find cut with no black crossing edges; color its min-weight edge
+black.</li>
+<li>Repeat until <span class="math inline">\(V-1\)</span> edges are
+colored black.</li>
+</ul>
+<p>该算法的 crucial 之处在于如何找到一种划分点集的方法 (即
+cut)，并且点集之间没有 black crossing
+edges。接下来我们将介绍两种划分的算法：Kruskal 算法与 Prim 算法。</p>
+<p><br></p>
+<h2 id="kruskals-algorithm">Kruskal's Algorithm</h2>
+<p>Kruskal's algorithm considers edges in <em>ascending</em> order of
+weight. We add next edge to tree <span class="math inline">\(T\)</span>
+unless doing so would create a cycle. If V-1 edges is added, <span class="math inline">\(T\)</span> is spanned to MST.</p>
+<p>我们来看看 Kruskal's algorithm 是如何划分两个点集 (即找到一个合法的
+cut) 的。</p>
+<ul>
+<li>Suppose Kruskal's algorithm colors the edge <span class="math inline">\(e\)</span>: <span class="math inline">\(v\)</span>-<span class="math inline">\(w\)</span>
+black.</li>
+<li>Cut = set of vertices connected to <span class="math inline">\(v\)</span> in tree <span class="math inline">\(T\)</span>.</li>
+<li>In this cut we can guarentee that no crossing edge is black &amp; no
+crossing edge has lower weight.</li>
+</ul>
+<p><img data-src="kruskal.png"></p>
+<p>如图，根据 Kruskal 算法，当前的 <span class="math inline">\(T\)</span> 中包括边 1-7，7-0 与
+2-3，下一个被添加的边为 0-2。如果加入 0-2 不会令 <span class="math inline">\(T\)</span> 中出现环，一个合法的 cut 为 <span class="math inline">\(\{1,7,0\}\)</span> (<span class="math inline">\(T\)</span> 中与 0 连接的所有点) 与 <span class="math inline">\(\{2,3,4,5,6\}\)</span>。</p>
+<p>对于该 cut，可以证明 0-2 是一个 minimum black-crossing edge。</p>
+<ul>
+<li>black-crossing edge：由于加入 0-2 不会使 <span class="math inline">\(T\)</span> 中出现环，<span class="math inline">\(T\)</span> 中点 0 所在的连通块与点 2
+所在的连通块本来是不连通的。因此 0-2 一定是一个 black-crossing
+edge。</li>
+<li>minimum：Kruskal
+算法是按照边权由小到大的顺序考虑的，因此可以保证当前考虑的这条边一定是所有
+crossing edge 中最小的。</li>
+</ul>
+<p>Implementation Challenge. Kruskal
+算法实现的难点在于动态判环：由于是否存在环本质上是一个判断是否联通的问题，我们可以轻易用并查集解决这个问题。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">KruskalMST</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Queue&lt;Edge&gt; mst = <span class="keyword">new</span> <span class="title class_">Queue</span>&lt;Edge&gt;();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">KruskalMST</span><span class="params">(EdgeWeightedGraph G)</span> &#123;</span><br><span class="line">        MinPQ&lt;Edge&gt; pq = <span class="keyword">new</span> <span class="title class_">MinPQ</span>&lt;Edge&gt;();</span><br><span class="line">        <span class="keyword">for</span> (Edge e : G.edges())    pq.insert(e);</span><br><span class="line">        <span class="type">UF</span> <span class="variable">uf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UF</span>(G.V());</span><br><span class="line">        <span class="keyword">while</span> (!pq.isEmpty() &amp;&amp; mst.size() &lt; G.V() - <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="type">Edge</span> <span class="variable">e</span> <span class="operator">=</span> pq.delMin();</span><br><span class="line">            <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> e.either(), w = e.other(v);</span><br><span class="line">            <span class="keyword">if</span> (!uf.connected(v, w)) &#123;</span><br><span class="line">                uf.union(v, w);</span><br><span class="line">                mst.enqueue(e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> Iterable&lt;Edge&gt; <span class="title function_">edges</span><span class="params">()</span> &#123; <span class="keyword">return</span> mst; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="single-link-clustering">Single-link Clustering</h3>
+<p>接下来我们看一个似乎与 MST 不相关的问题 — single-link clustering
+问题。首先介绍以下定义：</p>
+<ul>
+<li>k-clustering. Divide a set of objects classify into <span class="math inline">\(k\)</span> conherent groups.</li>
+<li>Distance function. Numeric value specifying "closeness" of two
+objects.</li>
+</ul>
+<p>一个常见的 distance function 定义是 single-link definition: Distance
+between two clusters equals the distance between the two closest objects
+(one in each cluster).</p>
+<p>那么我们定义 single-link clustering 问题如下：Given an integer <span class="math inline">\(k\)</span>, find a k-clustering that maximizes the
+distance between two closest clusters.</p>
+<p><img data-src="kclustering.png"></p>
+<p>我们对给出的点集构造出一张无向图，任意两点间的边权为它们之间的距离。</p>
+<p>由于需要 clusters
+之间的最小距离最大，我们采取贪心算法：由小到大考虑每一条边，若该边连接了两个不同的
+clusters，则将这两个 clusters 聚合为一个
+cluster，从而消除了该最小距离。重复以上过程直至图中只剩下 <span class="math inline">\(k\)</span> 个 clusters，我们能够保证这 <span class="math inline">\(k\)</span> 个 clusters 间的最小距离最大。</p>
+<p>这本质上就是 Kruskal 算法求 MST
+的过程。它微妙的印证了这样一个性质：对于一棵树，删掉该树中的 <span class="math inline">\(k-1\)</span> 条边，最后将会得到 <span class="math inline">\(k\)</span> 个连通块。</p>
+<p><br></p>
+<h2 id="prims-algorithm">Prim's Algorithm</h2>
+<p>关于 Kruskal 算法与 Prim 算法的区别有一条十分精准的概括：Kruskal
+是基于边 (edges) 的贪心算法，而 Prim 则是基于点 (vertices)
+的贪心算法。</p>
+<ul>
+<li>Start with vertex 0 and greedily grow tree <span class="math inline">\(T\)</span>.</li>
+<li>Add to <span class="math inline">\(T\)</span> the min weight edge
+with <em>exactly one endpoint</em> in <span class="math inline">\(T\)</span>.</li>
+<li>Repeat until V-1 edges are added.</li>
+</ul>
+<p>与 Kruskal 算法相同，Prim 算法也是 greedy MST algorithm 的一种
+special case。它是这样划分点集的：</p>
+<ul>
+<li>Suppose edge <span class="math inline">\(e\)</span> = min weight
+edge connecting a vertex on the tree.</li>
+<li>Cut = set of vertices connected on tree.</li>
+<li>In this cut we can guarentee that no crossing edge is black &amp; no
+crossing edge has lower weight.</li>
+</ul>
+<p><img data-src="prim.png"></p>
+<p>如图，当前 <span class="math inline">\(T\)</span> 中的边包括 1-7,
+7-0, 0-2 与 2-3，下一个加入的边为 7-5。此时一个合法的 cut 为 <span class="math inline">\(\{1,7,0,2,3\}\)</span> (即 <span class="math inline">\(T\)</span> 本身) 与 <span class="math inline">\(\{4,5,6\}\)</span>。</p>
+<p>由于 Prim 算法是逐渐对 <span class="math inline">\(T\)</span>
+进行扩展的，<span class="math inline">\(T\)</span>
+一定是联通的。因此，任何连接 <span class="math inline">\(T\)</span> 与非
+<span class="math inline">\(T\)</span> 节点的边都一定是 crossing
+edge。又我们是按照权值由小到大进行考虑的，该 crossing edge 一定是
+minimum 的。</p>
+<p>Implementation Challenge. Find the min weight edge with exactly one
+endpoint in <span class="math inline">\(T\)</span>.</p>
+<h3 id="lazy-implementation">Lazy Implementation</h3>
+<p>Lazy solution. Maintain a PQ of <em>edges</em> with (at least) one
+endpoint in <span class="math inline">\(T\)</span>.</p>
+<ul>
+<li>Key = edge; priority = weight of edge.</li>
+<li>Delete-min to determine next edge <span class="math inline">\(e\)</span> = <span class="math inline">\(v\)</span>-<span class="math inline">\(w\)</span>
+to add to <span class="math inline">\(T\)</span>.</li>
+<li>Disregard if both endpoints <span class="math inline">\(v\)</span>
+and <span class="math inline">\(w\)</span> are marked (both in <span class="math inline">\(T\)</span>).</li>
+<li>Otherwise, let <span class="math inline">\(w\)</span> be the
+unmarked vertex (not in <span class="math inline">\(T\)</span>):
+<ul>
+<li>add to PQ any edge incident to <span class="math inline">\(w\)</span> (assuming other endpoint not in <span class="math inline">\(T\)</span>)</li>
+<li>add <span class="math inline">\(e\)</span> to <span class="math inline">\(T\)</span> and mark <span class="math inline">\(w\)</span>.</li>
+</ul></li>
+</ul>
+<p>为何叫 <em>lazy</em> approach？因为 PQ
+中维护的边并非所有都是只有一端在 <span class="math inline">\(T\)</span>
+中的。随着 <span class="math inline">\(T\)</span> 的生长，PQ
+中的某些边会变得 obsolete (两端都在 <span class="math inline">\(T\)</span> 中)。因此从 PQ
+中取边时需要加入判断，舍弃已经变得 obsolete 的边。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LazyPrimMST</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span>[] marked;       <span class="comment">// MST vertices</span></span><br><span class="line">    <span class="keyword">private</span> Queue&lt;Edge&gt; mst;        <span class="comment">// MST edges</span></span><br><span class="line">    <span class="keyword">private</span> MinPQ&lt;Edge&gt; pq;         <span class="comment">// PQ of edges</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">LazyPrimMST</span><span class="params">(WeightedGraph G)</span> &#123;</span><br><span class="line">        pq = <span class="keyword">new</span> <span class="title class_">MinPQ</span>&lt;Edge&gt;();</span><br><span class="line">        mst = <span class="keyword">new</span> <span class="title class_">Queue</span>&lt;Edge&gt;();</span><br><span class="line">        marked = <span class="keyword">new</span> <span class="title class_">boolean</span>[G.V()];</span><br><span class="line">        visit(G, <span class="number">0</span>);                      <span class="comment">// assume G is connected: add vertex 0 to T</span></span><br><span class="line">        <span class="keyword">while</span> (!pq.isEmpty() &amp;&amp; mst.size() &lt; G.V() - <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="type">Edge</span> <span class="variable">e</span> <span class="operator">=</span> pq.delMin();</span><br><span class="line">            <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> e.either(), w = e.other(v);</span><br><span class="line">            <span class="keyword">if</span> (marked[v] &amp;&amp; marked[w])  <span class="keyword">continue</span>;  <span class="comment">// disgard obsolete edges</span></span><br><span class="line">            mst.enqueue(e);                         <span class="comment">// add edge e to tree T</span></span><br><span class="line">            <span class="keyword">if</span> (!marked[v])  visit(G, v);           <span class="comment">// add the not-in-T endpoint to T</span></span><br><span class="line">            <span class="keyword">if</span> (!marked[w])  visit(G, w);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">visit</span><span class="params">(WeightedGraph G, <span class="type">int</span> v)</span> &#123;</span><br><span class="line">        marked[v] = <span class="literal">true</span>;               <span class="comment">// add v to T</span></span><br><span class="line">        <span class="keyword">for</span> (Edge e : G.adj(v))</span><br><span class="line">            <span class="keyword">if</span> (!marked[e.other(v)])    <span class="comment">// for each edge v-w, add to PQ if w not already in T</span></span><br><span class="line">                pq.insert(e);         </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> Iterable&lt;Edge&gt; <span class="title function_">mst</span><span class="params">()</span> &#123; <span class="keyword">return</span> mst; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="eager-implementation">Eager Implementation</h3>
+<p>eager approach 同样维护一个 PQ，但与 lazy approach 不同的是 PQ
+中维护的是点，而非边。</p>
+<p>Maintain a PQ of vertices connected by an edge to <span class="math inline">\(T\)</span>, where priority of vertex <span class="math inline">\(v\)</span> = weight of shortest edge connecting
+<span class="math inline">\(v\)</span> to <span class="math inline">\(T\)</span>. (是不是有点像最短路算法的思路？)</p>
+<ul>
+<li>Delete min vertex <span class="math inline">\(v\)</span> and add its
+associated edge <span class="math inline">\(e\)</span> = <span class="math inline">\(v\)</span> - <span class="math inline">\(w\)</span> to <span class="math inline">\(T\)</span>.</li>
+<li>Update PQ by considering all edges <span class="math inline">\(e\)</span> = <span class="math inline">\(v\)</span> - <span class="math inline">\(x\)</span> incident to <span class="math inline">\(v\)</span>.
+<ul>
+<li>case 1: ignore if <span class="math inline">\(x\)</span> is already
+in <span class="math inline">\(T\)</span>.</li>
+<li>case 2: add <span class="math inline">\(x\)</span> to PQ if not
+already on it.</li>
+<li>case 3: <em>decrease priority</em> of <span class="math inline">\(x\)</span> if <span class="math inline">\(v\)</span>-<span class="math inline">\(x\)</span>
+becomes the shortest edge connecting <span class="math inline">\(x\)</span> to <span class="math inline">\(T\)</span> if <span class="math inline">\(x\)</span> in PQ but not in <span class="math inline">\(T\)</span>.</li>
+</ul></li>
+</ul>
+<p>当点 <span class="math inline">\(x\)</span> 到 <span class="math inline">\(T\)</span> 的距离被更新时，我们需要降低其优先级
+(e.g., 修改 PQ 中储存的距离值)：这就涉及到对 PQ
+内部元素的操作。实现这一功能的数据结构称为 <em>Indexed priority
+queue</em> (索引优先队列)。</p>
+<p>对于每个元素，IPQ 为其分配一个整数索引，并维护三个数组
+<code>keys[]</code>, <code>pq[]</code> 与 <code>qp[]</code>。</p>
+<ul>
+<li><code>keys[i]</code> is the priority of <code>i</code>.</li>
+<li><code>pq[i]</code> is the index of the key in heap position
+<code>i</code>.</li>
+<li><code>qp[i]</code> is the heap position of the key with index
+<code>i</code>.</li>
+</ul>
+<p><br></p>
+<h2 id="shortest-paths">Shortest Paths</h2>
+<p>Which vertices?</p>
+<ul>
+<li><em>Single source</em> (单源最短路): from one vertex <span class="math inline">\(s\)</span> to every other vertex.</li>
+<li>Source-sink: from one vertex <span class="math inline">\(s\)</span>
+to another <span class="math inline">\(t\)</span>.</li>
+<li>All pairs: between all pairs of vertices.</li>
+</ul>
+<p>在这里我们主要讨论单源最短路。代表单源最短路的数据结构是
+shortest-paths tree (SPT, 最短路树)。We can represent the SPT with two
+vertex-indexed arrays:</p>
+<ul>
+<li><code>distTo[v]</code> is length of shortest path from <span class="math inline">\(s\)</span> to <span class="math inline">\(v\)</span>.</li>
+<li><code>edgeTo[v]</code> is <em>last</em> edge on shortest path from
+<span class="math inline">\(s\)</span> to <span class="math inline">\(v\)</span>.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">double</span> <span class="title function_">distTo</span><span class="params">(<span class="type">int</span> v)</span> &#123; <span class="keyword">return</span> distTo[v]; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> Iterable&lt;DirectedEdge&gt; <span class="title function_">pathTo</span><span class="params">(<span class="type">int</span> v)</span> &#123;</span><br><span class="line">    Stack&lt;DirectedEdge&gt; path = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;DirectedEdge&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">DirectedEdge</span> <span class="variable">e</span> <span class="operator">=</span> edgeTo[v]; e != <span class="literal">null</span>; e = edgeTo[e.from()])</span><br><span class="line">        path.push(e);</span><br><span class="line">    <span class="keyword">return</span> path;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="shortest-paths-optimality-conditions">Shortest-paths Optimality
+Conditions</h3>
+<p>最短路的最优化条件，即所谓的三角形条件 (两边之和大于第三边)。Let
+<span class="math inline">\(G\)</span> be an edge-weighted digragh. Then
+<code>distTo[]</code> are the shortest path distances from <span class="math inline">\(s\)</span> iff:</p>
+<ul>
+<li><code>distTo[s] = 0</code>.</li>
+<li>For each vertex <code>v</code>, <code>distTo[v]</code> is the length
+of some path from <span class="math inline">\(s\)</span> to <span class="math inline">\(v\)</span>.</li>
+<li>For each edge <span class="math inline">\(e = v\to w\)</span>,
+<code>distTo[w] &lt;= distTo[v] + e.weight()</code>.</li>
+</ul>
+<p>根据最短路的最优化条件，我们介绍一个操作：<u>edge relaxation</u>.
+Relax edge <span class="math inline">\(e=v\to w\)</span> 的意义是：</p>
+<ul>
+<li><code>distTo[v]</code> is length of shortest <em>known</em> path
+from <span class="math inline">\(s\)</span> to <span class="math inline">\(v\)</span>.</li>
+<li><code>distTo[w]</code> is length of shortest <em>known</em> path
+from <span class="math inline">\(s\)</span> to <span class="math inline">\(w\)</span>.</li>
+<li><code>edgeTo[w]</code> is last edge on shortest <em>known</em> path
+from <span class="math inline">\(s\)</span> to <span class="math inline">\(w\)</span>.</li>
+<li>If <span class="math inline">\(e=v\to w\)</span> gives shorter path
+to <span class="math inline">\(w\)</span> through <span class="math inline">\(v\)</span>, update both <code>distTo[w]</code> and
+<code>edgeTo[w]</code>.</li>
+</ul>
+<h3 id="generic-shortest-paths-algorithm">Generic Shortest-paths
+Algorithm</h3>
+<p>利用最短路的最优化条件，我们能够设计一个理论上的最短路算法，它一定能够计算出以
+<span class="math inline">\(s\)</span> 为源点的 SPT。</p>
+<ul>
+<li>Initialize <code>distTo[s] = 0</code> and
+<code>distTo[v] = inf</code> for all other vertices.</li>
+<li>Repeat until optimality conditions are satisfied.
+<ul>
+<li>Relax any edge.</li>
+</ul></li>
+</ul>
+<p>我们能够证明该算法是可行的：每一次成功的 relaxation 都能使得某个
+<code>distTo[v]</code> 减小；而由于最短路一定存在 (under certain
+assumption)，<code>distTo[v]</code> 只会减小有限次。</p>
+<p>(Efficient) Implementation Challenge. How to choose which edge to
+relax? 对这个问题的解答区分了不同的最短路算法。</p>
+<ul>
+<li>Dijkstra's algorithm (nonnegative weights).</li>
+<li>Topological sort algorithm (no directed cycles).</li>
+<li>Bellman-Ford algorithm/SPFA (no <em>negative cycles</em>).</li>
+</ul>
+<p><br></p>
+<h2 id="dijkstras-algorithm">Dijkstra's Algorithm</h2>
+<p>Dijkstra 算法求 SPT 与 Prim 算法求 MST 的本质相同。Prim
+算法维护逐渐增长的 MST <span class="math inline">\(T\)</span>，每次选择<u>离 <span class="math inline">\(T\)</span> 最近</u>的非 <span class="math inline">\(T\)</span> 点进行扩展。而 Dijkstra
+算法维护逐渐增长的 SPT <span class="math inline">\(T\)</span>，每次选择离<u>源点 <span class="math inline">\(s\)</span> 最近</u>的非 <span class="math inline">\(T\)</span> 点进行扩展。</p>
+<ul>
+<li>Consider vertices in increasing order of distance from <span class="math inline">\(s\)</span>, e.g., pick non-tree vertex with the
+lowest <code>distTo[]</code> value.</li>
+<li>Add vertex to tree and relax all edges pointing from that
+vertex.</li>
+</ul>
+<div class="note info no-icon"><p>Dijkstra's algorithm computes a SPT in any edge-weighted diagraph
+with <em>nonnegative weights</em>.</p>
+</div>
+<p>下面将给出对于 Dijkstra 算法非正式的正确性证明 (这节课并没有 cover
+该内容，是我自己想的！)</p>
+<figure>
+<img data-src="SPT.png" alt="画图工具画的渣图...感觉有必要掌握一下这方面的技能">
+<figcaption aria-hidden="true">画图工具画的渣图...感觉有必要掌握一下这方面的技能</figcaption>
+</figure>
+<p>假设下一个将被扩展入 SPT <span class="math inline">\(T\)</span>
+的节点为 <span class="math inline">\(v\)</span>，即在所有非 <span class="math inline">\(T\)</span> 节点中 <code>distTo[v]</code>
+是最小的。而当前 <code>edgeTo[v]</code> 中记录的边为 <span class="math inline">\(u-v\)</span>。我们想要证明的是当前的
+<code>distTo[v]</code> 与 <code>edgeTo[v]</code> 是全局最优的。</p>
+<p>采用反证法，假设存在另一条由 <span class="math inline">\(s\)</span>
+到 <span class="math inline">\(v\)</span> 的路径距离比
+<code>distTo[v]</code> 更短。我们将该路径中第一个非 <span class="math inline">\(T\)</span> 节点标记为 <span class="math inline">\(x\)</span>，<span class="math inline">\(x\)</span>
+与 <span class="math inline">\(v\)</span> 在 <span class="math inline">\(T\)</span> 的外部经过若干条边相连。</p>
+<p>在 Dijkstra 算法中，我们选择下一个待扩展节点的规则是
+<code>distTo[]</code> 值最小的节点；那么一定有
+<code>distTo[x] &gt;= distTo[v]</code>。而由于图中没有负权边，<span class="math inline">\(x\)</span> 到 <span class="math inline">\(v\)</span> 的距离 <span class="math inline">\(d&gt;0\)</span>。那么该路径的长度
+<code>distTo[x] + d</code> 一定大于
+<code>distTo[v]</code>，与我们的假设相悖。(如果有负权边，该不等式就不一定成立了！)
+算法正确性得证。</p>
+<p>Dijkstra 算法最多 relax 每条边一次。因此，binary heap 优化后的
+Dijkstra 算法复杂度为 <span class="math inline">\(O(E\log{V})\)</span>.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DijkstraSP</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> DirectedEdge[] edgeTo;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span>[] distTo;</span><br><span class="line">    <span class="keyword">private</span> IndexMinPQ&lt;Double&gt; pq;    <span class="comment">// Eager Implementation of Dijkstra</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DijkstraSP</span><span class="params">(EdgeWeightedDigraph G, <span class="type">int</span> s)</span> &#123;</span><br><span class="line">        edgeTo = <span class="keyword">new</span> <span class="title class_">DirectedEdge</span>[G.V()];</span><br><span class="line">        distTo = <span class="keyword">new</span> <span class="title class_">double</span>[G.V()];</span><br><span class="line">        pq = <span class="keyword">new</span> <span class="title class_">IndexMinPQ</span>&lt;Double&gt;(G.V());</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> <span class="number">0</span>; v &lt; G.V(); ++v)</span><br><span class="line">            distTo[v] = Double.POSITIVE_INFINITY;</span><br><span class="line">        distTo[s] = <span class="number">0.0</span>;</span><br><span class="line">        </span><br><span class="line">        pq.insert(s, <span class="number">0.0</span>);</span><br><span class="line">        <span class="keyword">while</span> (!pq.isEmpty()) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> pq.delMin();</span><br><span class="line">            <span class="keyword">for</span> (DirectedEdge e : G.adj(v))    relax(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">relax</span><span class="params">(DirectedEdge e)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> e.from(), w = e.to();</span><br><span class="line">        <span class="keyword">if</span> (distTo[w] &gt; distTo[v] + e.weight()) &#123;</span><br><span class="line">            distTo[w] = distTo[v] + e.weight();</span><br><span class="line">            edgeTo[w] = e;</span><br><span class="line">            <span class="keyword">if</span> (pq.contains(w))  pq.decreaseKey(w, distTo[w]);</span><br><span class="line">            <span class="keyword">else</span>                 pq.insert     (w, distTo[w]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="longest-paths-in-dag">Longest Paths in DAG</h2>
+<p>Suppose that an edge-weighted digraph has no directed cycles
+(weighted DAG), it is easier to find shortest paths than in a general
+digraph.</p>
+<div class="note info no-icon"><p>Topological sort algorithm computes SPT in any edge-weighted DAG in
+time proportional to <span class="math inline">\(E+V\)</span>. Note that
+edge weights can be negative!</p>
+</div>
+<p>对于 DAG，按照拓扑序 relax all edges
+寻找最短路是一个很自然的思路。正确性比较 trivial，就不证明了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AcyclicSP</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> DirectedEdge[] edgeTo;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span>[] distTo;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">AcyclicSP</span><span class="params">(EdgeWeightedDigraph G, <span class="type">int</span> s)</span> &#123;</span><br><span class="line">        edgeTo = <span class="keyword">new</span> <span class="title class_">DirectedEdge</span>[G.V()];</span><br><span class="line">        distTo = <span class="keyword">new</span> <span class="title class_">double</span>[G.V()];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> <span class="number">0</span>; v &lt; G.V(); ++v)</span><br><span class="line">            distTo[v] = Double.POSITIVE_INFINITY;</span><br><span class="line">        distTo[s] = <span class="number">0.0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="type">Topological</span> <span class="variable">topological</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Topological</span>(G);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> v : topological.order())</span><br><span class="line">            <span class="keyword">for</span> (DirectedEdge e : G.adj(v))    relax(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于 DAG 还存在最长路问题 (longest paths in edge-weighted
+DAGs)；将其转化为最短路问题加以解决。</p>
+<ul>
+<li>Nagate all weights.</li>
+<li>Find shortest paths.</li>
+<li>Negate weights in result.</li>
+</ul>
+<p>该问题的一个经典应用是 parallel job scheduling 问题。对于一组有
+durations 与 precedence constraints
+的任务，我们可以将其抽象为最长路问题以找到最佳的安排方案，使得完成所有任务的总时间最少。</p>
+<p>对于给出的任务集合，我们将其抽象为一个 weighted DAG。该方法称为
+critical path method。</p>
+<ul>
+<li>Create a source and sink vertices.</li>
+<li>Two vertices (begin and end) for each job.</li>
+<li>Three edges for each job.
+<ul>
+<li>Begin to end (weighted by duration).</li>
+<li>Source to begin (0 weight).</li>
+<li>End to sink (0 weight).</li>
+</ul></li>
+<li>Critical path: one 0-weight edge for each precedence
+constraint.</li>
+</ul>
+<p><img data-src="CPM.png"></p>
+<p>对于任务 <span class="math inline">\(i\)</span>，从源点 source 到任务
+<span class="math inline">\(i\)</span> 对应的结束点 end
+最长路的长度即是该任务的最早完成时间；因此我们将从源点 source 到任务
+<span class="math inline">\(i\)</span> 对应的起始点 begin
+最长路的长度设为该任务的安排时间即可。</p>
+<p><br></p>
+<h2 id="bellman-ford-algorithm">Bellman-Ford Algorithm</h2>
+<p>Dijkstra 算法是基于贪心的最短路算法；而 Bellman-Ford
+算法是基于动态规划的最短路算法。Bellman-Ford 算法能够很好的 handle
+带有负权边的图。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// After pass i, found shortest path containing at most i edges</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; G.V(); ++i)</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> <span class="number">0</span>; v &lt; G.V(); ++v)</span><br><span class="line">        <span class="keyword">for</span> (DirectedEdge e : G.adj(v))</span><br><span class="line">            relax(e);</span><br></pre></td></tr></table></figure>
+<p>Bellman-Ford 算法的思想很好理解：其对所有的边进行 <span class="math inline">\(V-1\)</span> 轮 relax。这是因为在一个含有 <span class="math inline">\(V\)</span>
+个顶点的图中，任意两点间的最短路径最多包含 <span class="math inline">\(V-1\)</span> 条边。</p>
+<p>在第 1 轮 relax 后，得到了源点最多经过 1 条边到达的顶点的最短路，在第
+2 轮 relax 后，得到了源点最多经过 2 条边到达的顶点的最短路……在第 <span class="math inline">\(V-1\)</span> 轮 relax
+后能够保证得到所有其他顶点的最短路。</p>
+<div class="note info no-icon"><p>Observation. If <code>distTo[v]</code> does not change during pass
+<code>i</code>, no need to relax any edge pointing from <code>v</code>
+in pass <code>i+1</code>.</p>
+</div>
+<p>根据这一 observation 能设计出队列优化的 Bellman-Ford 算法 — 即 SPFA
+(shortest-path fast algorithm) 算法。我们使用一个 queue 来记录
+<code>distTo[]</code> 值发生更改的顶点，在下一轮中只 relax
+这些顶点发射的边。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">SPFA</span><span class="params">(EdgeWeightedDigraph G, <span class="type">int</span> s)</span> &#123;</span><br><span class="line">    ... <span class="comment">// initialize</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> <span class="number">0</span>; v &lt; G.V(); ++v)</span><br><span class="line">        distTo[v] = Double.POSITIVE_INFINITY;</span><br><span class="line">    distTo[s] = <span class="number">0.0</span>;</span><br><span class="line">    que.push(s);</span><br><span class="line">    vis[s] = <span class="literal">true</span>;    <span class="comment">// vis[x] marks whether x is in queue</span></span><br><span class="line">    <span class="keyword">while</span> (!que.empty()) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">u</span> <span class="operator">=</span> que.front();</span><br><span class="line">        que.pop();</span><br><span class="line">        vis[u] = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">for</span> (DirectedEdge e : G.adj(u))    &#123;	<span class="comment">// relax</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> e.from(), w = e.to();</span><br><span class="line">            <span class="keyword">if</span> (distTo[w] &gt; distTo[v] + e.weight()) &#123;</span><br><span class="line">                distTo[w] = distTo[v] + e.weight();</span><br><span class="line">                edgeTo[w] = e;</span><br><span class="line">                <span class="keyword">if</span> (!vis[w]) &#123;</span><br><span class="line">                    que.push(w);</span><br><span class="line">                    vis[w] = <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Bellman-Ford-based 算法的理论上的最坏时间复杂度为 <span class="math inline">\(\Omega(EV)\)</span>；但实际应用中经过队列优化的
+SPFA 算法效率是可以接受的。另外，Bellman-Ford-based 算法还能用于判负环 —
+对存在负环的图，Bellman-Ford 算法将陷入死循环，不断更新负环内顶点的
+<code>distTo[]</code> 与 <code>edgeTo[]</code> 值。</p>
+<div class="note info no-icon"><p>A <em>negative cycle</em> is a directed cycle whose sum of edge
+weights is negative. A SPT exists iff no negative cycles.</p>
+</div>
+<p>综上所述，最短路问题有三个困难性阶段：</p>
+<ul>
+<li>Directed cycles make the problem harder. (Dijkstra -&gt; Topological
+DP)</li>
+<li>Negative weights make the problem harder. (Bellman-Ford/SPFA -&gt;
+Dijkstra)</li>
+<li>Negative cycles makes the problem <em>intractable</em>.</li>
+</ul>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p><a target="_blank" rel="noopener" href="https://www.coursera.org/learn/algorithms-part2">Algorithms,
+Part 2, Princeton University</a>. Lecturer: Robert Sedgewick &amp; Kevin
+Wayne.</p>
+<p>Course textbook:</p>
+<p><em>Algorithms (4th edition)</em>, Sedgewick, R. &amp; Wayne, K.,
+(2011), Addison-Wesley Professional, <a target="_blank" rel="noopener" href="https://algs4.cs.princeton.edu/home/">view</a></p>
+<!-- flag of hidden posts -->
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2023/08/06/algorithm-4/" title="Algorithms II, Princeton University, P4">https://www.thisisxxz.com/2023/08/06/algorithm-4/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | Algorithms II, Princeton University, P4](https://www.thisisxxz.com/2023/08/06/algorithm-4/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Algorithms/" rel="tag"><i class="fa fa-tag"></i> Algorithms</a>
+          </div>
+
+        
+
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/08/06/algorithm-4/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

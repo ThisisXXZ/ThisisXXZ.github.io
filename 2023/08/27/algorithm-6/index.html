@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Algorithms I &amp; II, Princeton 系列笔记的 P6 部分。字符串算法博大精深，远非一篇笔记就能囊括。上一篇笔记主要关注字符串排序问题，而本篇将着重介绍以字符串为键值的 symbol tables 与 substring search 问题。  Tries: traditional R-way tries &amp; ternary search tries">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Algorithms II, Princeton University, P6">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/08/27/algorithm-6/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="Algorithms I &amp; II, Princeton 系列笔记的 P6 部分。字符串算法博大精深，远非一篇笔记就能囊括。上一篇笔记主要关注字符串排序问题，而本篇将着重介绍以字符串为键值的 symbol tables 与 substring search 问题。  Tries: traditional R-way tries &amp; ternary search tries">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/27/algorithm-6/sss.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/27/algorithm-6/DFA.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/27/algorithm-6/DFA2.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/27/algorithm-6/NFA.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/27/algorithm-6/NFA2.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/27/algorithm-6/NFA3.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/27/algorithm-6/LZW.png">
+<meta property="article:published_time" content="2023-08-27T08:00:05.000Z">
+<meta property="article:modified_time" content="2024-02-02T11:32:34.000Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Data Structure">
+<meta property="article:tag" content="Algorithms">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.thisisxxz.com/2023/08/27/algorithm-6/sss.png">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2023/08/27/algorithm-6/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/08/27/algorithm-6/","path":"2023/08/27/algorithm-6/","title":"Algorithms II, Princeton University, P6"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Algorithms II, Princeton University, P6 | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#tries"><span class="nav-number">1.</span> <span class="nav-text">Tries</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#r-way-tries"><span class="nav-number">1.1.</span> <span class="nav-text">R-way Tries</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ternary-search-tries"><span class="nav-number">1.2.</span> <span class="nav-text">Ternary Search Tries</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#character-based-operations"><span class="nav-number">2.</span> <span class="nav-text">Character-Based Operations</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#substring-search"><span class="nav-number">3.</span> <span class="nav-text">Substring Search</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#knuth-morris-pratt"><span class="nav-number">4.</span> <span class="nav-text">Knuth-Morris-Pratt</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#boyer-moore"><span class="nav-number">5.</span> <span class="nav-text">Boyer-Moore</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rabin-karp-fingerprint-search"><span class="nav-number">6.</span> <span class="nav-text">Rabin-Karp Fingerprint
+Search</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#regular-expression"><span class="nav-number">7.</span> <span class="nav-text">Regular Expression</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nondeterministic-finite-state-automata"><span class="nav-number">8.</span> <span class="nav-text">Nondeterministic
+Finite-State Automata</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nfa-simulation"><span class="nav-number">9.</span> <span class="nav-text">NFA Simulation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nfa-construction"><span class="nav-number">10.</span> <span class="nav-text">NFA Construction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#regex-miscellaneous"><span class="nav-number">11.</span> <span class="nav-text">Regex Miscellaneous</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#generalized-re-print"><span class="nav-number">11.1.</span> <span class="nav-text">Generalized RE Print</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#not-so-regular-expressions"><span class="nav-number">11.2.</span> <span class="nav-text">Not-So-Regular Expressions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#abstract-machines"><span class="nav-number">11.3.</span> <span class="nav-text">Abstract Machines</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#data-compression"><span class="nav-number">12.</span> <span class="nav-text">Data Compression</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#run-length-coding"><span class="nav-number">13.</span> <span class="nav-text">Run-Length Coding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#huffman-compression"><span class="nav-number">14.</span> <span class="nav-text">Huffman Compression</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lzw-compression"><span class="nav-number">15.</span> <span class="nav-text">LZW Compression</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">16.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/08/27/algorithm-6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Algorithms II, Princeton University, P6 | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Algorithms II, Princeton University, P6
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-08-27 16:00:05" itemprop="dateCreated datePublished" datetime="2023-08-27T16:00:05+08:00">2023-08-27</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://thisisxxz.com/categories/%E7%AC%94%E8%AE%B0/Algorithms-Princeton/">Algorithms
+I &amp; II, Princeton</a> 系列笔记的 P6
+部分。字符串算法博大精深，远非一篇笔记就能囊括。上一篇笔记主要关注字符串排序问题，而本篇将着重介绍以字符串为键值的
+symbol tables 与 substring search 问题。</p>
+<ul>
+<li>Tries: traditional R-way tries &amp; ternary search tries.</li>
+<li>Substring Search: Knuth-Morris-Pratt, Boyer-Moore, Rabin-Karp.</li>
+<li>Pattern Matching: Regular expressions (regex).</li>
+<li>Data Compression: Huffman &amp; LZW compression. (trie plays an
+important role!)</li>
+</ul>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="tries">Tries</h2>
+<div class="note info no-icon"><p>String symbol table. Symbol table specialized to string keys. It
+avoids examing the entrie key (as with string sorting) thus perform
+better than traditional symbol tables with string keys.</p>
+</div>
+<p>用红黑树或 linear-probing hashing 实现的 string symbol tables
+已经拥有较为优秀的效率；但一个更为 ingenious 的，string-specialized
+的数据结构是 tries (字典树)。</p>
+<h3 id="r-way-tries">R-way Tries</h3>
+<p>Tries 的名字来源于 re<em>trie</em>val，但读作
+try。相当简单优雅的数据结构，就不详细介绍了。</p>
+<ul>
+<li>Search hit. Need to examine all <span class="math inline">\(L\)</span> characters for equality.</li>
+<li>Search miss. (typical case) examine only a few characters
+(sublinear).</li>
+<li>Space. <span class="math inline">\(R\)</span> null links at each
+leaf.</li>
+</ul>
+<div class="note info no-icon"><p>Bottom line. Fast search hit and even faster search miss, but
+<em>wasted space</em>.</p>
+</div>
+<p>trie 的删除操作也十分简单：</p>
+<ul>
+<li>Find the node corresponding to key and set value to null.</li>
+<li>If node has null value and all null links, remove that node (and
+recur).</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This is a Trie Symbol Table, which associate a value with each string key. </span></span><br><span class="line"><span class="comment">// To create a Trie plainly storing strings, use Trie Set.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TrieST</span>&lt;Value&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">R</span> <span class="operator">=</span> <span class="number">256</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">Node</span> <span class="variable">root</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Node</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Node</span> &#123;</span><br><span class="line">        <span class="comment">// use Object instead of Value since no generic array creation in Java</span></span><br><span class="line">        <span class="keyword">private</span> Object value;</span><br><span class="line">        <span class="keyword">private</span> Node[] next = <span class="keyword">new</span> <span class="title class_">Node</span>[R];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">put</span><span class="params">(String key, Value val)</span> &#123;</span><br><span class="line">        root = put(root, key, value, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> Node <span class="title function_">put</span><span class="params">(Node x, String key, Value val, <span class="type">int</span> d)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (x == <span class="literal">null</span>) x = <span class="keyword">new</span> <span class="title class_">Node</span>();</span><br><span class="line">        <span class="keyword">if</span> (d == key.length()) &#123;</span><br><span class="line">            x.val = val;</span><br><span class="line">            <span class="keyword">return</span> x;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">char</span> <span class="variable">c</span> <span class="operator">=</span> key.charAt(d);</span><br><span class="line">        x.next[c] = put(x.next[c], key, val, d+<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">contains</span><span class="params">(String key)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> get(key) != <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> Value <span class="title function_">get</span><span class="params">(String key)</span> &#123;</span><br><span class="line">        <span class="type">Node</span> <span class="variable">x</span> <span class="operator">=</span> get(root, key, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">if</span> (x == <span class="literal">null</span>)    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">return</span> (Value) x.val;    <span class="comment">// cast needed</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> Node <span class="title function_">get</span><span class="params">(Node x, String key, <span class="type">int</span> d)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (x == <span class="literal">null</span>)    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (d == key.length())    <span class="keyword">return</span> x;</span><br><span class="line">        <span class="type">char</span> <span class="variable">c</span> <span class="operator">=</span> key.charAt(d);</span><br><span class="line">        <span class="keyword">return</span> get(x.next[c], key, d+<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="ternary-search-tries">Ternary Search Tries</h3>
+<p>又是 Sedgewick 教授发明的算法之一 (Bentley &amp;
+<em>Sedgewick</em>)，ORZ。</p>
+<ul>
+<li>Store characters and values in nodes (not keys).</li>
+<li>Each node has 3 children: smaller (left), equal (middle), larger
+(right).</li>
+<li>Search or Insert.
+<ul>
+<li>If less, take left link; If greater, take right link.</li>
+<li>If equal, take the middle link and move to the next key
+character.</li>
+</ul></li>
+</ul>
+<div class="note info no-icon"><p>TST is as fast as hashing (for string keys), space efficient.</p>
+</div>
+<p>TSTs 改善了传统 R-way tries 耗费空间过多的缺点 (从 <span class="math inline">\((R+1)N\)</span> 优化至 <span class="math inline">\(4N\)</span>)，同时仍然维持了 tries 优秀的时间效率
+(从 <span class="math inline">\(L\)</span> 到可以接受的 <span class="math inline">\(L+\ln{N}\)</span>)。</p>
+<p>TSTs 还存在许多 variants：balanced TSTs via rotations (can achieve
+worst-case <span class="math inline">\(L+\log{N}\)</span> guarantees) 与
+TSTs with <span class="math inline">\(R^2\)</span> branching
+(对特定的输入进一步提升时空效率)。</p>
+<p>总而言之，TST 是这样的一种数据结构，它：</p>
+<ul>
+<li>Faster than hashing (especially for search misses).</li>
+<li>More space-efficient than R-way tries.</li>
+<li>More flexible than red-black BSTs.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TST</span>&lt;Value&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> Node root;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">Node</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> Value val;</span><br><span class="line">        <span class="keyword">private</span> <span class="type">char</span> c;</span><br><span class="line">        <span class="keyword">private</span> Node left, mid, right;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">put</span><span class="params">(String key, Value val)</span> &#123;</span><br><span class="line">        root = put(root, key, val, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> Node <span class="title function_">put</span><span class="params">(Node x, String key, Value val, <span class="type">int</span> d)</span> &#123;</span><br><span class="line">        <span class="type">char</span> <span class="variable">c</span> <span class="operator">=</span> key.charAt(d);</span><br><span class="line">        <span class="keyword">if</span> (x == <span class="literal">null</span>)    &#123; x = <span class="keyword">new</span> <span class="title class_">Node</span>(); x.c = c; &#125;</span><br><span class="line">        <span class="keyword">if</span>      (c &lt; x.c)               x.left  = put(x.left,  key, val, d);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (c &gt; x.c)               x.right = put(x.right, key, val, d);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (d &lt; key.length() - <span class="number">1</span>)  x.mid   = put(x.mid,   key, val, d+<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">else</span>                            x.val = val;</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">contains</span><span class="params">(String key)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> get(key) != <span class="literal">null</span>; </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> Value <span class="title function_">get</span><span class="params">(String key)</span> &#123;</span><br><span class="line">        <span class="type">Node</span> <span class="variable">x</span> <span class="operator">=</span> get(root, key, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">if</span> (x == <span class="literal">null</span>)    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">return</span> x.val;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> Node <span class="title function_">get</span><span class="params">(Node x, String key, <span class="type">int</span> d)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (x == <span class="literal">null</span>)    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="type">char</span> <span class="variable">c</span> <span class="operator">=</span> key.charAt(d);</span><br><span class="line">        <span class="keyword">if</span>      (c &lt; x.c)               <span class="keyword">return</span> get(x.left,  key, d);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (c &gt; x.c)               <span class="keyword">return</span> get(x.right, key, d);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (d &lt; key.length() - <span class="number">1</span>)  <span class="keyword">return</span> get(x.mid,   key, d+<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">else</span>                            <span class="keyword">return</span> x;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="character-based-operations">Character-Based Operations</h2>
+<p>以 string 作为键值的 string symbol table implemented with tries
+不仅仅支持以 string 为基本单位的操作，更支持基于字符的操作
+(character-based operations)。</p>
+<ul>
+<li>Ordered iteration (引入了利用 trie 进行 string sorting 的新思路).
+<ul>
+<li>Do inorder traversal of trie; add keys encountered to a queue.</li>
+<li>Maintain a sequence of characters on path from root to node.</li>
+</ul></li>
+<li>Prefix matches. Find all keys in a symbol table starting with a
+given prefix.</li>
+<li>Longest prefix. Find longest key in symbol table that is a prefix of
+query string.</li>
+<li>T9 texting.
+<ul>
+<li>Multi-tap input. 不断按某键直到切换到想要的字母。</li>
+<li>T9 text input. Find all words that correspond to given sequence of
+numbers.</li>
+</ul></li>
+<li>Patricia trie (crit-bit tree, radix tree). 将 trie 上的 internal
+one-way branching (象征着多个字符串的共同前缀) 压缩成一个节点，提升了
+trie 的空间利用率。</li>
+<li>Suffix tree. Patricia trie of suffixes of a string; can be
+constructed in linear time.</li>
+</ul>
+<p>最后，我们再来对 string symbol table
+的不同实现进行一个全面的比较与总结：</p>
+<table>
+<colgroup>
+<col style="width: 21%">
+<col style="width: 35%">
+<col style="width: 43%">
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: center;">Implementation</th>
+<th style="text-align: center;">Performance Guarantee</th>
+<th style="text-align: center;">Features</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">Red-black BST.</td>
+<td style="text-align: center;"><span class="math inline">\(\log{N}\)</span> <em>key</em> (string)
+compares.</td>
+<td style="text-align: center;">Supports ordered symbol table API.</td>
+</tr>
+<tr>
+<td style="text-align: center;">Hash tables.</td>
+<td style="text-align: center;">constant number of probes.</td>
+<td style="text-align: center;">Requires good hash function for key
+type.</td>
+</tr>
+<tr>
+<td style="text-align: center;">R-way tries or TSTs.</td>
+<td style="text-align: center;"><span class="math inline">\(\log{N}\)</span> <em>characters</em>
+accessed.</td>
+<td style="text-align: center;">Supports character-based
+operations.</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<h2 id="substring-search">Substring Search</h2>
+<p>Substring search 也是一个相当 fundamental
+的字符串问题。用一句话就可以概括：</p>
+<div class="note info no-icon"><p>Goal. Find pattern of length <span class="math inline">\(M\)</span>
+in a text of length <span class="math inline">\(N\)</span>. (typically
+<span class="math inline">\(N&gt;&gt;M\)</span>)</p>
+</div>
+<p>Brute-force substring search. Check for pattern starting at each text
+position.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">search</span><span class="params">(String pat, String txt)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">M</span> <span class="operator">=</span> pat.length();</span><br><span class="line">    <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> txt.length();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt;= N-M; ++i) &#123;</span><br><span class="line">        <span class="type">int</span> j;</span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; M; ++j)</span><br><span class="line">            <span class="keyword">if</span> (txt.charAt(i+j) != pat.charAt(j))</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">if</span> (j == M)    <span class="keyword">return</span> i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> N;    <span class="comment">// not found</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>暴力做法的最坏时间复杂度是 <span class="math inline">\(\sim
+MN\)</span> 的。另外，由于每次失配时 text pointer 将会回滚
+(backup)，使得该做法无法适应文本的流式输入 (text
+string)；我们需要更加优秀的 substring search 算法。</p>
+<figure>
+<img data-src="sss.png" alt="未见其人，先闻其声">
+<figcaption aria-hidden="true">未见其人，先闻其声</figcaption>
+</figure>
+<p><br></p>
+<h2 id="knuth-morris-pratt">Knuth-Morris-Pratt</h2>
+<p>很早以前就学过并被惊艳过的 KMP
+算法；今天以另外的角度来学习这个算法，倍感新鲜。</p>
+<p>首先来介绍一下 DFA (deterministic finite state automaton,
+有限状态自动机)。</p>
+<ul>
+<li>Finate number of states (including start and halt).</li>
+<li>Exactly one transition for each char in alphabet.</li>
+<li>Accept if sequence of transitions leads to halt state.</li>
+</ul>
+<figure>
+<img data-src="DFA.png" alt="看到这个图就想到了后缀自动机">
+<figcaption aria-hidden="true">看到这个图就想到了后缀自动机</figcaption>
+</figure>
+<p>上图是 pattern <code>ABABAC</code> 构建的 KMP
+自动机；其接受且仅接受以该 pattern 为后缀的字符串。将给出的 text stream
+输入该 DFA，若在某个时刻能够到达 halting state，说明匹配成功。</p>
+<p>这是因为 text stream 在该时刻形成的前缀被 KMP 自动机接受了；根据 KMP
+自动机的性质，这一前缀一定存在某个 <code>ABABAC</code>
+的后缀。而<u>字符串前缀的后缀一定是该字符串的子串</u>：据此我们成功将
+substring search 问题转化为了基于 pattern 的 KMP 自动机构建问题。</p>
+<p>KMP 自动机的 internal representation 是一个二维数组
+<code>dfa[][]</code>: <code>dfa[c][j]</code> 存储了状态 <span class="math inline">\(j\)</span> 在读取字符 <span class="math inline">\(c\)</span> 后转移到的状态 <span class="math inline">\(k\)</span>。</p>
+<p>Match transition.</p>
+<ul>
+<li>Descriptive. If first <span class="math inline">\(j\)</span>
+characters of pattern have already been matched and next char also
+matches, then first <span class="math inline">\(j+1\)</span> characters
+of pattern will be matched.</li>
+<li>Operative. If in state <span class="math inline">\(j\)</span> and
+next char <span class="math inline">\(c = \mathtt{pat}[j]\)</span>, go
+to state <span class="math inline">\(j+1\)</span>.</li>
+</ul>
+<p>Mismatch transition. (!) If in state <span class="math inline">\(j\)</span> and next char <span class="math inline">\(c \neq \mathtt{pat}[j]\)</span>, then the last
+<span class="math inline">\(j-1\)</span> characters of input are <span class="math inline">\(\mathtt{pat}[1...j-1]\)</span>, followed by <span class="math inline">\(c\)</span>.</p>
+<p>根据 KMP 自动机的定义，在字符 <code>c</code>
+被读入后，我们将转移到一个状态 <span class="math inline">\(k\)</span>，在该状态中 <span class="math inline">\(\mathtt{pat}[0...j-1]+c\)</span> 的某个长度为
+<span class="math inline">\(k\)</span> 的后缀将与 <span class="math inline">\(\mathtt{pat}[0...k-1]\)</span> (pattern 长度为
+<span class="math inline">\(k\)</span> 的前缀) 匹配。</p>
+<p>在第一种情况 (match transition) 下，显然 <span class="math inline">\(k = j+1\)</span>。想要找到失配情况下的 <span class="math inline">\(k\)</span> 则比较 tricky。</p>
+<p>我们不妨这样解读 KMP 自动机：对于输入的字符串 <span class="math inline">\(s\)</span> 与某个 pattern，KMP 自动机将会把 <span class="math inline">\(s\)</span> 的所有后缀与 pattern
+进行匹配，并且返回匹配长度最长的后缀，该后缀的长度为 <span class="math inline">\(k\)</span>。</p>
+<p>能够证明的是，字符串 <span class="math inline">\(s_1=\mathtt{pat}[0...j-1]+c\)</span> 与 <span class="math inline">\(s_2=\mathtt{pat}[1...j-1]+c\)</span> 输入 KMP
+自动机后得到的结果后缀是相同的。<span class="math inline">\(s_1\)</span>
+除了比 <span class="math inline">\(s_2\)</span>
+多出了一个后缀以外完全相同，而这个多出来的后缀 <span class="math inline">\(\mathtt{pat}[0...j-1]+c\)</span> 不可能是 KMP
+自动机返回的结果：这正是由失配 (mismatch transition) 的条件决定的。</p>
+<p>To compute <code>dfa[c][j]</code>: <em>Simulate</em> <span class="math inline">\(\mathtt{pat}[1...j-1]\)</span> on DFA and take
+trancision <span class="math inline">\(c\)</span>.</p>
+<ul>
+<li>plain simulation: takes linear time.</li>
+<li>maintain <span class="math inline">\(\mathtt{pat}[1...j-1]\)</span>
+as <em>restart state</em> <span class="math inline">\(X\)</span>: takes
+only constant time.</li>
+</ul>
+<figure>
+<img data-src="DFA2.png" alt="remember to update state X each time">
+<figcaption aria-hidden="true">remember to update state X each
+time</figcaption>
+</figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">KMP</span><span class="params">(String pat)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.pat = pat;</span><br><span class="line">    M = pat.length();</span><br><span class="line">    dfa = <span class="keyword">new</span> <span class="title class_">int</span>[R][M];</span><br><span class="line">    dfa[pat.charAt(<span class="number">0</span>)][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">X</span> <span class="operator">=</span> <span class="number">0</span>, j = <span class="number">1</span>; j &lt; M; ++j) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">c</span> <span class="operator">=</span> <span class="number">0</span>; c &lt; R; ++c)</span><br><span class="line">            dfa[c][j] = dfa[c][X];       <span class="comment">// copy mismatch transitions</span></span><br><span class="line">        dfa[pat.charAt(j)][j] = j+<span class="number">1</span>;     <span class="comment">// set match transition</span></span><br><span class="line">        X = dfa[pat.charAt(j)][X];       <span class="comment">// update restart state</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="note info no-icon"><p>Proposition. KMP substring search accesses no more than <span class="math inline">\(M+N\)</span> chars to search for a pattern of
+length <span class="math inline">\(M\)</span> in a text of length <span class="math inline">\(N\)</span>.</p>
+</div>
+<p>从有限状态自动机的角度来理解 KMP
+对我来说确实是一个全新的视角：但是构造 KMP 自动机的时空代价是 <span class="math inline">\(\sim RM\)</span>，这比我之前学习的构造 fail 指针
+(标记最长公共前后缀) 的 KMP 算法多了一个小常数 <span class="math inline">\(R\)</span>。</p>
+<p><br></p>
+<h2 id="boyer-moore">Boyer-Moore</h2>
+<p>Boyer-Moore 是一种启发式的字符串匹配算法，其包含两种规则：坏字符启发
+(bad character heuristic) 与好后缀启发 (good suffix heuristic). BM
+算法的 intuition 在于：</p>
+<ul>
+<li>Scan characters in pattern <em>from right to left</em>.</li>
+<li>Can skip as many as <span class="math inline">\(M\)</span> text
+chars when finding one not in the pattern.</li>
+</ul>
+<p>问题在于 how much to skip。</p>
+<p>我们定义 <span class="math inline">\(i\)</span>
+为定位指针，它所指向的 text 中的字符总是与 pattern 的首字符对齐；定义
+<span class="math inline">\(c\)</span> 为当前的失配字符 (mismatch
+character)。具体的例子见 slides 53-SubstringSearch。</p>
+<ul>
+<li>Case 1 - <span class="math inline">\(c\)</span> not in pattern.
+increment <span class="math inline">\(i\)</span> one character beyond
+the mismatch character.</li>
+<li>Case 2 - <span class="math inline">\(c\)</span> in pattern.
+<ul>
+<li>Case 2a - align the text <span class="math inline">\(c\)</span> with
+rightmost pattern <span class="math inline">\(c\)</span>.</li>
+<li>Case 2b (heuristic no help since backup will happen) - increment
+<span class="math inline">\(i\)</span> by 1.</li>
+</ul></li>
+</ul>
+<div class="note info no-icon"><p>Property. Substring search with the Boyer-Moore mismatched character
+heuristic takes about <span class="math inline">\(\sim N/M\)</span>
+character (sublinear) compares to search for a pattern of length <span class="math inline">\(M\)</span> in a text of length <span class="math inline">\(N\)</span>.</p>
+</div>
+<p>虽然 BM 算法的平均时间复杂度十分优秀，但其最坏时间复杂度仍然是 <span class="math inline">\(\sim MN\)</span>。但通过向其中添加 KMP-like rule
+形成的 BM variant 可以保证最坏 <span class="math inline">\(\sim
+3N\)</span> 的时间复杂度。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">BMsearch</span><span class="params">(String text)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> txt.length();</span><br><span class="line">    <span class="type">int</span> <span class="variable">M</span> <span class="operator">=</span> pat.length();</span><br><span class="line">    <span class="type">int</span> skip;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt;= N-M; i += skip) &#123;</span><br><span class="line">        skip = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> M-<span class="number">1</span>; j &gt;= <span class="number">0</span>; --j) &#123;</span><br><span class="line">            <span class="keyword">if</span> (pat.charAt(j) != txt.charAt(i+j)) &#123;</span><br><span class="line">                skip = Math.max(<span class="number">1</span>, j - rightmost[txt.charAt(i+j)]);  <span class="comment">// precompute rightmost</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (skip == <span class="number">0</span>)    <span class="keyword">return</span> i;  <span class="comment">// match</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> N;  <span class="comment">// not match</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="rabin-karp-fingerprint-search">Rabin-Karp Fingerprint
+Search</h2>
+<p>在 Brute-force 的基础上，RK 算法使用 modular hash
+进行快速的字符串比较从而大大改善了时间复杂度。</p>
+<ul>
+<li>Compute a hash of pattern characters <span class="math inline">\(0\)</span> to <span class="math inline">\(M-1\)</span>.</li>
+<li>For each <span class="math inline">\(i\)</span>, compuate a hash
+<span class="math inline">\(x_i\)</span> of text characters <span class="math inline">\(i\)</span> to <span class="math inline">\(M+i-1\)</span>. (Horner's method)</li>
+<li>If pattern hash = text string hash, check for a match.</li>
+<li>We can update hash function in constant time: <span class="math inline">\(x_{i+1}=(x_i-t_iR^{M-1})R+t_{i+M}\)</span>.</li>
+</ul>
+<p>Rabin-Karp 算法有两种实现的方式：</p>
+<ul>
+<li>Monte Carlo version - return match if hash match: linear-time
+guarantee but <em>not</em> always return the correct answer.</li>
+<li>Las Vegas version - always returns correct answer: worst-case
+running time is <span class="math inline">\(MN\)</span> (backup).</li>
+</ul>
+<div class="note info no-icon"><p>In practice, we choose <span class="math inline">\(Q\)</span> to be a
+large prime (but not so large to cause overflow). Under reasonable
+assumptions, probability of a collision is about <span class="math inline">\(1/Q\)</span>.</p>
+</div>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RabinKarp</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> patHash;    <span class="comment">// pattern hash value</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> M;           <span class="comment">// pattern length</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> Q;          <span class="comment">// modulus</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> R;           <span class="comment">// radix</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> RM;         <span class="comment">// R^(M-1) % Q</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">RabinKarp</span><span class="params">(String pat)</span> &#123;</span><br><span class="line">        M = pat.length();</span><br><span class="line">        R = <span class="number">256</span>;</span><br><span class="line">        Q = longRandomPrime();</span><br><span class="line">        RM = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= M-<span class="number">1</span>; ++i)</span><br><span class="line">            RM = (R * RM) % Q;</span><br><span class="line">        patHash = hash(pat, M);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> <span class="title function_">hash</span><span class="params">(String key, <span class="type">int</span> M)</span> &#123;</span><br><span class="line">        <span class="type">long</span> <span class="variable">h</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; M; ++j)</span><br><span class="line">            h = (R * h + key.charAt(j)) % Q;</span><br><span class="line">        <span class="keyword">return</span> h;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">search</span><span class="params">(String txt)</span> &#123;    <span class="comment">// Monte Carlo Version</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> txt.length();</span><br><span class="line">        <span class="type">int</span> <span class="variable">txtHash</span> <span class="operator">=</span> hash(txt, M);</span><br><span class="line">        <span class="keyword">if</span> (patHash == txtHash)    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> M; i &lt; N; ++i) &#123;</span><br><span class="line">            txtHash = (txtHash + Q - RM*txt.charAt(i-M) % Q) % Q;</span><br><span class="line">            txtHash = (txtHash*R + txt.charAt(i)) % Q;</span><br><span class="line">            <span class="keyword">if</span> (patHash == txtHash)    <span class="keyword">return</span> i - M + <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> N;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="regular-expression">Regular Expression</h2>
+<div class="note info no-icon"><p>A regular expression is a notation to specify a set (possibly
+infinite) of strings.</p>
+</div>
+<p>正则表达式是解决 pattern matching 问题的有力武器。与 substring search
+问题不同，pattern matching 问题要求在文本中找到所有匹配给定 pattern
+的字符串集合，而不是某个单独的精确匹配的子串。</p>
+<p>正则表达式的基本 operations 有四种，按优先级从大到小分别是 ：</p>
+<ul>
+<li>parentheses. ex. <code>(AB)*A</code></li>
+<li>closure. ex. <code>AB*A</code></li>
+<li>concatenation. ex. <code>ABA</code></li>
+<li>or. ex. <code>AA | ABA</code></li>
+</ul>
+<p>此外还有几个约定俗成的 additional operations，比如：</p>
+<ul>
+<li>wildcard. ex. <code>.U.U.U.</code></li>
+<li>character class. ex. <code>[A-Za-z][a-z]*</code></li>
+<li>at least <span class="math inline">\(1\)</span>. ex.
+<code>A(BC)+DE</code></li>
+<li>exactly <span class="math inline">\(k\)</span>. ex.
+<code>[0-9]&#123;5&#125;-[0-9]&#123;4&#125;</code></li>
+</ul>
+<p>教授在这一节的末尾对正则表达式做了一个很精准的总结："REs are
+amazingly powerful and expressive, but using them in applications can be
+amazingly complex and error-prone."</p>
+<p><br></p>
+<h2 id="nondeterministic-finite-state-automata">Nondeterministic
+Finite-State Automata</h2>
+<p>在介绍 KMP 算法时，我们引入了 DFA (deterministic finite-state
+automata, 确定性有限状态自动机) 的概念并以此为基础构造了 KMP
+自动机。类似的，对于 RE 我们也能构建对应的 DFA。根据 Kleene's theorem
+有:</p>
+<ul>
+<li>For any DFA, there exists a RE that describes the same set of
+strings.</li>
+<li>For any RE, there exists a DFA that recognizes the same set of
+strings.</li>
+</ul>
+<p>因此，我们能够提出用 RE 实现 pattern matching 的 basic plan：</p>
+<ul>
+<li>Build DFA from RE.</li>
+<li>Simulate DFA with text as input. Pattern matched if it reaches the
+halting state.</li>
+</ul>
+<p>然而，理想很美好，现实很残酷，basic plan 实际上是 infeasible
+的。这是因为我们构建的 DFA may have exponential number of states.
+例如给出的 pattern 为 <code>a.......</code>，每多一个 wildcard，DFA
+的状态数就将增加 <span class="math inline">\(R\)</span> 倍；有 <span class="math inline">\(n\)</span> 个 wildcard 的 RE 所构建的 DFA
+将具有至少 <span class="math inline">\(R^n\)</span> 个状态。</p>
+<p>为了解决这个问题，NFA (nondeterministic finite-state
+automata，非确定性有限状态自动机)
+横空出世。不得不说这真的是一个非常天才的想法。我们构造
+Regular-expression-matching NFA 如下：</p>
+<ul>
+<li>We assume RE enclosed in parentheses.</li>
+<li><u>One state pre RE character</u> (start = 0, accept = M).</li>
+<li>Red <span class="math inline">\(\varepsilon\)</span>-transition only
+changes state, but do <em>not</em> scan text.</li>
+<li>Black match transition changes state and scan to next text
+char.</li>
+<li>Accept if <em>any</em> sequence of transitions ends in accept
+state.</li>
+</ul>
+<figure>
+<img data-src="NFA.png" alt="NFA corresponding to the pattern ( ( A*B | AC ) D )">
+<figcaption aria-hidden="true">NFA corresponding to the pattern
+<code>( ( A*B | AC ) D )</code></figcaption>
+</figure>
+<p>可以看到，NFA 中的状态数只与 RE 的长度有关；并且它巧妙地将
+transitions 分为两种，红色的 <span class="math inline">\(\varepsilon\)</span> 转移与黑色的 match
+转移。其中，利用 <span class="math inline">\(\varepsilon\)</span>
+转移可以在不读入字符的前提下转移到新的状态。</p>
+<p>这一设计虽然天才，但是也同时带来了不确定性 (nondeterminism)。与 DFA
+中 sequence 作为一个确定的 “解” 不同，NFA 中的 sequence 更像是：</p>
+<ul>
+<li>One view: machine can <em>guess</em> the proper sequence of state
+transitions.</li>
+<li>Another view: sequence is a proof that machine accepts the
+text.</li>
+</ul>
+<figure>
+<img data-src="NFA2.png" alt="AAAABD sequence matched by the above NFA">
+<figcaption aria-hidden="true"><code>AAAABD</code> sequence matched by
+the above NFA</figcaption>
+</figure>
+<p>可以看到，NFA 中存在若干个 applicable transitions，因此 NFA
+simulation 远比 DFA simulation 更加 tricky: we need to systematically
+consider <em>all</em> possible transition sequences.</p>
+<p><br></p>
+<h2 id="nfa-simulation">NFA Simulation</h2>
+<p>在理解了 NFA 的原理之后，其 simulation
+也变得十分简单。我们利用类似多源 BFS
+的思路模拟每一步能够到达的状态的集合 (“一步”代表读入一个 text
+character)。具体实现上，我们：</p>
+<ul>
+<li>State names. Integers from <span class="math inline">\(0\)</span> to
+<span class="math inline">\(M\)</span> (number of symbols in RE).</li>
+<li>Match-transitions. Keep regular expression in array
+<code>re[]</code>.</li>
+<li><span class="math inline">\(\varepsilon\)</span>-transitions. Store
+in a diagraph <span class="math inline">\(G\)</span>.</li>
+<li>Simulation. Maintain set of all possible (reachable) states that NFA
+could be in after reading in the first <span class="math inline">\(i\)</span> text characters. 其中 reachable states
+用 DFS 即可找到。</li>
+</ul>
+<figure>
+<img data-src="NFA3.png" alt="One step in simulating an NFA">
+<figcaption aria-hidden="true">One step in simulating an
+NFA</figcaption>
+</figure>
+<div class="note info no-icon"><p>Determining whether an <span class="math inline">\(N\)</span>-character text is recognized by the NFA
+corresponding to an <span class="math inline">\(M\)</span>-character
+pattern takes time proportional to <span class="math inline">\(MN\)</span> in the worst case.</p>
+</div>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">NFA</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">char</span>[] re;    <span class="comment">// match transitions</span></span><br><span class="line">    <span class="keyword">private</span> Digraph G;    <span class="comment">// epsilon-transition digraph</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> M;        <span class="comment">// number of states</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">NFA</span><span class="params">(String regexp)</span> &#123;</span><br><span class="line">        M  = regexp.length();</span><br><span class="line">        re = regexp.toCharArray();</span><br><span class="line">        G  = buildEpsilonTransitionDigraph();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">recognizes</span><span class="params">(String txt)</span> &#123;</span><br><span class="line">        Bag&lt;Integer&gt; pc = <span class="keyword">new</span> <span class="title class_">Bag</span>&lt;Integer&gt;();</span><br><span class="line">        <span class="type">DirectedDFS</span> <span class="variable">dfs</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DirectedDFS</span>(G, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> <span class="number">0</span>; v &lt; G.V(); ++v)</span><br><span class="line">            <span class="keyword">if</span> (dfs.marked(v))    pc.add(v);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; txt.length(); ++i) &#123;</span><br><span class="line">            Bag&lt;Integer&gt; states = <span class="keyword">new</span> <span class="title class_">Bag</span>&lt;Integer&gt;();</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> v : pc) &#123;</span><br><span class="line">                <span class="comment">// not necessarily a match since RE needs to match full text</span></span><br><span class="line">                <span class="keyword">if</span> (v == M)    <span class="keyword">continue</span>;  </span><br><span class="line">                <span class="keyword">if</span> ((re[v] == txt.charAt(i)) || re[v] == <span class="string">&#x27;.&#x27;</span>)  <span class="comment">// follow match transitions</span></span><br><span class="line">                    states.add(v+<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            dfs = <span class="keyword">new</span> <span class="title class_">DirectedDFS</span>(G, states);    <span class="comment">// follow epsilon-transitions</span></span><br><span class="line">            pc = <span class="keyword">new</span> <span class="title class_">Bag</span>&lt;Integer&gt;();</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> <span class="number">0</span>; v &lt; G.V(); ++v)</span><br><span class="line">                <span class="keyword">if</span> (dfs.marked(v))    pc.add(v);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> Digraph <span class="title function_">buildEpsilonTransitionDigraph</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">/* stay tuned */</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="nfa-construction">NFA Construction</h2>
+<p>NFA construction 本质上是图的构建，而图的形式是由 RE 对各种
+operations 的定义决定的。这里将着重介绍 RE 中四种基本 operations
+的连边方式。(slide 54RegularExpressions.pdf
+上有对应的实例图，很清晰)</p>
+<ul>
+<li>Concatenation. Add <em>match-transition</em> edge from state
+corresponding to characters to next state.</li>
+<li>Parentheses. Add a <span class="math inline">\(\varepsilon\)</span>-transition edge from
+parentheses to next state.</li>
+<li>Closure. Add three <span class="math inline">\(\varepsilon\)</span>-transition edges for each
+<code>*</code> operator.
+<ul>
+<li>character/closure expression to <code>*</code>.</li>
+<li><code>*</code> to characte/closure expression.</li>
+<li><code>*</code> to next state.</li>
+</ul></li>
+<li>Or. Add two <span class="math inline">\(\varepsilon\)</span>-transition edges for each
+<code>|</code> operator.</li>
+</ul>
+<p>可以发现 or 操作一定是与 parentheses
+伴生的，且只有在右括号的位置确定后才能确定如何连边，因此用栈来维护是一个很自然的想法。</p>
+<div class="note info no-icon"><p>Proposition. Building the NFA corresponding to an <span class="math inline">\(M\)</span>-character regular expresssion takes
+time and space proportional to <span class="math inline">\(M\)</span>.</p>
+</div>
+<p>对于长度为 <span class="math inline">\(M\)</span> 的RE
+中的每个字符，我们最多执行三次连边操作与两次栈操作，可以视为
+constant-time。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Digraph <span class="title function_">buildEpsilonTransitionDigraph</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">Digraph</span> <span class="variable">G</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Digraph</span>(M+<span class="number">1</span>);</span><br><span class="line">    Stack&lt;Integer&gt; ops = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;Integer&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; M; ++i) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">lp</span> <span class="operator">=</span> i;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (re[i] == <span class="string">&#x27;(&#x27;</span> || re[i] == <span class="string">&#x27;|&#x27;</span>) ops.push(i);    <span class="comment">// left parentheses and |</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (re[i] == <span class="string">&#x27;)&#x27;</span>) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">or</span> <span class="operator">=</span> ops.pop();</span><br><span class="line">            <span class="keyword">if</span> (re[or] == <span class="string">&#x27;|&#x27;</span>) &#123;                          <span class="comment">// 2-way or</span></span><br><span class="line">                lp = ops.pop();</span><br><span class="line">                G.addEdge(lp, or+<span class="number">1</span>);</span><br><span class="line">                G.addEdge(or, i);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> lp = or;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (i &lt; M-<span class="number">1</span> &amp;&amp; re[i+<span class="number">1</span>] == <span class="string">&#x27;*&#x27;</span>) &#123;                  <span class="comment">// closure</span></span><br><span class="line">            G.addEdge(lp, i+<span class="number">1</span>);</span><br><span class="line">            G.addEdge(i+<span class="number">1</span>, lp);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (re[i] == <span class="string">&#x27;(&#x27;</span> || re[i] == <span class="string">&#x27;*&#x27;</span> || re[i] == <span class="string">&#x27;)&#x27;</span>) <span class="comment">// metasymbols</span></span><br><span class="line">            G.addEdge(i, i+<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> G;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="regex-miscellaneous">Regex Miscellaneous</h2>
+<h3 id="generalized-re-print">Generalized RE Print</h3>
+<p>Generalized/Global regular expression print (grep,
+全局正则表达式打印) 我们应该再熟悉不过了。在学习了 RE NFA 的 simulation
+与 construction 之后，我们也能自己实现 grep。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GREP</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">re</span> <span class="operator">=</span> <span class="string">&quot;(.*&quot;</span> + args[<span class="number">0</span>] + <span class="string">&quot;.*)&quot;</span>;    <span class="comment">// contains RE as a substring</span></span><br><span class="line">        <span class="type">NFA</span> <span class="variable">nfa</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NFA</span>(re);</span><br><span class="line">        <span class="keyword">while</span> (StdIn.hasNextLine()) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">line</span> <span class="operator">=</span> StdIn.readLine();</span><br><span class="line">            <span class="keyword">if</span> (nfa.recognized(line))</span><br><span class="line">                StdOut.println(line);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>grep 的最坏时间复杂度与 substring search 问题的 brute-force
+算法相同，均是 <span class="math inline">\(\sim MN\)</span>；但 pattern
+matching 问题确实要比 substring search 更加 fundamental。</p>
+<h3 id="not-so-regular-expressions">Not-So-Regular Expressions</h3>
+<p>正则表达式能描述特定的字符串集合 (pattern)，那么是否所有的 pattern
+都能被正则表达式表示呢？答案是否定的。举几个非正则 (non-regular) pattern
+的例子：</p>
+<ul>
+<li>String of the form <span class="math inline">\(ww\)</span> for some
+string <span class="math inline">\(w\)</span>:
+<code>beriberi</code>.</li>
+<li>Unary strings with a composite number of 1s: <code>111111</code>,
+<code>1111</code>, <code>11</code>...</li>
+<li>Bitstrings with an equal number of 0s and 1s:
+<code>01110100</code>.</li>
+<li>Palindromes. <code>abccba</code>.</li>
+</ul>
+<p>还有一个许多编程语言中支持的 RE additional operation,
+<em>back-references</em>: <code>\1</code> notation matches subexpression
+that was matched earlier. 但实际上，这一 feature 将会令 pattern matching
+问题变得 intractable。</p>
+<h3 id="abstract-machines">Abstract Machines</h3>
+<p>Abstract machines, languages, and nondeterminism.</p>
+<ul>
+<li>Basis of the theory of computation.</li>
+<li>Basis of programming languages.</li>
+</ul>
+<p>实际上我们熟悉的 compiler 本质上与 DFA，NFA 这些 abstract machines
+没有区别：它们都将某种“程序” (program) 翻译成另一种“机器码” (machine
+code)，再由 executor (即 simulator) 进行执行。</p>
+<ul>
+<li>KMP: string =&gt; DFA =&gt; DFA simulator.</li>
+<li><code>grep</code>: RE =? NFA =&gt; NFA simulator.</li>
+<li><code>javac</code>: Java language =&gt; Java byte code =&gt;
+JVM.</li>
+</ul>
+<p><br></p>
+<h2 id="data-compression">Data Compression</h2>
+<p>我一直很好奇数据压缩的原理：我们常用的 <code>zip</code>,
+<code>7z</code> 等压缩软件，到底是依据什么样的原理进行工作的呢？</p>
+<p>先介绍几个数据压缩中的常用术语：</p>
+<ul>
+<li>Message. Binary data <span class="math inline">\(B\)</span> we want
+to compress.</li>
+<li>Compress. Generate a "compressed" representation <span class="math inline">\(C(B)\)</span>.</li>
+<li>Expand. Reconstructs original bitstream <span class="math inline">\(B\)</span>.</li>
+<li>Compression ratio. Bits in <span class="math inline">\(C(B)\)</span>
+/ bits in <span class="math inline">\(B\)</span>.</li>
+</ul>
+<p>一般来说，被压缩的数据都是 Standard ASCII characters: 每个 ASCII 字符
+(<code>char</code>) 都占 8 bits。</p>
+<div class="note info no-icon"><p>Non-existence of <em>universal data compression</em>. No algorithm
+can compress every bitstream.</p>
+</div>
+<p>用反证法简单证明：如果 universal data compression
+算法存在，那么对于某个 bitstream <span class="math inline">\(B\)</span>，我们不断对其应用该算法，理论上可以将空间压缩至
+0；这显然是不合理的。</p>
+<p><br></p>
+<h2 id="run-length-coding">Run-Length Coding</h2>
+<p>Run-length coding 是一个简单的数据压缩算法：对于 long runs of
+repeated bits，我们用 4-bits counts to represent alternating runs of 0s
+and 1s。</p>
+<p><code>0000000000000001111111000000011111111111</code> (40 bits) =&gt;
+15 0s, then 7 1s, then 7 0s, then 11 1s =&gt;
+<code>1111011101111011</code> (16 bits)。这 16 bits，每 4 bits 分别是
+15, 7, 7 与 11 的二进制表示。</p>
+<p>在实际应用中，我们一般用一个 8-bits string 来记录
+run-length。也就是说，若某个连续的 <span class="math inline">\(0/1\)</span> 段的长度超过 <span class="math inline">\(2^8-1=255\)</span> 时，我们需要 intersperse runs
+of length 0。(例如，当一个长度超过 255 的 <span class="math inline">\(0\)</span> 段出现时，我们将其分为两个长度小于 255
+的 <span class="math inline">\(0\)</span> 段并用一个形式化的长为 0 的
+<span class="math inline">\(1\)</span> 段隔开)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RunLength</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">R</span>   <span class="operator">=</span> <span class="number">256</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">lgR</span> <span class="operator">=</span> <span class="number">8</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">compress</span><span class="params">()</span> &#123; <span class="comment">/* see textbook */</span> &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">expand</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">bit</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">while</span> (!BinaryStdIn.isEmpty()) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">run</span> <span class="operator">=</span> BinaryStdIn.readInt(lgR);  <span class="comment">// read 8-bit count from standard input</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; run; ++i)</span><br><span class="line">                 BinaryStdOut.write(bit);         <span class="comment">// write 1 bit to standard output</span></span><br><span class="line">            bit = !bit;                          <span class="comment">// alternate 0 and 1</span></span><br><span class="line">        &#125;</span><br><span class="line">        BinaryStdOut.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="huffman-compression">Huffman Compression</h2>
+<p>我们常常能发现，一些 encoding 方式会导致
+ambiguity：比如这一段摩斯电码 <code>***---***</code> 可以解释为
+SOS，V7，IAMIE 与 EEWNI。在实际应用中，摩斯电码在每个 codewords
+间停顿一段时间以作区分。</p>
+<p>但对于 data compression 我们需要采取另外的方式来避免 ambiguity: we
+need to ensure no code word is a prefix of another.</p>
+<ul>
+<li>Ex 1. Fixed-length code.</li>
+<li>Ex 2. Append special stop char to each codeword.</li>
+<li>Ex 3. General prefix-free code.</li>
+</ul>
+<p>很巧妙的是，prefix-free code 可以用一颗 binary trie 来表示！</p>
+<ul>
+<li>Char in leaves.</li>
+<li>Codeword is path from root to leaf.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Node</span> <span class="keyword">implements</span> <span class="title class_">Comparable</span>&lt;Node&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">char</span> ch;            <span class="comment">// used only for leaf nodes</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> freq;           <span class="comment">// used only for compress (stay tuned)</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Node left, right; </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Node</span><span class="params">(<span class="type">char</span> ch, <span class="type">int</span> freq, Node left, Node right)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.ch    = ch;</span><br><span class="line">        <span class="built_in">this</span>.freq  = freq;</span><br><span class="line">        <span class="built_in">this</span>.left  = left;</span><br><span class="line">        <span class="built_in">this</span>.right = right;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isLeaf</span><span class="params">()</span> &#123; <span class="keyword">return</span> left == <span class="literal">null</span> &amp;&amp; right == <span class="literal">null</span>; &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(Node that)</span> &#123; <span class="keyword">return</span> <span class="built_in">this</span>.freq - that.freq; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样，对于一个给定的用 binary trie 表示的 prefix-free coding scheme
+与一段待压缩的 message，我们能够轻易的进行 compression (从 leaf
+开始向上) 与 expansion (从 root 开始向下)。以 expansion 为例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">expand</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">Node</span> <span class="variable">root</span> <span class="operator">=</span> readTrie();           <span class="comment">// read in encoding trie</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> BinaryStdIn.readInt();    <span class="comment">// read in number of chars</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i) &#123;</span><br><span class="line">        <span class="type">Node</span> <span class="variable">x</span> <span class="operator">=</span> root;</span><br><span class="line">        <span class="keyword">while</span> (!x.isLeaf()) &#123;         <span class="comment">// expand codeword for ith char</span></span><br><span class="line">            <span class="keyword">if</span> (!BinaryStdIn.readBoolean())</span><br><span class="line">                x = x.left;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                x = x.right;</span><br><span class="line">        &#125;</span><br><span class="line">        BinaryStdOut.write(x.ch, <span class="number">8</span>);  <span class="comment">// field &#x27;ch&#x27; stores the encoded char</span></span><br><span class="line">    &#125;</span><br><span class="line">    BinaryStdOut.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在，问题来到如何构建一颗 <em>optimal</em> prefix-free binary
+trie。Huffman tree 是一个绝佳的选择：</p>
+<ul>
+<li>Count frequency <code>freq[i]</code> for each char <code>i</code> in
+input.</li>
+<li>Start with one node corresponding to each char <code>i</code> (with
+weight <code>freq[i]</code>).</li>
+<li>Repeat until a single binary trie formed:
+<ul>
+<li>select two tries with min weight <code>freq[i]</code> and
+<code>freq[j]</code></li>
+<li>merge into single trie with weight
+<code>freq[i] + freq[j]</code></li>
+</ul></li>
+</ul>
+<p>Huffman tree 贪心的对当前权值最小的两颗 trie
+进行二叉合并，可以证明这样做能够使得权值越大的叶子节点离根节点的距离越远。也就是说，出现频率越高的字符，其编码
+(codeword) 的长度越短。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> Node <span class="title function_">buildTrie</span><span class="params">(<span class="type">int</span>[] freq)</span> &#123;</span><br><span class="line">    MinPQ&lt;Node&gt; pq = <span class="keyword">new</span> <span class="title class_">MinPQ</span>&lt;Node&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">char</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; R; ++i)    <span class="comment">// initialize PQ with singleton tries</span></span><br><span class="line">        <span class="keyword">if</span> (freq[i] &gt; <span class="number">0</span>)</span><br><span class="line">            pq.insert(<span class="keyword">new</span> <span class="title class_">Node</span>(i, freq[i], <span class="literal">null</span>, <span class="literal">null</span>));  </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (pq.size() &gt; <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="type">Node</span> <span class="variable">x</span> <span class="operator">=</span> pq.delMin();</span><br><span class="line">        <span class="type">Node</span> <span class="variable">y</span> <span class="operator">=</span> pq.delMin();  <span class="comment">// greedily merge two smallest tries</span></span><br><span class="line">        <span class="type">Node</span> <span class="variable">parent</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Node</span>(<span class="string">&#x27;\0&#x27;</span>, x.freq + y.freq, x, y);  <span class="comment">// new root/internal nodes</span></span><br><span class="line">        pq.insert(parent);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> pq.delMin();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="lzw-compression">LZW Compression</h2>
+<p>与 static model (ex. ASCII, Morse code) 与 dynamic model (ex. Huffman
+code) 不同，LZW code 是一种 <em>adaptive model</em>: it progressively
+learn and update model as you read text.</p>
+<p>LZW 算法维护一个 symbol table，其中记录着一系列 string-code
+的映射。与 Huffman code 逐字符编码的方式不同，LZW
+算法能够为特定的字符串进行编码。</p>
+<p>与 Huffman code 相同的是，LZW 中的 symbol table 也用 trie 进行实现
+(但并非 binary trie)；并且该 trie 需要支持 longest prefix match
+操作。这是因为 LZW compression 的步骤如下：</p>
+<ul>
+<li>Create ST associating <span class="math inline">\(W\)</span>-bit
+codewords with string keys.</li>
+<li>Initialize ST with codewords for single-char keys.</li>
+<li>(longest prefix match) Find longest string <span class="math inline">\(s\)</span> in ST that is a prefix of <em>unscanned
+part</em> of input.</li>
+<li>Write the <span class="math inline">\(W\)</span>-bit codeword
+associated with <span class="math inline">\(s\)</span>.</li>
+<li>Add <span class="math inline">\(s+c\)</span> to ST as an update,
+where <span class="math inline">\(c\)</span> is the next char in the
+input.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">compress</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">input</span> <span class="operator">=</span> BinaryStdIn.readString();</span><br><span class="line">    TST&lt;Integer&gt; st = <span class="keyword">new</span> <span class="title class_">TST</span>&lt;Integer&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; R; ++i)    <span class="comment">// codewords for single-char, radix R keys</span></span><br><span class="line">        st.put(<span class="string">&quot;&quot;</span> + (<span class="type">char</span>) i, i);</span><br><span class="line">    <span class="type">int</span> <span class="variable">code</span> <span class="operator">=</span> R+<span class="number">1</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (input.length() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> st.longestPrefixOf(input);    <span class="comment">// find longest prefix match s</span></span><br><span class="line">        BinaryStdOut.write(st.get(s), W);        <span class="comment">// write W-bit codeword for s</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">t</span> <span class="operator">=</span> s.length();</span><br><span class="line">        <span class="keyword">if</span> (t &lt; input.length() &amp;&amp; code &lt; L)      <span class="comment">// add new codeword</span></span><br><span class="line">            st.put(input.substring(<span class="number">0</span>, t+<span class="number">1</span>), code++);</span><br><span class="line">        input = input.substring(t);              <span class="comment">// scan past s in input</span></span><br><span class="line">    &#125;</span><br><span class="line">    BinaryStdOut.write(R, W);                    <span class="comment">// write &quot;stop&quot; codeword</span></span><br><span class="line">    BinaryStdOut.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>LZW expansion 需要在 decode 的同时 reconstruct the symbol table.
+其步骤如下：</p>
+<ul>
+<li>Create ST associating string values with <span class="math inline">\(W\)</span>-bit keys.</li>
+<li>Initialize ST to contain single-char values.</li>
+<li>Read a <span class="math inline">\(W\)</span>-bit key.</li>
+<li>Find associated string value in ST and write it out.</li>
+<li>Update ST.</li>
+</ul>
+<p>注意，LZW expansion 存在一种 tricky case 需要 handle: 尝试 expand
+以下例子，可以发现有时我们会遇到 symbol table
+中当前未记录的编码。(具体的处理方式 not cover in this class)</p>
+<figure>
+<img data-src="LZW.png" alt="expansion stops for unknown code value">
+<figcaption aria-hidden="true">expansion stops for unknown code
+value</figcaption>
+</figure>
+<p>LZW 与 Huffman compression 都是一种 <em>loseless compression</em>
+(我们熟悉的 JPEG, MP3 compression 均不属于此类，它们是 <em>lossy
+compression</em>)，并且都被 Shannon entropy
+理论所限制。它们最大的区别在于：</p>
+<ul>
+<li>LZW: represent variable-length symbols with fixed-length codes.</li>
+<li>Huffman: represent fixed-length symbols with variable-length
+codes.</li>
+</ul>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p><a target="_blank" rel="noopener" href="https://www.coursera.org/learn/algorithms-part2">Algorithms,
+Part 2, Princeton University</a>. Lecturer: Robert Sedgewick &amp; Kevin
+Wayne.</p>
+<p>Course textbook:</p>
+<p><em>Algorithms (4th edition)</em>, Sedgewick, R. &amp; Wayne, K.,
+(2011), Addison-Wesley Professional, <a target="_blank" rel="noopener" href="https://algs4.cs.princeton.edu/home/">view</a></p>
+<!-- flag of hidden posts -->
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2023/08/27/algorithm-6/" title="Algorithms II, Princeton University, P6">https://www.thisisxxz.com/2023/08/27/algorithm-6/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | Algorithms II, Princeton University, P6](https://www.thisisxxz.com/2023/08/27/algorithm-6/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Data-Structure/" rel="tag"><i class="fa fa-tag"></i> Data Structure</a>
+              <a href="/tags/Algorithms/" rel="tag"><i class="fa fa-tag"></i> Algorithms</a>
+          </div>
+
+        
+
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/08/27/algorithm-6/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="这是 Algorithms I &amp; II, Princeton 系列笔记的 P5 部分。这一节将介绍：  Maximum Flow &amp; Minimum Cut. Radix Sort - LSD, MSD &amp; 3-way radix sorts (Bentley &amp; Sedgewick, 1997). Suffix Arrays.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Algorithms II, Princeton University, P5">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/08/14/algorithm-5/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="这是 Algorithms I &amp; II, Princeton 系列笔记的 P5 部分。这一节将介绍：  Maximum Flow &amp; Minimum Cut. Radix Sort - LSD, MSD &amp; 3-way radix sorts (Bentley &amp; Sedgewick, 1997). Suffix Arrays.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/14/algorithm-5/init.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/14/algorithm-5/augpath.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/14/algorithm-5/block.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/14/algorithm-5/badcase.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/14/algorithm-5/radix1.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/14/algorithm-5/radix2.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/14/algorithm-5/radix3.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/08/14/algorithm-5/radix4.png">
+<meta property="article:published_time" content="2023-08-14T13:27:48.000Z">
+<meta property="article:modified_time" content="2024-02-02T11:32:28.000Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Algorithms">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.thisisxxz.com/2023/08/14/algorithm-5/init.png">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2023/08/14/algorithm-5/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/08/14/algorithm-5/","path":"2023/08/14/algorithm-5/","title":"Algorithms II, Princeton University, P5"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Algorithms II, Princeton University, P5 | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#maxflow-mincut"><span class="nav-number">1.</span> <span class="nav-text">Maxflow &amp; Mincut</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mincut-problem"><span class="nav-number">1.1.</span> <span class="nav-text">Mincut Problem</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#maxflow-problem"><span class="nav-number">1.2.</span> <span class="nav-text">Maxflow Problem</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ford-fulkerson-algorithm"><span class="nav-number">2.</span> <span class="nav-text">Ford-Fulkerson Algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#running-time-analysis"><span class="nav-number">2.1.</span> <span class="nav-text">Running Time Analysis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#java-implementation"><span class="nav-number">2.2.</span> <span class="nav-text">Java Implementation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#maxflow-mincut-theorem"><span class="nav-number">3.</span> <span class="nav-text">Maxflow-Mincut Theorem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#flow-value-lemma"><span class="nav-number">3.1.</span> <span class="nav-text">Flow-value Lemma</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#weak-duality"><span class="nav-number">3.2.</span> <span class="nav-text">Weak Duality</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#true-duality"><span class="nav-number">3.3.</span> <span class="nav-text">True Duality</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#key-indexed-counting"><span class="nav-number">4.</span> <span class="nav-text">Key-Indexed Counting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#radix-sort"><span class="nav-number">5.</span> <span class="nav-text">Radix Sort</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#lsd-radix-sort"><span class="nav-number">5.1.</span> <span class="nav-text">LSD Radix Sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#msd-radix-sort"><span class="nav-number">5.2.</span> <span class="nav-text">MSD Radix Sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#way-radix-quicksort"><span class="nav-number">5.3.</span> <span class="nav-text">3-way Radix Quicksort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#performance-analysis"><span class="nav-number">5.4.</span> <span class="nav-text">Performance Analysis</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#suffix-arrays"><span class="nav-number">6.</span> <span class="nav-text">Suffix Arrays</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/08/14/algorithm-5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Algorithms II, Princeton University, P5 | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Algorithms II, Princeton University, P5
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-08-14 21:27:48" itemprop="dateCreated datePublished" datetime="2023-08-14T21:27:48+08:00">2023-08-14</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>这是 <a target="_blank" rel="noopener" href="https://thisisxxz.com/categories/%E7%AC%94%E8%AE%B0/Algorithms-Princeton/">Algorithms
+I &amp; II, Princeton</a> 系列笔记的 P5 部分。这一节将介绍：</p>
+<ul>
+<li>Maximum Flow &amp; Minimum Cut.</li>
+<li>Radix Sort - LSD, MSD &amp; 3-way radix sorts (Bentley &amp;
+<em>Sedgewick</em>, 1997).</li>
+<li>Suffix Arrays.</li>
+</ul>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="maxflow-mincut">Maxflow &amp; Mincut</h2>
+<p>在了解最大流最小割定理前，我们先对最大流问题与最小割问题进行一个简单的介绍。</p>
+<h3 id="mincut-problem">Mincut Problem</h3>
+<p>对于一个边权为正的 edge-weighted digraph，给出一个 source vertex
+<span class="math inline">\(s\)</span> 与 target vertex <span class="math inline">\(t\)</span>.</p>
+<div class="note info no-icon"><p>Def. A <span class="math inline">\(st\)</span>-cut (cut) is a
+partition of the vertices into two disjoint sets, with <span class="math inline">\(s\)</span> in one set <span class="math inline">\(A\)</span> and <span class="math inline">\(t\)</span> in the other set <span class="math inline">\(B\)</span>. Its <em>capacity</em> is the sum of
+the capacities of the edges from <span class="math inline">\(A\)</span>
+to <span class="math inline">\(B\)</span>.</p>
+</div>
+<p>关于 cut 的定义在之前 MST 的部分也介绍过。对于最小割问题我们引入一个
+cut 的容量 (capacity)：即从一个点集到另一个点集间所有边的边权之和。</p>
+<p>据此我们定义最小割问题：Minumum st-cut (mincut) problem. Find a cut
+of minimum capacity.</p>
+<p>冷战期间，对于苏联-东欧的铁路网，我们假设破坏一个铁路线的代价是该铁路线的容量。西方世界想要以最小的代价切断两地的物资供应：这个问题的模型就是最小割问题。</p>
+<h3 id="maxflow-problem">Maxflow Problem</h3>
+<p>同样，对于一个有 source vertex 与 target vertex 的正边权
+edge-weighted digraph 我们定义流：</p>
+<div class="note info no-icon"><p>Def. An <span class="math inline">\(st\)</span>-flow (flow) is an
+assignment of values to the edges such that:</p>
+<ul>
+<li>Capacity constraint: 0 <span class="math inline">\(\leq\)</span>
+edge's flow <span class="math inline">\(\leq\)</span> edge's
+capacity.</li>
+<li>Local equilibrium: inflow = outflow at every vertex (except <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span>).</li>
+</ul>
+<p>The <em>value</em> of a flow is the inflow at <span class="math inline">\(t\)</span>.</p>
+</div>
+<p>流是一种分配方式 (assignment of values)，而流的值即最后流入 target
+vertex 的值之和。据此我们定义最大流问题：Maximum st-flow (maxflow)
+problem. Find a flow of maximum value.</p>
+<p>冷战期间，对于苏联-东欧的铁路网，每条铁路都有其容量上限。苏联方想要找到一种运输方式，使得由苏联运送到东欧的物资总量最大化，这个问题的模型即为最大流问题。</p>
+<p><br></p>
+<h2 id="ford-fulkerson-algorithm">Ford-Fulkerson Algorithm</h2>
+<p>Ford-Fulkerson
+算法是求解最大流问题的经典算法，它通过不断寻找图中可能的 augmenting
+paths (增广路) 试图增加 flow 的值。本质上它是一个贪心算法，但通过
+backward edges 引入了一个类似后悔的机制。</p>
+<p>Initialization. Start with 0 flow.</p>
+<p><img data-src="init.png"></p>
+<p>在初始化之后，Ford-Fulkerson 算法开始不断寻找图中的 augmenting paths
+(增广路)。</p>
+<div class="note info no-icon"><p>Augmenting Path. An <u>undirected</u> path from <span class="math inline">\(s\)</span> to <span class="math inline">\(t\)</span> such that:</p>
+<ul>
+<li>Can increase flow on <em>forward edges</em> (not full).</li>
+<li>Can decrease flow on <em>backward edges</em> (not empty).</li>
+</ul>
+</div>
+<p>注意增广路是 undirected 的：因此一条增广路可能包含若干条 forward
+edges 与若干条 backward edges。forward edges 是增广路中指向终点 <span class="math inline">\(t\)</span> 的边；而 backward edges
+是增广路中指向源点 <span class="math inline">\(s\)</span> 的边。</p>
+<p>In an augmenting path, we greedily increase the flow in all forward
+edges that are not full and decrease the flow in all backward edges that
+are not empty.</p>
+<p><img data-src="augpath.png"></p>
+<p>如图所示，在两次增广过后，Ford-Fulkerson
+算法找到了第三条增广路，它包括四条 forward edges 与一条 backward
+edge。在 forward edges 上我们贪心的增加流量，在 backward edge
+上我们贪心的减少流量。</p>
+<p>在 local equilibrium 条件下我们得以计算出这条增广路的 bottleneck 是
+5；因此它将为最大流贡献 5 流量。</p>
+<figure>
+<img data-src="block.png" alt="Algorithm ternimation.">
+<figcaption aria-hidden="true">Algorithm ternimation.</figcaption>
+</figure>
+<p>Termination. All paths from <span class="math inline">\(s\)</span> to
+<span class="math inline">\(t\)</span> are blocked by either a</p>
+<ul>
+<li>Full forward edge.</li>
+<li>Empty backward edge.</li>
+</ul>
+<p>如图，当图中没有增广路时，Ford-Fulkerson
+算法将中止。而没有增广路的表现是，从 <span class="math inline">\(s\)</span> 到 <span class="math inline">\(t\)</span>
+的所有无向路径都将被以上两种边所阻隔。换句话讲，所有存在 full forward
+edges 与 empty backward edges 的增广路的 bottleneck capacity 都是
+0，无法为最大流做出任何贡献。</p>
+<h3 id="running-time-analysis">Running Time Analysis</h3>
+<div class="note info no-icon"><p>Integrity theorem: There exists an <em>integer-valued</em> maxflow
+(and FF finds one).</p>
+</div>
+<p>一个图中的增广路数量 <span class="math inline">\(\leq\)</span>
+最大流的值：这是因为 Each augmentation increases the value by at least
+1.</p>
+<p>此外，对于一些特殊的构造，FF 算法可能显得比较低效。例如：</p>
+<p><img data-src="badcase.png"></p>
+<p>对于该图，朴素的 FF 算法在 100 次增广后才能计算出最大流 (其不断以 S
+型与倒 S 型这两种 bottleneck capacity 为 1
+的增广路进行增广)。解决的方法是采用特殊的增广路选取方式。<span class="math inline">\(V\)</span> vertices, <span class="math inline">\(E\)</span> edges, integer capacities between <span class="math inline">\(1\)</span> and <span class="math inline">\(U\)</span>.</p>
+<ul>
+<li>shortest path: augmenting path with fewest number of edges. number
+of paths <span class="math inline">\(\leq \frac{1}{2}EV\)</span>.</li>
+<li>fattest path: augmenting path with maximum bottleneck capacity.
+number of paths <span class="math inline">\(\leq E\ln{EU}\)</span>.</li>
+</ul>
+<h3 id="java-implementation">Java Implementation</h3>
+<p>定义一系列 flow network representation。在 flow edge data type 中保存
+flow <span class="math inline">\(f_e\)</span> 与 capacity <span class="math inline">\(c_e\)</span>。</p>
+<p>定义一条边的 residual capacity (残留容量) 为：</p>
+<ul>
+<li>Forward edge: residual capacity = <span class="math inline">\(c_e-f_e\)</span>.</li>
+<li>Backward edge: residual capacity = <span class="math inline">\(f_e\)</span>.</li>
+</ul>
+<p>如此一来，对于一条增广路，其 Augment flow 的计算方式为：</p>
+<ul>
+<li>Forward edge: add <span class="math inline">\(\Delta\)</span>
+(residual capacity).</li>
+<li>Backward edge: substract <span class="math inline">\(\Delta\)</span>
+(residual capacity).</li>
+</ul>
+<p>在引入了 residual capacity 的概念之后，我们可以基于此构造 residual
+network (残留网络)。在原始网络中， augmenting paths 是 undirected
+的，而在 residual network 中 augmenting paths 是 directed 的。</p>
+<p>首先是 <code>FlowEdge</code> datatype 的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FlowEdge</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> v, w;          <span class="comment">// from and to</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">double</span> capacity;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> flow;             <span class="comment">// initialized as 0</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">FlowEdge</span><span class="params">(<span class="type">int</span> v, <span class="type">int</span> w, <span class="type">double</span> capacity)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.v        = v;</span><br><span class="line">        <span class="built_in">this</span>.w        = w;</span><br><span class="line">        <span class="built_in">this</span>.capacity = capacity;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">from</span><span class="params">()</span>        &#123; <span class="keyword">return</span> v;        &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">to</span><span class="params">()</span>          &#123; <span class="keyword">return</span> w;        &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">capacity</span><span class="params">()</span> &#123; <span class="keyword">return</span> capacity; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">other</span><span class="params">(<span class="type">int</span> vertex)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>      (vertex == v) <span class="keyword">return</span> w;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (vertex == w) <span class="keyword">return</span> v;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">residualCapacityTo</span><span class="params">(<span class="type">int</span> vertex)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>      (vertex == v) <span class="keyword">return</span> flow;             <span class="comment">// backward edge</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (vertex == w) <span class="keyword">return</span> capacity - flow;  <span class="comment">// forward edge</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addResidualFlowTo</span><span class="params">(<span class="type">int</span> vertex, <span class="type">double</span> delta)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>      (vertex == v) flow -= delta;           <span class="comment">// backward edge</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (vertex == w) flow += delta;           <span class="comment">// forward edge</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来是 <code>FlowNetwork</code> datatype：其实现与
+<code>EdgeWeightedGraph</code> datatype 的实现基本相同。注意，虽然边是
+directed 的，但我们却需要将其同时加入 <span class="math inline">\(v\)</span> 与 <span class="math inline">\(w\)</span> 的邻接表中 (这是 undirected edge
+的加边方式)；这是由增广路的 undirected 性质决定的。因此 <span class="math inline">\(v\)</span> 中的边为 forward edge，<span class="math inline">\(w\)</span> 中的边为 backward edge。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FlowNetwork</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> V;</span><br><span class="line">    <span class="keyword">private</span> Bag&lt;FlowEdge&gt;[] adj;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">FlowNetwork</span><span class="params">(<span class="type">int</span> V)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.V = V;</span><br><span class="line">        adj = (Bag&lt;FlowEdge&gt;[]) <span class="keyword">new</span> <span class="title class_">Bag</span>[V];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> <span class="number">0</span>; v &lt; V; ++v)</span><br><span class="line">            adj[v] = <span class="keyword">new</span> <span class="title class_">Bag</span>&lt;FlowEdge&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addEdge</span><span class="params">(FlowEdge e)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> e.from();</span><br><span class="line">        <span class="type">int</span> <span class="variable">w</span> <span class="operator">=</span> e.to();</span><br><span class="line">        adj[v].add(e);     <span class="comment">// add forward edge</span></span><br><span class="line">        adj[w].add(e);     <span class="comment">// add backward edge</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> Iterable&lt;FlowEdge&gt; <span class="title function_">adj</span><span class="params">(<span class="type">int</span> v)</span> &#123; </span><br><span class="line">        <span class="keyword">return</span> adj[v]; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后是 <code>FordFulkerson</code> datatype：并且我们采用 shortest
+path 策略来寻找增广路。在网络流中边权的意义是容量 (capacity)
+而非距离。在距离意义上，每条边的长度都是 1；因此使用 BFS
+即可保证找到的增广路最短。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FordFulkerson</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span>[] marked;       <span class="comment">// true if s-&gt;v path in residual network</span></span><br><span class="line">    <span class="keyword">private</span> FlowEdge[] edgeTo;      <span class="comment">// last edge on s-&gt;v path</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> value;           <span class="comment">// value of the flow</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">FordFulkerson</span><span class="params">(FlowNetwork G, <span class="type">int</span> s, <span class="type">int</span> t)</span> &#123;</span><br><span class="line">        value = <span class="number">0.0</span>;</span><br><span class="line">        <span class="keyword">while</span> (hasAugmentingPath(G, s, t)) &#123;</span><br><span class="line">            <span class="type">double</span> <span class="variable">bottleneck</span> <span class="operator">=</span> Double.POSITIVE_INFINITY;</span><br><span class="line">            <span class="comment">// 遍历找到的增广路并计算 bottleneck capacity</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> t; v != s; v = edgeTo[v].other(v))  </span><br><span class="line">                bottle = Math.min(bottleneck, edgeTo[v].residualCapacityTo(v));</span><br><span class="line">            <span class="comment">// 遍历找到的增广路并对每一条边进行增广 (更新 flow)</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> t; v != s; v = edgeTo[v].other(v))  </span><br><span class="line">                edgeTo[v].addResidualFlowTo(v, bottleneck);</span><br><span class="line">            value += bottleneck;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">hasAugmentingPath</span><span class="params">(FlowNetwork G, <span class="type">int</span> s, <span class="type">int</span> t)</span> &#123;</span><br><span class="line">        edgeTo = <span class="keyword">new</span> <span class="title class_">FlowEdge</span>[G.V()];</span><br><span class="line">        marked = <span class="keyword">new</span> <span class="title class_">boolean</span>[G.V()];</span><br><span class="line">        </span><br><span class="line">        Queue&lt;Integer&gt; queue = <span class="keyword">new</span> <span class="title class_">Queue</span>&lt;Integer&gt;();  <span class="comment">// 采用 BFS 寻找增广路</span></span><br><span class="line">        queue.enqueue(s);</span><br><span class="line">        marked[s] = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> queue.dequeue();</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">for</span> (FlowEdge e : G.adj(v)) &#123;</span><br><span class="line">                <span class="type">int</span> <span class="variable">w</span> <span class="operator">=</span> e.other(v);</span><br><span class="line">                <span class="keyword">if</span> (e.residualCapacity(w) &gt; <span class="number">0</span> &amp;&amp; !marked[w]) &#123;</span><br><span class="line">                    edgeTo[w] = e;</span><br><span class="line">                    marked[w] = <span class="literal">true</span>;</span><br><span class="line">                    queue.enqueue(w);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// if t reachable from s in residual network, an augmenting path found</span></span><br><span class="line">        <span class="keyword">return</span> marked[t];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">value</span><span class="params">()</span> &#123; <span class="keyword">return</span> value; &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// is v reachable from s in residual network?</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">inCut</span><span class="params">(<span class="type">int</span> v)</span> &#123; <span class="keyword">return</span> marked[v]; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意 <code>inCut</code> 函数：该函数在 FF 算法结束后被调用，判断在
+residual network 中 <span class="math inline">\(s\)</span> 是否能到达
+<span class="math inline">\(v\)</span>。</p>
+<p>之前我们讲过，FF
+算法结束后，网络中的点将会被分为两个点集，这两个点集被一系列 full
+forward edges 与 empty backward edges 分隔开来，因此在该 residual
+network 中不存在任何新的增广路。此外，源点 <span class="math inline">\(s\)</span> 与终点 <span class="math inline">\(t\)</span> 在 FF 算法结束后的 residual network
+中一定分属不同的点集；如果它们仍然属于同一个点集，那么一定存在新的增广路。</p>
+<p><code>inCut</code> 函数的作用就是描述这两个点集的划分，即 cut：若
+<code>inCut(v)</code> 为真，说明 <span class="math inline">\(v\)</span>
+处于源点 <span class="math inline">\(s\)</span> 所在的点集内；反之说明
+<span class="math inline">\(v\)</span> 处于终点 <span class="math inline">\(t\)</span> 所在的点集内。</p>
+<p>更重要的是，该 cut 恰恰是这个网络的 mincut
+(最小割)！这绝非偶然：事实上，maxflow (最大流) 与 mincut (最小割)
+问题是等价的 (<em>dual problems</em>)。我们将通过介绍 maxflow-mincut
+theorem 来说明这一点。</p>
+<p><br></p>
+<h2 id="maxflow-mincut-theorem">Maxflow-Mincut Theorem</h2>
+<h3 id="flow-value-lemma">Flow-value Lemma</h3>
+<p>首先我们引入 flow-value lemma：这一 lemma 将 flows 与 cuts
+这两个概念联系起来。</p>
+<div class="note info no-icon"><p>Flow-value lemma. Let <span class="math inline">\(f\)</span> be any
+flow and let <span class="math inline">\((A,B)\)</span> be any cut.
+Then, the <em>net flow across</em> <span class="math inline">\((A,B)\)</span> equals the value of <span class="math inline">\(f\)</span>.</p>
+</div>
+<p>Def. The <em>net flow across</em> a cut <span class="math inline">\((A,B)\)</span> is the sum of the flows on its
+edges from <span class="math inline">\(A\)</span> to <span class="math inline">\(B\)</span> minus the flows on its edges from <span class="math inline">\(B\)</span> to <span class="math inline">\(A\)</span>.</p>
+<p>Flow-value lemma 的证明很符合直觉：它是由流的 local equilibrium
+保证的。通过 flow-value lemma 我们还能得出一个有用的结论：Outflow from
+<span class="math inline">\(s\)</span> = inflow to <span class="math inline">\(t\)</span> = value of flow <span class="math inline">\(f\)</span>.</p>
+<h3 id="weak-duality">Weak Duality</h3>
+<div class="note info no-icon"><p>Weak duality. Let <span class="math inline">\(f\)</span> be any flow
+and let <span class="math inline">\((A,B)\)</span> be any cut. Then the
+value of the flow <span class="math inline">\(=\)</span> net flow across
+cut <span class="math inline">\((A,B)\)</span> <span class="math inline">\(\leq\)</span> capacity of cut <span class="math inline">\((A,B)\)</span>.</p>
+</div>
+<p>Flow-value lemma 决定了第一个等式成立；flow bounded by capacity
+决定了第二个不等式成立。这一性质称为 weak duality：true duality 由
+maxflow-mincut theorem 决定。</p>
+<h3 id="true-duality">True Duality</h3>
+<p>Augmenting path theorem. A flow <span class="math inline">\(f\)</span> is a maxflow iff no augmenting
+paths.</p>
+<div class="note info no-icon"><p>Maxflow-mincut theorem. <u>Value of the maxflow = Capacity of
+mincut.</u></p>
+</div>
+<p>Pf. The following three conditions are equivalent for any flow <span class="math inline">\(f\)</span>:</p>
+<ol type="1">
+<li>There exists a cut whose capacity equals the value of the flow <span class="math inline">\(f\)</span>.</li>
+<li><span class="math inline">\(f\)</span> is a maxflow.</li>
+<li>There is no augmenting path with repect to <span class="math inline">\(f\)</span>.</li>
+</ol>
+<p>其中 ii <span class="math inline">\(\to\)</span> iii 与 iii <span class="math inline">\(\to\)</span> i 的证明比较 trivial，联想 FF
+算法的原理即可。需要稍作说明的是 i <span class="math inline">\(\to\)</span> ii：</p>
+<ul>
+<li>Suppose that <span class="math inline">\((A,B)\)</span> is a cut
+with capacity equal to the value of <span class="math inline">\(f\)</span>.</li>
+<li>Then, the value of any flow <span class="math inline">\(f&#39;\leq\)</span> capacity of <span class="math inline">\((A,B)\)</span> = value of <span class="math inline">\(f\)</span>. (weak duality + assumption)</li>
+<li>Thus, <span class="math inline">\(f\)</span> is a maxflow.</li>
+</ul>
+<p>据此，通过 FF 算法求最小割的正确性得以证明 (具体实现见 Ford-Fulkerson
+部分)：</p>
+<ul>
+<li>By augmenting path theorem, no augmenting paths with respect to
+<span class="math inline">\(f\)</span>.</li>
+<li>Compute <span class="math inline">\(A=\)</span> set of vertices
+connected to <span class="math inline">\(s\)</span> by an undirected
+path with no full forward or empty backward edges.</li>
+</ul>
+<p><br></p>
+<h2 id="key-indexed-counting">Key-Indexed Counting</h2>
+<p>典型的思路比代码好懂的算法。Key-indexed Counting 算法的目的是：Sort
+an array <code>a[]</code> of N integers between <span class="math inline">\(0\)</span> and <span class="math inline">\(R-1\)</span>. 我们照着代码对一个样例进行分析：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> a.length;</span><br><span class="line"><span class="type">int</span>[] count = <span class="keyword">new</span> <span class="title class_">int</span>[R+<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)    count[a[i]+<span class="number">1</span>]++;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">r</span> <span class="operator">=</span> <span class="number">0</span>; r &lt; R; ++r)    count[r+<span class="number">1</span>] += count[r];</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)    aux[count[a[i]]++] = a[i];</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)    a[i] = aux[i];</span><br></pre></td></tr></table></figure>
+<p>第一步：Count frequencies of each letter using key as index.</p>
+<figure>
+<img data-src="radix1.png" alt="计算 count[] 桶数组">
+<figcaption aria-hidden="true">计算 count[] 桶数组</figcaption>
+</figure>
+<p>第二步：Compute frequency cumulates which specify destinations.</p>
+<figure>
+<img data-src="radix2.png" alt="对 count[] 数组计算前缀和，从而得到每种 key 排序后的起始位置">
+<figcaption aria-hidden="true">对 count[] 数组计算前缀和，从而得到每种
+key 排序后的起始位置</figcaption>
+</figure>
+<p>在第二次循环后，<code>count[i]</code> 的意义是严格小于
+(这是由第一次循环中计算 <code>count[]</code> 时 offset by 1 保证的) key
+<code>i</code> 的 keys 的个数，也即 key <code>i</code>
+在排序后数组中的初始位置。</p>
+<p>第三步：Access cumulates using key as index to move items.</p>
+<figure>
+<img data-src="radix3.png" alt="注意 ++: count[i] 始终记录 key i 将会在的位置">
+<figcaption aria-hidden="true">注意 ++: count[i] 始终记录 key i
+将会在的位置</figcaption>
+</figure>
+<p>每次将 key <code>i</code> 根据 <code>count[i]</code>
+移动到指定的位置后，<code>count[i]++</code>；这是因为当我们要为下一个
+key <code>i</code> 的出现做好“准备”。由于我们是按照 keys
+的原顺序扫描的，key-indexed counting 是一个 stable 的排序算法。</p>
+<p>第四步：Copy <code>aux[]</code> back into original array.</p>
+<div class="note info no-icon"><p>Key-indexed array counting uses <span class="math inline">\(\sim11N+4R\)</span> array assesses to sort <span class="math inline">\(N\)</span> items whose keys are integers between
+<span class="math inline">\(0\)</span> and <span class="math inline">\(R-1\)</span>.</p>
+</div>
+<p>在之前学习排序算法时，我们提到过 compare-based sorting algorithm
+的下界是 <span class="math inline">\(\sim N\log{N}\)</span> 次比较。</p>
+<p>注意这与 key-indexed counting 算法的线性复杂度并不冲突。key-indexed
+counting 实际上是桶排序的变种，它并不是 compare-based 的排序算法！</p>
+<p><br></p>
+<h2 id="radix-sort">Radix Sort</h2>
+<p>基数排序的原理是将整数按位数切割成不同的数字，按位进行排序。因此其也完美符合字符串排序的要求：字符串是由一系列字符组成的，每一个字符就相当于其的一个“位数”。</p>
+<h3 id="lsd-radix-sort">LSD Radix Sort</h3>
+<p>LSD Radix Sort 即 Least-Significant-Digit-First Radix
+Sort；它从键值的低位到高位逐位进行排序。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LSD</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(String[] a, <span class="type">int</span> W)</span> &#123;    <span class="comment">// fixed-length W strings</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">R</span> <span class="operator">=</span> <span class="number">256</span>;    <span class="comment">// radix R</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> a.length;</span><br><span class="line">        String[] aux = <span class="keyword">new</span> <span class="title class_">String</span>[N];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">d</span> <span class="operator">=</span> W-<span class="number">1</span>; d &gt;= <span class="number">0</span>; --d) &#123;    <span class="comment">// do key-indexed counting from LSD to MSD</span></span><br><span class="line">            <span class="type">int</span>[] count = <span class="keyword">new</span> <span class="title class_">int</span>[R+<span class="number">1</span>];</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">                count[a[i].charAt(d) + <span class="number">1</span>]++;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">r</span> <span class="operator">=</span> <span class="number">0</span>; r &lt; R; ++r)</span><br><span class="line">                count[r+<span class="number">1</span>] += count[r];</span><br><span class="line">               <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">                aux[count[a[i].charAt(d)]++] = a[i];</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">                a[i] = aux[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个做法确实非常的优雅，正确性也比较符合直觉；由于采用了 key-indexed
+counting，每一轮排序都能保证是 stable 的；因此 LSD Radix Sort 是一个
+stable 的排序算法。</p>
+<p>Pf. [By induction on i] After pass <span class="math inline">\(i\)</span>, strings are sorted by last <span class="math inline">\(i\)</span> characters.</p>
+<ul>
+<li>If two strings differ on sort key, key-indexed sort puts them in
+proper relative order.</li>
+<li>If two strings agree on sort key, stability keeps them in proper
+relative order.</li>
+</ul>
+<p>注意，以上的代码是针对 fixed-length strings 的。对于 variable-length
+strings，我们只需要用 <code>-1</code> 补齐每个字符串即可。(在 C
+语言中则没有这种顾虑，因为每个字符串的末尾都添加了 <code>'\0'</code>
+标识符)</p>
+<h3 id="msd-radix-sort">MSD Radix Sort</h3>
+<p>类似的，MSD Radix Sort 即 Most-Significant-Digit-First Radix
+Sort，从键值的高位到低位逐位进行排序。很容易发现在 MSD 中我们需要引入
+partition，按照类似 quick sort 的结构进行排序。</p>
+<ul>
+<li>Partition array into <span class="math inline">\(R\)</span> pieces
+according to first character (use key-indexed counting).</li>
+<li>Recursively sort all strings that start with each character. (do
+key-indexed counting in each subarray)</li>
+</ul>
+<p>与 LSD 相比，MSD 的劣势在于：</p>
+<ul>
+<li>更多的空间。特别是每一层递归都需要为 <code>count[]</code>
+数组分配空间。</li>
+<li>递归带来的较低效率。可以采用 cutoff to insertion sort for small
+subarrays 优化。</li>
+<li>Inner loop has a lot of instructions.</li>
+<li>Cache inefficient: accesses memory "randomly".</li>
+</ul>
+<div class="note info no-icon"><p>MSD examines just enough characters to sort the keys.</p>
+</div>
+<p>以上的种种缺点与相对比较复杂的代码换来的是 MSD
+理论复杂度上的优势。由于 number of characters examined only depends on
+keys, MSD can be <em>sublinear</em> in input size!</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">charAt</span><span class="params">(String s, <span class="type">int</span> d)</span> &#123;    <span class="comment">// for variable-length strings</span></span><br><span class="line">    <span class="keyword">if</span> (d &lt; s.length())	<span class="keyword">return</span> s.charAt(d);</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(String[] a)</span> &#123;</span><br><span class="line">    aux = <span class="keyword">new</span> <span class="title class_">String</span>[a.length];    <span class="comment">// can recycle aux[] array but not count[] array</span></span><br><span class="line">    sort(a, aux, <span class="number">0</span>, a.length-<span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(String[] a, String[] aux, <span class="type">int</span> lo, <span class="type">int</span> hi, <span class="type">int</span> d)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (hi &lt;= lo)    <span class="keyword">return</span>;</span><br><span class="line">    <span class="type">int</span>[] count = <span class="keyword">new</span> <span class="title class_">int</span>[R+<span class="number">2</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> lo; i &lt;= hi; ++i)</span><br><span class="line">        count[charAt(a[i], d) + <span class="number">2</span>]++;   <span class="comment">// the existence of -1</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">r</span> <span class="operator">=</span> <span class="number">0</span>; r &lt; R+<span class="number">1</span>; ++r)</span><br><span class="line">        count[r+<span class="number">1</span>] += count[r];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> lo; i &lt;= hi; ++i)</span><br><span class="line">        aux[count[charAt(a[i], d) + <span class="number">1</span>]++] = a[i];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> lo; i &lt;= hi; ++i)</span><br><span class="line">        a[i] = aux[i - lo];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">r</span> <span class="operator">=</span> <span class="number">0</span>; r &lt; R; ++r)    <span class="comment">// sort R subarrays recursively</span></span><br><span class="line">        sort(a, aux, lo + count[r], lo + count[r+<span class="number">1</span>] - <span class="number">1</span>, d+<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="way-radix-quicksort">3-way Radix Quicksort</h3>
+<p>MSD 实际上使用的是 R-way Partitioning：它使用 key-indexed counting
+将原数组分为 R 个 subarrays，每个 subarray
+中的字符串都具有相同的第一关键字，接下来再递归的对这 R 个 subarrays
+进行排序。</p>
+<p>而 3-way radix quicksort 则借助了 3-way quicksort 的思想对 MSD
+进行改造。对于所有第一关键字，选择一个 partitioning
+item，并对应的将所有字符串分为 less, equal 与 greater 三个
+subarrays。</p>
+<figure>
+<img data-src="radix4.png" alt="Does not re-examine characters equal to the partitioning char">
+<figcaption aria-hidden="true">Does not re-examine characters equal to
+the partitioning char</figcaption>
+</figure>
+<p>与朴素的 Quicksort for strings 相比，3-way radix quicksort
+能够做到：</p>
+<ul>
+<li>Use <span class="math inline">\(\sim 2N\ln{N}\)</span> character
+compares (instead of string compares) on average for random
+strings.</li>
+<li>Avoids re-comparing long common prefixes.</li>
+</ul>
+<p>与 MSD (R-way radix sort) 相比 3-way radix quicksort 有以下优势：</p>
+<ul>
+<li>Has a short inner loop.</li>
+<li>Is cache-friendly.</li>
+<li>Is in-place.</li>
+</ul>
+<p>注意 3-way radix quicksort 并未使用 key-indexed
+counting；但它仍然是一种 radix
+sort，因为它是按位进行排序的。从这个意义上来讲，比起 MSD，3-way radix
+quicksort 的亲缘关系更偏向于传统的 quicksort。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(String[] a)</span> &#123;</span><br><span class="line">    sort(a, <span class="number">0</span>, a.length - <span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(String[] a, <span class="type">int</span> lo, <span class="type">int</span> hi, <span class="type">int</span> d)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (hi &lt;= lo)    <span class="keyword">return</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">lt</span> <span class="operator">=</span> lo, gt = hi;</span><br><span class="line">    <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> charAt(a[lo], d);</span><br><span class="line">    <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> lo + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= gt) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">t</span> <span class="operator">=</span> charAt(a[i], d);</span><br><span class="line">        <span class="keyword">if</span>      (t &lt; v) exch(a, lt++, i++);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (t &gt; v) exch(a, i, gt--);</span><br><span class="line">        <span class="keyword">else</span>            i++;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    sort(a, lo, lt-<span class="number">1</span>, d);</span><br><span class="line">    <span class="keyword">if</span> (v &gt;= <span class="number">0</span>) sort(a, lt, gt, d+<span class="number">1</span>);</span><br><span class="line">    sort(a, gt+<span class="number">1</span>, hi, d);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="performance-analysis">Performance Analysis</h3>
+<p>对 <span class="math inline">\(N\)</span> 个 <span class="math inline">\(W\)</span> 位的字符串进行排序，若字符集大小为
+<span class="math inline">\(R\)</span>，我们有：</p>
+<table>
+<colgroup>
+<col style="width: 30%">
+<col style="width: 20%">
+<col style="width: 18%">
+<col style="width: 10%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: center;">algorithm</th>
+<th style="text-align: center;">guarantee</th>
+<th style="text-align: center;">random</th>
+<th style="text-align: center;">stable?</th>
+<th style="text-align: center;">operation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">quicksort</td>
+<td style="text-align: center;"><span class="math inline">\(1.39N\lg{N}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1.39N\lg{N}\)</span></td>
+<td style="text-align: center;">no</td>
+<td style="text-align: center;"><code>compareTo()</code></td>
+</tr>
+<tr>
+<td style="text-align: center;">LSD</td>
+<td style="text-align: center;"><span class="math inline">\(2WN\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(2WN\)</span></td>
+<td style="text-align: center;">yes</td>
+<td style="text-align: center;"><code>charAt()</code></td>
+</tr>
+<tr>
+<td style="text-align: center;">MSD</td>
+<td style="text-align: center;"><span class="math inline">\(2WN\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(N\log_{R}
+N\)</span></td>
+<td style="text-align: center;">yes</td>
+<td style="text-align: center;"><code>charAt()</code></td>
+</tr>
+<tr>
+<td style="text-align: center;">3-way radix quicksort</td>
+<td style="text-align: center;"><span class="math inline">\(1.39WN\lg{R}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1.39N\lg{N}\)</span></td>
+<td style="text-align: center;">no</td>
+<td style="text-align: center;"><code>charAt()</code></td>
+</tr>
+</tbody>
+</table>
+<p>注意 <code>compareTo()</code>
+操作的复杂度与字符串间的最长公共前缀的长度有关，因此其最坏是 <span class="math inline">\(\Omega(W)\)</span> 的；而 <code>charAt()</code> 是
+constant time 的操作。</p>
+<p>对于 string sorting algorithms，我们能够作出以下总结：</p>
+<ul>
+<li>We can develop linear-time sorts (LSD): key compares not necessary
+for string keys; we use characters as index in an array.</li>
+<li>We can develop sublinear-time sorts (MSD): input size is amount of
+data in keys (not number of keys) and not all of the data has to be
+examined.</li>
+<li>3-way radix quicksort is asymptotically optimal.</li>
+<li>Long strings are <em>rarely random</em> in practice: we may need
+specialized algorithms.</li>
+</ul>
+<p><br></p>
+<h2 id="suffix-arrays">Suffix Arrays</h2>
+<p>接下来我们介绍后缀数组：一个字符串处理的终极利器，也是进一步理解后缀系算法
+(后缀树，后缀自动机)
+的基础。对于一个字符串，我们用数组保存其所有的后缀并进行排序，得到的数组即为后缀数组。</p>
+<div class="note info no-icon"><p>Bottleneck Problem. Suffix sort an arbitrary string of length <span class="math inline">\(N\)</span>.</p>
+</div>
+<p>后缀排序问题本质上是字符串排序问题，所以以上介绍的 LSD，MSD 与 3-way
+radix quicksort 甚至传统的 quicksort
+均可以作为后缀排序采用的算法；但其效率 ( <span class="math inline">\(\Omega(WN)\)</span> 或 <span class="math inline">\(\Omega(N^2\lg{N})\)</span> )
+难以满足实际应用的要求。</p>
+<p>利用后缀这一特殊的性质，我们能设计出性能更加优越的后缀排序算法：Manber-Myers
+倍增算法能够做到最坏 <span class="math inline">\(N\lg{N}\)</span>
+的时间复杂度，DC3 算法与后缀树能够做到线性的时间复杂度。</p>
+<p>Manber-Myers MSD algorithm overview.</p>
+<ul>
+<li>Phase <span class="math inline">\(0\)</span>: sort on first
+character using key-indexed counting sort.</li>
+<li>Phase <span class="math inline">\(i\)</span>: given array of
+suffixes sorted on first <span class="math inline">\(2^{i-1}\)</span>
+characters, create array of suffixes sorted on first <span class="math inline">\(2^i\)</span> characters.</li>
+</ul>
+<p>后缀数组的经典应用之一：Keyword-in-context search
+(本博客的搜索功能就是一种文本关键字搜索)。</p>
+<ul>
+<li>Proprocess: suffix sort the text.</li>
+<li>Query: <em>binary search</em> for query; scan until mismatch.</li>
+</ul>
+<p>后缀数组的经典应用之二：Longest repeated substring。</p>
+<ul>
+<li>Brute-force: Try all indices <span class="math inline">\(i\)</span>
+and <span class="math inline">\(j\)</span> for start of possible match,
+and compute longest common prefix (LCP) for each pair. 该做法的复杂度为
+<span class="math inline">\(\Omega (DN^2)\)</span>，其中 <span class="math inline">\(D\)</span> 是 LCP 的长度。</li>
+<li>后缀数组做法：在求出后缀数组后对每个相邻的后缀求 LCP 即可。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> String <span class="title function_">lrs</span><span class="params">(String s)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> s.length;</span><br><span class="line">    String[] suffixes = <span class="keyword">new</span> <span class="title class_">String</span>[N];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">        suffix[i] = s.substring(i, N);   <span class="comment">// String class: linear time &amp; space</span></span><br><span class="line">    Arrays.sort(suffixes);               <span class="comment">// sort suffixes</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">lrs</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N-<span class="number">1</span>; ++i) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> lcp(suffixes[i], suffixes[i+<span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">if</span> (len &gt; lrs.length())</span><br><span class="line">            lrs = suffixes[i].substring(<span class="number">0</span>, len);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> lrs;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p><a target="_blank" rel="noopener" href="https://www.coursera.org/learn/algorithms-part2">Algorithms,
+Part 2, Princeton University</a>. Lecturer: Robert Sedgewick &amp; Kevin
+Wayne.</p>
+<p>Course textbook:</p>
+<p><em>Algorithms (4th edition)</em>, Sedgewick, R. &amp; Wayne, K.,
+(2011), Addison-Wesley Professional, <a target="_blank" rel="noopener" href="https://algs4.cs.princeton.edu/home/">view</a></p>
+<!-- flag of hidden posts -->
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2023/08/14/algorithm-5/" title="Algorithms II, Princeton University, P5">https://www.thisisxxz.com/2023/08/14/algorithm-5/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | Algorithms II, Princeton University, P5](https://www.thisisxxz.com/2023/08/14/algorithm-5/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Algorithms/" rel="tag"><i class="fa fa-tag"></i> Algorithms</a>
+          </div>
+
+        
+
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/08/14/algorithm-5/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

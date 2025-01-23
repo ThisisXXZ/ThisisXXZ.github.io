@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="第一次接触中心极限定理是在 1853 的概率论 part 上，当时就觉得这个定理实在是非常优美。第二次就是 2501 了；但这个立足于数据科学的新表述却给我一种熟悉的陌生感。怎么个事？遂新开一篇文章做一点小小研究。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅谈 Central Limit Theorem">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/10/26/central-limit-theorem/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="第一次接触中心极限定理是在 1853 的概率论 part 上，当时就觉得这个定理实在是非常优美。第二次就是 2501 了；但这个立足于数据科学的新表述却给我一种熟悉的陌生感。怎么个事？遂新开一篇文章做一点小小研究。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-10-26T04:56:30.000Z">
+<meta property="article:modified_time" content="2024-02-02T11:34:14.000Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Theoretical Computer Science">
+<meta property="article:tag" content="Mathematics">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2023/10/26/central-limit-theorem/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/10/26/central-limit-theorem/","path":"2023/10/26/central-limit-theorem/","title":"浅谈 Central Limit Theorem"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>浅谈 Central Limit Theorem | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#lindeberg-levy-clt-math1853"><span class="nav-number">1.</span> <span class="nav-text">Lindeberg-Levy CLT (Math1853)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%8F%98%E5%BD%A2-standardization"><span class="nav-number">2.</span> <span class="nav-text">第一次变形: Standardization</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%E8%A1%A8%E8%BF%B0-data-science"><span class="nav-number">3.</span> <span class="nav-text">第二种表述: Data Science</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#p-values"><span class="nav-number">4.</span> <span class="nav-text">p-values</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bayesian-analysis"><span class="nav-number">5.</span> <span class="nav-text">Bayesian Analysis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/10/26/central-limit-theorem/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="浅谈 Central Limit Theorem | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          浅谈 Central Limit Theorem
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-10-26 12:56:30" itemprop="dateCreated datePublished" datetime="2023-10-26T12:56:30+08:00">2023-10-26</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>第一次接触中心极限定理是在 1853 的概率论 part
+上，当时就觉得这个定理实在是非常优美。第二次就是 2501
+了；但这个立足于数据科学的新表述却给我一种熟悉的陌生感。怎么个事？遂新开一篇文章做一点小小研究。</p>
+<span id="more"></span>
+<p><br></p>
+<h2 id="lindeberg-levy-clt-math1853">Lindeberg-Levy CLT (Math1853)</h2>
+<p>从这个我印象最深的 CLT 定义开始说起。</p>
+<p>对一系列 <em>independent</em> and <em>identically</em> distributed
+(i.i.d.) random variables <span class="math inline">\(\{X_n\}\)</span>，其均值为 <span class="math inline">\(\mu\)</span>，方差 <span class="math inline">\(\sigma^2&lt;\infty\)</span>，并令 <span class="math inline">\(S_n=X_1+X_2+...+X_n\)</span>，那么有 <span class="math display">\[
+\lim_{n\to\infty} S_n\sim N(n\mu,\sqrt{n}\sigma)
+\]</span> 也就是 i.i.d. 变量的 <em>和</em> <span class="math inline">\(S_n\)</span> 符合正态分布。</p>
+<p>注意两个性质：</p>
+<ul>
+<li><span class="math inline">\(\mathrm{mean}(X)+\mathrm{mean}(Y)=\mathrm{mean}(X+Y)\)</span>.</li>
+<li><span class="math inline">\(\mathrm{var}(X)+\mathrm{var}(Y)=\mathrm{var}(X+Y)\)</span>.</li>
+</ul>
+<p>由此可推出 <span class="math inline">\(S_n\)</span>
+所服从的正态分布的两个参数：</p>
+<ul>
+<li><span class="math inline">\(\mathrm{mean}(S_n)=n\cdot\mathrm{mean}(X)=n\mu\)</span>.</li>
+<li><span class="math inline">\(\mathrm{sd}(S_n)=\sqrt{\mathrm{var}(S_n)}=\sqrt{n\mathrm{var}(X)}=\sqrt{n\sigma^2}=\sqrt{n}\sigma\)</span>.</li>
+</ul>
+<p>这是最经典的 CLT 定义，因此限制也最严格。随机变量序列 <span class="math inline">\(\{X_n\}\)</span>
+不仅需要相互独立，还需要保证它们的分布完全一致
+(对具体是怎样的分布则没有限制)。</p>
+<p><br></p>
+<h2 id="第一次变形-standardization">第一次变形: Standardization</h2>
+<p>我们经常能够看到经典 CLT 的另一种表述：条件不变，但结论写成： <span class="math display">\[
+\lim_{n\to\infty} \frac{S_n-n\mu}{\sqrt{n}\sigma}\sim N(0,1)
+\]</span> 右侧的正态分布，我们称其为 标准正态分布 (standard normal
+distribution)。</p>
+<p>对于任何一个服从正态分布的随机变量，通过
+<em>减去均值</em>，<em>除以标准差</em>
+这两个步骤都能得到一个符合标准正态分布的新随机变量，我们称这个过程为
+<em>标准化</em> (standardization)。</p>
+<ul>
+<li>减去均值：使得钟形曲线的中轴移至 <span class="math inline">\(x=0\)</span>。</li>
+<li>除以标准差：使得钟形曲线的标准差变为 <span class="math inline">\(1\)</span>。想象一个原本位于 <span class="math inline">\((\sigma,b)\)</span> 的点，转换后将位于 <span class="math inline">\((1,b)\)</span>。</li>
+</ul>
+<p>这样，我们成功将任意正态分布映射到了标准正态分布上。
+该标准正态分布上的任意一点 <span class="math inline">\((x,b)\)</span>
+都对应原正态分布上的某点 <span class="math inline">\((x\sigma+\mu,
+b)\)</span>。</p>
+<p>正态分布的标准化消除了不同正态分布之间的鸿沟，使得它们都能被总结到标准正态分布上。</p>
+<p><br></p>
+<h2 id="第二种表述-data-science">第二种表述: Data Science</h2>
+<div class="note info no-icon"><p>Given a population with a mean <span class="math inline">\(\mu\)</span> and standard deviation <span class="math inline">\(\sigma\)</span>, the distribution of <span class="math inline">\(n\)</span> sample means approaches a normal
+distribution with the same mean <span class="math inline">\(\mu\)</span>
+and standard deviation <span class="math inline">\(\frac{\sigma}{\sqrt{n}}\)</span>.</p>
+</div>
+<p>这次我们将 <span class="math inline">\(X\)</span>
+定义一次抽样中某个个体的数据，若总共抽样 <span class="math inline">\(n\)</span> 次，那么本次抽样的均值 (即所谓 sample
+means) 为 <span class="math inline">\(S_n/n\)</span>。我们将说明该
+sample means 服从正态分布。</p>
+<p>根据经典 CLT，我们有 <span class="math display">\[
+\lim_{n\to\infty} S_n\sim N(n\mu,\sqrt{n}\sigma)
+\]</span> 按照类似标准化的转换模式，能够得到 <span class="math display">\[
+\lim_{n\to\infty}\frac{S_n-n\mu}{\sqrt{n}\sigma}=\lim_{n\to{\infty}}\frac{\mu_s-\mu}{\frac{\sigma}{\sqrt{n}}}\sim
+N(0,1)
+\]</span> 我们利用该结论来研究使用 sample mean <span class="math inline">\(\mu_s=\frac{S_n}{n}\)</span> 近似 population mean
+<span class="math inline">\(\mu\)</span> 的准确性，即 <span class="math inline">\(\mu_s\)</span> 与 <span class="math inline">\(\mu\)</span> 之间的标准误差 (standard error) <span class="math inline">\(|Z|\)</span>。</p>
+<p>令 <span class="math inline">\(Z=\mu-\mu_s\)</span>，对于任意 <span class="math inline">\(\Delta=z\frac{\sigma}{\sqrt{n}}\)</span>，都有
+<span class="math display">\[
+\begin{aligned}
+\Pr[|Z|\leq \Delta&amp;]=\Pr[|\frac{Z}{\frac{\sigma}{\sqrt{n}}}|\leq z]
+\\
+&amp;= \Pr[\frac{Z}{\frac{\sigma}{\sqrt{n}}}\leq
+z]-\Pr[\frac{Z}{\frac{\sigma}{\sqrt{n}}}\leq -z] \\
+\frac{Z}{\frac{\sigma}{\sqrt{n}}}&amp;\sim N(0,1)
+\end{aligned}
+\]</span> 由此就能计算出 sample mean 与 population mean 误差在 <span class="math inline">\(\Delta\)</span> 之内的概率。</p>
+<p>反过来，给出概率 <span class="math inline">\(\Pr\)</span>
+我们也能求出 <span class="math inline">\(\Delta\)</span>，从而得到在概率
+<span class="math inline">\(\Pr\)</span> 保证下的置信区间 <span class="math inline">\([\mu_s-z\frac{\sigma_s}{\sqrt{n}},
+\mu_s+z\frac{\sigma_s}{\sqrt{n}}]\)</span>。<span class="math inline">\(z\)</span> 和 confidence
+是一一对应的：<code>confidenceTable &lt;- tibble(z) |&gt; mutate(pnorm(z) - pnorm(-z))</code>。</p>
+<p>还有一个问题，population standard deviation <span class="math inline">\(\sigma\)</span> 是未知的：我们用 sample standard
+deviation <span class="math inline">\(\sigma_s\)</span>
+来近似。能够这样做的原因是当 <span class="math inline">\(n\)</span>
+足够大时，<span class="math inline">\(\frac{\sigma}{\sqrt{n}}\)</span>
+与 <span class="math inline">\(\frac{\sigma_s}{\sqrt{n}}\)</span>
+间的误差可以忽略不记，保证了近似的准确性。</p>
+<p><br></p>
+<h2 id="p-values">p-values</h2>
+<p>Given a coin, we are told that <em>the coin is fair</em>.</p>
+<p>We don't quite believe it, and we flip the coin 100 times with 58
+heads. How likely is it to see 58 or more heads if the assumption
+<em>the coin is fair</em> is true?</p>
+<ul>
+<li><strong>null hypothesis</strong> (零假设)：希望被证伪的假设。</li>
+<li><strong>p-value</strong>：根据实验结果所得零假设成立的概率。若
+p-value <span class="math inline">\(&lt;0.05\)</span>,
+没有足够的证据证明零假设成立。</li>
+</ul>
+<p>上例中，零假设为 <em>the coin is
+fair</em>；若其成立，则抛硬币这一事件的 <span class="math inline">\(\mu=0.5\)</span>，<span class="math inline">\(\sigma=\sqrt{0.5(1-0.5)}=0.5\)</span>。因此
+p-value 为 <span class="math inline">\(\Pr[\mu_s\geq
+0.58]\)</span>。应用 CLT 我们得出： <span class="math display">\[
+\begin{aligned}
+\Pr[\mu_s\geq
+0.58]&amp;=\Pr[\mu_s-\mu\geq0.08]\vphantom{\frac{\mu_s-\mu}{\sigma/\sqrt{100}}}\\
+&amp;= \Pr\left[\frac{\mu_s-\mu}{\sigma/\sqrt{100}}\geq
+\frac{0.08}{\sigma/\sqrt{100}}\right] \\
+&amp;= \Pr[Z\geq1.6]\vphantom{\frac{\mu_s-\mu}{\sigma/\sqrt{100}}} \\
+&amp;= 1-\Pr[Z\leq1.6]\vphantom{\frac{\mu_s-\mu}{\sigma/\sqrt{100}}}
+\end{aligned}
+\]</span> 在 R 中利用公式计算出 <code>1-pnorm(1.6)</code> 计算出 p-value
+为
+0.05479929，仍然是一个非常小的值。因此该实验并没有足够的证据支持零假设。</p>
+<p><br></p>
+<h2 id="bayesian-analysis">Bayesian Analysis</h2>
+<p>与 Bayesian Analysis 相对的是 Frequentist Analysis。</p>
+<p>我们目前所学习的所有概念与技巧 (CLT, confidence interval, p-value)
+都属于 frequentist statistic
+的范畴：结论的得出仅仅基于实验的结果，并不考虑任何先验信息 (prior
+information)。</p>
+<p>Bayesian Analysis 得名于贝叶斯公式 <span class="math inline">\(\Pr(A|B)=\frac{\Pr(A)\Pr(B|A)}{\Pr(B)}\)</span>。</p>
+<ul>
+<li>根据 prior information 得出 <em>prior distribution</em>
+(先验分布)。</li>
+<li>根据实验结果对 prior distribution 进行修正，得到 <em>posterior
+distribution</em> (后验预测分布)。</li>
+</ul>
+<p>研究一个例子：<span class="math inline">\(A\)</span>
+是否应该准备开始面对死亡的来临？</p>
+<ul>
+<li>prior information：囊肿性纤维在人群中的发病率为 <span class="math inline">\(\frac{1}{3900}\)</span>。</li>
+<li>实验结果：囊肿性纤维测试准确率为 <span class="math inline">\(99\%\)</span>。某个倒霉蛋 <span class="math inline">\(A\)</span> 测试的结果是阳性。</li>
+</ul>
+<p>这里，医学测试的准确率 (accuracy) 为 <span class="math inline">\(99\%\)</span>
+意味着：(患病为自变量，测试结果为因变量)</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"></th>
+<th style="text-align: center;">has</th>
+<th style="text-align: center;">has not</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">positive</td>
+<td style="text-align: center;">(true positive) <span class="math inline">\(99\%\)</span></td>
+<td style="text-align: center;">(false positive) <span class="math inline">\(1\%\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;">negative</td>
+<td style="text-align: center;">(false negative) <span class="math inline">\(1\%\)</span></td>
+<td style="text-align: center;">(true negative) <span class="math inline">\(99\%\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>如果从纯 frequentist analysis 的角度来看，<span class="math inline">\(A\)</span>
+似乎是必死无疑了。毕竟假阳性的出现概率仅有 <span class="math inline">\(1\%\)</span>。然而如果考虑到囊肿性纤维的发病率为
+<span class="math inline">\(\frac{1}{3900}\)</span>
+这一关键的先验信息，Bayesian analysis 能为我们提供另外的答案。</p>
+<p>令 <span class="math inline">\(D=1\)</span> 表示 <span class="math inline">\(A\)</span> 患病，<span class="math inline">\(D=0\)</span> 反之；那么先验信息为 <span class="math inline">\(\Pr(D=1)=\frac{1}{3900}\)</span>。 <span class="math display">\[
+\begin{aligned}
+\Pr(D=1|+)&amp;=\frac{\Pr(+|D=1)\cdot\Pr(D=1)}{\Pr(+)}\\
+&amp;= \frac{\Pr(+|D=1)\cdot
+\Pr(D=1)}{\Pr(+|D=0)\Pr(D=0)+\Pr(+|D=1)\Pr(D=1)} \\
+&amp;=
+\frac{99\%\times\frac{1}{3900}}{1\%\times(1-\frac{1}{3900})+99\%\times
+\frac{1}{3900}} \\
+&amp;\approx \vphantom{\frac{1}{\frac{1}{3900}}} 0.02
+\end{aligned}
+\]</span> 由此可见，在测试结果为阳性的前提下患有囊性纤维的概率仅有 <span class="math inline">\(2\%\)</span>；<span class="math inline">\(A\)</span>
+大可不必如此惊慌。这就是贝叶斯分析：考虑先验信息的存在，从而提高结论的准确性。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li>COMP2501 lecture slides.</li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=zeJD6dqJ5lo">But What is
+Central Limit Theorem? - 3Blue1Brown</a>.</li>
+<li><a target="_blank" rel="noopener" href="http://mfviz.com/central-limit/">CLT - a visual
+explanation</a>.</li>
+</ul>
+
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2023/10/26/central-limit-theorem/" title="浅谈 Central Limit Theorem">https://www.thisisxxz.com/2023/10/26/central-limit-theorem/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | 浅谈 Central Limit Theorem](https://www.thisisxxz.com/2023/10/26/central-limit-theorem/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Theoretical-Computer-Science/" rel="tag"><i class="fa fa-tag"></i> Theoretical Computer Science</a>
+              <a href="/tags/Mathematics/" rel="tag"><i class="fa fa-tag"></i> Mathematics</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/10/20/COMP2396-1/" rel="prev" title="再探 Java & OOP">
+                  <i class="fa fa-chevron-left"></i> 再探 Java & OOP
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/11/01/training-4/" rel="next" title="HKU Provincists 4th Training">
+                  HKU Provincists 4th Training <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/10/26/central-limit-theorem/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

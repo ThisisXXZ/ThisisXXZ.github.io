@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="与 COMP2119A Problem Set 一样，这篇笔记的目的主要是为了查漏补缺，因此记录的会比较随性。部分内容也来源于在学习 Programming Languages, UW 相关课程中产生的疑问。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="再探 Java &amp; OOP">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/10/20/COMP2396-1/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="与 COMP2119A Problem Set 一样，这篇笔记的目的主要是为了查漏补缺，因此记录的会比较随性。部分内容也来源于在学习 Programming Languages, UW 相关课程中产生的疑问。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-10-20T07:08:00.000Z">
+<meta property="article:modified_time" content="2024-02-02T11:34:52.000Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Programming Languages">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2023/10/20/COMP2396-1/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/10/20/COMP2396-1/","path":"2023/10/20/COMP2396-1/","title":"再探 Java & OOP"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>再探 Java & OOP | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#abstraction-v.s.-encapsulation"><span class="nav-number">1.</span> <span class="nav-text">Abstraction v.s.
+Encapsulation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#object-references"><span class="nav-number">2.</span> <span class="nav-text">Object References</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#parameters-v.s.-arguments"><span class="nav-number">3.</span> <span class="nav-text">Parameters v.s. Arguments</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#multidimensional-arrays"><span class="nav-number">4.</span> <span class="nav-text">Multidimensional Arrays</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#inheritance-v.s.-subtyping"><span class="nav-number">5.</span> <span class="nav-text">Inheritance v.s. Subtyping</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#contd.-remote-control"><span class="nav-number">5.1.</span> <span class="nav-text">contd. remote control</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#more-inheritance-super"><span class="nav-number">6.</span> <span class="nav-text">More Inheritance:
+super</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#overriding-v.s.-hidding"><span class="nav-number">7.</span> <span class="nav-text">Overriding v.s. Hidding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#file-inputoutput"><span class="nav-number">8.</span> <span class="nav-text">File Input&#x2F;Output</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#serialization"><span class="nav-number">9.</span> <span class="nav-text">Serialization</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#serializable-interface"><span class="nav-number">9.1.</span> <span class="nav-text">Serializable Interface</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#deserialization"><span class="nav-number">10.</span> <span class="nav-text">Deserialization</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#version-control"><span class="nav-number">10.1.</span> <span class="nav-text">Version Control</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">11.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/10/20/COMP2396-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="再探 Java & OOP | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          再探 Java & OOP
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-10-20 15:08:00" itemprop="dateCreated datePublished" datetime="2023-10-20T15:08:00+08:00">2023-10-20</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>与 COMP2119A Problem Set
+一样，这篇笔记的目的主要是为了查漏补缺，因此记录的会比较随性。部分内容也来源于在学习
+<a target="_blank" rel="noopener" href="https://thisisxxz.com/categories/%E7%AC%94%E8%AE%B0/Programming-Languages-UW/">Programming
+Languages, UW</a> 相关课程中产生的疑问。</p>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="abstraction-v.s.-encapsulation">Abstraction v.s.
+Encapsulation</h2>
+<p>这两个概念本身我就有点没搞清，在中文语境下更容易混淆了 (abstraction:
+抽象, encapsulation: 封装)。</p>
+<ul>
+<li>Abstraction is the process of <em>generalization</em>.</li>
+<li>Encapsulation is hiding the implementatin details from outside
+access.</li>
+</ul>
+<p>还是能发现这两个概念是完全不同的，考虑下面这个例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">person</span> &#123;</span><br><span class="line">    String name;</span><br><span class="line">    <span class="type">boolean</span> gender;</span><br><span class="line">    <span class="type">int</span> age;</span><br><span class="line">    <span class="type">int</span> height;</span><br><span class="line">    <span class="type">int</span> weight;</span><br><span class="line">    </span><br><span class="line">    Person(String _name, ...) &#123; ... &#125;    <span class="comment">// constructor</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="title function_">getBMI</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> weight / height;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isHealthy</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">BMI</span> <span class="operator">=</span> getBMI();</span><br><span class="line">        <span class="keyword">return</span> BMI &gt;= <span class="number">18.5</span> &amp;&amp; BMI &lt;= <span class="number">24.9</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们将人这一实体的特征提取出来
+(名字，年龄，性别……)，用这些特征的集合来描述人，这就是所谓的<strong>抽象</strong>。抽象允许我们忽略实体的
+background details，专注于其 necessary and common properties.</p>
+<p>而当我们将一个人的一系列特征数据<strong>封装</strong>在某个对象中
+(调用 constructor) 后，我们重新“创造”出了这个人
+(尽管失去了一些不重要的细节)。并且，这些被封装的数据将向外部隐藏。我们在与对象交互时
+(如调用
+<code>isHealthy()</code>)，并不能，也不关心它的内部实现；这是<strong>封装</strong>带来的，也是
+OOP 的灵魂所在。</p>
+<p>抽象使实体变得 generalized，封装又使其重新 specified。这两个概念 goes
+hand in hand，共同奠定了 OOP
+大厦的基石。当我们创建并初始化一个对象时，往往同时完成了抽象与封装。</p>
+<p><br></p>
+<h2 id="object-references">Object References</h2>
+<p>在写 <a target="_blank" rel="noopener" href="https://thisisxxz.com/categories/%E7%AC%94%E8%AE%B0/Algorithms-Princeton/">Algorithms
+I &amp; II, Princeton</a>
+这门课作业的时候困扰了我很久的一个问题：在了解了 object references
+这一概念后迎刃而解。</p>
+<p>在 Java 中，data type 只有两种：</p>
+<ul>
+<li>Primitives (<code>int</code>, <code>float</code>,
+<code>double</code>, <code>boolean</code>...) - fundamental values.</li>
+<li>Object references - references to objects.</li>
+</ul>
+<p>也就是说，变量中存储的并不是对象本身，而是 (可以视作是)
+指向对应对象的一个指针！当一个 object reference
+类型的变量并不指向任意一个对象时，其值为 0。</p>
+<p>真正的对象都储存在堆空间 (heap memory) 中。heap memory 具有 garbage
+collection 机制：也就是说，Java
+自动为我们管理空间！这也是为什么我们不需要像在 C/C++ 中那样使用
+<code>free()</code> 等函数手动释放内存。</p>
+<p>Java 的 heap memory 也因此被称为 Garbage-collectible heap.
+考虑下面这个例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Garbage</span> <span class="variable">p1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Garbage</span>(<span class="string">&quot;banana skin&quot;</span>);</span><br><span class="line"><span class="type">Garbage</span> <span class="variable">p2</span> <span class="operator">=</span> p1;</span><br><span class="line"></span><br><span class="line">p1 = <span class="keyword">new</span> <span class="title class_">Garbage</span>(<span class="string">&quot;watermelon peel&quot;</span>);</span><br><span class="line">p2 = <span class="keyword">new</span> <span class="title class_">Garbage</span>(<span class="string">&quot;grape skin&quot;</span>);</span><br><span class="line"></span><br><span class="line">Garbage p3;</span><br></pre></td></tr></table></figure>
+<p>一开始，我们声明了两个 object
+references，它们均指向香蕉皮对象；但随后 <code>p1</code>
+转而指向西瓜皮对象，<code>p2</code> 指向葡萄皮对象。此时没有任何 object
+reference 指向香蕉皮对象；它将会被送入 garbage collection 进程。</p>
+<ul>
+<li>An object (in heap memory) that is not pointed to by any object
+reference will be eligiable for garbage collection.</li>
+<li>An object reference to no object (<code>p3</code>) will have a value
+of <code>null</code>。</li>
+</ul>
+<p><br></p>
+<h2 id="parameters-v.s.-arguments">Parameters v.s. Arguments</h2>
+<p>一句话：parameters 是形参，arguments 是实参。</p>
+<ul>
+<li>A parameter is a variable defined in the method signature.</li>
+<li>An argument is the actual value passed to a method when it is
+called.</li>
+</ul>
+<p>因此，pass-by-value 即意味着 argument 中的值被复制到了 parameter
+中。</p>
+<p>更多概念性的知识复习见 Ch4_State_And_Behavior slide 末尾的 Revision
+Exercise。</p>
+<p><br></p>
+<h2 id="multidimensional-arrays">Multidimensional Arrays</h2>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">String[][] names = &#123;</span><br><span class="line">    &#123;<span class="string">&quot;Mr.&quot;</span>, <span class="string">&quot;Mrs.&quot;</span>, <span class="string">&quot;Ms.&quot;</span>&#125;.</span><br><span class="line">    &#123;<span class="string">&quot;Smith&quot;</span>, <span class="string">&quot;Jones&quot;</span>&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">String[][] names2 = <span class="keyword">new</span> <span class="title class_">String</span>[<span class="number">2</span>][<span class="number">3</span>];</span><br><span class="line">names[<span class="number">0</span>][<span class="number">0</span>] = <span class="string">&quot;Mr.&quot;</span>;</span><br><span class="line">names[<span class="number">0</span>][<span class="number">1</span>] = <span class="string">&quot;Mrs.&quot;</span>;</span><br><span class="line">names[<span class="number">0</span>][<span class="number">2</span>] = <span class="string">&quot;Ms.&quot;</span>;</span><br><span class="line">names[<span class="number">1</span>][<span class="number">0</span>] = <span class="string">&quot;Smith&quot;</span>;</span><br><span class="line">names[<span class="number">1</span>][<span class="number">1</span>] = <span class="string">&quot;Jones&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>注意，以上代码中的 <code>names</code> 与 <code>names2</code>
+是不同的数组。对于有 C/C++ 经验的人来说确实很容易混淆。这是因为在 Java
+中，多维数组每一维的长度可以是不同的。我们不妨将 Java 中的二维数组视作
+<code>vector&lt;vector&lt;int&gt;&gt;</code>，这样，每一维中的 vector
+长度不同就是很自然的事了。</p>
+<p><br></p>
+<h2 id="inheritance-v.s.-subtyping">Inheritance v.s. Subtyping</h2>
+<p>同样也是困扰了我很久的一个问题，又称 子类 (subclassing) v.s. 子类型
+(subtyping)。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Citizen</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Citizen</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">eat</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Police</span> <span class="keyword">extends</span> <span class="title class_">Citizen</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Police</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">gun</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">Citizen</span> <span class="variable">policeAsCitizen</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Police</span>();</span><br><span class="line"><span class="type">Police</span> <span class="variable">policeAsPolice</span>   <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Police</span>();</span><br><span class="line"></span><br><span class="line">policeAsCitizen.gun();    <span class="comment">// missing method error</span></span><br><span class="line">policeAsPolice.gun();     <span class="comment">// no problem</span></span><br></pre></td></tr></table></figure>
+<p>这是个能够完美解释 subclassing v.s. subtyping
+之间区别的例子。我自己想的，是不是很妙？</p>
+<p>从行为上来讲，调用 <code>policeAsCitizen</code> 对象的
+<code>gun()</code> 方法是完全没有问题的，因为
+<code>policeAsCitizen</code> 对象的确是定义了 <code>gun()</code>
+方法的。</p>
+<p>当然，<code>policeAsCitizen</code> 也可以调用其继承的
+<code>eat()</code> 方法：这是因为 subclassing
+<strong>规定</strong>了对象的行为。<code>Police</code> 类继承了
+<code>Citizen</code> 类，同时又新增了 <code>gun()</code>，因此任何
+<code>Police</code> 类的实例都能调用 <code>eat()</code> 与
+<code>gun()</code> 方法。</p>
+<p>既然如此，问题的原因又出在哪里？明明只是一个很普通的 polymorphism
+应用，为什么类型为 <code>Citizen</code> 的 <code>Police</code>
+类实例无法调用它本身拥有的 <code>gun()</code> 函数呢？</p>
+<p>这就来到 subtyping 的问题了：我想将其解释为 subtyping
+<strong>规范</strong>了对象的行为。<code>policeAsCitizen</code> 的类型为
+<code>Citizen</code>，而任何类型为 <code>Citizen</code> 的对象是不该调用
+<code>Citizen</code> 类中没有定义的行为的。</p>
+<p><strong>规定</strong>与<strong>规范</strong>这两个词有根本上的不同。
+警察相比普通市民拥有持枪的权利，他持枪这一行为是被允许的，也是
+subclassing 所声明的。然而在职务以外，作为普通市民的警察不能拔枪，这又是
+subtyping 所规范的。</p>
+<p>至于 subtyping 为何要约束对象的一些本身看似合法的行为，这就要追溯到
+statically-typed language 与 dynamically-typed language
+之间最本质的区别了，在此不再过多赘述。</p>
+<p>详情可参见我的笔记 <a target="_blank" rel="noopener" href="https://thisisxxz.com/categories/%E7%AC%94%E8%AE%B0/Programming-Languages-UW/">Programming
+Languages, UW</a>。</p>
+<h3 id="contd.-remote-control">contd. remote control</h3>
+<p>上述例子的另外一种解释 (但本质是相同的)：The compiler decides whether
+you can call a method based on the <em>reference type</em> (static
+type), not the <em>actual object type</em> (dynamic type).</p>
+<p>很喜欢 2396 对该问题的一个浅显比喻。object 是一个复杂的机器，而一个
+object 能够对应多个 references。reference 就像该机器的遥控器 (remote
+control)，每一种类型的 reference
+能在<strong>不同程度</strong>上控制该机器。</p>
+<p>自底向上，沿着 class hierarchy：从 actual object type 到
+<code>Object</code> type，不同类型的 reference 对 object
+的控制程度越来越低。</p>
+<p><br></p>
+<h2 id="more-inheritance-super">More Inheritance:
+<code>super</code></h2>
+<p>子类是无法继承父类中的 private members 的！</p>
+<p>但是，子类却能够通过其继承的 public getter/setters
+来间接的访问/修改父类中定义的 private instance
+variables。这是为了保证父类对其 private members 拥有绝对的掌控权。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">secret</span> <span class="operator">=</span> <span class="string">&quot;I want to escape!&quot;</span>;</span><br><span class="line">    A() &#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getSecret</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> secret;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">setSecret</span><span class="params">(String secret)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.secret = secret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">B</span> <span class="keyword">extends</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    B() &#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">show</span><span class="params">()</span> &#123;</span><br><span class="line">        println(<span class="string">&quot;My secret: &quot;</span> + <span class="built_in">this</span>.secret);   <span class="comment">// missing field error</span></span><br><span class="line">        println(<span class="string">&quot;My secret: &quot;</span> + <span class="built_in">super</span>.secret);  <span class="comment">// missing field error</span></span><br><span class="line">        println(<span class="string">&quot;My secret: &quot;</span> + getSecret());   <span class="comment">// no problem</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>虽然老师轻描淡写的带过了这个知识点，但我总感觉有哪里不对。</p>
+<p>不觉得这一句话很矛盾吗？既然子类不继承父类的私有实例变量，那理论上来说它并不会储存任何关于这些变量的信息；但我们却能够通过某种方法访问或修改这些“不存在”的变量。</p>
+<p>实际上，这些变量是存在的；从代码复用的角度来看，子类拥有父类的全套代码，只不过并不是所有代码都能被子类所使用。<strong>父类定义中的公有成员能被子类直接访问，我们称其被子类所「继承」；私有成员对子类隐藏，我们称其无法被继承。</strong>这就是公有继承的实质。</p>
+<p>按照这个逻辑，method overriding
+也并不意味着子类方法对父类同名方法的覆盖；父类的同名方法仍然是存在的，只是无法直接被子类调用。</p>
+<p>这一切的证据以及解决方法就是 <code>super</code>
+关键字的存在；我们通过它来访问父类的代码。</p>
+<p>对于 <code>super.a</code> ( <code>a</code> 可以是 instance variable
+或 method )：</p>
+<ul>
+<li>在父类定义中 <code>a</code> 是 private 的：不可访问，弹出 field
+missing 错误。</li>
+<li><code>a</code> 是某个被子类 overridden 的方法：<code>super.a</code>
+将访问父类定义中的同名方法。</li>
+<li><code>a</code> 是某个被子类 hidden [stay tuned]
+的实例变量：<code>super.a</code> 将访问父类定义中的同名变量。</li>
+<li><code>a</code> 为 public 并且没有被子类
+overridden/hidden：<code>super.a</code> 正常访问 <code>a</code>
+成员；在此情况下 <code>super.a</code> 与 <code>this.a</code>
+本质上是完全一致的。</li>
+</ul>
+<p>虽然逻辑上我们可以理解为每个子类在实例化时都伴随着一系列父类对象的创建，但实际上这一过程并不存在。子类只是复用了父类的所有代码，根据父类定义的访问权限有选择地继承一部分内容并初始化自身。</p>
+<ul>
+<li><code>this.hashCode()</code> 与 <code>super.hashCode()</code>
+相等。这两个指针指向的是同一块空间。</li>
+<li><em>constructor chaining</em>:
+当子类对象实例化时，它的构造函数将立即调用其父类的无参构造函数来初始化自身；这个过程将一直追溯到
+<code>Object</code> 类。</li>
+</ul>
+<p><br></p>
+<h2 id="overriding-v.s.-hidding">Overriding v.s. Hidding</h2>
+<p>tutorial 6 上讲的一个问题，考察了对 Java method lookup
+规则的理解。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="type">int</span> n;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">A</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.n = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">calculate</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.n = <span class="number">4</span> * <span class="built_in">this</span>.n;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span> &#123;</span><br><span class="line">        calculate();</span><br><span class="line">        System.out.println(<span class="string">&quot;In A: &quot;</span> + <span class="built_in">this</span>.n);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> <span class="keyword">extends</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="type">int</span> n;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">B</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.n = <span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">calculate</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.n = <span class="number">4</span> * <span class="built_in">super</span>.n;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.calculate();</span><br><span class="line">        System.out.println(<span class="string">&quot;In B: &quot;</span> + <span class="built_in">this</span>.n);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">C</span> <span class="keyword">extends</span> <span class="title class_">B</span> &#123;</span><br><span class="line">    <span class="type">int</span> n;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">C</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.n = <span class="number">100</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">calculate</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.n = <span class="number">4</span> * <span class="built_in">this</span>.n;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.print();</span><br><span class="line">        System.out.println(<span class="string">&quot;In C: &quot;</span> + <span class="built_in">this</span>.n);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">A</span> <span class="variable">x1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">A</span>();</span><br><span class="line">        x1.print();</span><br><span class="line">        <span class="type">B</span> <span class="variable">x2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">B</span>();</span><br><span class="line">        x2.print();</span><br><span class="line">        <span class="type">C</span> <span class="variable">x3</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">C</span>();</span><br><span class="line">        x3.print();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先是第一个问题：为什么可以使用 <code>super.n</code>
+直接在子类中访问父类的 instance variable？在未声明的情况下，父类的
+instance variable 不应该是默认为 private 的吗？</p>
+<p>答案：未声明的情况下，instance variable 的 accessibility 默认为
+<em>package-private</em>。处于同一个 package
+下的其他类是可以直接访问，修改或继承的。</p>
+<p>第二个问题，也就是问题本身：该程序的输出是什么？</p>
+<p>这个问题很值得深究，特别是 <code>x3.print()</code>
+的部分。在不同的语言中，这份代码将表现出完全不同的行为。</p>
+<ul>
+<li>Java: <code>In B: 10; In C: 400.</code></li>
+<li>C++: <code>In B: 4; In C: 100.</code></li>
+</ul>
+<p>为什么会有这样的区别？在 OOP 语言中，针对 class hierarchy 中同名
+field 存在多种实现的情况，有两种不同的 method-lookup mechanisms
+(这里不考虑 static overload)。</p>
+<ul>
+<li><strong>hiding</strong>: The method chosen for execution depends on
+the <em>static type</em> of the reference used to invoke it at
+<em>compile-time</em>.</li>
+<li><strong>overriding</strong>: This is determined by the <em>dynamic
+type</em> (actual type) of the <em>object at runtime</em>.</li>
+</ul>
+<p>Java 对 instance variables 采用的是 hiding 机制，对 methods
+采用的则是 overriding 机制。C++ 则同时对 member variables 与 member
+functions 应用了 hiding 机制。(C++ 允许使用 <code>virtual</code>
+关键字，通过 double dispatch 的方式实现 member functions 的 overriding
+机制)。</p>
+<p>这两个机制的最本质区别在于它们根据引用 (reference) 的静态或动态
+(实际) 类型来决定被调用的方法。</p>
+<p><code>x3</code> 中的 <code>print()</code> 首先调用了父类中的
+<code>print()</code> 函数：</p>
+<ul>
+<li><code>this.calculate()</code>：发现 <code>calculate()</code>
+方法在子类与父类中有不同的实现，此时 Java 采用 overriding 机制，依据
+<code>this</code>
+的实际类型来选择被执行的实现。很显然，<code>this</code> 指向的当前对象
+<code>x3</code> 的实际类型为 <code>C</code>；Java 决定执行
+<code>C</code> 类中的 <code>calculate()</code> 实现。所以会有输出
+<code>In C: 400</code>。</li>
+<li><code>println("In B: " + this.n)</code>：发现 <code>n</code>
+实例变量在子类与父类中均有定义，此时 Java 采用 hiding 机制，依据
+<code>this</code>
+的静态类型来选择被访问的实例变量。这是在编译时就被确定的，<code>this</code>
+的静态类型为 <code>B</code>；Java 决定访问 <code>B</code> 类中定义的
+<code>n</code>。所以会有输出 <code>In B: 10</code>。</li>
+</ul>
+<div class="note info no-icon"><p>In Java, the static type of a reference is the class in which it is
+defined. The dynamic type of a reference is the actual type of the
+object that refers to at runtime.</p>
+</div>
+<p>再看一个例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Father</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> a;</span><br><span class="line">    Father() &#123; </span><br><span class="line">        a = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">get</span><span class="params">()</span> &#123; <span class="keyword">return</span> a; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Son</span> <span class="keyword">extends</span> <span class="title class_">Father</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> a;</span><br><span class="line">    Son() &#123;</span><br><span class="line">        a = <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Son</span>    <span class="variable">son1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Son</span>();</span><br><span class="line">        <span class="type">Father</span> <span class="variable">son2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Son</span>();</span><br><span class="line">        </span><br><span class="line">        System.out.println(son1.get());</span><br><span class="line">        System.out.println(son2.get());</span><br><span class="line">        </span><br><span class="line">        System.out.println(son1.a);</span><br><span class="line">        System.out.println(son2.a);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个程序的输出是 <code>1 1 2 1</code>。能想清楚吗？(hint:
+<code>son1</code> 的静态类型为 <code>Son</code>, <code>son2</code>
+的静态类型为 <code>Father</code>；而它们的动态类型均为
+<code>Son</code>)。</p>
+<p>若在 <code>Son</code> 类中添加
+<code>public int get() &#123; return a; &#125;</code> 结果又是怎样？(method
+overriding: <code>2 2 2 1</code>)</p>
+<p><br></p>
+<h2 id="file-inputoutput">File Input/Output</h2>
+<p>midterm 小复习之常用的 Java I/O。有这一节纯粹是因为
+<code>System.in</code> 太难用了。</p>
+<p><strong>InputStreamReader + BufferedReader </strong>
+适合快速读入大规模的数据。用法如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">InputStreamReader</span> <span class="variable">isr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(System.in);</span><br><span class="line"><span class="type">BufferedReader</span> <span class="variable">inData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(isr);</span><br><span class="line"></span><br><span class="line">String line;</span><br><span class="line"><span class="keyword">while</span> ((line = inData.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="comment">// dealing with line</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用 <code>inData</code> 的 <code>readLine()</code>
+方法一行行的读入数据，每一行数据储存在一个 String 对象中。</p>
+<p><strong>Scanner </strong> 速度略慢于 InputStreamReader +
+BufferedReader，但胜在多种读入模式。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Scanner</span> <span class="variable">inData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (inData.hasNextLine()) &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">line</span> <span class="operator">=</span> inData.nextLine();</span><br><span class="line">    <span class="comment">// dealing with line</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>inData</code> 拥有各种各样方便的读入方法，如
+<code>nextInt()</code>, <code>nextLine()</code>,
+<code>nextBoolean()</code> 等等。</p>
+<p><strong>File Input </strong> FileReader + BufferedReader 或 File +
+Scanner.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">FileReader</span> <span class="variable">fr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileReader</span>(<span class="string">&quot;path/to/file.txt&quot;</span>);</span><br><span class="line"><span class="type">BufferedReader</span> <span class="variable">inData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(fr);</span><br><span class="line"></span><br><span class="line"><span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;path/to/file.txt&quot;</span>);</span><br><span class="line"><span class="type">Scanner</span> <span class="variable">inData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(file);</span><br></pre></td></tr></table></figure>
+<p><strong>File Output </strong> FileWriter + BufferedWriter.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">FileWriter</span> <span class="variable">fileWriter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileWriter</span>(<span class="string">&quot;path/to/file.txt&quot;</span>);</span><br><span class="line"><span class="type">BufferedWriter</span> <span class="variable">writer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedWriter</span>(fileWriter);</span><br><span class="line"></span><br><span class="line">writer.write(<span class="string">&quot;&quot;</span>);</span><br><span class="line">writer.close();</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="serialization">Serialization</h2>
+<div class="note info no-icon"><p><strong>Serialization</strong> is the process of translating a data
+structure or object state into a format that can be <em>stored</em> or
+<em>transmitted</em> and reconstructed later.</p>
+</div>
+<p>最直观的理解：存储 object 的 state (即其所有的 instance
+variables)。</p>
+<p>serialization 四部曲 (脱水！)：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. Make a FileOutputStream</span></span><br><span class="line"><span class="type">FileOutputStream</span> <span class="variable">fileStream</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(<span class="string">&quot;MyGame.sav&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. Make an ObjectOutputStream</span></span><br><span class="line"><span class="type">ObjectOutputStream</span> <span class="variable">os</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectOutputStream</span>(fileStream);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. Write the objects</span></span><br><span class="line">os.writeObject(elf);</span><br><span class="line">os.writeObject(troll);</span><br><span class="line">os.writeObject(magician);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4. Close the ObjectOutputStream</span></span><br><span class="line">os.close();</span><br></pre></td></tr></table></figure>
+<p>这是很常见的 <em>Chain Stream</em> 机制：</p>
+<ul>
+<li>connection stream (low-level, core of the nested stream):
+<code>FileOutputStream</code>.</li>
+<li>chain stream (higher-level): <code>ObjectOutputStream</code>.</li>
+</ul>
+<p>以 serialization 为例，对象将会在 <code>ObjectOutputStream</code>
+中被 serialized，接下来将会在 <code>OutputStream</code> 中转成 bytes
+并写入对应的 file 或 socket。</p>
+<p>当对象被 serialized 时，其 instance variables 所指向的对象也将被
+serialized。这就是所谓的 serialization saves the entire object
+graph。并且 Java 实现的 serialization 相当智能，若两个 instance
+variables 指向的是同一个对象，那么该对象仅会被存储一次。</p>
+<h3 id="serializable-interface">Serializable Interface</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Something</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>marker/tag interface. no need to implemenet any methods.</li>
+<li>inheritance. if the superclass is serializable, the subclass is
+automatically serializable.</li>
+</ul>
+<p>之前我们提到，serialization saves the entire object graph.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Pond</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">Duck</span> <span class="variable">duck</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Duck</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Duck</span> &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+<p>当我们 serialize 一个 <code>Pond</code> 对象时，其 instance variable
+<code>duck</code> 也将被 serialize。但 <code>Duck</code> 类并没有实现
+<code>Serializable</code> 接口，此时
+<code>NotSerializableException</code> 错误将会弹出。</p>
+<p>该问题有两种解决方法：</p>
+<ul>
+<li>对 <code>Duck</code> 类实现 <code>Serializable</code> 接口。</li>
+<li>添加 <code>transient</code> 关键词。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Pond</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> <span class="type">Duck</span> <span class="variable">duck</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Duck</span>(); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当对象的某些 instance variables CANNOT or SHOULD NOT (如某些
+runtime-specific information) 被 serialized 时，使用
+<code>transient</code> 关键词跳过它。</p>
+<p><br></p>
+<h2 id="deserialization">Deserialization</h2>
+<p>deserialization 四部曲 (泡水！)：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. Make a FileInputStream</span></span><br><span class="line"><span class="type">FileInputStream</span> <span class="variable">fileStream</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(<span class="string">&quot;MyGame.sav&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. Make an ObjectInputStream</span></span><br><span class="line"><span class="type">ObjectInputStream</span> <span class="variable">os</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectInputStream</span>(fileStream);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. Read and cast the objects</span></span><br><span class="line"><span class="type">GameCharacter</span> <span class="variable">elf</span> <span class="operator">=</span> (GameCharacter) os.readObject();</span><br><span class="line"><span class="type">GameCharacter</span> <span class="variable">troll</span> <span class="operator">=</span> (GameCharacter) os.readObject();</span><br><span class="line"><span class="type">GameCharacter</span> <span class="variable">magician</span> <span class="operator">=</span> (GameCharacter) os.readObject();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4. Close the ObjectInputStream</span></span><br><span class="line">os.close();</span><br></pre></td></tr></table></figure>
+<p>serialization 是如何将一个对象 bring to life 的：</p>
+<ul>
+<li>constructor chaining 将从 inheritance tree 上的首个 non-serializable
+superclass 开始一直追溯到 <code>Object</code> 类。这意味着对象的
+constructor 将不会被调用。</li>
+<li>对象的 instance variables 以 serialized state
+中储存的值初始化。</li>
+<li>transient instance variables 以默认值初始化。</li>
+</ul>
+<h3 id="version-control">Version Control</h3>
+<p>serialized object 带有特定的
+<code>serialVersionUID</code>，这个值是根据 class structure
+而计算得出的。若在对象被 serialized 之后类的定义发生了改变，Java
+将不允许我们进行 deserialization。(Java 认为
+<code>serialVersionUID</code> 不一致的对象和类是 incompatible 的)</p>
+<p>然而，我们可以通过这种方式欺骗编译器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Something</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> <span class="number">2396L</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果我们在类中显式地对 <code>serialVersionUID</code>
+进行了定义，那么即使类的结构发生了改变，<code>serialVersionUID</code>
+也将保持我们所赋予的值。</p>
+<p>如果我们要使用这种方法，确保类与对象转化之间的 compatibility
+这项任务就落到了程序员头上。假设某个对象已经被
+serialized，哪些对对应类结构的更改是 tolerable 的呢？</p>
+<table>
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: center;">lead to incompatibility</th>
+<th style="text-align: center;">generally OK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><em>delete</em> instance variables</td>
+<td style="text-align: center;"><em>add</em> new instance variables</td>
+</tr>
+<tr>
+<td style="text-align: center;">move a class up/down the inheritance
+tree</td>
+<td style="text-align: center;">add/remove classes to/from the
+inheritance tree</td>
+</tr>
+<tr>
+<td style="text-align: center;">change the declared type of instance
+variables</td>
+<td style="text-align: center;">change the access level of instance
+variables</td>
+</tr>
+<tr>
+<td style="text-align: center;"><u>change non-transient variables to
+transient</u></td>
+<td style="text-align: center;"><u>change transient variables to
+non-transient</u></td>
+</tr>
+<tr>
+<td style="text-align: center;">change some serializable class to
+non-serializable</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: center;">change non-static variables to
+static</td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info. Code: COMP2396, Lecturer: Dr. T.M. Chim.</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/20266563">抽象与封装的区别是什么？-
+知乎</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/51920553">Java
+中，创建子类对象时父类对象是否会被一起创建？ - 知乎</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/12086298/why-is-an-instance-variable-of-the-superclass-not-overridden-by-a-subclass">Why
+is an instance variable not overriden by a subclass? - Stack
+overflow</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://moodle.hku.hk/mod/forum/discuss.php?d=826256">Moodle
+Discussion Form - Ma Yuanche</a>.</li>
+</ul>
+
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2023/10/20/COMP2396-1/" title="再探 Java &amp; OOP">https://www.thisisxxz.com/2023/10/20/COMP2396-1/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | 再探 Java & OOP](https://www.thisisxxz.com/2023/10/20/COMP2396-1/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Programming-Languages/" rel="tag"><i class="fa fa-tag"></i> Programming Languages</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/10/19/COMP2119-1/" rel="prev" title="COMP2119A 问题集">
+                  <i class="fa fa-chevron-left"></i> COMP2119A 问题集
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/10/26/central-limit-theorem/" rel="next" title="浅谈 Central Limit Theorem">
+                  浅谈 Central Limit Theorem <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/10/20/COMP2396-1/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

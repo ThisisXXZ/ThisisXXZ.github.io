@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="我们定义某个 static type system 的expressiveness (表达性) 为：not rejecting too many programs that do nothing wrong and programmers are likely to write。  ML type system 的表达性来自 parametric polymorphism (参数多态)，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Programming Languages, UW, Part C - Subtyping">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/07/31/prog-lan-6/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="我们定义某个 static type system 的expressiveness (表达性) 为：not rejecting too many programs that do nothing wrong and programmers are likely to write。  ML type system 的表达性来自 parametric polymorphism (参数多态)，">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-07-31T11:01:34.000Z">
+<meta property="article:modified_time" content="2024-02-02T11:42:06.000Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Programming Languages">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2023/07/31/prog-lan-6/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/07/31/prog-lan-6/","path":"2023/07/31/prog-lan-6/","title":"Programming Languages, UW, Part C - Subtyping"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Programming Languages, UW, Part C - Subtyping | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction-and-rules"><span class="nav-number">1.</span> <span class="nav-text">Introduction and Rules</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#width-subtyping"><span class="nav-number">1.1.</span> <span class="nav-text">Width Subtyping</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#depth-subtyping-a-bad-idea-with-mutation"><span class="nav-number">2.</span> <span class="nav-text">Depth Subtyping: A Bad
+Idea With Mutation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#array-subtyping"><span class="nav-number">3.</span> <span class="nav-text">Array Subtyping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#function-subtyping"><span class="nav-number">4.</span> <span class="nav-text">Function Subtyping</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#convariant-return-type"><span class="nav-number">4.1.</span> <span class="nav-text">Convariant Return Type</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#contravariant-argument-type"><span class="nav-number">4.2.</span> <span class="nav-text">Contravariant Argument Type</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#subtyping-for-oop"><span class="nav-number">5.</span> <span class="nav-text">Subtyping for OOP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#generics-v.s.-subtyping"><span class="nav-number">6.</span> <span class="nav-text">Generics v.s. Subtyping</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#what-are-generics-good-for"><span class="nav-number">6.1.</span> <span class="nav-text">What are generics good for?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#subtyping-is-bad-substitute-for-generics"><span class="nav-number">6.2.</span> <span class="nav-text">Subtyping is bad
+substitute for generics</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#what-is-subtyping-good-for"><span class="nav-number">6.3.</span> <span class="nav-text">What is subtyping good for?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bounded-polymorphism"><span class="nav-number">7.</span> <span class="nav-text">Bounded Polymorphism</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">8.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/07/31/prog-lan-6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Programming Languages, UW, Part C - Subtyping | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Programming Languages, UW, Part C - Subtyping
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-07-31 19:01:34" itemprop="dateCreated datePublished" datetime="2023-07-31T19:01:34+08:00">2023-07-31</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>我们定义某个 static type system 的<em>expressiveness</em> (表达性)
+为：not rejecting too many programs that do nothing wrong and
+programmers are likely to write。</p>
+<ul>
+<li>ML type system 的表达性来自 <em>parametric polymorphism</em>
+(参数多态)，即 <em>generics</em> (泛型)。</li>
+<li>许多 OOP style (Java, C#) 的 type system 的表达性更多的来自于
+<em>subtype polymorphism</em> (子类型多态)，也即我们所说的
+<em>subtyping</em>。</li>
+</ul>
+<span id="more"></span>
+<p>我们将使用一种类 ML 的 MUPL 来介绍 subtyping；但请注意，ML
+本身是不支持 subtyping 的。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="introduction-and-rules">Introduction and Rules</h2>
+<div class="note info no-icon"><p>Letting an expression that has one type also have another type that
+has less information is the idea of <em>subtyping</em>.</p>
+</div>
+<p>我们来看一个例子：</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fun</span> distToOrigin(p:&#123;x:<span class="built_in">real</span>, y:<span class="built_in">real</span>&#125;) =</span><br><span class="line">    <span class="type">Math</span>.sqrt(p.x*p.x + p.y*p.y)</span><br><span class="line">    </span><br><span class="line"><span class="keyword">val</span> c : &#123;x:<span class="built_in">real</span>, y:<span class="built_in">real</span>, color:<span class="built_in">string</span>&#125; = &#123;x=<span class="number">3.0</span>, y=<span class="number">4.0</span>, color=<span class="string">&quot;green&quot;</span>&#125;</span><br><span class="line"><span class="keyword">val</span> five : <span class="built_in">real</span> = distToOrigin(c)</span><br></pre></td></tr></table></figure>
+<p>该程序是一个典型的 false positive (假阳性) 程序。在不支持 subtyping
+的语言中，将 <code>c</code> 传入 <code>distToOrigin</code> 方法将会产生
+type error。这引出了 subtyping 的必要性：它在一定程度上令 type system
+更加 <em>complete</em>，从而提高了其 expressiveness。(关于 type system
+的分析见 <a target="_blank" rel="noopener" href="https://thisisxxz.com/2023/07/19/prog-lan-3/">Part
+B</a>)</p>
+<p><code>c</code> 的类型 <code>&#123;x:real, y:real, color:string&#125;</code>
+是形参 <code>p</code> 类型 <code>&#123;x:real, y:real&#125;</code> 的子类型，而
+subtype can have any of its supertypes，所以 <code>c</code> 能够顺利传入
+<code>distToOrigin</code> 方法中。</p>
+<h3 id="width-subtyping">Width Subtyping</h3>
+<p>对于类型 <code>t1</code> 与 <code>t2</code>，若 <code>t1</code> 是
+<code>t2</code> 的 subtype，我们标记为 <code>t1 &lt;: t2</code>。那么
+subtyping 可以表示为这么一条最基本的 typing tule：If <code>e</code> has
+type <code>t1</code> and <code>t1 &lt;: t2</code>, then <code>e</code>
+(also) has type <code>t2</code>.</p>
+<p>为了进一步提升 type system 的 expressiveness，还有四条
+rules；其中最重要的是对 <code>&lt;:</code>
+关系本身的定义。最常见的一种定义是 <em>width subtyping</em>，即
+supertype 与 subtype 呈宽度展开关系：在 width subtyping 中，supertype
+中含有的 fields 一定是 subtype 的子集。</p>
+<ul>
+<li><em>Width subtyping</em>. A supertype can have a subset of fields
+with the same type, i.e., a subtype can have extra fields:
+<code>&#123;f1:t1,...,fm:tm,...,fn:tn&#125; &lt;: &#123;f1:t1,...,fm:tm&#125;</code>.</li>
+<li>Permutation subtyping. A supertype can have the same set of fields
+with the same types in a different order:
+<code>&#123;y:real, x:real&#125; &lt;: &#123;x:real, y:real&#125;</code>.</li>
+<li>Transitivity. If <code>t1 &lt;: t2</code> and
+<code>t2 &lt;: t3</code>, then <code>t1 &lt;: t3</code>.</li>
+<li>Reflexitivity. Every type is a subtype of itself:
+<code>t &lt;: t</code>.</li>
+</ul>
+<p>结合 width subtyping, permutation subtyping 与
+transitivity，我们能够做到类似
+<code>&#123;x:real, foo:string, y:real&#125; :&lt; &#123;y:real, x:real&#125;</code>
+的子类型关系，这大大提高了 type system 的 expressiveness。</p>
+<p><br></p>
+<h2 id="depth-subtyping-a-bad-idea-with-mutation">Depth Subtyping: A Bad
+Idea With Mutation</h2>
+<p>在使用 subtyping 时，最常见的错误如下：</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fun</span> circleY (c:&#123;center:&#123;x:<span class="built_in">real</span>, y:<span class="built_in">real</span>&#125;, r:<span class="built_in">real</span>&#125;) = </span><br><span class="line">    c.center.y</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> sphere:&#123;center:&#123;x:<span class="built_in">real</span>, y:<span class="built_in">real</span>, z:<span class="built_in">real</span>&#125;, r:<span class="built_in">real</span>&#125; = &#123;center=&#123;x=<span class="number">3.0</span>, y=<span class="number">4.0</span>, z=<span class="number">5.0</span>&#125;, r=<span class="number">1.0</span>&#125;</span><br><span class="line"><span class="keyword">val</span> _ = circleY(sphere)</span><br></pre></td></tr></table></figure>
+<p><code>circleY</code> 方法返回传入圆的圆心的 y
+坐标。自然的，对于一个球 sphere，我们可能会认为其可以作为圆 circle
+的子类型传入 <code>circleY</code> 方法，并成功得到球心的 y 坐标。</p>
+<p>实际上，circle 类型与 sphere 类型之间的关系并不遵循 width subtyping
+规则：circle 类型的 fields 并不是 sphere 类型的子集，因此该程序将无法
+type check。但抛开圆与球类型继承上的逻辑问题，该程序本质上是 false
+positive 的：它在运行时并不会出现 field missing 的错误。</p>
+<p>为了进一步提升 type system 的 expressiveness，不妨再添加一条
+subtyping rule，称为 <em>depth subtyping</em>:</p>
+<ul>
+<li><em>Depth subtyping</em>: If <code>ta &lt;: tb</code>, then
+<code>&#123;f1:t1,...,f:ta,...,fn:tn&#125; &lt;: &#123;f1:t1,...,f:tb,...,fn:tn&#125;</code>.</li>
+</ul>
+<p>在该规则下，以上的程序就能 type-check 了。</p>
+<p>遗憾的是，depth subtyping 这一规则会破坏我们的 type system；一些
+false negative 的程序将通过 type check。这也是程序员常犯的错误之一：认为
+depth subtyping 是被允许的。见下例：</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fun</span> setToOrigin (c:&#123;center:&#123;x:<span class="built_in">real</span>, y:<span class="built_in">real</span>&#125;, r:<span class="built_in">real</span>&#125;) =</span><br><span class="line">    c.center = &#123;x=<span class="number">0.0</span>, y=<span class="number">0.0</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> sphere:&#123;center:&#123;x:<span class="built_in">real</span>, y:<span class="built_in">real</span>, z:<span class="built_in">real</span>&#125;, r:<span class="built_in">real</span>&#125; = &#123;center=&#123;x=<span class="number">3.0</span>, y=<span class="number">4.0</span>, z=<span class="number">0.0</span>&#125;, r=<span class="number">1.0</span>&#125;</span><br><span class="line"><span class="keyword">val</span> _ = setToOrigin(sphere)</span><br><span class="line"><span class="keyword">val</span> _ = sphere.center.z</span><br></pre></td></tr></table></figure>
+<p>在允许 depth subtyping 的语言中，该程序能通过 type
+check。但在运行时，最后一行 <code>sphere.center.z</code> 将出现 field
+missing 错误；这是由于 <code>setToOrigin</code> 方法 <em>mutate</em>
+其参数，使得 <code>center</code> 失去了 <code>z</code> 域。</p>
+<div class="note info no-icon"><p>In a language with records (or objects) with <em>getters</em> and
+<em>setters</em> for fields, depth subtyping is unsound, i.e., you
+cannot have a different type for a field in the subtype and the
+supertype.</p>
+</div>
+<p>对于一个支持 subtyping 的语言，以下三个 features
+最多只能同时做到其中两个：</p>
+<ul>
+<li>Fields of objects are settable (i.e., immutable).</li>
+<li>Supporting depth subtyping.</li>
+<li>Having a type system actually prevent field-missing errors.</li>
+</ul>
+<p><br></p>
+<h2 id="array-subtyping">Array Subtyping</h2>
+<p>我们来看一段 Java 代码，其在 Java 中是 type check 的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span> &#123; ... &#125;    <span class="comment">// has fields double x, y</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ColorPoint</span> <span class="keyword">extends</span> <span class="title class_">Point</span> &#123; ... &#125; <span class="comment">// adds field String color</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">m1</span><span class="params">(Point[] pt_arr)</span> &#123;</span><br><span class="line">    pt_arr[<span class="number">0</span>] = <span class="keyword">new</span> <span class="title class_">Point</span>(<span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">String <span class="title function_">m2</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">    ColorPoint[] cpt_arr = <span class="keyword">new</span> <span class="title class_">ColorPoint</span>[x];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; x; ++i)</span><br><span class="line">        cpt_arr[i] = <span class="keyword">new</span> <span class="title class_">ColorPoint</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="string">&quot;green&quot;</span>);</span><br><span class="line">    m1(cpt_arr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的操作称为 <em>array subtyping</em>：即 If
+<code>ta &lt;: tb</code>, then
+<code>ta[] &lt;: tb[]</code>。它本质上就是 depth
+subtyping。根据上文中我们总结的规律，Java 支持三个 features
+中的两个：</p>
+<ul>
+<li>Array subtyping.</li>
+<li>Array indices are mutable.</li>
+</ul>
+<p>那么 Java 的 type system 就无法阻止某些程序的 field-missing
+错误。事实确实如此，上述程序能够通过 Java 的 type
+check。为了解决这个问题，Java 引入了 <em>run-time checks</em>。</p>
+<div class="note info no-icon"><p>Java use run-time checks to maintain the <em>invariant</em> that an
+object of type <code>t[]</code> always holds objects that have type
+<code>t</code> or a subtype, but not a supertype.</p>
+</div>
+<p>于是当程序运行到 <code>pt_arr[0] = new Point(3, 4)</code>
+这一语句时，Java 的 run-time check 会发现 <code>ColorPoint[]</code>
+类的数组存储了其 supertype <code>Point</code> 类的对象，于是
+<code>ArrayStoreException</code> 错误将被抛出。</p>
+<p>Java 与 C# 以加入 run-time checks 的代价换取了 depth
+subtyping，这是因为 depth subtyping 自有其意义：它的确提升了语言的灵活性
+(flexibility) 与 type system 的 expressiveness。</p>
+<p>除了利用 run-time checks 之外，还有其他的方法可以达到相同的目的：</p>
+<ul>
+<li><em>Bounded polymorphism</em>. Use generics (parametric
+polymorphism) combined with subtyping.</li>
+<li>Having support for indicating that a method will not update array
+elemtents, in which case depth subtyping is sound.</li>
+</ul>
+<p><br></p>
+<h2 id="function-subtyping">Function Subtyping</h2>
+<p>函数 (方法) 也拥有它的类型，因此研究函数类型间的 subtyping
+关系也是很有必要的。It is just as important for understanding how to
+safely override methods in object-oriented languages.</p>
+<p>When we talk about function subtyping, we are talking about using a
+function of one type in place of a function of another type.</p>
+<p>我们以 higher-order function 为例研究函数类型间的 subtyping
+关系：<code>distMoved</code> function computes the distance between the
+two-dimensional point <code>p</code> and the result of calling
+<code>f</code> with <code>p</code>.</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fun</span> distMoved (f : &#123;x:<span class="built_in">real</span>,y:<span class="built_in">real</span>&#125;-&gt;&#123;x:<span class="built_in">real</span>,y:<span class="built_in">real</span>&#125;,</span><br><span class="line">               p : &#123;x:<span class="built_in">real</span>,y:<span class="built_in">real</span>&#125;) = </span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">val</span> p2 : &#123;x:<span class="built_in">real</span>,y:<span class="built_in">real</span>&#125; = f p</span><br><span class="line">        <span class="keyword">val</span> dx : <span class="built_in">real</span> = p2.x - p.x</span><br><span class="line">        <span class="keyword">val</span> dy : <span class="built_in">real</span> = p2.y - p.y</span><br><span class="line">    <span class="keyword">in</span> <span class="type">Math</span>.sqrt(dx*dx + dy*dy) <span class="keyword">end</span></span><br><span class="line">    </span><br><span class="line"><span class="keyword">fun</span> flip p = &#123;x=~p.x, y=~p.y&#125;</span><br><span class="line"><span class="keyword">val</span> d = distMoved(flip, &#123;x=<span class="number">3.0</span>, y=<span class="number">4.0</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>那么函数 <code>distMoved</code> 的类型为
+<code>((&#123;x:real,y:real&#125;-&gt;&#123;x:real,y:real&#125;) * &#123;x:real,y:real&#125;) -&gt; real</code>.</p>
+<p>函数 <code>flip</code> 的类型为
+<code>&#123;x:real, y:real&#125; -&gt; &#123;x:real, y:real&#125;</code>，与函数
+<code>distMoved</code> 期待的参数类型是相符的；以函数 <code>flip</code>
+为参数调用函数 <code>distMoved</code> 没有用到 subtyping。</p>
+<h3 id="convariant-return-type">Convariant Return Type</h3>
+<div class="note info no-icon"><p>The subtyping for the return types works <em>covariant</em> as for
+the types overall.</p>
+</div>
+<p>函数类型与其返回值类型的 subtyping 关系是 covariant (协变) 的: If
+<code>ta &lt;: tb</code>, then
+<code>t -&gt; ta &lt;: t -&gt; tb</code>.</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fun</span> flipGreen p = &#123;x=~p.x, y=~p.y, color=<span class="string">&quot;green&quot;</span>&#125;</span><br><span class="line"><span class="keyword">val</span> d = distMoved(flipGreen, &#123;x=<span class="number">3.0</span>, y=<span class="number">4.0</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>如上例，<code>flipGreen</code> 函数作为参数传入
+<code>distMoved</code> 函数不会产生任何问题。</p>
+<ul>
+<li><code>flipGreen</code> 函数的返回值类型为
+<code>&#123;x:real,y:real,color:string&#125;</code>，是 <code>distMoved</code>
+形参函数返回值类型 <code>&#123;x:real,y:real&#125;</code> 的 subtype。</li>
+<li>而 <code>flipGreen</code> 函数类型
+<code>&#123;x:real,y:real&#125;-&gt;&#123;x:real,y:real,color:string&#125;</code> 是
+<code>distMoved</code> 形参函数类型
+<code>&#123;x:real,y:real&#125;-&gt;&#123;x:real,y:real&#125;</code> 的 subtype。</li>
+</ul>
+<p>可以看出函数类型与其返回值类型 subtyping 的协变关系。</p>
+<h3 id="contravariant-argument-type">Contravariant Argument Type</h3>
+<div class="note info no-icon"><p>The subtyping for argument types is the reverse of the subtyping for
+the types overall.</p>
+</div>
+<p>函数类型与其参数类型的 subtyping 关系是 contravariant (逆变) 的: If
+<code>ta &lt;: tb</code>, then
+<code>tb -&gt; t &lt;: ta -&gt; t</code>.</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fun</span> flipX_Y0 p = &#123;x=~p.x, y=<span class="number">0</span>&#125;</span><br><span class="line"><span class="keyword">val</span> d = distMoved(flipX_Y0, &#123;x=<span class="number">3.0</span>, y=<span class="number">4.0</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>如上例，<code>flipX_Y0</code> 函数作为参数传入 <code>distMoved</code>
+函数不会产生任何问题。</p>
+<ul>
+<li><code>flipX_Y0</code> 函数的参数类型为 <code>&#123;x:real&#125;</code>，是
+<code>distMoved</code> 形参函数参数类型 <code>&#123;x:real,y:real&#125;</code> 的
+supertype。</li>
+<li>而 <code>flipX_Y0</code> 函数类型
+<code>&#123;x:real&#125;-&gt;&#123;x:real,y:real&#125;</code> 是 <code>distMoved</code>
+形参函数类型 <code>&#123;x:real,y:real&#125;-&gt;&#123;x:real,y:real&#125;</code> 的
+subtype。</li>
+</ul>
+<p>可以看出函数类型与其参数类型 subtype 的逆变关系。</p>
+<div class="note info no-icon"><p>The <u>general rule for function subtyping</u> is: If
+<code>t3 &lt;: t1</code> (argument type) and <code>t2 &lt;: t4</code>
+(return type), then <code>t1-&gt;t2 &lt;: t3-&gt;t4</code>. This rule,
+combined with reflexivity lets us use contravariant arguments, covariant
+results, or both.</p>
+</div>
+<p>注意在 OOP 语言中，<code>self</code> (或 <code>this</code>)
+是被特殊处理的，它的类型与对象的类型始终是 convariant (共变) 的。</p>
+<p><br></p>
+<h2 id="subtyping-for-oop">Subtyping for OOP</h2>
+<p>在 Java 与 C# 这些 statically typed OOP
+语言中存在许多容易混淆的概念，如 inheritance v.s. subtyping, class v.s.
+type 等，这一节将对其进行澄清。(很重要的一节！)</p>
+<p>在之前，我们使用 ML-like MUPL 中的 record feature 来解释了
+subtyping。其实对于 OOP 中的 object，我们也可以视为一个 record：An
+object is basically a record holding fields (which we assume here are
+<em>mutable</em>) and methods (we assume the "slots" for methods are
+<em>immutable</em>).</p>
+<p>结合之前我们基于 record 与 higher-order function 研究的 width typing
+与 function typing，我们定义 OOP 中的 subtyping 规则如下：</p>
+<ul>
+<li>(Width typing for fields) A subtype can have extra fields.</li>
+<li>(NO depth typing for fields) Because fields are mutable, a subtype
+cannot have a different type for a field.</li>
+<li>(Width typing for methods) A subtype can have extra methods.</li>
+<li>(Depth typing for methods) Because methods are immutable, <u>a
+subtype can have a subtype for method</u>, which means the method in the
+subtype can have contravariant argument types and a covariant result
+type.</li>
+</ul>
+<p>虽然我们可以将 object 视为 PL 中的 record，Java 与 C# 中的 object
+types 与 ML-like 的 record types，function types 却有着很大的不同。</p>
+<div class="note info no-icon"><p>In Java and C#, we <u>reuse class (interfaces) names as types</u>. If
+there is a class <code>Foo</code>, then the type <code>Foo</code>
+includes in it all fields and methods inplied by the class definition
+(including superclasses).</p>
+</div>
+<p>Subtyping in Java and C# includes only the subtyping explicitly
+stated via:</p>
+<ul>
+<li>the subclass relationship.</li>
+<li>the interfaces that classes explicitly indicate they implement
+(including interfaces implemented by superclasses).</li>
+</ul>
+<p>接下来我们介绍 OOP 中的 subclassing 规则：它比 subtyping
+规则更为严格，因此可以 soundly 地阻止 field missing 与 method missing
+错误。</p>
+<ul>
+<li>A subclass can add fields but not remove them.</li>
+<li>A subclass can add methods but not removed them.</li>
+<li>A subclass can override a method with a covariant return type. (在
+C++ 中，这条规则更为严格，重写方法地参数表与返回值地类型均不能改变)</li>
+<li>A class can implement more methods than an interface requires or
+implement a required method with a covariant return type.</li>
+</ul>
+<p>注意，<u>classes 与 types 是两个完全不同的概念</u>！！！</p>
+<p>在 C# 与 Java 这种语言中，每个 class declaration 在定义 class
+的同时引入同名的 type。为了方便， classes 与 types
+的界限被刻意模糊了。类似的，inheritance (subclassing) 与 subtyping
+的界限也变得很暧昧。</p>
+<p>但实际上这些概念是有本质上的区别的。(高能预警，接下来的内容很精华，就不翻译了)</p>
+<div class="note info no-icon"><p>A class defines an object's <em>behavior</em>. Subclassing
+<em>inherits</em> behavior, modifying behavior via extension and
+override.</p>
+</div>
+<div class="note info no-icon"><p>A type describes what fields an object has and what messages it can
+respond to. Subtyping is a question of substitutability and what we want
+to flag as a type error.</p>
+</div>
+<p><br></p>
+<h2 id="generics-v.s.-subtyping">Generics v.s. Subtyping</h2>
+<p>关于 generics (parametric polymorphism) 与 subtyping polymorphism
+的比较也是一个很重要的话题。</p>
+<h3 id="what-are-generics-good-for">What are generics good for?</h3>
+<p>先来看看 generics (parametric polymorphism) 的两种最常见的应用。</p>
+<ol type="1">
+<li><p>higher-order function 的复合。</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> compose : (<span class="symbol">&#x27;b</span> -&gt; <span class="symbol">&#x27;c</span>) * (<span class="symbol">&#x27;a</span> -&gt; <span class="symbol">&#x27;b</span>) -&gt; (<span class="symbol">&#x27;a</span> -&gt; <span class="symbol">&#x27;c</span>)</span><br></pre></td></tr></table></figure></li>
+<li><p>functions that operate over collections/containers where
+different collections/containers can hold values of different types.</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> length : <span class="symbol">&#x27;a</span> <span class="built_in">list</span> -&gt; <span class="built_in">int</span></span><br><span class="line"><span class="keyword">val</span> map : (<span class="symbol">&#x27;a</span> -&gt; <span class="symbol">&#x27;b</span>) * <span class="symbol">&#x27;a</span> <span class="built_in">list</span> -&gt; <span class="symbol">&#x27;b</span> <span class="built_in">list</span></span><br><span class="line"><span class="keyword">val</span> swap : (<span class="symbol">&#x27;a</span> * <span class="symbol">&#x27;b</span>) -&gt; (<span class="symbol">&#x27;b</span> * <span class="symbol">&#x27;a</span>)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>generic types
+放松了对函数参数类型的限制，从而提高了代码的复用性。举例来说，如果没有
+generics，那么对于每一对不同类型的 pair 都需要编写一个 <code>swap</code>
+函数。</p>
+<h3 id="subtyping-is-bad-substitute-for-generics">Subtyping is bad
+substitute for generics</h3>
+<p>在不支持 generics 的语言中，程序员有时会用 subtyping 实现
+generics，但是：</p>
+<ul>
+<li>Somewhat lame generics.</li>
+<li>Doing so is like painting with a hammer instead of a
+paintbrush.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">LamePair</span> &#123;</span><br><span class="line">    Object x;</span><br><span class="line">    Object y;</span><br><span class="line">    LamePair(Object _x, Object _y) &#123; x=_x; y=_y; &#125;</span><br><span class="line">    LamePair <span class="title function_">swap</span><span class="params">()</span> &#123; <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">LamePair</span>(y,x); &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> (String)(<span class="keyword">new</span> <span class="title class_">LamePair</span>(<span class="string">&quot;hi&quot;</span>, <span class="number">4</span>).y); <span class="comment">// error caught only at run-time</span></span><br></pre></td></tr></table></figure>
+<p>这是用 subtyping 实现 generics 的一个例子：由于 <code>Object</code>
+类型是所有类型的 supertype，任何类型的数据都能传入 <code>LamePair</code>
+的域中。问题出在从 <code>LamePair</code> 中提取数据：我们只能获得一个
+<code>Object</code> 类型的数据，因此必须使用强制类型转换 downcast
+来将其转换为“原本”的类型。</p>
+<p>downcast 将对被转换的数据类型执行 run-time
+checks，因此上述程序中的类型错误只有在运行时才能被侦测到；这一方面增加了动态检查的时空成本，一方面潜在降低了程序的安全性。</p>
+<div class="note info no-icon"><p>When you use <code>Object</code> and downcasts, you are essentially
+taking a dynamic typing approach: any object could be stored in an
+<code>Object</code> field, so it is up to programmers, <u>without help
+from the type system</u>, to keep straight what kind of data is
+where.</p>
+</div>
+<h3 id="what-is-subtyping-good-for">What is subtyping good for?</h3>
+<p>subtyping 的优势区间在于 allowing code to be reused with data that
+has <em>extra information</em>.</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fun</span> distToOrigin &#123;x=x, y=y&#125; = </span><br><span class="line">    <span class="type">Math</span>.sqrt(x*x + y*y)</span><br><span class="line"><span class="keyword">val</span> five = distToOrigin &#123;x=<span class="number">3.0</span>, y=<span class="number">4.0</span>, color=<span class="string">&quot;red&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>该代码在不支持 subtyping 的语言如 ML 中将不会 type check。而在支持
+subtyping 的语言中，<code>distToOrigin</code> 函数既能作用于
+<code>Point</code> 类的对象，又能作用于 <code>ColorPoint</code>
+类的对象：其中 <code>ColorPoint</code> is data that has extra
+information for <code>Point</code>.</p>
+<p><br></p>
+<h2 id="bounded-polymorphism">Bounded Polymorphism</h2>
+<p>既然 generics 与 subtyping 都有着各自的优势区间，许多 statically
+typed 语言 (例如 Java 与 C#) 选择同时实现这 generics 与
+subtyping。同时拥有这两种 polymorphism 机制带来了：</p>
+<ul>
+<li>Some <em>complications</em>. (e.g. static overloading &amp;
+subtyping are more difficult to define)</li>
+<li>Merits brought by generics and subtyping separately.</li>
+<li>More code reuse and expressiveness with the <em>combination</em> of
+the two ideas.</li>
+</ul>
+<p>generics 与 subtyping 的结合带来了 <em>bounded polymorphism</em>,
+具体体现为 <em>bounded generic types</em>。</p>
+<div class="note info no-icon"><p>Bounded generic types allow us to say, <u>for all types
+<code>'a</code> that are subtype of <code>T</code>.</u></p>
+<ul>
+<li>(generics) We use <code>'a</code> multiple times to indicate where
+two things must have the same type.</li>
+<li>(subtyping) We can treat <code>'a</code> as a subtype of
+<code>T</code>, accessing whatever fields and methods we know a
+<code>T</code> has.</li>
+</ul>
+</div>
+<p>见下例，<code>Point</code> 类中定义了 <code>distance</code>
+方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Pt</span> &#123;</span><br><span class="line">    <span class="type">double</span> x, y;</span><br><span class="line">    <span class="type">double</span> <span class="title function_">distance</span><span class="params">(Pt pt)</span> &#123; <span class="keyword">return</span> Math.sqrt((x-pt.x)*(x-pt.x)+(y-pt.y)*(y-pt.y)); &#125;</span><br><span class="line">    Pt(<span class="type">double</span> _x, <span class="type">double</span> _y) &#123; x = _x; y = _y; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来是一个静态函数，输入一个 <code>point</code> 类 list
+与一个圆，返回 list 中所有在该圆内的 <code>point</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> List&lt;Pt&gt; <span class="title function_">inCircle</span><span class="params">(List&lt;Pt&gt; pts, Pt center, <span class="type">double</span> radius)</span> &#123;</span><br><span class="line">    List&lt;Pt&gt; result = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;Pt&gt;();</span><br><span class="line">    <span class="keyword">for</span> (Pt pt : pts)</span><br><span class="line">        <span class="keyword">if</span> (pt.distance(center) &lt;= radious)</span><br><span class="line">            result.add(pt)</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于一个 <code>ColorPt</code> 类型的 list，我们能否将其传入
+<code>inCircle</code> 方法实现代码的复用？该问题我们已经讨论过。</p>
+<ul>
+<li>一方面，list 中的各个 entry 是 mutable 的，这意味着 depth subtyping
+不成立，<code>List&lt;ColorPt&gt;</code> 并非
+<code>List&lt;Pt&gt;</code> 的 subtype。</li>
+<li>另一方面，即使 <code>List&lt;ColorPt&gt;</code> 传入了
+<code>inCircle</code> 方法，其返回的 list 类型是
+<code>List&lt;Pt&gt;</code> 而不是
+<code>List&lt;ColorPt&gt;</code>，我们必须用到丑陋的 downcast。</li>
+</ul>
+<p>好消息是，Java 的 bounded polymorphism 使得我们能够结合 generics 与
+subtyping，实现该功能：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> &lt;T <span class="keyword">extends</span> <span class="title class_">Pt</span>&gt; List&lt;T&gt; <span class="title function_">inCircle</span><span class="params">(List&lt;T&gt; pts, Pt center, <span class="type">double</span> radius)</span> &#123;</span><br><span class="line">    List&lt;T&gt; result = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;T&gt;();</span><br><span class="line">    <span class="keyword">for</span> (T pt : pts)</span><br><span class="line">        <span class="keyword">if</span> (pt.distance(center) &lt;= radius)</span><br><span class="line">            result.add(pt);</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>利用 generics，我们将 <code>T</code> 声明为一个 generic type；利用
+subtyping，我们规定该 generic type <code>T</code> 必须是 <code>Pt</code>
+的 subtype。当传入 <code>List&lt;ColorPt&gt;</code> 时，<code>T</code>
+将被指定为 <code>ColorPt</code>，且 <code>ColorPt</code> 的确是
+<code>Pt</code> 的 subtype。</p>
+<p>这样，我们不仅能够传入 <code>List&lt;ColorPt&gt;</code> 类型的
+list，该方法也将返回相同类型的 list 而无需用到 downcast。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Supplementry notes:</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/VeniVidiVici/p/16848669.html">My
+notes in CnBlogs</a>.</p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/57486254">Inheritance 与
+subtyping 到底有什么区别 -知乎</a>.</p>
+<p>Course info:</p>
+<p><a target="_blank" rel="noopener" href="https://www.coursera.org/learn/programming-languages-part-c">Programming
+Languages, Part C, University of Washington</a>, Lecturer: Professor Dan
+Grossman.</p>
+<!-- flag of hidden posts -->
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2023/07/31/prog-lan-6/" title="Programming Languages, UW, Part C - Subtyping">https://www.thisisxxz.com/2023/07/31/prog-lan-6/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | Programming Languages, UW, Part C - Subtyping](https://www.thisisxxz.com/2023/07/31/prog-lan-6/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Programming-Languages/" rel="tag"><i class="fa fa-tag"></i> Programming Languages</a>
+          </div>
+
+        
+
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/07/31/prog-lan-6/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

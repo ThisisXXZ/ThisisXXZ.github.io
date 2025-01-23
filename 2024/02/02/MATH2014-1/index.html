@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="有点出于功利的目的选了这门数学。由于提供回放，从开学到现在还没有 physically attend 过 lecture，感觉有点对不起老师。决定从写这篇笔记开始，以后所有的课都一定要 attend！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Multivariable Calculus &amp; Linear Algebra">
+<meta property="og:url" content="https://www.thisisxxz.com/2024/02/02/MATH2014-1/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="有点出于功利的目的选了这门数学。由于提供回放，从开学到现在还没有 physically attend 过 lecture，感觉有点对不起老师。决定从写这篇笔记开始，以后所有的课都一定要 attend！">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/02/02/MATH2014-1/lagrange.jpg">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/02/02/MATH2014-1/triple-integral.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/02/02/MATH2014-1/cramer-rule.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/02/02/MATH2014-1/SLE.jpg">
+<meta property="article:published_time" content="2024-02-02T12:10:28.000Z">
+<meta property="article:modified_time" content="2024-04-21T08:44:18.000Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Mathematics">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.thisisxxz.com/2024/02/02/MATH2014-1/lagrange.jpg">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2024/02/02/MATH2014-1/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2024/02/02/MATH2014-1/","path":"2024/02/02/MATH2014-1/","title":"Multivariable Calculus & Linear Algebra"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Multivariable Calculus & Linear Algebra | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E5%8D%95%E5%8F%98%E9%87%8F%E5%88%B0%E5%A4%9A%E5%8F%98%E9%87%8F"><span class="nav-number">1.</span> <span class="nav-text">从单变量到多变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A8%E5%BE%AE%E5%88%86"><span class="nav-number">2.</span> <span class="nav-text">全微分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%B0%E5%8B%92%E5%85%AC%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">泰勒公式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E5%85%83%E5%87%BD%E6%95%B0%E7%9A%84%E6%9C%80%E5%80%BC"><span class="nav-number">4.</span> <span class="nav-text">多元函数的最值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8B%89%E6%A0%BC%E6%9C%97%E6%97%A5%E4%B9%98%E6%95%B0%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">拉格朗日乘数法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E5%80%BC%E6%96%B9%E6%B3%95"><span class="nav-number">6.</span> <span class="nav-text">数值方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E5%85%83%E7%A7%AF%E5%88%86%E6%B1%82%E4%BD%93%E7%A7%AF"><span class="nav-number">7.</span> <span class="nav-text">多元积分求体积</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E5%A4%9A%E7%9A%84%E4%B8%89%E5%85%83%E7%A7%AF%E5%88%86"><span class="nav-number">8.</span> <span class="nav-text">更多的三元积分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B-jibber-jabber"><span class="nav-number">9.</span> <span class="nav-text">一些 jibber-jabber</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E4%B8%8E%E7%9F%A9%E9%98%B5"><span class="nav-number">10.</span> <span class="nav-text">线性方程组与矩阵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%91%E9%87%8F"><span class="nav-number">11.</span> <span class="nav-text">向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E7%9A%84%E8%A1%8C%E5%88%97%E5%BC%8F"><span class="nav-number">12.</span> <span class="nav-text">矩阵的行列式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E7%A7%AF%E4%B8%8E%E5%8F%89%E7%A7%AF"><span class="nav-number">13.</span> <span class="nav-text">内积与叉积</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E5%88%86%E8%A7%A3"><span class="nav-number">14.</span> <span class="nav-text">特征分解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">15.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2024/02/02/MATH2014-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Multivariable Calculus & Linear Algebra | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Multivariable Calculus & Linear Algebra
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-02-02 20:10:28" itemprop="dateCreated datePublished" datetime="2024-02-02T20:10:28+08:00">2024-02-02</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>有点出于功利的目的选了这门数学。由于提供回放，从开学到现在还没有
+physically attend 过
+lecture，感觉有点对不起老师。决定从写这篇笔记开始，以后所有的课都一定要
+attend！</p>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="从单变量到多变量">从单变量到多变量</h2>
+<p>我的大脑已经被单元微积分预训练的较为充分，关于多元微积分的基础内容只要微调一下就行了。此为迁移学习之道。</p>
+<p>多元函数的连续性 (continuity)。</p>
+<ul>
+<li>证明二元函数 <span class="math inline">\(f(x,y)\)</span> 在 <span class="math inline">\((x_0,y_0)\)</span> 处连续的充要条件是 <span class="math inline">\(\lim_{(x,y)\to
+(x_o,y_o)}f(x,y)=f(x_0,y_0)\)</span>。常用的化简方式：极坐标表示 (<span class="math inline">\(\alpha\)</span>​ 表示逼近的方向)。</li>
+<li>证明二元函数 <span class="math inline">\(f(x,y)\)</span> 在 <span class="math inline">\((x_0,y_0)\)</span> 的极限不存在：构造两个不同趋近
+<span class="math inline">\((x_0,y_0)\)</span>
+的方向，在这两个方向上得出的极限值不同。构造的方向能够化简函数为佳：从
+<span class="math inline">\(x=0\)</span> 逼近，<span class="math inline">\(y=0\)</span> 逼近，<span class="math inline">\(y=x\)</span> 逼近等。</li>
+</ul>
+<p>多元函数的偏导数 (partial derivatives)。</p>
+<ul>
+<li><span class="math inline">\(C^k\)</span> 函数。例：<span class="math inline">\(C^2\)</span> 函数 <span class="math inline">\(f(x,y)\)</span> 有 <span class="math inline">\(f_{xy}=\frac{\partial^2 f}{\partial y \partial
+x}\)</span>，<span class="math inline">\(f_{yx}=\frac{\partial^2
+f}{\partial x \partial y}\)</span>，满足 <span class="math inline">\(f_{xy}=f_{yx}\)</span>。</li>
+<li>链式法则 (chain rule of differentiation)。</li>
+</ul>
+<p>对于多元复合函数 <span class="math inline">\(w=f(g_1(t_1,...,t_k),...,g_n(t_1,...,t_k))\)</span>，其对某个变量
+<span class="math inline">\(t_i\)</span> 求偏导</p>
+<p><span class="math display">\[
+\frac{\partial w}{\partial t_i}=\sum_{j=1}^n \frac{\partial w}{\partial
+g_j}\times\frac{\partial g_j}{\partial t_i}
+\]</span> 题目：tutorial exercise 1.3.3。question bank q1, q2。</p>
+<p><br></p>
+<h2 id="全微分">全微分</h2>
+<p>全微分 (total differentiation) 是线性近似 (linear
+approximation)。</p>
+<p>对函数 <span class="math inline">\(w=f(x,y)\)</span>，若知道其在
+<span class="math inline">\((x_0,y_0)\)</span> 处的值，可利用 <span class="math inline">\(f(x_0,y_0)\)</span> 对 <span class="math inline">\(f(x,y)\)</span> 做近似。即，对于 <span class="math inline">\(x=x_0+\Delta x\)</span> 与 <span class="math inline">\(y=y_0+\Delta y\)</span>，求 <span class="math inline">\(\Delta w\)</span> 满足 <span class="math inline">\(f(x,y)=f(x_0,y_0)+\Delta w\)</span>​。有： <span class="math display">\[
+\Delta w=f_x(x_0,y_0)\Delta x+f_y(x_0,y_0)\Delta y+o(\sqrt{\Delta
+x^2+\Delta y^2})
+\]</span> 当 <span class="math inline">\(\Delta x\to 0, \Delta y \to
+0\)</span> 时，<span class="math inline">\(\Delta x\)</span> 与 <span class="math inline">\(\Delta y\)</span> 可被 <span class="math inline">\(dx,dy\)</span> 表示，<span class="math inline">\(\Delta w\)</span> 也可被 <span class="math inline">\(dw\)</span> <strong>近似</strong> (忽略了小量
+<span class="math inline">\(o(\sqrt{\Delta x^2+\Delta y^2})\)</span>)。
+<span class="math display">\[
+\Delta w \approx dw=f_x(x_0,y_0)dx+f_y(x_0,y_0)dy
+\]</span> 用该方法近似得出的 <span class="math inline">\(\Delta
+w\)</span> 被称为 <span class="math inline">\(w\)</span> 在 <span class="math inline">\((x_0,y_0)\)</span>​ 的全微分 (total
+differential)，或线性近似 (linear approximation)。</p>
+<p>题目：quesion bank q20 (误差问题求 <strong>maximum</strong> of <span class="math inline">\(\Delta S\)</span>: 用绝对值 <span class="math inline">\(|\Delta S|=|f_x||\Delta_x|+|f_y|
+|\Delta_y|\)</span>)</p>
+<p><br></p>
+<h2 id="泰勒公式">泰勒公式</h2>
+<p>全微分是函数在某点的线性近似。使用泰勒公式能够进一步提高近似的准确度。</p>
+<p>回忆单变量二阶泰勒公式的表述： <span class="math display">\[
+\Delta g =
+g(t)-g(t_0)=g&#39;(t_0)(t-t_0)+\frac{g&#39;&#39;(t_0)}{2!}(t-t_0)^2+\frac{1}{2!}\int_{t_0}^t(t-\tau)^2g&#39;&#39;&#39;(\tau)d\tau
+\]</span> 迁移到二元函数的近似 (忽略了小量，如果要表示出来可以直接写
+<span class="math inline">\(\text{Remainder}\)</span> 或 <span class="math inline">\(R\)</span>)： <span class="math display">\[
+\begin{aligned}
+\Delta w&amp;=f(x,y)-f(x_0,y_0)\\&amp;\approx[f_x(x_0,y_0)\Delta
+x+f_y(x_0,y_0)\Delta y]+\frac{1}{2!}[f_{xx}(x_0,y_0)\Delta
+x^2+2f_{xy}(x_0,y_0)\Delta x\Delta y+f_{yy}(x_0,y_0)\Delta y^2]
+\end{aligned}
+\]</span> 可以发现，使用一阶泰勒公式对 <span class="math inline">\(\Delta w\)</span>
+进行扩展，得到的即为全微分；<span class="math inline">\(\Delta
+x\)</span> 与 <span class="math inline">\(\Delta y\)</span>​ 的指数均为
+1，这就是线性近似中线性的含义。</p>
+<p><br></p>
+<h2 id="多元函数的最值">多元函数的最值</h2>
+<p>临界点 (critical point) <span class="math inline">\((x_0,y_0)\)</span> 指的是满足 <span class="math inline">\(f_x(x_0,y_0)=0\)</span> 且 <span class="math inline">\(f_y(x_0,y_0)=0\)</span> 的点。可证最值 (relative
+extreme values) 一定出现在临界点上，但不是所有的临界点都是最值点。</p>
+<p>对于求出的所有临界点，我们使用二阶导测试 (second-order derivative
+test) 来决定其性质。</p>
+<p>Let <span class="math inline">\((x_0,y_0)\)</span> be a critical
+point of <span class="math inline">\(f(x,y)\)</span> and suppose that
+<span class="math inline">\(A=f_{xx}(x_0,y_0)\)</span>, <span class="math inline">\(B=f_{xy}(x_0,y_0)\)</span>, <span class="math inline">\(C=f_{yy}(x_0,y_0)\)</span> and <span class="math inline">\(H=AC-B^2\)</span>.</p>
+<ul>
+<li>If <span class="math inline">\(H&gt;0\)</span> and <span class="math inline">\(A&lt;0\)</span>, then <span class="math inline">\(f(x_0,y_0)\)</span> is a relative maximum.</li>
+<li>If <span class="math inline">\(H&gt;0\)</span> and <span class="math inline">\(A&gt;0\)</span>, then <span class="math inline">\(f(x_0,y_0)\)</span> is a relative minimum.</li>
+<li>If <span class="math inline">\(H&lt;0\)</span>, then <span class="math inline">\(f(x_0,y_0)\)</span> is a saddle point.</li>
+<li>If <span class="math inline">\(H=0\)</span>, then the second-order
+derivative test is inconclusive.</li>
+</ul>
+<p>提供一个 intuition，<span class="math inline">\(H\)</span>
+可看作是某个二次函数的判别式的相反数，该二次函数表示的是 <span class="math inline">\(f\)</span> 在 <span class="math inline">\((x_0,y_0)\)</span> 向任意方向的导数。<span class="math inline">\(H&gt;0,A&gt;0\)</span> 说明从 <span class="math inline">\((x_0,y_0)\)</span> 向任意方向的导数都为正，<span class="math inline">\((x_0,y_0)\)</span>
+一定是一个极小值。再来一个例子，<span class="math inline">\(H&lt;0\)</span> 说明从 <span class="math inline">\((x_0,y_0)\)</span> 向各个方向的导数有正有负，<span class="math inline">\((x_0,y_0)\)</span>​ 一定是一个鞍点 (saddle
+point)。</p>
+<p>具体推导见 <a target="_blank" rel="noopener" href="https://www.zhihu.com/question/30252654"><span class="math inline">\(AC-B^2\)</span>​ 这个判别式是怎么来的？ —
+知乎</a>。</p>
+<p><br></p>
+<h2 id="拉格朗日乘数法">拉格朗日乘数法</h2>
+<p>拉格朗日乘数法 (Lagrange multiplier method) 求解带约束的最优化问题
+(constrained optimization problems)。即，对于函数 <span class="math inline">\(f(x,y)\)</span>，给出约束 <span class="math inline">\(g(x,y)=a\)</span>，求 <span class="math inline">\(f\)</span> 的最小/最大值。</p>
+<p>想象一个 contour 图，<span class="math inline">\(g\)</span>
+是固定的，<span class="math inline">\(f\)</span> 是可变的；满足约束的
+<span class="math inline">\(f\)</span> 的极值点一定是 <span class="math inline">\(f\)</span> 与 <span class="math inline">\(g\)</span> 的切点 <span class="math inline">\((x_0,y_0)\)</span>。那么有： <span class="math display">\[
+\nabla f(x_0,y_0)=\lambda \nabla g(x_0,y_0)
+\]</span> 其中 <span class="math inline">\(\nabla\)</span>
+表示的是函数在某点的梯度 (gradients)，<span class="math inline">\(\lambda\)</span> 被称为 Lagrange
+multiplier。把梯度展开，再加上 <span class="math inline">\(g(x,y)=a\)</span> 这个条件，对于 <span class="math inline">\(n\)</span> 元函数我们总能列出 <span class="math inline">\(n+1\)</span> 个方程： <span class="math display">\[
+f_x=\lambda g_x, f_y=\lambda g_y,g=a
+\]</span> 再将这些方程合并：定义 Langragian 函数 <span class="math inline">\(L(f,g,\lambda)=f-\lambda(g-a)\)</span>，
+那么最小/大值点一定满足 <span class="math inline">\(L_x=0\)</span>,
+<span class="math inline">\(L_y=0\)</span> 与 <span class="math inline">\(L_\lambda=0\)</span>。</p>
+<p>注意，拉格朗日乘数法只能求解限制 <span class="math inline">\(g(x,y)=a\)</span> 为等式的情况。对于不等式 <span class="math inline">\(g(x,y)\leq a\)</span>：</p>
+<ul>
+<li><span class="math inline">\(g(x,y)&lt;a\)</span>.
+内部，求出定义域内的 critical points，筛选 <span class="math inline">\(g(x,y)&lt;a\)</span> 的那部分。</li>
+<li><span class="math inline">\(g(x,y)=a\)</span>​. 边界，用 Lagrange
+multiplier/<strong>代入原函数后化简</strong>求解。</li>
+</ul>
+<p>在上面求出的所有点中选一个最大值，一个最小值。可以发现这个思路也是按照单变量函数来的：我们求单变量函数在限制
+<span class="math inline">\(a\leq x\leq b\)</span>
+下的最大/最小值，先求临界点并筛选 <span class="math inline">\(a &lt; x
+&lt; b\)</span> 的部分，再求边界上的 <span class="math inline">\(f(a)\)</span> 与 <span class="math inline">\(f(b)\)</span>​，从中取一个最大/小值。二元函数的唯一区别是它的边界位于平面/更高的位面上，这种情况下可能需要使用
+Lagrange multiplier。</p>
+<p>多约束问题中的 Lagrange multiplier：<span class="math inline">\(g_1(x,y,z)=a, g_2(x,y,z)=b\)</span>。 <span class="math display">\[
+L(x,y,z,\lambda_1,\lambda_2)=f-\lambda_1(g_1-a)-\lambda_2(g_2-b)
+\]</span> 这是 chapter 1 中最常见的一类题目，在这里总结一下方法。</p>
+<figure>
+<img data-src="lagrange.jpg" alt="求解带约束最优化问题流程图">
+<figcaption aria-hidden="true">求解带约束最优化问题流程图</figcaption>
+</figure>
+<p>题目：question bank q18 (算错了)，q19 (看似是 <span class="math inline">\(\leq\)</span> 限制，实则是 <span class="math inline">\(=\)</span> 限制)，q22-24
+均为比较复杂的计算和讨论，q25 (椭圆的 <span class="math inline">\(a,b\)</span>​ 轴是最大/最小距离)。</p>
+<p><br></p>
+<h2 id="数值方法">数值方法</h2>
+<p>找某个函数的零点。这里介绍的均是数值方法 (numerical
+methods)，采取不断近似-逼近的方式得到答案。</p>
+<p>求单变量函数 <span class="math inline">\(f(x)\)</span>
+的零点：Newton-Raphson Method。选取某个起始点 (initial point) <span class="math inline">\((x_0,f(x_0))\)</span>，不断执行以下步骤逼近零点：
+<span class="math display">\[
+f&#39;(x_n)=\frac{f(x_n)}{x_n-x_{n+1}}\Rightarrow
+x_{n+1}=x_n-\frac{f(x_n)}{f&#39;(x_n)}
+\]</span> 将 Newton-Raphson Method
+扩展到解<strong>非线性</strong>方程组。对于非线性方程组： <span class="math display">\[
+\begin{cases}
+f(x,y)=0 \\
+g(x,y)=0
+\end{cases}
+\]</span> 给出初始点 <span class="math inline">\((x_0,y_0)\)</span>，我们的目标是逼近该方程组的解
+<span class="math inline">\((a,b)\)</span>。使用二阶泰勒公式转化一下：
+<span class="math display">\[
+\begin{cases}
+0=f(a,b)=f(x_0+h,y_0+k)=f(x_0,y_0)+f_x(x_0,y_0)h+f_y(x_0,y_0)k+R \\
+0=g(a,b)=g(x_0+h, y_0+k)=g(x_0,y_0)+g_x(x_0,y_0)h+g_y(x_0,y_0)k+R
+\end{cases}
+\]</span> 把 <span class="math inline">\(R\)</span> 忽略
+(我们要的是逐渐逼近的近似) 再整理一下得到了<strong>线性</strong>方程组：
+<span class="math display">\[
+\begin{cases}
+f(x_0,y_0)+f_x(x_0,y_0)h+f_y(x_0,y_0)k=0 \\
+g(x_0,y_0)+g_x(x_0,y_0)h+g_y(x_0,y_0)k=0
+\end{cases}
+\]</span> 线性方程组当然能随意蹂躏了。解得 <span class="math inline">\(h,k\)</span> 后更新 <span class="math inline">\(x_1:=x_0+h,
+y_1:=y_0+k\)</span>。重复该过程逐渐逼近真零点 <span class="math inline">\((a,b)\)</span>​。</p>
+<p>题目：question bank p6 (千万记得不要高反 <span class="math inline">\(h,k\)</span> 的顺序，<span class="math inline">\(h\)</span> 对应 <span class="math inline">\(x\)</span>，<span class="math inline">\(k\)</span>
+对应 <span class="math inline">\(y\)</span>)</p>
+<p><br></p>
+<h2 id="多元积分求体积">多元积分求体积</h2>
+<p>多元积分 (Multiple Integrals) 求体积主要涉及的是二元 (double
+integral) 与三元积分 (triple integral)。</p>
+<p>根据 Fubini's Theorem，在矩形区域 (rectangular region) <span class="math inline">\(R:a\leq x\leq b, c\leq y\leq d\)</span>
+上连续的函数 <span class="math inline">\(f(x,y)\)</span>，有： <span class="math display">\[
+\iint\limits_{R} f(x,y)dA=\int_c^d \int_a^b
+f(x,y)dxdy=\int_{a}^b\int_{c}^d f(x,y)dydx
+\]</span> 若 <span class="math inline">\(y\)</span> 的范围与 <span class="math inline">\(x\)</span> 有关，即 <span class="math inline">\(f(x)\leq y\leq g(x)\)</span>，<span class="math inline">\(dx\)</span> 在外 <span class="math inline">\(dy\)</span> 在内 (计算底面时使用与 <span class="math inline">\(y\)</span> 轴平行的扫描线)。若 <span class="math inline">\(x\)</span> 范围与 <span class="math inline">\(y\)</span> 有关则 <span class="math inline">\(dy\)</span> 在外 <span class="math inline">\(dx\)</span> 在内 (计算底面时使用与 <span class="math inline">\(x\)</span>​ 轴平行的扫描线)。</p>
+<ul>
+<li>使用二元积分计算<strong>闭合的面积</strong>时使用 <span class="math inline">\(A=\iint_R dA\)</span>，即令 <span class="math inline">\(f(x,y)=1\)</span>。​</li>
+<li>计算 <span class="math inline">\(f\)</span> 在 <span class="math inline">\(R\)</span> 上的平均值 (average value) <span class="math inline">\((1/\text{area of } R)\iint_R fdA\)</span>。</li>
+</ul>
+<p>二元积分中的换元法 (Change of Variables in Double
+Integral)。先介绍一下 the Jacobian of variables <span class="math inline">\(u,v\)</span> with respect to <span class="math inline">\(x,y\)</span>，即二元函数对二元函数求导。对于 <span class="math inline">\(u=u(x,y),v=v(x,y)\)</span>， <span class="math display">\[
+J=\frac{\partial(u,v)}{\partial(x,y)}=\frac{\partial u}{\partial
+x}\frac{\partial v}{\partial y}-\frac{\partial u}{\partial
+y}\frac{\partial v}{\partial x}=det|\begin{matrix}\frac{\partial
+u}{\partial x}&amp; \frac{\partial v}{\partial x} \\ \frac{\partial
+u}{\partial y} &amp; \frac{\partial v}{\partial y} \end{matrix}|
+\]</span> 那么换元就很简单了。注意在 <span class="math inline">\(xy-\)</span>space 上的 <span class="math inline">\(S\)</span> 区域对应到 <span class="math inline">\(uv-\)</span>space 上的 <span class="math inline">\(S_1\)</span> 区域。 <span class="math display">\[
+\iint \limits_{S} f(x,y)dxdy=\iint \limits_{S&#39;} f(u,v)
+|\frac{1}{J}|dudv
+\]</span> 这类题目的解法 (好题 Chapter2 pp.35, 38)：对于 bounded by
+curves <span class="math inline">\(C_1,C_2,C_3\)</span> 的 <span class="math inline">\(R\)</span>：</p>
+<ul>
+<li>观察 <span class="math inline">\(C_1,C_2,C_3\)</span>，找到换元策略
+(用 <span class="math inline">\(u,v\)</span> 重写 <span class="math inline">\(C_1,C_2,C_3\)</span>​)</li>
+<li>计算 Jacobian 的倒数 <span class="math inline">\(|1/J|\)</span></li>
+<li>用 <span class="math inline">\(f(u,v)dudv\)</span> 重写 <span class="math inline">\(f(x,y)dxdy\)</span>，将 <span class="math inline">\(S\)</span> 重写为 <span class="math inline">\(S&#39;\)</span> (换元带来的范围变化)</li>
+</ul>
+<p>极坐标下的多元积分。Jacobian <span class="math inline">\(r\)</span>
+的本质是将极坐标变量之积 <span class="math inline">\(drd\theta\)</span>
+投射到 <span class="math inline">\(xy\)</span> 坐标系上的单位面积 <span class="math inline">\(dxdy=rdrd\theta\)</span>。 <span class="math display">\[
+\iint _R f(x,y)dxdy=\iint_R f(r\cos \theta, r\sin \theta)rdrd\theta
+\]</span> 当底面是圆/椭圆等图形时，通常使用极坐标系求积分。</p>
+<ul>
+<li>画出草图 (对较复杂的曲线，先得到 <span class="math inline">\(\theta-r\)</span> table，再进行连线)</li>
+<li>使用从原点出发向外发射的扫描线，对上下边界积分，<span class="math inline">\(dr\)</span> 在内 [<span class="math inline">\(r\)</span>-limits of integration]</li>
+<li>对扫描线扫过的角度积分，<span class="math inline">\(d\theta\)</span>
+在外 [<span class="math inline">\(\theta\)</span>​-limits of
+integration]</li>
+</ul>
+<p>三元积分 triple integrals。一样的套路：注意 <span class="math inline">\(dx,dy,dz\)</span> 的
+order，一定是外层变量决定里层。 <span class="math display">\[
+\iiint \limits_{D}
+F(x,y,z)dV=\int_{x=a}^{x=b}\int_{y=g_1(x)}^{y=g_2(x)}\int_{z=f_1(x,y)}^{z=f_2(x,y)}F(x,y,z)dzdydx
+\]</span></p>
+<ul>
+<li>使用三元积分计算体积时使用 <span class="math inline">\(V=\iiint_D
+dV\)</span>，即令 <span class="math inline">\(F(x,y,z)=1\)</span>。</li>
+<li><span class="math inline">\(f\)</span> 在空间 <span class="math inline">\(D\)</span> 上的平均值 <span class="math inline">\((1/\text{volume of }D)\iiint_D fdV\)</span>。</li>
+</ul>
+<p>小 trick：不共线的三点构成一个平面：解方程 <span class="math inline">\(ax+by+cz=d\)</span>。</p>
+<ul>
+<li>假设 <span class="math inline">\(a\neq 0\)</span>，代入三个点解
+<span class="math inline">\(x+by+cz=d\)</span>​</li>
+<li>上一步出现矛盾说明 <span class="math inline">\(a=0\)</span>，解
+<span class="math inline">\(by+cz=d\)</span></li>
+</ul>
+<p>题目：Chapter 2 pp.58, pp.59。</p>
+<p><br></p>
+<h2 id="更多的三元积分">更多的三元积分</h2>
+<p>计算三维固体 (three-dimensional solid) 的质点 (center of mass, aka
+<em>centroid</em>)。定义 <span class="math inline">\(\delta(x,y,z)\)</span> 为在 <span class="math inline">\((x,y,z)\)</span> 处的密度 (density)，质点 <span class="math inline">\((\overline{x}, \overline{y},
+\overline{z})\)</span> 位于： <span class="math display">\[
+\begin{aligned}
+\text{Mass: }&amp;M=\iiint_D \delta dV \\
+\text{Centroid: }&amp;\overline{x}=\frac{\iiint_D x\delta dV}{M},
+\overline{y}=\frac{\iiint_D y\delta dV}{M},\overline{z}=\frac{\iiint_D
+z\delta dV}{M}
+\end{aligned}
+\]</span> 题目：Chapter 2 pp.63, pp.64 example 24 (计算 two-dimensional
+plate 的质点。注意 first moments <span class="math inline">\(M_x,M_y\)</span> 的定义)。一个英文理解锅：<span class="math inline">\(x\)</span> is bounded <em>above</em> <span class="math inline">\(y\)</span>, <em>below</em> <span class="math inline">\(z\)</span> 是指 <span class="math inline">\(y\)</span> 为上边界，<span class="math inline">\(z\)</span> 为下边界。</p>
+<p>三元积分的换元 (Change of Variables in Triple Integrals)。相应的
+Jacobian 矩阵也是三阶的，回忆三阶矩阵行列式的计算方法：三条 ↘
+之和减去三条 ↙ 之和。</p>
+<figure>
+<img data-src="triple-integral.png" alt="x, y, z 按行，u, v, w 按列">
+<figcaption aria-hidden="true">x, y, z 按行，u, v, w 按列</figcaption>
+</figure>
+<p>三元积分的两种常见换元法：<strong>圆柱形坐标 (Cylindrical
+Coordinates)</strong> 与<strong>球形坐标 (Spherical
+Coordinates)</strong>。</p>
+<p>Cylindrical Coordinates。点 <span class="math inline">\(P\)</span> 被
+<span class="math inline">\((r, \theta,z)\)</span> 表示，其中：</p>
+<ul>
+<li><span class="math inline">\(r,\theta\)</span> 是 <span class="math inline">\(P\)</span> 在 <span class="math inline">\(xy\)</span> 平面上垂直投影的极坐标。<span class="math inline">\(x=r\cos \theta,y=r\sin \theta\)</span>。</li>
+<li><span class="math inline">\(z\)</span> 为矩形坐标系的 <span class="math inline">\(z\)</span> 坐标本身。<span class="math inline">\(z=z\)</span>。</li>
+<li>Jacobian 化简后为 <span class="math inline">\(r\)</span>
+(和二元积分的 Polar Coordinates 一致)。</li>
+<li>积分顺序由内而外一般为 <span class="math inline">\(dzdrd\theta\)</span>。</li>
+</ul>
+<p>Spherical Coordinates。点 <span class="math inline">\(P\)</span> 被
+<span class="math inline">\((\rho,\phi,\theta)\)</span> 表示，其中 (配合
+Chapter 2 pp.73 食用更佳)：</p>
+<ul>
+<li><span class="math inline">\(\rho\)</span> 为 <span class="math inline">\(P\)</span> 到原点的距离。<span class="math inline">\(\rho=\sqrt{x^2+y^2+z^2}=\sqrt{r^2+z^2}\)</span>。</li>
+<li><span class="math inline">\(\phi\)</span> 为 <span class="math inline">\(\mathbf{OP}\)</span> 与正向 <span class="math inline">\(z\)</span> 坐标轴的夹角，因此 <span class="math inline">\(0\leq \phi \leq \pi\)</span>​。</li>
+<li><span class="math inline">\(\theta\)</span> 为 <span class="math inline">\(P\)</span> 在 <span class="math inline">\(xy\)</span> 平面上垂直投影的极坐标。<span class="math inline">\(r\)</span> 此时被 <span class="math inline">\(\rho\sin\phi\)</span> 替代。</li>
+<li>Jacobian 化简后为 <span class="math inline">\(\rho^2 \sin
+\phi\)</span> (记住！)。</li>
+<li>积分顺序由内而外一般为 <span class="math inline">\(d\rho d\phi
+d\theta\)</span>。</li>
+</ul>
+<p>题目：Chapter 2 pp.72 example 26 (cylindrical), pp.78 example 27 (求
+cone 常用 spherical)。</p>
+<p><br></p>
+<h2 id="一些-jibber-jabber">一些 jibber-jabber</h2>
+<p>更适合 CS 学生体质的多元积分理解方式。</p>
+<p>求 <span class="math inline">\((x,y,z)=(a,b,c)\)</span>​
+的立方体体积。</p>
+<p><span class="math inline">\(\iiint\)</span>
+本质上是在三个方向上累积该坐标系下的单位体积 (小量)。假设
+<code>for</code> 是 continuous 的而非 discrete 的，那么：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">unit_vol = dx * dy * dz</span><br><span class="line">vol = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">from</span> <span class="number">0</span> to a:</span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">from</span> <span class="number">0</span> to b:</span><br><span class="line">        <span class="keyword">for</span> z <span class="keyword">from</span> <span class="number">0</span> to c:</span><br><span class="line">            vol += unit_vol</span><br></pre></td></tr></table></figure>
+<p>如果 <span class="math inline">\((x,y,z)\)</span>
+的值域并非固定，而是存在一定的依赖关系，例如 <span class="math inline">\(y\)</span> 的值满足关于 <span class="math inline">\(x\)</span> 的函数 <span class="math inline">\(y=f(x)\)</span>，<span class="math inline">\(z\)</span> 的值满足关于 <span class="math inline">\(x,y\)</span> 的函数 <span class="math inline">\(z=g(x,y)\)</span>，又怎么样呢？</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">unit_vol = dx * dy * dz</span><br><span class="line">vol = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">from</span> <span class="number">0</span> to a:</span><br><span class="line">    b = f(x)</span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">from</span> <span class="number">0</span> to b:</span><br><span class="line">        c = g(x, y)</span><br><span class="line">        <span class="keyword">for</span> z <span class="keyword">from</span> <span class="number">0</span> to c:</span><br><span class="line">            vol += unit_vol</span><br></pre></td></tr></table></figure>
+<p>换元又如何？其实换元本质上只是对坐标系的改变。坐标系的改变会导致两个变化：变量值域的变化，单位小量的变化。前者可以直接由换元关系计算得出，后者则反映在
+Jacobian <span class="math inline">\(J\)</span> 上。</p>
+<p>Jacobian <span class="math inline">\(J=\det(\partial(u,v,w)/\partial(x,y,z))\)</span>。新的单位小量
+<span class="math inline">\(dudvdw\)</span> 是原单位小量 <span class="math inline">\(dxdydz\)</span> 的 <span class="math inline">\(|J|\)</span> 倍，这表示换元后 <code>for</code>
+循环的每一次累积都被 scale up 了 <span class="math inline">\(|J|\)</span> 倍。那么：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">unit_vol = du * dv * dw</span><br><span class="line">vol = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> u <span class="keyword">from</span> <span class="number">0</span> to ap:</span><br><span class="line">    <span class="keyword">for</span> v <span class="keyword">from</span> <span class="number">0</span> to bp:</span><br><span class="line">        <span class="keyword">for</span> w <span class="keyword">from</span> <span class="number">0</span> to cp:</span><br><span class="line">            x, y, z = recover_from(u, v, w)</span><br><span class="line">            J = determinant(partial(u, v, w) / partial(x, y, z))</span><br><span class="line">            vol += unit_vol / J</span><br></pre></td></tr></table></figure>
+<p>题目：Tutorial Ex. 4.1 [关于 Eclipse 的换元 <span class="math inline">\(x=ar\cos \theta,y=br\sin \theta\)</span>], 4.3
+[<span class="math inline">\(r=1+\cos \theta\)</span> 或 <span class="math inline">\(r=1+\sin \theta\)</span> 的图像画法], Ex. 5.1, 5.3
+[积分的方向要看准，结合图像].</p>
+<p><br></p>
+<h2 id="线性方程组与矩阵">线性方程组与矩阵</h2>
+<p>来到第 2 Part 了。前期的概念还是比较熟悉的，稍微过一过：</p>
+<ul>
+<li>SLE (System of Linear Equation)。线性方程组。</li>
+<li>Equation Operations。对应矩阵的初等行变换 (Row operation) <span class="math inline">\(R_i\leftrightarrow R_j, \alpha R_i, \alpha
+r_i+R_j\)</span>。</li>
+<li>Coefficient Matrix, Vector of Constants and Solution
+Vector。参数矩阵，常数向量与解向量。</li>
+<li>参数矩阵与常数向量拼在一起得到熟悉的 Augmented Matrix
+(增广矩阵)。</li>
+</ul>
+<p>矩阵通过 <strong>row reduction</strong> 得到它的 <strong>echelon
+form</strong> (aka row echelon form, 行阶梯型矩阵)。</p>
+<ul>
+<li>全 0 行位于矩阵的底部。</li>
+<li>第 <span class="math inline">\(i\)</span> 行的 pivot 位于第 <span class="math inline">\(j\)</span> <span class="math inline">\((i&lt;j)\)</span> 行的 pivot 的左侧。</li>
+<li>位于 pivot 同列下方的元素全为 0。</li>
+</ul>
+<p>进一步 row reduction 得到 <strong>the reduced echelon form</strong>
+(aka reduced row echelon form, 行简化阶梯型矩阵)。</p>
+<ul>
+<li>所有 pivot 均为 1。</li>
+<li>现在，pivot 同列下方与上方的元素均为 0；即 pivot column 只有 pivot
+为 1，其他都是 0。</li>
+</ul>
+<p>一个非 0 矩阵可能对应多个 echelon form；但是 reduced echelon form
+是<strong>唯一的</strong>，它明确描述了线性系统的解集。先定义一些概念。</p>
+<ul>
+<li>consistent - 线性系统有解 (唯一或无穷)，inconsistent -
+线性系统无解。</li>
+<li><strong>base varaible</strong> - pivot column
+所对应的变量，<strong>free variable</strong> - 剩余的变量。</li>
+</ul>
+<p>Gauss Jordan methoe 解 SLE。</p>
+<ul>
+<li>将 SLE 写成增广矩阵形式。</li>
+<li>把矩阵变换为行简化阶梯型。</li>
+<li>如果存在 <span class="math inline">\(0=b\)</span> 的行，该 SLE 无解
+(inconsistent)。</li>
+<li>其他，如果存在自由变量，有无穷解
+(用自由变量表示基变量)；反之有唯一解。</li>
+</ul>
+<p><strong>homogeneous SLE</strong> - <span class="math inline">\(\mathbf{b}=\mathbf{0}\)</span> 的 SLE。可以保证
+homogeneous SLE 是 consistent 的， 因为至少存在 <span class="math inline">\(\mathbf{x}=\mathbf{0}\)</span>​ 的平凡解 (trivial
+solution)。</p>
+<p>主对角线 (main diagnal) <span class="math inline">\(a_{ii}\)</span>。对角矩阵 (<strong>diagnal
+matrix</strong>) 非零元素都在主对角线上 (对角矩阵可以是 <span class="math inline">\(n\times m\)</span> 的)。单位矩阵 <span class="math inline">\(I_n\)</span> 是 <span class="math inline">\(n\times n\)</span>
+的对角矩阵，且主对角线上所有元素均为 <span class="math inline">\(1\)</span>。</p>
+<p>关于矩阵乘法 (matrix multiplication)。</p>
+<ul>
+<li>如果 <span class="math inline">\(AB=BA\)</span>，我们说 <span class="math inline">\(A,B\)</span> <strong>commute</strong> with each
+other. (一般来说 <span class="math inline">\(AB\neq BA\)</span>)。</li>
+<li>Cancellation Law (消去律) 不成立。即 <span class="math inline">\(AB=AC\)</span> 不一定意味着 <span class="math inline">\(B=C\)</span>。</li>
+<li><span class="math inline">\(AB=0\)</span> 不一定意味着 <span class="math inline">\(A=0\)</span> 或 <span class="math inline">\(B=0\)</span>。</li>
+</ul>
+<p>矩阵的转置 (<strong>transpose</strong>)。一个重要规则 <span class="math inline">\((AB)^T=B^TA^T\)</span>。</p>
+<p><br></p>
+<h2 id="向量">向量</h2>
+<p>基础的东西没什么好说的。</p>
+<p>对于一组向量 <span class="math inline">\(v_1,...,v_p\)</span>，线性组合 (linear
+combination) 指 <span class="math inline">\(c_1v_1+c_2v_2+...+c_pv_p\)</span>。这组向量生成的所有线性组合的集合
+<span class="math inline">\(\text{Span}\{v_1,...,v_p\}\)</span> 被称为
+<strong>the subset of <span class="math inline">\(R^n\)</span> spanned
+(generated) by <span class="math inline">\(v_1,...,v_p\)</span></strong>。</p>
+<p>关于线性独立 (linear independence)。对于一组向量 <span class="math inline">\(\{v_1,...,v_p\}\)</span>，如果： <span class="math display">\[
+\begin{aligned}
+x_1v_1+x_2v_2+...+x_pv_p&amp;=0 \\ \\
+i.e. \ \begin{bmatrix}|&amp;|&amp;...&amp;|\\
+\mathbf{v_1}&amp;\mathbf{v_2}&amp;...&amp;\mathbf{v_p}\\|&amp;|&amp;...&amp;|\end{bmatrix}&amp;
+\begin{bmatrix} x_1\\x_2\\...\\x_p\end{bmatrix}=\mathbf{0}
+\end{aligned}
+\]</span></p>
+<ul>
+<li>有唯一解 (即唯一的平凡解 <span class="math inline">\(\mathbf{x}=\mathbf{0}\)</span>)，这组向量是
+linearly independent 的。</li>
+<li>有无穷解，这组向量是 linearly dependent 的。</li>
+</ul>
+<p>把线性组合写成矩阵形式，我们就把判断向量组 linear independence
+的问题转化为了判断 homogeneous SLE 是否 consistent 的问题。</p>
+<p>几个小结论。</p>
+<ul>
+<li>向量集合 <span class="math inline">\(\{\mathbf{v}_1,
+\mathbf{v}_2,...,\mathbf{v}_p\}\)</span>，其中 <span class="math inline">\(\mathbf{v}\in R^n\)</span>，如果 <span class="math inline">\(p&gt;n\)</span>，一定有 linear dependent。</li>
+<li>任何包含 <span class="math inline">\(\mathbf{0}\)</span>
+的向量集合是 linear dependent 的。</li>
+</ul>
+<p><br></p>
+<h2 id="矩阵的行列式">矩阵的行列式</h2>
+<p>子矩阵 (<strong>submatrix</strong>)。<span class="math inline">\(A\in
+R^{m\times n}\)</span>，子矩阵 <span class="math inline">\(A(i|j)\in
+R^{(m-1)\times (n-1)}\)</span> 是指<span class="math inline">\(A\)</span> 抽掉第 <span class="math inline">\(i\)</span> 行第 <span class="math inline">\(j\)</span>​ 列形成的。</p>
+<p>方阵 (<strong>square matrix</strong>) 的行列式
+(<strong>determinant</strong>)。对 <span class="math inline">\(A\in
+R^{n\times n}\)</span>，<span class="math inline">\(\text{det}(A)=|A|\)</span> 采用回溯定义： <span class="math display">\[
+\text{det}(A)=[A]_{11}\text{det}(A(1|1))-[A]_{12}\text{det}(A(1|2))+{...}+(-1)^{n+1}[A]_{1n}\text{det}(A(1|n))
+\]</span> 这是行列式在第一行展开 (<strong>expansion</strong> about row
+<span class="math inline">\(1\)</span>​)
+的公式。实际上求行列式可以在任意行/列展开。</p>
+<p>求行列式是线代的基本题型了。一些用得到的性质：</p>
+<ul>
+<li><span class="math inline">\(\text{det}(A)=\text{det}(A^{T})\)</span>。</li>
+<li><span class="math inline">\(\text{det}(AB)=\text{det}(A)\text{det}(B)\)</span>。</li>
+<li>对 <span class="math inline">\(A\)</span> 应用初等变换得到 <span class="math inline">\(A&#39;\)</span>。三种初等变换 (Elementary Matrix
+Operations)
+<ul>
+<li>EMO <span class="math inline">\(i\)</span> - 交换矩阵的两行。<span class="math inline">\(\text{det}(A&#39;)=-\text{det}(A)\)</span>​。</li>
+<li>EMO <span class="math inline">\(ii\)</span> - 选择某一行乘上常数
+<span class="math inline">\(c\)</span>。<span class="math inline">\(\text{det}(A&#39;)=c\cdot
+\text{det}(A)\)</span>。</li>
+<li>EMO <span class="math inline">\(iii\)</span> - 把行 <span class="math inline">\(i\)</span> 的 <span class="math inline">\(c\)</span> 倍加到行 <span class="math inline">\(j\)</span> 上。<span class="math inline">\(\text{det}(A&#39;)=\text{det}(A)\)</span>​​​。</li>
+</ul></li>
+<li>阶梯型矩阵的行列式：主对角线元素之积。</li>
+<li>以上结论得出的推论。
+<ul>
+<li>交换两列 - <span class="math inline">\(\text{det}(A&#39;)=\text{det}(A)\)</span>。</li>
+<li>存在相同行/全零行的矩阵 - <span class="math inline">\(\text{det}(A)=0\)</span>。</li>
+</ul></li>
+</ul>
+<p><strong>奇异矩阵 (Singular Matrix)</strong>。我们说方阵 <span class="math inline">\(A\)</span> 是奇异矩阵当 <span class="math inline">\(\text{det}(A)=0\)</span>。这代表以 <span class="math inline">\(A\)</span> 定义的 homogeneous SLE
+有无数组解。相反的，非奇异矩阵定义的 homogenous SLE 仅有唯一平凡解。</p>
+<p><strong>一系列重要结论。</strong>一个小总结：行列式可以说串起了线代里的一系列重要结论，这和它的几何意义
+—— 描述<strong>线性变换前后空间体积的伸缩率</strong> ——
+是息息相关的。对于某个 <span class="math inline">\(n\times n\)</span>
+的<strong>方阵</strong> <span class="math inline">\(A\)</span>：</p>
+<table>
+<colgroup>
+<col style="width: 19%">
+<col style="width: 47%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: center;">意义/行列式</th>
+<th style="text-align: center;"><span class="math inline">\(|\text{det}(A)|=0\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(|\text{det}(A)|&gt; 0\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">几何意义</td>
+<td style="text-align: center;">维数降低</td>
+<td style="text-align: center;">维数不变</td>
+</tr>
+<tr>
+<td style="text-align: center;">Singularity</td>
+<td style="text-align: center;">Singular Matrix</td>
+<td style="text-align: center;">Non-Singular Matrix</td>
+</tr>
+<tr>
+<td style="text-align: center;">Null Space</td>
+<td style="text-align: center;">由于降维，零空间有无数个向量被压缩至原点</td>
+<td style="text-align: center;">零空间仅包含零向量</td>
+</tr>
+<tr>
+<td style="text-align: center;">Homogeneous SLE</td>
+<td style="text-align: center;">有无数组解</td>
+<td style="text-align: center;">有唯一平凡解</td>
+</tr>
+<tr>
+<td style="text-align: center;">SLE</td>
+<td style="text-align: center;">有无数组解</td>
+<td style="text-align: center;">有唯一解</td>
+</tr>
+<tr>
+<td style="text-align: center;">简化行阶梯型矩阵</td>
+<td style="text-align: center;">存在自由变量</td>
+<td style="text-align: center;">行简化至 Identity Matrix <span class="math inline">\(I\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;">秩</td>
+<td style="text-align: center;"><span class="math inline">\(\text{rank}(A)&lt;n\)</span>，不满秩</td>
+<td style="text-align: center;"><span class="math inline">\(\text{rank}(A)=n\)</span>，满秩</td>
+</tr>
+<tr>
+<td style="text-align: center;">列向量</td>
+<td style="text-align: center;">线性相关，其最大独立组的大小定义为秩</td>
+<td style="text-align: center;">线性无关</td>
+</tr>
+<tr>
+<td style="text-align: center;">Invertibility</td>
+<td style="text-align: center;">被降维损失信息，矩阵不可逆</td>
+<td style="text-align: center;">存在 <span class="math inline">\(A^{-1}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>利用行列式与矩阵的逆，我们得到了求解 Linear System 的新方法。</p>
+<p>方法一 (求矩阵的逆)。如果 <span class="math inline">\(A\)</span>
+是非奇异矩阵，那么对于 Linear System <span class="math inline">\(A\mathbf{x}=\mathbf{b}\)</span>，有唯一解 <span class="math inline">\(\mathbf{x}=A^{-1}\mathbf{b}\)</span>。矩阵逆的求法
+- 高斯约旦消元法 (<strong>Gauss-Jordan Elimination</strong>)：把矩阵
+<span class="math inline">\(A\)</span> 增广为 <span class="math inline">\([A|I]\)</span> (或 <span class="math inline">\([I|A]\)</span>)，执行一系列 EMO 把 <span class="math inline">\(A\)</span> 变换为 <span class="math inline">\(I\)</span>，此时有 <span class="math inline">\([I|A^{-1}]\)</span>。</p>
+<p>方法二 (<strong>Cramer's Rule</strong>)。使用行列式求解。以 <span class="math inline">\(n=3\)</span> 为例：</p>
+<figure>
+<img data-src="cramer-rule.png" alt="注意分子，每个变量对应一个替换位置">
+<figcaption aria-hidden="true">注意分子，每个变量对应一个替换位置</figcaption>
+</figure>
+<p><br></p>
+<h2 id="内积与叉积">内积与叉积</h2>
+<p>内积/点积 (<strong>inner product/dot product</strong>) <span class="math inline">\(\mathbf{a}\cdot \mathbf{b}\)</span> 或 <span class="math inline">\(&lt;\mathbf{a},\mathbf{b}&gt;\)</span>​。结果为标量。</p>
+<ul>
+<li>几何意义：<span class="math inline">\(\mathbf{a}\cdot
+\mathbf{b}=||\mathbf{a}||\cdot ||\mathbf{b}||\cos\theta\)</span>。</li>
+<li>使用 <span class="math inline">\(\theta\)</span> 判断：夹角成锐角
+<span class="math inline">\(\mathbf{a}\cdot\mathbf{b}&gt;0\)</span>，直角
+<span class="math inline">\(\mathbf{a}\cdot\mathbf{b}=0\)</span>，钝角
+<span class="math inline">\(\mathbf{a}\cdot\mathbf{b}&lt;0\)</span>。</li>
+</ul>
+<p>向量的 norm。<span class="math inline">\(||\mathbf{a}||=\sqrt{\mathbf{a}^T\mathbf{a}}\)</span>。</p>
+<p>叉积 (<strong>cross product</strong>)
+是定义在<strong>三维空间</strong> <span class="math inline">\(R^3\)</span> 上的运算，<span class="math inline">\(\mathbf{a}\times \mathbf{b}\)</span>
+的结果是一个向量：</p>
+<ul>
+<li>垂直于 <span class="math inline">\(\mathbf{a},\mathbf{b}\)</span>
+所在的平面，指向右手大拇指 (剩余四指由 <span class="math inline">\(\mathbf{a}\)</span> 向 <span class="math inline">\(\mathbf{b}\)</span> 弯曲) 的方向。</li>
+<li><span class="math inline">\(\mathbf{a},\mathbf{b}\)</span> 间的夹角
+<span class="math inline">\(\theta \ \ (0\leq \theta \leq
+\pi)\)</span>，长度为 <span class="math inline">\(||\mathbf{a}\times\mathbf{b}||=||\mathbf{a}||\cdot
+||\mathbf{b}||\sin\theta\)</span>​。</li>
+</ul>
+<p>叉积计算的简单记法 (convenient mnemonic)。 <span class="math display">\[
+x\times
+y=(x_2y_3-x_3y_2,x_3y_1-x_1y_3,x_1y_2-x_2y_1)=\text{det}\begin{pmatrix}\hat{i}
+&amp; \hat{j} &amp; \hat{k} \\
+x_1 &amp; x_2 &amp; x_3 \\
+y_1 &amp; y_2 &amp; y_3\end{pmatrix}
+\]</span> 叉积的其他性质。</p>
+<ul>
+<li>非 <span class="math inline">\(0\)</span> 向量 <span class="math inline">\(\mathbf{a},\mathbf{b}\)</span> 平行，当且仅当
+<span class="math inline">\(\mathbf{a}\times\mathbf{b}=0\)</span>。</li>
+<li><span class="math inline">\(P,Q,R\)</span> 形成的平行四边形面积
+<span class="math inline">\(||\vec{PQ}\times \vec{PR}||\)</span>​​。</li>
+<li><span class="math inline">\(\mathbf{a}\times\mathbf{b}=-\mathbf{b}\times\mathbf{a}\)</span>。</li>
+<li><span class="math inline">\(\mathbf{a}\cdot(\mathbf{b}\times\mathbf{c})=(\mathbf{a}\times\mathbf{b})\cdot\mathbf{c}\)</span>。</li>
+</ul>
+<p><br></p>
+<h2 id="特征分解">特征分解</h2>
+<p>方阵 <span class="math inline">\(A\)</span> 的特征向量
+(<strong>eigenvector</strong>) <span class="math inline">\(\mathbf{x}\)</span> (<span class="math inline">\(\mathbf{x}\neq\mathbf{0}\)</span>) 满足 <span class="math inline">\(Ax=\lambda x\)</span> for some <span class="math inline">\(\lambda\)</span>。该常数 <span class="math inline">\(\lambda\)</span> 被称为特征向量 <span class="math inline">\(\mathbf{x}\)</span> 对应的特征值
+(<strong>eigenvalue</strong>)。</p>
+<p><span class="math inline">\(\lambda\)</span> 是 <span class="math inline">\(A\)</span> 的 eigenvalue 当且仅当方程 <span class="math inline">\((A-\lambda I)x=0\)</span>
+存在非平凡解；我们知道，这一条件等价于 homogenous SLE
+存在无数组解，等价于 <span class="math inline">\(\det(A-\lambda
+I_n)=0\)</span>​ (<strong>characteristic equation</strong>)。</p>
+<p>三角形矩阵 (triangular matrix) 的 eigenvalues 是它主对角线上的
+entries。</p>
+<p>方阵的对角化 (<strong>diagonalization</strong>)。我们说方阵 <span class="math inline">\(A\)</span> 是 diagonalizable 的，或者 <span class="math inline">\(A\)</span> is similar to a diagonal matrix，当
+<span class="math inline">\(A=PDP^{-1}\)</span>，其中 <span class="math inline">\(P\)</span> 是一个可逆阵 (invertible matrix)，<span class="math inline">\(D\)</span>​ 是一个对角阵 (diagonal matrix)。</p>
+<p>几个重要定理。</p>
+<p><strong><span class="math inline">\(n\times n\)</span> 方阵 <span class="math inline">\(A\)</span> 是 diagonalizable 的，当且仅当 <span class="math inline">\(A\)</span> 有 <span class="math inline">\(n\)</span> 个 linearly independent
+eigenvectors</strong>。将 <span class="math inline">\(A\)</span>
+特征分解为 <span class="math inline">\(AP=PD\)</span>，其中 <span class="math inline">\(P\)</span> 为 eigenvectors matrix，<span class="math inline">\(D\)</span> 为 eigenvalue matrix。</p>
+<ul>
+<li>if part 证明：diagonalizable 意味着 <span class="math inline">\(A=PDP^{-1}\)</span>，既然 <span class="math inline">\(P\)</span> 是 invertible 的，<span class="math inline">\(P\)</span> 一定由 <span class="math inline">\(n\)</span> 个 linearly independent
+的向量组成。</li>
+<li>only if part 证明：<span class="math inline">\(AP=PD\)</span>，既然
+<span class="math inline">\(P\)</span> 由 <span class="math inline">\(n\)</span> 个 linearly independent
+的向量组成，<span class="math inline">\(P\)</span> 有逆 <span class="math inline">\(P^{-1}\)</span>。所以 <span class="math inline">\(A\)</span> 一定有 <span class="math inline">\(A=PDP^{-1}\)</span>。</li>
+</ul>
+<p><strong>对应不同 eigenvalues 的 eigenvectors 是 linearly independent
+的。</strong></p>
+<p>证明：induction。若该定理在 <span class="math inline">\(k\)</span> 组
+eigenvectors/eigenvalues 上成立，证明其在 <span class="math inline">\(k+1\)</span> 亦成立。 <span class="math display">\[
+\begin{aligned}
+c_1x_1+c_2x_2+{...}+c_{k+1}x_{k+1}&amp;=0 \\
+\text{eq. 1 }
+\  c_1\lambda_1x_1+c_2\lambda_2x_2+{...}+c_{k+1}\lambda_{k+1}x_{k+1}&amp;=0
+\\
+\text{eq. 2 } \ c_1
+\lambda_{k+1}x_1+c_2\lambda_{k+1}x_2+{...}+c_{k+1}\lambda_{k+1}x_{k+1}&amp;=0\\
+\text{eq. 1 - eq.2} \ \sum_{i=1}^k
+c_i(\lambda_{k+1}-\lambda_i)x_i&amp;=0
+\end{aligned}
+\]</span> 定理在 <span class="math inline">\(k\)</span> 成立，又有 <span class="math inline">\(\lambda\)</span> 两两不同 (<span class="math inline">\(\lambda_{k+1}-\lambda_i\neq 0\)</span>)，一定有
+<span class="math inline">\(c_1=c_2={...}=c_k=0\)</span>。代回原式得
+<span class="math inline">\(c_{k+1}x_{k+1}\neq 0\)</span>。又因为
+eigenvectors 一定是非零向量，得 <span class="math inline">\(c_{k+1}=0\)</span>。所以原方程仅有平凡解 <span class="math inline">\(c_1=c_2={...}=c_{k+1}=0\)</span>，定理在 <span class="math inline">\(k+1\)</span>​ 处成立得证。</p>
+<p>OK 整理一下。现在我们知道 <span class="math inline">\(A\)</span> 有
+<span class="math inline">\(n\)</span> 个线性独立的 eigenvectors
+意味着它可对角化；又有对应不同 eigenvalues 的 eigenvectors
+线性独立。很容易 derive 出如果对应<strong>相同</strong> eigenvalue 的
+eigenvectors 线性独立，那么 <span class="math inline">\(A\)</span>
+就是可对角化的！</p>
+<p>这就引出了第三条定理：<span class="math inline">\(n\times n\)</span>
+方阵 <span class="math inline">\(A\)</span> 是可对角化的，当且仅当对于
+<span class="math inline">\(A\)</span> 的所有 eigenvalues，都有 <span class="math inline">\(AM_\lambda=GM_\lambda\)</span>​。</p>
+<ul>
+<li><span class="math inline">\(AM_\lambda\)</span> (<strong>Algebraic
+Multiplicities 代数重数</strong>) - 特征值 <span class="math inline">\(\lambda\)</span>​ 出现的次数。</li>
+<li><span class="math inline">\(GM_\lambda\)</span> (<strong>Geometric
+Multiplicities 几何重数</strong>) - 特征值 <span class="math inline">\(\lambda\)</span>
+所对应特征向量所形成的极大线性无关组的大小，或矩阵 <span class="math inline">\([A-\lambda I]\)</span>
+的<strong>零空间维数</strong> (化成 reduced row echelon
+形式后的全零行数目)。</li>
+</ul>
+<p><span class="math inline">\(AM_{\lambda}=GM_{\lambda}\)</span>，则说明 <span class="math inline">\(\lambda\)</span>
+对应的特征向量矩阵是满秩的，因此对应 <span class="math inline">\(\lambda\)</span>​ 的所有 eigenvectors
+都是线性独立的。</p>
+<p>一些 Chapter 3 的题目小总结。</p>
+<ul>
+<li>question bank q.72 (d)。构造 <span class="math inline">\((I-A)(A^{k-1}+A^{k}+{...}+A^{2}+A+I)=I-A^k=I\)</span>。</li>
+<li>question bank q.84 (c). 这一类的题目一定要利用 EMO
+与行列式变化的关系。</li>
+<li>概念问题：若 <span class="math inline">\(v_1,v_2\in
+R^3\)</span>，<span class="math inline">\(\text{span}\{v_1,v_2\}\)</span> 并不等于 <span class="math inline">\(R^2\)</span>，而是 <span class="math inline">\(R^3\)</span> 中的一个二维平面。</li>
+</ul>
+<p>关于 SLE 可解性的研究。<span class="math inline">\(m\)</span>
+个线性方程，<span class="math inline">\(n\)</span> 个变量，系数矩阵
+<span class="math inline">\(A\in R^{m\times n}\)</span>，增广矩阵 <span class="math inline">\([A|b]\in R^{m\times (n+1)}\)</span>。</p>
+<figure>
+<img data-src="SLE.jpg" alt="系数矩阵与增广矩阵的秩是确定可解性的关键性质">
+<figcaption aria-hidden="true">系数矩阵与增广矩阵的秩是确定可解性的关键性质</figcaption>
+</figure>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info: MATH2014, Dr. Doris ZHANG</p>
+<p>Course textbook: Marsden Jerrold E. &amp; Weinstein Alan, <em>Basic
+Multivariable Calculus</em>. Steven J. Leon, <em>Linear Algebra with
+Application</em>.</p>
+
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2024/02/02/MATH2014-1/" title="Multivariable Calculus &amp; Linear Algebra">https://www.thisisxxz.com/2024/02/02/MATH2014-1/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | Multivariable Calculus & Linear Algebra](https://www.thisisxxz.com/2024/02/02/MATH2014-1/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Mathematics/" rel="tag"><i class="fa fa-tag"></i> Mathematics</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/01/28/cs224n/" rel="prev" title="CS224N NLP with Deep Learning">
+                  <i class="fa fa-chevron-left"></i> CS224N NLP with Deep Learning
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/02/05/COMP2120-1/" rel="next" title="计算机组成小记">
+                  计算机组成小记 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/02/02/MATH2014-1/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

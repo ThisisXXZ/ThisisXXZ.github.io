@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="讲课的老师是大名鼎鼎的 Christopher Manning，NLP 领域的开拓者之一。我很喜欢他的澳洲口音，不像英式口音的生疏内敛，也不像美式口音的横冲直撞。听他讲课有一种在乡下听老爷子谈天说地之感。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CS224N NLP with Deep Learning">
+<meta property="og:url" content="https://www.thisisxxz.com/2024/01/28/cs224n/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="讲课的老师是大名鼎鼎的 Christopher Manning，NLP 领域的开拓者之一。我很喜欢他的澳洲口音，不像英式口音的生疏内敛，也不像美式口音的横冲直撞。听他讲课有一种在乡下听老爷子谈天说地之感。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/01/28/cs224n/multi-head.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/01/28/cs224n/transformer.png">
+<meta property="article:published_time" content="2024-01-28T03:09:47.000Z">
+<meta property="article:modified_time" content="2024-08-17T04:35:04.000Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="AI &amp; ML">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.thisisxxz.com/2024/01/28/cs224n/multi-head.png">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2024/01/28/cs224n/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2024/01/28/cs224n/","path":"2024/01/28/cs224n/","title":"CS224N NLP with Deep Learning"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>CS224N NLP with Deep Learning | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#word-embeddings"><span class="nav-number">1.</span> <span class="nav-text">Word Embeddings</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#direct-prediction-word2vec"><span class="nav-number">1.1.</span> <span class="nav-text">Direct Prediction: Word2Vec</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#count-based-co-occurrence-matrix"><span class="nav-number">1.2.</span> <span class="nav-text">Count-based: Co-occurrence
+Matrix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#glove"><span class="nav-number">1.3.</span> <span class="nav-text">GloVe</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#neural-networks"><span class="nav-number">2.</span> <span class="nav-text">Neural Networks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dependency-parsing"><span class="nav-number">3.</span> <span class="nav-text">Dependency Parsing</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#traditional-methods"><span class="nav-number">3.1.</span> <span class="nav-text">Traditional Methods</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#neural-dependency-parser"><span class="nav-number">3.2.</span> <span class="nav-text">Neural Dependency Parser</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#language-models"><span class="nav-number">4.</span> <span class="nav-text">Language Models</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#traditional-implementations"><span class="nav-number">4.1.</span> <span class="nav-text">Traditional Implementations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#recurrent-neural-network"><span class="nav-number">4.2.</span> <span class="nav-text">Recurrent Neural Network</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gru-lstm"><span class="nav-number">4.3.</span> <span class="nav-text">GRU &amp; LSTM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#seq2seq-machine-translation"><span class="nav-number">5.</span> <span class="nav-text">Seq2Seq: Machine Translation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#self-attention"><span class="nav-number">6.</span> <span class="nav-text">Self-Attention</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#transformer-pieces"><span class="nav-number">7.</span> <span class="nav-text">Transformer Pieces</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#transformer"><span class="nav-number">8.</span> <span class="nav-text">Transformer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2024/01/28/cs224n/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="CS224N NLP with Deep Learning | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CS224N NLP with Deep Learning
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-01-28 11:09:47" itemprop="dateCreated datePublished" datetime="2024-01-28T11:09:47+08:00">2024-01-28</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>讲课的老师是大名鼎鼎的 Christopher Manning，NLP
+领域的开拓者之一。我很喜欢他的澳洲口音，不像英式口音的生疏内敛，也不像美式口音的横冲直撞。听他讲课有一种在乡下听老爷子谈天说地之感。</p>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="word-embeddings">Word Embeddings</h2>
+<p>将 tokens 从 human-interpretable (words) 转为 machine-interpretable
+(word vectors/embeddings)。</p>
+<p>Discrete symbols. e.g., 使用 one-hot encoding。缺点很明显：vector
+稀疏且维数高；丧失了词之间的相似性信息。</p>
+<p><strong>Distributional semantics</strong>. A word's meaning is given
+by the words that frequently appear close-by. 模型大致分为两种：Direct
+prediction model 与 Count-based model。</p>
+<p>Evaluation of word embeddings.</p>
+<ul>
+<li>Intrinsic Evaluation. e.g., Analogy Evaluations, Correlation
+Evaluation.</li>
+<li>Extrinsic Evaluation. e.g., Sentiment Analysis, Named-entity
+Recognition (命名实体识别). 概念有点像下游任务。当 extrinsic task
+提供的数据足够大时，可以对训练出的 word embeddings 进行 fine tune。</li>
+</ul>
+<h3 id="direct-prediction-word2vec">Direct Prediction: Word2Vec</h3>
+<p>滑动窗口逐个扫过 corpus。窗口的中心词 (center word) <span class="math inline">\(w_c\)</span>，上下文词 (outside word) <span class="math inline">\(w_o\)</span>。</p>
+<p>对于所有词 <span class="math inline">\(w_x\in
+\text{Vocab}\)</span>，其 word vector 有两种表示 <span class="math inline">\(u_x \in U, v_x\in V\)</span>。<span class="math inline">\(U\to R^{n\times d}\)</span> 是周围词向量，<span class="math inline">\(V\to R^{n\times d}\)</span> 是中心词向量。我们把
+<span class="math inline">\(U\)</span> 和 <span class="math inline">\(V\)</span> 统称为 <span class="math inline">\(\theta\)</span>，它们既是需要学习的参数，也是最终得到的结果
+(词向量为 <span class="math inline">\(U,V\)</span> 取平均)。</p>
+<p>基于 naive softmax 定义的目标函数 (objective function) -
+该函数由词间的相似度 (likelihood) 取 log 整理而成。 <span class="math display">\[
+J(\theta)=-\frac{1}{T}\sum_{t=1}^{T}\sum_{-m\leq j\leq m,j\neq 0} \log
+P(w_{t+j}|w_{t};\theta)
+\]</span> 给出中心词 <span class="math inline">\(c\)</span>，上下文词为
+<span class="math inline">\(o\)</span> 的概率分布 <span class="math inline">\(P(o|c)\)</span>​ 定义如下 (就是 softmax)： <span class="math display">\[
+P(o|c)=\frac{\exp(u_o^Tv_c)}{\sum_{w\in \text{Vocab}} \exp(u_w^T v_c)}
+\]</span> 计算梯度 (以参数 <span class="math inline">\(v_c\)</span>
+为例，过程见 <a target="_blank" rel="noopener" href="https://web.stanford.edu/class/cs224n/slides/cs224n-2024-lecture01-wordvecs1-public.pdf">pp.39</a>)
+可以发现它本质上是 观测值 (observed) - 期望值 (expected)： <span class="math display">\[
+\frac{\partial}{\partial v_c} \log(P(o|c))=u_o-\sum_{x=1}^v P(x|c) u_x
+\]</span> 有 corpus，有目标函数 <span class="math inline">\(J(\theta)\)</span>，梯度下降更新 <span class="math inline">\(\theta\)</span> 即可。但在 naive softmax
+定义下，每次更新都要计算所有 <span class="math inline">\(\theta\)</span>
+的梯度，还要计算成本很高的 <span class="math inline">\(\sum_{w\in
+\text{Vocab}} \exp(u_w^T
+v_c)\)</span>，计算负担很大。为解决这个问题：</p>
+<ul>
+<li>使用 Stochastic Gradient Descent 进行梯度下降，每次窗口滑动都更新
+<span class="math inline">\(\theta\)</span>。</li>
+<li>使用 Negative Sampling。修改目标函数 <span class="math inline">\(J(\theta)\)</span>，将枚举到的 co-occurring
+中心词-上下文词对 <span class="math inline">\((c,o)\)</span>
+作为正样本，再随机选取 <span class="math inline">\(k\)</span> 个负样本
+<span class="math inline">\((c, o_{neg})\)</span>，最大化 <span class="math inline">\(P(o|c)\)</span> 的同时最小化 <span class="math inline">\(P(o_{neg}|c)\)</span>​。</li>
+<li>Stochastic gradients with negative sampling。使用 SGD + 负采样的
+Word2Vec 算法，半径为 <span class="math inline">\(m\)</span>
+的窗口每滑动一次，仅更新 <span class="math inline">\(2m+1\)</span>
+(window words) 加上 <span class="math inline">\(2mk\)</span> (negative
+words) 个参数即可。</li>
+</ul>
+<p>Word2Vec 的两种范式。</p>
+<ul>
+<li>Skip-grams (SM) model：给出中心词 <span class="math inline">\(c\)</span>，预测上下文词 <span class="math inline">\(o\)</span> 的概率分布。</li>
+<li>Continuous Bag of Words (CBOW)：给出上下文词 <span class="math inline">\(o\)</span>，预测中心词 <span class="math inline">\(c\)</span> 的概率分布。Bag of words
+意味着模型对每个位置的预测都相同。</li>
+</ul>
+<h3 id="count-based-co-occurrence-matrix">Count-based: Co-occurrence
+Matrix</h3>
+<p>一个更直接，更自然的想法：既然 center word 的含义与 outside words
+有关，为何不直接使用 outside words 的词频作为 word embeddings？</p>
+<p>我们直接统计 (两种方式) 出共现矩阵 (co-occurrence matrix) <span class="math inline">\(X\)</span>，<span class="math inline">\(X_{ij}\)</span> 表示以 <span class="math inline">\(w_i\)</span> 为 center，<span class="math inline">\(w_j\)</span> 为 outside word 的频率。直接取 <span class="math inline">\(X_i\)</span> 作为 <span class="math inline">\(w_i\)</span> 的 word embedding。</p>
+<p>这样做的问题很明显，也涌现了对应的修正方案：</p>
+<ul>
+<li><span class="math inline">\(X_i\)</span> 维数太高，和词汇表大小等同
+<span class="math inline">\(\to\)</span> 对 <span class="math inline">\(X\)</span> 进行 Singular Value Decomposition (SVD)
+实现 Dimensionality Reduction。</li>
+<li>function words 如 <em>the</em>, <em>he</em>, <em>has</em>
+出现频率太高，不利于对语义而非语法的捕捉 <span class="math inline">\(\to\)</span> 对频率取
+log，设置最低频率，或干脆忽略 function words。</li>
+<li>统计词频时，给予离中心词较近的词更高的权值。或使用 Pearson
+correlation 而非纯计数进行统计 (这样做的话记得把负值置 0)。</li>
+</ul>
+<p>COALS 模型就采用了 count-based 架构，效果超过了部分 Word2Vec
+模型。</p>
+<h3 id="glove">GloVe</h3>
+<p>比较 Direct Prediction 与 Count-based 架构的优劣：</p>
+<ul>
+<li>window-based 的直接预测架构 (e.g., skip-gram, CBOW)
+在捕捉复杂的语义模式和词性相似度上表现优秀，但无法利用 global
+co-occurrence statistic。</li>
+<li>count-based 的矩阵分解架构 (e.g., LSA, COALS) 能够有效利用 global
+statistical information，却在 word analogy 等任务上表现差。这说明其
+vector space 结构的 sub-optimal。</li>
+</ul>
+<p>GloVe (Global Vectors for Word Representation)
+则集两家之长：<strong>Using global statistics</strong> to
+<strong>predict</strong> the probability of word <span class="math inline">\(j\)</span> appearing in the context of word <span class="math inline">\(i\)</span> with a least squares objective.</p>
+<p>GloVe 架构中既有 <span class="math inline">\(U,V\)</span> 两个 word
+embedding 空间，又有共现矩阵 <span class="math inline">\(X\)</span>。其目标函数为： <span class="math display">\[
+J(\theta)=\sum_{i=1}^{W}\sum_{j=1}^W f(X_{ij})(u_j^Tv_i-\log X_{ij})^2
+\]</span> 具体的推导过程见 <a target="_blank" rel="noopener" href="https://web.stanford.edu/class/cs224n/readings/cs224n-2019-notes02-wordvecs2.pdf">notes2
+- word2vec</a>。还是比较 convincing 的。</p>
+<p><br></p>
+<h2 id="neural-networks">Neural Networks</h2>
+<p>NN (这里主要讲的是 MLP) 的概念已经非常熟悉了，不赘述。</p>
+<p>Feed-forward Computation (正向计算).</p>
+<p>Backpropagation (反向传播).</p>
+<ul>
+<li>Use <strong>Jacobian form</strong> (Jacobian Matrix
+雅可比矩阵，可以视作是矩阵意义下的导数) as much as possible, reshape to
+follow the <strong>shape convention</strong> (参数和其梯度的形状一致) at
+the end.</li>
+<li>一个公式总结反向传播：downstream gradient = local gradient *
+upstream gradient.</li>
+</ul>
+<p>Manual Gradient Checking: Numeric Gradient.
+使用数值微分的方式验证自动微分的正确性。</p>
+<p>训练 NN 时的 tricks.</p>
+<ul>
+<li>Regularization aka Weight Decay. 加入正则项阻止模型过拟合。</li>
+<li>Dropout. 以 <span class="math inline">\(p\)</span> 的概率丢弃某个
+neuron，<span class="math inline">\(1-p\)</span> 的概率使某个 neuron
+的输出除以 <span class="math inline">\(1-p\)</span>。这是为了使得应用
+dropout 前后丢弃层的输出期望一致。此外，在做 inference
+时不启用丢弃层。</li>
+<li>其他激活函数中的 Leaky ReLU。<span class="math inline">\(\text{leaky}(z)=\max(z, k\cdot z) \ \
+(0&lt;k&lt;1)\)</span>：这样当 <span class="math inline">\(z\leq
+0\)</span> 时也允许有 small error 反向传播回去。</li>
+</ul>
+<p>数据预处理的 tricks. Mean Subtraction, Normalization and
+Whitening.</p>
+<p>Parameter Initialization.</p>
+<ul>
+<li>Normal distribution around 0</li>
+<li>Xavier Initialization. 维持层间 activation variances 与
+backpropagated gradient variances 的稳定性。第 <span class="math inline">\(l\)</span> 层的权值 <span class="math inline">\(W\in R^{n(l-1)\times n(l)}\)</span>
+使用以下的分布进行随机初始化。</li>
+</ul>
+<p><span class="math display">\[
+W\sim U[-\sqrt{\frac{6}{n^{(l-1)}+n^{(l)}}},
+\sqrt{\frac{6}{n^{(l-1)}+n^{(l)}}}]
+\]</span></p>
+<p>Learning Strategies (对 optimizer 的研究).</p>
+<p>Annealing (退火). 学习率 <span class="math inline">\(\alpha\)</span>
+随着迭代次数 <span class="math inline">\(t\)</span>
+的增加而降低。若初始学习率为 <span class="math inline">\(\alpha_0\)</span>，常见方式有：</p>
+<ul>
+<li><span class="math inline">\(\alpha(t)=\frac{\alpha_0 \tau}{\max(t,
+\tau)}\)</span>, <span class="math inline">\(\tau\)</span>
+为超参数。</li>
+<li>指数衰减 <span class="math inline">\(\alpha(t)=\alpha_0
+e^{-kt}\)</span>, <span class="math inline">\(k\)</span> 为超参数。</li>
+</ul>
+<p>Momentum Update. 一个小球的运动方向受当前受力方向 (当前梯度 <span class="math inline">\(\frac{\partial J}{\partial x}\)</span>)
+与原运动方向 (之前的所有梯度累积而成的动量 <span class="math inline">\(v\)</span>) 共同影响。学习率为 <span class="math inline">\(\alpha\)</span>，动量衰减率为 <span class="math inline">\(\mu\)</span>
+(梯度对动量的影响随时间的衰减率，<span class="math inline">\(t\)</span>
+个迭代之前的梯度对当前动量的影响为 <span class="math inline">\(\mu^t\)</span>)，<span class="math inline">\(\mu\)</span> 常取 0.9, 0.5 等值。 <span class="math display">\[
+\begin{aligned}
+v&amp;:=\mu v-\alpha \frac{\partial J(\theta)}{\partial x} \\
+x&amp;:=x+v
+\end{aligned}
+\]</span> Adaptive Optimization Methods. Each parameter has its own
+learning rate. Parameters that have not been updated much in the past
+are likelier to have higher learning rates. 以 AdaGrad 为例，某参数
+<span class="math inline">\(\theta_i\)</span> 在第 <span class="math inline">\(t\)</span> 次迭代的 (真) 学习率被前 <span class="math inline">\(t-1\)</span> 次的梯度历史影响。 <span class="math display">\[
+\theta_{t,i}=\theta_{t-1,i}-\frac{\alpha}{\sqrt{\sum_{\tau=1}^{t}g_{\tau,i}^2}}
+g_{t,i} \text{ where } g_{t,i}=\frac{\partial}{\partial \theta_{t,i}}
+J_t(\theta)
+\]</span> 注意到 AdaGrad 中 (真) 学习率是单调下降的。RMSProp 作为
+AdaGrad 的一个变种，利用了 moving average of squared gradients
+解决了这个问题。Adam 又是 RMSProp 的一个变种，它使用 momentum-like
+updates。</p>
+<p><br></p>
+<h2 id="dependency-parsing">Dependency Parsing</h2>
+<p>非常 linguistic 的内容。下学期想 enroll general linguistic
+那门课了。</p>
+<p>与机器语言不同，自然语言非常之
+ambiguous。避免歧义的前提是了解句子的结构 (典中典之 Students Get First
+Hand Job Experience)，因此句法分析 (syntactic structure analysis)
+成为了传统 NLP 领域中的一个重要任务。</p>
+<p>语法结构的两种模型：</p>
+<ul>
+<li>Constituency Structure (成分结构).</li>
+<li>Dependency Structure (依赖结构).</li>
+</ul>
+<p>Constituency Structure.
+基于句子中各词的词性和短语结构语法把单词组织成嵌套的结构 (nested
+structure)，把较小的语言成分按照规则组装为较大的语言成分，表达的意义也随之越来越复杂。</p>
+<p>Dependency Structure. 强调词与词之间的依赖关系。依赖关系是一条单向边
+<span class="math inline">\((w_i,w_j,v)\)</span>，表示 <span class="math inline">\(w_j\)</span> 依赖于 <span class="math inline">\(w_i\)</span>，依赖方式是 <span class="math inline">\(v\)</span> (<span class="math inline">\(\mathtt{prep,pobj,nsubjpass}\)</span>​,
+etc.)。<span class="math inline">\(w_i\)</span> 被称为 head
+(governor)，<span class="math inline">\(w_j\)</span> 被称为 dependent
+(modifier)。分析依赖关系连边后往往会形成一颗依赖树 (dependency
+tree)。</p>
+<p>Dependency Parsing
+问题基本来说就是训练一个能够对给定句子生成对应依赖树的模型。</p>
+<ul>
+<li><em>Learning</em>: Given a training set <span class="math inline">\(D\)</span> (e.g., <a target="_blank" rel="noopener" href="https://universaldependencies.org/">Stanford Universal
+Dependencies</a>) of sentences annotated with dependency graphs, induce
+a parsing model <span class="math inline">\(M\)</span> that can be used
+to parse new sentences.</li>
+<li><em>Parsing</em>: Given a parsing model <span class="math inline">\(M\)</span> and a sentence <span class="math inline">\(S\)</span>, derive the optimal dependency graph
+<span class="math inline">\(D\)</span> for <span class="math inline">\(S\)</span> according to <span class="math inline">\(M\)</span>.</li>
+</ul>
+<h3 id="traditional-methods">Traditional Methods</h3>
+<p>Dependency Parsing 的传统方法。</p>
+<ul>
+<li><ol start="1996" type="1">
+<li>DP, 复杂度 <span class="math inline">\(O(n^3)\)</span>。</li>
+</ol></li>
+<li><ol start="2005" type="1">
+<li>基于最小生成树的 parser MSTParser。生成 <span class="math inline">\(n^2\)</span> 条带依赖概率的边，再使用 MST
+进行选择。</li>
+</ol></li>
+<li><ol start="2003" type="1">
+<li>MaltParser: 采取 transition-based parsing 或 greedy deterministic
+dependency parsing。</li>
+</ol></li>
+</ul>
+<p>Greedy Deterministic Transition-Based Parsing. 该框架下 parser
+是一个自动机，贪心的进行状态转移。</p>
+<p>先定义状态 (state)：对于句子 <span class="math inline">\(S=w_1...w_n\)</span>，状态 <span class="math inline">\(c=(\sigma,\beta,A)\)</span>，<span class="math inline">\(\sigma\)</span> 是一个栈，<span class="math inline">\(\beta\)</span> 是一个 buffer，<span class="math inline">\(A\)</span> 存储所有依赖关系。初始状态 <span class="math inline">\(c_0\)</span> 为 <span class="math inline">\(([w_0]_{\sigma},[w_1,...,w_n]_{\beta},\emptyset)\)</span>，<span class="math inline">\(w_0\)</span> 是为方便创造的依赖树根
+ROOT。终止状态为 <span class="math inline">\((\sigma,[]_{\beta},A)\)</span>​。</p>
+<p>转移 (transitions) 共有三种：</p>
+<ul>
+<li><span class="math inline">\(\mathtt{SHIFT}\)</span>. 将 buffer
+中的第第一个词压入栈中。</li>
+<li><span class="math inline">\(\mathtt{LEFT\_ARC}_r\)</span>.
+若从栈顶开始的两个词为 <span class="math inline">\(w_j,w_i\)</span>，连一条边 <span class="math inline">\((w_j,r,w_i)\)</span> 并存入 <span class="math inline">\(A\)</span> 中，从栈中弹出 <span class="math inline">\(w_i\)</span>。</li>
+<li><span class="math inline">\(\mathtt{RIGHT\_ARC}_r\)</span>.
+...连一条边 <span class="math inline">\((w_i,r,w_j)\)</span> 存入 <span class="math inline">\(A\)</span> 中，从栈中弹出 <span class="math inline">\(w_j\)</span>。</li>
+</ul>
+<p>设计好了自动机的状态与转移，接下来应该有一个 deterministic
+的决策器指导对于某种状态应该采取什么转移。</p>
+<h3 id="neural-dependency-parser">Neural Dependency Parser</h3>
+<p>接下来就是 Manning 和他的学生 Chen Danqi 的<a target="_blank" rel="noopener" href="https://nlp.stanford.edu/pubs/emnlp2014-depparser.pdf">工作</a>了：他们设计了一个神经网络作为决策器。这个神经网络以从当前状态
+<span class="math inline">\(c=(\sigma,\beta,A)\)</span>​
+中抽取的特征作为输入进行一个三分类，根据输出决定下一次转移是 SHIFT，LEFT
+ARC，RIGHT ARC 中的哪一种。实验结果证明这种 parser
+的准确性和效率都大大提高了。</p>
+<p>一般来说，我们从当前自动机的状态 <span class="math inline">\(c\)</span> 中抽取三种特征：<span class="math inline">\(S_{word}\)</span> 即栈或 buffer 中的某些词，<span class="math inline">\(S_{tag}\)</span> 即这些词对应的词性 (POS, Part of
+Speech)，<span class="math inline">\(S_{label}\)</span>​ 即这些词的
+dependents 和对应的依赖关系。</p>
+<p>把这三种特征表示成向量 <span class="math inline">\(x^w,x^t,x^l\)</span> 并 concatenate
+成一个低维稠密的分布式向量 <span class="math inline">\([x^w,x^t,x^l]\)</span> 喂到 NN 中，经过一个隐藏层
+(激活函数是 cubic function) 和 softmax 层后得到结果。</p>
+<p>题外话，看到 Chen Danqi
+这个名字我隐约觉得有点熟悉，查了下才知道她是隔壁雅礼的真 · IOI
+巨佬，在高中就发明了 CDQ 分治和插头 DP 这些折磨后世的算法，现在是
+Princeton 的 NLP group co-leader......真跪了。</p>
+<p><br></p>
+<h2 id="language-models">Language Models</h2>
+<p>终于到了语言模型及其实现。之前在 <em>dive into DL</em>
+中囫囵吞枣学到的知识可以好好反刍一下了。</p>
+<p>Language Models. 语言模型是一种词语概率分布模型，它能够预测长为 <span class="math inline">\(m\)</span> 的序列 <span class="math inline">\((w_1,w_2,...,w_m)\)</span> 的出现概率。应用 <span class="math inline">\(n\)</span> 阶马尔可夫假设，该概率可表示为： <span class="math display">\[
+P(w_1,...,w_m)=\prod_{i=1}^m P(w_i|w_1,...,w_{i-1})\approx \prod_{i=1}^m
+P(w_i|w_{i-n},...,w_{i-1})
+\]</span></p>
+<h3 id="traditional-implementations">Traditional Implementations</h3>
+<p><span class="math inline">\(n\)</span>-gram Language Models.
+在拥有足够 corpus 的情况下，<span class="math inline">\(n\)</span>
+元语法语言模型直接使用频率估计概率。以下两个式子分别是 uni-gram 与
+bi-gram 语言模型的公式。 <span class="math display">\[
+P(w_2|w_1)=\frac{\text{count}(w_1,w_2)}{\text{count}(w_1)},
+p(w_3|w_1,w_2)=\frac{\text{count}(w_1,w_2,w_3)}{\text{count}(w_1,w_2)}
+\]</span> <span class="math inline">\(n\)</span>
+元语法模型的缺点：Sparsity and Storage.</p>
+<ul>
+<li>Sparsity problems. 第一种情况 - 分子 <span class="math inline">\(\text{count}(w_1,w_2,w_3)=0\)</span>；改善方法是
+<em>smoothing</em>：令分子等于一个小量 <span class="math inline">\(\delta\)</span>。第二种情况 - 分母 <span class="math inline">\(\text{count}(w_1,w_2)=0\)</span>；改善方法是
+<em>backoff</em>：减小 <span class="math inline">\(n\)</span>，转而使
+<span class="math inline">\(\text{count}(w_2)\)</span>
+作为分母。在本例即 bi-gram 变为 uni-gram。</li>
+<li>Storage problems. <span class="math inline">\(n\)</span>
+元语法模型需要统计 count 数组。随着 corpus 大小的增加与 <span class="math inline">\(n\)</span> 的增加，存储 count
+的空间也会飞速增加。</li>
+</ul>
+<p>Window-based Neural Language Model. 引入了 NN。想法很简单，对于定长
+<span class="math inline">\(m\)</span> 的序列 <span class="math inline">\((w_1,...,w_m)\)</span>，学习到它们的 distributed
+representation <span class="math inline">\((e_1,...,e_m)\)</span>，喂到一个做 <span class="math inline">\(|V|\)</span> 分类的 NN 里即可得到 <span class="math inline">\(w_{m+1}\)</span>​​ 的预测分布。</p>
+<ul>
+<li>解决了 Sparsity problem. 举个例子，若 corpus 中包含 students like
+books，但预测序列 pupils like ____ 未在 corpus 中出现；由于 pupils 和
+students 的 distributive representation
+相近，模型大概率也能做出预测：空格处填 books。</li>
+<li>未解决 Storage problems. 只能处理定长 <span class="math inline">\(m\)</span>
+的序列，若序列长度改变，模型就需要重新训练，而且越长的序列对应的模型参数越多。</li>
+</ul>
+<p>从 <span class="math inline">\(n\)</span>
+元语法语言模型到基于窗口的神经网络语言模型的启发是：我们需要一个能够利用
+word representation 的，能够处理不定长序列的语言模型。</p>
+<h3 id="recurrent-neural-network">Recurrent Neural Network</h3>
+<p>RNN 呼之欲出。具体的不多说了，讲到底就是隐状态 <span class="math inline">\(h\)</span> 的引入和这两个公式： <span class="math display">\[
+h_t=\sigma(W^{(hh)}h_{t-1}+W^{(hx)}x_{[t]}),
+\hat{y_t}=\text{softmax}(W^{(S)}h_t)
+\]</span> 在训练时，不定长序列 <span class="math inline">\((w_1,...,w_m)\)</span> 的 word representation 为
+<span class="math inline">\((x_1,...,x_m)\)</span>，将其逐个喂到 RNN
+中去 (这里使用了 teacher forcing)，在这个过程中 RNN 的参数 <span class="math inline">\(W^{(hh)}, W^{(hx)},W^{(S)}\)</span>​
+是不变的。每处理完一个序列，才进行一次 BPTT (backpropagation through
+time) 对参数进行更新。</p>
+<p>BPTT. 这次手推了一遍 BPTT，彻彻底底搞清楚了。</p>
+<p>每个时间步的 loss <span class="math inline">\(E_t\)</span>
+是预测分布和真实分布间的交叉熵。定义一次训练的 loss 为 <span class="math inline">\(T\)</span> 个时间步产生的 loss 之和： <span class="math display">\[
+\frac{\partial E}{\partial W}=\sum_{i=1}^T \frac{\partial E_t}{\partial
+W}
+\]</span> 链式法则计算 <span class="math inline">\(E_t\)</span>，由于
+<span class="math inline">\(W\)</span> 被应用了 <span class="math inline">\(t\)</span> 次，求偏导时要一直往前追溯： <span class="math display">\[
+\frac{\partial E_t}{\partial W}=\sum_{k=1}^t \frac{\partial
+E_t}{\partial y_t} \frac{\partial y_t}{\partial h_t}\frac{\partial
+h_t}{\partial h_k}\frac{\partial h_k}{\partial W}
+\]</span> 需要注意的是这里的 <span class="math inline">\(\frac{\partial
+h_t}{\partial h_k}\)</span>，用链式法则拆开： <span class="math display">\[
+\frac{\partial h_t}{\partial h_k}=\prod_{j=k+1}^t \frac{\partial
+h_j}{\partial h_{j-1}}
+\]</span> 出现了！我们知道梯度连乘能导致梯度爆炸 (gradient explosion)
+与梯度消失 (gradient vanishing)。</p>
+<ul>
+<li>梯度爆炸：好探测，好解决，应用 gradient clipping。</li>
+<li>梯度消失：难探测，难解决。两个改善的 tricks：用 identity matrix
+初始化 <span class="math inline">\(W^{(hh)}\)</span>；使用 ReLU 而非
+sigmoid 作为激活函数。</li>
+</ul>
+<p>双向 RNN (bi-directional RNN) 与多层 RNN (multi-layered RNN).
+很好理解。</p>
+<h3 id="gru-lstm">GRU &amp; LSTM</h3>
+<p>GRU (Gate Recurrent Unit) 与 LSTM (Long Short-Term Memory)
+均引用了门控机制 (gating mechanism) 来改良传统 RNN 的网络结构，使得 RNN
+能够更容易地捕捉 long-term dependencies
+(即所谓的<strong>长-短期记忆</strong>)。这也一定程度上减轻了 RNN
+的梯度消失问题。</p>
+<p>主要讲 LSTM。它引入了额外的 cell state 存储 long-term
+information；类似 RAM，能够 read, erase, write。</p>
+<p>以下三个门的输出可以视作信号 (signal)，指示 cell state 和 hidden
+state 对过去状态与新输入的依赖程度。</p>
+<ul>
+<li>forget gate <span class="math inline">\(f^{(t)}\)</span>: controls
+what is kept vs forgotten from previous cell state.</li>
+<li>input gate <span class="math inline">\(i^{(t)}\)</span>: controls
+what parts of the new cell content are written to cell.</li>
+<li>output gate <span class="math inline">\(o^{(t)}\)</span>: controls
+what parts of cell are output to hidden state.</li>
+</ul>
+<p>新的 cell state 依赖遗忘信号，输入信号，旧的 cell state <span class="math inline">\(c^{(t-1)}\)</span> 和 candidate cell <span class="math inline">\(\tilde{c}^{(t)}\)</span> 计算得出。新的 hidden
+state 依赖输出信号和 cell state
+的计算得出。这里的计算主要使用的是哈达玛积 (Hadamard/element-wise
+product)。</p>
+<ul>
+<li>new cell content (candidate cell) <span class="math inline">\(\tilde{c}^{(t)}\)</span>: the new content to be
+written to the cell.</li>
+<li>cell state <span class="math inline">\(c^{(t)}\)</span>: erase
+("<em>forget</em>") some content from the last cell state, and write
+("<em>input</em>") some new cell content.</li>
+<li>hidden state <span class="math inline">\(h^{(t)}\)</span>: read
+("<em>output</em>") some content from the cell.</li>
+</ul>
+<p>更详细的 intuition 见 <a target="_blank" rel="noopener" href="https://web.stanford.edu/class/cs224n/readings/cs224n-2019-notes05-LM_RNN.pdf">notes
+for lecture 5-6</a>。</p>
+<p><br></p>
+<h2 id="seq2seq-machine-translation">Seq2Seq: Machine Translation</h2>
+<p>传统的机器翻译是 Statistical Machine Translation (SMT)，其目标是从
+corpus 中学到一个 probabilistic model。对于给出的源语言句子 <span class="math inline">\(x\)</span>，找到最佳的目标语言翻译 <span class="math inline">\(y\)</span>，满足 <span class="math inline">\(\text{argmax}_y P(y|x)\)</span>。</p>
+<p>NMT (Neural Machine Translation) 的到来给繁复笨重的 SMT
+模型带来了巨大冲击 (超级湮灭波.jpg)。它使用的 NN architecture 是基于
+RNNs 的 sequence-to-sequence (aka seq2seq) model。</p>
+<p>Seq2Seq 结构非常的简单优美，它由两个独立的 NN: encoder 和 decoder
+连接而成。连接的方式有很多，最经典的一种是将 encoder 最后一个时间步的
+hidden state 初始化为 decoder 的 hidden state。</p>
+<ul>
+<li>Encoder RNN produces an <em>encoded representation (context
+vector)</em> of the source language.</li>
+<li>Decoder RNN is a Language Model that generates target sentence,
+<em>conditioned on encoding</em>.</li>
+</ul>
+<p>encoder 输入一个序列，输出一个 neural representation；decoder 输入该
+encoded representation，输出一个序列。所以 encoder-decoder
+的结合被称为序列到序列 (sequence to sequence) 模型。</p>
+<p>SMT 使用贝叶斯公式拆开 <span class="math inline">\(\text{argmax}_y
+P(y|x)=\text{argmax}_y
+P(x|y)P(y)\)</span>，再分别使用翻译模型和语言模型求 <span class="math inline">\(P(x|y)\)</span> 与 <span class="math inline">\(P(y)\)</span>。而 NMT 则根据马尔科夫链直接计算
+<span class="math inline">\(P(y|x)\)</span>： <span class="math display">\[
+P(y|x)=P(y_1|x)P(y_2|y_1,x)P(y_3|y_1,y_2,x)...P(y_T|y_1,...,y_{T-1},x)
+\]</span> <span class="math inline">\(P(y_T|y_1,...,y_{T-1},x)\)</span>:
+Probability of next target word, given <strong>target words so
+far</strong> and <strong>source sentence</strong> <span class="math inline">\(x\)</span>.</p>
+<p>和传统的语言定义模型比，这里的定义还多了一个对 <span class="math inline">\(x\)</span>​
+的条件依赖。对应到实现上，作为语言模型的 decoder 依赖 encoder 生成的
+context vector。所以 Seq2Seq 模型又被称为是一种 <em>Conditional</em>
+Language Model。</p>
+<p>关于 Seq2Seq，还需要知道的是：</p>
+<ul>
+<li>decoder 的训练策略：free running, <em>teacher forcing</em> and
+<em>scheduled sampling</em></li>
+<li>提高预测准确度的 tricks - 束搜索 <em>beam search</em></li>
+<li>机器翻译的效果评估 BLEU (Bilingual Evaluation Understudy) 指标</li>
+</ul>
+<p>传统 Seq2Seq 模型的两个局限。</p>
+<ul>
+<li><em>Parallelization issues with dependence on the sequence
+index</em>。RNN 的时序依赖与 GPU 的并行性相悖。</li>
+<li><em>Linear interaction distance</em>。直接将 encoder 的最后一个
+hidden state 作为 context vector，这种做法很明显存在一个 <em>information
+bottleneck</em>。有没有方法得到质量更高的 contextual
+representation？</li>
+</ul>
+<p><br></p>
+<h2 id="self-attention">Self-Attention</h2>
+<p>先说说 attention。attention 机制本质上是对 information 的 <em>softly
+looking up</em>。给出 query <span class="math inline">\(q\)</span>，与键值表 <span class="math inline">\(\mathbf{k}\)</span>-<span class="math inline">\(\mathbf{v}\)</span>。找到与 <span class="math inline">\(q\)</span> 最相似的键 <span class="math inline">\(k\)</span>，返回对应的值 <span class="math inline">\(v\)</span>。</p>
+<ul>
+<li>衡量相似度 (affinity) 的方法 - dot product <span class="math inline">\(q^{T}k\)</span>。</li>
+<li>softly 体现在 weighted average，即最终得到的是 <span class="math inline">\(\sum (q^{T}k_i)v_i\)</span>。</li>
+</ul>
+<p>引入 attention 机制，把 Seq2Seq 解码器每一轮的预测作为 query <span class="math inline">\(q\)</span>，编码器生成的所有隐状态 <span class="math inline">\(h_1,h_2,...,h_t\)</span> 既作为 keys 也作为
+values。将得到的 weighted average <span class="math inline">\(h\)</span>
+与 <span class="math inline">\(q\)</span>​ 一起喂到解码器的 FFN
+中生成新的预测。</p>
+<p>attention 机制生成了质量更高的 context vector，解决了 linear
+interaction distance 的问题；但 RNN 架构仍然与 GPU
+的并行性冲突。接下来的 self-attention 架构干脆舍弃了 RNN。</p>
+<p>具体来说，self-attention 直接对 <span class="math inline">\(x_1,x_2,...,x_n\)</span> 生成 contextual
+representation。<span class="math inline">\(x\)</span> 同时作为 query,
+key 与 value。三个 learnable weight matrices <span class="math inline">\(\mathbf{W}_k,\mathbf{W}_q,\mathbf{W}_v\)</span>，乘上
+<span class="math inline">\(x\)</span> 生成 <span class="math inline">\(q,k,v\)</span>。<span class="math inline">\(x_i\)</span> 对 <span class="math inline">\(x_j\)</span> 的注意力分数 <span class="math inline">\(\alpha_{ij}\)</span>，与最后生成的 contextual
+representation <span class="math inline">\(h_i\)</span>​ 为： <span class="math display">\[
+\alpha_{ij}=\frac{\exp(q_i^{T} k_j)}{\sum_{j&#39;=1}^n
+\exp(q_i^{T}k_{j&#39;})}, h_i=\sum \alpha_{ij}v_j
+\]</span> 把 <span class="math inline">\(x_1,x_2,...,x_n\)</span>
+视作一个矩阵 <span class="math inline">\(\mathbf{X}\)</span>，可以发现
+self-attention 本质上就是在做一系列矩阵乘法，很容易并行运算。 <span class="math display">\[
+\begin{aligned}
+&amp;\mathbf{X}\mathbf{W}_k=\mathbf{K},
+\mathbf{X}\mathbf{W}_q=\mathbf{Q}, \mathbf{X}\mathbf{W}_v=\mathbf{V} \\
+&amp;\text{Attention}(\mathbf{Q},
+\mathbf{K},\mathbf{V})=\text{Softmax}(\mathbf{Q}\mathbf{K}^T)\mathbf{V}
+\end{aligned}
+\]</span></p>
+<p><br></p>
+<h2 id="transformer-pieces">Transformer Pieces</h2>
+<p>Transformer 模型是基于 self-attention 的 Seq2Seq 架构。从 RNN-based
+Seq2Seq 到 attention-based Seq2Seq，势必要做出一些适应。</p>
+<p><em><u>Position representations</u>.</em> 抛弃 RNN
+带来的第一个问题：丢失了位置关系。两个原因和两个解决方案：</p>
+<ul>
+<li>non-contextual embedding <span class="math inline">\(x_i=Ew_i\)</span> 并不涉及词序列 <span class="math inline">\(w_{1:n}\)</span>
+的位置关系。可以增加一个可学习的权重矩阵 <span class="math inline">\(P\in R^{t\times d}\)</span>，令 embedding <span class="math inline">\(\tilde{x_i}=P_i+x_i\)</span> 再做
+self-attention；让模型自己学习分辨相同的词在位置 <span class="math inline">\(i\)</span> 与在位置 <span class="math inline">\(j\)</span> 之间的区别。</li>
+<li>self-attention 的过程是位置无关的。可以在做 softmax
+计算注意力分数时增加 <em>linear biases</em>，<span class="math inline">\(\alpha_i=\text{softmax}\)</span><span class="math inline">\((k_{1:n}q_i+[-i, ..., -1, 0,
+-1,...,-(n-i)])\)</span>​。</li>
+</ul>
+<p><em><u>Element nonlinearity</u>.</em> 传统 RNN-based Seq2Seq 架构通过
+stacked RNNs (LSTMs) 来提升模型的复杂性，但 that's not the case for
+attention。stacked self-attention blocks 本质上与一个单独的
+self-attention block 没有区别。</p>
+<p>为使 stacked self-attention 起效果，transformer 在每个 self-attention
+block 后镶嵌了一个 FNN 来引入非线性性：<span class="math inline">\(h_{FF}=W_2
+\text{ReLU}(W_1h_{\text{self-attention}}+b_1)+b_2\)</span>。</p>
+<p><em><u>Future masking</u></em>. decoder 在训练时采用 teacher
+forcing：输入序列 <code>&lt;BOS&gt;, x[0], x[1], ..., x[t]</code>,
+decoder 将输出 <code>y[0], y[1], ..., y[t], &lt;EOS&gt;</code>，通过比较
+<code>x[i]</code> 与 <code>y[i]</code> 间的误差来计算
+loss。这很好的体现了 self-attention 的并行性，但同时也带来了 cheating
+的问题。</p>
+<p>并行性要求我们一股脑把预测序列 <code>x[0], x[1], ...x[t]</code> 输入
+decoder，但同时该序列也是答案序列。也就是说，作为语言模型的 decoder
+本应根据 <code>x[0], x[1], ..., x[i]</code> 生成 <code>x[i+1]</code>
+(这正是 RNN 的 nature)，但 self-attention 的特征使得它在生成
+<code>x[i+1]</code> 时能够直接看到正确答案。</p>
+<p>为了防止 decoder 作弊，在计算注意力分数时我们采用 future masking
+的策略： <span class="math display">\[
+\alpha_{i,j,\text{masked}}=
+\begin{cases}
+\alpha_{ij} \ \ j\leq i \\
+0 \ \ \ \ \  \text{otherwise}
+\end{cases}
+\]</span> <em><u>Multi-head Self-Attention</u></em>. 类似 CNN
+中的多卷积核与多通道，对同一个输入 <span class="math inline">\(X\in
+R^{n\times d}\)</span>，多头自注意力进行多次
+self-attention，每个头有独立的 <span class="math inline">\(W_k^{(l)},
+W_q^{(l)}, W_v^{(l)}\)</span>​ 参数 (一个等价的理解是，共用 <span class="math inline">\(W_k,W_q,W_v\)</span> 但是最后将得到的 <span class="math inline">\(q,k,v\)</span>
+切分成若干个头)，并各自独立的得到关注不同特征的 representation。</p>
+<p>最后再将每个头得到的结果 <span class="math inline">\(\text{concat}\)</span> (简单的连接)
+起来，再乘上一个转换矩阵 <span class="math inline">\(W_o\)</span>
+得到最终结果。</p>
+<figure>
+<img data-src="multi-head.png" alt="multi-head self-attention">
+<figcaption aria-hidden="true">multi-head self-attention</figcaption>
+</figure>
+<p><em><u>Layer normalization.</u></em>
+是一个我尝试理解但是失败了的玄学方法。我们知道 stacked self-attention
+blocks 把 <span class="math inline">\(x_{1:n}\)</span>
+一层一层往上传，LN 通常加在两个 self-attention blocks 之间，normalize
+<em>each token over all dimensions</em>。</p>
+<p>LN 对 token 本身进行 normalization，token 间互不影响，这是 Layer norm
+与 Batch norm 的最大区别。若某个 self-attention block 的输出为 <span class="math inline">\(h\in R^{n,d}\)</span>，想象 LN 对行而不是对列进行
+normalization，共 <span class="math inline">\(n\)</span> 次。</p>
+<p><em><u>Add &amp; Norm</u>.</em> 将 <em>Residual Connections</em> 加入
+LN。残差连接的 intuition - identity function 的梯度为 <span class="math inline">\(1\)</span>，缓解了深度神经网络的梯度消失问题；从
+identity function 开始学理论上也能够加速找到最优解的过程。</p>
+<p>输入 <span class="math inline">\(h_{1:n}\)</span>，Add &amp; Norm
+block 执行以下操作：其中 <span class="math inline">\(f\)</span> 可以是
+FFN 甚至 self-attention。 <span class="math display">\[
+h_{\text{pre-norm}}=f(\text{LN}(h))+h
+\]</span> <br></p>
+<h2 id="transformer">Transformer</h2>
+<p>现在 Transformer 的所有关键 components
+都已经介绍完毕了，可以开始拼图了！</p>
+<figure>
+<img data-src="transformer.png" alt="Transformer Architecture">
+<figcaption aria-hidden="true">Transformer Architecture</figcaption>
+</figure>
+<ul>
+<li>encoder 是编码模型。encoder-only 的架构常用于生成高质量的 contextual
+representation，因此不需要对 self-attention 应用 future masking。</li>
+<li>decoder 是自回归的语言模型 (autoregressive language
+model)。侧重于生成，需要应用 future masking。</li>
+<li>在 encoder-decoder 架构中，encoder 与 decoder 通过 <em>cross
+attention</em> 连接。交叉注意力本质上是对自注意力之前的 attention
+概念的回归，即 encoder 提供 keys 与 values，decoder 提供 queries。</li>
+</ul>
+<p>encoder-decoder transformer 常用于对 bidirectional context
+有着较高要求的应用，例如文本总结，机器翻译；但由于需要向 encoder 与
+decoder 分配参数，它的深度没法做到 decoder-only transformer 那么深。</p>
+<p>时下最流行的 transformer 均是 decoder-only 的，如 GPT
+(<em>generative</em> pretrained transformer) 系列模型。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info: Stanford <a target="_blank" rel="noopener" href="https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1214/index.html">CS224N
+NLP with Deep Learning</a> (2021~2023)</p>
+<p>Lecturer: Prof. Christopher Manning</p>
+
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2024/01/28/cs224n/" title="CS224N NLP with Deep Learning">https://www.thisisxxz.com/2024/01/28/cs224n/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | CS224N NLP with Deep Learning](https://www.thisisxxz.com/2024/01/28/cs224n/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/AI-ML/" rel="tag"><i class="fa fa-tag"></i> AI & ML</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/01/24/COMP2121-1/" rel="prev" title="离散数学小记">
+                  <i class="fa fa-chevron-left"></i> 离散数学小记
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/02/02/MATH2014-1/" rel="next" title="Multivariable Calculus & Linear Algebra">
+                  Multivariable Calculus & Linear Algebra <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/01/28/cs224n/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

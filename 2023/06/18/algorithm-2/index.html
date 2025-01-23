@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="这是 Algorithms I &amp; II, Princeton 系列笔记的 P2 部分。这一节将介绍：  \(\sim N\log{N}\) 的经典排序算法——归并排序与快速排序。 运用了快排 partition 思想的 \(\sim N\) 快速选择算法。 堆，堆排序与优先队列。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Algorithms I, Princeton University, P2">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/06/18/algorithm-2/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="这是 Algorithms I &amp; II, Princeton 系列笔记的 P2 部分。这一节将介绍：  \(\sim N\log{N}\) 的经典排序算法——归并排序与快速排序。 运用了快排 partition 思想的 \(\sim N\) 快速选择算法。 堆，堆排序与优先队列。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/06/18/algorithm-2/mergesort.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/06/18/algorithm-2/tree.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/06/18/algorithm-2/pointers.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/06/18/algorithm-2/duplicates.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/06/18/algorithm-2/3partition.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/06/18/algorithm-2/binarytree.png">
+<meta property="article:published_time" content="2023-06-18T04:10:04.000Z">
+<meta property="article:modified_time" content="2024-02-02T11:32:00.000Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Data Structure">
+<meta property="article:tag" content="Algorithms">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.thisisxxz.com/2023/06/18/algorithm-2/mergesort.png">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2023/06/18/algorithm-2/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/06/18/algorithm-2/","path":"2023/06/18/algorithm-2/","title":"Algorithms I, Princeton University, P2"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Algorithms I, Princeton University, P2 | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#merge-sort"><span class="nav-number">1.</span> <span class="nav-text">Merge Sort</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#code-implementation"><span class="nav-number">1.1.</span> <span class="nav-text">Code Implementation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#practical-improvements"><span class="nav-number">1.2.</span> <span class="nav-text">Practical Improvements</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#complexity-of-sorting"><span class="nav-number">2.</span> <span class="nav-text">Complexity of Sorting</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#decision-tree"><span class="nav-number">2.1.</span> <span class="nav-text">Decision Tree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lower-bound-for-sorting"><span class="nav-number">2.2.</span> <span class="nav-text">Lower Bound for Sorting</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#quick-sort"><span class="nav-number">3.</span> <span class="nav-text">Quick Sort</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#partition"><span class="nav-number">3.1.</span> <span class="nav-text">Partition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shuffle"><span class="nav-number">3.2.</span> <span class="nav-text">Shuffle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#way-partitioning"><span class="nav-number">3.3.</span> <span class="nav-text">3-way Partitioning</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#quick-select"><span class="nav-number">4.</span> <span class="nav-text">Quick Select</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#binary-heap"><span class="nav-number">5.</span> <span class="nav-text">Binary Heap</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#complete-binary-tree"><span class="nav-number">5.1.</span> <span class="nav-text">Complete Binary Tree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#heap-properties"><span class="nav-number">5.2.</span> <span class="nav-text">Heap Properties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#promotion-and-insertion"><span class="nav-number">5.3.</span> <span class="nav-text">Promotion and Insertion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#demotion-and-deletion"><span class="nav-number">5.4.</span> <span class="nav-text">Demotion and Deletion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#construction"><span class="nav-number">5.5.</span> <span class="nav-text">Construction</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#heap-sort"><span class="nav-number">6.</span> <span class="nav-text">Heap Sort</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#priority-queues"><span class="nav-number">7.</span> <span class="nav-text">Priority Queues</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">8.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/06/18/algorithm-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Algorithms I, Princeton University, P2 | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Algorithms I, Princeton University, P2
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-06-18 12:10:04" itemprop="dateCreated datePublished" datetime="2023-06-18T12:10:04+08:00">2023-06-18</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>这是 <a target="_blank" rel="noopener" href="https://thisisxxz.com/categories/%E7%AC%94%E8%AE%B0/Algorithms-Princeton/">Algorithms
+I &amp; II, Princeton</a> 系列笔记的 P2 部分。这一节将介绍：</p>
+<ul>
+<li><span class="math inline">\(\sim N\log{N}\)</span>
+的经典排序算法——归并排序与快速排序。</li>
+<li>运用了快排 partition 思想的 <span class="math inline">\(\sim
+N\)</span> 快速选择算法。</li>
+<li>堆，堆排序与优先队列。</li>
+</ul>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="merge-sort">Merge Sort</h2>
+<p>Basic idea of mergesort is <strong>divide-and-conquer
+paradigm</strong>.</p>
+<ul>
+<li>Divide array into two halves.</li>
+<li><strong>Recursively</strong> sort each half.</li>
+<li>Merge two sorted halves using two pointers.</li>
+</ul>
+<p>In empirical analysis of merge sort, # compares is denoted by <span class="math inline">\(C(N)\)</span>, # array accesses is denoted by
+<span class="math inline">\(A(N)\)</span>. It is proven that <span class="math inline">\(C(N)\leq N\lg N\)</span> and <span class="math inline">\(A(N)\leq 6N\lg N\)</span> for any array of size
+<span class="math inline">\(N\)</span>.</p>
+<figure>
+<img data-src="mergesort.png" alt="divide-and-conquer recurrence">
+<figcaption aria-hidden="true">divide-and-conquer
+recurrence</figcaption>
+</figure>
+<div class="note info no-icon"><p>Proposition. if <span class="math inline">\(D(N)=2D(N/2)+N\)</span>
+for <span class="math inline">\(N&gt;1\)</span>, with <span class="math inline">\(D(1)=0\)</span>, then <span class="math inline">\(D(N)=N\lg N\)</span>.</p>
+</div>
+<p>We prove this by <strong>induction</strong> with base case <span class="math inline">\(N=1\)</span> and inductive hypothesis <span class="math inline">\(D(N)=N\lg N\)</span>. The goal is to show that
+<span class="math inline">\(D(2N)=(2N)\lg(2N)\)</span>. <span class="math display">\[
+\begin{aligned}
+D(2N)&amp;=2D(N)+2N \\
+&amp;= 2N\lg N+2N \\
+&amp;= 2N(\lg(2N) - 1)+2N \\
+&amp;= 2N\lg (2N)
+\end{aligned}
+\]</span></p>
+<p>Mergesort uses extra space proportional to <span class="math inline">\(N\)</span>, which means it is <strong>NOT
+in-place</strong>.</p>
+<div class="note info no-icon"><p>Definition. A sorting algorithm is <strong>in-place</strong> if it
+uses <span class="math inline">\(\leq c\log N\)</span> extra memory.</p>
+<p>Examples. Insertion sort, selection sort, shellsort.</p>
+</div>
+<h3 id="code-implementation">Code Implementation</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Merge</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">merge</span><span class="params">(Comparable[] a, Comparable[] aux, <span class="type">int</span> lo, <span class="type">int</span> mid, <span class="type">int</span> hi)</span> &#123;</span><br><span class="line">        <span class="keyword">assert</span> <span class="title function_">isSorted</span><span class="params">(a, lo, mid)</span>;</span><br><span class="line">        <span class="keyword">assert</span> <span class="title function_">isSorted</span><span class="params">(a, mid + <span class="number">1</span>, hi)</span>;</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> lo; k &lt;= hi; ++k)	aux[k] = a[k];</span><br><span class="line">        <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> lo, j = mid + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> lo; k &lt;= hi; ++k) &#123;</span><br><span class="line">            <span class="keyword">if</span> (i &gt; mid)                     a[k] = aux[j++];</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (j &gt; hi)                 a[k] = aux[i++];</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (less(aux[j], aux[i]))   a[k] = aux[j++];</span><br><span class="line">            <span class="keyword">else</span>                             a[k] = aux[i++];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">assert</span> <span class="title function_">isSorted</span><span class="params">(a, lo, hi)</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Recursive version</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a, Comparable[] aux, <span class="type">int</span> lo, <span class="type">int</span> hi)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (hi &lt;= lo)    <span class="keyword">return</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> lo + (hi - lo) / <span class="number">2</span>;</span><br><span class="line">        sort(a, aux, lo, mid);</span><br><span class="line">        sort(a, aux, mid + <span class="number">1</span>, hi);</span><br><span class="line">        merge(a, aux, lo, mid, hi);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">        aux = <span class="keyword">new</span> <span class="title class_">Comparable</span>[a.length];</span><br><span class="line">        sort(a, aux, <span class="number">0</span>, a.length - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Non-recursive bottom-up version</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> a.length;</span><br><span class="line">        Comparable[] aux = <span class="keyword">new</span> <span class="title class_">Comparable</span>[N];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">sz</span> <span class="operator">=</span> <span class="number">1</span>; sz &lt; N; sz &lt;&lt;= <span class="number">1</span>)</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">lo</span> <span class="operator">=</span> <span class="number">0</span>; lo &lt; N - sz; lo += sz+sz)</span><br><span class="line">                merge(a, aux, lo, lo + sz - <span class="number">1</span>, Math.min(lo + sz + sz - <span class="number">1</span>, N - <span class="number">1</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="practical-improvements">Practical Improvements</h3>
+<ul>
+<li><p>Use <strong>insertion sort</strong> for small subarrays.</p>
+<p>Mergesort has too much <strong>overhead</strong> for tiny subarrays.
+Cutoff to insertion sort for <span class="math inline">\(\approx
+7\)</span> items.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a, Comparable[] aux, <span class="type">int</span> lo, <span class="type">int</span> hi)</span> &#123;</span><br><span class="line">+   <span class="keyword">if</span> (hi &lt;= lo + CUTOFF - <span class="number">1</span>) &#123;</span><br><span class="line">+       Insertion.sort(a, lo, hi);</span><br><span class="line">+       <span class="keyword">return</span>;</span><br><span class="line">+   &#125;</span><br><span class="line">    <span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> lo + (hi - lo) / <span class="number">2</span>;</span><br><span class="line">    sort(a, aux, lo, mid);</span><br><span class="line">    sort(a, aux, mid + <span class="number">1</span>, hi);</span><br><span class="line">    merge(a, aux, lo, mid, hi);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>STOP</strong> if already sorted. (especially helpful for
+partially-ordered arrays.)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a, Comparable[] aux, <span class="type">int</span> lo, <span class="type">int</span> hi)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (hi &lt;= lo)    <span class="keyword">return</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> lo + (hi - lo) / <span class="number">2</span>;</span><br><span class="line">    sort(a, aux, lo, mid);</span><br><span class="line">    sort(a, aux, mid + <span class="number">1</span>, hi);</span><br><span class="line">+   <span class="keyword">if</span> (!less(a[mid + <span class="number">1</span>], a[mid]))    <span class="keyword">return</span>;</span><br><span class="line">    merge(a, aux, lo, mid, hi);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>Eliminate the copy to the auxiliary array.</p>
+<p>Save time (not space) by switching the role of input and auxiliary
+array in each recursive call.</p></li>
+</ul>
+<p><br></p>
+<h2 id="complexity-of-sorting">Complexity of Sorting</h2>
+<p><strong>Computational complexity</strong> is a framework to study
+efficiency of algorithms for solving a particular problem <span class="math inline">\(X\)</span>. It consists of five components:</p>
+<ul>
+<li>Model of computation. Allowable operations.</li>
+<li>Cost model. Operation count(s).</li>
+<li>Upper bound. Cost guarantee provided by <strong>some</strong>
+algorithms for <span class="math inline">\(X\)</span>.</li>
+<li>Lower bound. Proven limit on cost guarantee by <strong>all</strong>
+algorithms for <span class="math inline">\(X\)</span>.</li>
+<li>Optimal algorithm. Algorithm with best possible cost guarantee for
+<span class="math inline">\(X\)</span>.</li>
+</ul>
+<p>We model the complexity of sorting problem as follows:</p>
+<ul>
+<li>Model of computation. <strong>Decision trees</strong>.</li>
+<li>Cost model. <strong># compares</strong>.</li>
+<li>Upper bound. <span class="math inline">\(\sim N\lg N\)</span> from
+mergesort.</li>
+<li>Lower bound. ?</li>
+<li>Optimal algorithm. ?</li>
+</ul>
+<h3 id="decision-tree">Decision Tree</h3>
+<p>Decision trees for compare-base sorting algorithms can access
+information only through compare.</p>
+<figure>
+<img data-src="tree.png" alt="comparable decision tree for 3 distinct items">
+<figcaption aria-hidden="true">comparable decision tree for 3 distinct
+items</figcaption>
+</figure>
+<p>Note that the height of the tree <span class="math inline">\(h\)</span> <span class="math inline">\(=\)</span>
+the worst-case number of compares, and <strong>at least</strong> each
+leaf corresponds to a possible ordering of elements.</p>
+<h3 id="lower-bound-for-sorting">Lower Bound for Sorting</h3>
+<div class="note info no-icon"><p>Proposition. Any compare-base sorting algorithm <strong>must use at
+least <span class="math inline">\(\sim N\lg N\)</span> compares</strong>
+in the worst case.</p>
+</div>
+<p>We prove this by establishing an inequality based on the number of
+leaves of decision tree.</p>
+<ul>
+<li>Binary tree of height <span class="math inline">\(h\)</span> has at
+most <span class="math inline">\(2^h\)</span> leaves. # leaves <span class="math inline">\(\leq 2^h\)</span>.</li>
+<li><span class="math inline">\(N!\)</span> different orderings <span class="math inline">\(\to\)</span> at least <span class="math inline">\(N!\)</span> leaves. # leaves <span class="math inline">\(\geq N!\)</span>.</li>
+<li>Worst case dictated by <strong>height</strong> <span class="math inline">\(h\)</span> of decision tree.</li>
+</ul>
+<p><span class="math inline">\(2^h\geq\)</span> # leaves <span class="math inline">\(\geq N!\Rightarrow h\geq \lg(N!)\)</span>.
+According to the <strong>Stirling's formula</strong>, <span class="math inline">\(\lg(N!)\sim N\lg N\)</span>.</p>
+<p>The lower bound of sorting problem is thus determined by <span class="math inline">\(h\geq \sim N\lg N\)</span>.</p>
+<p>We could see that the upper bound and the lower bound overlap each
+other <span class="math inline">\((\sim N\lg N)\)</span>. Therefore, we
+could say that <strong>mergesort is an optimal algorithm</strong> for
+compare-base sorting problem.</p>
+<p>Note that quicksort (stay tuned) is <strong>NOT</strong> optimal: it
+needs <span class="math inline">\(\sim\frac{1}{2}N^2\)</span> compares
+in the worst case.</p>
+<p><br></p>
+<h2 id="quick-sort">Quick Sort</h2>
+<blockquote>
+<p>快排，排序算法中的一颗明珠。然而在深入了解之后我才学习到其并不是<strong>理论上</strong>最优秀的排序算法
+(最坏情况下需要 <span class="math inline">\(N^2\)</span>
+规模次数的比较)，是排序前的随机打乱赋予了它概率上的性能保证。</p>
+<p>除了随机性的应用之外，它的核心思想——partition
+也非常的巧妙，能够在<strong>不</strong>对数组进行完全排序的前提下获得某个元素
+<code>a[lo]</code> 排序后的准确下标 <span class="math inline">\(j\)</span>。</p>
+</blockquote>
+<p>Quick sort is <strong>practically (NOT empirically)</strong> the
+fastest sorting algorithm. It has three processes:</p>
+<ul>
+<li><strong>Shuffle</strong> the array.</li>
+<li><strong>Partition</strong> so that, for some <span class="math inline">\(j\)</span>
+<ul>
+<li>entry <span class="math inline">\(a_j\)</span> is in place</li>
+<li><strong>No larger</strong> entry to the left of <span class="math inline">\(j\)</span></li>
+<li><strong>No smaller</strong> entry to the right of <span class="math inline">\(j\)</span></li>
+</ul></li>
+<li><strong>Sort</strong> each piece recursively.</li>
+</ul>
+<h3 id="partition">Partition</h3>
+<p><strong>Partition</strong> is the essence of quick sort. It finally
+produces an <strong>in-place index</strong> <span class="math inline">\(j\)</span> so that no larger entry to the left of
+<span class="math inline">\(j\)</span> and no smaller entry to the right
+of <span class="math inline">\(j\)</span>.</p>
+<p>To achieve this, we maintain two pointers <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> as follows:</p>
+<ul>
+<li>Scan <span class="math inline">\(i\)</span> from left to right so
+long as <code>a[i] &lt; a[lo]</code>.</li>
+<li>Scan <span class="math inline">\(j\)</span> from right to left so
+long as <code>a[j] &gt; a[lo]</code>.</li>
+<li>Exchange <code>a[i]</code> with <code>a[j]</code>.</li>
+</ul>
+<p>Repeat until <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> pointers cross. When it happens,
+exchange <code>a[lo]</code> with <code>a[j]</code>.</p>
+<figure>
+<img data-src="pointers.png" alt="Partition process in range [lo, hi]">
+<figcaption aria-hidden="true">Partition process in range [lo,
+hi]</figcaption>
+</figure>
+<p>See the Java code for partitioning below:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">partition</span><span class="params">(Comparable[] a, <span class="type">int</span> lo, <span class="type">int</span> hi)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> lo, j = hi + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="keyword">while</span> (less(a[++i], a[lo]))    <span class="comment">// stop on equal keys</span></span><br><span class="line">            <span class="keyword">if</span> (i == hi)    <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">while</span> (less(a[lo], a[--j]))    <span class="comment">// stop on equal keys</span></span><br><span class="line">            <span class="keyword">if</span> (j == lo)    <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">if</span> (i &gt;= j)    <span class="keyword">break</span>;</span><br><span class="line">        exch(a, i, j);</span><br><span class="line">    &#125;</span><br><span class="line">    exch(a, lo, j);     <span class="comment">// now j is in place with the partitioning item a[lo]</span></span><br><span class="line">    <span class="keyword">return</span> j;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="note info no-icon"><p>Counter-intuitively, when duplicates are present, it is better to
+<strong>stop on keys equal to the partitioning item's key</strong>.</p>
+</div>
+<figure>
+<img data-src="duplicates.png" alt="stop on equal keys: uses &lt; instead of \leq in the condition">
+<figcaption aria-hidden="true">stop on equal keys: uses <span class="math inline">\(&lt;\)</span> instead of <span class="math inline">\(\leq\)</span> in the condition</figcaption>
+</figure>
+<p>Considering an array with all entries having the same key; in this
+case, algorithm <strong>goes quadratic</strong> unless partitioning
+stops on equal keys.</p>
+<p>Stopping on equal keys guarantees <span class="math inline">\(\sim
+N\lg{N}\)</span> compares when all keys are equal.</p>
+<p>However, a more desirable consequence should be that all items equal
+to the partitioning item are in place. Stay tuned for the <strong>3-way
+partitioning technique</strong>.</p>
+<h3 id="shuffle">Shuffle</h3>
+<div class="note info no-icon"><p>Randomly shuffling the array probabilistically guarantee against the
+<strong>worst case</strong>.</p>
+</div>
+<p>The worst case happens when <strong>the array is sorted</strong> (key
+is already in order). This will cost quadratic number of compares: <span class="math inline">\(N+(N-1)+...+1\sim \frac{1}{2}N^2\)</span>.</p>
+<p>However, giving the array a random shuffle could make the probability
+of the worst case happening <strong>negligible</strong>. It is based on
+a math model that can be validated with experiments.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Quick</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">partition</span><span class="params">(Comparable[] a, <span class="type">int</span> lo, <span class="type">int</span> hi)</span> </span><br><span class="line">    &#123; <span class="comment">/* see previous partition code */</span> &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">        StdRandom.shuffle(a);</span><br><span class="line">        sort(a, <span class="number">0</span>, a.length - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a, <span class="type">int</span> lo, <span class="type">int</span> hi)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (hi &lt;= lo)    <span class="keyword">return</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> partition(a, lo, hi);</span><br><span class="line">        sort(a, lo, j - <span class="number">1</span>);</span><br><span class="line">        sort(a, j + <span class="number">1</span>, hi);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The average number of compares to quicksort an array of <span class="math inline">\(N\)</span> <strong>distinct keys</strong> is <span class="math inline">\(\sim 1.39N\lg{N}\)</span>, and the average number
+of exchange is <span class="math inline">\(\sim \frac{1}{3}N\lg
+N\)</span>.</p>
+<p>Though quicksort has 39% more compares than mergesort, it is
+<strong>faster in practice</strong> because of less data movement.</p>
+<h3 id="way-partitioning">3-way Partitioning</h3>
+<p>3-way partitioning (3-way quicksort) improves traditional quicksort
+<strong>in presence of duplicate keys</strong>.</p>
+<ul>
+<li>It put all items equal to the partitioning item <strong>in
+place</strong>.</li>
+<li>It reduces running time from linearithmic to linear <strong>in broad
+class of applications</strong>.</li>
+</ul>
+<p>3-way quicksort partition array into three parts that:</p>
+<ul>
+<li>Entries between <span class="math inline">\(lt\)</span> and <span class="math inline">\(gt\)</span> equal to partition item <span class="math inline">\(v\)</span>.</li>
+<li>No larger entries to left of <span class="math inline">\(lt\)</span>.</li>
+<li>No smaller entries to right of <span class="math inline">\(gt\)</span>.</li>
+</ul>
+<p>To achieve this, we maintain three pointers <span class="math inline">\(lt\)</span>, <span class="math inline">\(gt\)</span>, and <span class="math inline">\(i\)</span> as follows:</p>
+<p>Let <span class="math inline">\(v\)</span> be partitioning item <span class="math inline">\(a_{lo}\)</span>, scanning <span class="math inline">\(i\)</span> from left to right.</p>
+<ul>
+<li><code>a[i]  &lt; v</code>: exchange <code>a[lt]</code> with
+<code>a[i]</code>; increment both <code>lt</code> and
+<code>i</code></li>
+<li><code>a[i]  &gt; v</code>: exchange <code>a[gt]</code> with
+<code>a[i]</code>; decrement <code>gt</code></li>
+<li><code>a[i] == v</code>: increment <code>i</code></li>
+</ul>
+<p>Repeat until <span class="math inline">\(i\)</span> and <span class="math inline">\(gt\)</span> pointers cross.</p>
+<figure>
+<img data-src="3partition.png" alt="3-way partition process in range [lo, hi]">
+<figcaption aria-hidden="true">3-way partition process in range [lo,
+hi]</figcaption>
+</figure>
+<p>See the Java code for 3-way partitioning below; it's much simpler
+than traditional one above:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a, <span class="type">int</span> lo, <span class="type">int</span> hi)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (hi &lt;= lo)    <span class="keyword">return</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">lt</span> <span class="operator">=</span> lo, gt = hi;</span><br><span class="line">    <span class="type">Comparable</span> <span class="variable">v</span> <span class="operator">=</span> a[lo];</span><br><span class="line">    <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> lo;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= gt) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">cmp</span> <span class="operator">=</span> a[i].compareTo(v);</span><br><span class="line">        <span class="keyword">if</span>      (cmp &lt; <span class="number">0</span>)    exch(a, lt++, i++);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (cmp &gt; <span class="number">0</span>)    exch(a, i, gt--);</span><br><span class="line">        <span class="keyword">else</span>                 i++; </span><br><span class="line">    &#125;</span><br><span class="line">    sort(a, lo, lt - <span class="number">1</span>);</span><br><span class="line">    sort(a, gt + <span class="number">1</span>, hi);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>It is proven that 3-way quick sort needs only (linear) <span class="math inline">\(N\)</span> compares when in <strong>best
+case</strong>, but it still needs (quadratic) <span class="math inline">\(\frac{1}{2}N^2\)</span> compares in <strong>worst
+case</strong>.</p>
+<p><br></p>
+<h2 id="quick-select">Quick Select</h2>
+<blockquote>
+<p>Quick Select 算法实际上应用的是快排中的 partition 思想。找数组第
+<span class="math inline">\(k\)</span>
+大的问题居然可以如此优雅的实现，还有着平均线性的优秀时间复杂度，真的令人再次感受到算法的无穷魅力。</p>
+</blockquote>
+<p>The goal of selection problem is, <strong>given an array of <span class="math inline">\(N\)</span> items, find the <span class="math inline">\(k\)</span>-th smallest item.</strong></p>
+<p>A trivial solution is to sort the array, and simply pick the <span class="math inline">\(k\)</span>-th item. It means we find a <span class="math inline">\(N\log N\)</span> upper bound for this problem.
+However, is selection as hard as sorting?</p>
+<p>In fact, there is a <strong>linear-time quick-select</strong>
+algorithm: we partition the array so that,</p>
+<ul>
+<li>Entry <code>a[j]</code> is in place.</li>
+<li>No larger entry to the left of <span class="math inline">\(j\)</span>.</li>
+<li>No smaller entry to the right of <span class="math inline">\(j\)</span>.</li>
+</ul>
+<p>Repeat partitioning in <u><strong>one</strong></u> subarray,
+depending on <span class="math inline">\(j\)</span>;</p>
+<ul>
+<li><code>k &lt; j</code>: set <code>hi</code> to <code>j - 1</code>,
+partitioning the left subarray.</li>
+<li><code>k &gt; j</code>: set <code>lo</code> to <code>j + 1</code>,
+partitioning the right subarray.</li>
+</ul>
+<p>finished when <span class="math inline">\(j\)</span> equals <span class="math inline">\(k\)</span>, return <code>a[k]</code>.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Comparable <span class="title function_">select</span><span class="params">(Comparable[] a, <span class="type">int</span> k)</span> &#123;</span><br><span class="line">    StdRandom.shuffle(a);</span><br><span class="line">    <span class="type">int</span> <span class="variable">lo</span> <span class="operator">=</span> <span class="number">0</span>, hi = a.length - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (hi &gt; lo) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> partition(a, lo, hi);</span><br><span class="line">        <span class="keyword">if</span> (k &gt; j)       lo = j + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (k &lt; j)  hi = j - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span>             <span class="keyword">return</span> a[k];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> a[k];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="note info no-icon"><p>Proposition. Quick-select takes <strong>linear</strong> time on
+average.</p>
+</div>
+<p>Intuitively, each partitioning step splits the array
+<strong>approximately in half</strong>: the total number of compares
+will be <span class="math inline">\(N+N/2+N/4+...+1\sim 2N\)</span>. The
+formal analysis is similar to quicksort.</p>
+<p>Similar to quicksort, quick-select uses quadratic <span class="math inline">\(\sim 1/2N^2\)</span> compares in the <strong>worst
+case</strong>, but the random shuffle provides a probabilistic
+guarantee.</p>
+<p>Just like we use quicksort as a <strong>pratical
+linearithmic-time</strong> algorithm; in most cases, we use quick-select
+as a <strong>pratical linear-time</strong> algorithm.</p>
+<p><br></p>
+<h2 id="binary-heap">Binary Heap</h2>
+<p>堆是一个很重要的数据结构；它是绝大多数优先队列 (priority queue)
+的内部实现；其诞生也使得 <span class="math inline">\(\sim
+N\log{N}\)</span> 的 in-place 排序算法成为可能。(堆排序)
+但是堆排序仍然无法在日常应用中代替快速排序；它常常需要访问相距较远的地址取值，使得其底层的效率较为低下。</p>
+<h3 id="complete-binary-tree">Complete Binary Tree</h3>
+<p>A binary tree is composed by recursively following the
+principles:</p>
+<ul>
+<li>It is empty.</li>
+<li>It is a node with links to left <u><strong>and</strong></u> right
+binary trees.</li>
+</ul>
+<div class="note info no-icon"><p>Complete tree. Perfectly balanced, except for <strong>bottom
+level</strong>.</p>
+</div>
+<figure>
+<img data-src="binarytree.png" alt="Note that the bottom level is NOT balanced">
+<figcaption aria-hidden="true">Note that the bottom level is NOT
+balanced</figcaption>
+</figure>
+<p>An important property. Height of the complete binary tree with <span class="math inline">\(N\)</span> nodes is <span class="math inline">\(\lfloor \lg{N} \rfloor\)</span>.</p>
+<h3 id="heap-properties">Heap Properties</h3>
+<p>A binary heap is a complete binary tree with the following
+properties:</p>
+<ul>
+<li>Largest key is <code>a[1]</code>, which is the <strong>root</strong>
+of binary tree.</li>
+<li>Parent's key <strong>NO</strong> smaller than children's keys.</li>
+</ul>
+<p>We often use arrays to represent a heap, it is simple and do not
+require explicit links.</p>
+<ul>
+<li>Indices start at <span class="math inline">\(1\)</span>.</li>
+<li>Take nodes in <strong>level</strong> order.</li>
+<li>Can use array indices to move through tree.
+<ul>
+<li>Parent of node at <code>k</code> is <code>k/2</code>.</li>
+<li>Children of node at <code>k</code> are at <code>2k</code> and
+<code>2k+1</code>.</li>
+</ul></li>
+</ul>
+<h3 id="promotion-and-insertion">Promotion and Insertion</h3>
+<p><strong>Promotion</strong> is needed when child's key <strong>becomes
+larger</strong> key than its parent's key.</p>
+<blockquote>
+<p>Promotion follows <strong>Peter Principle</strong>: Node promoted to
+level of incompetence.</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">swim</span><span class="params">(<span class="type">int</span> k)</span> &#123;</span><br><span class="line">    <span class="keyword">while</span> (k &gt; <span class="number">1</span> &amp;&amp; less(k / <span class="number">2</span>, k)) &#123;</span><br><span class="line">        exch(k, k / <span class="number">2</span>);</span><br><span class="line">        k /= <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>This allows us to insert new nodes into a heap; We just add the node
+<strong>at end</strong>, then swim it up. It will cost at most <span class="math inline">\(1+\lg{N}\)</span> compares.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insert</span><span class="params">(Key x)</span> &#123;</span><br><span class="line">    pq[++N] = x;</span><br><span class="line">    swim(N);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="demotion-and-deletion">Demotion and Deletion</h3>
+<p><strong>Demotion</strong> is needed when parent's key <strong>becomes
+smaller</strong> than one (or both) of its children's.</p>
+<blockquote>
+<p>Demotion shows <strong>power struggle</strong>: Better subordinate
+gets promoted.</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">sink</span><span class="params">(<span class="type">int</span> k)</span> &#123;    <span class="comment">// top-down reheapify</span></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">2</span> * k &lt;= N) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">2</span> * k;</span><br><span class="line">        <span class="keyword">if</span> (j &lt; N &amp;&amp; less(j, j + <span class="number">1</span>))    ++j;</span><br><span class="line">        <span class="keyword">if</span> (!less(k, j))    <span class="keyword">break</span>;</span><br><span class="line">        exch(k, j);</span><br><span class="line">        k = j;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>This allows us to delete the root (maximum) in a heap; We exchange
+root with the node <strong>at end</strong>, then sink it down. It will
+cost at most <span class="math inline">\(2\lg N\)</span> compares.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Key <span class="title function_">delMax</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">Key</span> <span class="variable">max</span> <span class="operator">=</span> pq[<span class="number">1</span>];</span><br><span class="line">    exch(<span class="number">1</span>, N--);</span><br><span class="line">    sink(<span class="number">1</span>);</span><br><span class="line">    pq[N + <span class="number">1</span>] = <span class="literal">null</span>;    <span class="comment">// prevent loitering</span></span><br><span class="line">    <span class="keyword">return</span> max;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="construction">Construction</h3>
+<p>A trivial way to build a heap given <span class="math inline">\(N\)</span> keys is to <strong>insert them one by
+one</strong> into an empty heap. However, this will cost <span class="math inline">\(\sim N\log{N}\)</span> compares and exchanges.</p>
+<p>In fact, there is a bottom-up linear-time method to construct a heap
+out of <span class="math inline">\(N\)</span> keys.</p>
+<p>For a node with links to left <strong>subheap</strong> and right
+<strong>subheap</strong>, we <u><strong>heapify</strong></u> the node by
+sinking it down. Therefore, from the <strong>last second</strong> level,
+we heapify the nodes level by level.</p>
+<p>The reason why we start from the last second level is that
+<strong>every single node is a subheap of size <span class="math inline">\(1\)</span>.</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Note that it is a 1-based indexing</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> N/<span class="number">2</span>; k &gt;= <span class="number">1</span>; --k) </span><br><span class="line">    sink(a, k, N);</span><br><span class="line"><span class="comment">// Reverse traverse: We could heapify a node only if its two sons are both heaps</span></span><br></pre></td></tr></table></figure>
+<div class="note info no-icon"><p>Proposition. <strong>Bottom-up</strong> heap construction uses
+(linear) <span class="math inline">\(\leq 2N\)</span> compares and
+exchanges.</p>
+</div>
+<p>Assume <span class="math inline">\(S\)</span> is the total number of
+compares and exchanges. Note that the number of compares and exchanges
+when heapifying (sinking down) a node is <strong>proportional to the its
+height</strong> <span class="math inline">\(h\)</span>.</p>
+<p><span class="math inline">\(S=2^0h+2^1(h-1)+2^2(h-2)+...+2^k(h-k)+...+2^{h-1}=2^{h+1}-h-2\)</span>.
+The height of heap is <span class="math inline">\(h=\log{n}\)</span>,
+thus <span class="math inline">\(S=\sim N\)</span>.</p>
+<p><br></p>
+<h2 id="heap-sort">Heap Sort</h2>
+<p>The basic plan for in-place heap sort.</p>
+<ul>
+<li>Construct a max-heap with all <span class="math inline">\(N\)</span>
+keys. (<strong>linear-time</strong> bottom-up heap construction)</li>
+<li>Repeatedly remove the maximum key.
+(<strong>linearithmic-time</strong> sorting down process)</li>
+</ul>
+<p>See the complete Java code below:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Heap</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(Comparable[] a)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> a.length;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> N/<span class="number">2</span>; k &gt;= <span class="number">1</span>; --k)    <span class="comment">// construction</span></span><br><span class="line">            sink(a, k, N);</span><br><span class="line">        <span class="keyword">while</span> (N &gt; <span class="number">1</span>) &#123;         <span class="comment">// sorting down</span></span><br><span class="line">            exch(a, <span class="number">1</span>, N);</span><br><span class="line">            sink(a, <span class="number">1</span>, --N);    <span class="comment">// Leave in array instead of nulling out</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sink</span><span class="params">(Comparable[] a, <span class="type">int</span> k, <span class="type">int</span> N)</span> &#123; <span class="comment">/* as before */</span> &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">less</span><span class="params">(Comparable[] a, <span class="type">int</span> i, <span class="type">int</span> j)</span> &#123; <span class="comment">/* as before */</span> &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">exch</span><span class="params">(Comparable[] a, <span class="type">int</span> i, <span class="type">int</span> j)</span> &#123; <span class="comment">/* as before */</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="note info no-icon"><p>Proposition. Heapsort uses (linearithmic) <span class="math inline">\(\leq 2N\lg{N}\)</span> compares and exchanges.</p>
+</div>
+<p>The significance of heap sort. <strong>In-place</strong> sorting
+algorithm with <span class="math inline">\(N\log{N}\)</span>
+worst-case.</p>
+<ul>
+<li>Mergesort: no, linear extra <strong>space</strong>. (in-place merge
+possible with high constants, not pratical)</li>
+<li>Quicksort: no, quadratic <strong>time</strong> in worst case.</li>
+<li>Heapsort: yes! <strong>Optimal</strong> in both time and space.</li>
+</ul>
+<p>However, there is still an unpratical bottom line for heap sort.</p>
+<ul>
+<li>Inner loop longer than quicksort's.</li>
+<li>Makes poor use of cache memory.</li>
+<li><strong>Not stable</strong>.</li>
+</ul>
+<p><br></p>
+<h2 id="priority-queues">Priority Queues</h2>
+<p>We've introduced several <strong>collections</strong>. They all
+support insert and delete items. What differs them is the item to
+<strong>delete</strong>:</p>
+<ul>
+<li>Stack. Remove the item most recently added.</li>
+<li>Queue. Remove the item least recently added.</li>
+<li>Double-ended queue. Remove the item most or least recently
+added.</li>
+<li><strong>Priority queue</strong>. Remove the <strong>largest</strong>
+(or <strong>smallest</strong>) item.</li>
+</ul>
+<p>There are two kinds of PQs: <strong>elementary PQs</strong>
+(implemented with linked lists or resizing arrays) and
+<strong>heap-based PQs</strong>. See the order of growth of running time
+for PQs with <span class="math inline">\(N\)</span> items:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">implementation</th>
+<th style="text-align: center;">insert</th>
+<th style="text-align: center;">del max</th>
+<th style="text-align: center;">max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">(elementary) unordered array</td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(N\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(N\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;">(elementary) ordered array</td>
+<td style="text-align: center;"><span class="math inline">\(N\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;">binary heap</td>
+<td style="text-align: center;"><span class="math inline">\(\log{N}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\log{N}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\log{N}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>It's natural and efficient to implement PQs with heap. See the
+complete Java code below:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MaxPQ</span>&lt;Key&gt; <span class="keyword">implements</span> <span class="title class_">Iterable</span>&lt;Key&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> Key[] pq;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> n;</span><br><span class="line">    <span class="keyword">private</span> Comparator&lt;Key&gt; comparator;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        Constructors</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MaxPQ</span><span class="params">(<span class="type">int</span> initCapacity)</span> &#123;</span><br><span class="line">        pq = (Key[]) <span class="keyword">new</span> <span class="title class_">Object</span>[initCapacity + <span class="number">1</span>];</span><br><span class="line">        n = <span class="number">0</span>;</span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MaxPQ</span><span class="params">()</span> &#123; <span class="built_in">this</span>(<span class="number">1</span>); &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MaxPQ</span><span class="params">(<span class="type">int</span> initCapacity, Comparator&lt;Key&gt; comparator)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.comparator = comparator;</span><br><span class="line">        pq = (Key[]) <span class="keyword">new</span> <span class="title class_">Object</span>[initCapacity + <span class="number">1</span>];</span><br><span class="line">        n = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MaxPQ</span><span class="params">(Comparator&lt;Key&gt; comparator)</span> &#123; <span class="built_in">this</span>(<span class="number">1</span>, comparator); &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Construct the heap using O(N) bottom-up method</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MaxPQ</span><span class="params">(Key[] keys)</span> &#123;</span><br><span class="line">        n = keys.length;</span><br><span class="line">        pq = (Key[]) <span class="keyword">new</span> <span class="title class_">Object</span>[keys.length + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; ++i)    pq[i + <span class="number">1</span>] = keys[i];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> n/<span class="number">2</span>; k &gt;= <span class="number">1</span>; --k)    sink(k);</span><br><span class="line">        <span class="keyword">assert</span> <span class="title function_">isMaxHeap</span><span class="params">()</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        Priority Queue API (except resize)</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isEmpty</span><span class="params">()</span> &#123; <span class="keyword">return</span> n == <span class="number">0</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">size</span><span class="params">()</span> &#123; <span class="keyword">return</span> n; &#125;</span><br><span class="line">    <span class="keyword">public</span> Key <span class="title function_">max</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (isEmpty())    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NoSuchElementException</span>(<span class="string">&quot;Priority Queue Underflow&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> pq[<span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">resize</span><span class="params">(<span class="type">int</span> capacity)</span> &#123;    <span class="comment">// resizing heap</span></span><br><span class="line">        <span class="keyword">assert</span> capacity &gt; n;</span><br><span class="line">        Key[] temp = (Key[]) <span class="keyword">new</span> <span class="title class_">Object</span>[capacity];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; ++i)    temp[i] = pq[i];</span><br><span class="line">        pq = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insert</span><span class="params">(Key x)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (n == pq.length - <span class="number">1</span>)    resize(<span class="number">2</span> * pq.length);</span><br><span class="line">        pq[++n] = x;</span><br><span class="line">        swim(n);</span><br><span class="line">        <span class="keyword">assert</span> <span class="title function_">isMaxHeap</span><span class="params">()</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> Key <span class="title function_">delMax</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (isEmpty())    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NoSuchElementException</span>(<span class="string">&quot;Priority Queue Underflow&quot;</span>);</span><br><span class="line">        <span class="type">Key</span> <span class="variable">max</span> <span class="operator">=</span> pq[<span class="number">1</span>];</span><br><span class="line">        exch(<span class="number">1</span>, n--);</span><br><span class="line">        sink(<span class="number">1</span>);</span><br><span class="line">        pq[n + <span class="number">1</span>] = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">if</span> ((n &gt; <span class="number">0</span>) &amp;&amp; (n == (pq.length - <span class="number">1</span>) / <span class="number">4</span>))    resize(pq.length / <span class="number">2</span>);</span><br><span class="line">        <span class="keyword">assert</span> <span class="title function_">isMaxHeap</span><span class="params">()</span>;</span><br><span class="line">        <span class="keyword">return</span> max;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        Helper functions to restore the heap invariant</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">swim</span><span class="params">(<span class="type">int</span> k)</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (k &gt; <span class="number">1</span> &amp;&amp; less(k/<span class="number">2</span>, k)) &#123;</span><br><span class="line">            exch(k/<span class="number">2</span>, k);</span><br><span class="line">            k /= <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">sink</span><span class="params">(<span class="type">int</span> k)</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="number">2</span>*k &lt;= n) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">2</span>*k;</span><br><span class="line">            <span class="keyword">if</span> (j &lt; n &amp;&amp; less(j, j+<span class="number">1</span>))    ++j;</span><br><span class="line">            <span class="keyword">if</span> (!less(k, j))    <span class="keyword">break</span>;</span><br><span class="line">            exch(k, j);</span><br><span class="line">            k = j;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        Helper functions for compares and swaps.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">less</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (comparator == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> ((Comparable&lt;Key&gt;) pq[i]).compareTo(pq[j]) &lt; <span class="number">0</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> comparator.compare(pq[i], pq[j]) &lt; <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">exch</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span> &#123;</span><br><span class="line">        <span class="type">Key</span> <span class="variable">swap</span> <span class="operator">=</span> pq[i]; pq[i] = pq[j]; pq[j] = swap;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">isMaxHeap</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">            <span class="keyword">if</span> (pq[i] == <span class="literal">null</span>)    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> n+<span class="number">1</span>; i &lt; pq.length; ++i) &#123;</span><br><span class="line">            <span class="keyword">if</span> (pq[i] != <span class="literal">null</span>)    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (pq[<span class="number">0</span>] != <span class="literal">null</span>)    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> isMaxHeapOrdered(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">isMaxHeapOrdered</span><span class="params">(<span class="type">int</span> k)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (k &gt; n)    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> <span class="number">2</span>*k;</span><br><span class="line">        <span class="type">int</span> <span class="variable">right</span> <span class="operator">=</span> <span class="number">2</span>*k + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (left &lt;= n &amp;&amp; less(k, left))    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">if</span> (left &lt;= n &amp;&amp; less(k, right))   <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> isMaxHeapOrdered(left) &amp;&amp; isMaxHeapOrdered(right);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        Iterator</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">public</span> Iterator&lt;Key&gt; <span class="title function_">iterator</span><span class="params">()</span> &#123; <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">HeapIterator</span>(); &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">HeapIterator</span> <span class="keyword">implements</span> <span class="title class_">Iterator</span>&lt;Key&gt; &#123;</span><br><span class="line">        <span class="keyword">private</span> MaxPQ&lt;Key&gt; copy;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// copy the heap to avoid external mutation in next()</span></span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">HeapIterator</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (comparator == <span class="literal">null</span>)  copy = <span class="keyword">new</span> <span class="title class_">MaxPQ</span>&lt;Key&gt;(size());</span><br><span class="line">            <span class="keyword">else</span>                     copy = <span class="keyword">new</span> <span class="title class_">MaxPQ</span>&lt;Key&gt;(size(), comparator);</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; ++i)    MaxPQ.insert(pq[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">HasNext</span><span class="params">()</span> &#123; <span class="keyword">return</span> !copy.isEmpty(); &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">remove</span><span class="params">()</span>     &#123; <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UnsupportedOperationException</span>(); &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">public</span> Key <span class="title function_">next</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (!hasNext())    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NoSuchElementException</span>();</span><br><span class="line">            <span class="keyword">return</span> copy.delMax();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        Unit test (optional)</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p><a target="_blank" rel="noopener" href="https://www.coursera.org/learn/algorithms-part1">Algorithms,
+Part 1, Princeton University</a>. Lecturer: Robert Sedgewick &amp; Kevin
+Wayne.</p>
+<p>Course textbook:</p>
+<p><em>Algorithms (4th edition)</em>, Sedgewick, R. &amp; Wayne, K.,
+(2011), Addison-Wesley Professional, <a target="_blank" rel="noopener" href="https://algs4.cs.princeton.edu/home/">view</a></p>
+<!-- flag of hidden posts -->
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2023/06/18/algorithm-2/" title="Algorithms I, Princeton University, P2">https://www.thisisxxz.com/2023/06/18/algorithm-2/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | Algorithms I, Princeton University, P2](https://www.thisisxxz.com/2023/06/18/algorithm-2/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Data-Structure/" rel="tag"><i class="fa fa-tag"></i> Data Structure</a>
+              <a href="/tags/Algorithms/" rel="tag"><i class="fa fa-tag"></i> Algorithms</a>
+          </div>
+
+        
+
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/06/18/algorithm-2/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

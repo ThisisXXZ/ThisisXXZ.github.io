@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="这门课将带领我们使用普通的与非门 (NAND gate) 从零开始搭建一个完整的 general-purpose computer；不得不说这真是太极客了，很符合我对计算机科学的酷炫想象。 这门课课时并不长，但涵盖了从最底层的 logic gate，中层的 assembly languages 到顶层的 programming languages 与 OS 等一系列计算机的基本组成部分，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nand2Tetris I - ALU &amp; Memory">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="这门课将带领我们使用普通的与非门 (NAND gate) 从零开始搭建一个完整的 general-purpose computer；不得不说这真是太极客了，很符合我对计算机科学的酷炫想象。 这门课课时并不长，但涵盖了从最底层的 logic gate，中层的 assembly languages 到顶层的 programming languages 与 OS 等一系列计算机的基本组成部分，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/truth.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/multiplex.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/ALU.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/register.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/RAM.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/seqchips.png">
+<meta property="article:published_time" content="2023-09-06T06:42:55.000Z">
+<meta property="article:modified_time" content="2024-04-09T02:39:06.000Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Computer Architecture">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/truth.png">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/09/06/nand2tetris-1/","path":"2023/09/06/nand2tetris-1/","title":"Nand2Tetris I - ALU & Memory"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Nand2Tetris I - ALU & Memory | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#boolean-functions-gate-logic"><span class="nav-number">1.</span> <span class="nav-text">Boolean Functions &amp; Gate
+Logic</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#boolean-identities"><span class="nav-number">1.1.</span> <span class="nav-text">Boolean Identities</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#truth-table-to-boolean-expression"><span class="nav-number">1.2.</span> <span class="nav-text">Truth Table to Boolean
+Expression</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multiplexer"><span class="nav-number">1.3.</span> <span class="nav-text">Multiplexer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#alu-implementation"><span class="nav-number">2.</span> <span class="nav-text">ALU Implementation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#s-complement"><span class="nav-number">2.1.</span> <span class="nav-text">2&#39;s Complement</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#adder"><span class="nav-number">2.2.</span> <span class="nav-text">Adder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#arithmatic-logic-unit"><span class="nav-number">2.3.</span> <span class="nav-text">Arithmatic Logic Unit</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#problematic-combinatorial-logic"><span class="nav-number">3.</span> <span class="nav-text">Problematic Combinatorial
+Logic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sequential-logic-dff"><span class="nav-number">4.</span> <span class="nav-text">Sequential Logic &amp; DFF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memory-units-counters"><span class="nav-number">5.</span> <span class="nav-text">Memory Units &amp; Counters</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Nand2Tetris I - ALU & Memory | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Nand2Tetris I - ALU & Memory
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-09-06 14:42:55" itemprop="dateCreated datePublished" datetime="2023-09-06T14:42:55+08:00">2023-09-06</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>这门课将带领我们使用普通的与非门 (NAND gate) 从零开始搭建一个完整的
+general-purpose
+computer；不得不说这真是太极客了，很符合我对计算机科学的酷炫想象。</p>
+<p>这门课课时并不长，但涵盖了从最底层的 logic gate，中层的 assembly
+languages 到顶层的 programming languages 与 OS
+等一系列计算机的基本组成部分，可谓是具体而微。目标：一个月内 (10.6 之前)
+搞定！</p>
+<span id="more"></span>
+<p>我将该课程中所有 projects 的 HDL 代码实现储存在 <a target="_blank" rel="noopener" href="https://github.com/ThisisXXZ/Nand2Tetris-HebrewU">ThisisXXZ/Nand2Tetris
+- GitHub</a> 中，仅供参考。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="boolean-functions-gate-logic">Boolean Functions &amp; Gate
+Logic</h2>
+<p>这门课确实做到了完全的
+non-prerequisite；本节的内容十分基础，但我还是从中学到了不少新东西。</p>
+<h3 id="boolean-identities">Boolean Identities</h3>
+<p>三个基本的布尔函数：AND <span class="math inline">\(\land\)</span>,
+OR <span class="math inline">\(\lor\)</span> 与 NOT <span class="math inline">\(\lnot\)</span> .一个 Boolean Algebra
+具有以下性质：</p>
+<ul>
+<li>Commutative Laws (交换律).
+<ul>
+<li><span class="math inline">\((x\land y)=(y\land x)\)</span>.</li>
+<li><span class="math inline">\((x\lor y)=(y\lor x)\)</span>.</li>
+</ul></li>
+<li>Associative Laws (结合律).
+<ul>
+<li><span class="math inline">\((x \land (y\land z))=((x\land y)\land
+z)\)</span>.</li>
+<li><span class="math inline">\((x\lor (y\lor z))=((x\lor y)\lor
+z)\)</span>.</li>
+</ul></li>
+<li>Distributive Laws (分配律).
+<ul>
+<li><span class="math inline">\((x\land(y\lor z))=(x\land y)\lor (x\land
+z)\)</span>.</li>
+<li><span class="math inline">\((x\lor (y\land z))=(x\lor y)\land (x\lor
+z)\)</span>.</li>
+</ul></li>
+<li>De Morgan Laws.
+<ul>
+<li><span class="math inline">\(\lnot(x \land y)=(\lnot{x})\lor(\lnot
+y)\)</span>.</li>
+<li><span class="math inline">\(\lnot(x\lor y)=(\lnot{x})\land (\lnot
+y)\)</span>.</li>
+</ul></li>
+</ul>
+<p>应用这些性质，我们能够对任意的 Boolean algebra
+进行化简/等价变形；但需要注意的是，找到给定的 Boolean algebra
+的最简化形式这个问题是 NP-hard 的；不存在解决该问题的 general
+algorithm。</p>
+<h3 id="truth-table-to-boolean-expression">Truth Table to Boolean
+Expression</h3>
+<p>对于一张给定的真值表，如何找到等价的布尔表达式？这个问题很有应用价值。至少当我在写
+project 时发现，这一准则在 chip design
+中作用很大。我们来看一个例子：</p>
+<figure>
+<img data-src="truth.png" alt="A 3-variable boolean function">
+<figcaption aria-hidden="true">A 3-variable boolean
+function</figcaption>
+</figure>
+<p>对于每个值为 1 的行，我们查看对应的变量；若为
+0，则对其取反。最后把所有变量与起来 (保证最后的结果为
+1)：以第一行为例，由于 <span class="math inline">\(x,y,z\)</span> 均为
+0，该行对应的 constraint 为 <span class="math inline">\((\lnot x)\land
+(\lnot{y})\land (\lnot z)\)</span>；而第三行中 <span class="math inline">\(y\)</span> 的值为
+1，我们不需要对其取反，因此对应的 constraint 为 <span class="math inline">\((\lnot{x})\land y\land (\lnot{z})\)</span>.</p>
+<p>把这一步得出的所有 constraints
+再或起来，就得到了这张真值表对应的布尔表达式。</p>
+<h3 id="multiplexer">Multiplexer</h3>
+<p>当初在 ENGG1310 中接触了 multiplexer (多路复用器)
+这个概念，奈何该课实在过于水，只知道猛灌大量的概念，因此时至今日我只对这个名字产生了些许印象。而在
+Nand2Tetris 这门课程中，仅仅用了 10 分钟我就掌握了 multiplexer
+的基本原理，课程质量高下立判。</p>
+<p>multiplexer 与 demultiplexer 其实是一种 chip
+design，其宏观表现即为通讯系统中著名的复用器/解复用器。用 HDL (Hardware
+Description Language) 描述的 multiplexer 与 demultiplexer 的 API
+如下：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** </span></span><br><span class="line"><span class="comment"> * Multiplexor:         * Demultiplexor:</span></span><br><span class="line"><span class="comment"> *                      *                        </span></span><br><span class="line"><span class="comment"> * out = a if sel == 0  * &#123;a, b&#125; = &#123;in, 0&#125; if sel == 0</span></span><br><span class="line"><span class="comment"> *       b otherwise    * &#123;0, in&#125; if sel == 1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">CHIP Mux &#123;</span><br><span class="line">    IN a, b, sel;</span><br><span class="line">    OUT out;</span><br><span class="line">    ...  <span class="comment">// implementation</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">CHIP DMux &#123;</span><br><span class="line">    IN in, sel;</span><br><span class="line">    OUT a, b;</span><br><span class="line">    ...  <span class="comment">// implementation</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>多路复用器根据输入的 <code>sel</code>
+流同时将多路的输入比特流转化为一路的输出比特流；解复用器则是上述过程的逆过程。整个流程是
+simultaneous 的，使得多路信息能在单条信道上同时进行传输。</p>
+<figure>
+<img data-src="multiplex.png" alt="Each sel bit is connected to an oscillator producing alternating 0/1 signals">
+<figcaption aria-hidden="true">Each <code>sel</code> bit is connected to
+an oscillator producing alternating 0/1 signals</figcaption>
+</figure>
+<p><br></p>
+<h2 id="alu-implementation">ALU Implementation</h2>
+<p>这一节我们将使用 project 01 中设计的众多 chips 来构建一个 ALU
+(Arithmatic Logic Unit, 算术逻辑单元)。</p>
+<h3 id="s-complement">2's Complement</h3>
+<div class="note info no-icon"><p>Definition. Represent Negative number <span class="math inline">\(-x\)</span> using the positive number: <span class="math inline">\(2^n-x\)</span>.</p>
+</div>
+<p>这是因为 binary addition 本质上是 modular addition。对于 <span class="math inline">\(n\)</span>-bits 下的 binary addition，overflow bit
+(溢出位) 将会被直接舍弃；这实质上相当于将结果对 <span class="math inline">\(2^n\)</span> 取模。</p>
+<p>这样，计算 substraction <span class="math inline">\(x-y\)</span>
+也变得十分简单：<span class="math inline">\(x-y=x+(-y)\)</span>。给出
+<span class="math inline">\(y\)</span>，我们能通过下面的方式迅速计算出
+<span class="math inline">\(-y\)</span> 的 2s complement：将 <span class="math inline">\(y\)</span> 取反后加 1。这是因为：<span class="math inline">\(2^n-y=1+(2^n-1)-y\)</span>。</p>
+<h3 id="adder">Adder</h3>
+<p>所有算术运算的基础是加法运算：因此，ALU 的一个基础单元是 adder
+(加法器)。此外由于 2's complement 的存在，adder 可以同时完成 addition 与
+substraction。</p>
+<p>一个 binary adder 由一个 half adder (半加器) 与若干个 full adder
+(全加器) 组成：</p>
+<ul>
+<li>Half Adder: 模拟 LSB 的加法运算。输入 <code>a</code>,
+<code>b</code>；输出 <code>out</code> 与 <code>carry</code>.</li>
+<li>Full Adder: 一个 full adder 可以由两个 half adders 组成
+(这也是半加器名称的来源)；模拟普通位的加法运算。输入 <code>a</code>,
+<code>b</code> 与 <code>carry</code> (前一位), 输出 <code>out</code> 与
+<code>carry</code>。</li>
+</ul>
+<p>注意，若 MSB 在进行加法运算后产生了 carry bit，该 carry bit
+将被忽略。</p>
+<h3 id="arithmatic-logic-unit">Arithmatic Logic Unit</h3>
+<p>ALU 的基本模型如下：</p>
+<ul>
+<li>输入 <code>input1</code>, <code>input2</code> 与某个 pre-defined
+arithmetic/logical function <span class="math inline">\(f\)</span>.</li>
+<li>输出 <span class="math inline">\(f(\)</span><code>input1</code>,
+<code>input2</code><span class="math inline">\()\)</span>.</li>
+<li>输出两个 output control bits <code>zr</code> 与
+<code>ng</code>.</li>
+</ul>
+<p>其中，函数 <span class="math inline">\(f\)</span> 被 6 个 input
+control bits 所 specified：<code>zx</code>, <code>nx</code>,
+<code>zy</code>, <code>ny</code>, <code>f</code> 与
+<code>no</code>，每个 input control bit 指定了一种特定的 operation。ALU
+将根据每个 control bit 的值依次执行这一系列
+operations，最后得到的输出将与某个算数/逻辑函数 <span class="math inline">\(f\)</span> 一致。</p>
+<figure>
+<img data-src="ALU.png" alt="Only 18 different fs are defined">
+<figcaption aria-hidden="true">Only 18 different <span class="math inline">\(f\)</span>s are defined</figcaption>
+</figure>
+<p>理论上来说，6 个 input control bits 可以代表 <span class="math inline">\(2^6=64\)</span> 种不同的 <span class="math inline">\(f\)</span>；但本课程中只要求我们实现 18 种。真正的
+ALU 的确能够支持远超 18 种的函数以执行不同的算数/逻辑运算。</p>
+<p>两个 output control bits <code>zr</code>, <code>ng</code> 则用于标识
+ALU 计算结果 <code>out</code> 的性质：</p>
+<ul>
+<li>if <code>out == 0</code> then <code>zr = 1</code>, else
+<code>zr = 0</code>.</li>
+<li>if <code>out &lt;  0</code> then <code>ng = 1</code>, else
+<code>ng = 0</code>.</li>
+</ul>
+<p>当我们构建整个计算机的结构时，这两个 output control bits
+提供的信息将至关重要 [stay tuned].</p>
+<p><br></p>
+<h2 id="problematic-combinatorial-logic">Problematic Combinatorial
+Logic</h2>
+<p>到目前为止，我们构建的所有 chips 都是 <em>combinational chips</em>
+(组合逻辑芯片/器件)；combinatorial logic (组合逻辑)
+意味着芯片任意时刻的稳态输出仅仅取决于该时刻的输入 (i.e., <span class="math inline">\(\mathtt{out}(t)=f(\mathtt{in}(t))\)</span>)。组合逻辑器件使得计算机具有了「计算」(compute
+values) 的能力。</p>
+<p>其实在写 projects 的时候就能感觉到这一点：由于所有 HDL 语句都是
+synchronized 的，chips
+的输入与输出仿佛是同时发生的。像这样，仅仅建立在组合逻辑器件上，缺少时间概念的计算机有两个致命的问题：</p>
+<ul>
+<li>It cannot store and recall values (i.e., it cannot <em>memorize</em>
+things).</li>
+<li>The system state is not stablized.</li>
+</ul>
+<p>第一点很好理解：组合逻辑器件的输出仅仅与该时刻的输入有关，而与前一时刻的状态无关；这一定义本身就与「记忆」这一概念相悖。</p>
+<p>第二点则需要稍微进行说明：虽然组合逻辑器件刻意忽略了时间的概念，但现实中，无论是器件的输入与输出之间还是不同器件间信号的传输都会产生时间造成的误差。举例来说，ALU
+此时需要计算 <span class="math inline">\(x\)</span>, <span class="math inline">\(y\)</span> 两数之和：</p>
+<ul>
+<li><span class="math inline">\(x\)</span> 位于 ALU 临近的某个 register
+[stay tuned]。</li>
+<li><span class="math inline">\(y\)</span> 位于某个比较偏远的 RAM
+register。</li>
+</ul>
+<p>In this case，<span class="math inline">\(x\)</span> 与 <span class="math inline">\(y\)</span> 到达 ALU
+的时间一定会有差异。于是，在产生稳定的 <span class="math inline">\(x+y\)</span> 输出之前，ALU 的输出完全没有意义
+(generate
+garbage)。当器件数较少时这个问题的影响可能不会太大；但计算机是一个含有成千上万个元件的精密结构，如果无法实现
+architecture synchronization，微小的误差将会导致巨大的混沌。</p>
+<p>为了解决以上的问题，一个新的设计逻辑 - sequential logic (时序逻辑)
+应运而生。在该逻辑下，芯片在某时刻的稳态输出不仅取决于当前的输入，还与前一时刻输入形成的<em>状态</em>有关
+(i.e., <span class="math inline">\(\mathtt{state}(t)=f(\mathtt{state}(t-1))\)</span>)。</p>
+<p>注意在 sequential logic 的定义中，我们使用了 state (状态)
+这一概念：这也是其与 combinatorial logic 的最根本区别之一。sequential
+chips (register, binary cell, RAM 等等)
+几乎都与计算机的存储功能相关。</p>
+<p><br></p>
+<h2 id="sequential-logic-dff">Sequential Logic &amp; DFF</h2>
+<p>如何实现 sequential
+logic，亦即，如何使一个元件在某时刻的输出能够被前一个时刻的状态影响？如何定义所谓的「时刻」与「状态」？sequential
+logic 又如何解决 combinatorial logic 产生的两个致命问题？</p>
+<p>接下来我们介绍实现 sequential logic 的两个重要基本元件：The
+<em>Clock</em> (钟) 与 Flips-Flops (正反器/触发器).</p>
+<p><u><em>The Clock</em></u>. The Clock 是一个不断在 0-1
+(<em>tick-tock</em>) 两信号中交替的 oscillator。该信号 (0-<em>tick</em>,
+1-<em>tock</em>) 同时向所有 sequential chips 进行广播，宣布当前的 clock
+phase。从某个 tick 开始到随后的 tock 结束之间的时间称为 <em>cycle</em>
+(周期)，每个周期代表了一个离散的时间单位 (discrete time
+unit)，即所谓的「时刻」。</p>
+<p><u><em>Flip-Flops.</em></u> Data Flip-Flops (DFF) 是能够实现
+sequential logic 的最小单位。DFF 接受从 master clock
+传输的隐藏输入，从而具有了时刻的概念。在此基础上，DFF 能够实现 <span class="math inline">\(\mathtt{out}(t)=\mathtt{in}(t-1)\)</span>:
+即，在某时刻 <span class="math inline">\(t\)</span> 的 DFF 能够输出其在
+<span class="math inline">\(t-1\)</span> 时刻接受的输入，<span class="math inline">\(\mathtt{in}(t-1)\)</span> 的值从时刻 <span class="math inline">\(t-1\)</span> 到时刻 <span class="math inline">\(t\)</span> 被 DFF 所「记忆」。</p>
+<p>被 DFF 所记忆的值，我们称之为 DFF 的「状态」
+(state)。从另一个角度来看，DFF 创造的是一个长度为 <span class="math inline">\(1\)</span> (或者说，<span class="math inline">\(1\)</span> 个时刻) 的时间延迟 (inherent time
+delay)：本该在 <span class="math inline">\(t-1\)</span> 时输出的值直到
+<span class="math inline">\(t\)</span> 时刻才被输出。</p>
+<p>DFF 是由两个互相连接的与非门构建的。由 DFF 开始，我们能够构建从
+register 到 RAM 的所有记忆器件。DFF 与 sequential logic 给予了计算机
+maintain values 的能力 - 组合逻辑束手无策的第一个问题得以解决。</p>
+<p>第二个问题的解决则更加巧妙：我们计算出计算机中相距最远的两个元件传输信号所需的时间，并将
+clock 控制的时间单元周期 <em>cycle</em>
+设为稍微高于该时间的某个值。这样我们能够保证在每个 cycle 的末尾 (即
+<em>tock</em> 信号结束的瞬间) 所有元件的输出都是稳定且有意义的。</p>
+<p><br></p>
+<h2 id="memory-units-counters">Memory Units &amp; Counters</h2>
+<p>接下来我们以 DFF 为基础构建一系列经典的记忆单元：registers
+(寄存器)，RAM units (random-access memory unit, 随机访问存储器) 与
+program counters (程序计数器)。</p>
+<p><u><em>Single-bit register</em></u> (a.k.a., Bit, binary cell).
+Behavior: <span class="math inline">\(\mathtt{out}(t)=\mathtt{out}(t-1)\)</span>。该函数恰恰是对「记忆」这一功能的定义。如何使用仅能执行
+<span class="math inline">\(\mathtt{out}(t)=\mathtt{in}(t-1)\)</span> 的
+DFF 构造出这样的元件？</p>
+<figure>
+<img data-src="register.png" alt="Register implementation">
+<figcaption aria-hidden="true">Register implementation</figcaption>
+</figure>
+<ul>
+<li>[write] If <span class="math inline">\(\mathtt{load}(t-1)\)</span>
+then <span class="math inline">\(\mathtt{out}(t)=\mathtt{in}(t-1)\)</span>.</li>
+<li>[read] else <span class="math inline">\(\mathtt{out}(t)=\mathtt{out}(t-1)\)</span>.</li>
+</ul>
+<p>某个 cycle 内 register 的工作流程如下：在每个 tick 期间，Mux 根据
+load 选择保留或更新 DFF 的 state；在接下来的 tock 期间，DFF 产生稳定的
+out 输出；同时，在 register 内部，该输出值将被导入 Mux 以便其在下一个
+cycle 开始时进行选择。</p>
+<p>一系列的 single-bit registers 串联形成 multiple-bits registers。宽度
+<em>width</em> 是 register 的基本参数之一，它描述了某个 register
+最多能够容纳的比特数。在本课程内一个典型的 multiple-bits register 的宽度
+<span class="math inline">\(w\)</span> 是 16。</p>
+<p><u><em>RAM unit</em>.</u> 一个 RAM 单元由若干个 <span class="math inline">\(w\)</span>-bits registers/RAMs (with smaller size)
+与附加的 direct (random) access logic 组成，它支持根据输入的地址 address
+直接对对应的 register 执行读/写操作。</p>
+<p>direct (random) access logic 一般由一对 <code>DMux</code> 与
+<code>Mux</code> chips 组成：<code>DMux</code> 根据传入的 address 把
+load 分配给对应的 registers/RAMs，<code>Mux</code>
+则收集相应的输出。这一 logic 的存在使得元件具有了 random access
+(随机访问) 的性质：我们能够<em>直接</em>
+访问任意存储单元中的数据，而不需要按照顺序逐个读取。</p>
+<figure>
+<img data-src="RAM.png" alt="word is a w-bit content">
+<figcaption aria-hidden="true"><em>word</em> is a <span class="math inline">\(w\)</span>-bit content</figcaption>
+</figure>
+<p>RAM 的基本参数包括 width 与 size: width 与组成其的 register 的 width
+(即 word 的长度) 一致；size 则描述其含有的 registers
+的个数。现代计算机的 RAMs 一般是 32/64-bit-wide 的；但其 size
+却是数以亿计的。</p>
+<p><u><em>Program counters</em>.</u> counter (计数器) 是一种特殊的
+sequential
+chip；它所维护的状态在每个时间单元内都会产生一定的变化，遵循函数 <span class="math inline">\(\mathtt{out}(t)=\mathtt{out}(t-1)+c\)</span>；其中
+<span class="math inline">\(c\)</span> 一般为 <span class="math inline">\(1\)</span>。Counter 在现代计算机中扮演的角色是指令
+(instructions)
+储存器：在当前的程序中它总是储存下一个将被执行的指令的地址。</p>
+<p>一般来说，counter 需要支持以下三种操作 (我们把 counter 维护的 state
+称为 "count")：</p>
+<ul>
+<li>resetting the count to zero.</li>
+<li>loading a new counting base.</li>
+<li>incrementing/decrementing the count by 1.</li>
+</ul>
+<p><u><em>Sequential chips design</em>.</u> 现在我们能对 sequential
+chips 下这样的定义：A sequential chip is a chip that embeds one or more
+DFF gates, either directly or indirectly.</p>
+<p>DFF 的存在使 sequential chips 具有了 maintain state (memory units) 与
+operate on state (counters) 的能力。技术上来说，<u>DFF 通过引入时间延迟
+(inherent time delay) 使得 feedback loop 成为了可能</u>。</p>
+<figure>
+<img data-src="seqchips.png" alt="Sequential chips always consist of a layer of DFFs sandwiched between combinational logic layers">
+<figcaption aria-hidden="true">Sequential chips always consist of a
+layer of DFFs sandwiched between combinational logic layers</figcaption>
+</figure>
+<p>feedback loop 是一种 (directly or indirecrly)
+将某个元件的输出作为其自身输入的结构。sequential chips
+能够「记忆」的本质，即为通过 feedback loop
+持续不断的将上一时刻的输出重新作为该时刻的输入。</p>
+<p>这一结构只有在 DFF
+创造的时间延迟基础上才得以存在；也就是说，combinatorial logic 下
+feedback loop 的存在是非法的。由于时间的概念被忽视，combinational chips
+的输入与输出可以看成是同时发生的：因此将其输出作为其自身输入将会产生
+mutual dependence 的悖论。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p>Lecturer: Prof. Shimon Shocken, Prof. Noam Nisan.</p>
+<p>Course textbook:</p>
+<p>(Nisan N., Schocken S., 2008) <a target="_blank" rel="noopener" href="https://www.amazon.com/Elements-Computing-Systems-Principles-ebook/dp/B004HHORGA/">The
+Element of Computing Systems: Building a Modern Computer from First
+Principles.</a></p>
+
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2023/09/06/nand2tetris-1/" title="Nand2Tetris I - ALU &amp; Memory">https://www.thisisxxz.com/2023/09/06/nand2tetris-1/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | Nand2Tetris I - ALU & Memory](https://www.thisisxxz.com/2023/09/06/nand2tetris-1/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Computer-Architecture/" rel="tag"><i class="fa fa-tag"></i> Computer Architecture</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/08/22/moment-230816/" rel="prev" title="从秦皇岛到承德">
+                  <i class="fa fa-chevron-left"></i> 从秦皇岛到承德
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/09/14/nand2tetris-2/" rel="next" title="Nand2Tetris I - Machine Language">
+                  Nand2Tetris I - Machine Language <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/09/06/nand2tetris-1/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

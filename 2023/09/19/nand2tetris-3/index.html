@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="The computer that will emerge from this project will be as simple as possible, but not simpler.   终于来到了最激动人心的时刻：这一节我们将使用之前构造的所有芯片 (ALU, memory, counter...)，构造一个能够运行任意以 Hack assembly language 编写的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nand2Tetris I - Computer Architecture">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/09/19/nand2tetris-3/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="The computer that will emerge from this project will be as simple as possible, but not simpler.   终于来到了最激动人心的时刻：这一节我们将使用之前构造的所有芯片 (ALU, memory, counter...)，构造一个能够运行任意以 Hack assembly language 编写的">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/09/19/nand2tetris-3/vonNeumann.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/09/19/nand2tetris-3/CPU.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/09/19/nand2tetris-3/memory.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2023/09/19/nand2tetris-3/computer.png">
+<meta property="article:published_time" content="2023-09-19T08:09:03.000Z">
+<meta property="article:modified_time" content="2024-07-07T08:45:24.000Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Computer Architecture">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.thisisxxz.com/2023/09/19/nand2tetris-3/vonNeumann.png">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2023/09/19/nand2tetris-3/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/09/19/nand2tetris-3/","path":"2023/09/19/nand2tetris-3/","title":"Nand2Tetris I - Computer Architecture"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Nand2Tetris I - Computer Architecture | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#the-stored-program-concept"><span class="nav-number">1.</span> <span class="nav-text">The Stored Program Concept</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#von-neumann-architecture"><span class="nav-number">1.1.</span> <span class="nav-text">von Neumann architecture</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#harvard-architecture"><span class="nav-number">1.2.</span> <span class="nav-text">Harvard Architecture</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#central-processing-unit"><span class="nav-number">2.</span> <span class="nav-text">Central Processing Unit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memory"><span class="nav-number">3.</span> <span class="nav-text">Memory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#here-it-comes---hack-computer"><span class="nav-number">4.</span> <span class="nav-text">Here it comes - Hack
+Computer!</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/09/19/nand2tetris-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Nand2Tetris I - Computer Architecture | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Nand2Tetris I - Computer Architecture
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-09-19 16:09:03" itemprop="dateCreated datePublished" datetime="2023-09-19T16:09:03+08:00">2023-09-19</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote class="blockquote-center">
+<p>The computer that will emerge from this project will be as simple as
+possible, but not simpler.</p>
+
+</blockquote>
+<p>终于来到了最激动人心的时刻：这一节我们将使用之前构造的所有芯片 (ALU,
+memory, counter...)，构造一个能够运行任意以 Hack assembly language
+编写的程序的，真正意义上的 general-purpose computer！</p>
+<span id="more"></span>
+<p>下面我们介绍的构造方案基于本课程中定义的 Hack
+computer；因此在细节方面与现代计算机可能有所差异。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="the-stored-program-concept">The Stored Program Concept</h2>
+<p>计算机之所以能从其他机械中脱颖而出，最为突出的原因在于其无与伦比的「万用性」(versatile)。但这万用性又从何而来呢？</p>
+<ul>
+<li>[theoretically] Church-Turing Thesis 指出图灵机是一种 universal
+computing machine。</li>
+<li>[practically] von Neumann architecture 是所有现代计算机的蓝图。</li>
+</ul>
+<p><em>universal Turing machine</em> (1936) 与 <em>von Neumann
+machine</em> (1945) 殊途同归，它们不约而同地 (存疑?) 提出了 stored
+program 这一天才般的想法。而这一想法又是那样的简洁与优雅：</p>
+<div class="note info no-icon"><p>The program's code is temporarily stored and manipulated in the
+computer's memory, <em>just like data</em>, becoming what is known as
+"software".</p>
+</div>
+<p>在理论计算机领域中，Turing machine
+占有很高的地位；但本节课是基于实践的。因此，我们将着重介绍 von Neumann
+architecture，并亲自见证这一诞生在近 80
+年前的概念是如何指导我们今天的计算机设计的。</p>
+<h3 id="von-neumann-architecture">von Neumann architecture</h3>
+<p>von Neumann architecture 基于 central processing unit (CPU)
+这一核心元件。它：</p>
+<ul>
+<li>interacting with a <em>memory</em> device.</li>
+<li>receiving data from some <em>input</em> device.</li>
+<li>sending data to some <em>output</em> device.</li>
+</ul>
+<p>von Neumann architecture 的核心 - stored program concept 则体现在
+memory device 中：it stores not only the data that the computer
+manipulates, but also the very instructions that tell the computer what
+to do.</p>
+<figure>
+<img data-src="vonNeumann.png" alt="the von Neumann architecture">
+<figcaption aria-hidden="true">the von Neumann architecture</figcaption>
+</figure>
+<h3 id="harvard-architecture">Harvard Architecture</h3>
+<p>von Neumann architecture 有许多不同的 variants，其中 Harvard
+architecture 是比较著名的一个。</p>
+<p>Harvard architecture 强调 data 与 instruction
+在计算机中的分离储存；也就是说，data 与 instruction 各自占据 memory
+中两块独立的连续空间，拥有各自独立的 data bus，两者井水不犯河水。</p>
+<p>正因如此，在 Harvard architecture 中，CPU 能够同时获取 data 与
+instruction；而 pure von Neumann architecture 则无法做到。</p>
+<p>Hack computer 采用的是 Harvard Architecture；详见 machine language
+一节中对 hardware platform 的描述，我们对 memory 作出了 data memory 与
+instruction memory 这两种明确的区分。</p>
+<p><br></p>
+<h2 id="central-processing-unit">Central Processing Unit</h2>
+<p>计算机的核心，当之无愧的艺术品。它把我们之前构造的所有硬件巧妙地联系在一起：</p>
+<figure>
+<img data-src="CPU.png" alt="CPU diagram">
+<figcaption aria-hidden="true">CPU diagram</figcaption>
+</figure>
+<p>我们来看看 CPU 是如何完成经典的 <em>fetch-decode-execute cycle</em>
+的：</p>
+<p><em>Tick</em> 时刻 (<u>Tick 时刻 combinatorial chips
+瞬间完成工作，sequential chips 仅仅向外输出其状态</u>)：</p>
+<ul>
+<li>外部控制器 (reset button): 向 CPU 中的 Program Counter (PC) 传入
+<code>reset</code>。</li>
+<li>Mux16 (leftmost): 根据 <code>c=instruction[15]</code> 选择将
+instruction 或 ALU output 传入 A register 中。
+<ul>
+<li><code>c=0</code>: 该指令是一个 <span class="math inline">\(A\)</span>-指令 <code>@val</code>，表示将
+<code>val</code> 存入 A register。</li>
+<li><code>c=1</code>: 该指令是一个 <span class="math inline">\(C\)</span>-指令
+<code>dest=comp; jump</code>。将上一循环计算的结果传入 A register。</li>
+</ul></li>
+<li>A register: 向外 (ALU, <code>addressM</code>) 输出其状态
+<code>A</code>。</li>
+<li>D register: 向外 (ALU) 输出其状态 <code>D</code>。</li>
+<li>Mux16 (rightmost): 根据 <code>c=instruction[12]</code> 选择将
+<code>M</code> 或 <code>A</code> 传入 ALU 中。
+<ul>
+<li>这是 Hack machine language 的规定：<span class="math inline">\(C\)</span>-指令的第 12 位指定了计算式
+<code>comp</code> 中的其中一个操作数是 <code>A</code> 还是
+<code>M</code> (另一个操作数一定是 <code>D</code>)。</li>
+<li><u>若传入的指令是 <span class="math inline">\(A\)</span>-指令，接下来的环节都没有意义</u>；但也不会产生任何影响。</li>
+</ul></li>
+<li>ALU: 根据 <code>instruction</code> 的对应 bits 确定计算式
+<code>comp</code> 并对传入的 <code>D</code> 与
+<code>A</code>/<code>M</code> 执行相应的计算。向 <code>outM</code> 与 D
+register 输出计算的结果。输出 control bits <code>zr</code> 与
+<code>ng</code>。</li>
+<li>PC: 向外输出其状态 <code>PC</code>。</li>
+<li>A register logic: A register 的 combinatorial logic 根据
+<code>instruction</code> 的对应 bits 计算出 <span class="math inline">\(C\)</span>-指令中 <code>dest</code> 是否为
+<code>A</code>，用 <code>load_A</code> 表示并将该值传入 A register
+中。</li>
+<li>D register logic: D register 的 combinatorial logic 根据
+<code>instruction</code> 的对应 bits 计算出 <span class="math inline">\(C\)</span>-指令中 <code>dest</code> 是否为
+<code>D</code>，用 <code>load_D</code> 表示并将该值传入 D register
+中。</li>
+<li>PC logic: counter 的 combinatorial logic 根据 <code>zr</code> 与
+<code>ng</code> 计算出 <span class="math inline">\(C\)</span>-指令中
+conditional jump 的 conditional，用 <code>load_PC</code>
+表示并将该值传入 PC 中。</li>
+<li>以上是所有 internal chips 在 tick 时刻的工作状态。就 CPU
+整体而言，其与外部的交互：
+<ul>
+<li>read from memory [stay tuned]: 向 CPU 输入 <code>instruction</code>,
+data <code>inM</code>。</li>
+<li>write to memory [stay tuned]: 向 memory 中传入 <code>outM</code>,
+<code>writeM</code> 与 <code>addressM</code>。</li>
+</ul></li>
+</ul>
+<p><em>Tock</em> 时刻 (<u>Tock 时刻 sequential chips 根据
+<code>load</code> 改变自身状态</u>)：</p>
+<ul>
+<li>A register: 根据 <code>load_A</code> 决定是否将 Mux16 (leftmost)
+传入的值进行存储。继续向外输出。</li>
+<li>D register: 根据 <code>load_D</code> 决定是否将 ALU
+计算的结果进行存储。继续向外输出。</li>
+<li>PC: 从 register A 中获取 address，从 PC logic 中获取 conditional
+<code>load_PC</code>，从外部获取
+reset。根据这三个值决定是否与如何改变自身状态之后继续向外输出。
+<ul>
+<li>If <code>reset=1</code>, <code>PC=[0]</code>. (重启)</li>
+<li>Else if <code>load_PC=1</code>, <code>PC=address</code>. (执行
+<code>jump</code>)</li>
+<li>Else <code>PC++</code>. (正常的程序执行流程，自增)</li>
+</ul></li>
+</ul>
+<p>一切都联系起来了：在一个时刻内，CPU 在 A register 的指导下从 data
+memory 中获取数据，在 PC 的指导下从 instruction memory 中获取指令 (
+<em>fetch</em> )，在 Mux16 等一系列 combinatorial logic 中完成解码 (
+<em>decode</em> )，在 ALU 与 PC 中执行对应的指令 ( <em>execute</em>
+)。</p>
+<p>除了感叹设计者的匠心独运之外，任何评价都是多余的。</p>
+<p><br></p>
+<h2 id="memory">Memory</h2>
+<p>memory 本质上是一个 24KRAM chip，由若干较小的 RAM chips 与对应的
+combinatorial logic 组成。注意到 screen，keyboard 这些 IO devices 也是
+memory 的一部分，这得益于 IO devices 与 RAM 底层实现的统一性 (见
+hardware platform)。screen 与 keyboard 的地址是被 pre-defined 的。</p>
+<figure>
+<img data-src="memory.png" alt="data memory: including RAM and memory-mapped I/O devices">
+<figcaption aria-hidden="true">data memory: including RAM and
+memory-mapped I/O devices</figcaption>
+</figure>
+<p>以上是 Hack computer <em>data</em> memory
+的示意图。这一系列的输入/输出对应 CPU 中的：</p>
+<ul>
+<li><code>in</code>: 对应 CPU 输出的
+<code>outM</code>，被写入的值（如有）。</li>
+<li><code>address</code>: 对应 CPU 输出的
+<code>addressM</code>，访问/被写入的 memory cell 的地址。</li>
+<li><code>load</code>: 对应 CPU 输出的
+<code>writeM</code>，决定是否执行写入操作
+(若不写入，则单纯进行访问)。</li>
+<li><code>out</code>: 对应 CPU 输入的
+<code>inM</code>，输出对应地址中的值。</li>
+</ul>
+<p>CPU 具有对 data memory 的读/写权限，但 instruction memory
+是只读的。因此 instruction memory 是一个仅有两个接口的 ROM chip。</p>
+<ul>
+<li><code>in</code>: 对应 CPU 输出的 <code>PC</code>，根据
+<code>PC</code> 指定的地址访问 ROM 中对应的指令。</li>
+<li><code>out</code>: 对应 CPU 输入的
+<code>instruction</code>，输出对应地址中的指令。</li>
+</ul>
+<p>我们仅仅能通过一些外部方式对 instruction memory 进行更改 (i.e., load
+a new program)；例如，替换整片 ROM chip。</p>
+<p><br></p>
+<h2 id="here-it-comes---hack-computer">Here it comes - Hack
+Computer!</h2>
+<p>即使是最原始，最简陋的原核细胞，也能在漫长的进化中构建出种种精妙的生物体；如果说
+register
+的出现象征着原核细胞的诞生，那么计算机的构建无疑是相当于人类诞生的奇迹。</p>
+<p>然而，在 CPU 与 memory
+已经构建完毕的基础上，这个奇迹显得那么的自然而简洁：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">CHIP Computer &#123;</span><br><span class="line"></span><br><span class="line">    IN reset;</span><br><span class="line"></span><br><span class="line">    PARTS:</span><br><span class="line">    CPU(inM=outMem, instruction=outROM, reset=reset, </span><br><span class="line">        outM=inMem, writeM=wriMem, addressM=addrMem, pc=inROM);</span><br><span class="line">    Memory(in=inMem, load=wriMem, address=addrMem, out=outMem);</span><br><span class="line">    ROM32K(address=inROM, out=outROM);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure>
+<img data-src="computer.png" alt="Hack computer">
+<figcaption aria-hidden="true">Hack computer</figcaption>
+</figure>
+<p>注意这个特殊的外部输入 <code>reset</code>: 我们可以将其理解为重启键
+(reset bottom)。每当我们按下重启键，<code>PC</code> 将被设定为
+<code>[0]</code>；这代表着我们将中止目前的进程，从头开始执行 ROM chip
+中存储的程序。</p>
+<p>庆贺吧！Hack computer
+就此诞生了！我们亲手创造了一个「奇迹」；它将能够完成 physical world
+中一切能被观测到的计算任务，是名副其实的 universal computing
+machine。你之所以能够看到这篇文章，也是神迹的一部分。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p>Lecturer: Prof. Shimon Shocken, Prof. Noam Nisan.</p>
+<p>Course textbook:</p>
+<p>(Nisan N., Schocken S., 2008) <a target="_blank" rel="noopener" href="https://www.amazon.com/Elements-Computing-Systems-Principles-ebook/dp/B004HHORGA/">The
+Element of Computing Systems: Building a Modern Computer from First
+Principles.</a></p>
+
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2023/09/19/nand2tetris-3/" title="Nand2Tetris I - Computer Architecture">https://www.thisisxxz.com/2023/09/19/nand2tetris-3/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | Nand2Tetris I - Computer Architecture](https://www.thisisxxz.com/2023/09/19/nand2tetris-3/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Computer-Architecture/" rel="tag"><i class="fa fa-tag"></i> Computer Architecture</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/09/16/japn1088/" rel="prev" title="中学以来の再会 — 霓虹语入门">
+                  <i class="fa fa-chevron-left"></i> 中学以来の再会 — 霓虹语入门
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/09/27/master-theorem/" rel="next" title="貴方が私の Master Theorem か">
+                  貴方が私の Master Theorem か <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/09/19/nand2tetris-3/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="COMP2501 的 Ting 老教授完美符合我对上了年纪的老师的印象：佛系，人好，但上课催眠；加之 R 语言更近似于一种脚本型语言，semantics 相对简单 (甚至绝大部分操作都是在 REPL 中进行的)，遂决定自学。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Introduction to DS - R 语言初探之壹">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/09/21/COMP2501-1/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="COMP2501 的 Ting 老教授完美符合我对上了年纪的老师的印象：佛系，人好，但上课催眠；加之 R 语言更近似于一种脚本型语言，semantics 相对简单 (甚至绝大部分操作都是在 REPL 中进行的)，遂决定自学。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-09-21T11:05:21.000Z">
+<meta property="article:modified_time" content="2024-07-07T08:46:54.000Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Programming Languages">
+<meta property="article:tag" content="Data Science">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2023/09/21/COMP2501-1/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/09/21/COMP2501-1/","path":"2023/09/21/COMP2501-1/","title":"Introduction to DS - R 语言初探之壹"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Introduction to DS - R 语言初探之壹 | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#the-very-basics"><span class="nav-number">1.</span> <span class="nav-text">The Very Basics</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#data-types"><span class="nav-number">2.</span> <span class="nav-text">Data Types</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#basic-data-types"><span class="nav-number">2.1.</span> <span class="nav-text">Basic Data Types</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#data-frames"><span class="nav-number">2.2.</span> <span class="nav-text">Data Frames</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vectors"><span class="nav-number">2.3.</span> <span class="nav-text">Vectors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#factors"><span class="nav-number">2.4.</span> <span class="nav-text">Factors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lists"><span class="nav-number">2.5.</span> <span class="nav-text">Lists</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#matrices"><span class="nav-number">2.6.</span> <span class="nav-text">Matrices</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vectors-1"><span class="nav-number">3.</span> <span class="nav-text">Vectors</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#creating-vectors"><span class="nav-number">3.1.</span> <span class="nav-text">Creating Vectors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#names"><span class="nav-number">3.2.</span> <span class="nav-text">Names</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sequences"><span class="nav-number">3.3.</span> <span class="nav-text">Sequences</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#subsetting"><span class="nav-number">3.4.</span> <span class="nav-text">Subsetting</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rescaling"><span class="nav-number">3.5.</span> <span class="nav-text">Rescaling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#two-vectors"><span class="nav-number">3.6.</span> <span class="nav-text">Two Vectors</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#coercion"><span class="nav-number">4.</span> <span class="nav-text">Coercion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sorting"><span class="nav-number">5.</span> <span class="nav-text">Sorting</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#sort"><span class="nav-number">5.1.</span> <span class="nav-text">sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#order"><span class="nav-number">5.2.</span> <span class="nav-text">order</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#max-which.max"><span class="nav-number">5.3.</span> <span class="nav-text">max &amp;
+which.max</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rank"><span class="nav-number">5.4.</span> <span class="nav-text">rank</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#indexing"><span class="nav-number">6.</span> <span class="nav-text">Indexing</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#subsetting-with-logicals"><span class="nav-number">6.1.</span> <span class="nav-text">Subsetting with logicals</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#logical-operators"><span class="nav-number">6.2.</span> <span class="nav-text">Logical operators</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#which"><span class="nav-number">6.3.</span> <span class="nav-text">which</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#match"><span class="nav-number">6.4.</span> <span class="nav-text">match</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#in"><span class="nav-number">6.5.</span> <span class="nav-text">%in%</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#basic-plots"><span class="nav-number">7.</span> <span class="nav-text">Basic plots</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#plot"><span class="nav-number">7.1.</span> <span class="nav-text">plot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hist"><span class="nav-number">7.2.</span> <span class="nav-text">hist</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#boxplot"><span class="nav-number">7.3.</span> <span class="nav-text">boxplot</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#programming-basics"><span class="nav-number">8.</span> <span class="nav-text">Programming Basics</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#if-else-statement"><span class="nav-number">8.1.</span> <span class="nav-text">if-else statement</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#any-all"><span class="nav-number">8.2.</span> <span class="nav-text">any &amp; all</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#defining-functions"><span class="nav-number">8.3.</span> <span class="nav-text">Defining functions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#for-loops"><span class="nav-number">8.4.</span> <span class="nav-text">For-loops</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vectorizations-functionals"><span class="nav-number">9.</span> <span class="nav-text">Vectorizations &amp;
+Functionals</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">10.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/09/21/COMP2501-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Introduction to DS - R 语言初探之壹 | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Introduction to DS - R 语言初探之壹
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-09-21 19:05:21" itemprop="dateCreated datePublished" datetime="2023-09-21T19:05:21+08:00">2023-09-21</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>COMP2501 的 Ting
+老教授完美符合我对上了年纪的老师的印象：佛系，人好，但上课催眠；加之 R
+语言更近似于一种脚本型语言，semantics 相对简单 (甚至绝大部分操作都是在
+REPL 中进行的)，遂决定自学。</p>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="the-very-basics">The Very Basics</h2>
+<p><u>Objects.</u> We use the term <em>object</em> to describe stuff
+that is stored in R. Variables are examples, but objects can also be
+more complicated entities such as functions.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">a <span class="operator">&lt;-</span> 1</span><br><span class="line">b <span class="operator">&lt;-</span> 1</span><br><span class="line"><span class="built_in">c</span> <span class="operator">&lt;-</span> <span class="operator">-</span><span class="number">1</span></span><br><span class="line">a</span><br><span class="line"><span class="comment">#&gt; [1] 1</span></span><br><span class="line">print<span class="punctuation">(</span>a<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] 1</span></span><br><span class="line">ls<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;a&quot; &quot;b&quot; &quot;c&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>ls()</code> function displays all objects in the environment
+(workspace).</li>
+<li>use <code>rm(a)</code> to remove object <code>a</code> from current
+environment.</li>
+</ul>
+<p><u>Built-in Functions</u>.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">args<span class="punctuation">(</span><span class="built_in">log</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; function (x, base = exp(1))</span></span><br><span class="line"><span class="comment">#&gt; NULL</span></span><br><span class="line"><span class="built_in">log</span><span class="punctuation">(</span><span class="number">8</span><span class="punctuation">,</span> base <span class="operator">=</span> <span class="number">2</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] 3</span></span><br><span class="line"><span class="built_in">log</span><span class="punctuation">(</span>x <span class="operator">=</span> <span class="number">8</span><span class="punctuation">,</span> base <span class="operator">=</span> <span class="number">2</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] 3</span></span><br><span class="line"><span class="built_in">log</span><span class="punctuation">(</span>base <span class="operator">=</span> <span class="number">2</span><span class="punctuation">,</span> x <span class="operator">=</span> <span class="number">8</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] 3</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>use <code>help("log")</code> or <code>?log</code> to display manual
+page for function <code>log()</code>.</li>
+<li><span class="math inline">\(=\)</span> v.s. <span class="math inline">\(\leftarrow\)</span>. <code>=</code> is to
+<em>specify</em> arguments, <code>&lt;-</code> is to <em>assign</em>
+values to variables. When arguments' names are used, the order is no
+longer important.</li>
+</ul>
+<p><br></p>
+<h2 id="data-types">Data Types</h2>
+<h3 id="basic-data-types">Basic Data Types</h3>
+<ul>
+<li>numeric. e.g., <code>a &lt;- 1</code>.</li>
+<li>integer (subset of numeric). e.g., <code>b &lt;- 1L</code>.</li>
+<li>character. e.g., <code>c &lt;- "hello"</code>.</li>
+<li>logical. e.g., <code>d &lt;- TRUE</code>. (capitalized
+<code>TRUE</code> &amp; <code>FALSE</code>)</li>
+</ul>
+<h3 id="data-frames">Data Frames</h3>
+<p>The most common way of storing a dataset in R is in a <em>data
+frame</em>. Think of it as a table:</p>
+<ul>
+<li>rows: observations.</li>
+<li>columns: different <em>variables</em> reported for each
+observation.</li>
+</ul>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">library<span class="punctuation">(</span>dslabs<span class="punctuation">)</span></span><br><span class="line">data<span class="punctuation">(</span>murders<span class="punctuation">)</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>murders<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;data.frame&quot;</span></span><br><span class="line">str<span class="punctuation">(</span>murders<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; &#x27;data.frame&#x27;:    51 obs. of  5 variables:</span></span><br><span class="line"><span class="comment">#&gt; $ state : chr &quot;Alabama&quot; &quot;Alaska&quot; &quot;Arizona&quot; &quot;Arkansas&quot; ...</span></span><br><span class="line"><span class="comment">#&gt; $ abb : chr &quot;AL&quot; &quot;AK&quot; &quot;AZ&quot; &quot;AR&quot; ...</span></span><br><span class="line"><span class="comment">#&gt; ...</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>library()</code> 可理解为 <code>import</code> (Java, Python)
+或 <code>include</code> (C).</li>
+<li><code>data(murders)</code> 将数据集 <code>murders</code>
+导入当前的环境中。</li>
+<li><code>str()</code> function is useful for finding out more about the
+structure of an object.</li>
+</ul>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">names</span><span class="punctuation">(</span>murders<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;state&quot; &quot;abb&quot; &quot;region&quot; &quot;population&quot; &quot;total&quot;</span></span><br><span class="line">murders<span class="operator">$</span>population</span><br><span class="line"><span class="comment">#&gt;  [1]  4779736   710231  6392017  2915918 37253956  5029196  3574097</span></span><br><span class="line"><span class="comment">#&gt;  [8]   897934   601723 19687653  9920000  1360301  1567582 12830632</span></span><br><span class="line"><span class="comment">#&gt; [15]  ...</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>names()</code> 函数返回 data frame 的所有 variables' (columns)
+names.</li>
+<li><code>[data_frame_name]$[variable_name]</code>: 使用 accessor
+<code>$</code> 取出对应的 column。</li>
+</ul>
+<h3 id="vectors">Vectors</h3>
+<p>The object <code>murder$population</code> is not one number but
+several. We call these types of objects <em>vectors</em>.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pop <span class="operator">&lt;-</span> murder<span class="operator">$</span>population</span><br><span class="line"><span class="built_in">length</span><span class="punctuation">(</span>pop<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] 51</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>pop<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;numeric&quot;</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>murder<span class="operator">$</span>state<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;character&quot;</span></span><br></pre></td></tr></table></figure>
+<p>注意到这里有一个 counter-intuitive 的细节：vector <code>pop</code>
+的类型是 <code>numeric</code>，而不是某个类似
+<code>numeric vector</code> 或 <code>numeric[]</code> 的东西；这是因为在
+R 中，a single number is technically a vector of length <span class="math inline">\(1\)</span>.</p>
+<p>由此可见，与我们之前接触过的其他语言不同，在 R 语言中 the most basic
+objects available to store data are <em>vectors</em>.
+这样的规定带有很强烈的 data wrangling
+色彩：在进行数据处理时，最基本的单位并非某个单独的数据单元，而是一组
+(通常情况下) 具有相同特征的数据集。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">z <span class="operator">&lt;-</span> 3 <span class="operator">==</span> <span class="number">2</span></span><br><span class="line">print<span class="punctuation">(</span>z<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] FALSE</span></span><br><span class="line"><span class="built_in">length</span><span class="punctuation">(</span>z<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; 1</span></span><br></pre></td></tr></table></figure>
+<p>We shall discuss vectors in full detail later.</p>
+<h3 id="factors">Factors</h3>
+<div class="note info no-icon"><p>Factors are useful for storing categorical data.</p>
+</div>
+<p>当 data frame 的某一列中 distinct elements 的数量较少时，我们可以使用
+factors 来节省空间。举例来说，<code>murders</code> 的
+<code>region</code> 列中只有四种元素：Northeast, South, North Central 与
+West。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>murders<span class="operator">$</span>region<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;factor&quot;</span></span><br><span class="line">levels<span class="punctuation">(</span>murders<span class="operator">$</span>region<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;Northeast&quot; &quot;South&quot; &quot;North Central&quot; &quot;West&quot;</span></span><br></pre></td></tr></table></figure>
+<p>We use <code>levels()</code> to display all <em>levels</em> of a
+certain factor object.</p>
+<ul>
+<li>In the background, R stores these <em>levels</em> as integers and
+keeps a map to keep track of the labels. This is more memory-efficient
+than storing all the characters.</li>
+<li>The default in R is for the levels to follow alphabetical
+order.</li>
+</ul>
+<p>The function <code>reorder()</code> lets us change the order of the
+levels of a factor variable (e.g., <code>region</code>) based on a
+summary computed on a numertic vector (e.g., <code>value</code>):</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">region <span class="operator">&lt;-</span> murders<span class="operator">$</span>region</span><br><span class="line">value <span class="operator">&lt;-</span> murders<span class="operator">$</span>total</span><br><span class="line">region <span class="operator">&lt;-</span> reorder<span class="punctuation">(</span>region<span class="punctuation">,</span> value<span class="punctuation">,</span> FUN <span class="operator">=</span> <span class="built_in">sum</span><span class="punctuation">)</span></span><br><span class="line">levels<span class="punctuation">(</span>region<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;Northeast&quot; &quot;North Central&quot; &quot;West&quot; &quot;South&quot;</span></span><br></pre></td></tr></table></figure>
+<p>The above code takes the sum of the total murders in each region, and
+reorders the factor following these sums. The new order shows that
+<code>Northeast</code> has the least murders while <code>South</code>
+has the most.</p>
+<h3 id="lists">Lists</h3>
+<p>Data frames are special case of lists. (data frame
+本质上是一个含有若干长度相同的 vectors 或 factors 的 list) Lists are
+useful because you can store any combination of different types (and
+vectors can't).</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">record <span class="operator">&lt;-</span> <span class="built_in">list</span><span class="punctuation">(</span>name <span class="operator">=</span> <span class="string">&quot;John Doe&quot;</span><span class="punctuation">,</span> </span><br><span class="line">               student_id <span class="operator">=</span> <span class="number">1234</span><span class="punctuation">,</span> </span><br><span class="line">               grade <span class="operator">=</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">95</span><span class="punctuation">,</span> <span class="number">82</span><span class="punctuation">,</span> <span class="number">91</span><span class="punctuation">,</span> <span class="number">97</span><span class="punctuation">,</span> <span class="number">93</span><span class="punctuation">)</span><span class="punctuation">,</span> </span><br><span class="line">               final_grade <span class="operator">=</span> <span class="string">&quot;A&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>record<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;list&quot;</span></span><br><span class="line">record<span class="operator">$</span>student_id</span><br><span class="line"><span class="comment">#&gt; [1] 1234</span></span><br><span class="line">record<span class="punctuation">[[</span><span class="string">&quot;student_id&quot;</span><span class="punctuation">]</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; [1] 1234</span></span><br></pre></td></tr></table></figure>
+<p>与在 data frame 中一致，我们使用
+<code>[list_name]$[variable_name]</code> 来访问 list 中对应的
+field。除此之外，<code>[[]]</code> + "name"
+也能达到同样的目的。有时我们会遇到 lists without names:</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">record2 <span class="operator">&lt;-</span> <span class="built_in">list</span><span class="punctuation">(</span><span class="string">&quot;John Doe&quot;</span><span class="punctuation">,</span> <span class="number">1234</span><span class="punctuation">)</span></span><br><span class="line">record2<span class="punctuation">[[</span><span class="number">1</span><span class="punctuation">]</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;John Doe&quot;</span></span><br></pre></td></tr></table></figure>
+<p>我们可以把这种 lists 视作能够储存不同类型数据的 vectors。由于这种
+lists 的 fields 是匿名的，我们无法通过 <code>$</code> + name
+进行访问。Instead，我们使用 <code>[[]]</code> + index
+来访问对应下标的元素。</p>
+<p>注意 R 语言遵循 1-indexed rule: 下标从 1 而非从 0 开始！</p>
+<h3 id="matrices">Matrices</h3>
+<ul>
+<li>Matrices are two-dimensional (like data frames).</li>
+<li>All entries in matrices have to be all the same type (like
+vectors).</li>
+</ul>
+<p>Compared to matrices, data frames are much more useful for storing
+data. Yet matrices have a major advantage over data frames: we can
+perform <em>matrix algebra operations</em> on them.</p>
+<p>使用 <code>matrix()</code> 函数创建一个新的 matrix；使用
+<code>as.data.frame()</code> 函数方便的将 matrix 转化为 data frame。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mat <span class="operator">&lt;-</span> matrix<span class="punctuation">(</span><span class="number">1</span><span class="operator">:</span><span class="number">12</span><span class="punctuation">,</span> <span class="number">4</span><span class="punctuation">,</span> <span class="number">3</span><span class="punctuation">)</span></span><br><span class="line">mat</span><br><span class="line"><span class="comment">#&gt;      [,1] [,2] [,3]</span></span><br><span class="line"><span class="comment">#&gt; [1,]    1    5    9</span></span><br><span class="line"><span class="comment">#&gt; [2,]    2    6   10</span></span><br><span class="line"><span class="comment">#&gt; [3,]    3    7   11</span></span><br><span class="line"><span class="comment">#&gt; [4,]    4    8   12</span></span><br><span class="line">as.data.frame<span class="punctuation">(</span>mat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt;   V1 V2 V3</span></span><br><span class="line"><span class="comment">#&gt; 1  1  5  9</span></span><br><span class="line"><span class="comment">#&gt; 2  2  6 10</span></span><br><span class="line"><span class="comment">#&gt; 3  3  7 11</span></span><br><span class="line"><span class="comment">#&gt; 4  4  8 12</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>[]</code> ，我们可以随心所欲地进行 matrix
+slicing。若被切割的是 matrix 中的某「条」(one-demensional)
+数据，返回的将是一个 vector；若是某「块」(two-dimensional)
+数据，返回的将是一个 matrix。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mat<span class="punctuation">[</span><span class="number">2</span><span class="punctuation">,</span> <span class="number">3</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; [1] 10</span></span><br><span class="line">mat<span class="punctuation">[</span><span class="number">2</span><span class="punctuation">,</span> <span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; [1]  2  6 10</span></span><br><span class="line">mat<span class="punctuation">[</span><span class="punctuation">,</span> <span class="number">3</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; [1]  9 10 11 12</span></span><br><span class="line">mat<span class="punctuation">[</span><span class="number">1</span><span class="operator">:</span><span class="number">2</span><span class="punctuation">,</span> <span class="number">2</span><span class="operator">:</span><span class="number">3</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt;      [,1] [,2]</span></span><br><span class="line"><span class="comment">#&gt; [1,]    5    9</span></span><br><span class="line"><span class="comment">#&gt; [2,]    6   10</span></span><br></pre></td></tr></table></figure>
+<p>此外，相似的 slicing 方法也可以用在 data frame 中：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">data<span class="punctuation">(</span><span class="string">&quot;murders&quot;</span><span class="punctuation">)</span></span><br><span class="line">murders<span class="punctuation">[</span><span class="number">25</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;Mississippi&quot;</span></span><br><span class="line">murders<span class="punctuation">[</span><span class="number">2</span><span class="operator">:</span><span class="number">3</span><span class="punctuation">,</span> <span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt;     state abb region population total</span></span><br><span class="line"><span class="comment">#&gt; 2  Alaska  AK   West     710231    19</span></span><br><span class="line"><span class="comment">#&gt; 3 Arizona  AZ   West    6392017   232</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="vectors-1">Vectors</h2>
+<div class="note info no-icon"><p>In R, the most basic objects available to store data are
+<em>vectors</em>. As we have seen, complex datasets can usually be
+broken down into components that are vectors.</p>
+</div>
+<h3 id="creating-vectors">Creating Vectors</h3>
+<p>We can create vectors using the function <code>c()</code>, which
+stands for <em>concatenate</em>.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">grades <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">95</span><span class="punctuation">,</span> <span class="number">82</span><span class="punctuation">,</span> <span class="number">91</span><span class="punctuation">,</span> <span class="number">97</span><span class="punctuation">,</span> <span class="number">93</span><span class="punctuation">)</span></span><br><span class="line">grades</span><br><span class="line"><span class="comment">#&gt; [1] 95 82 91 97 93</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>grades<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;numeric&quot;</span></span><br></pre></td></tr></table></figure>
+<p>与 lists 不同，vectors 中所有 entries
+的类型必须是一致的。当我们尝试使用 <code>c()</code>
+创建一个含有不同类型元素的 vectors 时，lower-level types (e.g., numeric)
+将转化为 higher-level types (e.g., character)。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">grades <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">95</span><span class="punctuation">,</span> <span class="number">82</span><span class="punctuation">,</span> <span class="string">&quot;91&quot;</span><span class="punctuation">,</span> <span class="string">&quot;97&quot;</span><span class="punctuation">,</span> <span class="string">&quot;93&quot;</span><span class="punctuation">)</span></span><br><span class="line">grades</span><br><span class="line"><span class="comment">#&gt; [1] &quot;95&quot; &quot;82&quot; &quot;91&quot; &quot;97&quot; &quot;93&quot;</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>grades<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;character&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="names">Names</h3>
+<p>与 lists 一样，我们可以为 vectors 中的 entries 命名，并对具名的
+vectors 调用 <code>names()</code> 函数。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">codes <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span>italy <span class="operator">=</span> <span class="number">380</span><span class="punctuation">,</span> canada <span class="operator">=</span> <span class="number">124</span><span class="punctuation">,</span> egypt <span class="operator">=</span> <span class="number">818</span><span class="punctuation">,</span> <span class="number">86</span><span class="punctuation">)</span></span><br><span class="line">codes</span><br><span class="line"><span class="comment">#&gt;  italy canada  egypt </span></span><br><span class="line"><span class="comment">#&gt;    380    124    818     86</span></span><br><span class="line"><span class="built_in">names</span><span class="punctuation">(</span>codes<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;italy&quot; &quot;canada&quot; &quot;egypt&quot; &quot;&quot;</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>codes<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;numeric&quot;</span></span><br></pre></td></tr></table></figure>
+<p>在为 vectors 的 entries 命名时将变量名用引号 <code>""</code> 括起来
+makes no difference。此外，我们还能使用 <code>names()</code> 函数来
+assign names - 即，names can be given later after being defined.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">codes <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">380</span><span class="punctuation">,</span> <span class="number">124</span><span class="punctuation">,</span> <span class="number">818</span><span class="punctuation">)</span></span><br><span class="line">country <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;italy&quot;</span><span class="punctuation">,</span> <span class="string">&quot;canada&quot;</span><span class="punctuation">,</span> <span class="string">&quot;egypt&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="built_in">names</span><span class="punctuation">(</span>codes<span class="punctuation">)</span> <span class="operator">&lt;-</span> country</span><br><span class="line">codes</span><br><span class="line"><span class="comment">#&gt;  italy canada  egypt </span></span><br><span class="line"><span class="comment">#&gt;    380    124    818</span></span><br></pre></td></tr></table></figure>
+<h3 id="sequences">Sequences</h3>
+<p>使用 sequences 来迅速创建一个元素符合特定规律的 vector。Python
+中也有类似的 idiom，很方便。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">seq<span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span> <span class="number">10</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1]  1  2  3  4  5  6  7  8  9 10</span></span><br><span class="line">seq<span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span> <span class="number">10</span><span class="punctuation">,</span> <span class="number">2</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] 1 3 5 7 9</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>seq<span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span> <span class="number">10</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;integer&quot;</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>seq<span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span> <span class="number">10</span><span class="punctuation">,</span> <span class="number">2</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;numeric&quot;</span></span><br></pre></td></tr></table></figure>
+<p>只有当未指定 jump length 时 (即使用默认的 jump length
+1)，<code>seq()</code> 函数返回的 vector 类型才是 integer；其余情况下
+<code>seq()</code> 函数返回的 vector 都是 numeric 类型的。</p>
+<p><code>seq(a, b)</code> 与 <code>a:b</code> 这一表达等价：但
+<code>a:b</code> 这种表达只能生成 jump length 为 1 的 vectors。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="operator">:</span><span class="number">10</span></span><br><span class="line"><span class="comment">#&gt; [1]  1  2  3  4  5  6  7  8  9 10</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span><span class="number">1</span><span class="operator">:</span><span class="number">10</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;integer&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="subsetting">Subsetting</h3>
+<p>我们使用 single square brackets <code>[]</code> + name/index 来访问
+vector 中的 entry。神奇的是，You can get more than one entry by using a
+multi-entry vector referring to indexes/names.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">codes<span class="punctuation">[</span><span class="number">2</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; canada</span></span><br><span class="line"><span class="comment">#&gt;    124</span></span><br><span class="line">codes<span class="punctuation">[</span><span class="built_in">c</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span> <span class="number">3</span><span class="punctuation">)</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; italy egypt </span></span><br><span class="line"><span class="comment">#&gt;   380   818</span></span><br><span class="line">codes<span class="punctuation">[</span><span class="number">1</span><span class="operator">:</span><span class="number">2</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt;  italy canada </span></span><br><span class="line"><span class="comment">#&gt;    380    124</span></span><br><span class="line">codes<span class="punctuation">[</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;egypt&quot;</span><span class="punctuation">,</span> <span class="string">&quot;italy&quot;</span><span class="punctuation">)</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; egypt italy </span></span><br><span class="line"><span class="comment">#&gt;   818   380</span></span><br></pre></td></tr></table></figure>
+<h3 id="rescaling">Rescaling</h3>
+<p>In R, arithmetic operations on vectors occur
+<em>element-wise</em>.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">a <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">0.01</span><span class="punctuation">,</span> <span class="number">0.02</span><span class="punctuation">,</span> <span class="number">0.03</span><span class="punctuation">,</span> <span class="number">0.04</span><span class="punctuation">,</span> <span class="number">0.05</span><span class="punctuation">)</span></span><br><span class="line">a <span class="operator">*</span> <span class="number">100</span></span><br><span class="line"><span class="comment">#&gt; [1] 1 2 3 4 5</span></span><br><span class="line">a <span class="operator">*</span> <span class="number">100</span> <span class="operator">-</span> <span class="number">5</span></span><br><span class="line"><span class="comment">#&gt; [1] -4 -3 -2 -1 0</span></span><br></pre></td></tr></table></figure>
+<h3 id="two-vectors">Two Vectors</h3>
+<p>Two vectors <code>a</code>, <code>b</code>:</p>
+<ul>
+<li>等长：<code>c &lt;- a + b</code> 意味着 <span class="math inline">\(c_i=a_i+b_i\)</span>.</li>
+<li>不等长：出现 <em>recycle</em>；较短的 vector 发生 recycle 直至两
+vectors 等长 <span class="math inline">\(\to\)</span> 第一种情况。</li>
+</ul>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">x <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span> <span class="number">2</span><span class="punctuation">,</span> <span class="number">3</span><span class="punctuation">)</span></span><br><span class="line">y <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">10</span><span class="punctuation">,</span> <span class="number">20</span><span class="punctuation">,</span> <span class="number">30</span><span class="punctuation">)</span></span><br><span class="line">z <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">10</span><span class="punctuation">,</span> <span class="number">20</span><span class="punctuation">,</span> <span class="number">30</span><span class="punctuation">,</span> <span class="number">40</span><span class="punctuation">,</span> <span class="number">50</span><span class="punctuation">,</span> <span class="number">60</span><span class="punctuation">,</span> <span class="number">70</span><span class="punctuation">)</span></span><br><span class="line">x<span class="operator">+</span>y</span><br><span class="line"><span class="comment">#&gt; [1] 11 22 33</span></span><br><span class="line">x<span class="operator">+</span>z</span><br><span class="line"><span class="comment">#&gt; [1] 11 22 33 41 52 63 71</span></span><br><span class="line"><span class="comment">#&gt; Warning message: </span></span><br><span class="line"><span class="comment">#&gt; In x + z : longer object length is not a multiple of shorter object length</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="coercion">Coercion</h2>
+<p><em>coercion</em> is an attempt by R to be flexible with data types.
+When an entry does not match expected type, some of the prebuilt R
+functions try to guess what was meant before throwing errors.</p>
+<p>R 以放弃 type safeness 为代价换取了 type flexiblity. 几个 coercion
+的例子 (有些我们已经接触过了)：</p>
+<ul>
+<li>when coercion is possible: R <em>coerced</em> lower-level data into
+higher-level data.</li>
+<li>when coercion is impossible: Not availables (NA) is introduced.</li>
+</ul>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">x <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span> <span class="string">&quot;canada&quot;</span><span class="punctuation">,</span> <span class="number">3</span><span class="punctuation">)</span></span><br><span class="line">x</span><br><span class="line"><span class="comment">#&gt; [1] &quot;1&quot; &quot;canada&quot; &quot;3&quot;</span></span><br><span class="line"><span class="built_in">class</span><span class="punctuation">(</span>x<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; &quot;character&quot;</span></span><br></pre></td></tr></table></figure>
+<p>以上是 possible coercion 的例子：R 为了遵循「vector
+内类型一致」这一规则，将 numeric 类型的数据强制转换为了 character
+类型。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;1&quot;</span><span class="punctuation">,</span> <span class="string">&quot;b&quot;</span><span class="punctuation">,</span> <span class="string">&quot;3&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="built_in">as.numeric</span><span class="punctuation">(</span>x<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; Warning: NAs introduced by coercion</span></span><br><span class="line"><span class="comment">#&gt; [1]  1 NA  3</span></span><br></pre></td></tr></table></figure>
+<p>当某种强制类型转换不可能完成时 (impossible coercion: 我们无法将一个
+character 类型的数据转化为 numeric 型)，伴随着一个轻飘飘的 warning
+信息，<code>NA</code> 这一特殊的值将被引入。</p>
+<p><br></p>
+<h2 id="sorting">Sorting</h2>
+<p>data wrangling 当然是离不开 sorting 的；接下来我们来介绍一下 R
+中提供了哪些方便的 sorting features。</p>
+<h3 id="sort"><code>sort</code></h3>
+<p>The function <code>sort()</code> sorts a vector in increasing order;
+but it does not give us any additional information.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">library<span class="punctuation">(</span>dslabs<span class="punctuation">)</span></span><br><span class="line">data<span class="punctuation">(</span>murders<span class="punctuation">)</span></span><br><span class="line">sort<span class="punctuation">(</span>murders<span class="operator">$</span>total<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt;  [1]    2    4    5    5    7    8   11   12   12   16   19   21   22</span></span><br><span class="line"><span class="comment">#&gt; [14]   27   32   36   38   53   63   65   67   84   93   93   97   97</span></span><br><span class="line"><span class="comment">#&gt; [27]   99  111  116  118  120  135  142  207  219  232  246  250  286</span></span><br><span class="line"><span class="comment">#&gt; [40]  293  310  321  351  364  376  413  457  517  669  805 1257</span></span><br></pre></td></tr></table></figure>
+<h3 id="order"><code>order</code></h3>
+<p>The function <code>order()</code> returns the <em>vector of
+indexes</em> that sorts the input vector.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">x</span><br><span class="line"><span class="comment">#&gt; [1] 31 4 15 92 65</span></span><br><span class="line">order<span class="punctuation">(</span>x<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] 2 3 1 5 4</span></span><br><span class="line">index <span class="operator">&lt;-</span> order<span class="punctuation">(</span>x<span class="punctuation">)</span></span><br><span class="line">x<span class="punctuation">[</span>index<span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; [1] 4 15 31 65 92</span></span><br></pre></td></tr></table></figure>
+<p>由于 R 中 vector 的 index 可以是一个 multi-entry
+vector，我们通过这种方式来实现 <code>sort()</code>。<code>order()</code>
+能做到的不仅如此：If we want to order the states by murders,
+<code>sort()</code> alone can not accomplish the task.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ind <span class="operator">&lt;-</span> order<span class="punctuation">(</span>murders<span class="operator">$</span>total<span class="punctuation">)</span></span><br><span class="line">murders<span class="operator">$</span>abb<span class="punctuation">[</span>ind<span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt;  [1] &quot;VT&quot; &quot;ND&quot; &quot;NH&quot; &quot;WY&quot; &quot;HI&quot; &quot;SD&quot; &quot;ME&quot; &quot;ID&quot; &quot;MT&quot; &quot;RI&quot; &quot;AK&quot; &quot;IA&quot; &quot;UT&quot;</span></span><br><span class="line"><span class="comment">#&gt; [14] &quot;WV&quot; &quot;NE&quot; &quot;OR&quot; &quot;DE&quot; &quot;MN&quot; &quot;KS&quot; &quot;CO&quot; &quot;NM&quot; &quot;NV&quot; &quot;AR&quot; &quot;WA&quot; &quot;CT&quot; &quot;WI&quot;</span></span><br><span class="line"><span class="comment">#&gt; [27] &quot;DC&quot; &quot;OK&quot; &quot;KY&quot; &quot;MA&quot; &quot;MS&quot; &quot;AL&quot; &quot;IN&quot; &quot;SC&quot; &quot;TN&quot; &quot;AZ&quot; &quot;NJ&quot; &quot;VA&quot; &quot;NC&quot;</span></span><br><span class="line"><span class="comment">#&gt; [40] &quot;MD&quot; &quot;OH&quot; &quot;MO&quot; &quot;LA&quot; &quot;IL&quot; &quot;GA&quot; &quot;MI&quot; &quot;PA&quot; &quot;NY&quot; &quot;FL&quot; &quot;TX&quot; &quot;CA&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>First obtain the index that orders the vectors according to murder
+totals.</li>
+<li>Then index the state names vector.</li>
+</ul>
+<p>由此可见，加州 <code>CA</code> 的 total murders 数量最多，佛蒙特州
+<code>VT</code> 数量最少。</p>
+<h3 id="max-which.max"><code>max</code> &amp;
+<code>which.max</code></h3>
+<p>分别返回最大值的 value 与 index。同理还有 <code>min()</code> 与
+<code>which.min()</code>。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">max</span><span class="punctuation">(</span>murders<span class="operator">$</span>total<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] 1257</span></span><br><span class="line">i_max <span class="operator">&lt;-</span> which.max<span class="punctuation">(</span>murders<span class="operator">$</span>total<span class="punctuation">)</span></span><br><span class="line">murders<span class="operator">$</span>state<span class="punctuation">[</span>i_max<span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;California&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="rank"><code>rank</code></h3>
+<p><code>rank()</code> 函数返回给定 vector 中所有 entries 的排名。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">31</span><span class="punctuation">,</span> <span class="number">4</span><span class="punctuation">,</span> <span class="number">15</span><span class="punctuation">,</span> <span class="number">92</span><span class="punctuation">,</span> <span class="number">65</span><span class="punctuation">)</span></span><br><span class="line">rank<span class="punctuation">(</span>x<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] 3 1 2 5 4</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="indexing">Indexing</h2>
+<p>R provides a powerful and convenient way of indexing vector. We can,
+for example, subset a vector based on properties of another vector. In
+expression <code>a[b]</code>, <code>b</code> could be:</p>
+<ul>
+<li>vector of indexes. [见 5.2 order 一节]</li>
+<li>logical vector. [stay tuned]</li>
+</ul>
+<h3 id="subsetting-with-logicals">Subsetting with logicals</h3>
+<p>很好理解。vector <code>a</code> 与 logical vector <code>b</code>;
+<code>a[b]</code> means:</p>
+<ul>
+<li>等长：<span class="math inline">\(a_i\)</span> remains only when
+<span class="math inline">\(b_i=\mathtt{TRUE}\)</span>.</li>
+<li><code>a</code> 的长度大于 <code>b</code>: <code>b</code> 发生
+recycle，与 <code>a</code> 等长后 <span class="math inline">\(\to\)</span> 第一种情况。</li>
+<li><code>a</code> 的长度小于 <code>b</code>: 超出的部分将引入
+<code>NA</code>.</li>
+</ul>
+<p>下面来看看我们是如何通过 logical subsetting 找到所有 murder rate 小于
+0.71 的州的：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">murder_rate <span class="operator">&lt;-</span> murders<span class="operator">$</span>total <span class="operator">/</span> murders<span class="operator">$</span>population <span class="operator">*</span> <span class="number">100000</span></span><br><span class="line">logical_ind <span class="operator">&lt;-</span> murder_rate <span class="operator">&lt;</span> <span class="number">0.71</span></span><br><span class="line">murders<span class="operator">$</span>state<span class="punctuation">[</span>logical_ind<span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;Hawaii&quot;        &quot;Iowa&quot;          &quot;New Hampshire&quot; &quot;North Dakota&quot; </span></span><br><span class="line"><span class="comment">#&gt; [5] &quot;Vermont&quot;</span></span><br><span class="line"><span class="built_in">sum</span><span class="punctuation">(</span>logical_ind<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] 5</span></span><br></pre></td></tr></table></figure>
+<h3 id="logical-operators">Logical operators</h3>
+<p>In R, both <code>&amp;</code> and <code>&amp;&amp;</code> are logical
+AND but not bitwise AND. But always use <code>&amp;</code> since
+<code>&amp;&amp;</code> assumes length 1 on input and only compares
+once.</p>
+<p>下面这段代码能够找到所有 murder rate 小于等于 1 的西部州。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">west <span class="operator">&lt;-</span> murders<span class="operator">$</span>region <span class="operator">==</span> <span class="string">&quot;West&quot;</span></span><br><span class="line">safe <span class="operator">&lt;-</span> murder_rate <span class="operator">&lt;=</span> <span class="number">1</span></span><br><span class="line">ind <span class="operator">&lt;-</span> west <span class="operator">&amp;</span> safe</span><br><span class="line">murders<span class="operator">$</span>state<span class="punctuation">[</span>ind<span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; [1] &quot;Hawaii&quot;  &quot;Idaho&quot;   &quot;Oregon&quot;  &quot;Utah&quot;    &quot;Wyoming&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="which"><code>which</code></h3>
+<p><code>which()</code> 函数能够返回给定 logical vector 中所有值为
+<code>TRUE</code> 的 entries 的 indexes。因此，对于某个 logical vector
+<code>b</code>, <code>a[b]</code> 与 <code>a[which(b)]</code>
+得到的结果通常是相同的。(logical subsetting v.s. index subsetting)</p>
+<p>假设我们想要查找加利福尼亚州的 murder rate：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">logical_ind <span class="operator">&lt;-</span> murders<span class="operator">$</span>state <span class="operator">==</span> <span class="string">&quot;California&quot;</span></span><br><span class="line">ind <span class="operator">&lt;-</span> which<span class="punctuation">(</span>logical_ind<span class="punctuation">)</span></span><br><span class="line">murder_rate<span class="punctuation">[</span>logical_ind<span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; [1] 3.374138</span></span><br><span class="line">murder_rate<span class="punctuation">[</span>ind<span class="punctuation">]</span></span><br><span class="line"><span class="comment">#&gt; [1] 3.374138</span></span><br></pre></td></tr></table></figure>
+<h3 id="match"><code>match</code></h3>
+<p>假设我们想要同时查找不止一个州的 murder rate；此时可以使用函数
+<code>match()</code>。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">match<span class="punctuation">(</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;New York&quot;</span><span class="punctuation">,</span> <span class="string">&quot;Florida&quot;</span><span class="punctuation">,</span> <span class="string">&quot;Taxas&quot;</span><span class="punctuation">)</span><span class="punctuation">,</span> murders<span class="operator">$</span>state<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] 33 10 44</span></span><br></pre></td></tr></table></figure>
+<p>但其实使用 logical vectors 之间的逻辑或 <code>|</code>
+也能达成目的，只是略显臃肿：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">which<span class="punctuation">(</span>murders<span class="operator">$</span>state <span class="operator">==</span> <span class="string">&quot;New York&quot;</span> <span class="operator">|</span> murders<span class="operator">$</span>state <span class="operator">==</span> <span class="string">&quot;Florida&quot;</span> <span class="operator">|</span> murders<span class="operator">$</span>state <span class="operator">==</span> <span class="string">&quot;Texas&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] 10 33 44</span></span><br></pre></td></tr></table></figure>
+<h3 id="in"><code>%in%</code></h3>
+<p>If rather than an index we want a logical that tells us whether or
+not each element of a first vector is in a second, we can use the
+function <code>%in%</code>.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;Boston&quot;</span><span class="punctuation">,</span> <span class="string">&quot;Dakota&quot;</span><span class="punctuation">,</span> <span class="string">&quot;Washington&quot;</span><span class="punctuation">)</span> <span class="operator">%in%</span> murder<span class="operator">$</span>state</span><br><span class="line"><span class="comment">#&gt; [1] FALSE FALSE TRUE</span></span><br></pre></td></tr></table></figure>
+<p>通过 <code>which()</code>，我们能将 <code>match()</code>
+(index-based) 与 <code>%in%</code> (logic-based) 联系起来。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">match<span class="punctuation">(</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;New York&quot;</span><span class="punctuation">,</span> <span class="string">&quot;Florida&quot;</span><span class="punctuation">,</span> <span class="string">&quot;Texas&quot;</span><span class="punctuation">)</span><span class="punctuation">,</span> murder<span class="operator">$</span>state<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] 33 10 44</span></span><br><span class="line">which<span class="punctuation">(</span>murder<span class="operator">$</span>state <span class="operator">%in%</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;New York&quot;</span><span class="punctuation">,</span> <span class="string">&quot;Florida&quot;</span><span class="punctuation">,</span> <span class="string">&quot;Texas&quot;</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] 10 33 44</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="basic-plots">Basic plots</h2>
+<p>R 语言的一大特色就是其能够以简单的语法快速生成图像。(见 MIT-Data
+Wrangling 一节)</p>
+<h3 id="plot"><code>plot</code></h3>
+<p>使用 <code>plot()</code> 函数来绘制 scatterplot (散点图)。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x <span class="operator">&lt;-</span> murders<span class="operator">$</span>population <span class="operator">/</span> <span class="number">10</span><span class="operator">^</span><span class="number">6</span></span><br><span class="line">y <span class="operator">&lt;-</span> murders<span class="operator">$</span>total</span><br><span class="line">plot<span class="punctuation">(</span>x<span class="punctuation">,</span> y<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p><code>with()</code> function allows us to use the
+<code>murders</code> column names in the <code>plot()</code>
+function.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">with<span class="punctuation">(</span>murders<span class="punctuation">,</span> plot<span class="punctuation">(</span>population<span class="punctuation">,</span> total<span class="punctuation">)</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p><code>plot(x, y)</code> 函数有两个参数：散点图描述变量 <code>x</code>
+与 <code>y</code> 间的关联或分布模式。</p>
+<h3 id="hist"><code>hist</code></h3>
+<p>使用 <code>hist()</code> 函数来绘制 histogram (直方图)。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x <span class="operator">&lt;-</span> with<span class="punctuation">(</span>murders<span class="punctuation">,</span> total<span class="operator">/</span>population <span class="operator">*</span> <span class="number">100000</span><span class="punctuation">)</span></span><br><span class="line">hist<span class="punctuation">(</span>x<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p><code>hist(x)</code> 函数只有一个参数：直方图描述变量 <code>x</code>
+的频率分布情况。</p>
+<h3 id="boxplot"><code>boxplot</code></h3>
+<p>使用 <code>boxplot()</code> 函数来绘制 boxplot (箱型图)。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">murders<span class="operator">$</span>rate <span class="operator">&lt;-</span> with<span class="punctuation">(</span>murders<span class="punctuation">,</span> total<span class="operator">/</span>population <span class="operator">*</span> <span class="number">100000</span><span class="punctuation">)</span></span><br><span class="line">boxplot<span class="punctuation">(</span>rate<span class="operator">~</span>region<span class="punctuation">,</span> data <span class="operator">=</span> murders<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>Boxplot demonstrating the locality, spread and skewness groups of
+numerical data.</p>
+<p><br></p>
+<h2 id="programming-basics">Programming Basics</h2>
+<p>到目前为止介绍的所有内容都可以在 REPL 中复现；我们藉此强调 R 语言的
+interactive 特征与其数据处理方面的特化。但 R 同样是一种 programming
+language，它当然也具有成熟的流程控制系统。</p>
+<h3 id="if-else-statement">if-else statement</h3>
+<p>常见的 <code>if</code>-<code>else</code> 逻辑语句。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">library<span class="punctuation">(</span>dslabs<span class="punctuation">)</span></span><br><span class="line">data<span class="punctuation">(</span>murders<span class="punctuation">)</span></span><br><span class="line">murder_rate <span class="operator">&lt;-</span> murder<span class="operator">$</span>total <span class="operator">/</span> murder<span class="operator">$</span>population<span class="operator">*</span><span class="number">100000</span></span><br><span class="line"></span><br><span class="line">ind <span class="operator">&lt;-</span> which.min<span class="punctuation">(</span>murder_rate<span class="punctuation">)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="punctuation">(</span>murder_rate<span class="punctuation">[</span>ind<span class="punctuation">]</span> <span class="operator">&lt;</span> <span class="number">0.5</span><span class="punctuation">)</span> <span class="punctuation">&#123;</span></span><br><span class="line">    print<span class="punctuation">(</span>murders<span class="operator">$</span>state<span class="punctuation">[</span>ind<span class="punctuation">]</span><span class="punctuation">)</span></span><br><span class="line"><span class="punctuation">&#125;</span> <span class="keyword">else</span> <span class="punctuation">&#123;</span></span><br><span class="line">    print<span class="punctuation">(</span><span class="string">&quot;No state has murder rate that low&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#&gt; [1] &quot;Vermont&quot;</span></span><br></pre></td></tr></table></figure>
+<p>R 语言还有一个 built-in function for if-else:
+<code>ifelse(a, b, c)</code>. 可以将其视为 C++ 中的三目运算符
+<code>a?b:c</code>。The function is particularly useful because it works
+on vectors (联想到 higher-order function).</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">0</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">,</span> <span class="number">2</span><span class="punctuation">,</span> <span class="operator">-</span><span class="number">4</span><span class="punctuation">,</span> <span class="number">5</span><span class="punctuation">)</span></span><br><span class="line">result <span class="operator">&lt;-</span> ifelse<span class="punctuation">(</span>a <span class="operator">&gt;</span> <span class="number">0</span><span class="punctuation">,</span> <span class="number">1</span><span class="operator">/</span>a<span class="punctuation">,</span> <span class="literal">NA</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1]  NA 1.0 0.5  NA 0.2</span></span><br><span class="line"><span class="comment">#&gt; PS: 1/0 = Inf</span></span><br></pre></td></tr></table></figure>
+<p>再来看一个例子：我们使用 <code>ifelse()</code> 函数将某个 vector
+<code>na_example</code> 中的缺失值 (即 <code>NA</code>) 全部替换为
+0。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">data<span class="punctuation">(</span>na_example<span class="punctuation">)</span></span><br><span class="line">no_nas <span class="operator">&lt;-</span> ifelse<span class="punctuation">(</span><span class="built_in">is.na</span><span class="punctuation">(</span>na_example<span class="punctuation">)</span><span class="punctuation">,</span> <span class="number">0</span><span class="punctuation">,</span> na_example<span class="punctuation">)</span></span><br><span class="line"><span class="built_in">sum</span><span class="punctuation">(</span><span class="built_in">is.na</span><span class="punctuation">(</span>no_nas<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#&gt; [1] 0</span></span><br></pre></td></tr></table></figure>
+<h3 id="any-all"><code>any</code> &amp; <code>all</code></h3>
+<p>很经典的函数了。<code>any()</code> 与 <code>all()</code>
+函数均作用于某个 logical vector。</p>
+<ul>
+<li><code>any(a)</code>: 结果为 <span class="math inline">\(a_1\lor a_2
+\lor a_3...a_{n-1}\lor a_n\)</span>.</li>
+<li><code>all(a)</code>: 结果为 <span class="math inline">\(a_1\land a_2
+\land a_3...a_{n-1}\land a_n\)</span>.</li>
+</ul>
+<h3 id="defining-functions">Defining functions</h3>
+<p>无需多言。R 中的函数定义语法与大多数主流语言一致。</p>
+<p>学到这里应该能隐约察觉到了：虽然 R 中最基本的存储单元被称为
+object，但它显然与 OOP 中的 object 关系不大；R 本质上来说是一种
+functional programming language。</p>
+<p>以下函数根据传入的参数 <code>arithmetic</code> 选择计算
+<code>x</code> 的算数平均值或几何平均值。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">avg <span class="operator">&lt;-</span> <span class="keyword">function</span><span class="punctuation">(</span>x<span class="punctuation">,</span> arithmetic <span class="operator">=</span> <span class="literal">TRUE</span><span class="punctuation">)</span> <span class="punctuation">&#123;</span></span><br><span class="line">    n <span class="operator">&lt;-</span> <span class="built_in">length</span><span class="punctuation">(</span>x<span class="punctuation">)</span></span><br><span class="line">    ifelse<span class="punctuation">(</span>arithmetic<span class="punctuation">,</span> <span class="built_in">sum</span><span class="punctuation">(</span>x<span class="punctuation">)</span><span class="operator">/</span>n<span class="punctuation">,</span> <span class="built_in">prod</span><span class="punctuation">(</span>x<span class="punctuation">)</span><span class="operator">^</span><span class="punctuation">(</span><span class="number">1</span><span class="operator">/</span>n<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p><code>function</code> 关键字声明一个函数将被定义。注意到这里我们使用
+<code>&lt;-</code> 赋值符号将函数赋给了名为 <code>avg</code>
+的变量。</p>
+<p>仔细体会一下，这个写法其实非常的 functional programming：它暗示着在 R
+中，函数与任何 object 一样，都是立派な一等公民，能被储存与传递。</p>
+<h3 id="for-loops">For-loops</h3>
+<p>同样没什么需要强调的。下面的例子通过循环语句计算数列 <span class="math inline">\(S_n\)</span>；其中 <span class="math inline">\(S_i=\sum_{1}^{i}i\)</span>.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">compute_s_n <span class="operator">&lt;-</span> <span class="keyword">function</span><span class="punctuation">(</span>n<span class="punctuation">)</span> <span class="punctuation">&#123;</span></span><br><span class="line">    x <span class="operator">&lt;-</span> 1<span class="operator">:</span>n</span><br><span class="line">    <span class="built_in">sum</span><span class="punctuation">(</span>x<span class="punctuation">)</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line">m <span class="operator">&lt;-</span> 25</span><br><span class="line">s_n <span class="operator">&lt;-</span> vector<span class="punctuation">(</span><span class="built_in">length</span> <span class="operator">=</span> m<span class="punctuation">)</span> <span class="comment"># create an empty vector</span></span><br><span class="line"><span class="keyword">for</span> <span class="punctuation">(</span>i <span class="keyword">in</span> <span class="number">1</span><span class="operator">:</span>m<span class="punctuation">)</span> <span class="punctuation">&#123;</span></span><br><span class="line">    s_n<span class="punctuation">[</span>i<span class="punctuation">]</span> <span class="operator">&lt;-</span> compute_s_n<span class="punctuation">(</span>i<span class="punctuation">)</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="vectorizations-functionals">Vectorizations &amp;
+Functionals</h2>
+<p>Although for-loops are an important concept to understand, in R we
+rarely use them. That's because most functions in R are
+<em>vectorized</em>.</p>
+<div class="note info no-icon"><p>A <em>vectorized</em> function is a function that will apply the same
+operation on each of the vectors.</p>
+</div>
+<p>不禁联想到在 <a target="_blank" rel="noopener" href="https://thisisxxz.com/categories/notes/courses/Programming-Languages-UW/">Programming
+Languages</a> 这门课中所学的：higher-order functions 的存在是 functional
+programming 的重要特征之一，而这类函数所实现的功能就是我们这里所提到的
+<em>vectorization</em>。</p>
+<p>某些 OOP 语言例如 Ruby，通过引入 blocks
+的概念也能够较为轻松的实现类似 vectorization
+的功能；我们能够看到，在支持 vectorization
+的语言中，循环控制语句被使用的频率远低于不支持的语言。</p>
+<p>R 提供了一个 general high-order function 的接口，我们称其为
+<em>functionals</em>；<code>sapply()</code> 函数是其中之一。</p>
+<div class="note info no-icon"><p><em>Functionals</em> are functions that help us apply the same
+function to each entry in a vector, matrix, data frame, or list.
+Functionals vectorized a function.</p>
+</div>
+<p>回到之前计算数列 <span class="math inline">\(S_n\)</span>
+的例子：如何使用 vectorization &amp; functionals
+而不是循环控制语句进行实现？</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">n <span class="operator">&lt;-</span> 1<span class="operator">:</span><span class="number">25</span></span><br><span class="line">s_n <span class="operator">&lt;-</span> sapply<span class="punctuation">(</span>n<span class="punctuation">,</span> compute_s_n<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>可以看到，与 for-loop 相比，vectorization
+的实现显然更加简洁优雅。这也就能解释为什么像 Ruby 这样的 OOP
+语言也想要引入类似的 features。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p>Code: COMP2501, Lecturer: Dr. H.F. Ting.</p>
+<p>Course textbook:</p>
+<p><a target="_blank" rel="noopener" href="http://rafalab.dfci.harvard.edu/dsbook/">Data Analysis and
+Prediction Algorithms with R - Rafael A. Irizarry</a>.</p>
+<!-- flag of hidden posts -->
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2023/09/21/COMP2501-1/" title="Introduction to DS - R 语言初探之壹">https://www.thisisxxz.com/2023/09/21/COMP2501-1/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | Introduction to DS - R 语言初探之壹](https://www.thisisxxz.com/2023/09/21/COMP2501-1/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Programming-Languages/" rel="tag"><i class="fa fa-tag"></i> Programming Languages</a>
+              <a href="/tags/Data-Science/" rel="tag"><i class="fa fa-tag"></i> Data Science</a>
+          </div>
+
+        
+
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/09/21/COMP2501-1/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

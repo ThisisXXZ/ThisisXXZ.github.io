@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="COMP3322 课程 JavaScript, AJAX &amp; JSON 相关内容拾遗。  接触到的第二种 dynamically typed OOP 语言 (第一种是 Ruby)，但其语法又总是令人联想到 C 与 Java；学起来不算难，令人惊艳的点主要在于它是如何通过 DOM (Document Object Model) 与 HTML 交互的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript 杂记">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/10/09/COMP3322-2/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="COMP3322 课程 JavaScript, AJAX &amp; JSON 相关内容拾遗。  接触到的第二种 dynamically typed OOP 语言 (第一种是 Ruby)，但其语法又总是令人联想到 C 与 Java；学起来不算难，令人惊艳的点主要在于它是如何通过 DOM (Document Object Model) 与 HTML 交互的。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-10-09T12:02:37.000Z">
+<meta property="article:modified_time" content="2024-02-02T11:37:24.000Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Programming Languages">
+<meta property="article:tag" content="Web Technologies">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2023/10/09/COMP3322-2/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/10/09/COMP3322-2/","path":"2023/10/09/COMP3322-2/","title":"JavaScript 杂记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>JavaScript 杂记 | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#prototype-based-oop"><span class="nav-number">1.</span> <span class="nav-text">Prototype-based OOP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#document-object-model"><span class="nav-number">2.</span> <span class="nav-text">Document Object Model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#element-node-object"><span class="nav-number">2.1.</span> <span class="nav-text">Element Node Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#document-object"><span class="nav-number">2.2.</span> <span class="nav-text">Document Object</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#executing-js-in-html"><span class="nav-number">3.</span> <span class="nav-text">Executing JS in HTML</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#event-handling"><span class="nav-number">4.</span> <span class="nav-text">Event Handling</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#event-handler"><span class="nav-number">4.1.</span> <span class="nav-text">Event Handler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#event-propagation"><span class="nav-number">4.2.</span> <span class="nav-text">Event Propagation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#asynchrounous-programming"><span class="nav-number">5.</span> <span class="nav-text">Asynchrounous Programming</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ajax-with-xmlhttprequest"><span class="nav-number">6.</span> <span class="nav-text">AJAX with
+XMLHttpRequest</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#xmlhttprequest-object"><span class="nav-number">6.1.</span> <span class="nav-text">XMLHttpRequest Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#callback-hell"><span class="nav-number">6.2.</span> <span class="nav-text">Callback Hell</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ajax-with-fetch"><span class="nav-number">7.</span> <span class="nav-text">AJAX with fetch()</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#promise-object"><span class="nav-number">7.1.</span> <span class="nav-text">Promise Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#response-object"><span class="nav-number">7.2.</span> <span class="nav-text">Response Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#asyncawait-sytatic-sugar"><span class="nav-number">7.3.</span> <span class="nav-text">async&#x2F;await
+sytatic sugar</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#json"><span class="nav-number">8.</span> <span class="nav-text">JSON</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/10/09/COMP3322-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="JavaScript 杂记 | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JavaScript 杂记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-10-09 20:02:37" itemprop="dateCreated datePublished" datetime="2023-10-09T20:02:37+08:00">2023-10-09</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>COMP3322 课程 JavaScript, AJAX &amp; JSON 相关内容拾遗。</p>
+</blockquote>
+<p>接触到的第二种 dynamically typed OOP 语言 (第一种是
+Ruby)，但其语法又总是令人联想到 C 与
+Java；学起来不算难，令人惊艳的点主要在于它是如何通过 DOM (Document
+Object Model) 与 HTML 交互的。</p>
+<span id="more"></span>
+<p>严格来说，HTML, CSS, JavaScript 三件套中只有 JavaScript
+能够称之为是一种「编程语言」 (programming
+language)。前两者是静态的标记语言 (markup language)，因此不归在 PL
+类别中。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="prototype-based-oop">Prototype-based OOP</h2>
+<blockquote class="blockquote-center">
+<p>We don't need classes... <em>Objects inherit from object</em>. What
+could be more object-oriented than that?</p>
+
+</blockquote>
+<p>关于语言的部分我不打算详细记录，JavaScript
+的语法并非这门语言的精髓所在。</p>
+<p>但值得注意的是，JavaScript 的 OOP 概念并非传统的 class-based
+programming，而是 <em>prototype-based programming</em>
+(基于原型编程)。</p>
+<p>在传统的 class-based OOP 中，我们首先定义抽象的，(通常是) 静态的
+<em>类</em> (class)，再在类所规定的框架下创造 <em>对象</em>
+(object)。这一过程被称为 <em>实例化</em> (instantiation)。</p>
+<p>而在 JavaScript 为代表的 prototype-based OOP
+中，类的概念并不存在；继承发生在对象与对象之间。若对象 <span class="math inline">\(a\)</span> 继承了对象 <span class="math inline">\(b\)</span>，我们称对象 <span class="math inline">\(b\)</span> 为对象 <span class="math inline">\(a\)</span> 的原型 (prototype)。</p>
+<p>很显然，只有在 dynamically typed 语言中 prototype-based OOP
+才有生存的空间；对象间的继承依赖于对对象的动态更改，即，在运行时增添，删减或重写对象的性质与行为。</p>
+<p>如果仔细想想的话，其实 prototype-based OOP 才是更符合直觉的 OOP
+定义方式。女娲在造人之前并没有获得某种人类的制造蓝图
+(<code>class Human</code>)，而是以自己为原型 (<code>Object Nüwa</code>)
+决定了人类的外形。如果我们使用 JavaScript 来描述女娲造人的过程：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Nüwa = &#123;</span><br><span class="line">    <span class="attr">head</span>: 人首,</span><br><span class="line">    <span class="attr">body</span>: 蛇身,</span><br><span class="line">    <span class="attr">specialPower</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="title function_">createHuman</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="title class_">Human001</span> = <span class="title class_">Object</span>.<span class="title function_">create</span>(Nüwa);   <span class="comment">// creating object based on prototype object</span></span><br><span class="line"><span class="title class_">Human001</span>.<span class="property">body</span> = 人身;                 <span class="comment">// modifying property dynamically</span></span><br><span class="line"><span class="title class_">Human001</span>.<span class="property">specialPower</span> = <span class="literal">undefined</span>;   <span class="comment">// deleting property dynamically</span></span><br></pre></td></tr></table></figure>
+<p>那么能否在 JavaScript 中实现类似 class-based OOP
+的行为呢？也是可以的。构造函数 (constructor) 可以一定程度上承担 class
+所具备的功能。</p>
+<p>女娲没日没夜地捏着泥巴，手终于开始发酸了；而且她也觉得这样效率实在是太低。她打算建造一个自动化人类生产工厂，自己只需要传入对应的参数，工厂就能生产出具备这些特点的人类：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Human</span>(<span class="params">name, gender, destiny</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">gender</span> = gender;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">destiny</span> = destiny;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">speak</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123; ... &#125;;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">hear</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123; ... &#125;;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">var</span> <span class="title class_">Human999</span> = <span class="keyword">new</span> <span class="title class_">Human</span>(<span class="string">&#x27;Huang&#x27;</span>, <span class="string">&#x27;male&#x27;</span>, <span class="string">&#x27;Emperor&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="document-object-model">Document Object Model</h2>
+<p>文档对象模型 (DOM, Document Object Model) 在 JavaScript
+中被广泛使用，但需要注意的是，它并<strong>不是 JavaScript
+或其他编程语言的一部分 (platfrom- &amp;
+language-neutrality)</strong>！</p>
+<p>DOM 是一种 <em>programming interface</em>：在实现了 DOM 接口
+(implement DOM interface) 的编程语言中，我们能够调用一系列强大的
+API，来对 DOM 及其所 model 的 HTML 文件进行动态操纵。</p>
+<h3 id="element-node-object">Element Node Object</h3>
+<p>在 DOM 中，每个 HTML element 都是一个结点
+(node)。结点之间相互连接，从而形成了一颗树。这颗树的结构正是 HTML
+文档的结构。DOM 中的结点共分为三种：</p>
+<ul>
+<li>element nodes.</li>
+<li>text nodes.</li>
+<li>attribute nodes.</li>
+</ul>
+<p>很明显 text nodes 与 attribute nodes 一定是 DOM 树的叶子节点。</p>
+<p>在实现了 DOM interface 的编程语言中，element object 自带一系列
+properties 与 method：</p>
+<ul>
+<li><code>attributes</code>: 返回 a list of attributes.</li>
+<li><code>className</code></li>
+<li><code>id</code></li>
+<li><code>innerHTML</code>: 以字符串的形式返回该元素的 markup content
+(tags 包围的所有内容)。使用这个 property
+对元素进行外科手术式的修改。</li>
+<li><code>style</code>: 返回一个特殊的对象，该对象中存储了一系列 styling
+<em>name-value pairs</em>。</li>
+<li><code>tagName</code></li>
+<li><code>addEventListener()</code>: [stay tuned for event
+handling]</li>
+<li><code>getAttribute()</code>, <code>setAttribute()</code>,
+<code>removeAttribute()</code></li>
+</ul>
+<p>一个典型的 JavaScript workflow：使用 document object [stay tuned]
+定位某个 element node object，访问它的 properties 以获取信息或调用它的
+methods 对其进行修改。</p>
+<h3 id="document-object">Document Object</h3>
+<p><code>document</code> 是一个特殊的对象；它代表整个 HTML
+文档。通常我们将其作为 DOM crawling 的起点。除此之外，它还是
+<code>window</code> 对象的孩子，因此我们也可以用
+<code>window.document</code> 进行指代。</p>
+<p>常用的 DOM crawling 方法：方法名中含有 <code>Elements</code>
+的往往返回 a list of element nodes.</p>
+<ul>
+<li><code>getElementById()</code></li>
+<li><code>getElementsByClassName()</code></li>
+<li><code>getElementsByTagName()</code></li>
+<li><code>querySelector()</code>: 该方法返回与选择器匹配的
+<em>第一个</em> 元素对应的结点。</li>
+<li><code>querySelectorAll()</code></li>
+</ul>
+<p>动态修改 DOM 树的结构；添加新的结点：</p>
+<ul>
+<li><code>createAttribute()</code></li>
+<li><code>createElement()</code></li>
+<li><code>createTextNode()</code></li>
+</ul>
+<p>以上方法的参数均为字符串：注意字符串在 JavaScript 中是 immutable
+的。</p>
+<p><br></p>
+<h2 id="executing-js-in-html">Executing JS in HTML</h2>
+<div class="note info no-icon"><p>JavaScript only needs one friend in the world of HTML - the
+<code>&lt;script&gt;</code> element.</p>
+</div>
+<p>牢记一个原则：当 browser 在解析 HTML 文件时，如果它遇到了某个
+<code>&lt;script&gt;</code> 元素，它将立刻执行其中的 JavaScript
+代码，无论 HTML 文件是否已经解析完成。</p>
+<p><code>&lt;script&gt;</code> 有两个 attribute: <code>async</code> 与
+<code>defer</code>，它们可以 override 这一默认的，由位置决定的顺序。</p>
+<table>
+<colgroup>
+<col style="width: 23%">
+<col style="width: 38%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: center;">different
+<code>&lt;script&gt;</code></th>
+<th style="text-align: center;">execution priority</th>
+<th style="text-align: center;">details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><code>&lt;script&gt;</code> in
+<code>&lt;head&gt;</code></td>
+<td style="text-align: center;">very high - blocks parser</td>
+<td style="text-align: center;">loaded &amp; executed before parsing
+begins</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>&lt;script&gt;</code></td>
+<td style="text-align: center;">high - interrupts parser</td>
+<td style="text-align: center;">parser pauses until it is loaded &amp;
+executed</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>&lt;script async&gt;</code></td>
+<td style="text-align: center;">high - interrupts parser</td>
+<td style="text-align: center;">parsing and loading go asynchronously;
+parser pauses when JS is ready to execute</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>&lt;script&gt;</code> at the end
+of <code>&lt;body&gt;</code></td>
+<td style="text-align: center;">low - waits parser end</td>
+<td style="text-align: center;">loaded &amp; executed after parsing
+ends</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>&lt;script defer&gt;</code></td>
+<td style="text-align: center;">very low - executes after
+<code>&lt;script&gt;</code> at the end of <code>&lt;body&gt;</code></td>
+<td style="text-align: center;">parser does not wait for the script; it
+continues to build DOM</td>
+</tr>
+</tbody>
+</table>
+<p>注意，我们能够保证 <code>&lt;script defer&gt;</code> 一定在 DOM is
+fully built 之后，<code>DOMContentLoaded</code> 事件之前被执行；而
+<code>&lt;script async&gt;</code> 被执行的时刻是不可预测的。它可能在
+<code>DOMContentLoaded</code>
+事件之前被执行，也有可能在其之后被执行；一切取决于 script 完成 loading
+所需的时间。</p>
+<p><br></p>
+<h2 id="event-handling">Event Handling</h2>
+<div class="note info no-icon"><p><em>Event-driven programming</em> is a paradigm in which the flow of
+the program is determined by events, usually user actions.</p>
+</div>
+<p>首先，event 也是 DOM interface 的一部分。因此我们可以在实现了 DOM
+interface 的 JavaScript 中直接使用一系列 pre-built <em>event
+objects</em>，调用各种 event-related APIs。</p>
+<h3 id="event-handler">Event Handler</h3>
+<p>Event handler 是一段代码：当其侦测 (listen) 到某事件触发 (event
+fires) 时，其立刻执行所储存的代码 (通常是一个函数)。有三种 registering
+event handlers 的方法：</p>
+<ul>
+<li>As an HTML attribute: bad style.</li>
+<li>As a method attached to the element: only one handler per
+event.</li>
+<li>Using <code>addEventListener()</code>.</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span> = <span class="string">&quot;bttn&quot;</span>&gt;</span>Press me<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> bttn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;bttn&quot;</span>);</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">function</span> <span class="title function_">bttnClick</span>(<span class="params"></span>) &#123; <span class="title function_">alert</span>(<span class="string">&quot;World ends!&quot;</span>) &#125;</span></span><br><span class="line"><span class="language-javascript">    bttn.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, bttnCLick);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>addEventListener()</code> 函数为某个元素添加一个 event
+handler；其第一个参数是 event 的名称，第二个参数是当 event
+触发时所需要执行的函数。同样的，我们有
+<code>removeEventListener()</code> 来删除特定的 event handler。</p>
+<p><code>addEventListener()</code>
+函数还有第三个参数，<code>useCapture: false</code>；它与 event
+propagation 有关。</p>
+<h3 id="event-propagation">Event Propagation</h3>
+<p>在某元素的范围内，一个事件的发生不仅会影响到该元素本身，还会影响到其所有的祖宗元素；因此，多个
+event handlers 可能被触发。Event propagation 规定了这种情况下 event
+handlers 被执行的顺序。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">    ...    </span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;p1&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;p2&quot;</span>&gt;</span></span><br><span class="line">        ...</span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span> = <span class="string">&quot;pn&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">p</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>假设 <code>pn</code> 是事件发生处的最直接元素，event propagation
+规定：</p>
+<ul>
+<li>首先进行 capturing propagation：从 <code>&lt;html&gt;</code> 到
+<code>pn</code>，自顶向下检测元素是否定义了处理对应事件的 event
+handler；如果有，并且其 <code>useCapture</code> 为真，执行该 event
+handler。</li>
+<li>然后进行 bubbling propagation：从 <code>&lt;pn&gt;</code> 到
+<code>&lt;html&gt;</code>，自底向上检测元素是否定义了处理对应事件的
+event handler；如果有，并且其 <code>useCapture</code> 为假
+(default)，执行该 event handler。</li>
+</ul>
+<p><br></p>
+<h2 id="asynchrounous-programming">Asynchrounous Programming</h2>
+<p>什么是同步/异步
+(synchronous/asynchronous)？在中文语境下其实我们很容易将这两个词的意义弄混。</p>
+<ul>
+<li>synchronous：下一进程必须等待上一进程完成之后才能开始执行。</li>
+<li>asynchronous：上一进程不会阻塞下一进程的执行；两者可以并行。</li>
+</ul>
+<div class="note info no-icon"><p>Asynchrounous programming enables your program to start a potentially
+<em>long-running task</em> and still be able to be <em>responsive</em>
+to other events when that task runs, rather whan having to wait until
+that task has finished.</p>
+</div>
+<p>在 web application 中，asynchronous programming 的应用使得 web
+page：</p>
+<ul>
+<li>faster：多个异步进程能够同时进行，大大节约了时间。</li>
+<li>more responsive：在异步进程执行期间 browser
+将不会停摆，仍然能对用户触发的事件作出响应。</li>
+</ul>
+<p>当异步进程执行完毕之后，将会有对应的函数处理该进程的结果。我们将这种函数称为
+callback function (回调函数)；callback function
+仅仅会在对应的异步进程执行完毕后被调用。</p>
+<p>仔细想想，这是不是和 event 与 event handler 的定义有点相似？event
+handler 只有在对应的 event
+触发后才被调用；如果把异步进程的完成视作某个事件的话，其对应的 callback
+function 就是该事件的 event handler。</p>
+<p>实际上，在 JavaScript 中最常见的 asynchronous paradigm - AJAX
+中，就采用了通过添加 event handler 的方式实现异步的思想 [stay tuned for
+AJAX with <code>XMLHttpRequest</code>]。</p>
+<p><br></p>
+<h2 id="ajax-with-xmlhttprequest">AJAX with
+<code>XMLHttpRequest</code></h2>
+<h3 id="xmlhttprequest-object"><code>XMLHttpRequest</code> Object</h3>
+<p>AJAX (<strong>A</strong>synchronous <strong>Ja</strong>vaScript with
+<strong>X</strong>ML，异步 Javascript 与 XML)
+范式：在<strong>无需重载网页</strong>的情况下，使得 browser
+能对网页进行快速的，增加式的动态更新。(本博客的全局音乐播放功能就应用了
+AJAX)</p>
+<p>为什么我们要采用
+AJAX？想象这样一个场景：在注册账号时我们常常需要在输入手机号之后点击“发送验证码”按钮。在传统方式下，浏览器在收到服务器的响应后将会重载页面，于是我们之前输入的手机号被刷新掉了；这无疑大大降低了用户体验。而
+AJAX 能够解决这个问题。</p>
+<p><code>XMLHttpRequest</code> 对象是 (传统) AJAX 范式的核心。在
+client-side (JavaScript) 中：</p>
+<ul>
+<li>[a] 声明一个 <code>XMLHttpRequest</code> 对象。</li>
+<li>[b] 对该对象的 <code>onreadystatechange</code> property 注册一个
+callback function。</li>
+<li>[c] 调用该对象的 <code>open()</code> 与 <code>send()</code>
+方法向服务器发送 HTTP 请求。
+<ul>
+<li>使用 <code>GET</code> 或 <code>POST</code>。</li>
+<li>异步请求 (asynchronously)：无需等待服务器的
+response，不会阻塞浏览器的控制。</li>
+</ul></li>
+<li>[d] 当收到服务器的 response 后，执行之前定义的 callback
+function。</li>
+<li>[e] 通常接下来 JavaScript 通过 DOM
+来修改并渲染网页，这避免了网页的重载。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ajaxObj = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();  <span class="comment">// [a]</span></span><br><span class="line"><span class="keyword">if</span> (!ajaxObj)</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&#x27;Cannot create XMLHttpRequest object!!&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// HTTP request function</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ajaxRequest</span>(<span class="params"></span>) &#123;</span><br><span class="line">    ajaxObj.<span class="property">onreadystatechange</span> = ajaxResponse;  <span class="comment">// [b] inline style not using addEventListener</span></span><br><span class="line">    ajaxObj.<span class="title function_">open</span>(<span class="string">&#x27;GET&#x27;</span>, <span class="string">&quot;checking.php?number=&quot;</span>+snum.<span class="property">value</span>, <span class="literal">true</span>);  <span class="comment">// [c]</span></span><br><span class="line">    ajaxObj.<span class="title function_">send</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">snum.<span class="title function_">addEventListener</span>(<span class="string">&#x27;blur&#x27;</span>, ajaxRequest);  <span class="comment">// &lt;=&gt; snum.onblur = ajaxRequest</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// callback function</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ajaxResponse</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (ajaxObj.<span class="property">readyState</span> == <span class="number">4</span> &amp;&amp; ajaxObj.<span class="property">status</span> == <span class="number">200</span>) &#123;</span><br><span class="line">        <span class="comment">// [e] use innerHTML/addElement to modify web page</span></span><br><span class="line">        <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;chkReg&#x27;</span>).<span class="property">innerHTML</span> = ajaxObj.<span class="property">responseText</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="callback-hell">Callback Hell</h3>
+<p>在不刷新浏览器的情况下执行 DOM 事件时 (e.g. 点击某链接,
+回车等事件操作) browser 会向服务端发送若干 HTTP
+request，携带后台可识别的参数并等待服务器响应返回数据。</p>
+<p>这个过程是异步回调的，当许多功能需要连续调用，环环相扣互相依赖时，将会产生庞大的
+nested callback：一个 callback function 在函数体中调用另一个
+callback，一层一层递归下去……</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">clickOnLinksResponse</span>(<span class="params">init, callback</span>) &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="title function_">callback</span>(result);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ajaxResponse</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">clickOnLinksResponse</span>(<span class="number">0</span>, <span class="function">(<span class="params">result1</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="title class_">EnterResponse</span>(result1, <span class="function">(<span class="params">result2</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="title class_">SubmitResponse</span>(result2, <span class="function">(<span class="params">result3</span>) =&gt;</span> &#123;</span><br><span class="line">                ...</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种庞大的嵌套回调函数被称为 callback hell (回调地狱)，或是 pyramid
+of doom；它大大降低了代码的可读性，并且由于耦合度太高，debug
+也十分困难。</p>
+<p>为了避免 callback hell，许多现代的 asynchronous API 不再采用 callback
+functions。[stay tuned for <code>fetch()</code> and <code>Promise</code>
+object]</p>
+<p><br></p>
+<h2 id="ajax-with-fetch">AJAX with <code>fetch()</code></h2>
+<p><code>fetch()</code> 是一种更 modern style 的 AJAX
+实现。基本语法是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">fetch</span>(url)</span><br><span class="line">.<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// code for handling the returned data</span></span><br><span class="line">&#125;)</span><br><span class="line">.<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;)</span><br><span class="line">...</span><br><span class="line">.<span class="title function_">catch</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// code to be run when returns any networks errors</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><code>fetch()</code> 函数返回的是一个 Promise 对象 (其最终将被解析为
+Response 对象)；这里的 <code>.then()</code>, <code>.catch()</code>
+实际上都是 Promise 对象对应的语法：它们是“附着”在 Promise 对象后的
+callback functions。</p>
+<p>那么什么是 Promise 对象呢？对这个词的最初印象来自 Racket 中 delayed
+evaluation 的 promise 概念。在学习了 JavaScript 中的 Promise
+对象之后确实感受到了一点很 subtle 的相似性。</p>
+<h3 id="promise-object"><code>Promise</code> Object</h3>
+<div class="note info no-icon"><p>A <code>Promise</code> is a proxy for a value not necessarily known
+when it is created.</p>
+<p>This lets asynchoronous methods (e.g., <code>fetch()</code>) behave
+synchronously: instead of immediately returning the final value, it
+returns a <em>promise</em> to supply the value at some point in the
+future.</p>
+</div>
+<p>Promise 对象有三种状态：</p>
+<ul>
+<li><em>Pending</em>: initial state, before the Promise is resolved or
+rejected.</li>
+<li><em>Resolved</em>: Promise has been resolved with a
+<em>value</em>.</li>
+<li><em>Rejected</em>: Promise has been rejected with a
+<em>reason</em>.</li>
+</ul>
+<p>Promise 对象后附着的一系列 <code>.then()</code> 与
+<code>.catch()</code> 可以视为该对象的 callback functions。</p>
+<ul>
+<li>当 Promise 的状态为 resolved 时，以 Promise 的 resolved value
+作为参数调用 <code>.then()</code>。</li>
+<li>当 Promise 的状态为 rejected 时，以 Promise 的 rejected reason
+作为参数调用 <code>.catch()</code>。</li>
+</ul>
+<p>我们常常能看到 Promise 对象下附着了多个连续的 <code>.then()</code>
+函数：我们把这一系列 <code>.then()</code> 函数称为 callback
+chain。callback chain 中函数的调用是环环相扣的：如果
+<code>.then()</code> 有返回值，那么它返回的是一个 Promise 对象；在被
+resolved 后将对应的 resolved value 传入下一个 <code>.then()</code>
+中进行处理。</p>
+<p>Promise 对象的 callback chain 本质上是对传统方式下 callback hell
+的<strong>解耦合</strong> (nested <span class="math inline">\(\to\)</span> chaining)。</p>
+<h3 id="response-object"><code>Response</code> Object</h3>
+<p><code>.then()</code> 函数将对应 Promise 对象的 resolved value
+作为参数；也就是说，它能够剥开 Promise 的外壳获取到里面的东西。我们来看
+<code>fetch()</code>
+函数的定义：<code>Promise&lt;Response&gt; fetch(input[, init])</code>。</p>
+<ul>
+<li><code>init</code> 是 <code>fetch()</code> 函数的自定义
+options，可以在其中指定 HTTP request 的：
+<ul>
+<li>HTTP method：默认为 <code>GET</code>。</li>
+<li>HTTP headers。</li>
+<li>HTTP body。</li>
+</ul></li>
+<li>Promise 对象所封装的是 Response
+对象：它携带着服务器传回的信息并传入对应的 <code>.then()</code>
+函数。</li>
+</ul>
+<p>Response 对象常用的 properties 与方法：</p>
+<ul>
+<li><code>status</code>: HTTP response code.</li>
+<li><code>statusText</code>: HTTP response text.</li>
+<li><code>ok</code>: True if status is HTTP 2xx.</li>
+<li><code>headers</code>: a Header object associated with the response
+header.</li>
+<li><code>text()</code>: a <em>Promise</em> contains the body as a
+string.</li>
+<li><code>json()</code>: a <em>Promise</em> contains the body text as
+JSON [stay tuned].</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">snum.<span class="title function_">addEventListener</span>(<span class="string">&#x27;blur&#x27;</span>, fetchRequest);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">fetchRequest</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">fetch</span>(<span class="string">&#x27;checking.php?number=&#x27;</span> + snum.<span class="property">value</span>);</span><br><span class="line">    .<span class="title function_">then</span>(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (response.<span class="property">status</span> == <span class="number">200</span>) &#123;</span><br><span class="line">            response.<span class="title function_">text</span>().<span class="title function_">then</span>(<span class="function"><span class="params">data</span> =&gt;</span> &#123;	<span class="comment">// text() returns a promise</span></span><br><span class="line">                <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;chkReg&#x27;</span>).<span class="property">innerHTML</span> = data;</span><br><span class="line">            &#125;);</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;HTTP return status: &quot;</span> + response.<span class="property">status</span>);</span><br><span class="line">        &#125;</span><br><span class="line">       &#125;)</span><br><span class="line">    .<span class="title function_">catch</span>(<span class="function"><span class="params">err</span> =&gt;</span> &#123; <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Fetch Error!&quot;</span>); &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="asyncawait-sytatic-sugar"><code>async</code>/<code>await</code>
+sytatic sugar</h3>
+<p>使用 <code>async</code>/<code>await</code> 写出的代码更近似传统的
+synchronous style，因此可读性更强。</p>
+<ul>
+<li><code>async</code> declaration defines an asynchronous function
+which returns an implicit Promise.</li>
+<li>within the <code>async</code> function, <code>await</code>
+expression 'pauses' the execution.</li>
+<li><code>await</code> is only valid inside the <code>async</code>
+function.</li>
+</ul>
+<p>一言以蔽之，在某个 <code>async</code> 函数内，我们将所有 asynchronous
+function 前加上 <code>await</code>，就可以省去 <code>.then()</code>,
+<code>.catch()</code> 等冗长的定义。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">snum.<span class="title function_">addEventListener</span>(<span class="string">&#x27;blur&#x27;</span>, fetchRequest);</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">fetchRequest</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> response = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&#x27;checking?php?number=&#x27;</span> + snum.<span class="property">value</span>);</span><br><span class="line">        <span class="keyword">if</span> (response.<span class="property">status</span> == <span class="number">200</span>) &#123;</span><br><span class="line">            <span class="keyword">let</span> data = <span class="keyword">await</span> response.<span class="title function_">text</span>();</span><br><span class="line">            <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;chkReg&#x27;</span>).<span class="property">innerHTML</span> = data;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;HTTP return status: &quot;</span> + response.<span class="property">status</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span>(err) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Fetch Error!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="json">JSON</h2>
+<div class="note info no-icon"><p>JSON (<strong>J</strong>ava<strong>S</strong>cript
+<strong>O</strong>bject <strong>N</strong>otation) is a standard
+text-based format for representing structured data based on JavaScript
+object syntax.</p>
+</div>
+<p>关于 JSON 没什么要讲的，理解为每个对象的 <code>toString()</code>
+方法就好。它主要用于网络数据的交换；此外，不仅仅是
+JavaScript，现在很多语言都能生成或解析 JSON 格式的数据。</p>
+<p>JSON object 由一系列 name-value pairs 组成：</p>
+<ul>
+<li>name：一定是<strong>双引号</strong>括起来的字符串。</li>
+<li>value：strings (双引号), numbers, objects (大括号), arrays (中括号),
+booleans, null/empty.</li>
+</ul>
+<p>注意，JSON 是纯文本格式：它只包含 properties，不包含 methods。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// trick: 使用 stringify() 与 parse() 实现 JavaScript 中对象的深拷贝</span></span><br><span class="line"><span class="keyword">let</span> stringObj = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(object);</span><br><span class="line"><span class="keyword">let</span> copyObj = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(stringObj);</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info: Code, COMP3322. Lecturer, Dr. Tam Anthony Tat Chun.</p>
+<p>Additional website:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Introducing">Introducing
+Asynchoronous JavaScript - Mozilla Web Docs</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/Guide/AJAX">AJAX -
+Mozilla Web Docs</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://ithelp.ithome.com.tw/articles/10252941">JavaScript：Fetch
+练习 - IThome</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2020/12/fetch-tutorial.html">Fetch
+API 教程 - 阮一峰的网络日志</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise
+- Mozilla Web Docs</a>.</li>
+</ul>
+<!-- flag of hidden posts -->
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2023/10/09/COMP3322-2/" title="JavaScript 杂记">https://www.thisisxxz.com/2023/10/09/COMP3322-2/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | JavaScript 杂记](https://www.thisisxxz.com/2023/10/09/COMP3322-2/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Programming-Languages/" rel="tag"><i class="fa fa-tag"></i> Programming Languages</a>
+              <a href="/tags/Web-Technologies/" rel="tag"><i class="fa fa-tag"></i> Web Technologies</a>
+          </div>
+
+        
+
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/10/09/COMP3322-2/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

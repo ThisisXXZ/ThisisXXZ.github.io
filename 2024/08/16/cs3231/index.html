@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="计算理论 (Theory of Computation) 当之无愧是计算机科学王冠上的明珠；考虑到我贫瘠的智商，以后估计不会朝 TCS 方向来走；但对这些优雅的理论有一个最基本的了解应当是 CS 学生的素养。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自动人形会梦见 NP 完全问题吗？">
+<meta property="og:url" content="https://www.thisisxxz.com/2024/08/16/cs3231/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="计算理论 (Theory of Computation) 当之无愧是计算机科学王冠上的明珠；考虑到我贫瘠的智商，以后估计不会朝 TCS 方向来走；但对这些优雅的理论有一个最基本的了解应当是 CS 学生的素养。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/08/16/cs3231/PL_figure.png">
+<meta property="article:published_time" content="2024-08-16T12:31:10.000Z">
+<meta property="article:modified_time" content="2025-01-23T07:50:11.609Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Theoretical Computer Science">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.thisisxxz.com/2024/08/16/cs3231/PL_figure.png">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2024/08/16/cs3231/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2024/08/16/cs3231/","path":"2024/08/16/cs3231/","title":"自动人形会梦见 NP 完全问题吗？"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>自动人形会梦见 NP 完全问题吗？ | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#dfa-nfa"><span class="nav-number">1.</span> <span class="nav-text">DFA &amp; NFA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pumping-lemma-for-rl"><span class="nav-number">2.</span> <span class="nav-text">Pumping Lemma for RL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pda"><span class="nav-number">3.</span> <span class="nav-text">PDA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chomsky-normal-form"><span class="nav-number">4.</span> <span class="nav-text">Chomsky Normal Form</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pumping-lemma-for-cfl"><span class="nav-number">5.</span> <span class="nav-text">Pumping Lemma for CFL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#turing-machine"><span class="nav-number">6.</span> <span class="nav-text">Turing Machine</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#decidability"><span class="nav-number">7.</span> <span class="nav-text">Decidability</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#halting-problem"><span class="nav-number">8.</span> <span class="nav-text">Halting Problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#p-np"><span class="nav-number">9.</span> <span class="nav-text">P &amp; NP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npc"><span class="nav-number">10.</span> <span class="nav-text">NPC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">11.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2024/08/16/cs3231/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="自动人形会梦见 NP 完全问题吗？ | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          自动人形会梦见 NP 完全问题吗？
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-08-16 20:31:10" itemprop="dateCreated datePublished" datetime="2024-08-16T20:31:10+08:00">2024-08-16</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>计算理论 (Theory of Computation)
+当之无愧是计算机科学王冠上的明珠；考虑到我贫瘠的智商，以后估计不会朝 TCS
+方向来走；但对这些优雅的理论有一个最基本的了解应当是 CS 学生的素养。</p>
+<span id="more"></span>
+<p>讽刺的是，你坑近二十年前就没有开设这门课了
+[<font color="#0000FF">1</font>]，只得留待交换来上。老师是印度人，口音很重，我听完整节课才明白他口中的「GEO」其实是「zero」。</p>
+<p>完整的笔记和错题集归档在<a target="_blank" rel="noopener" href="https://www.cnblogs.com/VeniVidiVici/p/18572613">博客园</a>，这里就留下一点比较精华的东西吧！</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="dfa-nfa">DFA &amp; NFA</h2>
+<p><br>DFA (Deterministic Finite Automaton)
+确定有限状态自动机：有向图，一个开始状态 (starting
+state)，若干个接受状态 (accepting state)。边上带 label
+用来标示转移。<strong>每个状态出度为 1</strong> (出度为 0 的状态默认向
+dead state 转移)。</p>
+<p>NFA (Non-deterministic Finite Automaton) 非确定有限状态自动机：DFA
+<strong>但每个状态出度可以大于 1</strong>。并且它的不确定性允许空转移
+<span class="math inline">\(\epsilon\)</span>-transition，即不带 label
+的边。</p>
+<hr>
+<p>NFA 与 DFA 在 language recognition 意义上等价。</p>
+<ul>
+<li>DFA 显然是出度为 1 的 NFA。</li>
+<li>NFA 转 DFA 稍微麻烦点：因为 <span class="math inline">\(|\delta(q,\alpha)|\geq 1\)</span>，我们直接令
+<span class="math inline">\(\delta_D(\{q\},\alpha)=\{\delta(q,\alpha)\}\)</span>，把集合视为一个状态。重定义的转移
+<span class="math inline">\(\delta_D\)</span> 如下：<span class="math inline">\(\delta_D(Q,\alpha)=\{\cup_{q\in
+Q}\delta(q,\alpha)\}\)</span>。这样，<strong>新 DFA 的状态数量要
+exponentially more than 原 NFA</strong>。</li>
+</ul>
+<hr>
+<p>什么是正则语言 (Regular Language) -
+首先要知道什么是语言，语言就是满足某种规律的<strong>字符串集合</strong>
+- <strong>正则语言就是能被 DFA/NFA 识别的语言</strong>。</p>
+<p>我们熟悉的正则表达式 (Regular Expression)
+是一种可以描述正则语言规律的表达式，简单来说，就是用单个字符串 (表达式)
+来表示字符串集合
+(语言)。因此也可以这样说：<strong>正则语言是可以被正则表达式表示的语言</strong>。</p>
+<p>符合直觉地，任意 DFA
+可以转化为一个正则表达式；任意正则表达式可以转化为一个 <span class="math inline">\(\epsilon\)</span>​-NFA (具体 DP
+方法见归档笔记)。</p>
+<hr>
+<p>怎样把 DFA 化为最简形式 (minimization of DFA)，即，等价 DFA
+中状态数最少的？</p>
+<p>又是 DP。定义 <span class="math inline">\(f_{i,j}=1/0\)</span> 为状态
+<span class="math inline">\(i\)</span> 与状态 <span class="math inline">\(j\)</span> 是否 distinguishable。初始化：</p>
+<ul>
+<li><span class="math inline">\(f_{s,t}=1\)</span> where <span class="math inline">\(t\in T\)</span>。显然起始状态与接收状态是可被空串
+<span class="math inline">\(\epsilon\)</span> 分辨的。</li>
+<li><span class="math inline">\(f_{i,j}=0\)</span> otherwise。</li>
+</ul>
+<p>开始 DP，已知使用长度为 <span class="math inline">\(x\)</span>
+的字符串时分辨情况为 <span class="math inline">\(f\)</span>，推出使用长度为 <span class="math inline">\(x+1\)</span> 时的字符串时的分辨情况
+(为了节省空间，这里 <span class="math inline">\(f\)</span>
+其实省略了长度维度 <span class="math inline">\(x\)</span>)。转移方程
+<span class="math inline">\(f_{p,q}=1\)</span> if <span class="math inline">\(\exists \alpha,
+f(\delta(p,\alpha),\delta(q,\alpha))=1\)</span>。不断增加长度直到 <span class="math inline">\(f\)</span> 收敛，我们就获得了所有的
+indistinguishable pairs (被 <span class="math inline">\(f\)</span>
+标记为 0)；在原 DFA 中合并每一对不可分辨状态对即可。</p>
+<p><br></p>
+<h2 id="pumping-lemma-for-rl">Pumping Lemma for RL</h2>
+<p>Pumping Lemma (泵引理) 将会伴随整个计算理论课程，在这里我将首先介绍其
+RL 版本。</p>
+<p>若 <span class="math inline">\(L\)</span> 是正则语言，那么存在某常数
+<span class="math inline">\(n\)</span> 使得对于任意长度 <span class="math inline">\(\geq n\)</span> 的字符串 <span class="math inline">\(w\in L\)</span>，我们都能找到一种方式将其分解为
+<span class="math inline">\(w=xyz\)</span>，并满足：</p>
+<ul>
+<li><span class="math inline">\(y\neq \epsilon\)</span></li>
+<li><span class="math inline">\(|xy|\leq n\)</span></li>
+<li>对所有整数 <span class="math inline">\(k\geq 0\)</span>，字符串
+<span class="math inline">\(xy^kz\in L\)</span></li>
+</ul>
+<p>这里 <span class="math inline">\(y^k\)</span> 表示将子串 <span class="math inline">\(y\)</span> 重复 <span class="math inline">\(k\)</span> 次。</p>
+<p>这应该是所有泵引理中最容易证明的一个了：考虑某个能够识别 <span class="math inline">\(L\)</span> 的 DFA，令 <span class="math inline">\(n=|Q|+1\)</span> (<span class="math inline">\(|Q|\)</span> 为该 DFA 的状态数)。对于长度 <span class="math inline">\(\geq n\)</span> 的某个 <span class="math inline">\(w\in
+L\)</span>，根据鸽巢原理我们能够肯定至少存在一个状态 <span class="math inline">\(q_{rep}\)</span>
+被经过了两次。这意味着在转移过程中一定出现了某个环 (<span class="math inline">\(q_{rep}\)</span> 作为该环的扭结)。我们令 <span class="math inline">\(y\)</span> 等于这个环对应的字符串即可。</p>
+<p>所有正则语言都满足泵引理，但也存在满足泵引理的非正则语言。因此泵引理常用来证否：若找到某个长度
+<span class="math inline">\(\geq n\)</span> 的字符串，不存在任意一种
+<span class="math inline">\(xyz\)</span> 的划分方式能使得对于所有 <span class="math inline">\(k\)</span>，<span class="math inline">\(xy^kz\in
+L\)</span>，那么 <span class="math inline">\(L\)</span> 不是正则的。</p>
+<p><br></p>
+<h2 id="pda">PDA</h2>
+<p>PDA (Push Down Automata)
+下推自动机是一种外置一个无限长的数据栈的有限状态自动机。转移条件不仅与当前读入的字符有关，也与栈顶元素有关。</p>
+<p>转移 <span class="math inline">\((q,\gamma)\in \delta(p,a,X)\)</span>
+表示，当前状态为 <span class="math inline">\(p\)</span>，栈顶元素为
+<span class="math inline">\(X\)</span>；此时读入字符 <span class="math inline">\(a\)</span>；NPDA <em>能够</em> (DPDA
+则是<em>仅能</em>) 转移至状态 <span class="math inline">\(q\)</span>，且
+<span class="math inline">\(X\)</span> 从栈中弹出，<span class="math inline">\(\gamma\)</span> 被压入栈中。</p>
+<p>引入一种新的 notation，瞬时描述 (instantaneous
+description)。它是一个三元组 <span class="math inline">\((q,w,a)\)</span> 表示当前状态为 <span class="math inline">\(q\)</span>，剩余需要读入的字符串为 <span class="math inline">\(w\)</span>，当前栈顶元素为 <span class="math inline">\(a\)</span>。使用 <span class="math inline">\(\vdash\)</span> (单步) 或 <span class="math inline">\(\vdash^*\)</span> 进行转移。</p>
+<hr>
+<p><strong>上下文无关语言 (Context-Free Language) 是能够被 PDA
+识别的语言</strong>。<strong>任意 CFL 都能被上下文无关语法 (Context-Free
+Grammar) 表达</strong>，或者，更准确地说，生成。</p>
+<p>PDA - CFL - CFG 的关系与 DFA - RL - RE 的关系近似。</p>
+<p>同样的，对任意 CFG 都能构造一个等价的空栈 PDA 来识别，对任意 PDA
+都能构造一个等价的 CFG 生成相同的语言。证明见归档笔记，利用了 NPDA
+的非确定性。</p>
+<hr>
+<p>CFG <span class="math inline">\(G\)</span> 由四部分构成，<span class="math inline">\(V\)</span> (变量，variables)，<span class="math inline">\(T\)</span> (终止符，terminals)，<span class="math inline">\(S\)</span> (起始符，start symbol) 与 <span class="math inline">\(P\)</span> (生成规则，production rules，<span class="math inline">\(\to\)</span>)。</p>
+<p><span class="math inline">\(G\)</span> 所生成的 CFL <span class="math inline">\(L(G)=\{w\in T^*|S\Rightarrow^*
+w\}\)</span>。从起始符开始，根据若干生成规则不断转移
+(引入变量，消去变量，引入终止符)，直至生成最终的字符串
+(全由终止符构成，无法再生成)，这一过程被称为<strong>派生
+(derivation)</strong>。显然，派生过程可以用一颗树来描述，该树被称为 CFG
+的<strong>分析树 (parse tree)</strong>，或具体语法树 (concrete syntax
+tree)。</p>
+<p>若同一个字符串存在两种派生方式
+(存在两种形态有异的分析树)，我们说该语法是<strong>歧义的
+(ambiguous)</strong>。</p>
+<p><br></p>
+<h2 id="chomsky-normal-form">Chomsky Normal Form</h2>
+<p>乔姆斯基范式 (Chomsky Normal Form) 是一种特殊的 CFG 范式，它规定该
+CFG
+的<strong>分析树是一颗二叉树</strong>。从生成规则上看，乔姆斯基范式要求每一种生成规则都满足以下形式：</p>
+<ul>
+<li><span class="math inline">\(A\to BC\)</span> (<span class="math inline">\(A,B,C\)</span> 均为变量 <span class="math inline">\(\in V\)</span>)</li>
+<li><span class="math inline">\(A\to \alpha\)</span> (<span class="math inline">\(A\)</span> 为变量 <span class="math inline">\(\in
+V\)</span>，<span class="math inline">\(\alpha\)</span> 为终止符 <span class="math inline">\(\in T\)</span>)</li>
+</ul>
+<p>任意 CFG 都能转化为乔姆斯基范式。</p>
+<p>第一步：消除所有空生成 (<span class="math inline">\(\epsilon\)</span>
+productions)，即 <span class="math inline">\(A\to\epsilon\)</span>
+这样的规则。</p>
+<ul>
+<li>去掉所有的 <span class="math inline">\(A\to \epsilon\)</span>
+规则，并把 <span class="math inline">\(A\)</span> 标记为空变量 (nullable
+variables)。</li>
+<li>检查其他的规则，若规则 <span class="math inline">\(B\to s\)</span>
+中，<span class="math inline">\(s\)</span> 包含空变量，则排列的
+(permutation) 删去这些空变量。举个例子 <span class="math inline">\(S\to
+ASA\)</span>，删去后产生四个新规则 <span class="math inline">\(S\to
+ASA|SA|AS|S\)</span>。</li>
+</ul>
+<p>第二步：消除所有单元生成 (unit productions)，即 <span class="math inline">\(A\to B\)</span>，<span class="math inline">\(A,B\)</span> 均为变量这样的规则。直接去掉所有的
+<span class="math inline">\(A\to B\)</span> 规则，如果有 <span class="math inline">\(B\to s\)</span>，则添加 <span class="math inline">\(A\to s\)</span>。</p>
+<p>经以上两步，<span class="math inline">\(G\)</span> 中所有的生成规则
+<span class="math inline">\(A\to s\)</span> 都表现成以下两种形式：</p>
+<ul>
+<li><span class="math inline">\(|s|=1\)</span>，此时 <span class="math inline">\(s\)</span> 一定是单个终止符。</li>
+<li><span class="math inline">\(|s|=|s_1s_2...s_n|=n\geq
+2\)</span>，<span class="math inline">\(s_i\)</span>
+是终止符或者变量。</li>
+</ul>
+<p>第三步：把所有生成规则转化为 <span class="math inline">\(A\to
+BC\)</span> 或 <span class="math inline">\(A\to \alpha\)</span>
+的形式。举例来说，给定 <span class="math inline">\(A\to
+s_1s_2...s_n\)</span>，我们从 <span class="math inline">\(i=1\)</span>
+开始逐个进行拆解：</p>
+<ul>
+<li>若 <span class="math inline">\(s_1\)</span> 是变量，<span class="math inline">\(A\to s_1B_2\)</span></li>
+<li>若 <span class="math inline">\(s_2\)</span> 是变量，<span class="math inline">\(B_2\to s_2B_3\)</span></li>
+<li>以此类推，若 <span class="math inline">\(s_i\)</span> 是变量，<span class="math inline">\(B_i\to s_iB_{i+1}\)</span></li>
+<li>若某个 <span class="math inline">\(s_i\)</span> 是终止符，令 <span class="math inline">\(B_i\to Z_iB_{i+1}\)</span>，其中 <span class="math inline">\(Z_i\to s_i\)</span></li>
+</ul>
+<p><br></p>
+<h2 id="pumping-lemma-for-cfl">Pumping Lemma for CFL</h2>
+<p>来了！关于上下文无关语言 CFL 的泵引理。</p>
+<p>若 <span class="math inline">\(L\)</span>
+是上下文无关语言，那么存在某常数 <span class="math inline">\(n\)</span>
+使得对于任意长度 <span class="math inline">\(\geq n\)</span> 的字符串
+<span class="math inline">\(z\in
+L\)</span>，我们都能找到一种方式将其分解为 <span class="math inline">\(z=uvwxy\)</span>，并满足：</p>
+<ul>
+<li><span class="math inline">\(|vwx|\leq n\)</span></li>
+<li><span class="math inline">\(vx\neq \epsilon\)</span></li>
+<li>对所有整数 <span class="math inline">\(k\geq 0\)</span>，字符串
+<span class="math inline">\(uv^kwx^ky \in L\)</span></li>
+</ul>
+<p>这一泵引理证明起来就有点复杂了。给定 CFG <span class="math inline">\(G=(V,T,P,S)\)</span> 且 <span class="math inline">\(L(G)=L\)</span>。令 <span class="math inline">\(m=|V|\)</span> (变量数)，<span class="math inline">\(n=2^m\)</span>。</p>
+<p>考虑一个长度 <span class="math inline">\(&gt;n=2^m\)</span> 的字符串
+<span class="math inline">\(z\in
+L\)</span>，它的分析树中一定至少存在一条从根到叶的路径，其长度 <span class="math inline">\(\geq m+1\)</span>
+(即使分析树是完全二叉树，此时深度最小，为 <span class="math inline">\(m+1\)</span>)。</p>
+<p>考虑这一路径上的后 <span class="math inline">\(m+1\)</span> 个变量
+(从底部往上数)，根据鸽巢原理，其中至少存在一对同样的变量，记为 <span class="math inline">\(A\)</span>。</p>
+<figure>
+<img data-src="PL_figure.png" alt="repetition: A\Rightarrow^* A">
+<figcaption aria-hidden="true">repetition: <span class="math inline">\(A\Rightarrow^* A\)</span></figcaption>
+</figure>
+<p>见上图，我们按照这种方式进行分割 <span class="math inline">\(S\Rightarrow_G^* uAy\Rightarrow^*_G
+uvAxy\Rightarrow_G^* uvwxy\)</span>。</p>
+<ul>
+<li>条件一：<span class="math inline">\(A\)</span> 是 <span class="math inline">\(S\)</span> 的深为 <span class="math inline">\(m+1\)</span> 的子树，其叶子数量 (<span class="math inline">\(|vwx|\)</span>) 不会超过 <span class="math inline">\(2^m=n\)</span></li>
+<li>条件二：<span class="math inline">\(A\)</span> 子树非空，一定能保证
+<span class="math inline">\(vx\neq \epsilon\)</span></li>
+<li>条件三：既然有 <span class="math inline">\(A\Rightarrow_G^*
+vAx\)</span> 且 <span class="math inline">\(A\Rightarrow_G^*
+w\)</span>，先不断使用式一 <span class="math inline">\(A\Rightarrow_G^*
+v^kAx^k\)</span>，再使用式二 <span class="math inline">\(v^kAx^k\Rightarrow_G^* v^kwx^k\)</span>。于是有
+<span class="math inline">\(S\Rightarrow_G^* uAy\Rightarrow_G^*
+uv^kwx^ky\)</span>；既然该字符串能被 <span class="math inline">\(G\)</span> 产生，它同样属于原 CFL <span class="math inline">\(L\)</span>。</li>
+</ul>
+<p><br></p>
+<h2 id="turing-machine">Turing Machine</h2>
+<p>来到最强大的通用计算模型图灵机 (Turing Machine) 了。</p>
+<p>无限长的纸带 (tape)，读写头 (read-write head)
+在该纸带上进行转移。转移方程如下：<span class="math inline">\(\delta(p,\alpha)=(q,
+\beta,L/R)\)</span>。意义为：图灵机在状态 <span class="math inline">\(p\)</span>，当前读到的字符为 <span class="math inline">\(\alpha\)</span>；那么图灵机转移到状态 <span class="math inline">\(q\)</span>，读写头将当前单元的字符 <span class="math inline">\(\alpha\)</span> 更改为 <span class="math inline">\(\beta\)</span>，读写头向左/右移动一个单元。</p>
+<p>读写头若到达任意接受状态 (accepting
+state)，纸带上的字符串被视为接受。与 DFA/PDA
+不同，图灵机不要求访问纸带上的所有字符 (前两个自动机均要求 consume
+输入字符串的所有字符)。这一特性决定了图灵机可能在转移过程中陷入死循环，即，不<strong>停机
+(halt)</strong>。</p>
+<p>图灵机的瞬时描述 (instantaneous description)：<span class="math inline">\(x_0x_1...x_{n-1}qx_n...x_m\)</span>。实际上就是把图灵机的状态
+<span class="math inline">\(q\)</span> 插入纸带的内容 <span class="math inline">\(x_0x_1...x_m\)</span> 里！其实挺形象的。</p>
+<p>图灵机存在许多变种：半无限带式图灵机 (semi-infinite tape
+TM)，多带图灵机 (multi-tape TM)，非确定性图灵机 (nondeterministic
+TM)；但它们在语言识别意义上均与单带确定性图灵机等价
+(区别在于时空复杂度)。</p>
+<hr>
+<p><strong>通用图灵机 (Universal TM)</strong> 是能够识别<strong>通用语言
+(Universal Language)</strong> <span class="math inline">\(L_u=\{(M,w):M\text{ accepts } w\}\)</span>
+的图灵机。输入模式为 <span class="math inline">\(M\#w\)</span>。</p>
+<p>这里要涉及一个概念，<strong>图灵机的编码 (coding
+scheme)</strong>。简单理解就是把图灵机编码成一个字符串；我们甚至可以通过遍历所有字符串来列举所有图灵机。</p>
+<p>通用图灵机所做的只是 simulate <span class="math inline">\(M(w)\)</span>，若 <span class="math inline">\(M\)</span> 接受 <span class="math inline">\(w\)</span>，通用图灵机也接受。</p>
+<p><br></p>
+<h2 id="decidability">Decidability</h2>
+<p>几个概念。</p>
+<ul>
+<li>递归可枚举语言 (Recursively Enumerable Language)
+是能<strong>被图灵机识别的语言</strong>。</li>
+<li>递归语言 (Recursive Language)，或可判定语言 (Decidable
+Language)，是能<strong>被图灵机识别，且在所有输入上都能停机的语言</strong>。</li>
+<li>部分递归函数 (Partial Recursive Function) <span class="math inline">\(f\)</span> — 很明显 TM 是一个函数，输入是 TM
+处理前的纸带，输出是 TM 处理后的纸带 — 是能被图灵机计算，且该图灵机在
+<span class="math inline">\(f\)</span> 的定义域上停机，在 <span class="math inline">\(f\)</span> 的定义域外不停机的函数。</li>
+<li>递归函数 (Recursive Function) <span class="math inline">\(f\)</span>
+— 是能被图灵机计算，且该图灵机在所有输入上都停机的函数。</li>
+</ul>
+<p>显然，比起递归可枚举，递归是一个更强的约束。</p>
+<p>一些有趣的结论：<strong>对角语言 (Diagonal Language)</strong> <span class="math inline">\(L_d=\{w_i:w_i\notin L(M_i)\}\)</span>
+(注意，字符串可以被列举，图灵机的编码也可以被列举) 是 non-RE
+语言。通用语言的补 <span class="math inline">\(\overline{L_u}=\{(M,w):M\text{ doesn&#39;t accept
+}w\}\)</span> 也是 non-RE 语言。非空图灵机语言 <span class="math inline">\(L_{ne}=\{M:L(M)\neq \emptyset\}\)</span> 是 RE
+语言，但空图灵机语言 <span class="math inline">\(L_e=\{M:L(M)=\emptyset\}\)</span> 是 non-RE
+语言：这意味着我们无法判断一个给定的图灵机是否为空 (empty language
+problem)。</p>
+<hr>
+<p>规约 (Reduction)：<span class="math inline">\(P_1\)</span> 规约为
+<span class="math inline">\(P_2\)</span> (表记 <span class="math inline">\(P_1\leq_m P_2\)</span>) 若存在某个递归函数 <span class="math inline">\(f\)</span> 满足 <span class="math inline">\(x\in
+P_1\)</span> 当且仅当 <span class="math inline">\(f(x)\in
+P_2\)</span>。规约关系说明了：</p>
+<ul>
+<li>如果 <span class="math inline">\(P_2\)</span> 是递归的，<span class="math inline">\(P_1\)</span> 也是递归的</li>
+<li>如果 <span class="math inline">\(P_2\)</span> 是递归可枚举的，<span class="math inline">\(P_1\)</span> 也是</li>
+<li>如果 <span class="math inline">\(P_1\)</span> 是不可判定的，<span class="math inline">\(P_2\)</span> 也是</li>
+<li>如果 <span class="math inline">\(P_1\)</span> 不是递归可枚举的
+(non-RE)，<span class="math inline">\(P_2\)</span> 也不是</li>
+</ul>
+<p>一开始我是把这个规约按照 COMP3357
+中的那个规约理解的，后来发现两者不太一样。见后文关于 Karp Reduction 与
+Cook Reduction 的讨论。</p>
+<hr>
+<p>莱斯定理 (Rice's Theorem)：递归可枚举语言的所有非平凡性质
+(non-trivial property) 都是不可判定的。</p>
+<ul>
+<li>非平凡性质 <span class="math inline">\(p\)</span>：至少有一个 RE
+语言满足 <span class="math inline">\(p\)</span>，也至少存在一个 RE
+语言不满足 <span class="math inline">\(p\)</span>。</li>
+<li><span class="math inline">\(L_p=\{M|L(M)\text{ satisfies property
+}P\}\)</span> 是不可判定的。</li>
+</ul>
+<p>莱斯定理的详细证明见归档笔记，比较巧妙，可以将这个问题归约到空语言问题
+(empty language problem) 上。</p>
+<p>我们知道通用语言是递归可枚举的，但是它是可判定的吗？另一个在课上提到的例子是将波斯特对应问题
+(Post's Correspondence Problem) 归约到通用语言。PCP
+是著名的不可判定问题，因此我们能够确定通用语言递归可枚举，但不可判定。这个例子的证明也很巧妙，可见归档笔记，感觉我长了五个脑子也想不出来。</p>
+<p><br></p>
+<h2 id="halting-problem">Halting Problem</h2>
+<p>著名的停机问题，这个必须得记录一下。</p>
+<ul>
+<li>INSTANCE：下标 <span class="math inline">\(i,j\)</span></li>
+<li>PROBLEM：第 <span class="math inline">\(i\)</span> 个图灵机 <span class="math inline">\(M_i\)</span> 是否在输入第 <span class="math inline">\(j\)</span> 个字符串 <span class="math inline">\(w_j\)</span> 后停机？</li>
+</ul>
+<p>反证法。假设停机问题是可判定的，那么一定存在某个图灵机 <span class="math inline">\(H\)</span> 接受 <span class="math inline">\(L=\{(i,j):M_i\text{ halts on } w_j\}\)</span>
+且在所有输入上停机。</p>
+<p>构造一个悖论图灵机 (Paradoxical Turing Machine) <span class="math inline">\(D\)</span>，输入某个下标 <span class="math inline">\(k\)</span>，模拟 <span class="math inline">\(H(k,k)\)</span>：</p>
+<ul>
+<li>若 <span class="math inline">\(H\)</span> 接受 <span class="math inline">\((k,k)\)</span>，即，<span class="math inline">\(M_k\)</span> 在 <span class="math inline">\(w_k\)</span> 上停机，则令 <span class="math inline">\(D\)</span> 陷入死循环 (不停机)</li>
+<li>若 <span class="math inline">\(H\)</span> 拒绝 <span class="math inline">\((k,k)\)</span>，即，<span class="math inline">\(M_k\)</span> 在 <span class="math inline">\(w_k\)</span> 上不停机，则令 <span class="math inline">\(D\)</span> 停机</li>
+</ul>
+<p><span class="math inline">\(D\)</span>
+本身也是图灵机，这说明它可以被编码并且有对应的下标 <span class="math inline">\(d\)</span>。现在我们分析一下 <span class="math inline">\(D(d)\)</span> 的表现：</p>
+<ul>
+<li>若 <span class="math inline">\(D\)</span> 不在 <span class="math inline">\(w_d\)</span> 上停机，说明 <span class="math inline">\(H\)</span> 接受 <span class="math inline">\((d,d)\)</span>，即 <span class="math inline">\(M_d\Rightarrow D\)</span> 在 <span class="math inline">\(w_d\)</span> 上停机！悖论产生</li>
+<li>若 <span class="math inline">\(D\)</span> 在 <span class="math inline">\(w_d\)</span> 上停机，说明 <span class="math inline">\(H\)</span> 拒绝 <span class="math inline">\((d,d)\)</span>，即 <span class="math inline">\(M_d\Rightarrow D\)</span> 不在 <span class="math inline">\(w_d\)</span> 上停机！悖论产生</li>
+</ul>
+<p>推出矛盾。假设为假：因此停机问题是不可判定问题。</p>
+<p><br></p>
+<h2 id="p-np">P &amp; NP</h2>
+<p>来正式认识一下 P 与 NP 问题。</p>
+<p>P 问题：所有能够被一个<strong>确定性图灵机 (Deterministic
+TM)</strong> 在<strong>多项式时间</strong>内求解的问题。</p>
+<p>NP 问题：所有能够被一个<strong>非确定性图灵机 (Nondeterministic
+TM)</strong> 在<strong>多项式时间</strong>内求解的问题。</p>
+<p>显然有 <span class="math inline">\(P\subseteq NP\)</span>。P
+问题代表的是一种可解性
+(任何经典意义上的多项式算法都能被视作一个确定性图灵机)，那么 NP
+问题代表的是什么呢？</p>
+<p>命题：若 <span class="math inline">\(L\in
+NP\)</span>，存在一个确定性多项式时间的<strong>可计算谓词 (computable
+predicate)</strong> <span class="math inline">\(P(x,y)\)</span>，与一个多项式 <span class="math inline">\(q(\cdot)\)</span>，满足： <span class="math display">\[
+x\in L \iff \exists y: |y|\leq q(|x|) \text{ such that } P(x,y)=1
+\]</span> 证明很符合直觉。我们知道 NTM 的转移是不确定的，即，<span class="math inline">\(|\delta(q,\alpha)|\geq 0\)</span>。作为理论模型的
+NTM 能够平行探索 (parallel exploration) 所有可能性，但这样的神力并不
+physically 存在。因此，一个真正可计算的方案是用 <span class="math inline">\(y\)</span> 消除 NTM 的非确定性，即，<span class="math inline">\(y\)</span> 标志着 NTM
+下一步选择哪一个可能性进行转移，类似于导航：如果 NTM 接受了 <span class="math inline">\(x\)</span>，令 <span class="math inline">\(P(x,y)=1\)</span>，否则 <span class="math inline">\(P(x,y)=0\)</span>。因为 NTM 能在多项式时间内接受
+<span class="math inline">\(x\)</span>，显然 <span class="math inline">\(y\)</span> 的长度也是多项式级别的。</p>
+<p>我们把这样的 <span class="math inline">\(y\)</span> 称为 <span class="math inline">\(x\)</span> 的<strong>证明 (proof, or
+certificate)</strong>。虽然我们无法在多项式时间内判定 <span class="math inline">\(x\in L\)</span> (NTM
+不存在)，但可以在多项式时间内<strong>验证 (verify)</strong> 给定的 <span class="math inline">\(y\)</span> 是否能使得 <span class="math inline">\(P(x,y)=1\)</span>。</p>
+<p>因此，有人说 NP 问题代表的是一种<strong>可验证性
+(verifiable)</strong>。找出解的过程也许是困难的，但验证解的过程是简单的。这也是
+<span class="math inline">\(P\neq NP\)</span>
+的一个重要理论基础：我们真的能够相信，验证一个问题的解与找出一个问题的解有着相同的难度吗？</p>
+<p>或者说，「真理的存在」一定代表着「真理是可被认识」的吗？</p>
+<p><br></p>
+<h2 id="npc">NPC</h2>
+<p>定义 <strong>Karp 规约 (Karp Reduction)</strong> <span class="math inline">\(L_1\leq_m^p
+L_2\)</span>：存在多项式时间可计算的函数 <span class="math inline">\(f\)</span>，满足 <span class="math inline">\(x\in
+L_1 \iff f(x)\in L_2\)</span>。因此有时 Karp
+规约也被称为<strong>多项式时间规约 (Poly-Time Reduction)</strong>。</p>
+<blockquote>
+<p>我们在加密学 COMP3357 中接触到的规约是 <strong>Cook 规约 (Cook
+Reduction)</strong>；其特征是所调用的<strong>预言机 (Oracle)</strong>
+是一个确定性多项式时间的机器，且可以被调用任意次数。而在本节课中提到的
+Karp 规约仅能调用预言机一次。</p>
+</blockquote>
+<p>NP 困难问题 (NP Hard) <span class="math inline">\(L_{hard}\)</span>
+满足：<span class="math inline">\(\forall L&#39; \in NP.L&#39;\leq_m^p
+L_{hard}\)</span>。</p>
+<p>NP 完全问题 (NP Complete) <span class="math inline">\(L_{comp}\)</span> 满足：</p>
+<ul>
+<li><span class="math inline">\(L_{comp}\in NP\)</span></li>
+<li><span class="math inline">\(L_{comp}\in NP\text{ Hard}\)</span>，即
+<span class="math inline">\(\forall L&#39;\in NP,L&#39;\leq_m^p
+L_{comp}\)</span></li>
+</ul>
+<p>注意，NP hard 问题不一定是 NP 问题 (它可以比 NP
+问题更困难，即，其答案都是难以验证的)，但 NP complete 问题一定是 NP
+问题。</p>
+<p>由于所有的 NP 问题都能归约到 NPC 问题，若任意一个 NPC
+问题在多项式时间上可解 (<span class="math inline">\(\exists L\in
+NPC,L\in P\)</span>)，整个 NP 问题集都将在多项式时间上可解 (<span class="math inline">\(P=NP\)</span>)。</p>
+<p>著名的 NPC 问题：</p>
+<ul>
+<li>可满足性问题 Satisfiability，e.g., 3-SAT</li>
+<li>三维匹配问题 3D Matching</li>
+<li>顶点覆盖问题 Vertex Cover (一个顶点覆盖所有邻接的顶点)</li>
+<li>最大割问题 MAX-CUT</li>
+<li>K-问题 K-Clique (图中是否存在一个规模为 <span class="math inline">\(k\)</span> 的团/完全子图)</li>
+<li>独立集问题 Independent Set (独立集中任意两个顶点都不相连)</li>
+<li>哈密顿回路问题 Hamiltonian Circuit (每个顶点会且仅会被访问一次)</li>
+<li>划分问题 Partition (正整数集合的等和分割)</li>
+<li>集合覆盖问题 Set Cover</li>
+<li>旅行商问题 Traveling Salesman Problem, TSP (权重和 <span class="math inline">\(\leq B\)</span> 的哈密顿回路)</li>
+</ul>
+<p>3-SAT 归约到顶点覆盖问题。有 <span class="math inline">\(n\)</span>
+个变量，<span class="math inline">\(m\)</span> 个 3-SAT
+clauses，构造出一个点数为 <span class="math inline">\(2n+3m\)</span>
+的图，分别是 <span class="math inline">\(n\)</span> 个 <span class="math inline">\(x_i\)</span>，<span class="math inline">\(n\)</span> 个 <span class="math inline">\(\lnot
+x_i\)</span>，<span class="math inline">\(m\)</span>
+个三角形，每个三角形对应一个 clause 中的三个
+literals。连边策略很显然：该图的顶点覆盖对应的是原 3-SAT 的一个解。</p>
+<p>三个图论 NPC 问题 (Vertex Cover, Independent Set, K-Clique)
+的规约关系：如果图 <span class="math inline">\(G=(V,E)\)</span>
+有一个规模为 <span class="math inline">\(k\)</span>
+的顶点覆盖，那么它有一个规模为 <span class="math inline">\(|V|-k\)</span> 的独立集，且 <span class="math inline">\(\overline{G}=(V,E^c)\)</span> 有一个大小为 <span class="math inline">\(|V|-k\)</span> 的完全子图。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info: CS3231. Professor: Sanjay Jain.</p>
+<p>Course textbook: <em>Introduction to Automata Theory, Languages and
+Computation (3rd Edition)</em>, Hopcraft, Motwani &amp; Ullman, (2014),
+Pearson</p>
+<p>Course website: https://www.comp.nus.edu.sg/~sanjay/cs3231.html</p>
+<p>[1] 引自杨老师，摘录如下：「<em>据考证，本科生课程 CSIS0293/COMP3293
+Introduction to Theory of Computation 最后一次开设是在 Autumn
+2005，研究生课程 CSIS9601/COMP9601 Theory of Computation and Algorithm
+Design 最后一次开设是在 Autumn 2016。</em>」</p>
+
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2024/08/16/cs3231/" title="自动人形会梦见 NP 完全问题吗？">https://www.thisisxxz.com/2024/08/16/cs3231/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | 自动人形会梦见 NP 完全问题吗？](https://www.thisisxxz.com/2024/08/16/cs3231/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Theoretical-Computer-Science/" rel="tag"><i class="fa fa-tag"></i> Theoretical Computer Science</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/08/13/ph2112/" rel="prev" title="非经典逻辑">
+                  <i class="fa fa-chevron-left"></i> 非经典逻辑
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/09/18/ccch5054/" rel="next" title="子宫里的中国">
+                  子宫里的中国 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/08/16/cs3231/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="(胡言乱语时刻) 学习的越深入，越感觉到计算机真是神的造物；阴与阳，黑与白，假与真，0 与 1：吟唱着二进制神谕的摩西缓缓举起手杖，混沌的芯片与电路之海顷刻间分开，一条平坦的道路向应许之地延伸。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nand2Tetris I - Machine Language">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/09/14/nand2tetris-2/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="(胡言乱语时刻) 学习的越深入，越感觉到计算机真是神的造物；阴与阳，黑与白，假与真，0 与 1：吟唱着二进制神谕的摩西缓缓举起手杖，混沌的芯片与电路之海顷刻间分开，一条平坦的道路向应许之地延伸。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-09-14T11:29:43.000Z">
+<meta property="article:modified_time" content="2024-04-09T02:38:56.000Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Computer Architecture">
+<meta property="article:tag" content="Programming Languages">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2023/09/14/nand2tetris-2/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/09/14/nand2tetris-2/","path":"2023/09/14/nand2tetris-2/","title":"Nand2Tetris I - Machine Language"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Nand2Tetris I - Machine Language | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#machine-language"><span class="nav-number">1.</span> <span class="nav-text">Machine Language</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hardware-platform"><span class="nav-number">2.</span> <span class="nav-text">Hardware Platform</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#memory"><span class="nav-number">2.1.</span> <span class="nav-text">Memory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#processor"><span class="nav-number">2.2.</span> <span class="nav-text">Processor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#register"><span class="nav-number">2.3.</span> <span class="nav-text">Register</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#assembly-language"><span class="nav-number">3.</span> <span class="nav-text">Assembly Language</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#basic-instructions"><span class="nav-number">4.</span> <span class="nav-text">Basic Instructions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#the-a-instruction"><span class="nav-number">4.1.</span> <span class="nav-text">The A-Instruction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#the-c-instruction"><span class="nav-number">4.2.</span> <span class="nav-text">The C-Instruction</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#symbols"><span class="nav-number">5.</span> <span class="nav-text">Symbols</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#io-devices"><span class="nav-number">6.</span> <span class="nav-text">I&#x2F;O Devices</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#screen"><span class="nav-number">6.1.</span> <span class="nav-text">Screen</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#keyboard"><span class="nav-number">6.2.</span> <span class="nav-text">Keyboard</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/09/14/nand2tetris-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Nand2Tetris I - Machine Language | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Nand2Tetris I - Machine Language
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-09-14 19:29:43" itemprop="dateCreated datePublished" datetime="2023-09-14T19:29:43+08:00">2023-09-14</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>(胡言乱语时刻)
+学习的越深入，越感觉到计算机真是神的造物；阴与阳，黑与白，假与真，0 与
+1：吟唱着二进制神谕的摩西缓缓举起手杖，混沌的芯片与电路之海顷刻间分开，一条平坦的道路向应许之地延伸。</p>
+<span id="more"></span>
+<p>神的语言 (machine language)
+太简单又太复杂，远非人类贫瘠的大脑能够理解；但人类又觊觎祂全知全能的伟力
+(Church-Turing Thesis)，遂亵渎地创造了自己简陋的语言 (assembly language)
+来对神谕加以解读。</p>
+<p>见此情形，神曰：「看哪，他們都是一樣的人，說着同一種語言，如今他們既然能做起這事，以後他們想要做的事就沒有不成功的了。」为了惩罚人类的僭越，神把他们的语言打乱
+(programming
+languages)；愚钝的人类从此无法互相理解，并都宣称自己使用的语言是最好的。这就是巴别塔倒塌的故事了。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="machine-language">Machine Language</h2>
+<div class="note info no-icon"><p>A machine language is an agree-upon formalism, designed to code
+low-level programs as series of machine instructions.</p>
+</div>
+<p>Machine language is the most profound interface in the overall
+computer enterprise - <u>the fine line where hardware and software meet.
+</u></p>
+<p>This is the point where the abstract thoughts of the programmers, as
+manifested in symbolic (binary) instructions, are turned into physical
+operations performed in silicon.</p>
+<p>上面这段对机器语言的描述太精髓了，我无力进行翻译或总结。</p>
+<p>在前几节里我们构造了一系列重要的元件，包括 ALU 与 memory
+chips；这些硬件构成了计算机的 hardware
+platform。我们常常认为机器语言是为了向 hardware
+platform「发号施令」而设计的；但其实并不尽然。</p>
+<p>machine language 与 hardware platform 是一体两面的。</p>
+<ul>
+<li>It's true that the machine language is designed to exploit a given
+hardware platform.</li>
+<li>It's also true that the hardware platform is designed to fetch,
+interpret, and execute instructions written in the given machine
+language.</li>
+</ul>
+<p>machine language 与 hardware platform
+从不同的角度描述计算机的底层实现，但终究殊途同归。</p>
+<ul>
+<li><em>constructive</em> : how hardware platform is built from
+low-level chips? (第一节)</li>
+<li><em>abstractly</em> : What is the given machine language's
+capabilities? (本节)</li>
+</ul>
+<p><br></p>
+<h2 id="hardware-platform">Hardware Platform</h2>
+<div class="note info no-icon"><p>A <em>machine language</em> can be viewed as an agreed-upon
+formalism, designed to manipulate a <em>memory</em> using a
+<em>processor</em> and a set of <em>registers</em>.</p>
+</div>
+<h3 id="memory">Memory</h3>
+<p>memory 通常用于指代计算机中用于存储数据<u>与指令</u>的硬件设备，包括
+RAM 与 ROM，中文语境下通常称其为「内存」或「记忆体」。</p>
+<p>memory structure: A continuous array of cells of some fixed width
+(每个 cell 对应一个 register), also called <em>words</em> or
+<em>locations</em>, each having a unique <em>address</em>.</p>
+<p>An individual word (representing a data item or an instruction) is
+specified by supplying its address, with the notation Memory[address],
+RAM[address], or R[address] for brevity.</p>
+<h3 id="processor">Processor</h3>
+<p>Processor 即我们熟知的 <em>Central Processor Unit</em>
+(<em>CPU</em>)，它负责执行一系列 elementary operations:</p>
+<ul>
+<li>Arithmetic and logic operations. (通过 ALU)</li>
+<li>Memory access operations.</li>
+<li>Control (branching) operations.</li>
+</ul>
+<p>这些 operations 的 operants 来自 registers 或 selected memory
+locations；同样，经过 processor 计算之后的结果 results 也将储存到
+registers 或 selected memory locations 中。</p>
+<p>那么 instructions 又从哪来？答案是 instruction memory: <u>instruction
+memory is a read-only device (例如 ROM), programs are loaded into it
+using some exogenous means.</u></p>
+<p>我们不妨想象这个情形：</p>
+<ul>
+<li>memory 分为两个部分，data memory 与 instruction memory。</li>
+<li>processor 拥有 data memory 的 read/write 权限与 instruction memory
+的 read 权限。</li>
+</ul>
+<p>如何更改只读的 instruction memory？e.g., If the instruction memory is
+implemented in a ROM chip pre-burned with some program. Loading a new
+program is done by <u>replacing the entire ROM chip.</u></p>
+<h3 id="register">Register</h3>
+<p>register 是 memory chips 的基本组成部分；但我们这里提到的 register
+与这个意义无关。在讨论 hardware platform 时，register 特指 CPU
+所配备的一系列快速储存器，有时也叫 <em>cache</em> (快存)。</p>
+<p>它的出现是为了解决 processor 对 memory 的直接访问速度过慢的问题。</p>
+<div class="note info no-icon"><p>Located in the processor's immediate proximity, registers serve as a
+high-speed local memory, allowing the processor to manipulate data and
+instructions quickly.</p>
+</div>
+<p>registers 使 processor
+本身也具备了少量记忆的功能；就像程序中的临时变量一样，registers
+的存在能够最小化 memory access 命令的数量，从而加速程序执行。</p>
+<p>在本节课将要实现的 Hack computer 中，我们将关注两个 CPU registers
+与一个对应的 memory register：</p>
+<ul>
+<li>D register: solely store data value.</li>
+<li>A register: both a data register and an <em>address register</em>
+.</li>
+<li>M register: M register 由 A 指定，M <span class="math inline">\(\leftarrow\)</span> <span class="math inline">\(RAM\)</span>[A].</li>
+</ul>
+<p><br></p>
+<h2 id="assembly-language">Assembly Language</h2>
+<p>注意，计算机是符合 von Neumann architecture [stay tuned]
+的；简单来说就是 data 与 instructions 是平等的，均能被计算机所存储
+(stored-program concept)。</p>
+<p>若想被计算机所存储，instructions 必须以 binary value
+的形式存在；又因为 instructions 是被 machine language
+所描述的，我们不难归结出 machine language 的本质：<u>a series of coded
+binaries.</u></p>
+<p>例如，对于二进制串 <code>1010001100011001</code>，我们赋予其如下意义
+(每 4 bits 为一组)：</p>
+<ul>
+<li><code>1010</code>: 表明该 instruction 的类型为 addition。</li>
+<li><code>0011</code>: processor 应将执行完该 instruction 后的结果储存至
+<span class="math inline">\(R\)</span>[3] 中。</li>
+<li><code>0001</code>: 第一个 operant 的值为 <span class="math inline">\(R\)</span>[1]。</li>
+<li><code>1001</code>: 第二个 operant 的值为 <span class="math inline">\(R\)</span>[9]。</li>
+</ul>
+<p>Under the formalism，我们将一个普通的 16-bit 二进制串编码成了
+hardware platform 能够理解的机器语言。对应的 hardware platform
+在读入这一 instruction 过后，将会执行 <span class="math inline">\(R\)</span>[3] = <span class="math inline">\(R\)</span>[1] + <span class="math inline">\(R\)</span>[9]。</p>
+<p>但人类难以理解以二进制编码形式存在的机器语言；很自然的，我们需要一套
+human-readable 的体系来描述机器语言。于是人类引入了一系列 symbolic
+notation：这就是所谓 assembly language 的由来了。</p>
+<div class="note info no-icon"><p>Assembly language (or simply <em>assembly</em>) is a mnemonic for
+machine language.</p>
+</div>
+<p>举例来说，我们将 <code>1010</code> 符号化为
+<code>ADD</code>，接下来的几个地址则对应为 <code>R3</code>,
+<code>R1</code>, <code>R9</code>；这样，instruction <span class="math inline">\(R\)</span>[3] = <span class="math inline">\(R\)</span>[1] + <span class="math inline">\(R\)</span>[9] 能被 assembly language 描述为
+<code>ADD R3, R1, R9</code>.</p>
+<p>人类不光擅长读 symbolic notation，还擅长写由这些 symbolic notation
+组成的程序；assembly language 是一个真正意义上的 programming
+language。这就是 symbolic abstraction 的力量。</p>
+<p>至此，红海分开，道路显现：人类用 assembly language 写就的程序，经
+<em>assembler</em> 按照特定的 mapping rules 翻译成 machine language，被
+hardware platform 读取后终于转化为硅晶间的微小电流。</p>
+<p><br></p>
+<h2 id="basic-instructions">Basic Instructions</h2>
+<p>我们将用 assembly language 来描述两个基本的 instructions:
+<em>A</em>-Instruction 与 <em>C</em>-Instruction.</p>
+<h3 id="the-a-instruction">The <em>A</em>-Instruction</h3>
+<p>The <em>A</em>-instruction is used to set the A register to a 15-bit
+value (address).</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@value                       // Where value is either a non-negative decimal number</span><br><span class="line">                             // or a symbol referring to such number.</span><br></pre></td></tr></table></figure>
+<p>这个指令与 A 作为 address register
+的身份密切相关。因此，在该命令执行完之后我们一般会对 A
+中储存的地址所对应的 register - M 进行操作。(M = <span class="math inline">\(R\)</span>[value])</p>
+<h3 id="the-c-instruction">The <em>C</em>-Instruction</h3>
+<p>The <em>C</em>-instruction is the programming workhorse of the Hack
+platform - the instruction that gets almost everything done. The
+instruction code is a specification that answers three questions:</p>
+<ul>
+<li>what to compute? (<em>comp</em>)</li>
+<li>where to store the computed value? (<em>dest</em>)</li>
+<li>what to do next? (<em>jump</em>)</li>
+</ul>
+<p>Along with the <em>A</em>-instruction, these specifications determine
+all the possible operations.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dest=comp; jump               // Either the desk or jump fields may be empty.</span><br><span class="line">comp; jump                    // If dest is empty, the &quot;=&quot; is omitted;</span><br><span class="line">dest=comp                     // If jump is empty, the &quot;;&quot; is omitted;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>dest</code>: 将结果储存至 register (A, D) 或 data memory (M)
+处。</li>
+<li><code>comp</code>: 支持常数 <code>0</code>, <code>1</code>, 与
+<code>-1</code> 和 A, D, M 三个 register
+所储存的值之间任意的算数或逻辑运算。</li>
+<li><code>jump</code>: 支持 conditional jump 与 unconditional
+jump，可以跳跃到程序的任意一行执行 (类似 <code>goto</code>)。</li>
+</ul>
+<p>在正常情况下，程序是一行一行执行的，每一行对应一个 instruction，而
+<code>jump</code> 可以改变程序的执行流程。其底层实现是 system counter
+元件 (可以看出 system counter 指向 instruction memory 的地址)。</p>
+<p><em>conflicting uses of the A register</em>. 之前我们提到，A register
+既是 data register，又是 address register。因此 A
+中储存的值的含义可能有三种：</p>
+<ul>
+<li>data: 一个平平无奇的 data。</li>
+<li>address: 指向 data memory，是 M register 的地址。</li>
+<li>address: 指向 instruction memory，是程序下一步将会 <code>jump</code>
+到的地址。</li>
+</ul>
+<p>为了避免语义冲突，在可能会进行 <code>jump</code> 的 C-instruction
+中我们尽量避免引用 M register。</p>
+<p><br></p>
+<h2 id="symbols">Symbols</h2>
+<p>Assembly commands can refer to memory locations (addresses) using
+either constants or <em>symbols</em>. Symbols are introduced into
+assembly programs in the following three ways:</p>
+<ul>
+<li><em>Predefined symbols</em>.
+<ul>
+<li>Virtual registers: <code>R0</code> to <code>R15</code> refer to RAM
+addresses 0 to 15 respectively.</li>
+<li>Predefined pointers: <code>SP</code>, <code>LCL</code>,
+<code>ARG</code>, <code>THIS</code> and <code>THAT</code> refer to RAM
+addresses 0 to 4.</li>
+<li>I/O pointers: <code>SCREEN</code> and <code>KBD</code> refer to RAM
+addresses 16834 (0x4000) and 24576 (0x6000).</li>
+</ul></li>
+<li><em>Label symbols</em>.</li>
+<li><em>Variable symbols</em>.</li>
+</ul>
+<p>label symbols 与 variable symbols 均属于 user-defined
+symbols。其中，label symbols 作为 <em>jump</em> 命令的补充，使得
+assembly language 程序的可读性进一步提高。语法和 <em>goto</em>
+很类似：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(JUMP_HERE)</span><br><span class="line"></span><br><span class="line">@JUMP_HERE</span><br><span class="line">0; JMP            // or other conditional jump</span><br></pre></td></tr></table></figure>
+<p>assembler 将自动把 <code>JUMP_HERE</code> symbol 解析为
+<code>(JUMP_HERE)</code> 下一行的行数：在这个例子中是 2。</p>
+<p>结合 conditional jump 与 label symbols，我们能在 assembly language
+中实现简单的
+while-loop。最常见的例子是程序末尾的死循环：这是为了阻止潜在的
+no-operation (NOP) attack.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(END)</span><br><span class="line">@END</span><br><span class="line">0; JMP</span><br></pre></td></tr></table></figure>
+<p>variable symbols 与 label symbol 唯一的区别是它没有 <code>()</code>
+标记。variable symbols 将在 data memory 中申请一个
+register；此后，所有对该 variable symbol 的引用都将被 assembler 解析为该
+register 的地址。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@VAR</span><br><span class="line">M=0            // VAR=0</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="io-devices">I/O Devices</h2>
+<p>这里我再一次感受到计算机底层结构的统一性：例如键盘，屏幕这样的输入输出设备，其底层实现与
+memory 大同小异：我们仍然可以将其视作 a continuous array of fixed-width
+registers.</p>
+<p>以下例子中的具体数据是以本课程中的 Hack computer
+为标准的，但其涉及到的原理是共通的。</p>
+<h3 id="screen">Screen</h3>
+<p>Hack computer 拥有一个 256x512 (131072 pixels)
+的黑白屏幕。其底层实现是由 <code>SCREEN</code> 标记的 base address 16384
+开始的 8K memory map。(<span class="math inline">\(8192 \times 16 =
+131072\)</span>)。</p>
+<p>第 <span class="math inline">\(r\)</span> 行第 <span class="math inline">\(c\)</span> 列的某个 pixel 位于 <span class="math inline">\(RAM[16384+r\cdot32+c/16]\)</span> 中 word 的第
+<span class="math inline">\(c\%16\)</span> 个 bit 上 (从 LSB 到
+MSB)。e.g., 屏幕最左上角的 pixel 位于 <span class="math inline">\(RAM[\)</span><code>SCREEN</code><span class="math inline">\(]\)</span> 的第一个 bit 上。</p>
+<p>黑色的 pixel 对应 bit 1，白色的则对应 bit
+0。假设屏幕一开始为空，若我们想将左上角的 pixel 改为黑色：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@SCREEN</span><br><span class="line">M=1</span><br></pre></td></tr></table></figure>
+<h3 id="keyboard">Keyboard</h3>
+<p>Hack computer 的键盘用一个 register <span class="math inline">\(RAM[\)</span><code>KBD</code><span class="math inline">\(]\)</span> 即可实现。</p>
+<ul>
+<li>A key is pressed on the physical keyboard: its 16-bit ASCII code
+appears in <span class="math inline">\(RAM[24576]\)</span>.</li>
+<li>No key is pressed: the code <span class="math inline">\(0\)</span>
+appears in this location.</li>
+</ul>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p>Lecturer: Prof. Shimon Shocken, Prof. Noam Nisan.</p>
+<p>Course textbook:</p>
+<p>(Nisan N., Schocken S., 2008) <a target="_blank" rel="noopener" href="https://www.amazon.com/Elements-Computing-Systems-Principles-ebook/dp/B004HHORGA/">The
+Element of Computing Systems: Building a Modern Computer from First
+Principles.</a></p>
+
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2023/09/14/nand2tetris-2/" title="Nand2Tetris I - Machine Language">https://www.thisisxxz.com/2023/09/14/nand2tetris-2/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | Nand2Tetris I - Machine Language](https://www.thisisxxz.com/2023/09/14/nand2tetris-2/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Computer-Architecture/" rel="tag"><i class="fa fa-tag"></i> Computer Architecture</a>
+              <a href="/tags/Programming-Languages/" rel="tag"><i class="fa fa-tag"></i> Programming Languages</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/09/06/nand2tetris-1/" rel="prev" title="Nand2Tetris I - ALU & Memory">
+                  <i class="fa fa-chevron-left"></i> Nand2Tetris I - ALU & Memory
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/09/16/japn1088/" rel="next" title="中学以来の再会 — 霓虹语入门">
+                  中学以来の再会 — 霓虹语入门 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/09/14/nand2tetris-2/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

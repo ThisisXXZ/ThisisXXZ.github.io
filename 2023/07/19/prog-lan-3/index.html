@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="这一节可以说是整套系列课程中含金量最高的一部分，学习的时候甚至能感受到获取知识的快感......！  一方面，在我们已经建立起对 ML 与 Racket 相当认识的基础之上，这一节由浅入深的展示了 static typing system 与 dynamic typing system 之间的区别与联系。 另一方面，本节的作业是用 Racket 写一个 MUPL (made-up pr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Programming Languages, UW, Part B - Static Checking">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/07/19/prog-lan-3/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="这一节可以说是整套系列课程中含金量最高的一部分，学习的时候甚至能感受到获取知识的快感......！  一方面，在我们已经建立起对 ML 与 Racket 相当认识的基础之上，这一节由浅入深的展示了 static typing system 与 dynamic typing system 之间的区别与联系。 另一方面，本节的作业是用 Racket 写一个 MUPL (made-up pr">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-07-19T10:16:28.000Z">
+<meta property="article:modified_time" content="2024-02-02T11:41:48.000Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Programming Languages">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2023/07/19/prog-lan-3/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/07/19/prog-lan-3/","path":"2023/07/19/prog-lan-3/","title":"Programming Languages, UW, Part B - Static Checking"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Programming Languages, UW, Part B - Static Checking | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#interpreter-compiler"><span class="nav-number">1.</span> <span class="nav-text">Interpreter &amp; Compiler</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ml-versus-racket"><span class="nav-number">2.</span> <span class="nav-text">ML versus Racket</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#what-is-static-checking"><span class="nav-number">3.</span> <span class="nav-text">What is Static Checking?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#correctness-soundness-completeness-undecidability"><span class="nav-number">4.</span> <span class="nav-text">Correctness:
+Soundness, Completeness, Undecidability</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#weak-typing"><span class="nav-number">5.</span> <span class="nav-text">Weak Typing</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#extended-semantics"><span class="nav-number">5.1.</span> <span class="nav-text">Extended Semantics</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/07/19/prog-lan-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Programming Languages, UW, Part B - Static Checking | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Programming Languages, UW, Part B - Static Checking
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-07-19 18:16:28" itemprop="dateCreated datePublished" datetime="2023-07-19T18:16:28+08:00">2023-07-19</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>这一节可以说是整套系列课程中含金量最高的一部分，学习的时候甚至能感受到获取知识的快感......！</p>
+<ul>
+<li>一方面，在我们已经建立起对 ML 与 Racket
+相当认识的基础之上，这一节由浅入深的展示了 static typing system 与
+dynamic typing system 之间的区别与联系。</li>
+<li>另一方面，本节的<a target="_blank" rel="noopener" href="https://www.cnblogs.com/VeniVidiVici/p/16667116.html">作业</a>是用
+Racket 写一个 MUPL (made-up programming language) 的解释器。</li>
+</ul>
+<span id="more"></span>
+<p><br></p>
+<blockquote class="blockquote-center">
+<p>If you want to understand something, implement it.</p>
+
+</blockquote>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="interpreter-compiler">Interpreter &amp; Compiler</h2>
+<p>We can describe a typical workflow for a language implementation as
+follows.</p>
+<ul>
+<li>We take a <em>string</em> holding the <em>concrete syntax</em> of a
+program in the language. Typically this string would be the contents of
+one or more files.</li>
+<li>The <em>parser</em> (解析器，语法分析器) gives errors if this string
+is not syntactically well-formed. (no misused keywords, misplaced
+parentheses, etc.)</li>
+<li>If there are no such errors, the parser produces a <em>tree</em>
+that represents the program. This is called <em>abstract-syntax
+tree</em> (抽象语法树), or AST for short.</li>
+<li>If our language includes type-checking rules, the
+<em>type-checker</em> will use this AST to either produce error messages
+or not.</li>
+</ul>
+<p>解析器将代码解析为
+AST；这是源代码语言结构的一种树形抽象表示，树上的每一个节点代表源代码中的一种结构。若语言有类型检查规则，类型检查器将对
+AST 进行类型检查。若通过检查，AST 将被进一步处理。</p>
+<p>There are basically two approaches to this rest-of-the-implementation
+for implementing some programming language B, or sometimes of the
+mix.</p>
+<ul>
+<li><em>interpreter</em> (解释器)：我们用另一种语言 A 编写语言 B
+的解释器。解释器读入 B 语言程序的 AST 并生成结果。更好的名字
+(但并非学术共识)：<em>executor</em> for B 或 <em>evaluator</em> for
+B.</li>
+<li><em>compiler</em> (编译器)：我们用另一种语言 A 编写语言 B
+的编译器。编译器读入 B 语言程序的 AST 并生成一段与其完全等价的 C 语言
+(not necessarily the language C) 程序，再利用某些已有的 C 语言实现
+(pre-existing implementation for C) 生成结果。更好的名字
+(但并非学术共识)：<em>translator</em> for B.</li>
+</ul>
+<p>无论采用解释器还是编译器，我们把语言 A 称之为 <em>metalanguage</em>
+(元语言)。For compilation, 我们把语言 B 称为 <em>source language</em>
+(源语言)，语言 C 称为 <em>target language</em> (目标语言)。</p>
+<div class="note info no-icon"><p>A one-sentence sermon: <em>Interpreter versus compiler is a feature
+of a particular programming-language implementation, NOT a feature of
+the programming language.</em></p>
+</div>
+<p>采用编译器或解释器是语言实现的两种方式，与语言本身无关。我们不能将使用编译器或解释器当作语言本身的
+feature。</p>
+<p>我们常说的所谓编译型语言 (compiled languages) 与解释型语言
+(interpreted languages)
+其实是毫无道理的：这种分类方法的出现有着很复杂的历史原因，例如 C
+语言长期以来都是采用编译器实现，函数式语言通常采用解释器实现。(因此 C
+语言常被称作编译型语言，而函数式语言常被称作解释型语言)。</p>
+<p>但这并不代表我们不能编写 C 语言的解释器，或是编写函数式语言的编译器
+(事实上，SML/NJ
+就采用了部分编译器实现)：无论采用哪一种实现方式，都与源语言本身无关。</p>
+<p><br></p>
+<h2 id="ml-versus-racket">ML versus Racket</h2>
+<p>General semantics 上的异同：</p>
+<ul>
+<li>similarities:
+<ul>
+<li>have constructs that encourage a functional style.</li>
+<li>avoiding mutations, while allowing it where appropriate.</li>
+<li>using first-class closures.</li>
+<li>...</li>
+</ul></li>
+<li>differences:
+<ul>
+<li>different syntax: ML's pattern matching, Racket's accessor functions
+for structs.</li>
+<li>Racket's mutiple variants of let-expressions (<code>let</code>,
+<code>let*</code>, <code>letrec</code>)</li>
+<li>(most important) <u><em>ML has a static type system that Racket does
+not!</em></u></li>
+</ul></li>
+</ul>
+<div class="note info no-icon"><p>ML's static type system rejects lots of programs before running them
+by doing type-checking and reporting errors. To do so, ML enforces
+certain <em>restrictions</em> (e.g., all elements of a list must have
+the same type). As a result, ML ensures the absence of certain errors at
+<em>compile time</em>.</p>
+</div>
+<p>理解两个语言区别的最好方式是从其中一个语言的角度审视另一个语言。抛开语法的桎梏，我们站在
+ML 的视角，研究它的静态类型系统会对 Racket 的程序作何反应。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">f</span> y) (<span class="name"><span class="built_in">+</span></span> y (<span class="name"><span class="built_in">car</span></span> y)))</span><br></pre></td></tr></table></figure>
+<p>ML
+的静态类型系统可以识别到以上程序的类型错误并在编译时报告错误，阻止该程序进入运行阶段。而
+Racket 只有该函数被调用时才会弹出 run-time error。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> xs (<span class="name"><span class="built_in">list</span></span> <span class="number">1</span> <span class="literal">#t</span> <span class="string">&quot;hi&quot;</span>))</span><br></pre></td></tr></table></figure>
+<p>然而 ML 也会 reject 一些在 Racket 视角下没有 bug
+的程序；如上例，这个程序违反了 ML 的类型规则：list
+中的所有元素类型应该保持一致。但这样的 list 定义在 Racket
+中完全没有问题。</p>
+<p>从这个角度看，我们能够得出这样的结论：ML is roughly a <em>subset</em>
+of Racket. Programs that run produce similar answers, but ML rejects
+many more programs as illegal, i.e., not part of the language.</p>
+<p>那么，一个 ML 程序员又会如何看待 Racket 呢？他可能会认为 Racket is
+just ML where <em>every expression is part of one big datatype</em>.</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">datatype</span> theType = <span class="type">Int</span> <span class="keyword">of</span> <span class="built_in">int</span></span><br><span class="line">                 | <span class="type">String</span> <span class="keyword">of</span> <span class="built_in">string</span></span><br><span class="line">                 | <span class="type">Pair</span> <span class="keyword">of</span> theType <span class="keyword">of</span> theType * theType</span><br><span class="line">                 | <span class="type">Fun</span> <span class="keyword">of</span> theType -&gt; theType</span><br><span class="line">                 | ... <span class="comment">(* one constructor per built-in type *)</span></span><br></pre></td></tr></table></figure>
+<p>Racket 中的每个表达，都被某个 constructor 隐式的 (implicitly)
+包装入这个 big datatype 中。例如 <code>42</code> 实际上是
+<code>(Int 42)</code>；这能够使得每个表达的结果都是 <code>theType</code>
+类型。</p>
+<p>并且，函数将检查其参数是否有正确的 constructors (in other words,
+"tags")，如果不合法，弹出错误；反之将调用函数的结果也隐式的包装在对应的
+<code>theType</code> 类内。例如，<code>(+ a b)</code> 将检查
+<code>a</code> 与 <code>b</code> 是否有标签
+<code>Int</code>；如果有，则返回结果 <code>(Int a+b)</code>。</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fun</span> car v = <span class="keyword">case</span> v <span class="keyword">of</span> <span class="type">Pair</span>(a, b) =&gt; a | _ =&gt; <span class="keyword">raise</span> ... <span class="comment">(* give some error *)</span></span><br><span class="line"><span class="keyword">fun</span> pair? v = <span class="keyword">case</span> v <span class="keyword">of</span> <span class="type">Pair</span> _ =&gt; <span class="literal">true</span> | _ =&gt; <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p>这是另外一个例子：我们用 ML 来展示 Racket 中存在的 implicit run-time
+pattern matching。由于这种 "secret pattern-matching"
+是不对程序员暴露的，Racket 提供了类型检查函数例如
+<code>pair?</code>。</p>
+<p>The fact that we can think of Racket in terms of <code>theType</code>
+suggests that anything you can do in Racket can be done, perhaps more
+awkwardly, in ML: The ML programmer could just program explicitly using
+something like <code>theType</code> definition above.</p>
+<p><br></p>
+<h2 id="what-is-static-checking">What is Static Checking?</h2>
+<p>What is usually meant by "static checking" is anything done to reject
+a program at <em>compile-time</em>.</p>
+<div class="note info no-icon"><p>Compile-time is the time <em>after</em> a program (successfully)
+parses but <em>before</em> it runs.</p>
+</div>
+<p>注意，compile-time 是一个时间概念，虽然名字中含有
+compile，但它与语言实现采用的是 interpreter 还是 compiler
+无关。这进一步印证了我们之前所提到的语言实现并不是语言本身的 feature
+这一观念。</p>
+<div class="note info no-icon"><p>The most common <em>approach</em> to define a language's static
+checking is via a <em>type system</em>.</p>
+</div>
+<p>type system 中包含一系列 typing rules，例如 (以 ML
+为背景)：每个变量都有一个类型，条件语句的分支有着相同的类型，list
+中的元素类型一致等等。static checking 则检查程序是否遵循了这些规则。</p>
+<p>注意在 ML 中，type inferencer 也是 static checking
+的一部分，它对程序进行推断，判断是否存在一种可能的 type
+annotations，使得程序能够遵循 type system 中定义的规则。</p>
+<div class="note info no-icon"><p>The <em>purpose</em> of static checking is to reject programs that
+"make no sense" or "may try to misuse a language feature".</p>
+</div>
+<p>static checking 的确能够达到它设计之初的目的，但它并不是完美的；</p>
+<ul>
+<li>There are errors a type system typically does not prevent (such as
+array-bounds errors).</li>
+<li>There are errors a type system <em>cannot</em> prevent unless given
+more information about what a program is supposed to do. (ex. wrongly
+calls <code>+</code> instead of <code>*</code>)</li>
+<li>The necessary <em>trade-off</em>. the static checker has to reject
+some programs that would not do anything wrong.</li>
+</ul>
+<p>值得注意的是第三点：Racket 的动态检查 (dynamic checking, i.e.,
+run-time checking) 通过赋予并检测值的标签实现 (即上一节提到的 secret
+pattern-matching)，这使得它在运行时发现程序的错误。</p>
+<p>而静态检查则能在程序运行之前排除某些有问题的程序，这样做的代价
+(trade-off) 是它将会拒绝某些实际上没有问题的程序 (例如拥有不同类型元素的
+list)。</p>
+<div class="note info no-icon"><p>The typical points at which to prevent an error are compile-time and
+run-time. However, it is worth realizing that there is really a
+<em>continuum of eagerness</em> about when we declare something an
+error.</p>
+</div>
+<p>实际上，静态检查与动态检查并非是对立的概念，对于不同类型的错误，我们可以选择在
+compile-time 将其检出，也可以选择等到 run-time
+时再弹出错误；在这两个时间段之外进行处理也是一个可行但非典型的选择。</p>
+<p>如何掌握好 static checking 的
+trade-off，平衡其检出错误的效率与语言的灵活性，才是一个更加实际且有意义的命题。</p>
+<p><br></p>
+<h2 id="correctness-soundness-completeness-undecidability">Correctness:
+Soundness, Completeness, Undecidability</h2>
+<p>设我们想要避免的错误为 X，我们定义一个 static checker 的正确性
+(correctness) 为：</p>
+<ul>
+<li>A type system is <em>sound</em> if it never accepts a program that,
+when run with some input, does X, i.e., soundness prevents <em>false
+negatives</em>.</li>
+<li>A type system is <em>complete</em> if it never rejects a program
+that, no matter what input it is run with, will not do X, i.e.,
+completeness prevents <em>false positives</em>.</li>
+</ul>
+<p>实际上，<em>soundness</em> 与 <em>completeness</em>
+这两个术语来自逻辑学，其被广泛的应用在编程语言的理论设计中。</p>
+<ul>
+<li>A sound logic proves <em>only</em> true things.</li>
+<li>A complete logic proves <em>all</em> true things.</li>
+</ul>
+<p>如果一个 type system 能够兼具 soundness 与
+completeness，那么它所接受的程序集合与所有不执行 X
+的程序集合是完全等价的。可惜，理论是美好的，现实是残酷的：</p>
+<div class="note info no-icon"><p>In modern languages, type system are sound (they prevent what they
+claim to) but not complete (they reject program that need not
+reject).</p>
+</div>
+<p>以 ML 的 static checker 为例，若我们想避免的问题 X 为 "string
+类型的值作为除法运算的运算数"：</p>
+<figure class="highlight ml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fun</span> f1 x = <span class="number">4</span> div <span class="string">&quot;hi&quot;</span>                         <span class="comment">(* f1 never get called *)</span></span><br><span class="line"><span class="keyword">fun</span> f2 x = <span class="keyword">if</span> <span class="literal">true</span> <span class="keyword">then</span> <span class="number">0</span> <span class="keyword">else</span> <span class="number">4</span> div <span class="string">&quot;hi&quot;</span></span><br><span class="line"><span class="keyword">fun</span> f3 = <span class="keyword">if</span> x &lt;= abs x <span class="keyword">then</span> <span class="number">0</span> <span class="keyword">else</span> <span class="number">4</span> div <span class="string">&quot;hi&quot;</span></span><br></pre></td></tr></table></figure>
+<p>注意，上述的三个函数均不会执行 <code>4 div "hi"</code> 这一语句，但
+ML 的 static checker 却会检出类型错误并拒绝程序运行。这也就是说，ML
+并不能很好的处理假阳性程序，它的 static checker 并不是 complete 的。</p>
+<div class="note info no-icon"><p>It is <em>impossible</em> to implement a static checker that given
+any program in your language (a) always terminates, (b) is sound, (c) is
+complete.</p>
+</div>
+<p>为了确保 X 不出现，现代语言的设计者选择了 soundness 与 always
+terminates 而牺牲了
+completeness。接受假阴性程序的后果要远大于拒绝假阳性程序的后果。</p>
+<p>与停机问题 (halting problem) 类似，一个总能停机的 static checker
+不能兼具 soundness 与 completeness 的原因也是由图灵机的<em>不可决定性
+(undecidability)</em> 决定的。</p>
+<p>非正式的设想一下，若我们想避免的问题 X 为程序进入死循环，那么一个既
+sound 又 complete 的 static checker
+本身就是对停机问题的通用解法。这样，我们把该问题的不可能性归约到了停机问题的不可能性上。</p>
+<p><br></p>
+<h2 id="weak-typing">Weak Typing</h2>
+<p>接下来我们再来介绍一个语言概念，<em>strongly typed</em> language 与
+<em>weakly typed</em> language。</p>
+<p>首先要强调，语言的强/弱类型与静态/动态类型是没有必然联系的两个概念。ML
+与 Racket
+虽然分别采用静态与动态类型系统，但它们都可被视为是强类型语言。</p>
+<p>对于想要阻止的问题 X，不同的语言有不同的处理方式：</p>
+<ul>
+<li>static checking: 利用 static checker 在 compile-time 检出。</li>
+<li>dynamic checking: 若 static checker 无法检出 X (语言不使用 static
+checker 或其 static checker 对问题 X 是 unsound
+的)，则在语言实现中加入一些 dynamic checks 在 run-time 阻止 X
+发生。</li>
+<li>......</li>
+<li>weak typing: 语言实现根本不对程序进行检查：认定 X
+的出现是程序员本身的问题。若程序员本身没有发现问题，X
+将会发生。(你程序员觉得是我的锅，那就是我的锅)</li>
+</ul>
+<p>C/C++ 是很典型的弱类型语言：举一个非常熟悉的例子，C/C++
+中的数组越界问题。即使我们访问了不合法的数组下标如
+<code>a[-1]</code>，C/C++
+也不会阻止程序的运行，最后程序可能会因为访问某些未申请的内存而导致崩溃。</p>
+<p>所谓强类型语言，就是其类型系统 (type system) 中存在较多的
+restrictions，阻止潜在 bug 程序的运行。而弱类型语言的 restrictions
+就相对较少。</p>
+<p>相对于强类型语言，弱类型语言省去了进行检查的时间成本，存储数据 (例如
+dynamic checks 所需要记录的 tags 信息)
+的空间成本；但所付出的代价是，程序的 bug
+更需要程序员本身进行检出而不能依靠强类型语言中的各种检查来发现。(相信我们都遇到过出现难以
+de 出的奇怪 bug，最后发现是数组越界的抓狂时刻)</p>
+<p>因此，在实际应用中存在很多外置的 checking tools
+对弱类型语言程序进行检查；这是一个折中的方案。</p>
+<p>另外需要强调的是，语言的强/弱类型比起是一种定义，不如说是一种相对的概念，具体可以参考<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/archive/blogs/ericlippert/is-c-a-strongly-typed-or-a-weakly-typed-language">这个帖子</a>，回答者讲的很好。在中文语境下对强/弱类型似乎还有另外的定义，与变量的定义与类型转换规则相关。</p>
+<h3 id="extended-semantics">Extended Semantics</h3>
+<p>对于某个想要避免的问题
+X，一些语言并不纠结是否将其检出的问题，它们选择扩展其 primitives
+的语义。例如，传统的 <code>+</code> 只允许两个数字进行相加，一个
+<code>string</code> 类型的参数是不合法的。</p>
+<p>而在 Python 中，<code>"Hello" + "World"</code>
+这样的表达是合法的；这是因为 Python 扩展了 <code>+</code> 的
+semantics，使其具有了连接两个 <code>string</code> 类型字符串的语义。</p>
+<p>关于是否将问题 X 所对应的本来应当视作 bug
+的语句赋予新的意义这个问题见仁见智：一方面，这样的处理使得一些 bug
+更难被检出。一方面，它又确实给程序员带来了很多方便。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Supplementary notes:</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/VeniVidiVici/p/16644030.html">My
+notes in CnBlogs</a>. <a target="_blank" rel="noopener" href="https://www.cnblogs.com/VeniVidiVici/p/16667116.html">My
+implementation</a>.</p>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/archive/blogs/ericlippert/is-c-a-strongly-typed-or-a-weakly-typed-language">Is
+C# a strongly typed or weakly typed language?</a>.</p>
+<p>Course info:</p>
+<p><a target="_blank" rel="noopener" href="https://www.coursera.org/learn/programming-languages-part-b">Programming
+Languages, Part B, University of Washington</a>, Lecturer: Professor Dan
+Grossman.</p>
+<!-- flag of hidden posts -->
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2023/07/19/prog-lan-3/" title="Programming Languages, UW, Part B - Static Checking">https://www.thisisxxz.com/2023/07/19/prog-lan-3/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | Programming Languages, UW, Part B - Static Checking](https://www.thisisxxz.com/2023/07/19/prog-lan-3/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Programming-Languages/" rel="tag"><i class="fa fa-tag"></i> Programming Languages</a>
+          </div>
+
+        
+
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/07/19/prog-lan-3/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

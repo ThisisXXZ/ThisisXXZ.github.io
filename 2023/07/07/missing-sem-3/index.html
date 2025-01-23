@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="不得不说，我个人认为 Anish 是三位老师中讲得最好的一个。这节课上他展示的问题几乎全部是我在初入门 Git 时遇到过的坑；真是相见恨晚啊！不过在有 Git 使用经验的前提下来上这一小节体验也很不错，使我对 Git 优美的底层逻辑有了更深入的认识。  Anish: While an ugly interface has to be memorized, a beautiful de">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The Missing Semester of CS Education, MIT - Version Control">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/07/07/missing-sem-3/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="不得不说，我个人认为 Anish 是三位老师中讲得最好的一个。这节课上他展示的问题几乎全部是我在初入门 Git 时遇到过的坑；真是相见恨晚啊！不过在有 Git 使用经验的前提下来上这一小节体验也很不错，使我对 Git 优美的底层逻辑有了更深入的认识。  Anish: While an ugly interface has to be memorized, a beautiful de">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-07-07T13:36:00.000Z">
+<meta property="article:modified_time" content="2024-02-02T11:39:52.000Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Toolbox">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2023/07/07/missing-sem-3/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/07/07/missing-sem-3/","path":"2023/07/07/missing-sem-3/","title":"The Missing Semester of CS Education, MIT - Version Control"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>The Missing Semester of CS Education, MIT - Version Control | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#gits-data-model"><span class="nav-number">1.</span> <span class="nav-text">Git&#39;s data model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#snapshots-and-commits"><span class="nav-number">1.1.</span> <span class="nav-text">Snapshots and Commits</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#objects-and-content-addressing"><span class="nav-number">1.2.</span> <span class="nav-text">Objects and
+Content-Addressing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#references"><span class="nav-number">1.3.</span> <span class="nav-text">References</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#basic-commands"><span class="nav-number">2.</span> <span class="nav-text">Basic Commands</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#branching-and-merging"><span class="nav-number">3.</span> <span class="nav-text">Branching and Merging</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#remotes"><span class="nav-number">4.</span> <span class="nav-text">Remotes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/07/07/missing-sem-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="The Missing Semester of CS Education, MIT - Version Control | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          The Missing Semester of CS Education, MIT - Version Control
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-07-07 21:36:00" itemprop="dateCreated datePublished" datetime="2023-07-07T21:36:00+08:00">2023-07-07</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>不得不说，我个人认为 Anish
+是三位老师中讲得最好的一个。这节课上他展示的问题几乎全部是我在初入门 Git
+时遇到过的坑；真是相见恨晚啊！不过在有 Git
+使用经验的前提下来上这一小节体验也很不错，使我对 Git
+优美的底层逻辑有了更深入的认识。</p>
+<blockquote>
+<p>Anish: While an ugly interface <strong>has to</strong> be
+<em>memorized</em>, a beautiful design <strong>can</strong> be
+<em>understood</em>.</p>
+</blockquote>
+<span id="more"></span>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="gits-data-model">Git's data model</h2>
+<p>Git 以树形的 hierarchy 组织一个 top-level git 文件夹。</p>
+<ul>
+<li>文件 (blobs)：底层叶子节点。</li>
+<li>文件夹 (trees)：<strong>maps</strong> names to blobs or trees (so
+directories can contain other directories).</li>
+</ul>
+<h3 id="snapshots-and-commits">Snapshots and Commits</h3>
+<p>A <strong>snapshot</strong> is the top-level tree that is being
+tracked. 说到底，“快照” (snapshot) 这一概念就是我之前理解的所谓
+“版本”；而 git history 即是这些 snapshots 构成的一个 DAG。</p>
+<p>Git 中的 <strong>commits</strong> (来了！) 封装了这些
+snapshots，并附有额外的 metadata 对其进行标记，例如：作者，commit
+time，commit message 等。</p>
+<p>我们用一段 pseudocode 来描述这些 Git 数据模型之间的关系：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># a file is a bunch of bytes</span></span><br><span class="line"><span class="built_in">type</span> blob = array&lt;byte&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># a directory contains named files and directories</span></span><br><span class="line"><span class="built_in">type</span> tree = <span class="built_in">map</span>&lt;string, tree | blob&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># a commit has parents, metadata, and the top-level tree (snapshot)</span></span><br><span class="line"><span class="built_in">type</span> commit = struct &#123;</span><br><span class="line">    parents: array&lt;commit&gt;</span><br><span class="line">    author: string</span><br><span class="line">    message: string</span><br><span class="line">    snapshot: tree</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="objects-and-content-addressing">Objects and
+Content-Addressing</h3>
+<p>在 Git 的底层存储中，这三种数据模型 (blob, tree, commit) 均是
+<strong>object (对象)</strong> 的一种，并且所有的对象都有其独特的 SHA-1
+哈希编码用于引用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span> <span class="built_in">object</span> = blob | tree | commit</span><br><span class="line"></span><br><span class="line">objects = <span class="built_in">map</span>&lt;string, <span class="built_in">object</span>&gt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">store</span>(<span class="params"><span class="built_in">object</span></span>):</span><br><span class="line">    <span class="built_in">id</span> = sha1(<span class="built_in">object</span>)</span><br><span class="line">    objects[<span class="built_in">id</span>] = <span class="built_in">object</span></span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load</span>(<span class="params"><span class="built_in">id</span></span>):</span><br><span class="line">    <span class="keyword">return</span> objects[<span class="built_in">id</span>]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Blobs, trees, and commits are unified in this way: they are all
+objects. When they reference other objects, they don't actually
+<em>contain</em> them in their on-disk representation, but <strong>have
+a reference to them by their hash.</strong> In Git data store, all
+objects are <strong>content-addressed</strong> by their SHA-1 hash.</p>
+</blockquote>
+<p>所以，上文伪代码中类似 <code>map&lt;string, tree | blob</code> 与
+<code>array&lt;commit&gt;</code>
+的结构，其内部储存的只是对应对象的<strong>地址</strong>；该地址即为对象的
+SHA-1 哈希值。一般来说，对象的地址是 immutable
+的，一旦新的对象产生，其地址随之固定；这也保证了对象本身的
+immutability。</p>
+<p>我们可以通过 git 中的 <code>git cat-file -p</code>
+命令来说明这一点。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ tree .</span><br><span class="line">&lt;root&gt; (tree)</span><br><span class="line">|</span><br><span class="line">+- foo (tree)</span><br><span class="line">|  |</span><br><span class="line">|  + bar.txt (blob, contents = <span class="string">&quot;hello world&quot;</span>)</span><br><span class="line">|</span><br><span class="line">+- baz.txt (blob, contents = <span class="string">&quot;git is wonderful&quot;</span>)</span><br><span class="line">$ git <span class="built_in">log</span></span><br><span class="line">commit 42fb7a2... (HEAD -&gt; master)</span><br><span class="line">...</span><br><span class="line">$ git cat-file -p 42fb7a2</span><br><span class="line">tree 68aba62...</span><br><span class="line">...</span><br><span class="line">$ git cat-file -p 68aba62</span><br><span class="line">100644 blob 4448adb...    baz.txt</span><br><span class="line">040000 tree c68d233...    foo</span><br><span class="line">$ git cat-file -p 4448adb</span><br><span class="line">git is wonderful</span><br></pre></td></tr></table></figure>
+<p>可以看到这个严格的 hierarchy 关系与哈希寻址的过程：commit
+<code>master</code> 中封装了一个 snapshot，这个 snapshot 又包含了一个
+tree 与一个 blob。到达叶子节点 blob 时，文件的内容最终被输出。</p>
+<h3 id="references">References</h3>
+<p>SHA-1 哈希值虽然能保证每个 commit
+地址的独特性，但可读性很差：人类没法记住由 40
+个十六进制数组成的超长字符串。为了解决这个问题，git 引入了新的
+<strong>references</strong>：我们可以用 human-readable
+的短字符串作为哈希值的<strong>指针</strong>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">references = <span class="built_in">map</span>&lt;string, string&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># references are mutable</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">update_reference</span>(<span class="params">name, <span class="built_in">id</span></span>):</span><br><span class="line">    references[name] = <span class="built_in">id</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">read_reference</span>(<span class="params">name</span>):</span><br><span class="line">    <span class="keyword">return</span> references[name]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load_refernce</span>(<span class="params">name_or_id</span>):</span><br><span class="line">    <span class="keyword">if</span> name_or_id <span class="keyword">in</span> references:</span><br><span class="line">        <span class="keyword">return</span> load(references[name_or_id])</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> load(name_or_id)</span><br></pre></td></tr></table></figure>
+<p>需要注意的是，<strong>References are pointers to
+commits</strong>：因此，与 objects 不同，references 是 mutable
+的；我们可以更改其指向的 commit。举例来说，<code>master</code> reference
+一般指向当前 branch 的 latest commit；在更新的过程中，它所指向的 commit
+将不断发生改变。</p>
+<p><code>HEAD</code> 也是一个常用的
+reference，我们用它指向我们目前所在的 commit。使用
+<code>git checkout</code> 命令并把目的地 commit
+的哈希值作为参数，我们能够轻松改变 <code>HEAD</code> reference 指向的
+commit，从而实现在 Git history 中的移动。</p>
+<div class="note info no-icon"><p>Finally, we can define (roughly) is a Git <em>repository</em>: it is
+the data <code>objects</code> and <code>references</code>.</p>
+</div>
+<p><br></p>
+<h2 id="basic-commands">Basic Commands</h2>
+<p>正如 Anish 开始指出的那样，Git 的 interface
+其实十分的丑陋且对新手不友好；这些复杂的命令就像魔法咒语一样既难懂又难记。但是现在我们已经学习了
+Git 优美的底层数据存储逻辑——一个由 commits 组成的 DAG。</p>
+<p>On disk, all Git stores are objects and references: that's all there
+is to Git's data model. All <code>git</code> commands map to some
+manipulation of the <strong>commit DAG by adding objects and
+adding/updating references</strong>. Note that you cannot remove objects
+since the <strong>commit DAG is immutable</strong>.</p>
+<p>当我们使用 git 命令时，思考它将会对 commit DAG
+产生什么影响：有哪些新的 objects 将被创造，有哪些 references
+将会被更新。相反，当我们想对 commit DAG 作出更改时，也很大几率会有对应的
+Git 命令能够实现我们的目的。</p>
+<ul>
+<li><code>git help &lt;command&gt;</code></li>
+<li><code>git init</code>: 创建新的 git repo，数据储存在 dotfile
+<code>.git</code> 文件夹中。</li>
+<li><code>git status</code>：追踪上次 commit
+后新增/发生更改的文件。</li>
+<li><code>.gitignore</code>：specify intentionally untracked files to
+ignore.</li>
+<li><code>git add &lt;filename&gt;</code>：将文件加入<strong>暂存区
+(staging area)</strong>。</li>
+<li><code>git commit</code>：创建新的 commit (<strong>在 commit DAG
+上添加新的节点</strong>)。写 commit message 很有讲究。
+<ul>
+<li><code>git commit --amend</code>：修改某个 commit 的内容或 commit
+message。</li>
+</ul></li>
+<li><code>git stash</code>：暂时隐藏对工作区文件进行的更改。使用
+<code>git stash pop</code> 恢复。</li>
+<li><code>git log</code>: 很有用的命令！shows a flattened log of
+history.
+<ul>
+<li><code>git log --all --graph --decorate</code>：visualizes history as
+a DAG. (即 commit DAG！)</li>
+</ul></li>
+<li><code>git diff &lt;filename&gt;</code>：显示已存入暂存区的文件和<strong>工作区</strong>的文件的区别。</li>
+</ul>
+<p>注意 <code>~/.gitconfig</code> 是 Git 的配置文件；它也是高度个性化
+dotfiles 的经典例子之一。</p>
+<p><br></p>
+<h2 id="branching-and-merging">Branching and Merging</h2>
+<p>Git 中的 branch 概念并不像看上去那么 intuitive；对于一段抽象的 commit
+branch，我们对其进行命名 (比如 <code>master</code>,
+<code>bugFix</code>...)，这些 branch name 就是 branch 的符号引用 (branch
+reference)，通常指向其所代表的 branch 中的 latest
+commit。所以<strong>本质上来说，branch 就是指向某个 commit
+的指针</strong>。</p>
+<p>另外一个重要的概念是 <code>HEAD</code> reference: 它与 branch
+reference 有着微妙的定义上的不同；<code>HEAD</code>
+是一个<strong>对当前所在分支的符号引用</strong>——也就是指向你正在其基础上进行工作的
+commit。</p>
+<ul>
+<li>通常情况下，<code>HEAD</code> 是指向某个 branch reference 的 (比如
+<code>master</code>)。<u>在提交 commit 时，branch reference
+的状态发生了改变，而这一变化通过 <code>HEAD</code>
+的改变而变得可见。</u></li>
+<li>当 <code>HEAD</code> 指向的是某个具体的 commit，而不是 branch
+reference 时，我们称其为<strong>游离的 (detached)</strong>
+<code>HEAD</code> 。由游离的 <code>HEAD</code> 提交 commit
+是被禁止的。</li>
+</ul>
+<p>一定要理解抽象的 commit branch 与 branch name/reference
+的联系：branch name/reference 指向抽象 commit branch 的 latest
+branch。当我们说 <code>HEAD</code> 指向某个 branch 时，要注意：</p>
+<ul>
+<li>workflow 上，我们切换到了整个 project 中的一条 branch
+上进行工作。</li>
+<li>本质上， <code>HEAD</code> 指向了该 branch 对应的 branch
+reference。</li>
+</ul>
+<p>有了上面的 foundations 之后，理解接下来有关 branching 与 merging
+的命令就比较简单了。</p>
+<ul>
+<li><code>git branch</code>：显示所有 branches。</li>
+<li><code>git branch &lt;name&gt;</code>：由当前 (<code>HEAD</code>)
+新建一个 branch。注意，这并<strong>不会</strong>改变 <code>HEAD</code>
+指向的 branch。</li>
+<li><code>git checkout &lt;revision&gt;</code>：很有用，但也很危险的命令；它将改变
+<code>HEAD</code> 指向的 commit，并使得工作区的文件与 <code>HEAD</code>
+所指向的 commit
+进行同步。这很大概率上会使得<strong>工作区的文件发生改变</strong>。
+<ul>
+<li><code>git checkout &lt;address&gt;</code>：<code>HEAD</code>
+将会指向该哈希值地址对应的 commit。</li>
+<li><code>git checkout &lt;name&gt;</code>：<code>HEAD</code>
+将会指向对应的 branch。</li>
+<li><code>git checkout -b &lt;name&gt;</code>：新建一个 branch 并令
+<code>HEAD</code> 指向它。相当于 <code>git branch &lt;name&gt;</code>
+后执行 <code>git checkout &lt;name&gt;</code>。</li>
+<li><code>git checkout -- &lt;file&gt;</code>：(与 branching/merging
+无关) 丢弃工作区中的进行的更改。</li>
+</ul></li>
+<li><code>git merge &lt;revision&gt;</code>：将参数中指定的 branch
+合并进入当前 branch (<code>HEAD</code> 指向的 branch)。一般来说，我们先
+<code>git checkout master</code> 再将其他的 branch 合并入 master
+中。如果被合并的 branch 是 master 的直接后继，这样的合并称为
+<strong>fast-forward：它不会提交任何额外的 commit</strong>。
+<ul>
+<li><code>git merge --abort</code>：中止合并并恢复到合并之前的状态。</li>
+</ul></li>
+<li><code>git mergetool</code>：使用其他工具 (例如 vimdiff)
+来解决<strong>合并冲突</strong>。</li>
+<li><code>git rebase</code>：将某个 branch 上的所有修改都移至另一个
+branch 上。使用 <code>rebase</code> 进行合并能够创造更线性的 commit
+history；即使它们本来是并行开发的。见 <a target="_blank" rel="noopener" href="https://git-scm.com/book/zh/v2/Git-%E5%88%86%E6%94%AF-%E5%8F%98%E5%9F%BA">Git
+官方文档的变基实例</a>。</li>
+</ul>
+<p><br></p>
+<h2 id="remotes">Remotes</h2>
+<p>以上我们所介绍的命令都是基于本地 repo 而言的。然而 Git
+之所以如此普及，一方面在于<strong>版本控制</strong>的强大，另一方面在于，共享同一个远程
+repo 使得<strong>并行开发</strong>成为了可能。远程 repo
+的概念其实并不复杂：它只是你的<strong>本地 repo
+在远程的拷贝</strong>——通过互联网，你可以与其进行通信，增加或者获取提交记录。</p>
+<p>另外一个重要的概念是远程 branch；与本地 branch 一致，它本质上也是一个
+reference，或者说是指向某个 commit 的指针。它反映的是<strong>远程 repo
+(在最后一次与其通信后) 的状态</strong>。</p>
+<p>远程 branch 其实是一个本地概念。切换到某个远程 branch
+时，<code>HEAD</code> 自动进入游离状态；这是因为 Git
+禁止从本地直接更新远程 branch。远程 branch 仅会在远程 repo
+更新后发生变化；它反映的是最新的远程 repo。</p>
+<ul>
+<li><code>git remote</code>：列出该 repo 对应的所有远程 repo。</li>
+<li><code>git remote add &lt;name&gt; &lt;url&gt;</code>：为该 repo
+新增一个远程 repo。用 Anish 的原话说，在 <code>add</code> 之后，本地
+repo “<strong>意识到了 (aware of)</strong>”
+其某个远程副本的存在；<code>git log</code> 此时也将显示远程 repo 中的
+reference 指向的 commit。</li>
+<li><code>git push &lt;remote&gt; &lt;local branch&gt;:&lt;remote branch&gt;</code>：将某个
+local branch 推送到远程 repo 上，使得远程 branch
+同步进行更新。<del>终于知道魔法咒语之 git push origin master
+到底是什么意思了</del></li>
+<li><code>git branch --set-upstream-to=&lt;remote&gt;/&lt;remote branch&gt;</code>：在本地
+branch 与远程 branch 之间建立对应关系 (correspondence)；这样当
+<code>git push</code> 时，Git 会根据该对应关系自动对参数进行扩展。使用
+<code>git branch -vv</code> 可查看这些对应关系。</li>
+<li><code>git fetch</code>：从远程 repo 中下载本地 repo 中缺失的 commits
+并更新远程 branch reference。但注意，它并不会更新任何本地
+branch，所以并<strong>不会改变你本地 repo 的状态</strong>。</li>
+<li><code>git pull</code>：抓取更新 (下载缺失的 commits 并且更新远程
+branch) 再合并到本地 branch。相当于
+<code>git fetch; git merge &lt;remote branch&gt;</code>。</li>
+<li><code>git clone &lt;url&gt;</code>： 从远程下载 repo。
+<ul>
+<li><code>git clone -depth=1</code> 或
+<code>git clone --shallow</code>：浅克隆；加入该参数后
+<code>clone</code> 不会克隆所有的版本历史从而加速下载。</li>
+</ul></li>
+</ul>
+<p>更详细的介绍与一些高阶命令见 <a target="_blank" rel="noopener" href="https://missing.csail.mit.edu/2020/version-control/">missing
+semester version control (Git)</a>.</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://git-scm.com/">Git Scm: Distributed is the New
+Centralized</a>.</p></li>
+<li><p>(checked and <strong>HIGHLY RECOMMENDED</strong>) <a target="_blank" rel="noopener" href="https://learngitbranching.js.org/?locale=zh_CN">Learn Git
+Branch</a>.</p></li>
+</ul>
+<p>Course info:</p>
+<p>MIT Open Learning. The Missing Semester of Your CS Education.</p>
+<p>Course resource:</p>
+<p><a target="_blank" rel="noopener" href="https://missing.csail.mit.edu/">The Missing Semester of Your
+CS Education</a>.</p>
+<!-- flag of hidden posts -->
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2023/07/07/missing-sem-3/" title="The Missing Semester of CS Education, MIT - Version Control">https://www.thisisxxz.com/2023/07/07/missing-sem-3/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | The Missing Semester of CS Education, MIT - Version Control](https://www.thisisxxz.com/2023/07/07/missing-sem-3/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Toolbox/" rel="tag"><i class="fa fa-tag"></i> Toolbox</a>
+          </div>
+
+        
+
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/07/07/missing-sem-3/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

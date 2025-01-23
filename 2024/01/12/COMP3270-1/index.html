@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="COMP3270 笔记。当看到 agenda 是每周一次 3.5 hr 的 lecture 时，我就知道这注定是一节自学课了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Artificial Intelligence 笔记">
+<meta property="og:url" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="COMP3270 笔记。当看到 agenda 是每周一次 3.5 hr 的 lecture 时，我就知道这注定是一节自学课了。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/AC-3.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/alpha-beta.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/bellman.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/HMM.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/state_trellis.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/bayes_inference.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/outcome_tree.png">
+<meta property="article:published_time" content="2024-01-12T07:29:57.000Z">
+<meta property="article:modified_time" content="2024-05-08T09:16:56.000Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="AI &amp; ML">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.thisisxxz.com/2024/01/12/COMP3270-1/AC-3.png">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2024/01/12/COMP3270-1/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2024/01/12/COMP3270-1/","path":"2024/01/12/COMP3270-1/","title":"Artificial Intelligence 笔记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Artificial Intelligence 笔记 | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#uninformed-search"><span class="nav-number">1.</span> <span class="nav-text">Uninformed Search</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#informed-search"><span class="nav-number">2.</span> <span class="nav-text">Informed Search</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#constraint-satisfaction-problem-i"><span class="nav-number">3.</span> <span class="nav-text">Constraint Satisfaction
+Problem I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#constraint-satisfaction-problem-ii"><span class="nav-number">4.</span> <span class="nav-text">Constraint Satisfaction
+Problem II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#search-with-other-agents-i"><span class="nav-number">5.</span> <span class="nav-text">Search with Other Agents I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#search-with-other-agents-ii"><span class="nav-number">6.</span> <span class="nav-text">Search with Other Agents II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#markov-decision-processes"><span class="nav-number">7.</span> <span class="nav-text">Markov Decision Processes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reinforcement-learning-i"><span class="nav-number">8.</span> <span class="nav-text">Reinforcement Learning I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reinforcement-learning-ii"><span class="nav-number">9.</span> <span class="nav-text">Reinforcement Learning II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#probability"><span class="nav-number">10.</span> <span class="nav-text">Probability</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#markov-models"><span class="nav-number">11.</span> <span class="nav-text">Markov Models</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hidden-markov-models"><span class="nav-number">12.</span> <span class="nav-text">Hidden Markov Models</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#particle-filtering"><span class="nav-number">13.</span> <span class="nav-text">Particle Filtering</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#viterbi-algorithm"><span class="nav-number">14.</span> <span class="nav-text">Viterbi Algorithm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bayes-nets-i"><span class="nav-number">15.</span> <span class="nav-text">Bayes Nets I</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bayes-nets-ii"><span class="nav-number">16.</span> <span class="nav-text">Bayes Nets II</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bayes-nets-iii"><span class="nav-number">17.</span> <span class="nav-text">Bayes Nets III</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#utility-theory"><span class="nav-number">18.</span> <span class="nav-text">Utility Theory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#decision-networks"><span class="nav-number">19.</span> <span class="nav-text">Decision Networks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#natural-language-processing"><span class="nav-number">20.</span> <span class="nav-text">Natural Language Processing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#note-reading"><span class="nav-number">21.</span> <span class="nav-text">Note Reading</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">22.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2024/01/12/COMP3270-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Artificial Intelligence 笔记 | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Artificial Intelligence 笔记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-01-12 15:29:57" itemprop="dateCreated datePublished" datetime="2024-01-12T15:29:57+08:00">2024-01-12</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>COMP3270 笔记。当看到 agenda 是每周一次 3.5 hr 的 lecture
+时，我就知道这注定是一节自学课了。</p>
+<span id="more"></span>
+<p>教授的 background
+很牛，学术成果丰硕，本人也超级亲切友好，奈何课程我真的有点听不进去。这再次证明了科研和教学真的是井水不犯河水的两码事。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="uninformed-search">Uninformed Search</h2>
+<p>State Space Graph 与 Search Tree。</p>
+<p>状态空间图用有向图对搜索问题进行建模，节点对应状态，边对应转移。搜索树则更关注搜索过程，每一条从根节点
+(起始状态) 到叶子节点 (目标状态)
+的路径都代表一个可能的转移路径，因此同一个状态在搜索树上可以多次出现。</p>
+<p>盲目搜索 (Uninformed Search)。对目标状态的位置没有认识。</p>
+<ul>
+<li><em>DFS</em>。总是选取搜索树上最深的节点进行扩展。不保证
+completeness 与 optimality。</li>
+<li><em>BFS</em>。总是选取搜索树上最浅的节点进行扩展。保证
+completeness，不保证 optimality。</li>
+<li><em>UCS</em>。总是选取搜索树上 <em>computed backward cost</em>
+最小的节点进行扩展。与 Dijkstra 的唯一区别是 uniform cost search
+在首次到达目标节点后退出。保证 completeness 与 optimality。</li>
+</ul>
+<p><br></p>
+<h2 id="informed-search">Informed Search</h2>
+<p>Heuristic。当前状态到目标状态距离的评估，即 <em>estimated forward
+cost</em>，通常是一个放松后的原问题 (relaxed problem)
+的解。例如，寻路问题的启发常常是曼哈顿距离。</p>
+<ul>
+<li><em>Greedy Search</em>。总是选取搜索树上 heuristic
+最小的节点进行扩展。不保证 completeness 与 optimality。</li>
+<li><em>A* Search</em>。定义 <em>total estimated cost</em> <span class="math inline">\(f(n)\)</span> 为 <em>total backward cost</em>
+<span class="math inline">\(g(n)\)</span> 与 <em>estimated forward
+cost</em> <span class="math inline">\(h(n)\)</span>
+之和，总是选取搜索树上 cost 最小的节点 [UCS + greedy]。</li>
+</ul>
+<p>保证 A* 搜索 optimality 的两个约束。admissibility 与
+consistency。</p>
+<ul>
+<li>A*-TSA optimality guaranteed by <em>admissibility</em> <span class="math inline">\(\forall n: 0\leq h(n)\leq
+h^{*}(n)\)</span>。证明见 <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note02.pdf">Informed
+Search</a> p.4。</li>
+<li>TSA (tree search) 常对同一节点进行多次扩展，效率极其低下。GSA (graph
+search) 引入 <em>reached
+set</em>，保证同一节点最多被扩展一次。但同时它又破坏了 A* 的最优性 (见
+p.5)。</li>
+<li>A*-GSA optimality guaranteed by <em>consistency</em> <span class="math inline">\(\forall A,C:h(A)-h(C)\leq
+cost(A,C)\)</span>​。underestimate 边权能够保证每次扩展的路径一定最优 (见
+p.6)。</li>
+</ul>
+<p>Dominance。</p>
+<p>对于两个 admissible/consistent 的 heuristic <span class="math inline">\(h_a\)</span> 与 <span class="math inline">\(h_b\)</span>，我们说 <span class="math inline">\(h_a\)</span> dominate over <span class="math inline">\(h_b\)</span> 当 <span class="math inline">\(\forall n:h_a(n)\geq h_b(n)\)</span>。可见
+heuristic 最优性 continuum 的两端为 <span class="math inline">\(h_l(n)=0\)</span> (<em>trivial
+heuristic</em>，退化为 ucs) 与 <span class="math inline">\(h_r(n)=h^{*}(n)\)</span> (一步到位)。</p>
+<p><br></p>
+<h2 id="constraint-satisfaction-problem-i">Constraint Satisfaction
+Problem I</h2>
+<p>约束满足问题 (Constraint Satisfaction Problem, CSPs)。CSP 是
+<em>identification</em> problem。与 <em>planning</em> problem
+相对，只关心具体的目标状态，不关心到达目标状态的路径。可以将 CSP 表示为
+constraint graph，节点对应变量，边对应约束。</p>
+<p>CSP 是 NP-hard 的，通过将 CSP 建模为搜索问题，再定义合适的
+heuristic，使得部分 CSP 能够在 feasible 的时间内求解。解 CSP
+采用的搜索策略是 <em>backtracking</em> search (回溯搜索)。</p>
+<p>回溯改进 i - <em>Filtering</em>。根据约束，对未赋值的变量的值域
+(domain of unassigned variables) 进行剪枝 (pruning)。</p>
+<ul>
+<li>naive filtering - <em>Forward
+checking</em>。每次赋值变量后，对共享约束的其他变量剪枝。</li>
+<li>AC-3 algorithm (Arc Consistency Algorithm #3)。对于 arc <span class="math inline">\(x\to
+y\)</span>，我们说它是<strong>相容</strong>的，当对 <span class="math inline">\(x\)</span> 值域中的每个值，<span class="math inline">\(y\)</span> 值域中都存在对应的不违背约束的值。AC-3
+算法在每次赋值变量后，enforces arc consistency
+得到所有未赋值变量的满足约束的<strong>最小的</strong>值域。能够更早的触发回溯，相应的增加了计算成本。</li>
+</ul>
+<figure>
+<img data-src="AC-3.png" alt="Answer: arc consistency (相容性)满足 commutative law">
+<figcaption aria-hidden="true">Answer: arc consistency (相容性)满足
+commutative law</figcaption>
+</figure>
+<p>回溯改进 ii - <em>Ordering</em>。规定 variables and values involved
+的优先级。</p>
+<p>Variable Ordering: choose <strong>which variable</strong> to assign
+values with? - fail-first heuristic</p>
+<ul>
+<li><em>Minimum Remaining Values</em> (MRV): the variable with fewest
+legal left values.</li>
+<li>tie-breaker of MRV (<em>degree heuristic</em>): the variable with
+the most constraints on remaining variables.</li>
+</ul>
+<p>Value Ordering: choose <strong>which value</strong> to assign to a
+variable?</p>
+<ul>
+<li><em>Least Constraining Value</em> (LCV): the value that rules out
+the fewest values in the remaining variables</li>
+</ul>
+<p>关于 fail-first heuristic 与
+MRV：受到约束最多的变量也最容易耗尽所有可能的值从而引起回溯，所以应优先进行赋值。关于
+LCV：尽量维持剩余变量面对约束的灵活性。</p>
+<p><br></p>
+<h2 id="constraint-satisfaction-problem-ii">Constraint Satisfaction
+Problem II</h2>
+<p>CSP 的另一种搜索策略：<em>Local Search</em>
+(局部搜索)。从一个随机状态开始进行迭代改进 (iterative
+improvement)；即随机的选择一个与约束产生冲突的变量，对其重新赋值，使得其与尽量少的约束产生冲突。不断进行这个过程直至所有的约束都得到满足。</p>
+<ul>
+<li><em>Hill-Climbing Search</em> (爬山搜索)。从当前状态开始，不断地朝
+objective function 增加的方向往相邻状态转移。容易陷入 local maxima 与
+plateaux。</li>
+<li><em>Simulated Annealing Search</em>
+(模拟退火)。从当前状态开始随机移动。若这次移动使得 objective function
+增加，移动；若 objective function 减少，以概率 <span class="math inline">\(p\)</span> 移动。<span class="math inline">\(p\)</span>​
+被温度决定：该温度的值初始较高，随着迭代的进行将逐渐冷却。
+这意味着搜索允许在一开始 take more "bad moves".</li>
+<li><em>Genetic Algorithms</em> (遗传算法)。</li>
+</ul>
+<p><br></p>
+<h2 id="search-with-other-agents-i">Search with Other Agents I</h2>
+<p>存在敌手 (adversaries) 的搜索问题是 <em>adversarial search
+problems</em>，或者更加喜闻乐见的，<em>games</em>。与普通的搜索问题相比，对抗搜索的解不是一个完整的解路径，而是一个
+<em>strategy</em> 或 <em>policy</em>。</p>
+<p>确定性零和博弈 (deterministic zero-sum games)
+的搜索策略：<em>minimax</em> 算法。即，后序遍历 (postorder traversal)
+博弈树，计算出所有节点的 <em>utility</em>。节点 <span class="math inline">\(s\)</span> 的 utility，或 <span class="math inline">\(\text{Minimax}(s)\)</span>，定义为玩家从 <span class="math inline">\(s\)</span> 出发能获得的 best possible
+outcome。</p>
+<p>minimax 算法得到的 strategy 在与一个理性敌手 (rational/optimal
+adversary) 博弈时是最优的。</p>
+<p>minimax 算法改进 i - <span class="math inline">\(\alpha\)</span>-<span class="math inline">\(\beta\)</span> pruning。</p>
+<figure>
+<img data-src="alpha-beta.png" alt="应用 alpha-beta 剪枝的 minimax 算法的效率能够提升两倍">
+<figcaption aria-hidden="true">应用 alpha-beta 剪枝的 minimax
+算法的效率能够提升两倍</figcaption>
+</figure>
+<p>minimax 算法改进 ii - <em>evaluation
+function</em>。估价函数的设计被广泛应用在 <em>depth-limited minimax</em>
+中，它仅遍历博弈树上深度 <span class="math inline">\(\leq l\)</span>
+的节点，实现 early termination；因此需要设计合适的估价函数，评估
+non-terminal 节点的 utilities。</p>
+<ul>
+<li>从状态 <span class="math inline">\(s\)</span> 中提取若干特征 <span class="math inline">\(f\)</span>，每个特征有权重 <span class="math inline">\(w\)</span>。<span class="math inline">\(\text{eval}(s)=\sum w_if_i\)</span></li>
+<li>两个 tradeoff：深度限制 <span class="math inline">\(l\)</span>
+与估价函数 <span class="math inline">\(e(s)\)</span>​；估价函数设计中，特征的复杂度与计算成本</li>
+<li><em>Horizon
+Effect</em>：短视的估价函数可能会尝试挽回一个无法挽回的损失，从而付出更大的代价
+(Search.pdf pp.144，赔了主教又折兵)</li>
+</ul>
+<p><br></p>
+<h2 id="search-with-other-agents-ii">Search with Other Agents II</h2>
+<p>minimax 算法的缺陷 i - 总是假设敌手是理性的；无法处理带有 inherent
+randomness 的游戏 (掷骰子，棋牌游戏等)。<em>expectimax</em> 算法作为
+minimax 算法的 generalization，通过引入 <em>chance nodes</em>
+的概念来解决这个问题。</p>
+<p>传统 minimax 博弈树是 maximizer 与 minimizer 交替堆叠而成的；在
+expectimax 中 minimizer 被替换为 chance nodes。它所计算的是子节点的
+<em>expected utility</em>：<span class="math inline">\(\forall \text{
+chance states,} V(s)=\sum_{s\to
+s&#39;}p(s&#39;|s)V(s&#39;)\)</span>​。概率分布 <span class="math inline">\(p\)</span> 的计算基于我们对 suboptimal adversary
+的了解。</p>
+<p>expectimax 博弈树又可以向两个方向继续推广。</p>
+<ul>
+<li><em>Mixed-layer
+types</em>。进一步增删/修改博弈树的交替层结构，实现多个 agents
+进行零和博弈。</li>
+<li><em>General games</em>。世界上绝大多数游戏并非零和博弈。对于具有
+<em>multi-agent utilities</em> 的游戏，在博弈树中引入 <em>utility
+vector</em> 实现多个 agents 进行非零和博弈，引发 agents
+间更复杂的对抗与合作。</li>
+</ul>
+<p>minimax 算法的缺陷 ii - 无法处理 branching factor <span class="math inline">\(b\)</span>​ 较大的游戏 (围棋)。<em>Monte Carlo Tree
+Search (MCTS)</em> 引入频率模拟概率的思想，进行 <em>evaluation by
+rollouts</em> 与 <em>selective search</em> (仅探索 parts of the
+tree)，对这类问题取得了较好的效果。</p>
+<p><em>UCB algorithm</em> 常作为 <em>MCTS UCT</em> 算法扩展搜索树的
+criterion，它反映了某个节点 promising 与 uncertain 间的 tradeoff。 当
+rollout 次数 <span class="math inline">\(N\to \infty\)</span>​ 时，MCTS
+UCT 的表现向 minimax agent 逼近。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># return next best move</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">monte_carlo_tree</span> search(root):</span><br><span class="line">    <span class="keyword">while</span> resources_left(time, computational power):</span><br><span class="line">        leaf = traverse(root)</span><br><span class="line">        simulation_result = rollout(leaf)</span><br><span class="line">        backpropagate(leaf, simulation_result)</span><br><span class="line">    <span class="keyword">return</span> best_child(root)</span><br><span class="line"></span><br><span class="line"><span class="comment"># return first unvisited node from root</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">traverse</span>(<span class="params">node</span>):</span><br><span class="line">    <span class="keyword">while</span> fully_expanded(node):</span><br><span class="line">        node = best_ucb(node)</span><br><span class="line">    <span class="keyword">return</span> pick_unvisited(node.children) <span class="keyword">or</span> node <span class="comment"># if node is terminal</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">rollout</span>(<span class="params">node</span>):</span><br><span class="line">    <span class="keyword">while</span> non_terminal(node):</span><br><span class="line">        node = rollout_policy(node)</span><br><span class="line">    <span class="keyword">return</span> result(node)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">rollout_policy</span>(<span class="params">node</span>):</span><br><span class="line">    <span class="keyword">return</span> pick_random(node.children)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">backpropagate</span>(<span class="params">node, result</span>):</span><br><span class="line">    <span class="keyword">if</span> is_root(node):    </span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    node.stats = update_stat(node, result)</span><br><span class="line">    backpropagate(node.parent, result)</span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">best_child</span>(<span class="params">node</span>):</span><br><span class="line">    <span class="keyword">return</span> most_visited(node.children)</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="markov-decision-processes">Markov Decision Processes</h2>
+<p><em>Non-deterministic search</em>。Environment may <em>subject</em>
+the agent's actions to being <em>non-deterministic</em>；即，<span class="math inline">\(\text{result}(s,a)\)</span>​
+将产生多个可能的后继状态 (successors)。</p>
+<p>环境中存在一定程度的 inherent uncertainty；这类问题可被建模为
+<em>Markov decision processes (MDPs)</em>。</p>
+<ul>
+<li><em>discount factor</em> <span class="math inline">\(\gamma\)</span>。</li>
+<li><em>transition function</em> <span class="math inline">\(T(s,a,s&#39;)\)</span>​ - 返回一个概率。</li>
+<li><em>reward function</em> <span class="math inline">\(R(s, a,
+s&#39;)\)</span>​ - agent 的目标是在到达 terminal state
+前最大化获得的<strong>奖励之和</strong> (discounting or not)。<span class="math inline">\(U([s_0,a_0,s_1,a_1,...])=R(s_0,a_0,s_1)+\gamma
+R(s_1,a_1,s_2)+\gamma^2 R(s_2,a_2,s_3)...\)</span></li>
+</ul>
+<p>MDP 的性质。<strong>memoryless property</strong> aka Markov
+property。未来状态仅与当前状态有关，与状态的转移历史无关。即 <span class="math inline">\(T(s,a,s&#39;)=P(s&#39;|s,a)\)</span>​。</p>
+<p>MDP 搜索树。在 agent 采取行动之后，总有象征随机环境 (stochastic
+environment) 的 <em>Q-states</em> aka <em>action states</em> 对 agent
+的行动施加影响，生成多个可能的后继状态。与 expectimax 中的 chance nodes
+作用几乎一致：chance nodes 代表的是随机敌手，Q-states
+代表的是随机环境。Q-states 不计入 time step。</p>
+<p>为 agent 提供动机 (motivation) 防止 infinite utility。</p>
+<ul>
+<li><em>finite horizons</em>。agent
+应在限制的时间步之内取得最大奖励。</li>
+<li><em>discounting</em>。设置 discount factor <span class="math inline">\(\gamma\)</span>，agent 获得的奖励逐步衰减。</li>
+</ul>
+<p>MDP 的解。决策 <em>policy</em> <span class="math inline">\(\pi:S\to
+A\)</span>，对于给定的状态 <span class="math inline">\(s\)</span>，返回在当前状态应采取的行动 <span class="math inline">\(\pi(s)=a\)</span>。MDP 的最优决策 <span class="math inline">\(\pi^{*}\)</span>​ 将引导向 maximum expected total
+reward/utility。</p>
+<p><em>Bellman Equation</em>。定义状态 <span class="math inline">\(s\)</span> 的最优 utility <span class="math inline">\(U^{*}(s)\)</span> 与 Q-state <span class="math inline">\((s,a)\)</span> 的最优 utility <span class="math inline">\(Q^{*}(s,a)\)</span>：</p>
+<figure>
+<img data-src="bellman.png" alt="有没有感到一丝熟悉？">
+<figcaption aria-hidden="true">有没有感到一丝熟悉？</figcaption>
+</figure>
+<p>根据 Bellman Equation 能够得到一个 DP 求解的方法，称为 <em>value
+iteration</em>。它通过递推计算 <em>time-limited values</em> 的方式 (这是
+<em>finite horizons</em> 的自然要求)，得到任意状态 <span class="math inline">\(s\)</span> 在 <span class="math inline">\(k\)</span>​ 个时间步内能够取得的最大 discounting
+reward。</p>
+<ul>
+<li>初始化 <span class="math inline">\(U_0(s)=0, \forall s\in
+S\)</span>。这很自然，剩下 <span class="math inline">\(0\)</span>
+步时无奖励。</li>
+<li>根据 Bellman 方程递推。<span class="math inline">\(\forall s\in S,
+U_{k+1}(s)\leftarrow \max_a
+\sum_{s&#39;}T(s,a,s&#39;)[R(s,a,s&#39;)+\gamma
+U_k(s&#39;)]\)</span>​。</li>
+<li>重复递推直至收敛。terminate when <span class="math inline">\(U_{k+1}(s)=U_k(s)\)</span>。可以证明此时 <span class="math inline">\(U_k(s)=U^{*}(s)\)</span>，且当 <span class="math inline">\(\gamma\in (0,1]\)</span>​ 时必收敛 (见 note7 MDP-I
+p.7。intuition 是当 <span class="math inline">\(\gamma&lt;1\)</span>
+时树的深度越大，其值越可忽略)。</li>
+</ul>
+<p>到这里所有的概念都很好理解，但我总觉得哪里不太对劲。</p>
+<p>仔细思考后我发现了诡异的源头：这不就是 expectimax 吗？普通 states
+对应 maximizers，Q-states 对应 chance nodes，time-limited values 对应
+depth-limited minimax。</p>
+<p>这些近乎同一的概念很自然的引出了怀疑：<strong>为什么不直接用
+expectimax 解 MDP，而要采用基于 DP 的 value
+iteration？</strong>我苦思冥想良久，一路追根溯源到了 CS188 2012 年的 <a target="_blank" rel="noopener" href="https://ai.berkeley.edu/~cs188/sp12/announcements.html">sources</a>，终于找到了答案。value
+iteration 是对 MDP 搜索树结构的
+exploitation，它将同一层的相同状态节点压缩到了一起，形成了一个具有深度的搜索图。</p>
+<p><strong>Value iteration is essentially a graph search version of
+Expectimax, </strong> but</p>
+<ul>
+<li>there are rewards in every step (rather than a utility just in the
+terminal node)</li>
+<li>ran bottom-up (rather than recursively)</li>
+<li>can handle infinite duration game</li>
+</ul>
+<p>Policy extraction, Q-value iteration 与 policy iteration
+是几个比较同质化的概念。它们探讨的是在得到 <span class="math inline">\(U^{*}(s)\)</span> 后如何 derive 出最优策略 <span class="math inline">\(\pi^{*}(s)\)</span>。这个问题的答案即所谓的策略提取，非常简单：</p>
+<ul>
+<li>Policy extraction. <span class="math inline">\(\pi^{*}(s)=\text{argmax}_a
+Q^{*}(s,a)=\text{argmax}_a
+\sum_{s&#39;}T(s,a,s&#39;)[R(s,a,s&#39;)+\gamma
+U^{*}(s&#39;)]\)</span></li>
+<li>Q-value iteration. 可以发现，仅需计算 optimal Q-values 就能满足
+policy extraction 的需要。于是把 value iteration 替换为 Q-value
+iteration <span class="math inline">\(Q_{k+1}(s,a)=\sum_{s&#39;}T(s,a,s&#39;)[R(s,a,s&#39;)+\gamma
+\max_{a&#39;} Q_{k}(s&#39;,a&#39;)]\)</span>。与 value iteration
+唯一的区别是 <span class="math inline">\(\max\)</span>​ 的位置，这是因为
+take actions 与 transition 是一个先后的过程。</li>
+</ul>
+<p>Value/Q-value iteration 的复杂度是 <span class="math inline">\(O(S^2A)\)</span> 级别，计算花销还是挺大的。但
+policy extraction 只关心 <span class="math inline">\(\text{argmax}\)</span>，这说明许多 values
+的计算其实是 overcomputation；optimal policy 的收敛速度其实会比 optimal
+value 快很多。既然如此，不如直接在 policy 层面上进行迭代，这就是 policy
+iteration。</p>
+<p>Policy iteration 的三个步骤：</p>
+<ul>
+<li><em>Policy initialization</em>. 选取一个初始策略 <span class="math inline">\(\pi_0\)</span>。合适的选择能够加速收敛。</li>
+<li><em>Policy evaluation</em>. 对所有状态 <span class="math inline">\(s\)</span>，计算 <span class="math inline">\(U^{\pi_i}(s)=\sum_{s&#39;}T(s,\pi_i(s),s&#39;)[R(s,\pi_i(s),s&#39;)+\gamma
+U^{\pi_i}(s&#39;)]\)</span>。注意这里的计算是 expectimax 式 (top-down)
+而非 value iteration 式
+(bottom-up)。可以采用后者，但实际中前者速度较快。注意到策略评估的复杂度是
+<span class="math inline">\(O(S^2)\)</span>：因为初始策略的存在保证了一个状态
+<span class="math inline">\(s\)</span> 对应一个 action <span class="math inline">\(\pi_i(s)\)</span>。</li>
+<li><em>Policy improvement</em>. 实际上就是迭代啦！<span class="math inline">\(\pi_{i+1}=\text{argmax}_a
+\sum_{s&#39;}T(s,a,s&#39;)[R(s,a,s&#39;)+\gamma
+U^{\pi_i}(s&#39;)]\)</span>。迭代到 <span class="math inline">\(\pi_{i+1}=\pi_i\)</span> 时收敛到最优策略 <span class="math inline">\(\pi^{*}\)</span>。复杂度是 <span class="math inline">\(O(S^2A)\)</span>，和 value iteration
+一样，但迭代次数一般会减少很多。</li>
+</ul>
+<p><br></p>
+<h2 id="reinforcement-learning-i">Reinforcement Learning I</h2>
+<p>一些名词。</p>
+<ul>
+<li><em>offline planning</em> (离线规划)。agent 拥有对 transitions <span class="math inline">\(T\)</span> 与 rewards <span class="math inline">\(R\)</span> 的完整知识。</li>
+<li><em>online planning</em> (在线规划)。与 offline planning 相对。</li>
+<li>在 online planning 下解 MDP 问题: explore, learn then exploit。
+<ul>
+<li><strong>explore</strong>: agent 不断与环境交互，得到若干
+feedback。</li>
+<li><strong>learn</strong>: 即 reinforcement learning，从 feedback
+中学到 optimal policy。</li>
+<li><strong>exploit</strong>: 使用学到的 policy 取得尽量多的
+reward。</li>
+</ul></li>
+<li><em>sample</em>。feedback 的基本单元。agent 在 <span class="math inline">\(s\)</span> 采取行动 <span class="math inline">\(a\)</span>，来到 <span class="math inline">\(s&#39;\)</span>，获得奖励 <span class="math inline">\(r\)</span>，获得 sample <span class="math inline">\((s,a,s&#39;,r)\)</span>。</li>
+<li>episode。一次 explore 收集到的 collections of samples 是一个
+episode。</li>
+</ul>
+<p><em>Model-based learning</em>。通过 feedback 计算 <span class="math inline">\(\hat{T},\hat{R}\)</span> (对真实 <span class="math inline">\(T,R\)</span> 的估计)。<span class="math inline">\(\hat{T}(s,a,s&#39;)=n(s,a,s&#39;)/n(s,a)\)</span>，<span class="math inline">\(\hat{R}\)</span>
+则可以准确得到。根据大数定理，counting 次数越多，得到的 <span class="math inline">\(\hat{T}\)</span>​ 越准确。</p>
+<ul>
+<li>得到 <span class="math inline">\(\hat{T},\hat{R}\)</span>
+后，问题转化为 offline planning，使用 value/policy iteration 等方法得到
+<span class="math inline">\(\pi_{exploit}\)</span>​ 即可。</li>
+<li>Model-based learning
+容易理解，效率也较高，唯一的问题是需要大量的空间存储 episodes。</li>
+</ul>
+<p><em>Model-free learning</em>。不计算 <span class="math inline">\(T,R\)</span>，直接从 feedback 中学习最优策略 <span class="math inline">\(\pi^{*}\)</span> 。无模型学习分为两种类型：</p>
+<ul>
+<li>Passive reinforcement learning - policy evaluation 是 model-free
+的，但随后的 policy extraction 环节还是离不开对 <span class="math inline">\(T,R\)</span> 的 estimation。代表方法：direct
+evaluation, TD evaluation。</li>
+<li>Active reinforcement learning - 获取 <span class="math inline">\(\pi^{*}\)</span> 的全过程均是 model-free 的。以
+Q-learning 为代表。</li>
+</ul>
+<p><em>Direct evaluation</em>。非常朴素的想法。在探索过程中维护一个
+table，表头为 <span class="math inline">\((s, \text{total reward},
+\text{times visited})\)</span>。在决策 <span class="math inline">\(\pi\)</span> 下 agent 不断游走，更新
+table，最后计算 <span class="math inline">\(U^{\pi}(s)=\text{total} \
+\text{reward}/\text{times} \
+\text{visited}\)</span>。同样根据大数定理，探索的 episodes 越多，得到的
+<span class="math inline">\(U^{\pi}\)</span> 越准确。</p>
+<p><em>Temporal difference evaluation</em>。引入 <strong>exponential
+moving average</strong> 迭代的更新 <span class="math inline">\(U^{\pi}(s)\)</span>​，与 direct evaluation
+相比，不仅需要的 episodes 更少，收敛速度还会大幅加快。初始化 <span class="math inline">\(U_0^{\pi}=0\)</span>，在时间步 <span class="math inline">\(k\)</span>：</p>
+<ul>
+<li>agent 游走，收集 <span class="math inline">\(\text{sample}_k(s)=R(s,\pi(s),s&#39;)+\gamma
+U_{k-1}^{\pi}(s&#39;)\)</span>​。其中 <span class="math inline">\(\gamma\)</span> 是一个 discount。</li>
+<li>更新 estimate <span class="math inline">\(U^{\pi}_k(s)\leftarrow
+(1-\alpha)U_{k-1}^{\pi}(s)+\alpha\cdot
+\text{sample}_{k}(s)\)</span>​。</li>
+</ul>
+<p>展开第二个式子，可以发现 TD learning 的妙处：<span class="math inline">\(U_k^{\pi}\leftarrow \alpha [\sum_{i=1}^k
+(1-\alpha)^{k-i}\text{sample}_i]\)</span>​。随着时间步的增加，较早版本的
+sample 获得的权重以指数级别下降；而较早版本的 sample
+通常是不准确的。正是这一点加速了 <span class="math inline">\(U^{\pi}\)</span> 的收敛。</p>
+<p>学习率 <span class="math inline">\(\alpha\)</span>
+的设定也是有讲究的。一个典型的退火做法是初始化 <span class="math inline">\(\alpha=1\)</span>，再缓慢的降至 <span class="math inline">\(0\)</span>。</p>
+<p><em>Q-learning</em>。纯粹的 model-free learning。</p>
+<p>回顾下 policy extraction：<span class="math inline">\(\pi^{*}(s)=\text{argmax}_a
+Q^{*}(s,a)=\text{argmax}_a
+\sum_{s&#39;}T(s,a,s&#39;)[R(s,a,s&#39;)+\gamma
+U^{*}(s&#39;)]\)</span>。可以看到，前两种 passive RL 方法只能得到 <span class="math inline">\(U^{\pi}\)</span>，如果想要得到 <span class="math inline">\(\pi^{*}\)</span>，还是离不开求解 <span class="math inline">\(\tilde{T}, \tilde{R}\)</span>​ 与后续的 policy
+iteration。</p>
+<p>与 <em>Q-value iteration</em> 的 intuition 相同，Q learning 直接从 Q
+values 入手求解 <span class="math inline">\(\pi^{*}\)</span>。为了绕过
+<span class="math inline">\(T,R\)</span> 函数，又使用了与 TD learning
+同样的 exponential moving average 技巧。</p>
+<ul>
+<li>agent 游走，收集 <span class="math inline">\(\text{sample}_k(s,a)=R(s,a,s&#39;)+\gamma
+\max_{a&#39;}Q_{k-1}(s&#39;, a&#39;)\)</span>​。</li>
+<li>更新 <span class="math inline">\(Q_k(s,a)\leftarrow
+(1-\alpha)Q_{k-1}(s,a)+\alpha\cdot \text{sample}_k(s,a)\)</span>.</li>
+</ul>
+<p>与 TD 相同，<span class="math inline">\(Q_i\)</span> 将逐渐向最优的
+<span class="math inline">\(Q^{*}\)</span> 收敛。不同的是，agent
+在游走收集 sample 时，并不遵循一个特定的 <span class="math inline">\(\pi\)</span>；只要 explore 的时间够长，agent
+可以做出 suboptimal 甚至是 random 的移动，最后仍然能收敛到 <span class="math inline">\(Q^{*}\)</span>​。这一特点使得 Q-learning 成为一种
+<strong>off-policy learning</strong>，而前两种 passive RL 被称为
+<strong>on-policy learning</strong>。</p>
+<p><em>Approximate Q-Learning</em>。朴素的 Q-learning 需要储存所有 <span class="math inline">\(Q(s,a)\)</span>，在状态数非常多的情况下会带来很大的空间压力。Approximate
+方法试图学习到 <span class="math inline">\(Q(s,a)\)</span> 的特征表示
+(feature-based representation) <span class="math inline">\(\mathbf{w}^{T}\cdot \mathbf{f}(s,a)\)</span>，其中
+<span class="math inline">\(\mathbf{f}\)</span> 是当前状态 <span class="math inline">\((s,a)\)</span> 的特征向量，<span class="math inline">\(\mathbf{w}\)</span> 是每个特征的权重。</p>
+<p>这里就有一点 ML 的思想了：通过引入状态的特征表示，使得模型具有泛化
+(generalizing learning experience) 的能力。当前状态的特征 <span class="math inline">\(\mathbf{f}(s,a)\)</span>
+多是人工选取的，其所占的权重 <span class="math inline">\(\mathbf{w}\)</span>
+则通过一种类似梯度下降的方式进行更新。</p>
+<ul>
+<li>计算 <span class="math inline">\(\text{difference}=[R(s,a,s&#39;)+\gamma
+\max_{a&#39;}Q(s&#39;,a&#39;)]-Q(s,a)\)</span>，即 <span class="math inline">\(Q(s,a)\)</span> 的 sampled estimation
+与当前模型表示间的距离。</li>
+<li>更新权重 <span class="math inline">\(w_i\leftarrow w_i+\alpha\cdot
+\text{difference}\cdot f_i(s,a)\)</span>。</li>
+<li>更新权重本质上是在更新 <span class="math inline">\(Q(s,a)\leftarrow
+Q(s,a)+\alpha\cdot\text{difference}\)</span>。即，把模型拉向 sampled
+estimation 的方向。由于真实奖励 <span class="math inline">\(R(s,a,s&#39;)\)</span>
+的存在，这个方向在大部分情况下应当是指向 <span class="math inline">\(Q(s,a)\)</span>​ 的真实值的。</li>
+</ul>
+<p>这样，我们获得了一个泛化能力更强，且大幅度节省空间 (只需存储 <span class="math inline">\(\mathbf{f}, \mathbf{w}\)</span> 与少量的 Q-values
+表) 的 Q-learning 模型。</p>
+<p><br></p>
+<h2 id="reinforcement-learning-ii">Reinforcement Learning II</h2>
+<p>之前的所有 RL 算法得到最优决策 <span class="math inline">\(\pi^{*}\)</span> 的前提是 agent 进行了 sufficient
+exploration，但实际上这是一个很难达成的前提。在 RL 中一个重要的 tradeoff
+是 <strong>exploration vs exploitation</strong>。如何实现这个平衡？</p>
+<p><span class="math inline">\(\varepsilon\)</span>-<em>greedy
+policies</em>。以 <span class="math inline">\(\varepsilon\)</span>
+的概率随机行动 (explore)，以 <span class="math inline">\((1-\varepsilon)\)</span>​ 的概率进行 exploit。</p>
+<ul>
+<li><span class="math inline">\(\varepsilon\)</span>
+过大：即使学到了最优决策，agent 仍然表现得非常随机。</li>
+<li><span class="math inline">\(\varepsilon\)</span> 过小：agent 专注于
+exploit，Q-learning 等学习算法的收敛很慢。</li>
+</ul>
+<p><em>Exploration functions</em>。无需手动调参，是一种 adaptive
+的算法。将 Q-learning 写成如下形式： <span class="math display">\[
+Q(s,a)\leftarrow
+(1-\alpha)Q(s,a)+\alpha[R(s,a,s&#39;)+\gamma\max_{a&#39;}f(s&#39;,a&#39;)]
+\]</span> <span class="math inline">\(f\)</span> 是 exploration
+function。一个常见的定义是： <span class="math display">\[
+f(s&#39;,a&#39;)=Q(s&#39;,a&#39;)+\frac{k}{N(s&#39;,a&#39;)}
+\]</span> 当采样 sample 是 <span class="math inline">\((s,a,r,s&#39;)\)</span> 时，<span class="math inline">\(\max_{a&#39;}f(s&#39;,a&#39;)\)</span> 将自动在
+exploration 与 exploitation 间做出平衡。</p>
+<ul>
+<li>在学习初期，<span class="math inline">\(k/N(s&#39;,a&#39;)\)</span>
+将提供足够的 bonus 鼓励 agent 探索陌生的区域。</li>
+<li>随着学习的进行，<span class="math inline">\(k/N(s&#39;,a&#39;)\)</span> 将趋近于 0，<span class="math inline">\(f(s&#39;,a&#39;)\)</span> 回归到 <span class="math inline">\(Q(s&#39;,a&#39;)\)</span>​，使 exploitation
+逐渐回到舞台。</li>
+</ul>
+<p><em>Regret</em>。另一个衡量 RL 算法的指标，它累积了学习过程中产生的
+total mistake lost。某算法在 <span class="math inline">\(k\)</span>
+个时间步内学习到了最优决策 <span class="math inline">\(\pi^{*}\)</span>，它的 regret 定义为： <span class="math display">\[
+\text{regret}=\sum_{i=1}^k R(\pi^{*})-R(\pi_i)
+\]</span> 最小化 regret 不仅要求算法能够指导 agent
+学到最优决策，还要求该算法本身是最优的。</p>
+<p>举个例子，random exploration 与 exploration function 都能指导 agent
+学到最优决策，但 random exploration 的 regret 远远高于 exploration
+function。</p>
+<p><br></p>
+<h2 id="probability">Probability</h2>
+<p>对概率论的 recap，只提几个陌生的概念。</p>
+<p>joint distribution <span class="math inline">\(P(A,B,C)\)</span>。</p>
+<ul>
+<li><strong>chain rule</strong>. <span class="math inline">\(P(A,B,C)=P(A)P(B|A)P(C|A,B)\)</span>.</li>
+<li><strong>marginal distribution</strong> 又称 <strong>summing
+out</strong>. <span class="math inline">\(P(A,B)=\sum_{c}P(A,B,C=c)\)</span>​.</li>
+</ul>
+<p>关于 independence。</p>
+<ul>
+<li><span class="math inline">\(A,B\)</span> is independent, <span class="math inline">\(P(A,B)=P(A)P(B)\)</span>.</li>
+<li><span class="math inline">\(A,B\)</span> is <strong>conditionally
+independent</strong> given <span class="math inline">\(C\)</span>, <span class="math inline">\(P(A,B|C)=P(A|C)P(B|C)\)</span>, or equivalently,
+<span class="math inline">\(P(A|C)\)</span><span class="math inline">\(=P(A|B,C)\)</span>. notation <span class="math inline">\(A\perp B|C\)</span>.</li>
+</ul>
+<p>新的模型 - <strong>joint distribution table</strong>。</p>
+<ul>
+<li>所能解决的新问题 - 观察到若干证据 <span class="math inline">\((e_1,...,e_n)\)</span>，结果为 <span class="math inline">\((Q_1,...,Q_m)\)</span>​ 的概率是？</li>
+<li>解决的方式 - <strong>probabilistic inference</strong>, aka
+probabilistic reasoning.</li>
+</ul>
+<p><strong>Inference by Enumeration</strong>. 最 intuitive
+的概率推断方式。给出 joint PDF，模型中的变量分为三类：</p>
+<ul>
+<li>Query variables <span class="math inline">\(Q_i\)</span> -
+未知变量，出现在条件概率 <span class="math inline">\(|\)</span>
+的左侧。</li>
+<li>Evidence variables <span class="math inline">\(e_i\)</span> -
+被观察到的值已知的变量，出现在条件概率 <span class="math inline">\(|\)</span> 的右侧。</li>
+<li>Hidden variables - 在当前问题下无关的变量，需要被 summing out。</li>
+</ul>
+<p>IBE 三步求解 <span class="math inline">\(P(Q_1,...,Q_m|e_1,...,e_n)\)</span>。</p>
+<ul>
+<li>在 joint PDF 中选出所有与 <span class="math inline">\(e\)</span>
+匹配的行。</li>
+<li>Sum out (marginalize) 所有隐变量。</li>
+<li>最后 normalize 得到的 sub table，就能得到要求的概率分布了。</li>
+</ul>
+<p>若共有 <span class="math inline">\(j\)</span> 个变量，每个变量平均有
+<span class="math inline">\(d\)</span> 种取值，IBE 的时空复杂度均为
+<span class="math inline">\(O(d^j)\)</span>。</p>
+<p><br></p>
+<h2 id="markov-models">Markov Models</h2>
+<p>[大量公式注意]</p>
+<p>马尔可夫模型/马尔可夫链。<strong>time-dependent</strong>
+probabilistic model。</p>
+<ul>
+<li><strong>initial distribution</strong> <span class="math inline">\(P(X_0)\)</span>。<span class="math inline">\(t=0\)</span> 时 <strong>state variables</strong>
+(以天气晴/雨为例) 的 PDF。</li>
+<li><strong>transition model</strong> <span class="math inline">\(P(X_{t+1}|X_t)\)</span>​。马尔可夫模型假设该转移模型是固定的
+(stationary assumption) 。</li>
+</ul>
+<p>给出第 <span class="math inline">\(0\)</span>
+天天气的概率分布，与连续两天中天气变化的概率分布，就能求出第 <span class="math inline">\(k\)</span> 天天气的概率分布。</p>
+<p>马尔可夫模型的无记忆性 (<strong>memoryless property</strong>) -
+<strong>Future doesn't depend on Past given Present.</strong> <span class="math display">\[
+X_{i+1}\perp \{X_0,...,X_{i-1}\}|X_i
+\]</span> 因此长为 <span class="math inline">\(n\)</span> 的马尔可夫链的
+joint distribution 是： <span class="math display">\[
+\begin{aligned}
+P(X_0,...,X_{n})&amp;=
+P(X_0)P(X_1|X_0)P(X_2|X_0,X_1)...P(X_{n}|X_0,...,X_{n-1}) \\
+&amp;= P(X_0)P(X_1|X_0)P(X_2|X_1)...P(X_{n}|X_{n-1}) \\
+&amp;= P(X_0) \prod_{i=0}^{n-1}P(X_{i+1}|X_i)
+\end{aligned}
+\]</span> 想要获得第 <span class="math inline">\(k\)</span>
+天天气的概率分布，一个 naive 的方法是求出 <span class="math inline">\(P(X_0,...,X_k)\)</span> 再 marginalize <span class="math inline">\(X_0,...,X_{k-1}\)</span>，但这样效率显然很低 <span class="math inline">\(O(d^k)\)</span>。<strong>Mini-Forward
+Algorithm</strong> 是一种迭代的方法，把复杂度优化至 <span class="math inline">\(O(kd^2)\)</span>。 <span class="math display">\[
+\begin{aligned}
+&amp;i=0\\
+&amp;P(X_{i+1})=\sum_{x_i}P(x_i,X_{i+1})=\sum_{x_i}P(X_{i+1}|x_i)P(x_i)
+\\
+&amp;i\to i+1 \text{ until } i=k
+\end{aligned}
+\]</span> 当 <span class="math inline">\(k\to \infty\)</span> 时，<span class="math inline">\(P(X_k)\)</span>​ 将收敛。我们将该收敛的概率分布称为
+<strong>Stationary
+Distribution</strong>。好消息是，不需要无穷无尽的迭代，我们可以根据性质直接把它解出来。
+<span class="math display">\[
+P(X_{k+1})=P(X_k)=\sum_{x_k}P(X_{k+1}|x_k)P(x_k)
+\]</span> 如果 <span class="math inline">\(X_k\)</span> 有 <span class="math inline">\(d\)</span> 种取值，展开上式可以得到 <span class="math inline">\(d\)</span> 个方程构成的 <span class="math inline">\(d\)</span> 元方程组。再来一个 <span class="math inline">\(\sum_{x_k} P(x_k)=1\)</span>，可以轻松解得
+stationary distribution <span class="math inline">\(P(X_k)\)</span>。</p>
+<p><br></p>
+<h2 id="hidden-markov-models">Hidden Markov Models</h2>
+<p>前一个例子里，天气作为 state 是一望而知的；但现实生活中大部分 state
+都是无法被直接观测到的，我们只能观测到与其有关的一些线索
+(evidence)。还是拿天气为例吧；但现在我们生活在柏拉图所说的洞穴里，无法直接观测到天气，只能看到火光映照出的影子有没有打伞。</p>
+<figure>
+<img data-src="HMM.png" alt="有没有觉得有点像 RNN?">
+<figcaption aria-hidden="true">有没有觉得有点像 RNN?</figcaption>
+</figure>
+<p>在马尔可夫模型的基础上，引入 <strong>evidence variables</strong>
+<span class="math inline">\(E_t\)</span>​ 就得到了隐马尔可夫模型
+(HMM)。</p>
+<ul>
+<li>initial distribution <span class="math inline">\(P(X_0)\)</span>。</li>
+<li>transition model <span class="math inline">\(P(X_{t+1}|X_t)\)</span>。</li>
+<li><strong>emission/sensor model</strong> <span class="math inline">\(P(E_t|X_t)\)</span>。隐马尔可夫模型同样假设
+emission model 是固定的。</li>
+</ul>
+<p>隐马尔可夫的无记忆性体现在 <span class="math inline">\(X_t\)</span>
+与 <span class="math inline">\(E_t\)</span> 两种变量上： <span class="math display">\[
+X_{i+1}\perp \{X_0,...,X_{i-1},E_1,...,E_i\}|X_i, \  E_{i+1}\perp
+\{X_0,...,X_i,E_1,...,E_i\}|X_{i+1}
+\]</span> 套到例子里，就是第 <span class="math inline">\(k\)</span>
+天的天气只与第 <span class="math inline">\(k-1\)</span> 天有关，第 <span class="math inline">\(k\)</span> 天打不打伞只与当天的天气有关。</p>
+<p>定义第 <span class="math inline">\(k\)</span> 天的 <strong>belief
+distribution</strong> <span class="math inline">\(B(X_k)\)</span> 为：
+<span class="math display">\[
+B(X_k)=P(X_k|e_1,...,e_{k})
+\]</span> 类似的有 <span class="math inline">\(B&#39;(X_k)\)</span>：
+<span class="math display">\[
+B&#39;(X_k)=P(X_k|e_1,...,e_{k-1})
+\]</span> 这里的定义很贝叶斯学派，对第 <span class="math inline">\(k\)</span> 天会不会下雨的 belief
+会根据观察到的线索而改变。<span class="math inline">\(B&#39;(X_k)\)</span> 与 <span class="math inline">\(B(X_k)\)</span> 是我们在观测到第 <span class="math inline">\(k\)</span> 天的线索 <span class="math inline">\(e_k\)</span> 前后对当天天气的 belief，从 <span class="math inline">\(B&#39;(X_k)\)</span> 到 <span class="math inline">\(B(X_k)\)</span> 的修正被称为 <strong>observation
+update</strong>。</p>
+<p>把 <span class="math inline">\(B(X_k)\)</span>
+按照条件概率的定义展开： <span class="math display">\[
+\begin{aligned}
+B(X_k)&amp;=P(X_k|e_1,...,e_k)\\
+&amp;=\frac{P(X_k,e_{k}|e_1,...,e_{k-1})}{P(e_k|e_1,...,e_{k-1})} \\
+&amp;\propto P(X_k,e_k|e_1,...,e_{k-1})\\
+&amp;= P(e_k|X_k,e_1,...,e_{k-1})P(X_k|e_1,...,e_{k-1})\\
+&amp;=P(e_k|X_k)B&#39;(X_k)
+\end{aligned}
+\]</span> 这就是 observation update 的方式了。由于分母 <span class="math inline">\(P(e_k|e_1,...,e_{k-1})\)</span>
+是常数而非概率分布，所以能够应用 <strong>delay normalization</strong> 的
+trick。因为 <span class="math inline">\(\sum_{x_k}
+B(X_k)=1\)</span>，先计算 <span class="math inline">\(P(e_k|X_k)B&#39;(X_k)\)</span>，最后再
+normalize。</p>
+<p>把 <span class="math inline">\(B&#39;(X_k)\)</span> 向前展开： <span class="math display">\[
+\begin{aligned}
+B&#39;(X_k)&amp;=\sum_{x_{k-1}}P(X_k,x_{k-1}|e_1,...,e_{k-1})\\
+&amp;=\sum_{x_{k-1}}P(X_k|x_{k-1},e_1,...,e_{k-1})P(x_{k-1}|e_1,...,e_{k-1})\\
+&amp;= \sum_{x_{k-1}} P(X_k|x_{k-1})B(x_{k-1})
+\end{aligned}
+\]</span> 这样从 <span class="math inline">\(B(X_{k-1})\)</span> 到
+<span class="math inline">\(B&#39;(X_k)\)</span>​ 的更新是根据 transition
+model 来的，被称为 <strong>time elapse update</strong>。</p>
+<p>把上面两个式子合起来，就得到了求 belief distribution <span class="math inline">\(B\)</span> 的迭代算法 <strong>Forward
+Algorithm</strong>。核心式子是： <span class="math display">\[
+B(X_k)\propto P(e_k|X_k)\sum_{x_{k-1}}P(X_k|x_{k-1})B(x_{k-1})
+\]</span></p>
+<p><br></p>
+<h2 id="particle-filtering">Particle Filtering</h2>
+<p>很神奇的算法。当 <span class="math inline">\(|X|\)</span> 非常大时
+(例如 <span class="math inline">\(X\)</span> 是 continuous 的)，直接在
+Markov 或 HMM 模型上跑 inference 时间开销太大。Particle Filtering
+的核心思想在于使用 <span class="math inline">\(N \ \
+(N&lt;&lt;|X|)\)</span> 个粒子 (particles) 来近似概率分布 <span class="math inline">\(B(X)\)</span>​​。 这里的粒子
+(<strong>particles</strong>)，实际上就是样本 (samples)。</p>
+<p>用一定数量的样本来近似地表示状态，这无疑是很具蒙特卡洛精神的。除此之外，PF
+几乎就和 HMM 的 forward algorithm 一致了。</p>
+<p>初始化：随机取样，获得初始的 particle list。</p>
+<ul>
+<li><em>Time Elapse Update</em> - 对每个粒子 <span class="math inline">\(x_i\)</span> 应用 <span class="math inline">\(P(X_{i+1}|x_i)\)</span> 转移得到下一个时间步的
+particle list。</li>
+<li><em>Observation Update</em> - 在 sensor model <span class="math inline">\(P(E_i|X_i)\)</span> 下，若当前观测到 <span class="math inline">\(e_i\)</span>，为粒子 <span class="math inline">\(x_i\)</span> 分配权重 <span class="math inline">\(P(e_i|x_i)\)</span>。normalize 整个 particle list
+后，它近似的是当前步的 belief distribution <span class="math inline">\(B(X)\)</span>。</li>
+<li><em>Resampling</em> - 根据该近似分布 <span class="math inline">\(B(X)\)</span>​ 重新取样，得到新的 particle
+list。</li>
+</ul>
+<p>PF 常应用于 Robot Localization 中，我们拥有
+Map，但是机器人的位置未知。还有更高级的 SLAM (Simultaneous Localization
+and Mapping) 问题，which Map 与机器人的位置都是未知的，需要使用 Kalman
+Filtering 解决。</p>
+<p><a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note18.pdf">Particle
+Filtering</a> note 中有一个关于天气的详细例子，讲的很清楚。</p>
+<p><br></p>
+<h2 id="viterbi-algorithm">Viterbi Algorithm</h2>
+<p>在 HMM 模型中，Forward Algorithm 用于求解 <span class="math inline">\(P(X_N|e_{1:N})\)</span>，Viterbi Algorithm
+则用于求解概率最大的隐状态序列 (hidden state trajectory)，即 <span class="math inline">\(\text{arg}\max_{x_{1:N}}P(x_{1:N}|e_{1:N})\)</span>，或等价的
+<span class="math inline">\(\arg
+\max_{x_{1:N}}P(x_{1:N},e_{1:N})\)</span>。</p>
+<figure>
+<img data-src="state_trellis.png" alt="HMM 的转移图即所谓的 state trellis">
+<figcaption aria-hidden="true">HMM 的转移图即所谓的 state
+trellis</figcaption>
+</figure>
+<p>定义从层 <span class="math inline">\(X_{t-1}\)</span> 到 <span class="math inline">\(X_t\)</span> 的边权为 <span class="math inline">\(P(X_t|X_{t-1})P(E_t|X_t)\)</span>，很容易发现，从
+<span class="math inline">\(X_1\)</span> 到 <span class="math inline">\(X_N\)</span>
+的路径的概率为其<strong>边权之积</strong>。这可以由路径 <span class="math inline">\(X_{1:N}\)</span> 的概率分布 <span class="math inline">\(P(X_{1:N},e_{1:N})\)</span>
+的马尔可夫展开式看出来： <span class="math display">\[
+P(X_{1:N},e_{1:N})=P(X_1)P(e_1|X_1)\prod_{t=2}^NP(X_t|X_{t-1})P(e_t|X_t)
+\]</span> 我们要求的则是这么一个序列 <span class="math inline">\(\{x_1,x_2,...,x_N\}\)</span>，满足： <span class="math display">\[
+\arg \max_{x_1,x_2,...,x_N} P(x_{1:N},e_{1:N})
+\]</span> 直接求 joint distribution table <span class="math inline">\(P(X_{1:N},e_{1:N})\)</span>
+再提取是一种方法，但时空复杂度都是指数级的 <span class="math inline">\(O(d^N)\)</span>。Viterbi Algorithm 则采用 DP
+的思想把复杂度降到 <span class="math inline">\(O(dN)\)</span>。</p>
+<p>从头到尾扫，求 <span class="math inline">\(m_t[x_t]\)</span>。<span class="math inline">\(m_t[x_t]\)</span> 的定义是，给定时刻 <span class="math inline">\(t\)</span> 的取值 <span class="math inline">\(X_t=x_t\)</span> 与一系列观测 <span class="math inline">\(e_1,e_2,...,e_t\)</span>，路径 <span class="math inline">\(X_{1:t}\)</span> 的最大概率。即，确定了末尾元素
+<span class="math inline">\(x_t\)</span> 后，所有 <span class="math inline">\(x_1,x_2,...,x_{t-1},x_t\)</span>
+中概率最大的序列所对应的概率。 <span class="math display">\[
+\begin{aligned}
+m_t[x_t]&amp;=\max_{x_{1:t-1}}P(x_{1:t}, e_{1:t})\\
+&amp;=\max_{x_{1:t-1}} P(e_t|x_t)P(x_t|x_{t-1})P(x_{1:t-1},e_{1:t-1})\\
+&amp;=P(e_t|x_t)\max_{x_{1:t-1}}P(x_t|x_{t-1})P(x_{1:t-1},e_{1:t-1})\\
+&amp;=P(e_t|x_t)\max_{x_{t-1}}P(x_t|x_{t-1})\max_{x_{1:t-2}}P(x_{1:t-1},e_{1:t-1})\\
+&amp;=P(e_t|x_t)\max_{x_{t-1}}P(x_t|x_{t-1})m_{t-1}[x_{t-1}]
+\end{aligned}
+\]</span> 与此同时记录 <span class="math inline">\(a_t[x_t]\)</span>。<span class="math inline">\(a_t[x_t]\)</span> 的定义是，给定末尾元素 <span class="math inline">\(x_t\)</span>，使得 <span class="math inline">\(x_1,x_2,...,x_t\)</span>
+序列概率最大的最佳的次末尾元素 <span class="math inline">\(x_{t-1}\)</span>。 <span class="math display">\[
+\begin{aligned}
+a_t[x_t]&amp;=P(e_t|x_t)\arg
+\max_{x_{t-1}}P(x_t|x_{t-1})m_{t-1}[x_{t-1}]\\
+&amp;=\arg \max_{x_{t-1}}P(x_t|x_{t-1})m_{t-1}[x_{t-1}]
+\end{aligned}
+\]</span> 求得 <span class="math inline">\(a,m\)</span> 后，我们就可以
+reconstruct 出概率最大的隐变量序列了：若序列长度为 <span class="math inline">\(N\)</span>，选择令 <span class="math inline">\(m_N\)</span> 最大的 <span class="math inline">\(x_N\)</span>，向前迭代 <span class="math inline">\(x_{N-1}:= a_N[x_N]\)</span>，直到 <span class="math inline">\(\{x_1,x_2,...,x_N\}\)</span> 构建完毕。</p>
+<p><br></p>
+<h2 id="bayes-nets-i">Bayes Nets I</h2>
+<p>还是挺有意思的。<span class="math inline">\(N\)</span> 个变量，值域
+(<strong>domain</strong>) 大小为 <span class="math inline">\(d\)</span>，那么 joint distribution <span class="math inline">\(P(X_1,X_2,...,X_N)\)</span> table 的大小是指数
+<span class="math inline">\(d^N\)</span>
+级别的。贝叶斯网络则利用变量间的 conditional independence
+关系，大大节省了存储空间。</p>
+<p>贝叶斯网络包括：</p>
+<ul>
+<li>一个 DAG，每个顶点对应一个随机变量 <span class="math inline">\(X\)</span>。</li>
+<li>一系列条件概率表 (<strong>conditional probability table</strong>,
+CPT) <span class="math inline">\(P(X|A_1,...,A_n)\)</span>，其中 <span class="math inline">\(A_i\)</span> 是 <span class="math inline">\(X\)</span> 的第 <span class="math inline">\(i\)</span> 个 parent。这也就是说，每个 CPT 包含
+<span class="math inline">\(n+2\)</span> 列，<span class="math inline">\(n\)</span> 列 for <span class="math inline">\(P(A_i)\)</span>，<span class="math inline">\(1\)</span> 列 for <span class="math inline">\(P(X)\)</span>，<span class="math inline">\(1\)</span> 列 for <span class="math inline">\(P(X|A_1,...,A_n)\)</span>。</li>
+</ul>
+<p>贝叶斯网络有什么性质呢？</p>
+<ul>
+<li><strong>Each node is conditionally independent of all its ancestor
+nodes (non-descendants) in the graph, given all of its
+parents.</strong></li>
+<li><strong>Each node is conditionally independent of all other
+variables given its Markov blanket.</strong> A variable’s Markov blanket
+consists of parents, children, children’s other parents.</li>
+</ul>
+<p>这两个性质保证了 joint distribution <span class="math inline">\(P(X_1,...,X_N)\)</span> 按照 DAG
+的拓扑序累积所有变量的 CPTs 计算得出： <span class="math display">\[
+P(X_1,X_2,...,X_N)=\prod_{i=1}^N P(X_i|\text{parents}(X_i))
+\]</span> 值得注意的一点是，<span class="math inline">\(X\to Y\)</span>
+(<span class="math inline">\(X\)</span> 是 <span class="math inline">\(Y\)</span> 的 parent) 并不一定代表 <span class="math inline">\(X,Y\)</span> 间存在因果关系 (causal
+relationship)，或是 <span class="math inline">\(Y\)</span> 依赖于 <span class="math inline">\(X\)</span>。贝叶斯网络上的一条边只能说明 <span class="math inline">\(X,Y\)</span> 间存在某种关系 (some
+relationship)。换句话来说，<strong>贝叶斯网络的结构仅能保证部分变量间的
+conditionally independence 关系</strong> (independence assumption)。</p>
+<p><br></p>
+<h2 id="bayes-nets-ii">Bayes Nets II</h2>
+<p>在之前的 Probability 一节，我们介绍了 Probability Inference
+的概念：求概率分布 <span class="math inline">\(P(Q_1...Q_k|e_1...e_k)\)</span>。给出一个贝叶斯网络，我们怎么做
+inference？[经典例题 Assignment4 4.2]</p>
+<figure>
+<img data-src="bayes_inference.png" alt="考虑这个简单的例子，变量 T,C,S,E 均取 binary value">
+<figcaption aria-hidden="true">考虑这个简单的例子，变量 <span class="math inline">\(T,C,S,E\)</span> 均取 binary value</figcaption>
+</figure>
+<p>给出该贝叶斯网络，观察到 <span class="math inline">\(E=+e\)</span>，求概率分布 <span class="math inline">\(P(T|+e)\)</span>。</p>
+<p>朴素 Inference by Enumeration (IBE): 写出 joint PDF <span class="math inline">\(P(T,C,S,E)\)</span>，选出对应 <span class="math inline">\(+e\)</span> 的行并 summing out 所有隐变量 <span class="math inline">\(S,E\)</span> 。得到 <span class="math inline">\(P(T,+e)\)</span> 后 normalize 整理成 <span class="math inline">\(P(T|+e)\)</span>。本质上是： <span class="math display">\[
+P(T|+e)=\alpha \sum_s \sum_c P(T) P(s|T) P(c|T) P(+e|c,s)
+\]</span> 应用贝叶斯网络性质的 alternative 方法：<strong>Variable
+Elimination</strong>.</p>
+<p>先把 joint PDF <span class="math inline">\(P(T,C,S,E)\)</span>
+写成多个<strong>因子</strong>相乘的形式。<strong>因子 (factor)</strong>
+的本质是 <em>unnormalized probability</em>。</p>
+<ul>
+<li><span class="math inline">\(P(T,C,S,E=+e)=P(T)P(C|T)P(S|T)P(E=+e|C,S)\)</span>。</li>
+<li>消除隐变量 <span class="math inline">\(C\)</span>：将所有与 <span class="math inline">\(C\)</span> 有关的因子相乘合成一个新因子 <span class="math inline">\(P(C|T)P(+e|C,S)\to P(C,+e|T,S)\)</span>。</li>
+<li>sum out 该新因子中的 <span class="math inline">\(C\)</span>：<span class="math inline">\(P(C,+e|T,S)\to P(+e|T,S)\)</span>。</li>
+<li>此时 <span class="math inline">\(P(T,S,+e)=P(T)P(S|T)P(+e|T,S)\)</span>，隐变量
+<span class="math inline">\(C\)</span> 被消除。</li>
+<li>消除隐变量 <span class="math inline">\(S\)</span>：将所有与 <span class="math inline">\(S\)</span> 有关的因子相乘融合成一个新因子 <span class="math inline">\(P(S|T)P(+e|T,S)\to P(S,+e|T)\)</span>。</li>
+<li>sum out 该因子中的 <span class="math inline">\(S\)</span>：<span class="math inline">\(P(S,+e|T)\to P(+e|T)\)</span>。</li>
+<li>所有隐变量都被消除，合成剩余的因子 <span class="math inline">\(P(+e|T)P(T)\to P(+e,T)\)</span>。</li>
+</ul>
+<p>进一步整理与 normalize <span class="math inline">\(P(+e,T)\)</span>
+后很容易得到 <span class="math inline">\(P(T|+e)\)</span>。</p>
+<p>其实 variable elimination 仅仅对 IBE 式子中的 summation
+做了位置变换。它的本质是： <span class="math display">\[
+\alpha P(T)\sum_s P(s|T)\sum_c P(c|T)P(+e|c,s)
+\]</span> 可以看到它与 IBE 是完全等价的。但是，逐个 sum out 隐变量的小
+trick 潜在地降低了时间复杂度。若 inference 问题中涉及 <span class="math inline">\(n\)</span> 个隐变量 <span class="math inline">\(h_1,h_2,...,h_n\)</span>，<span class="math inline">\(h_i\)</span> 的大小为 <span class="math inline">\(|h_i|\)</span>。</p>
+<ul>
+<li>直接做 IBE：<span class="math inline">\(O(\prod_{i=1}^n
+|h_i|)\)</span>。</li>
+<li>做 variable elimination：<span class="math inline">\(O(\sum_{i=1}^n
+(|\text{factor size}|=\prod_{h\in
+\text{blanket}(h_i)}|h|))\)</span>​。</li>
+</ul>
+<p>可以看到，variable elimination
+的复杂度与消元的顺序有很大关系：最优的消元顺序可以保证每次被消去的因子的
+size 尽量小，从而取得比 IBE 优秀的效率。</p>
+<p>但找到该最优的消元顺序是一个 NP hard
+的问题，所以在实际计算中通常采取启发式的规则进行消元，比如，不断选择度数最小的节点进行消去。</p>
+<p><br></p>
+<h2 id="bayes-nets-iii">Bayes Nets III</h2>
+<p>Bayes Nets 的第二种题型：在给定的 BN 中，提供若干证据变量
+(evidence)，如何判断变量间是否 conditionally independent？在贝叶斯网络的
+independence assumption 基础之上，我们使用 <strong>D-Separation
+算法</strong>来回答上述形如 <span class="math inline">\(X_i\perp X_j |
+\{X_{k_1},...,X_{k_n}\}\)</span>​ 的询问。</p>
+<p>D-Separation 分为四步：</p>
+<ul>
+<li>Draw ancestral graph.</li>
+<li>Moralize the ancestral graph by <strong>marrying</strong> the
+parents.</li>
+<li>Disorient the graph.</li>
+<li>Delete the givens and their edges.</li>
+</ul>
+<p>这样，判断两变量间 conditional independence
+关系的问题就转化为判断无向图点间连通性的问题了。</p>
+<p>具体见 <a target="_blank" rel="noopener" href="https://web.mit.edu/jmn/www/6.034/d-separation.pdf">MIT
+D-separation Algorithm Handout</a>，写得非常详细。</p>
+<p><br></p>
+<h2 id="utility-theory">Utility Theory</h2>
+<p>An agent can make <strong>rational decisions</strong> based on
+<strong>what it believes</strong> and <strong>what it
+wants</strong>.</p>
+<ul>
+<li>what it believes - 由 <strong>utilities</strong>
+定义，将客观的外在状态 (state of the world) 映射为一个代表着 agent
+对该状态主观需求度 (desirability of the state) 的实数。</li>
+<li>what it wants - 换句话说，即 agent 的<strong>偏好
+(preference)</strong>。</li>
+<li>rational decisions - agent
+的理性决策体现在它遵循<strong>最大化期望效用原则 (principle of maximum
+expected utility, MEU)</strong>。</li>
+</ul>
+<p>agent 的偏好定义在 <strong>prizes</strong> 与
+<strong>lotteries</strong> (situations with uncertain prizes e.g. <span class="math inline">\([p,A;(1-p),B]\)</span>) 之上。</p>
+<ul>
+<li><span class="math inline">\(A\sim B\)</span>. indifferent between
+<span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span></li>
+<li><span class="math inline">\(A\succ B\)</span>. prefer <span class="math inline">\(A\)</span> over <span class="math inline">\(B\)</span></li>
+<li><span class="math inline">\(A\prec B\)</span>. prefer <span class="math inline">\(B\)</span> over <span class="math inline">\(A\)</span></li>
+</ul>
+<p>一个遵循 MEU 决策的 agent 必须有<strong>理性偏好 (rational
+preferences)</strong>。[否则将被恶意 agent 欺骗，考虑非理性偏好环]
+理性偏好被<strong>五个理性公理 (Axioms of Rationality)</strong>
+所定义。</p>
+<ul>
+<li><em>Orderability</em>. <span class="math inline">\((A\succ B)\lor
+(B\succ A)\lor (A\sim B)\)</span>.</li>
+<li><em>Transitivity</em>. <span class="math inline">\((A\succ B)\land
+(B\succ C)\Rightarrow (A\succ C)\)</span>.</li>
+<li><em>Continuity</em>. <span class="math inline">\(A\succ B\succ C
+\Rightarrow \exists p[p,A;(1-p),C]\sim B\)</span></li>
+<li><em>Substitutability</em>. <span class="math inline">\(A\sim B
+\Rightarrow [p,A;(1-p),C]\sim [p,B;(1-p),C]\)</span></li>
+<li><em>Monotonicity</em>. <span class="math inline">\(A\succ
+B\Rightarrow (p\geq q \Leftrightarrow [p,A;(1-p),B]\succeq
+[q,A;(1-q),B])\)</span></li>
+</ul>
+<p>若 agent 有理性偏好，它的行为 (behavior) 一定符合 MEU
+决策。这也就是说，存在 <strong>real-valued utility function <span class="math inline">\(U\)</span></strong> 满足以下条件：</p>
+<ul>
+<li>若 <span class="math inline">\(A\succ B\)</span>，<span class="math inline">\(U(A)&gt;U(B)\)</span></li>
+<li>若 <span class="math inline">\(A\sim B\)</span>，<span class="math inline">\(U(A)=U(B)\)</span></li>
+<li><span class="math inline">\(U([p_1,S_1;...;p_n,S_n])=\sum_i p_i
+U(S_i)\)</span></li>
+</ul>
+<p>满足这些条件的 <span class="math inline">\(U\)</span>
+有很多个，它们的选择反映了 agent 的主观认知；或者不如说是 agent
+的性格。</p>
+<ul>
+<li><span class="math inline">\(U_1(\$x)=x\)</span> -
+<strong>risk-neutral</strong> agent.</li>
+<li><span class="math inline">\(U_2(\$x)=\sqrt{x}\)</span> -
+<strong>risk-averse</strong> agent.</li>
+<li><span class="math inline">\(U_3(\$x)=x^2\)</span> -
+<strong>risk-seeking</strong> agent.</li>
+</ul>
+<p>虽然性格各异，但它们毫无疑问都具有理性偏好，做出的决策均是理性决策
+(最大化期望效用)。反直觉的是，人类是 predictable irrational 的 (Allais
+paradox 1953)。</p>
+<p><br></p>
+<h2 id="decision-networks">Decision Networks</h2>
+<p>贝叶斯网络 + Expectimax <span class="math inline">\(\Rightarrow\)</span> 决策网络。</p>
+<p>三种节点：</p>
+<ul>
+<li><strong>Chance nodes</strong> - BN 节点。Ovals。</li>
+<li><strong>Action nodes</strong> - 值确定 (observed evidence) 的 BN
+节点，<strong>cannot have parents</strong>，agent
+拥有完全控制权。Rectangles。</li>
+<li><strong>Utility nodes</strong> - Expectimax 节点，依赖
+chances/actions nodes 计算期望效用。Diamonds。</li>
+</ul>
+<p>用决策网络求最佳 actions。</p>
+<ul>
+<li>遍历 action space。</li>
+<li>Initiate all evidence (环境 evidence/action evidence)。</li>
+<li>Calculate posterior probabilities for <strong>all parents of utility
+nodes</strong> given the evidence (运行 BN)。</li>
+<li>Calculate expected utility for each action (运行 utility
+nodes)。</li>
+<li>Choose maximizing action (取 <span class="math inline">\(\arg
+\max_{a} \text{MEU}\)</span>)。</li>
+</ul>
+<p>以上对 action space 的遍历可以被 unravel 成一颗类 Expectimax
+Tree，被称为 Decisions as <strong>Outcome Tree</strong>。</p>
+<figure>
+<img data-src="outcome_tree.png" alt="与 Expectimax Tree 的唯一区别是边上的标签">
+<figcaption aria-hidden="true">与 Expectimax Tree
+的唯一区别是边上的标签</figcaption>
+</figure>
+<p>一个最简单的 outcome tree：</p>
+<ul>
+<li>第一层：Action node，对应 Expectimax tree 中的
+Maximizer，分支出不同的 action 选择。</li>
+<li>第二层：Chances nodes，每个节点对应一种 action 选择下 BN 的
+probabilistic inference。</li>
+<li>第三层：Utility nodes，计算期望效用。</li>
+</ul>
+<p><br></p>
+<h2 id="natural-language-processing">Natural Language Processing</h2>
+<p>见 CS224N 笔记，重合程度很高。</p>
+<p><br></p>
+<h2 id="note-reading">Note Reading</h2>
+<p>本节课课件内容的绝大部分是从 Berkeley CS188
+的公开课件中蒯下来的，并且经过我的调查，Berkeley 还提供了丰富翔实的课程
+notes，实为广大自学学子的福音。遂决定之后应当把听课的时间用来读
+notes；特此记录。</p>
+<ul>
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note01.pdf">Uninformed
+Search</a>.</li>
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note02.pdf">Informed
+Search</a>.</li>
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note03.pdf">CSP
+I</a>.</li>
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note04.pdf">CSP
+II</a>.</li>
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note05.pdf">Search
+with Other Agents I</a>.</li>
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note06.pdf">Search
+with Other Agents II</a>.</li>
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note07.pdf">MDPs
+I</a></li>
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note08.pdf">MDPs
+II</a></li>
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note09.pdf">RL
+I</a></li>
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note10.pdf">RL
+II</a></li>
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note11.pdf">Probability</a></li>
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note17.pdf">Hidden
+Markov Models</a></li>
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note18.pdf">Particle
+Filtering</a></li>
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/sp24/assets/notes/cs188-sp24-note11.pdf">Bayes
+Nets: Representation</a></li>
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/sp24/assets/notes/cs188-sp24-note12.pdf">Bayes
+Nets: Inference</a></li>
+<li>[out of scope] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/sp24/assets/notes/cs188-sp24-note13.pdf">Bayes
+Nets: Sampling</a></li>
+<li>[checked] <a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/sp24/assets/notes/cs188-sp24-note16.pdf">Utility
+Theory &amp; Decision Networks</a></li>
+</ul>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info: Code, COMP3270. Lecturer, Dr. Zhao Hengshuang.</p>
+<p>Course textbook: S. Russell &amp; P. Norvig, (2020), <em>Artificial
+Intelligence: A Modern Approach</em> (4th Edition)</p>
+<p>Other reference:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://inst.eecs.berkeley.edu/~cs188/fa22/">UCB CS 188
+<em>Introduction to Artificial Intelligence</em>, Fall 2022</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/64901634/is-there-a-difference-between-what-is-called-expectimax-and-expectiminimax">the
+intricate difference between Expectimax and Expectiminimax</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/53948964">蒙特卡洛搜索树算法 -
+知乎</a></li>
+<li><a target="_blank" rel="noopener" href="https://ai.berkeley.edu/~cs188/sp12/slides/cs188%20lecture%208%20and%209%20--%20MDPs%202PP.pdf">Why
+don't we use expectimax to solve MDPs?</a></li>
+<li><a target="_blank" rel="noopener" href="https://web.mit.edu/jmn/www/6.034/d-separation.pdf">MIT
+D-separation handout</a></li>
+</ul>
+
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2024/01/12/COMP3270-1/" title="Artificial Intelligence 笔记">https://www.thisisxxz.com/2024/01/12/COMP3270-1/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | Artificial Intelligence 笔记](https://www.thisisxxz.com/2024/01/12/COMP3270-1/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/AI-ML/" rel="tag"><i class="fa fa-tag"></i> AI & ML</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/12/21/review-hibike/" rel="prev" title="京吹随谈">
+                  <i class="fa fa-chevron-left"></i> 京吹随谈
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/01/15/learning-review-1/" rel="next" title="我的第一次反向传播">
+                  我的第一次反向传播 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/01/12/COMP3270-1/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

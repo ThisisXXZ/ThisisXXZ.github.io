@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Part A 深入的介绍了 ML —— 一个优美的 static typed functional language. 接下来的 Part B 我们将会引入一个 dynamic typed functional language，Racket；在很早之前我就听说过这个语言独特的括号语法。 这一节的一个很重要的主题应该是比较 versus。我们将学习编程语言中几个很重要的 comparis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Programming Languages, UW, Part B - Racket Basic">
+<meta property="og:url" content="https://www.thisisxxz.com/2023/07/16/prog-lan-2/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="Part A 深入的介绍了 ML —— 一个优美的 static typed functional language. 接下来的 Part B 我们将会引入一个 dynamic typed functional language，Racket；在很早之前我就听说过这个语言独特的括号语法。 这一节的一个很重要的主题应该是比较 versus。我们将学习编程语言中几个很重要的 comparis">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-07-16T06:38:47.000Z">
+<meta property="article:modified_time" content="2024-02-02T11:41:42.000Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Programming Languages">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2023/07/16/prog-lan-2/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2023/07/16/prog-lan-2/","path":"2023/07/16/prog-lan-2/","title":"Programming Languages, UW, Part B - Racket Basic"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Programming Languages, UW, Part B - Racket Basic | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#syntax-parentheses"><span class="nav-number">1.</span> <span class="nav-text">Syntax &amp; Parentheses</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dynamic-typing"><span class="nav-number">2.</span> <span class="nav-text">Dynamic Typing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#delayed-evaluation-thunks"><span class="nav-number">3.</span> <span class="nav-text">Delayed Evaluation &amp; Thunks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mutable-bindings"><span class="nav-number">4.</span> <span class="nav-text">Mutable Bindings</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lazy-evaluation"><span class="nav-number">5.</span> <span class="nav-text">Lazy Evaluation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#streams"><span class="nav-number">6.</span> <span class="nav-text">Streams</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#using-streams"><span class="nav-number">6.1.</span> <span class="nav-text">Using Streams</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#defining-streams"><span class="nav-number">6.2.</span> <span class="nav-text">Defining Streams</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2023/07/16/prog-lan-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Programming Languages, UW, Part B - Racket Basic | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Programming Languages, UW, Part B - Racket Basic
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-07-16 14:38:47" itemprop="dateCreated datePublished" datetime="2023-07-16T14:38:47+08:00">2023-07-16</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Part A 深入的介绍了 ML —— 一个优美的 static typed functional
+language. 接下来的 Part B 我们将会引入一个 <em>dynamic typed</em>
+functional
+language，Racket；在很早之前我就听说过这个语言独特的括号语法。</p>
+<p>这一节的一个很重要的主题应该是<strong>比较
+versus</strong>。我们将学习编程语言中几个很重要的 comparisons:</p>
+<ul>
+<li>compiler v.s. interpreter.</li>
+<li>ML v.s. Racket.</li>
+<li>static typing (与重要的 static checking 机制) v.s. dynamic
+typing.</li>
+</ul>
+<span id="more"></span>
+<p>Part B 的内容比较多，于是分为 Part B-1 与 Part B-2
+进行记录。第一部分将会介绍 Racket 语言基础与各种
+idioms，而第二部分专注于 static 与 dynamic typing 的比较。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="syntax-parentheses">Syntax &amp; Parentheses</h2>
+<blockquote>
+<p>Racket 脱胎于 Scheme，而 Scheme 是 LISP 的一个著名的 programming
+dialect。LISP
+语系都采用独特的完全用圆括号的前缀符号表示法，这一优美的语法使得其被称之为“上帝的编程语言”。</p>
+</blockquote>
+<p>Racket 中的语素仅仅有两种：</p>
+<ul>
+<li><em>atom</em>: 例如 <code>#t</code>, <code>#f</code>,
+<code>34</code>, <code>"hi"</code>, <code>null</code>
+等等。一种特别重要的 atom 被称为 identifier，它可能是：
+<ul>
+<li>variable: 例如 <code>x</code> 或
+<code>something-like-this!</code>.</li>
+<li><em>special form</em>: <code>define</code>, <code>lambda</code>,
+<code>if</code> 等等。(类比关键字)</li>
+</ul></li>
+<li>A sequence of things in parentheses
+<code>(t1 t2 ... tn)</code>.</li>
+</ul>
+<p>在一个括号序列中，第一个 atom 决定了其余元素的含义。</p>
+<ul>
+<li>第一个 atom 是某种 special form。举例来说，<code>(define ...)</code>
+means we have a <em>variable</em> definition or a <em>sugared version of
+function</em> definitions.</li>
+<li>第一个 atom 不是任何 special form。此时括号序列是一个 function
+call。</li>
+</ul>
+<p>对 Racket 的每一条语句，我们可以轻松的解析 <em>parsing</em>
+并建立对应的语法树。sequence 则代表一颗颗子树，子树的根为 sequence
+的第一个 atom。可以看出语法树的<strong>前序遍历</strong>对应的就是
+Racket 的程序结构。这样的结构使得 Racket 的语法是 <em>unambiguous</em>
+的，不用考虑优先级问题。</p>
+<div class="note info no-icon"><p>In Racket, <em>parentheses change the meaning of your program. You
+cannot add or remove them because you feel like it. They are NEVER
+optional or meaningless.</em></p>
+</div>
+<p>与其他语言不同，Racket
+中的括号有举足轻重的地位，不能随便增删。举例来说，<code>(e)</code> means
+evaluate <code>e</code> and call the resulting function with 0
+arguments. 所以 <code>(42)</code> 将会导致 run-time error。</p>
+<p><br></p>
+<h2 id="dynamic-typing">Dynamic Typing</h2>
+<p>Racket 是一个 dynamic typed language；也就是说，Racket does not use a
+static type system to reject programs before they run. 在 Racket
+中，一切类型错误都是 run-time error。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> f (<span class="name"><span class="built_in">lambda</span></span> () (<span class="name"><span class="built_in">+</span></span> <span class="number">1</span> <span class="string">&quot;hello&quot;</span>)))</span><br></pre></td></tr></table></figure>
+<p>在 Racket 中，定义一个这样的函数不会出现任何错误。只有当调用它时
+<code>(f)</code>，Racket 才会弹出 <code>contract violation</code> 的
+run-time error。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">list</span></span> <span class="number">2</span> (<span class="name"><span class="built_in">list</span></span> <span class="number">4</span> <span class="number">5</span>) (<span class="name"><span class="built_in">list</span></span> (<span class="name"><span class="built_in">list</span></span> <span class="number">1</span> <span class="number">2</span>) (<span class="name"><span class="built_in">list</span></span> <span class="number">6</span>)) <span class="number">19</span> (<span class="name"><span class="built_in">list</span></span> <span class="number">14</span> <span class="number">0</span>))</span><br></pre></td></tr></table></figure>
+<p>舍弃 static type system 带来的是更加灵活的语法：在 Racket
+中，定义拥有不同类型元素的 list 显得非常的 trivial；而这样的定义方式在
+ML 中会因为无法 type checked 而被 reject。</p>
+<p>非常自然的，we may want to compute something over such lists. Again
+this is no problem.
+举例来说，我们可以定义一个函数来计算该数据结构中所有数之和：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">sum</span> xs)</span><br><span class="line">  (<span class="name"><span class="built_in">cond</span></span> [(<span class="name"><span class="built_in">null?</span></span> xs) <span class="number">0</span>]</span><br><span class="line">        [(<span class="name"><span class="built_in">number?</span></span> (<span class="name"><span class="built_in">car</span></span> xs)) (<span class="name"><span class="built_in">+</span></span> (<span class="name"><span class="built_in">car</span></span> xs) (<span class="name">sum</span> (<span class="name"><span class="built_in">cdr</span></span> xs)))]</span><br><span class="line">        [<span class="literal">#t</span> (<span class="name"><span class="built_in">+</span></span> (<span class="name">sum</span> (<span class="name"><span class="built_in">car</span></span> xs)) (<span class="name">sum</span> (<span class="name"><span class="built_in">cdr</span></span> xs)))]))</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="delayed-evaluation-thunks">Delayed Evaluation &amp; Thunks</h2>
+<p>A key semantic issue for a language construct is <em>when are its
+subexpressions evaluated.</em> 在 Racket (与包括 ML 的绝大多数语言)
+中，对于一个函数调用 <code>(e1 e2 ... en)</code>，我们先对参数
+<code>e2</code>, ... <code>en</code>
+进行求值再执行函数体中的内容。见下例：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">my-if-bad</span> x y z) (<span class="name"><span class="built_in">if</span></span> x y z))</span><br></pre></td></tr></table></figure>
+<p>与直觉相反，<code>my-if-bad</code> 并不能完全替换
+<code>if</code>：这是因为作为函数的 <code>my-if-bad</code> 与作为
+special-form atom 的 <code>if</code> 有着完全不同的 rules for evaluating
+subexpressions.</p>
+<ul>
+<li><code>(my-if-bad e1 e2 e3)</code>，作为函数，当被调用时，需要对所有参数
+<code>e1</code>,<code>e2</code>,<code>e3</code> 进行求值。</li>
+<li><code>(if x y z)</code>，作为括号序列，<code>if</code> 的规则是先对
+<code>e1</code> 求值，如果结果为 true，则对 <code>e2</code> 求值。反之对
+<code>e3</code> 求值。也就是说，与函数不同，我们无需同时对
+<code>e2</code> 与 <code>e3</code> 进行求值。</li>
+</ul>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">factorial-wrong</span> x)</span><br><span class="line">  (<span class="name">my-if-bad</span> (<span class="name"><span class="built_in">=</span></span> x <span class="number">0</span>)</span><br><span class="line">             <span class="number">1</span></span><br><span class="line">             (<span class="name"><span class="built_in">*</span></span> x (<span class="name">factorial-wrong</span> (<span class="name"><span class="built_in">-</span></span> x <span class="number">1</span>)))))</span><br></pre></td></tr></table></figure>
+<p>我们使用 <code>my-if-bad</code> 来替换经典阶乘算法中的
+<code>if</code>：这个程序会因为无限递归而无法终止。原因是因为由于
+<code>my-if-bad</code> 是函数，无论 <code>x</code> 是否等于
+0，程序都会继续对函数体中的 <code>(factorial-wrong (-x 1))</code>
+进行求值。</p>
+<p>可以看出问题的关键在于<em>推迟对参数的求值</em>；我们可以利用
+function bodies are not evaluated until the function gets called
+这一特性来实现一个可行的 <code>my-if</code>：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">my-if</span> x y z) (<span class="name"><span class="built_in">if</span></span> x (<span class="name">y</span>) (<span class="name">z</span>)))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">factorial</span> x)</span><br><span class="line">  (<span class="name">my-if</span> (<span class="name"><span class="built_in">=</span></span> x <span class="number">0</span>)</span><br><span class="line">         (<span class="name"><span class="built_in">lambda</span></span> () <span class="number">1</span>)</span><br><span class="line">         (<span class="name"><span class="built_in">lambda</span></span> () (<span class="name"><span class="built_in">*</span></span> x (<span class="name">factorial</span> (<span class="name"><span class="built_in">-</span></span> x <span class="number">1</span>)))))</span><br></pre></td></tr></table></figure>
+<p>将所有 <code>(if e1 e2 e3)</code> 替换成
+<code>(my-if e1 (lambda () e2) (lambda () e3))</code>。这样，使用
+<code>my-if</code> 函数定义的阶乘算法不会产生无限递归的错误。</p>
+<p>可以发现，由于我们用 <code>lambda</code> 创建无参匿名函数将
+<code>e2</code> 和 <code>e3</code> 包了起来，在调用 <code>my-if</code>
+时并不会对 <code>e2</code> 和 <code>e3</code> 进行求值。直到执行
+<code>my-if</code> 的函数体并对 either <code>y</code> or <code>z</code>
+进行调用时，我们才需要对 <code>e2</code> 或 <code>e3</code>
+其中之一进行求值。这一逻辑与 <code>if</code> 本质是相同的。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">e                            <span class="comment">; e will be evaluated immediately</span></span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> x (<span class="name"><span class="built_in">lambda</span></span> () e))     <span class="comment">; wrap e in a thunk</span></span><br><span class="line">(<span class="name">x</span>)                          <span class="comment">; e won&#x27;t be evaluated until x is called</span></span><br></pre></td></tr></table></figure>
+<p>利用 function bodies are not evaluated until the function gets called
+的特性，将表达式 <code>e</code> 封装在一个无参函数中推迟其求值的做法称为
+<em>delayed evaluation</em>。这个无参函数被称为 <em>thunk</em>。</p>
+<div class="note info no-icon"><p><em>thunk</em>.</p>
+<ul>
+<li>noun. the zero-argument function wrapping <code>e</code>.</li>
+<li>verb. we use "thunk the argument" to mean "use
+<code>lambda () e</code> instead of <code>e</code>" to delay the
+evaluation of <code>e</code>.</li>
+</ul>
+</div>
+<p>使用 thunk 进行表达式的延时求值是一个常见且强大的 functional
+programming idiom。这并不是 Racket 特有的 ——
+实际上这一部分完全可以在学习 ML 的时候进行介绍。</p>
+<p><br></p>
+<h2 id="mutable-bindings">Mutable Bindings</h2>
+<p>Racket 支持使用 assignment statement <code>set!</code> (set-bang) 来
+<em>mutate</em> bindings。</p>
+<p>注意区分 mutate 与 shadow：若 <code>x</code> 在环境中，使用
+<code>(set! x 13)</code> 将 <em>mutate</em> the binding so that
+<code>x</code> maps to the value 13. Doing so affects <em>all code</em>
+that has this <code>x</code> in its environment. 这也就是说，在 mutate
+<code>x</code> 之后，在所有的环境中 (而不仅仅是 mutate
+之后的环境)，<code>x</code> 都将与 13 对应。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> b <span class="number">3</span>)</span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> f (<span class="name"><span class="built_in">lambda</span></span> (x) (<span class="name"><span class="built_in">*</span></span> <span class="number">1</span> (<span class="name"><span class="built_in">+</span></span> x b))))</span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> c (<span class="name"><span class="built_in">+</span></span> b <span class="number">4</span>))</span><br><span class="line">(<span class="name"><span class="built_in">set!</span></span> b <span class="number">5</span>)</span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> z (<span class="name">f</span> <span class="number">4</span>))</span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> w c)</span><br></pre></td></tr></table></figure>
+<p>在上例中，我们依次对 bindings 进行求值 (就和在 ML 中一样)：</p>
+<ul>
+<li><code>b</code> bound to 3.</li>
+<li><code>f</code> bound to <code>(lambda (x) (* 1 (+ x b)))</code>:
+正如之前强调的，在 <code>f</code> 被调用之前不会执行函数体。</li>
+<li><code>c</code>: 在环境中寻找 <code>b</code> =&gt; <code>b</code>
+bound to 3 =&gt; <code>c</code> bound to 7.</li>
+<li>mutate <code>b</code>: 此时在所有环境中 <code>b</code> bound to
+5.</li>
+<li><code>z</code>: 调用函数 <code>f</code> =&gt; 参数 <code>x</code>
+bound to 4 =&gt; 在环境中寻找 <code>b</code> =&gt; <code>b</code> bound
+to 5 =&gt; <code>z</code> bound to 9.</li>
+<li><code>w</code>: 在环境中寻找 <code>c</code> =&gt; <code>c</code>
+bound to 7 =&gt; <code>w</code> bound to 7.</li>
+</ul>
+<p>在 functional programming 中，使用 mutation 通常是非常 error-prone
+的。举例来说，可能函数 <code>f</code> 在定义时想要使用的是
+<code>b</code> 之前的值。然而 <code>b</code> 在之后发生了
+mutate，这时调用 <code>f</code> 结果会与预期不一致。</p>
+<div class="note info no-icon"><p>General technique in software development. <em>If something might get
+mutated and you need the old value, make a copy before mutation can
+occur.</em></p>
+</div>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> f</span><br><span class="line">  (<span class="name"><span class="built_in">let</span></span> ([<span class="name">b</span> b])</span><br><span class="line">    (<span class="name"><span class="built_in">lambda</span></span> (x) (<span class="name"><span class="built_in">*</span></span> <span class="number">1</span> (<span class="name"><span class="built_in">+</span></span> x b)))))</span><br></pre></td></tr></table></figure>
+<p>This code makes the <code>b</code> in the function body refer to a
+local <code>b</code> that is initialized to the global
+<code>b</code>.</p>
+<p><br></p>
+<h2 id="lazy-evaluation">Lazy Evaluation</h2>
+<p>在实际使用 thunk 的过程中，我们常常会遇到重复计算的情况：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> my-mult x y-thunk</span><br><span class="line">  (<span class="name"><span class="built_in">cond</span></span> [(<span class="name"><span class="built_in">=</span></span> x <span class="number">0</span>) <span class="number">0</span>]</span><br><span class="line">        [(<span class="name"><span class="built_in">=</span></span> x <span class="number">1</span>) (<span class="name">y-thunk</span>)]</span><br><span class="line">        [<span class="literal">#t</span> (<span class="name"><span class="built_in">+</span></span> (<span class="name">y-thunk</span>) (<span class="name">my-mult</span> (<span class="name"><span class="built_in">-</span></span> x <span class="number">1</span>) y-thunk))]))</span><br></pre></td></tr></table></figure>
+<p>在这个递归实现的乘法函数中，每递归一层都需要调用一次
+<code>y-thunk</code>。一种可行的解决方案是，在调用函数时我们使用
+<code>let</code> 定义本地变量对调用 <code>y-thunk</code>
+的结果进行储存。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">my-mult</span> x (<span class="name"><span class="built_in">lambda</span></span> () (<span class="name"><span class="built_in">+</span></span> <span class="number">3</span> <span class="number">4</span>)))                  <span class="comment">; ordinary call</span></span><br><span class="line">(<span class="name">my-mult</span> x (<span class="name"><span class="built_in">let</span></span> ([<span class="name">z</span> (<span class="name"><span class="built_in">+</span></span> <span class="number">3</span> <span class="number">4</span>)]) (<span class="name"><span class="built_in">lambda</span></span> () z)))    <span class="comment">; store the result in z</span></span><br><span class="line">(<span class="name">my-mult</span> x (<span class="name"><span class="built_in">lambda</span></span> () (<span class="name"><span class="built_in">let</span></span> ([<span class="name">z</span> (<span class="name"><span class="built_in">+</span></span> <span class="number">3</span> <span class="number">4</span>)]) z)))    <span class="comment">; wrong: the same as ordinary call</span></span><br></pre></td></tr></table></figure>
+<p>注意第三种写法是错误的；它本质上与第一种相同，因为在 <code>let</code>
+中计算的过程仍然被包含在 thunk 中。</p>
+<p>这种优化方式操作性不强。在这里我们介绍一个更普适的优化方案：<em>lazy-evaluation/call-by-need/promises.</em>
+惰性求值的基本思路是利用 mutation 来对 thunk
+进行记忆化，仅在需要时才对表达式进行求值。</p>
+<p>惰性求值 (lazy evaluation) 包含两个操作：delay 与 force：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">my-delay</span> f)</span><br><span class="line">  (<span class="name">mcons</span> <span class="literal">#f</span> f))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">my-force</span> th)</span><br><span class="line">  (<span class="name"><span class="built_in">if</span></span> (<span class="name">mcar</span> th)</span><br><span class="line">      (<span class="name">mcdr</span> th)</span><br><span class="line">      (<span class="name"><span class="built_in">begin</span></span> (<span class="name">set-mcar!</span> th <span class="literal">#t</span>)</span><br><span class="line">             (<span class="name">set-mcdr!</span> th ((<span class="name">mcdr</span> th)))</span><br><span class="line">             (<span class="name">mcdr</span> th))))</span><br></pre></td></tr></table></figure>
+<ul>
+<li>delay: 对于 thunk <code>f</code>，delay 返回一个 pair。这个 pair
+被称为 <em>promise</em>。注意，在创建 promise 的过程中 thunk
+并没有被调用，所以表达式不会被计算。
+<ul>
+<li>first field 用来标记我们是否对 thunk <code>f</code>
+进行过求值。</li>
+<li>second field 初始存储 thunk <code>f</code> 本身。</li>
+</ul></li>
+<li>force: 替换朴素的 <code>(thunk)</code> 操作。查看 promise 的 first
+field，判断我们是否对 thunk <code>f</code> 进行过求值。
+<ul>
+<li>若为假，对 thunk <code>f</code> 进行求值并将 second field mutate
+为求值的结果；再将 first field 设为真。</li>
+<li>若为真，直接返回 second field 中储存的值。</li>
+</ul></li>
+</ul>
+<p>接下来我们利用惰性求值对上例进行优化：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">my-mult</span> x y-promise)</span><br><span class="line">  (<span class="name"><span class="built_in">cond</span></span> [(<span class="name"><span class="built_in">=</span></span> x <span class="number">0</span>) <span class="number">0</span>]</span><br><span class="line">        [(<span class="name"><span class="built_in">=</span></span> x <span class="number">1</span>) (<span class="name">my-force</span> y-promise)]</span><br><span class="line">        [<span class="literal">#t</span> (<span class="name"><span class="built_in">+</span></span> (<span class="name">my-force</span> y-promise) (<span class="name">my-mult</span> (<span class="name"><span class="built_in">-</span></span> x <span class="number">1</span>) my-promise))]))</span><br><span class="line"></span><br><span class="line">(<span class="name">my-mult</span> e1 (<span class="name">my-delay</span> (<span class="name"><span class="built_in">lambda</span></span> () e2)))    <span class="comment">; calling</span></span><br></pre></td></tr></table></figure>
+<p>在一些编程语言例如 Haskell
+中，惰性求值被运用到所有的函数调用中：也就是说，对于所有的函数参数，我们要么从不对其进行求值，要么仅仅对其进行一次求值。这样的机制又被称为
+<em>call-by-need</em>。而传统的在函数体被执行之前保证对所有的函数参数进行求值的机制被称为
+<em>call-by-value</em>。</p>
+<p><br></p>
+<h2 id="streams">Streams</h2>
+<div class="note info no-icon"><p>A stream is an infinite sequence of values.</p>
+</div>
+<p>We obviously cannot create such a sequence explicitly as it would
+literally take forever, but with <em>delayed evaluation</em> we can
+create the code that knows how to produce the infinite sequence.</p>
+<p>stream 是以 thunk 的形式表示的，当调用该 thunk 时将返回一个 pair
+<code>&lt;val, next-thunk&gt;</code>。其中，<code>val</code>
+为序列中当前元素的值，而 <code>next-thunk</code>
+为接下来的元素序列形成的 stream。</p>
+<blockquote>
+<p>无限序列由 <code>cons</code> 单元的嵌套结构表示，<code>cons</code>
+单元的 <code>car</code> 与 <code>cdr</code>
+分别为当前值与被延时求值的对象 (promise)。序列的后一个 <code>cons</code>
+单元通过求值 <code>cdr</code>
+部分产生。这个过程不断重复，从而形成无限序列。</p>
+</blockquote>
+<h3 id="using-streams">Using Streams</h3>
+<p><code>powers-of-two</code> 是 Racket 中的一个 built-in
+stream，它是一个由 2 的幂次方组成的无限值序列。注意 stream
+本质上是一个包含 pair 的 thunk；因此在取值之前需要进行调用。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; (<span class="name"><span class="built_in">car</span></span> (<span class="name">power-of-two</span>))</span><br><span class="line"><span class="number">2</span></span><br><span class="line">&gt; (<span class="name"><span class="built_in">car</span></span> (<span class="name"><span class="built_in">cdr</span></span> (<span class="name">power-of-two</span>)))</span><br><span class="line"><span class="number">4</span></span><br></pre></td></tr></table></figure>
+<p>自然的，我们想要定义函数 that operates over streams
+来获得某些信息。下面的 <code>number-until</code>
+函数将会计算满足条件的元素在给定 stream 中的位置。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">number-until</span> stream tester)</span><br><span class="line">  (<span class="name"><span class="built_in">letrec</span></span> ([<span class="name">f</span> (<span class="name"><span class="built_in">lambda</span></span> (stream ans)</span><br><span class="line">                (<span class="name"><span class="built_in">let</span></span> ([<span class="name">pr</span> (<span class="name">stream</span>)])</span><br><span class="line">                  (<span class="name"><span class="built_in">if</span></span> (<span class="name">tester</span> (<span class="name"><span class="built_in">car</span></span> pr))</span><br><span class="line">                      ans</span><br><span class="line">                      (<span class="name">f</span> (<span class="name"><span class="built_in">cdr</span></span> pr) (<span class="name"><span class="built_in">+</span></span> ans <span class="number">1</span>)))))])</span><br><span class="line">    (<span class="name">f</span> stream <span class="number">1</span>)))</span><br><span class="line"></span><br><span class="line">&gt; (<span class="name">number-until</span> powers-of-two (<span class="name"><span class="built_in">lambda</span></span> (x) (<span class="name"><span class="built_in">=</span></span> x <span class="number">16</span>)))</span><br><span class="line"><span class="number">4</span></span><br></pre></td></tr></table></figure>
+<h3 id="defining-streams">Defining Streams</h3>
+<p>按照 stream 的定义，我们尝试定义一个无限长的全 1 序列。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> ones (<span class="name"><span class="built_in">lambda</span></span> () (<span class="name"><span class="built_in">cons</span></span> <span class="number">1</span> (<span class="name"><span class="built_in">lambda</span></span> () (<span class="name"><span class="built_in">cons</span></span> <span class="number">1</span> ...)))))) <span class="comment">; infinite def. (not realistic)</span></span><br></pre></td></tr></table></figure>
+<p>这是一种朴素的无限定义；但我们能够很容易发现其中隐藏的递归规律：后面重复的部分就是
+<code>ones</code> 本身。</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> ones (<span class="name"><span class="built_in">lambda</span></span> () (<span class="name"><span class="built_in">cons</span></span> <span class="number">1</span> ones)))                      <span class="comment">; correct def.</span></span><br></pre></td></tr></table></figure>
+<p>需要注意的是，对 stream 的定义，核心在于利用了延时求值 (delayed
+evaluation) 的 idiom。使用定义本身来进行定义，这被称作递归定义
+(recursive definition)。递归定义的完整性需要借助延时求值来保证。</p>
+<p>例如在上述定义中，我们在对 <code>ones</code> 的定义中使用了
+<code>ones</code> 本身，但由于 thunk
+的存在，主体部分的求值过程被延迟了，这保证了递归定义的完整性。如果不这样做的话
+(见下例)：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> ones (<span class="name"><span class="built_in">cons</span></span> <span class="number">1</span> ones))                                  <span class="comment">; wrong def.</span></span><br><span class="line"></span><br><span class="line">&gt; ones: undefined. cannot reference an identifier before its definition</span><br></pre></td></tr></table></figure>
+<p>由于没有 thunk 来对 <code>ones</code>
+定义的主体部分的求值过程进行延迟，程序在定义 <code>ones</code>
+的过程将立即对主体部分的递归定义进行求值，但它将会发现 <code>ones</code>
+的定义并未完成，于是 <code>undefined</code> 错误将会产生。</p>
+<p>接下来我们尝试自己定义一个 <code>powers-of-two</code>:</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> powers-of-two</span><br><span class="line">  (<span class="name"><span class="built_in">letrec</span></span> ([<span class="name">f</span> (<span class="name"><span class="built_in">lambda</span></span> (x) (<span class="name"><span class="built_in">cons</span></span> x (<span class="name"><span class="built_in">lambda</span></span> () (<span class="name">f</span> (<span class="name"><span class="built_in">*</span></span> x <span class="number">2</span>))))])</span><br><span class="line">              (<span class="name"><span class="built_in">lambda</span></span> () (<span class="name">f</span> <span class="number">2</span>))))</span><br></pre></td></tr></table></figure>
+<p>注意到在 stream 与 stream 操作函数的定义中，我们常常需要一个辅助函数
+<code>f</code>。在上例中，辅助函数 <code>f</code> 对于某个参数
+<code>x</code>，输出一个 pair <code>&lt;x, thunk&gt;</code>。其中 thunk
+包装的是 <code>f</code> 对于参数 <code>2x</code> 计算的结果；那么整个
+stream 就可以表示为 <code>(lambda () (f 2))</code>：一个封装
+<code>f(2)</code> 的 thunk。</p>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info:</p>
+<p><a target="_blank" rel="noopener" href="https://www.coursera.org/learn/programming-languages-part-b">Programming
+Languages, Part B, University of Washington</a>, Lecturer: Professor Dan
+Grossman.</p>
+<!-- flag of hidden posts -->
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2023/07/16/prog-lan-2/" title="Programming Languages, UW, Part B - Racket Basic">https://www.thisisxxz.com/2023/07/16/prog-lan-2/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | Programming Languages, UW, Part B - Racket Basic](https://www.thisisxxz.com/2023/07/16/prog-lan-2/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Programming-Languages/" rel="tag"><i class="fa fa-tag"></i> Programming Languages</a>
+          </div>
+
+        
+
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2023/07/16/prog-lan-2/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>

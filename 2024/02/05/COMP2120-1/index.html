@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="google-site-verification" content="M7cxNNJJ5_hOcluLRtlSzKHHlRHJxZjT1l8REfKQsOs" />
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-custom.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-custom.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/red/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.thisisxxz.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","width":300,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="困啊，困，困到眼皮咀嚼眼珠，下巴亲吻桌面，意识在困倦中被熬成一锅浓粥，试图清醒过来却拔出粘稠的丝。老师破碎的英语断断续续的传来，像深山中精怪的呼唤；屏幕上的 PPT 变幻扭曲出炫光的轮廓，透过公式和图像我恍惚看到了神谕。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机组成小记">
+<meta property="og:url" content="https://www.thisisxxz.com/2024/02/05/COMP2120-1/index.html">
+<meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="困啊，困，困到眼皮咀嚼眼珠，下巴亲吻桌面，意识在困倦中被熬成一锅浓粥，试图清醒过来却拔出粘稠的丝。老师破碎的英语断断续续的传来，像深山中精怪的呼唤；屏幕上的 PPT 变幻扭曲出炫光的轮廓，透过公式和图像我恍惚看到了神谕。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/02/05/COMP2120-1/memory.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2024/02/05/COMP2120-1/pipeline.png">
+<meta property="article:published_time" content="2024-02-05T06:43:24.000Z">
+<meta property="article:modified_time" content="2024-05-11T04:14:58.000Z">
+<meta property="article:author" content="XXZ">
+<meta property="article:tag" content="Computer Architecture">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.thisisxxz.com/2024/02/05/COMP2120-1/memory.png">
+
+
+<link rel="canonical" href="https://www.thisisxxz.com/2024/02/05/COMP2120-1/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://www.thisisxxz.com/2024/02/05/COMP2120-1/","path":"2024/02/05/COMP2120-1/","title":"计算机组成小记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>计算机组成小记 | ThisisXXZ's Blog</title>
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+
+.post-widgets {
+  border-top: 1px solid $gainsboro;
+  margin-top: 15px;
+  text-align: center;
+}
+    #needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="ThisisXXZ's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">ThisisXXZ's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">~Sound! Euphonium~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">47</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">16</span></a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li><li class="menu-item menu-item-rss"><a href="/atom.xml" rel="section"><i class="fa fa-rss fa-fw"></i>RSS</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#digital-logic"><span class="nav-number">1.</span> <span class="nav-text">Digital Logic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#number-representation"><span class="nav-number">2.</span> <span class="nav-text">Number Representation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#number-arithmetic"><span class="nav-number">3.</span> <span class="nav-text">Number Arithmetic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#instruction-execution-cycle"><span class="nav-number">4.</span> <span class="nav-text">Instruction Execution Cycle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memory-hierarchy"><span class="nav-number">5.</span> <span class="nav-text">Memory Hierarchy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cache-memory"><span class="nav-number">6.</span> <span class="nav-text">Cache Memory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#external-storage"><span class="nav-number">7.</span> <span class="nav-text">External Storage</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#input-and-output"><span class="nav-number">8.</span> <span class="nav-text">Input and Output</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#instruction-set-addressing"><span class="nav-number">9.</span> <span class="nav-text">Instruction Set &amp;
+Addressing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#assembly-language"><span class="nav-number">10.</span> <span class="nav-text">Assembly Language</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#operating-system"><span class="nav-number">11.</span> <span class="nav-text">Operating System</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#processor-organization"><span class="nav-number">12.</span> <span class="nav-text">Processor Organization</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">13.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/about/">
+      <img class="site-author-image" itemprop="image" alt="XXZ"
+        src="/uploads/avatar-sumire.jpg">
+    </a>
+  <p class="site-author-name" itemprop="name">XXZ</p>
+  <div class="site-description" itemprop="description">如果努力的尽头是奇迹</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ThisisXXZ" title="Github → https:&#x2F;&#x2F;github.com&#x2F;ThisisXXZ" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>Github</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xxz.7203@gmail.com" title="Email → mailto:xxz.7203@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>Email</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198827062562/" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198827062562&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-steam fa-fw"></i>Steam</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/110299" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;110299" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>Luogu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:u3584577@connect.hku.hk" title="HKUmail → mailto:u3584577@connect.hku.hk" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>HKUmail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.cnblogs.com/VeniVidiVici/" title="CnBlogs → https:&#x2F;&#x2F;www.cnblogs.com&#x2F;VeniVidiVici&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-archive fa-fw"></i>CnBlogs</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+<div class="feed-link motion-element">
+  <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=210 height=50 src="//music.163.com/outchain/player?type=0&id=8472318357&auto=1&height=32"></iframe>
+</div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://steevebrine.github.io/" title="https:&#x2F;&#x2F;steevebrine.github.io&#x2F;" rel="noopener" target="_blank">Steevebrine</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/Lskkkno1" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Lskkkno1" rel="noopener" target="_blank">lskkkno1</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://kqp.world/" title="https:&#x2F;&#x2F;kqp.world&#x2F;" rel="noopener" target="_blank">kqp's world</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://skylee.xyz/" title="https:&#x2F;&#x2F;skylee.xyz&#x2F;" rel="noopener" target="_blank">Skylee</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.jonathan-qin.com/" title="https:&#x2F;&#x2F;www.jonathan-qin.com&#x2F;" rel="noopener" target="_blank">Jonathan</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://blog.s0ra.cc/" title="https:&#x2F;&#x2F;blog.s0ra.cc&#x2F;" rel="noopener" target="_blank">Sora</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://www.thisisxxz.com/2024/02/05/COMP2120-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar-sumire.jpg">
+      <meta itemprop="name" content="XXZ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ThisisXXZ's Blog">
+      <meta itemprop="description" content="如果努力的尽头是奇迹">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="计算机组成小记 | ThisisXXZ's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算机组成小记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-02-05 14:43:24" itemprop="dateCreated datePublished" datetime="2024-02-05T14:43:24+08:00">2024-02-05</time>
+    </span>
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+    </span>
+    <span class="post-meta-item-text">
+        繁/简：
+    </span>
+    <a id="translateLink" href="javascript:translatePage();">
+        <span class="translate-style">
+            set
+        </span>
+    </a>
+</span>
+<script type="text/javascript" src="/js/tw-cn.js"></script>
+<script type="text/javascript">
+    var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+    var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+    var cookieDomain = "https://thisisxxz.github.io/"; //Cookie地址, 一定要设定, 通常为你的网址
+    var msgToTraditionalChinese = "set"; //此处可以更改为你想要显示的文字
+    var msgToSimplifiedChinese = "set"; //同上，但两处均不建议更改
+    var translateButtonId = "translateLink"; //默认互换id
+    translateInitilization();
+</script>
+
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>困啊，困，困到眼皮咀嚼眼珠，下巴亲吻桌面，意识在困倦中被熬成一锅浓粥，试图清醒过来却拔出粘稠的丝。老师破碎的英语断断续续的传来，像深山中精怪的呼唤；屏幕上的
+PPT 变幻扭曲出炫光的轮廓，透过公式和图像我恍惚看到了神谕。</p>
+<span id="more"></span>
+<p>COMP2120 Computer Organization 笔记。无聊的课程前轰然倒塌的我。</p>
+<p><br></p>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  It will <strong>NOT</strong> cover any exam or assignment related
+content.</p>
+</div>
+<p><br></p>
+<h2 id="digital-logic">Digital Logic</h2>
+<p>Boolean Algebra. 该部分与 COMP2121
+之前的命题逻辑部分高度重合。值得注意的是逻辑与 <span class="math inline">\(\land\)</span> 常被表示为 <span class="math inline">\(\times\)</span>，逻辑或 <span class="math inline">\(\lor\)</span> 被表示为 <span class="math inline">\(+\)</span>，否定 (NOT) <span class="math inline">\(\lnot A\)</span> 被表示为取补 (complement) <span class="math inline">\(\overline{A}\)</span>。</p>
+<p>Functionally complete sets. (三元) AND, OR, NOT. (二元) AND, NOT/OR,
+NOT. (一元) NAND/NOR.</p>
+<p>Implementation of Boolean function. 将真值表转化为布尔表达式。常用
+sum of products (SOP) 方法：</p>
+<ul>
+<li><strong>minterm: </strong> 一个包含所有变量的累乘 (AND) 项。</li>
+<li>对所有函数值 <span class="math inline">\(F=1\)</span> 的 minterm，为
+0 的变量取反，为 1 的变量不变，再求和得到布尔表达式。</li>
+</ul>
+<p>S-R Latch. 有点像 flip flops，作为记忆单元。</p>
+<p>Karnaugh Map. 卡诺图，用于化简复杂的布尔表达式。</p>
+<ul>
+<li>二元 <span class="math inline">\(2^1\times 2^1\)</span>，三元 <span class="math inline">\(2^1\times 2^2\)</span>，四元 <span class="math inline">\(2^2\times 2^2\)</span>。</li>
+<li>为保证变量的连续变化，表头采用格雷码 (Gray code) 排列。</li>
+<li>选出 (数量尽量少的) 若干个全 1 矩形。矩形大小必须是 <span class="math inline">\(2^n\)</span>，可以相互重叠或者 wrap around
+图的边界。</li>
+<li>每个矩形对应一个 minterm，忽略 0 和 1
+均取到的变量，其他的变量按照之前的规则取反/保留。</li>
+</ul>
+<p><br></p>
+<h2 id="number-representation">Number Representation</h2>
+<p>radix-<span class="math inline">\(10\)</span> to radix-<span class="math inline">\(r\)</span>. 对于十进制数 <span class="math inline">\(A.B\)</span>，分别处理其 integer part 与
+fractional part。</p>
+<ul>
+<li><span class="math inline">\(A\)</span>: 经典的 quotient remainder
+方法。短除后得到的余数记得倒着写。</li>
+<li><span class="math inline">\(0.B\)</span>: 不断乘 <span class="math inline">\(r\)</span>，取整数部分直到 <span class="math inline">\(B=0\)</span>。</li>
+</ul>
+<p>binary to hexadecimal.
+从左到右，四个一组，二进制中的每四个数码对应十六进制中的一个数码。记住
+<span class="math inline">\(A-F\)</span> 对应 <span class="math inline">\(10-15\)</span>。</p>
+<p>binary to octal. 从左到右，三个一组。</p>
+<p>Excess <span class="math inline">\(K\)</span> (aka Offset Binary,
+Biased Representation). 加 <span class="math inline">\(K\)</span>​ 后再求
+bit pattern 表示。</p>
+<p>Sign-Magnitude Representation. 难以计算，<span class="math inline">\(0\)</span> 有两种表示。</p>
+<p>One's Complement.</p>
+<ul>
+<li>正数：同 unsigned bit pattern。</li>
+<li>负数：将 unsigned bit pattern 取反。本质上 <span class="math inline">\(-x\)</span> 被 <span class="math inline">\(2^n-1-x\)</span>​ 表示。</li>
+<li>仍然存在 <span class="math inline">\(+0\)</span> 与 <span class="math inline">\(-0\)</span> 表示，加法实现还是不够直接。</li>
+</ul>
+<p>Two's Complement.</p>
+<ul>
+<li>正数：同 unsigned bit pattern。</li>
+<li>负数：将 unsigned bit pattern 取反后加一。本质上 <span class="math inline">\(-x\)</span> 被 <span class="math inline">\(2^n-x\)</span>​ 表示。</li>
+<li><span class="math inline">\(0\)</span> 的表示唯一。由于 <span class="math inline">\(10...0_n\)</span> 的意义空缺，将其分配给 <span class="math inline">\(-2^{n-1}\)</span>。因此 2's Complement
+的表示范围比之前的两种方法多 <span class="math inline">\(1\)</span>：<span class="math inline">\([-2^{n-1},
+2^{n-1}-1]\)</span>。加法计算简洁。</li>
+<li>Range Extension：使用 sign bit 进行填充。</li>
+</ul>
+<p><strong>Floating-Point Representation</strong> (Chapter 4.2).
+与定点数表示 (Fixed-Point Representation)
+相对。定点数表示规定了小数点前后 (整数部分与小数部分)
+占据的位数，因此无法较精确的表示 large numbers 或 small
+fractions。浮点数表示则没有这样的限制。</p>
+<p>浮点数表示本质上是二进制下的科学记数法。以 32
+位为例，一个浮点数表示分为三部分：</p>
+<ul>
+<li>Sign of Significand (1 bit) <span class="math inline">\(S\)</span>：符号位。</li>
+<li>Biased Exponent (8 bits) <span class="math inline">\(E\)</span>：幂数位，通常采用 excess-127
+表示。</li>
+<li>Significand (23 bits) <span class="math inline">\(M\)</span>：又称
+mantissa，有效数字位。类似科学记数法，有效数字被 normalize 为 <span class="math inline">\(1.\text{xx...x}\)</span>。由于 <span class="math inline">\(1\)</span>​​ 总是出现在首位，它将会被省略。</li>
+</ul>
+<p>浮点数表示的实值 (actual value) 计算。</p>
+<ul>
+<li>一般来说，实值的计算符合公式 <span class="math inline">\((-1)^S\times 1.M \times 2^{E-127}\)</span>。</li>
+<li>IEEE 标准下的特殊值 (special values)：exponent 为全 <span class="math inline">\(0\)</span> 或全 <span class="math inline">\(1\)</span>。
+<ul>
+<li>subnormal values：被 exponent 全 <span class="math inline">\(0\)</span> 标记，公式变为 <span class="math inline">\((-1)^S\times 0.M\times 2^{-126}\)</span>。</li>
+<li>infinity and Not-a-Number (NaN)：被 exponent 全 <span class="math inline">\(1\)</span> 标记。若 <span class="math inline">\(M\)</span> 为全 <span class="math inline">\(0\)</span>，表示 <span class="math inline">\((-1)^S \infty\)</span>；若 <span class="math inline">\(M\)</span> 非全 <span class="math inline">\(0\)</span>，表示 Not-a-Number。</li>
+</ul></li>
+<li>由此可见，有效的 exponent range 在 <span class="math inline">\([1,254]\)</span> 间。这代表 normal values
+的幂数范围在 <span class="math inline">\([-126,127]\)</span>​ 间。</li>
+</ul>
+<p>浮点数表示中精确度 (precision) 与表示范围 (range) 的
+tradeoff。精确度与 significand 的位数正相关，范围与 exponent
+的位数正相关。</p>
+<p><br></p>
+<h2 id="number-arithmetic">Number Arithmetic</h2>
+<p>虽然很佩服研究出这些繁琐规则的人，但对这一部分是真的感不起兴趣。</p>
+<p>[具体参见 Tutorial-2 slides 与 Chapter 4.3-Number Representation and
+Arithmetic Part III]</p>
+<p><strong>Addition/Subtraction.</strong> (1-4 tutorial, 5 lecture)</p>
+<ul>
+<li>Excess-<span class="math inline">\(b\)</span>​ Representation.</li>
+<li>2's Complement Addition/Subtraction. add bit patterns directly and
+ignore the carry out.</li>
+<li>1's Complement Addition/Subtraction. <span class="math inline">\(\text{a+b carry out ? (ignore carryout) add 1 back
+: do nothing}\)</span>​.</li>
+<li>2's Complement Range Extension. Fill with copies of the <strong>sign
+bit</strong>.</li>
+<li>Floating-point Addition/Subtraction.
+<ul>
+<li>align the significands to make two exponents equal (larger one)</li>
+<li>add/sub on the significand and determine the sign of result</li>
+<li>normalize (truncate) and rounding</li>
+</ul></li>
+</ul>
+<p><strong>Multiplication/Division.</strong> (lecture)</p>
+<ul>
+<li>2's Complement Multiplication. 规则很复杂，总的来说是被乘数进行 sign
+extension，按照乘数的符号位分类讨论，列出竖式进行计算。[见 Chapter 4.3
+p.3 multiplication in 2's complement]</li>
+<li>Floating-point Multiplication/Division.
+<ul>
+<li>Exponent 部分回到 Excess-<span class="math inline">\(b\)</span>
+表示的加减法。</li>
+<li>Significand 部分相乘/相除并确定符号。</li>
+<li>normalize 然后 rounding。</li>
+</ul></li>
+</ul>
+<p><br></p>
+<h2 id="instruction-execution-cycle">Instruction Execution Cycle</h2>
+<p>详见 From NAND to Tetris 课程笔记，内容基本重合。</p>
+<p>与 Hack computer 的不同之处见 assignment 中提供的 <code>sim.py</code>
+和作业描述中的示意图。CPU 中有：</p>
+<ul>
+<li>PC (program counter)。在 byte addressing 模式下每轮隐式的 <span class="math inline">\(+4\)</span>。</li>
+<li>Register File。由少量快速寄存器组成，储存 CPU
+经常访问的数据。<code>RFIN</code> 写入，<code>RFOUT1</code> 与
+<code>RFOUT2</code> 输出。</li>
+<li>MAR (memory address register)，存储地址。</li>
+<li>MBR (memory buffer register)，存储从 memory 中提取的数据。常用
+<code>MBR &lt;- Mem[MAR]</code> (operand fetch)。</li>
+<li>IR (instruction register)，存储 PC 指向的具体指令内容。常用
+<code>IR &lt;- Mem[PC//4]</code> (instruction fetch)。</li>
+<li>以上的寄存器被若干 data bus 连接起来。</li>
+</ul>
+<p>关于指令也有少许不同之处；细节还是参考 <code>sim.py</code>。</p>
+<ul>
+<li>1-word instruction. <code>ADD</code>, <code>SUB</code>,
+<code>OR</code>, <code>AND</code> 等指令均在 1 word (4 bytes)
+中指定了两个源地址与一个目标地址。</li>
+<li>2-words instruction. <code>LD</code> (load), <code>ST</code> (store)
+均是 2-words 指令。第一个 word 指定了 operation code，CPU 地址
+(寄存器地址，在 <code>LD</code> 中为目标，在 <code>ST</code> 中为源) 与
+addressing mode (总是 <code>0xFF</code>)。第二个 word 指定了需交互的
+memory 的地址。</li>
+<li>2-word instruction. <code>BR</code> (unconditional), <code>BZ</code>
+(zero flag is true), <code>BNZ</code> (zero flag is not true) 这些
+branch 指令也是 2-words 指令。 第一个 word 指定了 operation
+code，condition code 与 addressing mode (总是 <code>0xFF</code>)。第二个
+word 指定了 jump 的目标地址。</li>
+</ul>
+<p><br></p>
+<h2 id="memory-hierarchy">Memory Hierarchy</h2>
+<p>memory 一直是性能瓶颈的主要来源。memory hierarchy
+在成本与性能间找到了一个平衡点。从金字塔的顶端到底端，memory
+的成本越来越低，容量越来越大；同时所需的 access time 增加，被 CPU (直接)
+访问的频率越来越低。</p>
+<ul>
+<li>registers of the CPU.</li>
+<li>on-chip cache memory [inside CPU chip].</li>
+<li>cache memory [on the motherboard].</li>
+<li>main memory [on the motherboard].</li>
+<li>external memory [secondary memory].</li>
+</ul>
+<p>对需要频繁访问的数据，例如 temporal locality 与 spatial
+locality；将它们从 lower level 复制到 higher level 中。</p>
+<p>关于 memory byte ordering - 对于 multi-byte data 有两种存储顺序：Big
+Endian Mode 与 Little Endian Mode。</p>
+<p>关于 memory 的种类。</p>
+<figure>
+<img data-src="memory.png" alt="Semiconductor Memory Type">
+<figcaption aria-hidden="true">Semiconductor Memory Type</figcaption>
+</figure>
+<p>memory 的性能 (performance) 评估。access time，memory cycle time 与
+transfer rate [见 Chapter 6 Memory Hierarchy pp.21-22]</p>
+<p>传输时的 error detection &amp; correction。对 a block of data
+添加一位 parity bit (校验码)，标识数据中 <span class="math inline">\(1\)</span> 的个数的奇偶性。correction 则需要更多
+bits，如 Hamming code。</p>
+<p><br></p>
+<h2 id="cache-memory">Cache Memory</h2>
+<p>其实并不是很绕的东西，看 PPT
+硬是看了很久才搞清楚。笔记写了挺多，后来一看只觉杂乱无章。想了很久，发现通过伪代码描述
+address mapping 是一个最佳的选择。</p>
+<p>把 cache memory 与 main memory 想成两个数组 <code>cache</code> 与
+<code>memory</code>，<code>memory</code> 的空间远远大于
+<code>cache</code>，因此可以当作哈希表来用；但代价是访问
+<code>memory</code> 的速度极慢。为了最小化 CPU
+访问数据的平均速度，把访问次数较多的数据存入
+<code>cache</code>；具体存入 <code>cache</code> 的什么位置？这个问题就是
+address mapping 所要解决的。</p>
+<p><code>cache</code> 或 <code>memory</code> 储存的都是 data
+<em>block</em>，每个 block 中有 <span class="math inline">\(b\)</span>​
+个 bytes (若 word-addressed 就是 words)。</p>
+<p>single-level cache 的 principle 与 multi-level cache 是一致的。</p>
+<p><em>Fully associative</em>. 灵活，多对一，但效率低下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">read</span>(<span class="params">addr, cache</span>):</span><br><span class="line">    <span class="comment"># BLOCK_SIZE: the number of bytes within a block</span></span><br><span class="line">    <span class="comment"># tag: aka block number</span></span><br><span class="line">    tag, offset = addr // BLOCK_SIZE, addr % BLOCK_SIZE</span><br><span class="line">    <span class="keyword">for</span> cache_line <span class="keyword">in</span> cache:</span><br><span class="line">        <span class="keyword">if</span> cache_line.tag == tag:</span><br><span class="line">            <span class="keyword">return</span> cache_line.data[offset]  <span class="comment"># search hit</span></span><br><span class="line">    data = memory[tag]</span><br><span class="line">    <span class="comment"># write data in cache with some append/replace policy</span></span><br><span class="line">    write(data, cache, some_append_policy)</span><br><span class="line">    <span class="keyword">return</span> data[offset]</span><br></pre></td></tr></table></figure>
+<p><em>Direct-Map Organization</em> aka <em>1-way Set
+Associative</em>.</p>
+<ul>
+<li>若 cache 大小为 <span class="math inline">\(m\)</span>，<code>memory[0], memory[m], memory[2m]...</code>
+均对应 <code>cache[0]</code></li>
+<li>大大提升了读取速度，但如果 CPU 同时需要 <code>memory[0]</code> 与
+<code>memory[m]</code>，一对一就成了诅咒。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">read</span>(<span class="params">addr, cache</span>):</span><br><span class="line">    block_number, offset = addr // BLOCK_SIZE, addr % BLOCK_SIZE</span><br><span class="line">    <span class="comment"># CACHE_SIZE: the number of cache lines in the cache, one block per line</span></span><br><span class="line">    tag, line_number = block_number // CACHE_SIZE, block_number % CACHE_SIZE</span><br><span class="line">    <span class="keyword">if</span> line_number <span class="keyword">in</span> cache:    <span class="comment"># memory[line_number] not empty</span></span><br><span class="line">        cache_line = cache[line_number]</span><br><span class="line">        <span class="keyword">if</span> cache_line.tag == tag:</span><br><span class="line">            <span class="keyword">return</span> cache_line.data[offset]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            data = memory[block_number]</span><br><span class="line">            write(data, tag, line_number, cache)  </span><br><span class="line">            <span class="keyword">return</span> data[offset]</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        data = memory[block_number]</span><br><span class="line">        write(data, tag, line_number, cache) </span><br><span class="line">        <span class="keyword">return</span> data[offset]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">write</span>(<span class="params">data, tag, line_number, cache</span>):</span><br><span class="line">    cache[line_number].tag, cache[line_number].data = tag, data</span><br></pre></td></tr></table></figure>
+<p><em>K-way Set Associative</em>. 引入 cache sets
+综合了前两种地址映射机制。体现了读取效率和灵活性的 tradeoff。核心关系
+<span class="math inline">\(m=k\times v\)</span>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">read</span>(<span class="params">addr, cache</span>):</span><br><span class="line">    block_number, offset = addr // BLOCK_SIZE, addr % BLOCK_SIZE</span><br><span class="line">    <span class="comment"># K-way: the number of cache lines in a cache set</span></span><br><span class="line">    <span class="comment"># SET_SIZE: the number of sets, SET_SIZE = CACHE_SIZE / K</span></span><br><span class="line">    tag, set_number = block // SET_SIZE, block_number % SET_SIZE</span><br><span class="line">    <span class="keyword">if</span> set_number <span class="keyword">in</span> cache:</span><br><span class="line">        cache_set = cache[set_number]</span><br><span class="line">        <span class="keyword">for</span> cache_line <span class="keyword">in</span> cache_set:</span><br><span class="line">            <span class="keyword">if</span> cache_line.tag == tag:</span><br><span class="line">                <span class="keyword">return</span> cache_line.data[offset]</span><br><span class="line">        data = memory[block_number]</span><br><span class="line">        write(data, tag, set_number, cache, some_append_policy)</span><br><span class="line">        <span class="keyword">return</span> data[offset]</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        data = memory[block_number]</span><br><span class="line">        write(data, tag, set_number, cache, some_append_policy)</span><br><span class="line">        <span class="keyword">return</span> data[offset]</span><br></pre></td></tr></table></figure>
+<p>常用的 replacement policy (direct map organization 的 set size 为
+<span class="math inline">\(1\)</span>，不需要 replacement
+policy)：<strong>FIFO</strong>
+(first-in-first-out)，<strong>LRU</strong> (least recently used) 与
+<strong>RR</strong> (random replacement)。</p>
+<p>两种 write policy。</p>
+<ul>
+<li><em>write through</em> - cache 与 main memory 的写入是 consistent
+的。问题：main memory 的写入较慢
+(但指令的执行并不会被其阻塞)，如果在写入完成之前，下一个指令要求访问该
+memory slot，就会产生冲突。</li>
+<li><em>write back</em> - 仅仅在 cache 中的某个 memory block
+被替换时更新 main memory。写入效率显著高于 write through。当存在 I/O
+operations 时，cache 与 main memory 的 inconsistency 会引发冲突。</li>
+</ul>
+<p>从 direct-map organization，到 k-way associative，再到 fully
+associative，<em>hit ratio</em> (<span class="math inline">\(1-\)</span><em>miss ratio</em>)
+越来越高，读写速率越来越慢。<strong>重要公式</strong> <span class="math inline">\(\text{average access time }=\text{ hit time
+}+\text{ miss ratio }\times\text{ miss penalty }\)</span>​</p>
+<ul>
+<li>hit time: 在该 cache layer，一次 search hit 所需的时间。</li>
+<li>miss ratio: search miss 发生的概率。</li>
+<li><em>miss penalty</em>: 若该 cache layer 是 L1，miss penalty 是 L2 的
+average access time。若该 cache layer 是 L3，miss penalty 是 main memory
+的 average access time。[见 Chapter 7.2 p.8 multi-level caches]</li>
+</ul>
+<p><br></p>
+<h2 id="external-storage">External Storage</h2>
+<p>这一节主要讲外部存储器。</p>
+<p>首先是一些名词。</p>
+<ul>
+<li>Magnetic disks (磁盘)。储存数据。
+<ul>
+<li>Cylinder - Sector - Track 结构。</li>
+<li>Sector: Gap - Sync - Address mark - Data - ECC (error correction
+code) 结构。</li>
+</ul></li>
+<li>Disk access 评估的三个重要时间参数。Seek (读写头在 cylinder
+间移动)，Rotational delay (指定的 sector 移动到读写头处)，Data transfer
+time [公式见 Chapter 8 External Storage pp.8]</li>
+<li>HDD (Hard Disk Drive, 硬盘驱动器)。各种磁盘是 HDD 的媒介。</li>
+</ul>
+<p>关于 RAID (Redundant Array of Independent/Inexpensive Disks,
+独立磁盘冗余阵列)，是一种多个磁盘的组织形式。关键概念：<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Data_striping">Data striping</a>
+把连续的数据分成小段分散在多个磁盘中以促进并行读/写。</p>
+<p>课上共介绍了 6 个 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Standard_RAID_levels#RAID_3">standard
+RAID levels</a> [Chapter 8 External Storage pp.11-23]：</p>
+<ul>
+<li>RAID 0：应用 striping。I/O 效率高 (并行读写)，无冗余。</li>
+<li>RAID 1：多了一个镜像磁盘 (mirrored backup)。</li>
+<li>RAID 2：采用 Hamming code 作为 ECC，冗余磁盘的数量是 <span class="math inline">\(\log\)</span> 数据磁盘的数量。</li>
+<li>RAID 3：使用额外的一个冗余磁盘储存其他所有数据磁盘的 parity
+bit。<span class="math inline">\(X_r=\oplus_{i}^n X_i\)</span>。</li>
+<li>RAID 4：采用 block-level
+striping，这意味着每次读取的数据总是在一个磁盘内。(RAID 0-3 通常采用的是
+byte-level 或 bit-level striping，读取一个 block 需要访问所有磁盘)</li>
+<li>RAID 5：采用 block-level striping，且 parity strips 分散在所有磁盘中
+(RAID 3-4 的 parity strips 统一存储在一个额外的冗余磁盘中)。</li>
+<li>RAID 6：使用两个 parity stripes，应对两个 HDD failures。</li>
+</ul>
+<p>关于 SSD (Solid State Disks/Drives, 固态硬盘/驱动器)。与 HDD
+相比，I/O 效率，访问速率都高，耗能少，耐久高。</p>
+<p><br></p>
+<h2 id="input-and-output">Input and Output</h2>
+<p>关于 I/O。</p>
+<p>学到这里越来越发现计组知识本身不难，关键在于找到其中的逻辑联系。可惜的是，课件中所展现出来的逻辑非常的
+unorganized
+(我本来想说课件简直是答辩，但其实它对于知识的描述和总结是很详实的，还是有其可取之处)。</p>
+<p>开场陈述：<strong>I/O Modules</strong> 可视作是<strong>外部设备
+(External Devices, aka Peripherals)</strong> 的接口；CPU (aka processor)
+通过和 I/O Modules 交互对外部设备进行操纵。</p>
+<p>CPU - I/O Modules interactions (direct)。</p>
+<ul>
+<li>CPU 通过读写 I/O Modules 中的两种 registers 来完成交互。
+<ul>
+<li><strong>The Control and Status Register</strong> <code>CSR</code> -
+存储了外部设备的状态信息 (读)，对外部设备的操作 (写)，可分散在同一个
+register 的多个 bits 中。</li>
+<li><strong>The Data Register</strong> -
+存储了其他数据，例如向外部设备的输入等 (读/写)。使用了 Data Buffering
+机制的 Data Register 常被称为 Buffer Register <code>BR</code>。</li>
+</ul></li>
+<li>I/O Modules 的种类。
+<ul>
+<li><strong>Port-mapped I/O</strong>。I/O Modules 中的 registers (如
+<code>CSR</code>, <code>BR</code>) 作为独立的 dedicated I/O ports
+的一部分，CPU 需要通过特定的指令对它们进行访问。</li>
+<li><strong>Memory-mapped I/O</strong>。I/O Modules 中的 registers 是
+memory map 的一部分，CPU 能通过普通的 memory read/write
+指令直接访问。</li>
+</ul></li>
+</ul>
+<p>CPU - External Devices interactions (indirect)；有三种交互方式。</p>
+<p><strong>Programmed I/O</strong>。特征是 CPU 在空循环中等待 External
+Device 完成 I/O operations。以 read operation 为例：</p>
+<ul>
+<li>CPU 向 I/O Modules 中的 <code>CSR</code> 发送一个 read 命令。</li>
+<li>CPU 从 <code>CSR</code> 中获取外部设备的状态。</li>
+<li>OK ? 从 <code>BR</code> 中读取数据 : 返回第二步继续循环。</li>
+</ul>
+<p><strong>Interrupt-Driven I/O</strong>。减轻 Programmed I/O 的 CPU
+资源浪费。[见 Chapter 9 Input and Output pp.16-20]
+这里只讲几个值得注意的细节。</p>
+<ul>
+<li>CPU 收到 interrupt signal
+后并不立即悬置程序，而是在当前指令执行完毕后再转向 interrupt
+attention。这是为了减少需要保存的 register 数量。</li>
+<li>需要保存到栈中的 registers：
+<ul>
+<li><strong>Processor Status Word</strong> <code>PSW</code>, aka flag
+register，即前一个 ALU 的 result。当下一个指令是 branch
+时将会用到这个值。</li>
+<li>Program Counter <code>PC</code>。</li>
+<li>所有在 interrupt routine 中被用到的 registers，在使用之前都将被 push
+到栈中进行保存。</li>
+</ul></li>
+<li>interrupt routine 的最后一个指令是 <strong>Return from
+Interrupt</strong> <code>RETI</code>，它将会恢复 <code>PSW</code>,
+<code>PC</code> 与所有备份在栈中的 registers (in a reverse order that
+they were saved)。</li>
+</ul>
+<p><strong>Direct Memory Access (DMA)</strong>。在 I/O Modules 中引入
+<strong>Input-Output Processor (IOP)</strong>。它无需 CPU
+的直接干预，能够直接访问 memory。需要解决的问题是 IOP 与 CPU
+的冲突：例如，它们需要同时访问同一块 memory。</p>
+<p>引入 Cycle Stealing (周期挪用) 机制。即 IOP 向 CPU 发送信号请求 CPU
+将 memory bus 的占用解除；如果 CPU 接下来的 cycle 无需访问
+memory，它将同意请求，IOP 则会取得 memory bus 的控制。IOP
+每次请求通常只占用一个或几个 cycles。</p>
+<p><br></p>
+<h2 id="instruction-set-addressing">Instruction Set &amp;
+Addressing</h2>
+<p>一些指令我们已经很熟悉了，在 Instruction Execution Cycle
+那一章节有过介绍。</p>
+<p>机器指令 (machine instruction) 的操作码 (operation code, opcode)
+被各式各样的 <strong>mnemonics</strong>
+表记。不同的机器可能有不同的缩写策略，但这些指令都能够大致分为以下几类：</p>
+<ul>
+<li>data transfer - e.g. <code>MOV</code>, <code>LD</code>,
+<code>ST</code></li>
+<li>arithmetic - e.g., <code>ADD</code>, <code>SUB</code></li>
+<li>logical - e.g., <code>AND</code>, <code>OR</code>,
+<code>NOT</code></li>
+<li>transfer of control - <code>BR</code> for branch, <code>CALL</code>,
+<code>RET</code> for procedure</li>
+</ul>
+<p>这里稍微分辨一下 arithmetic 和 logical 两种指令的区别：算术指令把
+operands 视作数字，而逻辑指令把 operands 视作 bit pattern -
+也就是说，逻辑指令直接操纵二进制串。</p>
+<p>何以见得呢？考虑逻辑左/右移指令 (logical shift) 与算数左/右移指令
+(arithmetic shift) 的区别。逻辑 shift 指令直接移动对应的 bit
+pattern，左移在 LSB 补零，右移在 MSB 补零。而算数 shift 指令会专门复制
+sign bit 上的值不移动；这是因为算数 shift
+指令本质上是对其所代表的数字进行乘 2 或除 2。</p>
+<p>指令集架构 (instruction set architecture)。精简指令集运算 (Reduced
+Instruction Set Computing, RISC) - MIPS, ARM；复杂指令集运算 (Complex
+Instruction Set Computing, CISC) - x86, x86-64。</p>
+<p><strong>寻址模式 (addressing modes)</strong>
+是指令集架构的重要组成部分，抽象了指令的寻址过程 (tradeoff
+是更复杂的硬件实现)。这里的寻址对象当然是 memory
+里的地址；现代处理器提供了大量
+registers，大大降低了寻址需求。因此，常用的寻址模式被削减到了几种。</p>
+<p>几个符号表记的规定：</p>
+<ul>
+<li><code>A</code> = contents of an address field in the
+instruction.</li>
+<li><code>R</code> = contents of an address field in the instruction
+that refers to a register.</li>
+<li><code>EA</code> = <strong>actual (effective) address</strong> of the
+location containing the referenced operand.</li>
+<li><code>(X)</code> = contents of memory location <code>X</code>.</li>
+</ul>
+<p><em>Immediate Addressing</em> (立即寻址) - 即命令直接提供
+<strong>operand 的真实值</strong>。又称 <em>literal mode</em>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Value = A</span><br><span class="line">MOV #200, R6</span><br><span class="line">ADD R2, #4, R2</span><br></pre></td></tr></table></figure>
+<p><em>Direct/Absolute Addressing</em> (直接寻址) - 命令提供
+<strong>operand 的地址，而非值</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># EA = A</span><br><span class="line">MOV A, R1 # Move the content at A to R1</span><br></pre></td></tr></table></figure>
+<p><em>Indirect Addressing</em> (间接寻址) -
+就是指针啦！命令提供<strong>一个地址，该地址中的值指向 operand
+的地址</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># EA = (A)</span><br><span class="line">MOV (A), R1 # Move the content pointed by the value at address A to R1. R1 = mem[A]</span><br></pre></td></tr></table></figure>
+<p><em>Register Addressing</em> (寄存器寻址) - operand 的值储存在
+general registers 中 (8 到 32 个)。register
+的超快访问使其成为了现代处理器中使用得最多的寻址模式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># EA = R</span><br><span class="line">MOV R1, R2 # move the content of R1 to R2</span><br></pre></td></tr></table></figure>
+<p><em>Register Indirect Addressing</em> (寄存器间接寻址) - 就是把
+<strong>register 存储的值作为指针指向 operand 的地址</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># EA = (R)</span><br><span class="line">MOV (R1), R2 # Move the content of mem[R1] to R2</span><br></pre></td></tr></table></figure>
+<p><em>Displacement Addressing</em> (位移寻址) - <strong>operand
+的地址被 register + 某个 offset 表示</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># EA = A + (R)</span><br><span class="line">MOV A(R1), R2 # move the content at address A+R1 to R2. R2 = A[R1]</span><br><span class="line">ADD R1, #4, R1 # R1 points to next word</span><br></pre></td></tr></table></figure>
+<p><em>Stack Addressing</em> (栈寻址) - 部分机器提供 <code>PUSH</code>
+与 <code>POP</code> 命令，用来访问栈。特殊的栈指针 (stack pointer)
+<code>SP</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># EA = top of stack</span><br><span class="line">PUSH R4:</span><br><span class="line">    SUB SP, #4, SP</span><br><span class="line">    MOV R4, (SP)</span><br><span class="line">POP R3:</span><br><span class="line">    MOV (SP), R3</span><br><span class="line">    ADD SP, #4, SP</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="assembly-language">Assembly Language</h2>
+<p>在讲到这一节之前我们已经有一些汇编语言编程的基础了，这里稍微做一点补完。汇编语言的一条命令遵循以下形式：<code>[label]: mnemonic [operand list] # comment</code>。其中
+<code>mnemonic</code> 表记又分以下两种：</p>
+<ul>
+<li>我们熟悉的 instruction，<code>mnenomic</code> 表示的是 operation
+codes。</li>
+<li><em>assembler directives</em> (有时也称作假指令
+pseudo-instruction)，可以简单理解为汇编语言中一些方便的宏。常用的有
+<code>.data</code>, <code>.text</code>, <code>.globl [name]</code>,
+<code>.word value1 [,value2],</code></li>
+</ul>
+<p>举个例子：用汇编翻译最简单的 if-else 流程控制
+<code>x = a[0] &gt; a[1] ? a[0] : a[1]</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">    .data       # begin data segment</span><br><span class="line">a:  .word 1     # create storage containing a[0] = 1</span><br><span class="line">    .word 2     # create storage containing a[1] = 2</span><br><span class="line">x:  .word 0     # create storage containing 4, x = 4</span><br><span class="line">    .text       # begin program segment</span><br><span class="line">main:</span><br><span class="line">    LD #a, R0	# a is an array, use #a to indicate the address</span><br><span class="line">    LD 0(R0), R1 </span><br><span class="line">    LD 4(R0), R2 # notice 4!</span><br><span class="line">    BGT R1, R2, else</span><br><span class="line">    ST R2, x</span><br><span class="line">    BR return</span><br><span class="line">else:</span><br><span class="line">    ST R1, x</span><br><span class="line">return: </span><br><span class="line">    RET</span><br></pre></td></tr></table></figure>
+<p>此外，还有用汇编写函数 (function, aka
+procedure)。需要注意的是在函数开始时 <code>PUSH</code> 储存，结束时
+<code>POP</code> 恢复。使用 <code>CALL</code> 调用函数。下面这个函数
+<code>Capitalize</code> 把储存在 <code>R0</code>
+中的小写字母改大写。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Capitalize:</span><br><span class="line">    PUSH R1</span><br><span class="line">    PUSH R2</span><br><span class="line">    LD #0x61, R1  # &#x27;a&#x27;</span><br><span class="line">    LD #0x7a, R2  # &#x27;z&#x27;</span><br><span class="line">    BLT R0, R1, Ret</span><br><span class="line">    BGT R0, R2, Ret</span><br><span class="line">    SUB R0, #0x20, R0 # 0x20=&#x27;a&#x27;-&#x27;A&#x27;</span><br><span class="line">Ret:</span><br><span class="line">    POP R1</span><br><span class="line">    POP R2</span><br><span class="line">    RET</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="operating-system">Operating System</h2>
+<p>OS 是 <strong>software</strong>！它有以下功能：</p>
+<ul>
+<li>program creation. 指 OS 能够调用一些 utility programs e.g. editor
+(vi, emacs), compiler (gcc), debugger (gdb), etc.</li>
+<li>program execution. OS 把程序从 hard disk 加载到 main
+memory，准备执行程序所需的资源。</li>
+<li>I/O access. OS 为程序提供一个统一的 I/O 接口。</li>
+<li>file system management.</li>
+<li>system access. OS 的 protection scheme: 某些特定的资源或动作只能在
+kernel (supervisor) mode 下执行，user mode 没有直接访问的权限，通常通过
+<strong>system call</strong> 来调用这些被保护的资源。</li>
+<li>error detection and response.</li>
+<li>accounting statistics.</li>
+<li>multitasking and time-sharing. 我们知道 CPU
+可以被多个进程共享，每个进程轮流占据一段 time slice。OS 将会处理 process
+scheduling。</li>
+</ul>
+<p>虚拟内存 (Virtual Memory) 技术。</p>
+<ul>
+<li>使用 Hard Disk 扩充物理内存 (Physical Memory)。</li>
+<li>重定义地址空间，为程序提供连续的虚拟内存地址 (Virtual/Logical
+Address)。这在不浪费物理内存的同时，简化了大型程序的编写。虚拟地址到物理地址的映射是由<strong>内存管理单元
+(Memory Management Unit, MMU)</strong> 完成的。</li>
+</ul>
+<p>虚拟地址与物理地址均采用分页
+(<strong>Paging</strong>)，将地址空间划分为若干页。维护地址映射关系的数据结构被称为<strong>分页表
+(Page Table)</strong>，分页表由若干行 <strong>PTE (Page Table
+Entry)</strong> 组成，第 <span class="math inline">\(i\)</span>
+行记录的是第 <span class="math inline">\(i\)</span>​ 页的信息。</p>
+<ul>
+<li><code>V</code> valid bit. 该页在内存中吗？若在，提供
+<strong>physical frame number
+(PFN)</strong>。可以简单理解为物理地址分页的索引，对应的是虚拟地址中的
+<strong>virtual/logical page number (VPN,
+LPN)</strong>，即当前的行数。</li>
+<li><code>P</code> protection info. 该页的 protection mode，如访问权限等
+(<code>r/w</code>, supervisor/user access)。</li>
+<li><code>D</code> dirty bit 标记。若某页在 load 进 physical memory
+之后被修改过，我们将其标记为 dirty；这意味着我们要将修改后的内容
+<strong>write back</strong> 回 hard disk。</li>
+</ul>
+<p>OK，那我们开始 address translation 吧！某个程序通过 CPU address bus
+访问某个地址 <code>addr</code>：</p>
+<ul>
+<li>提取 VPN (LPN) 与 offset。<code>addr=[VPN+offset]</code>。</li>
+<li>找到对应的 VPN 对应的 PTE，查看 valid bit，检查该 page 是否在
+physical memory 中。</li>
+<li>如果是，从 PTE 中 找到 PFN 并翻译成 physical address
+<code>[PFN+offset]</code>，并访问 physical memory。</li>
+<li>如果否，生成一个 <strong>page fault</strong>。</li>
+</ul>
+<p><strong>缺页异常 (page fault)</strong> 发生后，OS 将接管并 fetch
+required page from hard disk to memory。具体来说：</p>
+<ul>
+<li>从 hard disk 中获取对应的页。</li>
+<li>从 physical memory 中找到一个空白页。如果没有，replace
+(FIFO/LRU)。</li>
+<li>如果被 replace 的页是 dirty 的，将其 write back 回 hard
+disk，并修改对应 PTE 的 valid bit。</li>
+<li>把之前获取的页写入，并修改对应的 PTE。</li>
+</ul>
+<p>Page Table 也有比较强的 locality 特征，因此也能套一层 cache -
+<strong>Translation Lookaside Buffer (TLB)</strong>。若 PTE 不在 TLB
+中，先使用 Page Table，再把对应的 PTE cache 进 TLB。</p>
+<p>等等，这个过程是不是太像 cache memory 了？还真是！看看这个
+analogue：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Cache</th>
+<th style="text-align: center;">Virtual Memory</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">Block</td>
+<td style="text-align: center;">Page</td>
+</tr>
+<tr>
+<td style="text-align: center;">Block Size</td>
+<td style="text-align: center;">Page Size</td>
+</tr>
+<tr>
+<td style="text-align: center;">Block Offset</td>
+<td style="text-align: center;">Page Offset</td>
+</tr>
+<tr>
+<td style="text-align: center;">Cache Miss</td>
+<td style="text-align: center;">Page Fault</td>
+</tr>
+<tr>
+<td style="text-align: center;">Cache Tag</td>
+<td style="text-align: center;">Virtual Page Number (VPN)</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<h2 id="processor-organization">Processor Organization</h2>
+<p>关于 control signal - data movement is controlled by control
+signals。</p>
+<p>把一条指令拆成若干 data movements
+的过程，我们可以将其分为以下几个阶段 (stages)：</p>
+<ul>
+<li>Fetch Instruction (FI)</li>
+<li>Decode Instruction (DI)</li>
+<li>Calculate Addresses (CO) * 现代处理器是 register-to-register
+的，往往没有 CO 阶段。</li>
+<li>Fetch Operands (FO)</li>
+<li>Execute Instruction (EI)</li>
+<li>Write Operand (WO)</li>
+</ul>
+<p>这直接促使了<strong>管道 (pipeline)</strong> 的产生。以上各个 stages
+的 data movement
+都是不相交的，因此它们可以被并行处理。在理想情况下，一个 5-stage
+pipeline 可以做到执行 one instruction per clock cycle，即 <span class="math inline">\(CPI = 1\)</span>。</p>
+<figure>
+<img data-src="pipeline.png" alt="Five-stage pipeline, ideal case">
+<figcaption aria-hidden="true">Five-stage pipeline, ideal
+case</figcaption>
+</figure>
+<p>然而，现实没这么理想。不同指令的 stage 不同，stage
+所需的时间不同；指令间也可能存在先后顺序等依赖关系。我们把这种非理想的情况称为
+<strong>Pipeline Hazards</strong>，即需要阻止下一条指令进入 pipeline
+的情况。</p>
+<p><em>Resource Hazard (Structural Hazard)</em>. 两条指令抢夺同一个
+resource 的情况 (ALU, memory read port, etc.)。解决方法：添加更多
+resources。</p>
+<p><em>Data Hazard</em>. e.g. <span class="math inline">\(I_1\)</span>
+<code>ADD R1 R2 R3</code>，<span class="math inline">\(I_2\)</span>
+<code>SUB R3 R4 R4</code>。这种情况下 <span class="math inline">\(I_2\)</span> 必须等待 <span class="math inline">\(I_1\)</span> 执行完毕。解决方法：调整程序逻辑，或
+data forwarding (硬件方案)。三种 data hazards (仅有 RAW 发生在 pipeline
+中):</p>
+<ul>
+<li><strong>Read after Write (RAW)</strong> hazard - <span class="math inline">\(I_1\)</span> 写入 <span class="math inline">\(R\)</span>，<span class="math inline">\(I_2\)</span> 读取 <span class="math inline">\(R\)</span>。读取发生在写入之前，hazard。</li>
+<li><strong>Write after Read (WAR)</strong> hazard - <span class="math inline">\(I_1\)</span> 读取 <span class="math inline">\(R\)</span>，<span class="math inline">\(I_2\)</span> 写入 <span class="math inline">\(R\)</span>。写入发生在读取之前，hazard。</li>
+<li><strong>Write after Write (WAW)</strong> hazard - <span class="math inline">\(I_1\)</span> 写入 <span class="math inline">\(R\)</span>，<span class="math inline">\(I_2\)</span> 写入 <span class="math inline">\(R\)</span>。<span class="math inline">\(I_2\)</span> 的写入发生在 <span class="math inline">\(I_1\)</span> 之前，hazard。</li>
+</ul>
+<p><em>Control Hazard</em>. 若 <span class="math inline">\(I_1\)</span>
+是一个 branch 指令，下一条指令必须等待 <span class="math inline">\(I_1\)</span> 完成后才能开始 FI
+阶段。缓解方法：<strong>Branch
+Prediction</strong>。下一条指令是跳转后的，还是无需跳转的？提前预测一个并作为
+<span class="math inline">\(I_2\)</span>。</p>
+<p>Processor Performance 的几个指标。</p>
+<ul>
+<li>Clock per Instruction (CPI).</li>
+<li>Clock Rate: the number of cycles a processor can execute per second.
+3GHz processor <span class="math inline">\(\to\)</span>​ 3 billions
+cycles per second.</li>
+<li>Execution Time (of a Program): <span class="math inline">\(\text{Instruction Count}\times CPI\times
+\text{Clock Cycle Time }\)</span>.</li>
+</ul>
+<p>以 <strong>RISC (Reduced Instruction Set Computing)</strong>
+为代表，现代处理器有哪些特点呢？</p>
+<ul>
+<li>除 <code>LD</code>, <code>ST</code> 需要涉及 memory access
+外，所有指令均是 register-register 类型的。</li>
+<li>Simple, Fixed-Length, and Fixed-Format instructions. (instruction
+count ++, but acceptable)</li>
+<li>精简的 operations 与 addressing modes。当需要考虑的情况较少时，CPU
+与 pipeline 的设计也变得更加优雅高效。(clock rate ++)</li>
+<li>Use of hardwired rather than microprogrammed control.</li>
+<li>Extensive Pipelining: 使用各种 software 或 hardware techniques
+尽可能地消除 pipeline hazards。(CPI --)</li>
+<li>Use of Large Register File. CPU 的精简使得更多 registers
+的使用成为可能。</li>
+</ul>
+<p><br></p>
+<h2 id="reference">Reference</h2>
+<div class="note warning"><p>  This article is a self-administered course note.</p>
+<p>  References in the article are from corresponding course materials
+if not specified.</p>
+</div>
+<p>Course info: COMP2120, Prof. Zhao Qi</p>
+<p>Course textbook: William Stallings, <em>Computer Organization and
+Architecture (10th edition)</em></p>
+
+    </div>
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+            -----------------------------------そして、次の曲が始まるのです。-----------------------------------
+        </div>
+    
+</div>
+<br />
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<!-- JS库 clipboard 拷贝内容到粘贴板-->
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+
+<!-- JS库 sweetalert 显示提示信息-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>XXZ
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://www.thisisxxz.com/2024/02/05/COMP2120-1/" title="计算机组成小记">https://www.thisisxxz.com/2024/02/05/COMP2120-1/</a>
+      <!--copy buttom-->
+      <span class="copy-path" title="Click to copy markdown-style reference"
+      ><i
+        style="cursor: pointer"
+        class="fa fa-clipboard"
+        data-clipboard-text="[XXZ's Blog | 计算机组成小记](https://www.thisisxxz.com/2024/02/05/COMP2120-1/)"
+        aria-label="Markdown-style reference is now on your clipboard"
+      ></i
+    ></span>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/en" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+
+<script>
+  var clipboard = new ClipboardJS(".fa-clipboard");
+  clipboard.on("success", function(target) {
+    var message = document.createElement("div");
+    message.innerHTML =
+      '<i class="fa fa-check-circle message-icon"></i><span class="message-content">' +
+      target.trigger.getAttribute("aria-label") +
+      "</span>";
+    swal({
+      content: message,
+      className: "copy-success-message",
+      timer: 1500,
+      button: false
+    });
+  });
+</script>
+
+</div>
+<div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+          <div class="post-tags">
+              <a href="/tags/Computer-Architecture/" rel="tag"><i class="fa fa-tag"></i> Computer Architecture</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/02/02/MATH2014-1/" rel="prev" title="Multivariable Calculus & Linear Algebra">
+                  <i class="fa fa-chevron-left"></i> Multivariable Calculus & Linear Algebra
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/02/19/review-bg3/" rel="next" title="通用语学习指南">
+                  通用语学习指南 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="valine-comments"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XXZ</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ThisisXXZ" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script size="70" alpha="0.35" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script><script src="/js/code-unfold.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+
+<script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2024/02/05/COMP2120-1/"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.valine.el)
+    .then(() => NexT.utils.getScript(
+      'https://fastly.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js',
+      { condition: window.Valine }
+    ))
+    .then(() => {
+      new Valine(CONFIG.valine);
+    });
+});
+</script>
+
+  
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+  <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+  <script async src="/js/cursor/explosion.min.js"></script>
+
+
+ 
+
+<script>
+  var OriginTitile = document.title;
+  var titleTime;
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      document.title = "让我带你去吧...";
+      clearTimeout(titleTime);
+    } else {
+      document.title = "这座小镇愿望实现的地方";
+      titleTime = setTimeout(function() {
+        document.title = OriginTitile;
+      }, 1500);
+    }
+  });
+</script>
+
+</body>
+</html>
