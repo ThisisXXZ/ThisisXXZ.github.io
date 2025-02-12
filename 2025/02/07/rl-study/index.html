@@ -33,8 +33,9 @@
 <meta property="og:description" content="最近需要学习一些有关 RL 和 LLM reasoning 能力的知识，在这里零碎的记录一下。此前对 RL 也已经有相当的接触，参阅 COMP3270 笔记中 MDP 与 RL I-II 部分。P.S. 顺便祝我自己生日快乐！">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.thisisxxz.com/2025/02/07/rl-study/trpo.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2025/02/07/rl-study/ppo.png">
 <meta property="article:published_time" content="2025-02-07T12:19:38.000Z">
-<meta property="article:modified_time" content="2025-02-10T07:59:48.696Z">
+<meta property="article:modified_time" content="2025-02-12T12:27:55.972Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="AI &amp; ML">
 <meta name="twitter:card" content="summary">
@@ -170,7 +171,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E5%86%B3%E7%AD%96%E8%BF%87%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">马尔可夫决策过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#policy-gradient"><span class="nav-number">2.</span> <span class="nav-text">Policy Gradient</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#trpo"><span class="nav-number">3.</span> <span class="nav-text">TRPO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ppo"><span class="nav-number">4.</span> <span class="nav-text">PPO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#mdp"><span class="nav-number">1.</span> <span class="nav-text">MDP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#policy-gradient"><span class="nav-number">2.</span> <span class="nav-text">Policy Gradient</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#trpo"><span class="nav-number">3.</span> <span class="nav-text">TRPO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ppo"><span class="nav-number">4.</span> <span class="nav-text">PPO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gae"><span class="nav-number">5.</span> <span class="nav-text">GAE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#actor-critic-methods"><span class="nav-number">6.</span> <span class="nav-text">Actor-Critic Methods</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -354,7 +355,7 @@
 MDP 与 RL I-II 部分。P.S. 顺便祝我自己生日快乐！</p>
 <span id="more"></span>
 <p><br></p>
-<h2 id="马尔可夫决策过程">马尔可夫决策过程</h2>
+<h2 id="mdp">MDP</h2>
 <p>source: <a target="_blank" rel="noopener" href="https://hrl.boyuai.com/chapter/1/马尔可夫决策过程/">动手学强化学习
 — 马尔可夫决策过程</a></p>
 <p>notation reminder.</p>
@@ -502,8 +503,130 @@ M_i(\pi_{i+1})-M_i(\pi_i)\)</span></li>
 </figure>
 <p><br></p>
 <h2 id="ppo">PPO</h2>
+<p>sources:</p>
+<ul>
+<li>[1] <a target="_blank" rel="noopener" href="https://newfacade.github.io/notes-on-reinforcement-learning/11-policy.html">newfacade
+RL notes - 11. Policy Gradient</a></li>
+<li>[2] <a target="_blank" rel="noopener" href="https://newfacade.github.io/notes-on-reinforcement-learning/15-ppo.html">newfacade
+RL notes - 15. PPO</a></li>
+<li>[3] <a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42392454/article/details/140641453#Proximal_Policy_OptimizationPPO_90">热血厨师长
+- 狗都能看懂的 PPO 算法详解</a></li>
+</ul>
+<p>Policy gradient 的优势函数定义 (见 source [1] Appendix
+C，策略梯度其实是<strong>一系列函数</strong>)： <span class="math display">\[
+\nabla_{\theta}J(\theta)=\mathbb{E}_{(s_t,a_t)\sim
+\pi_{\theta}}[A_\theta(s_t,a_t) \nabla_\theta\log \pi_{\theta}(a_t|s_t)]
+\]</span> 使用<strong>重要性采样 (importance sampling)</strong> (见
+source [3]，解释很到位) 把 policy gradient 变换成以下形式，其中 <span class="math inline">\(\pi_{\theta}\)</span> 是待更新的策略，<span class="math inline">\(\pi_{\theta&#39;}\)</span> 是收集样本的策略
+(即旧策略。这里确实有一点 off policy 的意思，但 PPO 整体是 on policy
+的)： <span class="math display">\[
+\begin{aligned}
+\nabla_{\theta}J(\theta)&amp;\approx\mathbb{E}_{(s_t,a_t)\sim
+\pi_{\theta&#39;}}[\frac{\pi_{\theta}(a_t|s_t)}{\pi_{\theta&#39;}(a_t|s_t)}A_\theta(s_t,a_t)
+\nabla_\theta\log \pi_{\theta}(a_t|s_t)] \\
+&amp;= \mathbb{E}_{(s_t,a_t)\sim
+\pi_{\theta&#39;}}[\frac{\nabla\pi_{\theta}(a_t|s_t)}{\pi_{\theta&#39;}(a_t|s_t)}A_{\theta&#39;}(s_t,a_t)]
+\\
+\end{aligned}
+\]</span> 反推出目标函数： <span class="math display">\[
+J(\theta)=\mathbb{E}_{(s_t,a_t)\sim
+\pi_{\theta&#39;}}[\frac{\pi_{\theta}(a_t|s_t)}{\pi_{\theta&#39;}(a_t|s_t)}A_{\theta&#39;}(s_t,a_t)]
+\]</span> (此处见 source [2]，还有 <span class="math inline">\(\theta-r\)</span> 折线图辅助理解) 我们定义 ratio
+function <span class="math inline">\(r_t(\theta):=\pi_{\theta}(a_t|s_t)/\pi_{\theta&#39;}(a_t|s_t)\)</span>，它能够表示
+<span class="math inline">\(\pi_\theta\)</span> 与 <span class="math inline">\(\pi_{\theta&#39;}\)</span> 的散度。若 <span class="math inline">\(r_t(\theta)&gt;1\)</span>，<span class="math inline">\((a_t,s_t)\)</span> 更可能出现在 <span class="math inline">\(\pi_\theta\)</span> 中；若 <span class="math inline">\(r_t(\theta)&lt;1\)</span>，<span class="math inline">\((a_t,s_t)\)</span> 则更容易出现在 <span class="math inline">\(\pi_{\theta&#39;}\)</span> 中。</p>
+<p>为了不让 <span class="math inline">\(\pi_{\theta}\)</span> 偏离 <span class="math inline">\(\pi_{\theta&#39;}\)</span> 过远 (不让 <span class="math inline">\(r\)</span> 偏离 <span class="math inline">\(1\)</span> 过远)，我们对目标函数进行剪裁 (clipped
+objective)，这样当 <span class="math inline">\(r\)</span> 偏离 <span class="math inline">\(1\)</span> 过远时能防止 <span class="math inline">\(\pi_{\theta}\)</span> 被更新得太过剧烈。 <span class="math display">\[
+\begin{aligned}
+L(s,a,\theta_k,\theta)&amp;=\min(\frac{\pi_{\theta}(a|s)}{\pi_{\theta_k}(a|s)}A^{\pi_{\theta_k}}(s,a),\text{clip}(\frac{\pi_{\theta}(a|s)}{\pi_{\theta_k}(a|s)},1-\epsilon,1+\epsilon)A^{\pi_{\theta_k}}(s,a))\\
+\theta_{k+1}&amp;=\arg \max_{\theta} \mathbb{E}_{s,a\sim
+\pi_{\theta_k}}[L(s,a,\theta_k,\theta)]
+\end{aligned}
+\]</span> 下面给出 PPO-clip 算法的伪代码：</p>
+<figure>
+<img data-src="ppo.png" alt="问题现在来到优势函数的计算 &amp; 价值函数的更新：详见下一章">
+<figcaption aria-hidden="true">问题现在来到优势函数的计算 &amp;
+价值函数的更新：详见下一章</figcaption>
+</figure>
+<p><br></p>
+<h2 id="gae">GAE</h2>
+<p>sources:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/549145459">万理的探求者 - GAE
+广义优势估计</a>，主要讲 GAE 的 intuition，很不错</li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/shizheng_Li/article/details/144436495">阿正的梦工坊
+- 深入解析 GAE</a></li>
+</ul>
+<p>计算优势函数 <span class="math inline">\(A(s,a)\)</span>
+时往往会面临两大问题：</p>
+<ul>
+<li>Monte Carlo estimation 的高方差 (high variance)：<span class="math inline">\(A_t=R_t-V(s_t)\)</span>，其中 <span class="math inline">\(R_t\)</span> 是根据完整轨迹求出的真实回报 <span class="math inline">\(R_t=r_t+\gamma r_{t+1}+\gamma^2
+r_{t+2}+...\)</span>。MC
+估计是对优势函数的无偏估计，但由于样本数量有限，求出的优势函数往往方差较大，使得训练不稳定。</li>
+<li><strong>one-step</strong> TD learning 的高偏差 (high bias)：<span class="math inline">\(A_t=r_t+\gamma
+V(s_{t+1})-V(s_t)\)</span>，仅依赖于即时奖励和下一状态的估计价值函数，因此可能会出现较大偏差，尤其是在训练初期价值函数不准确的情况下。(问题：使用
+<strong>n-step</strong> TD learning 又如何？确实有这种方法，被称为 <span class="math inline">\(\lambda\)</span>-return 算法)</li>
+</ul>
+<p>GAE (Generalized Advantage Estimation)
+是一种在偏差与方差之间权衡的优势函数估计方法。它的核心思想在于把当前时间步
+<span class="math inline">\(t\)</span> 的优势函数 <span class="math inline">\(A_t\)</span> 拆分成即时误差 (<span class="math inline">\(\delta_t\)</span>, TD Residuals)
+与未来累计误差的加权和。通过引入新参数 <span class="math inline">\(\lambda\)</span> 控制 GAE 对长期误差的关注度。
+<span class="math display">\[
+\begin{aligned}
+\text{TD Residuals. } \delta_t &amp;= r_t+\gamma V(s_{t+1})-V(s_t) \\
+A(s_t,a_t)&amp;\approx A_t^{\text{GAE}}=\sum_{l=0}^\infty
+(\gamma\lambda)^l \delta_{t+l}
+\end{aligned}
+\]</span> GAE 的递归形式如下，更符合我们在上文提到的「拆分」思想： <span class="math display">\[
+A_t^{\text{GAE}}=\delta_t+(\gamma\lambda)\cdot A_{t+1}^{\text{GAE}}
+\]</span> 当 <span class="math inline">\(\lambda=1\)</span> 时，GAE
+退化为 MC 估计，<span class="math inline">\(\lambda=0\)</span> 退化为 TD
+估计。</p>
+<p><br></p>
+<h2 id="actor-critic-methods">Actor-Critic Methods</h2>
+<p>source: <a target="_blank" rel="noopener" href="https://newfacade.github.io/notes-on-reinforcement-learning/12-actor-critic.html">newfacade
+RL notes - 12. Actor-Critic</a></p>
+<p>让我想起了 GAN，本质上是将 value-based method 引入 policy-based
+method 来减少策略梯度的方差。最后我们将会得到两个 function
+approximations：</p>
+<ul>
+<li>actor：控制 agent 如何做出行动的策略 <span class="math inline">\(\pi_{\theta}(s)\)</span></li>
+<li>critic：评估 agent 所做行动并协助 actor 策略更新的价值函数 <span class="math inline">\(\hat{q_w}(s,a)\)</span></li>
+</ul>
+<p>很自然，可以直接采用状态价值函数 <span class="math inline">\(V(s)\)</span> 或动作价值函数 <span class="math inline">\(Q(s,a)\)</span> 作为 critic。</p>
+<p>critic 的目标函数通常是 MSE
+loss，使其尽可能接近真实的价值函数。此外，critic 也可以采用 clipped
+objective 进行剪裁，使得学习过程更稳定。 <span class="math display">\[
+L_{\text{value}}=\max[(V_{\theta_t}-V_{\text{target}})^2,(\text{clip}(V_{\theta_t},V_{\theta_{t-1}}-\epsilon,V_{\theta_{t-1}}+\epsilon)-V_{\text{target}})^2]
+\]</span> 这里的 <span class="math inline">\(V_{\text{target}}=A_t+V(s_t)\)</span>，其中 <span class="math inline">\(A_t\)</span> 是以 actor 收集的样本通过 GAE
+计算而来，<span class="math inline">\(V(s_t)\)</span> 是 critic
+当前的估计。在下一轮中，actor 在计算策略梯度时又采取 critic
+计算的价值函数 <span class="math inline">\(V(s_t)\)</span>。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://hrl.boyuai.com/chapter/1/马尔可夫决策过程/">动手学强化学习
+— 马尔可夫决策过程</a></li>
+<li><a target="_blank" rel="noopener" href="https://newfacade.github.io/notes-on-reinforcement-learning/11-policy.html">newfacade
+RL notes - 11. Policy Gradient</a></li>
+<li><a target="_blank" rel="noopener" href="https://newfacade.github.io/notes-on-reinforcement-learning/14-trpo.html">newfacade
+RL notes - 14. TRPO</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/MR_kdcon/article/details/119060723">Ton10 -
+论文笔记之 TRPO</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/26308073">天津包子馅儿 -
+强化学习第七讲 TRPO</a></li>
+<li><a target="_blank" rel="noopener" href="https://newfacade.github.io/notes-on-reinforcement-learning/11-policy.html">newfacade
+RL notes - 11. Policy Gradient</a></li>
+<li><a target="_blank" rel="noopener" href="https://newfacade.github.io/notes-on-reinforcement-learning/15-ppo.html">newfacade
+RL notes - 15. PPO</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42392454/article/details/140641453#Proximal_Policy_OptimizationPPO_90">热血厨师长
+- 狗都能看懂的 PPO 算法详解</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/549145459">万理的探求者 - GAE
+广义优势估计</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/shizheng_Li/article/details/144436495">阿正的梦工坊
+- 深入解析 GAE</a></li>
+<li><a target="_blank" rel="noopener" href="https://newfacade.github.io/notes-on-reinforcement-learning/12-actor-critic.html">newfacade
+RL notes - 12. Actor-Critic</a></li>
+</ul>
 
     </div>
 
