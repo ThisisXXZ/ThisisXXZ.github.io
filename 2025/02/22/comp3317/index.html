@@ -33,8 +33,9 @@
 <meta property="og:description" content="这篇笔记我打算基于 tutorial 做一点 problem-based 的总结。P.S.，Kenneth 课教的好，人长得帅，还有一件 NERV 员工服！计算机视觉又是一个相当「EVA」的学科，已经可以想象他戴着墨镜做出碇司令的经典手势了。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.thisisxxz.com/2025/02/22/comp3317/m-adjacent.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2025/02/22/comp3317/aperture_prob.png">
 <meta property="article:published_time" content="2025-02-22T09:52:42.000Z">
-<meta property="article:modified_time" content="2025-02-23T16:41:53.318Z">
+<meta property="article:modified_time" content="2025-02-24T09:43:47.232Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Mathematics">
 <meta property="article:tag" content="Computer Vision">
@@ -171,7 +172,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#digital-image-processing"><span class="nav-number">1.</span> <span class="nav-text">Digital Image Processing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#feature-extraction"><span class="nav-number">2.</span> <span class="nav-text">Feature Extraction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#digital-image-processing"><span class="nav-number">1.</span> <span class="nav-text">Digital Image Processing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#feature-extraction"><span class="nav-number">2.</span> <span class="nav-text">Feature Extraction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#perspective-projection"><span class="nav-number">3.</span> <span class="nav-text">Perspective Projection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -381,7 +382,7 @@ Insufficient gray levels: <strong>false contouring</strong></li>
 <figcaption aria-hidden="true">中间 1 与右上 1 是 8-邻接的，但不是
 m-邻接的</figcaption>
 </figure>
-<p>Euclidean 距离 (几何距离)，City-clock 距离 (<span class="math inline">\(|x_1-x_2|+|y_1-y_2|\)</span>)，Chessboard 距离
+<p>Euclidean 距离 (几何距)，City-clock 距离 (<span class="math inline">\(|x_1-x_2|+|y_1-y_2|\)</span>)，Chessboard 距离
 (<span class="math inline">\(\max(|x_1-x_2|,|y_1-y_2|)\)</span>)，<span class="math inline">\(D_m\)</span> 距离 (m-path 距离)。</p>
 <p><em>Key point 3</em>: <strong>Convolution &amp; Filters</strong></p>
 <p>Filtering 本质上是卷积，因此满足交换律与结合律。</p>
@@ -408,8 +409,96 @@ noise or uniform noise.</li>
 0，这是为了防止其捕捉到任何辉度信息 (<span class="math inline">\(R=G=B\)</span> 时 pixel 所显示的是辉度)。</p>
 <p><br></p>
 <h2 id="feature-extraction">Feature Extraction</h2>
+<p><em>Keypoint 0:</em></p>
+<p>首先注意一个 convention，图像矩阵以<strong>左上角</strong>为原点
+<span class="math inline">\((0,0)\)</span>，横轴为 <span class="math inline">\(x\)</span> 轴，纵轴为 <span class="math inline">\(y\)</span> 轴。但 numpy
+矩阵还是以传统的先行再列的形式访问，因此坐标为 <span class="math inline">\((x,y)\)</span> 的像素在代码中应该写成
+<code>img[y][x]</code>。</p>
 <p><em>Key point 1</em>: Canny edge detection</p>
+<p>Canny 边缘检测算法的步骤如下 (2D 边缘检测)：</p>
+<ul>
+<li>smooth the image <span class="math inline">\(I\)</span> by
+convolving with a 2D Gaussian kernel <span class="math inline">\(S=G_{\sigma}*I\)</span></li>
+<li>find the gradient of the smoothed image <span class="math inline">\(\nabla S\)</span></li>
+<li>non-maximal suppression: only selects <strong>edgels</strong> where
+<span class="math inline">\(||\nabla S||\)</span> is greater than local
+values of <span class="math inline">\(||\nabla S||\)</span> in the
+direction of <span class="math inline">\(\pm \nabla S\)</span>
+(如果没有这一步，生成的边缘将会很厚。这一步相当于把边缘细化到脊线 ridge
+上)</li>
+<li>threshold the edgels: only strong edgels with <span class="math inline">\(||\nabla S||\)</span> above a certain value are
+retained</li>
+<li><strong>hysteresis</strong>: some weak edges are revived if they
+span the gaps between some strong edgels
+(保证边缘的连续性从而留下一些弱边缘)</li>
+</ul>
+<p>重要参数 <span class="math inline">\(\sigma\)</span> (3.feature
+extraction pp.19 网格图)：</p>
+<ul>
+<li>fine-scale Gaussian kernel (较小 <span class="math inline">\(\sigma\)</span>)：检测到更多，更细微的边缘，对
+noise 敏感</li>
+<li>large-scale Gaussian kernel (较大 <span class="math inline">\(\sigma\)</span>)：suppress finer details</li>
+</ul>
+<p>Aperture problem (孔径问题)：为了分析图像的 motion 特征，我们还需要
+corner detection 角点检测！</p>
+<figure>
+<img data-src="aperture_prob.png" alt="edge 究竟朝哪个方向移动呢？如果可以看到 endpoint 我们就能确定了！">
+<figcaption aria-hidden="true">edge 究竟朝哪个方向移动呢？如果可以看到
+endpoint 我们就能确定了！</figcaption>
+</figure>
 <p><em>Key point 2</em>: Harris corner detection</p>
+<p>Harris
+角点的定义：若局部窗口包含角点，则该窗口沿<strong>任意方向</strong>移动都有灰度跳变。(平坦区域：任意方向移动均无灰度跳变；边缘：垂直于边缘方向移动有灰度跳变)</p>
+<p>以上定义的数学描述是图像窗口在向方向 <span class="math inline">\((u,v)\)</span> 平移时的<strong>平方强度变化
+squared change in intensity</strong> (这里的 <span class="math inline">\(w\)</span> 一般是 2D
+高斯滤波核，以分配更多注意给中心区域)： <span class="math display">\[
+E(u,v)=\sum_{x,y}w(x,y)[I(x+u,y+v)-I(x,y)]^2
+\]</span> 经泰勒展开和矩阵分析将其近似为： <span class="math display">\[
+\begin{aligned}
+E(u,v)&amp;\approx \begin{bmatrix}u&amp;v\end{bmatrix}M\begin{bmatrix} u
+\\ v\end{bmatrix} \\
+\text{where }M&amp;=\sum_{x,y} w(x,y) \begin{bmatrix}I_x^2 &amp; I_xI_y
+\\I_xI_y &amp; I_y^2\end{bmatrix}
+\end{aligned}
+\]</span> 根据基本特征值理论有 <span class="math inline">\(\lambda_1\leq
+E(u,v) \leq \lambda_2\)</span>，其中 <span class="math inline">\(\lambda_1,\lambda_2\)</span> 分别是 <span class="math inline">\(M\)</span>
+的最小与最大特征值，表示窗口向各个方向移动获得的最小与最大灰度变化。据此有：</p>
+<ul>
+<li>case 0: <span class="math inline">\(\lambda_1\approx
+\lambda_2\approx 0\)</span>: 窗口移动灰度基本不变，为 featureless
+region</li>
+<li>case 1: <span class="math inline">\(\lambda_1\approx 0\)</span>,
+<span class="math inline">\(\lambda_2\)</span> is large:
+很显然这是边缘，<span class="math inline">\(\lambda_1\)</span>
+为平行边缘方向，<span class="math inline">\(\lambda_2\)</span>
+为垂直边缘方向</li>
+<li>case 2: <span class="math inline">\(\lambda_1\)</span>, <span class="math inline">\(\lambda_2\)</span> are both large and distinct:
+这是角点！</li>
+</ul>
+<p>注意到 <span class="math inline">\(\lambda_1\lambda_2=\det(A),
+\lambda_1+\lambda_2=\text{trace}(A)\)</span>，基于此定义<strong>角点响应函数
+cornerness function</strong> <span class="math inline">\(R\)</span>。Harris 推荐将 <span class="math inline">\(k\)</span> 设为 <span class="math inline">\(0.04\sim 0.06\)</span>。 <span class="math display">\[
+R=\det(M)-k\cdot \text{trace}(M)^2
+\]</span> 数学 intuition 这样就差不多了，以下是 Harris
+角点检测算法的步骤：</p>
+<ul>
+<li>convert color image to grayscale image</li>
+<li>compute gradient along <span class="math inline">\(x\)</span>, <span class="math inline">\(y\)</span> axis at each pixel <span class="math inline">\(I_x,I_y\)</span></li>
+<li>form images of <span class="math inline">\(I_x^2,I_y^2\)</span> and
+<span class="math inline">\(I_xI_y\)</span>, then smooth them with 2D
+Gaussian kernel</li>
+<li>form image of the cornerness function <span class="math inline">\(R\)</span></li>
+<li>locate <strong>local maxima</strong> in the image of <span class="math inline">\(R\)</span> as corners</li>
+<li>compute the coordinates of the corners up to sub-pixel accuracy by
+quadratic approximation
+(二次曲线近似使得角点的位置精确到次像素程度)</li>
+<li>threshold the strong corners</li>
+</ul>
+<p>代码如下。虽然背后的数学原理有点难，但实现起来并不复杂 [等 assignment
+2 due 了以后再放出]：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># To be released: after Mar.5</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="perspective-projection">Perspective Projection</h2>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
@@ -606,6 +695,15 @@ Forsyth &amp; Ponce</p>
 
 
 
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "box";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "bottomCenter";
+        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
 
 <script class="next-config" data-name="valine" type="application/json">{"enable":true,"appId":"LbAWfrkBjPK0zrIxynTLIyls-gzGzoHsz","appKey":"V7I2yuRh1bALJ9vrRQlXOBDh","serverURLs":"https://lbawfrkb.lc-cn-n1-shared.com","placeholder":"Sound! Euphonium","avatar":"retro","meta":["nick","mail"],"pageSize":10,"lang":"en","visitor":false,"comment_count":false,"recordIP":false,"enableQQ":false,"requiredFields":["nick","mail"],"el":"#valine-comments","path":"/2025/02/22/comp3317/"}</script>
 <script>
@@ -621,15 +719,6 @@ document.addEventListener('page:loaded', () => {
 });
 </script>
 
-  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
-  <script>
-      pbOptions = {};
-        pbOptions.iconStyle = "box";
-        pbOptions.boxForm = "horizontal";
-        pbOptions.position = "bottomCenter";
-        pbOptions.networks = "Wechat,QQZone,Weibo,Douban,Twitter,Facebook";
-      new needShareButton('#needsharebutton-postbottom', pbOptions);
-  </script>
   
 
   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
