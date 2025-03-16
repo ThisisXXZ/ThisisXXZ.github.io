@@ -32,11 +32,13 @@
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
 <meta property="og:description" content="还是采用与 COMP2119A 问题集 相同的形式记录一下进阶算法课中的一些 insights。这学期 workload 有点重，3251 学起来应该比 3252 轻松很多。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.thisisxxz.com/2025/02/14/comp3251/closest_pair.png">
 <meta property="article:published_time" content="2025-02-14T02:34:10.000Z">
-<meta property="article:modified_time" content="2025-02-14T02:51:49.831Z">
+<meta property="article:modified_time" content="2025-03-16T09:58:59.510Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Algorithms">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.thisisxxz.com/2025/02/14/comp3251/closest_pair.png">
 
 
 <link rel="canonical" href="https://www.thisisxxz.com/2025/02/14/comp3251/">
@@ -168,7 +170,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">1.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#selection"><span class="nav-number">1.</span> <span class="nav-text">Selection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fast-multiplication"><span class="nav-number">2.</span> <span class="nav-text">Fast Multiplication</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#closest-pair"><span class="nav-number">3.</span> <span class="nav-text">Closest Pair</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dfs-bfs"><span class="nav-number">4.</span> <span class="nav-text">DFS &amp; BFS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mst"><span class="nav-number">5.</span> <span class="nav-text">MST</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -359,6 +361,140 @@
 <p>  It will <strong>NOT</strong> cover any exam or assignment related
 content.</p>
 </div>
+<p><br></p>
+<h2 id="selection">Selection</h2>
+<p>Selection 问题：选出第 <span class="math inline">\(k\)</span>
+大的数。<span class="math inline">\(O(n)\)</span> Selection
+算法简要介绍如下：</p>
+<p>定义 <span class="math inline">\(\text{Select}(S,k)\)</span>：</p>
+<ul>
+<li>从 <span class="math inline">\(S=\{x_1,x_2,...,x_n\}\)</span> 中选出
+pivot <span class="math inline">\(v\)</span></li>
+<li>根据 <span class="math inline">\(v\)</span> 把数列分为三个子集 <span class="math inline">\(S_L(&lt;v),S_v(=v),S_R(&gt;v)\)</span> [<span class="math inline">\(O(n)\)</span> 复杂度]
+<ul>
+<li>若 <span class="math inline">\(k\leq |S_L|\)</span>，输出 <span class="math inline">\(\text{Select}(S_L,k)\)</span></li>
+<li>若 <span class="math inline">\(|S_L|&lt;k\leq
+|S_L|+|S_v|\)</span>，输出 <span class="math inline">\(v\)</span></li>
+<li>若 <span class="math inline">\(|S_L|+|S_v|&lt;k\)</span>，输出 <span class="math inline">\(\text{Select}(S_R,k-|S_L|-|S_v|)\)</span></li>
+</ul></li>
+</ul>
+<p>其实就是个快排小改造。定义：</p>
+<ul>
+<li>reasonable good pivot: <span class="math inline">\(1/4\leq
+\text{rank}\leq 3/4\)</span>, recursive step takes at most <span class="math inline">\(T(\frac{3n}{4})\)</span></li>
+<li>bad pivot: <span class="math inline">\(\text{rank}&lt;1/4\)</span>
+or <span class="math inline">\(\text{rank}&gt;3/4\)</span>, recursive
+step takes at most <span class="math inline">\(T(n)\)</span></li>
+</ul>
+<p>随机挑选 pivot，选到 reasonable good pivot 与 bad pivot 的概率均为
+<span class="math inline">\(1/2\)</span>。那么： <span class="math display">\[
+\begin{aligned}
+\mathbb{E} T(n)&amp;\leq \frac{1}{2}\mathbb{E}
+T(\frac{3n}{4})+\frac{1}{2}\mathbb{E}T(n)+O(n) \\
+\mathbb{E}T(n)&amp;\leq \mathbb{E} T(\frac{3n}{4})+2O(n)
+\end{aligned}
+\]</span> 应用 Master Theorem，有 <span class="math inline">\(a=1,b=\frac{4}{3},d=1\)</span>，<span class="math inline">\(d=1&gt;\log_b a=0\)</span>。所以 <span class="math inline">\(\mathbb{E}T(n)=O(n)\)</span>。</p>
+<p><br></p>
+<h2 id="fast-multiplication">Fast Multiplication</h2>
+<p>整数乘法问题：给定两个 <span class="math inline">\(n\)</span>
+位二进制整数 <span class="math inline">\((x)_2,(y)_2\)</span>，输出它们的乘积，一个 <span class="math inline">\((2n-1)\)</span> 位二进制整数。</p>
+<p>分治法：</p>
+<ul>
+<li>Divide: 令 <span class="math inline">\(x=x_L\times
+2^{n/2}+x_R\)</span>, <span class="math inline">\(y=y_L\times
+2^{n/2}+y_R\)</span></li>
+<li>Recurse: 递归计算 <span class="math inline">\(x_L y_L,x_L y_R,x_R
+y_L,x_R y_R\)</span></li>
+<li>Combine: <span class="math inline">\(xy=x_Ly_L\times
+2^n+(x_Ly_R+x_Ry_L)\times 2^{n/2}+x_Ry_R\)</span></li>
+</ul>
+<p>复杂度 <span class="math inline">\(T(n)=4T(n/2)+O(n)\)</span>，应用主定理后得 <span class="math inline">\(T(n)=O(n^2)\)</span>。</p>
+<p>一个优化：注意到 <span class="math inline">\(x_Ly_R+x_Ry_L=(x_L+x_R)(y_L+y_R)-x_Ly_L-x_Ry_R\)</span>，递归步骤中的四次乘法可以优化为三次。</p>
+<p>复杂度 <span class="math inline">\(T(n)=3T(n/2)+O(n)\)</span>，应用主定理后得 <span class="math inline">\(T(n)=O(n^{\log_2 3})=O(n^{1.59})\)</span>。</p>
+<p>类似的 trick 是 Strassen's Magical Idea，能将 <span class="math inline">\(O(n^3)\)</span> 的矩阵乘法优化到 <span class="math inline">\(O(n^{2.81})\)</span>。</p>
+<p><br></p>
+<h2 id="closest-pair">Closest Pair</h2>
+<p>平面最近点对问题：<span class="math inline">\(n\)</span> 个点 <span class="math inline">\((x_1,y_1),(x_2,y_2),...,(x_n,y_n)\)</span>，输出距离最近的点对。</p>
+<p>解法还是很巧妙的，仍然是分治思想。</p>
+<ul>
+<li>Divide: 把所有点按照 <span class="math inline">\(x\)</span>
+坐标排序，画出中线 <span class="math inline">\(L\)</span> 使得其两侧均有
+<span class="math inline">\(n/2\)</span> 个点。这个过程是 <span class="math inline">\(O(n\log n)\)</span> 的。</li>
+<li>Recurse: 递归找到左组内以及右组内的最近点距 <span class="math inline">\(\delta_L,\delta_R\)</span></li>
+<li>Combine: 求出<strong>左右组间</strong>的最近点距 <span class="math inline">\(\delta_{mid}\)</span></li>
+</ul>
+<p>显然，如何找到组间的最近点距需要仔细设计。令 <span class="math inline">\(\delta=\min(\delta_L,\delta_R)\)</span>，只考虑
+<span class="math inline">\(x\in[L-\delta,L+\delta]\)</span>
+区间中的点，把它们按照 <span class="math inline">\(y\)</span>
+坐标排序，得到点序列 <span class="math inline">\(\{p_1,p_2,...,p_m\}\)</span>。对于 <span class="math inline">\(p_i\)</span>，只需要记录它和 <span class="math inline">\(p_{i+1},p_{i+2},...,p_{i+7}\)</span> 随后这
+<strong>7 个点的距离</strong>。</p>
+<p>为什么偏偏是 7 个点？这个数字基于一个重要的结论：</p>
+<figure>
+<img data-src="closest_pair.png" alt="在组间区间的一侧，任意边长为 \delta 的正方形中至多有 4 个点">
+<figcaption aria-hidden="true">在组间区间的一侧，任意边长为 <span class="math inline">\(\delta\)</span> 的正方形中至多有 4
+个点</figcaption>
+</figure>
+<p>把该正方形划分为四个边长为 <span class="math inline">\(\delta/2\)</span>
+的子正方形，在子正方形中，任意点距都 <span class="math inline">\(\leq
+\delta/\sqrt{2}&lt;\delta\)</span>；因此每个子正方形中最多只能有一个点，否则就将与已知的单侧最小点距为
+<span class="math inline">\(\delta\)</span>
+的结论相冲突。所以，这整个正方形中最多有 4 个点。</p>
+<p>现在考虑组间区间中的一个点 <span class="math inline">\(p_i=(x_i,y_i)\)</span>，将它与 <span class="math inline">\(y&gt;y_i\)</span> 的点构成点对；如果比 <span class="math inline">\(\delta\)</span> 更小的点距存在，对应的点一定位于
+<span class="math inline">\([L-\delta \sim L+\delta,y_i\sim
+y_i+\delta]\)</span> 这一长方形内。该长方形由左右两侧两个 <span class="math inline">\(\delta\times \delta\)</span>
+的正方形组成，根据上文得出的结论，其中最多含有 <span class="math inline">\(4\times 2=8\)</span> 个点。除去 <span class="math inline">\(p_i\)</span> 本身，需要比较的点最多只有 7 个。</p>
+<p>确实巧妙！这个算法的复杂度递归形式是 <span class="math inline">\(T(n)=2T(n/2)+O(n\log n)\)</span> [bottleneck
+是对组间区间中的点按照 <span class="math inline">\(y\)</span>
+坐标排序]，解得 <span class="math inline">\(T(n)=O(n\log^2
+n)\)</span>。</p>
+<p><br></p>
+<h2 id="dfs-bfs">DFS &amp; BFS</h2>
+<p>无甚好讲，主要是一些名词解释。</p>
+<p>无向图的 DFS 树。</p>
+<ul>
+<li>DFS 树的树边 tree edges.</li>
+<li>foward edges. node <span class="math inline">\(\to\)</span> a
+non-child descendent.</li>
+<li>back edges. node <span class="math inline">\(\to\)</span>
+ancestor.</li>
+<li>cross edges. node <span class="math inline">\(\to\)</span> a node
+that has been already explored (<em>explored</em>: pre-ordered &amp;
+post-ordered).</li>
+</ul>
+<p>应用：</p>
+<ul>
+<li>DFS 判环 (找 back edges)</li>
+<li>DAG 的拓扑排序：DFS 后序遍历的逆序。起始节点入度为 0。</li>
+<li>SCC：
+<ul>
+<li>初始化：求反图 <span class="math inline">\(G_R\)</span> 并 DFS
+一次得到后序遍历 <span class="math inline">\(\text{post}\)</span>。</li>
+<li>求 SCC：回到图 <span class="math inline">\(G\)</span>，取当前图中
+<span class="math inline">\(\text{post}[x]\)</span> 最大的点 x
+作为起始点，DFS 一遍找到包含 <span class="math inline">\(x\)</span> 的
+SCC，标号，并从 <span class="math inline">\(G\)</span> 中删除该 SCC
+(点和所有连向/连出的边)。重复此过程直至所有 SCC 被找出。</li>
+</ul></li>
+</ul>
+<p>SPT (Shortest Path Tree) 最短路径树：最短路径生成的树。</p>
+<p>Dijkstra 算法的本质就是不断扩展 SPT
+直到图上的点均被覆盖。每次迭代，找到离最短路径树距离最近的节点 <span class="math inline">\(v\)</span> (堆优化)，加入 SPT，并由 <span class="math inline">\(v\)</span> 更新 SPT 到余下所有点的距离。复杂度
+<span class="math inline">\(O((|E|+|V|)\log
+|V|)\)</span>。[边复杂度对应入堆，点复杂度对应出堆]</p>
+<p>Bellman-Ford 算法。由于图中有负权边 (但无负环)，Dijkstra 设计的
+"clever order" 失效了，因此需要回到 “stupid
+way”。考虑到任意一条最短路长度 <span class="math inline">\(\leq
+|V|-1\)</span>，将所有边松弛 <span class="math inline">\(|V|-1\)</span>
+次即可。复杂度 <span class="math inline">\(O(|V||E|)\)</span>。队列优化是 SPFA。</p>
+<p>DAG 求最短路。很明显，按照拓扑序松弛即可。复杂度 <span class="math inline">\(O(|V|+|E|)\)</span>。</p>
+<p><br></p>
+<h2 id="mst">MST</h2>
+<p>这里也没什么好讲的，随便记一下。</p>
+<p>Prim 算法。Dijkstra 每次选择离 SPT 距离最近的点扩展，Prim 每次选择
+MST 邻接点中边权最小的扩展。实现基本和 Dijkstra 一致，但更简单：不再需要
+<span class="math inline">\(\text{dist}\)</span>
+数组，只需要维护一个布尔 <span class="math inline">\(\text{vis}\)</span>
+数组，向堆中加入 <span class="math inline">\((v,e)\)</span> 即可。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
