@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2025/02/22/comp3317/m-adjacent.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2025/02/22/comp3317/aperture_prob.png">
 <meta property="article:published_time" content="2025-02-22T09:52:42.000Z">
-<meta property="article:modified_time" content="2025-03-19T04:52:02.563Z">
+<meta property="article:modified_time" content="2025-04-06T15:53:00.555Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Mathematics">
 <meta property="article:tag" content="Computer Vision">
@@ -172,7 +172,9 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#digital-image-processing"><span class="nav-number">1.</span> <span class="nav-text">Digital Image Processing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#feature-extraction"><span class="nav-number">2.</span> <span class="nav-text">Feature Extraction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#perspective-projection"><span class="nav-number">3.</span> <span class="nav-text">Perspective Projection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#digital-image-processing"><span class="nav-number">1.</span> <span class="nav-text">Digital Image Processing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#feature-extraction"><span class="nav-number">2.</span> <span class="nav-text">Feature Extraction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#perspective-projective-camera"><span class="nav-number">3.</span> <span class="nav-text">Perspective &amp; Projective
+Camera</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#weak-perspective-affine-camera"><span class="nav-number">4.</span> <span class="nav-text">Weak-Perspective &amp; Affine
+Camera</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#camera-calibration"><span class="nav-number">5.</span> <span class="nav-text">Camera Calibration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -271,6 +273,9 @@
             </li>
             <li class="links-of-blogroll-item">
               <a href="https://whats.love/" title="https:&#x2F;&#x2F;whats.love&#x2F;" rel="noopener" target="_blank">Master</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://arcalunar.github.io/" title="https:&#x2F;&#x2F;arcalunar.github.io&#x2F;" rel="noopener" target="_blank">ArcaLunar</a>
             </li>
         </ul>
       </div>
@@ -502,7 +507,173 @@ quadratic approximation
 2 due 了以后再放出]：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># To be released: after Mar.5</span></span><br></pre></td></tr></table></figure>
 <p><br></p>
-<h2 id="perspective-projection">Perspective Projection</h2>
+<h2 id="perspective-projective-camera">Perspective &amp; Projective
+Camera</h2>
+<p>所谓 camera projection (成像投射) 指的是把世界坐标系中的某个 3D
+点投射到像素坐标系中的某个 2D 点的过程。</p>
+<ul>
+<li><strong>Rigid Body Motion</strong>. World coordinates <span class="math inline">\([X, Y, Z]\)</span> to camera coordinates <span class="math inline">\([X_c,Y_c,Z_c]\)</span></li>
+<li><strong>Perspective Projection</strong>. Camera coordinates <span class="math inline">\([X_c,Y_c,Z_c]\)</span> to image plane coordinates
+<span class="math inline">\([x, y]\)</span></li>
+<li><strong>CCD Imaging</strong>. Image plane coordinates <span class="math inline">\([x, y]\)</span> to pixel coordinate <span class="math inline">\([u,v]\)</span></li>
+</ul>
+<p>为 represent points at infinity (vanishing points)，采用 homogenous
+coordinates <span class="math inline">\([X,Y,Z]\to [sX,sY,sZ,
+s]\)</span>。<span class="math inline">\(s=0\)</span> 时，表示该点在
+<span class="math inline">\([X,Y,Z]\)</span> 方向趋于无限。</p>
+<ul>
+<li>Given points <span class="math inline">\(\tilde{\mathbf{x_0}},
+\tilde{\mathbf{x_1}}\)</span> in homogenous coord, the line passing
+through is <span class="math inline">\(\mathbf{I}=\tilde{\mathbf{x_0}}\times
+\tilde{\mathbf{x_1}}\)</span></li>
+<li>Given lines <span class="math inline">\(\mathbf{I_0},
+\mathbf{I_1}\)</span>, the intersection point is <span class="math inline">\(\tilde{\mathbf{x}}=\mathbf{I_0}\times
+\mathbf{I_1}\)</span></li>
+</ul>
+<p><em>Step 1</em>: Rigid Body Motion. <span class="math display">\[
+\begin{bmatrix} X_c \\ Y_c \\ Z_c \\ 1
+\end{bmatrix}=\begin{bmatrix} \mathbf{R} &amp; \mathbf{T} \\ \mathbf{0}
+&amp; 1\end{bmatrix}\begin{bmatrix}X \\ Y \\ Z \\
+1\end{bmatrix}=\begin{bmatrix} -\mathbf{v_x^T}- &amp; T_x \\
+-\mathbf{v_y^T}- &amp; T_y \\ -\mathbf{v_z^T}- &amp; T_z \\
+-0- &amp; 1
+\end{bmatrix}\begin{bmatrix}X \\ Y \\ Z \\ 1\end{bmatrix}
+\]</span> 其中 <span class="math inline">\(\mathbf{R}\)</span> 是 3X3
+rotation matrix，每行分别是 camera coordsys 中 <span class="math inline">\(x,y,z\)</span> 方向的 unit vector 在 world
+coordsys 下的表示。而 <span class="math inline">\(\mathbf{T}\)</span> 是
+3X1 translation matrix，它可以看成是从 camera coordsys 中心到 world
+coordsys 中心的向量。</p>
+<p><em>Step 2</em>: Perspective Projection.</p>
+<p>根据相似三角形推出的重要结论：The scaling is <span class="math inline">\(f/Z_0\)</span>: <span class="math inline">\(f\)</span> is focal length, <span class="math inline">\(Z_0\)</span> is the distance from the optical
+center (usually reflected in <span class="math inline">\(Z\)</span>-axis).</p>
+<p>例：给定世界坐标中的一条直线 <span class="math inline">\(\mathbf{X}_c=\mathbf{a}+\lambda\mathbf{b}=[a_x,a_y,a_z]^T+\lambda[b_x,b_y,b_z]^T\)</span>，求它的
+vanishing point。</p>
+<ul>
+<li>Line on the image plane: <span class="math inline">\(\mathbf{x}=f(\frac{a_x+\lambda b_x}{a_z+\lambda
+b_z}, \frac{a_y+\lambda b_y}{a_z+\lambda b_z})\)</span>. As <span class="math inline">\(\lambda \to \infty\)</span>, the point <span class="math inline">\(X_c\)</span> moves further down the line, and
+<span class="math inline">\(\mathbf{x}\)</span> converges to the vanish
+point <span class="math inline">\(\mathbf{v}=\lim_{\lambda\to\infty}f(...)=f(\frac{b_x}{b_z},
+\frac{b_y}{b_z})\)</span>.</li>
+<li>As expected, <strong>the vanishing point depends only on the line's
+orientation but not no its position</strong>. When <span class="math inline">\(b_z=0\)</span>, the line is parallel to the image
+plane and the vanishing point is at infinity.</li>
+</ul>
+<p>在 camera projection matrix 中，perspective projection 表现为： <span class="math display">\[
+\begin{bmatrix}sx \\ sy \\ s\end{bmatrix}=\begin{bmatrix}f &amp; 0 &amp;
+0 &amp; 0 \\ 0 &amp; f &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 1 &amp;
+0\end{bmatrix}\begin{bmatrix}X_c \\ Y_c \\ Z_c \\ 1\end{bmatrix}
+\]</span> 本质上就是 <span class="math inline">\(x=fX_c/Z_c,
+y=fY_c/Z_c\)</span>。</p>
+<p><em>Step 3.</em> CCD imaging.</p>
+<p>将 image plane 上的 2D 点 <span class="math inline">\(\mathbf{x}=(x,y)\)</span> 转化为像素坐标 <span class="math inline">\(\mathbf{w}=(u,v)\)</span>。 <span class="math display">\[
+\begin{aligned}
+u &amp;= k_ux + u_0 \\
+v &amp;= k_vy + v_0 \\ \\
+\text{i.e., }\begin{bmatrix}su\\sv\\
+s\end{bmatrix}&amp;=\begin{bmatrix}k_u &amp; 0 &amp; u_0 \\ 0 &amp; k_v
+&amp; v_0 \\ 0 &amp; 0 &amp; 1\end{bmatrix}\begin{bmatrix} sx \\ sy \\
+s\end{bmatrix}
+\end{aligned}
+\]</span></p>
+<ul>
+<li><span class="math inline">\((u_0,v_0)\)</span> 是 principal
+point，它是 optical axis 与 CDD array 的交点 (即 image plane
+原点的像素坐标表示)。</li>
+<li><span class="math inline">\(k_u,k_v\)</span> 是 scale
+factors，分别是在 <span class="math inline">\(u\)</span> (i.e., <span class="math inline">\(x\)</span>) 和 <span class="math inline">\(v\)</span> (i.e., <span class="math inline">\(y\)</span>) 方向上单位长度的像素数。</li>
+</ul>
+<p><em>Key point 1.</em> Full perspective camera model (10 DOFs). <span class="math display">\[
+\begin{aligned}
+\mathbf{P}_{ps}&amp;=\mathbf{P}_c\mathbf{P}_p\mathbf{P}_r \\
+&amp;= \begin{bmatrix}k_u &amp; 0 &amp; u_0 \\ 0 &amp; k_v &amp; v_0 \\
+0 &amp; 0 &amp; 1\end{bmatrix}\begin{bmatrix}f &amp; 0 &amp; 0 &amp; 0
+\\ 0 &amp; f &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 1 &amp;
+0\end{bmatrix}\begin{bmatrix}\mathbf{R} &amp; \mathbf{T} \\
+\mathbf{0}_3^{T} &amp; 1\end{bmatrix} \\
+&amp;=\begin{bmatrix}k_u &amp; 0 &amp; u_0 \\ 0 &amp; k_v &amp; v_0 \\ 0
+&amp; 0 &amp; 1\end{bmatrix}\begin{bmatrix}f &amp; 0 &amp; 0 \\ 0 &amp;
+f &amp; 0 \\ 0 &amp; 0 &amp; 1\end{bmatrix}\begin{bmatrix}1 &amp; 0
+&amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 1 &amp;
+0\end{bmatrix}\begin{bmatrix}\mathbf{R} &amp; \mathbf{T} \\
+\mathbf{0}_3^{T} &amp; 1\end{bmatrix} \\
+&amp;= \begin{bmatrix}\alpha_u &amp; 0 &amp; u_0 \\ 0 &amp; \alpha_v
+&amp; v_0 \\ 0 &amp; 0 &amp; 1\end{bmatrix}\begin{bmatrix}\mathbf{R}
+&amp; \mathbf{T}\end{bmatrix} \\
+&amp;= \mathbf{K} \begin{bmatrix}\mathbf{R} &amp;
+\mathbf{T}\end{bmatrix}
+\end{aligned}
+\]</span> 这里 <span class="math inline">\(\alpha_u=fk_u,\alpha_v=fk_v,u_0,v_0\)</span>
+描述的是相机的 intrinsic parameters，其余的 (rotation/translation
+matrix) 描述的是 extrinsic parameters。</p>
+<ul>
+<li><strong>Camera calibration matrix</strong> <span class="math inline">\(\mathbf{K}\)</span>. 4 DOFs: <span class="math inline">\(k_u,k_v,\alpha_u,\alpha_v\)</span>. Focal length
+<span class="math inline">\(f\)</span> and pixel scaling factors <span class="math inline">\(k_u,k_v\)</span> are not independent in a way that
+they cannot be uniquely separated based solely on the resulting
+image.</li>
+<li><strong>Rotation matrix</strong> <span class="math inline">\(\mathbf{R}\)</span>. 3 DOFs: roll, pitch, yaw. 3x3
+elements, but 6 non-linear constraints are imposed (orthogonality <span class="math inline">\(\mathbf{R^T R}=I\)</span>).</li>
+<li><strong>Translation matrix T</strong>. 3 DOFs.</li>
+</ul>
+<p><em>Key point 2</em>. Projective camera model (11 DOFs).</p>
+<p>Projective camera 是一个 general 3x4 matrix <span class="math inline">\(\mathbf{P}\)</span>，它没有任何 constraints。由于
+<span class="math inline">\(\mathbf{P}\)</span> 的 overall scale 对
+camera projection 的结果无影响，不妨将 <span class="math inline">\(p_{23}\)</span> 设为 <span class="math inline">\(1\)</span>，剩余的元素贡献了 11 DOFs。</p>
+<p>Perspective camera 是 Projective camera 的一个特例。</p>
+<p>给定 projection matrix <span class="math inline">\(\mathbf{P}\)</span>，<span class="math inline">\((X_d,Y_d,Z_d)\)</span> 方向上 vanishing point 的
+2D 像素坐标是 <span class="math inline">\(\tilde{\mathbf{v}}=\mathbf{P}\begin{bmatrix}X_d
+&amp; Y_d &amp; Z_d &amp; 0\end{bmatrix}^T\)</span> 。</p>
+<p><em>Key point 3</em>. Planar/Linear rigid body transformation.
+去除多余维度对应的列即可。</p>
+<p><br></p>
+<h2 id="weak-perspective-affine-camera">Weak-Perspective &amp; Affine
+Camera</h2>
+<p><em>Key point 1</em>. Weak-Perspectie projection.</p>
+<p>应用 perspective projection 后，现实世界中的平行线在图像中往往交于
+vanishing
+point。但我们也能观察到在有些图像中，平行的性质，以及平行线间的 length
+ratios 在图像中得到了保留。这是因为 the depth variation <span class="math inline">\(\Delta Z\)</span> of the objects in the scene are
+small compared with the average distance <span class="math inline">\(Z_{avg}\)</span> of the objects from the
+camera.</p>
+<p>对于具有以上性质的图像，我们可以使用 weak-perspective projection 来
+model。回忆 perspective projection 中的 scaling <span class="math inline">\(f/Z_0\)</span>，每个 3D 世界坐标都有彼此各异的
+<span class="math inline">\(Z_0\)</span>；weak-perspective camera
+将其统一用 <span class="math inline">\(Z_{avg}\)</span> 进行替代。 <span class="math display">\[
+\begin{bmatrix} sx \\ sy \\ s\end{bmatrix}=\begin{bmatrix} f &amp; 0
+&amp; 0 &amp; 0 \\ 0 &amp; f &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp;
+Z_{avg}\end{bmatrix}\begin{bmatrix}X_c\\ Y_c\\ Z_c \\ 1\end{bmatrix}
+\]</span> 其余步骤 (rigid body motion, CCD imaging) 没有变化 <span class="math inline">\(\mathbf{P}_{\text{wp}}=\mathbf{P}_\text{c}\mathbf{P}_{\text{pll}}\mathbf{P}_\text{r}\)</span>。</p>
+<p><em>Key point 2</em>. Image error introduced by WP approximation.
+<span class="math display">\[
+[u,v]-[u&#39;,v&#39;]=([u,v]-[u_0,v_0])\frac{\Delta Z}{Z_{\text{avg}}}
+\]</span></p>
+<ul>
+<li><span class="math inline">\(\Delta
+Z&lt;&lt;Z_{\text{avg}}\)</span></li>
+<li>image points are closer to the principal point (i.e. <span class="math inline">\(u-u_0\approx v-v_0\approx 0\)</span>)</li>
+</ul>
+<p><em>Step 3.</em> Affine camera.</p>
+<p>与 projective camera 之于 perspective camera 类似，affine camera 是
+weak-perspective camera 的 non-linear constraints 被 relax
+过后的更一般的模型。 <span class="math display">\[
+\mathbf{P}_{\text{aff}}=\begin{bmatrix}p_{00} &amp; p_{01} &amp; p_{02}
+&amp; p_{03} \\ p_{10} &amp; p_{11} &amp; p_{12} &amp; p_{13} \\ 0 &amp;
+0 &amp; 0 &amp; p_{23} \end{bmatrix}
+\]</span> 不妨将 overall scale <span class="math inline">\(p_{23}\)</span> 设为 1，affine camera 有 8
+DOFs。Planar affine camera 去除第三列，有 6 DOFs。</p>
+<p><em>Key point 4</em>. Planar scene <strong>invariants</strong>
+(measurement which does not change across different viewpoints of the
+same object). [chapter 6 pp.18]</p>
+<ul>
+<li>Euclidean camera (3 DOFs: rotationX1, translationX2)</li>
+<li>similarity camera (4 DOFs: +scalingX1)</li>
+<li>affine camera (6 DOFs: +stretchingX1, shearingX1)</li>
+<li>projective camera (completely unrestricted 8DOFs: +equation of the
+vanishing lineX2)</li>
+</ul>
+<p>一个重要的 projective invariant: cross-ratio - the ratio of two
+ratios of lengths.</p>
+<p><br></p>
+<h2 id="camera-calibration">Camera Calibration</h2>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
