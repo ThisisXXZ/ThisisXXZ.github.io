@@ -34,8 +34,11 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.thisisxxz.com/2025/02/22/comp3317/m-adjacent.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2025/02/22/comp3317/aperture_prob.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2025/02/22/comp3317/calibration_grid.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2025/02/22/comp3317/triangulation.png">
+<meta property="og:image" content="https://www.thisisxxz.com/2025/02/22/comp3317/epipolar.png">
 <meta property="article:published_time" content="2025-02-22T09:52:42.000Z">
-<meta property="article:modified_time" content="2025-04-06T15:53:00.555Z">
+<meta property="article:modified_time" content="2025-04-14T16:01:56.566Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Mathematics">
 <meta property="article:tag" content="Computer Vision">
@@ -174,7 +177,7 @@
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#digital-image-processing"><span class="nav-number">1.</span> <span class="nav-text">Digital Image Processing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#feature-extraction"><span class="nav-number">2.</span> <span class="nav-text">Feature Extraction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#perspective-projective-camera"><span class="nav-number">3.</span> <span class="nav-text">Perspective &amp; Projective
 Camera</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#weak-perspective-affine-camera"><span class="nav-number">4.</span> <span class="nav-text">Weak-Perspective &amp; Affine
-Camera</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#camera-calibration"><span class="nav-number">5.</span> <span class="nav-text">Camera Calibration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Camera</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#camera-calibration"><span class="nav-number">5.</span> <span class="nav-text">Camera Calibration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stereo-vision"><span class="nav-number">6.</span> <span class="nav-text">Stereo Vision</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#essential-matrix"><span class="nav-number">7.</span> <span class="nav-text">Essential Matrix</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fundamental-matrix"><span class="nav-number">8.</span> <span class="nav-text">Fundamental Matrix</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -612,8 +615,14 @@ elements, but 6 non-linear constraints are imposed (orthogonality <span class="m
 <p><em>Key point 2</em>. Projective camera model (11 DOFs).</p>
 <p>Projective camera 是一个 general 3x4 matrix <span class="math inline">\(\mathbf{P}\)</span>，它没有任何 constraints。由于
 <span class="math inline">\(\mathbf{P}\)</span> 的 overall scale 对
-camera projection 的结果无影响，不妨将 <span class="math inline">\(p_{23}\)</span> 设为 <span class="math inline">\(1\)</span>，剩余的元素贡献了 11 DOFs。</p>
-<p>Perspective camera 是 Projective camera 的一个特例。</p>
+camera projection 的结果无影响，不妨将 <span class="math inline">\(p_{23}\)</span> 设为 <span class="math inline">\(1\)</span>，剩余的元素贡献了 11 DOFs。<br>
+<span class="math display">\[
+\begin{bmatrix}su \\ sv \\ s\end{bmatrix}=\begin{bmatrix}p_{00} &amp;
+p_{01} &amp; p_{02} &amp; p_{03} \\ p_{10} &amp; p_{11} &amp; p_{12}
+&amp; p_{13} \\ p_{20} &amp; p_{21} &amp; p_{22} &amp;
+p_{23}\end{bmatrix}\begin{bmatrix}\lambda X \\ \lambda Y \\ \lambda Z \\
+\lambda\end{bmatrix}
+\]</span> Perspective camera 是 Projective camera 的一个特例。</p>
 <p>给定 projection matrix <span class="math inline">\(\mathbf{P}\)</span>，<span class="math inline">\((X_d,Y_d,Z_d)\)</span> 方向上 vanishing point 的
 2D 像素坐标是 <span class="math inline">\(\tilde{\mathbf{v}}=\mathbf{P}\begin{bmatrix}X_d
 &amp; Y_d &amp; Z_d &amp; 0\end{bmatrix}^T\)</span> 。</p>
@@ -623,12 +632,10 @@ camera projection 的结果无影响，不妨将 <span class="math inline">\(p_{
 <h2 id="weak-perspective-affine-camera">Weak-Perspective &amp; Affine
 Camera</h2>
 <p><em>Key point 1</em>. Weak-Perspectie projection.</p>
-<p>应用 perspective projection 后，现实世界中的平行线在图像中往往交于
-vanishing
-point。但我们也能观察到在有些图像中，平行的性质，以及平行线间的 length
-ratios 在图像中得到了保留。这是因为 the depth variation <span class="math inline">\(\Delta Z\)</span> of the objects in the scene are
-small compared with the average distance <span class="math inline">\(Z_{avg}\)</span> of the objects from the
-camera.</p>
+<p>经过 perspective projection
+后，现实世界中的平行线在图像中通常会相交于 vanishing
+point。然而在某些图像中，平行性质以及平行线之间的 length ratios
+依然得以保持。这是因为场景中物体的深度变化量 <span class="math inline">\(ΔZ\)</span> 相较于物体到相机的平均距离<span class="math inline">\(Z_{avg}\)</span> 而言非常微小。</p>
 <p>对于具有以上性质的图像，我们可以使用 weak-perspective projection 来
 model。回忆 perspective projection 中的 scaling <span class="math inline">\(f/Z_0\)</span>，每个 3D 世界坐标都有彼此各异的
 <span class="math inline">\(Z_0\)</span>；weak-perspective camera
@@ -669,6 +676,182 @@ vanishing lineX2)</li>
 ratios of lengths.</p>
 <p><br></p>
 <h2 id="camera-calibration">Camera Calibration</h2>
+<p>相机标定是一种根据相机拍出的图像确定相机内外参数的过程。常常使用标定板
+(calibaration grid) 进行辅助。</p>
+<ul>
+<li>相机内参数：camera calibration matrix <span class="math inline">\(\mathbf{K}\)</span>，包括焦距，缩放参数等</li>
+<li>相机外参数：相机的位置 (position)，朝向 (orientation) 等等</li>
+</ul>
+<p>考虑一个 projective camera： <span class="math display">\[
+\begin{bmatrix}s_iu_i \\ s_iv_i \\
+s_i\end{bmatrix}=\begin{bmatrix}p_{00} &amp; p_{01} &amp; p_{02} &amp;
+p_{03} \\ p_{10} &amp; p_{11} &amp; p_{12} &amp; p_{13} \\ p_{20} &amp;
+p_{21} &amp; p_{22} &amp;
+p_{23}\end{bmatrix}\begin{bmatrix}X_i\\Y_i\\Z_i\\1\end{bmatrix}
+\]</span></p>
+<ul>
+<li>方程组共有 <span class="math inline">\(3\times 4=12\)</span>
+个未知数</li>
+<li>考虑 2D 坐标点 <span class="math inline">\((u, v)\)</span>
+与其对应的 3D 世界坐标点 <span class="math inline">\((X, Y,
+Z)\)</span>，每对这样的点对可以贡献两组方程：
+<ul>
+<li><span class="math inline">\(Xp_{00}+Yp_{01}+Zp_{02}+p_{03}-uXp_{20}-uYp_{21}-uZp_{22}-up_{23}=0\)</span></li>
+<li><span class="math inline">\(Xp_{10}+Yp_{11}+Zp_{12}+p_{13}-vXp_{20}-vYp_{21}-vZp_{22}-vp_{23}=0\)</span></li>
+</ul></li>
+<li>因此，解 projective matrix <strong>至少</strong>需要 <span class="math inline">\(12/2=6\)</span> 对点对。</li>
+</ul>
+<p>点对的选取：标定板的特征 (corners, edges 等)。好处 1)
+特征点易求，稳定 2) 很容易建立 3D 世界坐标系。</p>
+<figure>
+<img data-src="calibration_grid.png" alt="一个经典的网格状标定板">
+<figcaption aria-hidden="true">一个经典的网格状标定板</figcaption>
+</figure>
+<p>将这一系列方程组写成矩阵形式 <span class="math inline">\(\mathbf{Ap}=0\)</span> [chap.7 camera calibration
+pp. 6]，问题转化为求矩阵 <span class="math inline">\(\mathbf{A}\)</span>
+的零空间 <span class="math inline">\(\mathbf{p}\)</span>。然而，由于相机固有误差的存在，<span class="math inline">\(\mathbf{p}\)</span> 不一定有解
+(这也是为什么是「至少」6 对点对；点对越多，误差越小)。</p>
+<p>确定性问题转化为最优化问题 Linear Least Squares：考虑带残差 <span class="math inline">\(\mathbf{r}\)</span> 的方程组 <span class="math inline">\(\mathbf{Ap}=\mathbf{r}\)</span>，求 <span class="math inline">\(\mathbf{p}\)</span> 使得 <span class="math inline">\(||\mathbf{r}||^2\)</span> 最小。代码如下
+(注意，这里我们令 scale <span class="math inline">\(p_{23}=1\)</span>，方程组仅有 11
+个未知数，且不再是齐次的；残差变为 <span class="math inline">\(\mathbf{Ap}-\mathbf{b}=\mathbf{r}\)</span>)：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">calibrate3D</span>(<span class="params">ref3D, ref2D</span>):</span><br><span class="line">    n = ref3D.shape[<span class="number">0</span>]</span><br><span class="line">    A = []</span><br><span class="line">    b = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        x, y, z = ref3D[i, <span class="number">0</span>], ref3D[i, <span class="number">1</span>], ref3D[i, <span class="number">2</span>]</span><br><span class="line">        u, v = ref2D[i, <span class="number">0</span>], ref2D[i, <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">        A.append([x, y, z, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, -u*x, -u*y, -u*z])</span><br><span class="line">        A.append([<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, x, y, z, <span class="number">1</span>, -v*x, -v*y, -v*z])</span><br><span class="line">        b.extend([u, v])</span><br><span class="line">    </span><br><span class="line">    A, b = np.array(A), np.array(b)</span><br><span class="line"></span><br><span class="line">    p = lstsq(A, b, rcond=<span class="literal">None</span>)[<span class="number">0</span>]</span><br><span class="line">    P = np.append(p, <span class="number">1</span>).reshape(<span class="number">3</span>, <span class="number">4</span>)    <span class="comment"># add scaling factor back</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> P</span><br></pre></td></tr></table></figure>
+<p>将解得的 <span class="math inline">\(\mathbf{p}\)</span> reshape 成
+<span class="math inline">\(3\times 4\)</span> 的 projective matrix
+<span class="math inline">\(\mathbf{P}\)</span>。下一步，我们将其
+decompose 成 <span class="math inline">\(\mathbf{K}\begin{bmatrix}\mathbf{R} &amp;
+\mathbf{T}\end{bmatrix}\)</span>。观察到 <span class="math inline">\(\mathbf{K}\)</span> 是一个 3X3 上三角矩阵，<span class="math inline">\(\mathbf{R}\)</span> 是一个 3X3 正交矩阵，而剩下的
+<span class="math inline">\(\mathbf{T}\)</span> 是 3X1 矩阵。自然想到 QR
+decomposition： <span class="math display">\[
+\begin{aligned}
+\begin{bmatrix}\mathbf{p}_0 &amp; \mathbf{p}_1 &amp;
+\mathbf{p}_2\end{bmatrix}^{-1}&amp;=\mathbf{Q}\mathbf{R}&#39; \\
+\begin{bmatrix}\mathbf{p}_0 &amp; \mathbf{p}_1
+&amp;\mathbf{p}_2\end{bmatrix} &amp;=(\mathbf{Q}\mathbf{R}&#39;)^{-1} \\
+&amp;= \mathbf{R}&#39;^{-1}\mathbf{Q}^{-1} \\
+&amp;= \mathbf{KR}
+\end{aligned}
+\]</span> 性质：上三角矩阵的逆还是上三角矩阵 =&gt; <span class="math inline">\(\mathbf{K}=\mathbf{R}&#39;^{-1}\)</span>；正交矩阵的逆是它的转置，且结果同样是正交矩阵
+=&gt; <span class="math inline">\(\mathbf{R}=\mathbf{Q}^{T}\)</span>.
+根据 <span class="math inline">\(\mathbf{KT}=\mathbf{p}_3\)</span>，有
+<span class="math inline">\(\mathbf{T}=\mathbf{K}^{-1}\mathbf{p}_3\)</span>。最后对
+<span class="math inline">\(\mathbf{K}\)</span> 做 normalization：令
+<span class="math inline">\(k_{23}=1\)</span>，且保证 <span class="math inline">\(k_{22}\)</span> 与 <span class="math inline">\(k_{11}\)</span> 均为正。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">decompose_P</span>(<span class="params">P</span>) :</span><br><span class="line">    M = P[:, :<span class="number">3</span>]</span><br><span class="line">    Q_, R_ = qr(inv(M))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># obtain K as the inverse of R</span></span><br><span class="line">    K = inv(R_)</span><br><span class="line">    R = Q_.T</span><br><span class="line"></span><br><span class="line">    T = R_ @ P[:, <span class="number">3</span>]</span><br><span class="line">    RT = np.hstack((R, T.reshape(-<span class="number">1</span>, <span class="number">1</span>)))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># normalize K</span></span><br><span class="line">    K /= K[<span class="number">2</span>, <span class="number">2</span>]</span><br><span class="line">    <span class="keyword">if</span> K[<span class="number">0</span>, <span class="number">0</span>] &lt; <span class="number">0</span>:</span><br><span class="line">        K[:, <span class="number">0</span>] *= -<span class="number">1</span></span><br><span class="line">        RT[<span class="number">0</span>, :] *= -<span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> K[<span class="number">1</span>, <span class="number">1</span>] &lt; <span class="number">0</span>:</span><br><span class="line">        K[:, <span class="number">1</span>] *= -<span class="number">1</span></span><br><span class="line">        RT[<span class="number">1</span>, :] *= -<span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> K, RT</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2 id="stereo-vision">Stereo Vision</h2>
+<p><em>Key point 1</em>. 一维与二维还原。</p>
+<p>如果相机的各项参数已知，我们可以把线/平面上的像素坐标还原到对应的世界坐标上。</p>
+<p>一维 (line) projective matrix <span class="math inline">\(\mathbf{P}_p\)</span> 是 3X2 的。<span class="math inline">\(X=p_{01}-up_{21}/up_{20}-p_{00}\)</span> 或 <span class="math inline">\(X=p_{11}-vp_{21}/vp_{20}-p_{10}\)</span>。</p>
+<p>二维 (planar) projective matrix <span class="math inline">\(\mathbf{P}_p\)</span> 是 3X3 的。求 <span class="math inline">\(\mathbf{Q}=\mathbf{P}^{-1}_p\)</span> 后整理为
+<span class="math inline">\(X=q_{00}u+q_{01}v+q_{02}/q_{20}u+q_{21}v+q_{22}\)</span>,
+<span class="math inline">\(Y=q_{10}u+q_{11}v+q_{12}/q_{20}u+q_{21}v+q_{22}\)</span>。</p>
+<p><em>Key point 2.</em> 三维还原。</p>
+<p>考虑一般的三维 projective matrix <span class="math inline">\(\mathbf{P}_p\)</span>，它是 3X4 的。将 camera
+calibration 中每对点对提供的两个方程改写成关于 <span class="math inline">\(X,Y,Z\)</span> 的形式： <span class="math display">\[
+\begin{aligned}
+a_u X+b_u Y+c_u Z+d_u &amp;= 0 \\
+a_v X+b_v Y + c_vZ+d_v &amp;= 0
+\end{aligned}
+\]</span> 以上两个方程都各自在世界坐标系中定义了一个平面，而像素坐标
+<span class="math inline">\((u,v)\)</span> 所对应的世界坐标 <span class="math inline">\((X_0,Y_0,Z_0)\)</span>
+一定位于这<strong>两个平面的交线 (ray)</strong> 上。由于方程数量 (2)
+小于未知数数量 (3)，想要将 2D 像素坐标还原为 3D
+世界坐标，仅仅一台标定好的相机是不够的。</p>
+<p>如果我们有两台标定好的相机 (或者一台相机在两个角度)，那么 <span class="math inline">\((X_0,Y_0,Z_0)\)</span> 就可以被两条交线的交点确定
+(数学解释：方程数量 4 大于未知数数量 3)。这被称为<strong>双目立体视觉
+(stereo vision)</strong>，与人眼的视觉原理一致。</p>
+<figure>
+<img data-src="triangulation.png" alt="Stereo Vision Triangulation">
+<figcaption aria-hidden="true">Stereo Vision Triangulation</figcaption>
+</figure>
+<ul>
+<li>3D 世界坐标点：<span class="math inline">\(\mathbf{X}=(X,Y,Z)\)</span></li>
+<li>3D 相机坐标点：<span class="math inline">\(\mathbf{X}_c=(X_c,Y_c,Z_c)\)</span></li>
+<li>像素图像坐标点：<span class="math inline">\((u,v)\)</span></li>
+<li>(3D 相机坐标系下) 图像坐标点 <span class="math inline">\(\mathbf{x}=(x, y, f)\)</span>，其中 <span class="math inline">\(x=(u-u_0)/k_u\)</span>, <span class="math inline">\(y=(v-v_0)/k_v\)</span></li>
+<li>射线向量 <span class="math inline">\(\mathbf{p}=\vec{O_c\mathbf{x}}=\begin{bmatrix}x
+&amp; y &amp; f\end{bmatrix}^T\)</span></li>
+</ul>
+<p>可以发现 <span class="math inline">\(\mathbf{p}\)</span> 与 <span class="math inline">\(\mathbf{X}_c\)</span> 被未知的 <span class="math inline">\(Z_c\)</span> 相联系： <span class="math display">\[
+\mathbf{p}=\begin{bmatrix}x \\ y \\
+f\end{bmatrix}=\begin{bmatrix}fX_c/Z_c \\ fY_c/Z_c \\
+fZ_c/Z_c\end{bmatrix}=\frac{f}{Z_c}\mathbf{X}_c
+\]</span> 第二台相机有相同的表现：<span class="math inline">\(\mathbf{p}&#39;=f&#39;\mathbf{X}_c&#39;/Z_c&#39;\)</span>。</p>
+<p>假设这两个相机坐标系被已知的旋转矩阵 <span class="math inline">\(\mathbf{R}\)</span> 与变换矩阵 <span class="math inline">\(\mathbf{T}\)</span> 相联系，有 <span class="math inline">\(\mathbf{X}_c&#39;=\mathbf{RX}_c+\mathbf{T}\)</span>。利用
+<span class="math inline">\(\mathbf{X}&#39;_c\)</span> 与 <span class="math inline">\(\mathbf{p}&#39;\)</span> 的平行关系可以得到 stereo
+vision 中的核心方程 triangulation equation： <span class="math display">\[
+\begin{aligned}
+\mathbf{X}_c&#39;\times\mathbf{p}&#39;&amp;=0 \\
+(\mathbf{RX}_c+\mathbf{T})\times \mathbf{p}&#39;&amp;= 0 \\
+(\frac{Z_c}{f}\mathbf{Rp}+\mathbf{T})\times\mathbf{p}&#39;&amp;=0
+\end{aligned}
+\]</span></p>
+<p>据此还原出未知深度 <span class="math inline">\(Z_c\)</span>。如果两部相机并未对应到同一个世界坐标点上，两条射线不会相交，且方程组
+inconsistent。</p>
+<p><br></p>
+<h2 id="essential-matrix">Essential Matrix</h2>
+<p>对极几何 (epipolar geometry) 是双目立体视觉中的一种几何关系。基于
+perspective camera
+的假设，这一系列几何关系导致了各个图像点之间的约束。</p>
+<figure>
+<img data-src="epipolar.png" alt="From stereo vision to epipolar geometry">
+<figcaption aria-hidden="true">From stereo vision to epipolar
+geometry</figcaption>
+</figure>
+<ul>
+<li>对极平面 (epipolar plane)：<span class="math inline">\(\mathbf{X}\)</span> 与两台相机的光心 (optical
+center) 组成的平面。</li>
+<li>基线 (baseline)：连接两光心的直线。</li>
+<li>对极点 (epipole)：基线与成像平面的交点。</li>
+<li>对极线 (epipolar line)：对极平面与成像平面的交线。对极点 <span class="math inline">\(\mathbf{e}\)</span> 与 <span class="math inline">\(\mathbf{X}\)</span> 的图像坐标点 <span class="math inline">\(\mathbf{x}\)</span> 都在对极线上。</li>
+</ul>
+<p>对极约束 (epipolar constraint) 指的是在双目立体视觉中，已知某点 <span class="math inline">\(\mathbf{x}\)</span>
+在第一张图像上的位置；那么第二张图像上的对应点 <span class="math inline">\(\mathbf{x}&#39;\)</span>
+一定位于对极线上。这一约束的数学表达在<strong>本质矩阵 (essential
+matrix)</strong> 的推导中可以体现：</p>
+<p>已知两个相机坐标系与它们之间的转化关系 <span class="math inline">\(\mathbf{R}, \mathbf{T}\)</span>： <span class="math display">\[
+\begin{aligned}
+\mathbf{X}&#39;_c&amp;=\mathbf{RX}_c+\mathbf{T} \\
+\mathbf{T}\times \mathbf{X}&#39;_c &amp;= \mathbf{T}\times
+\mathbf{RX}_c+\mathbf{T}\times \mathbf{T} \\
+\mathbf{X}&#39;_c\cdot (\mathbf{T}\times \mathbf{X}&#39;_c) &amp;=
+\mathbf{X}_c&#39;\cdot (\mathbf{T}\times\mathbf{RX}_c) \\
+\mathbf{X}_c&#39;[\mathbf{T}]_{\times}\mathbf{R}\mathbf{X}_c&amp;= 0 \\
+\mathbf{X}_c&#39;^T\mathbf{E}\mathbf{X}_c&amp;=0 \ \text{ where }
+\mathbf{E}=[\mathbf{T}]_{\times}\mathbf{R}
+\end{aligned}
+\]</span> <span class="math inline">\(\mathbf{E}\)</span>
+是本质矩阵。这里应用了一些向量运算的 tricks：</p>
+<ul>
+<li><span class="math inline">\(\mathbf{T}\times
+\mathbf{T}=0\)</span></li>
+<li><span class="math inline">\(a\cdot(b\times c)=b\cdot (a\times
+c)=c\cdot (a\times b)\)</span></li>
+<li>叉乘等价于<strong>反对称矩阵 (skew-symmetric matrix)</strong>
+点乘：<span class="math inline">\(\mathbf{T}\times
+\mathbf{R}=[\mathbf{T}]_{\times}\mathbf{R}\)</span></li>
+<li>继承于反对称矩阵 <span class="math inline">\([\mathbf{T}]_{\times}\)</span>，本质矩阵 <span class="math inline">\(\mathbf{E}\)</span> 的奇异值是 <span class="math inline">\([\sigma,\sigma,0]\)</span>
+的形式。这意味着它可以通过 SVD 还原为 <span class="math inline">\(\mathbf{R},\mathbf{T}\)</span></li>
+<li>不妨将 scale <span class="math inline">\(e_{33}\)</span> 设为
+1，本质矩阵 <span class="math inline">\(\mathbf{E}\)</span> 共有 5 DoFs
+(3 for rotation, 2 for translation)</li>
+</ul>
+<p>Refer 一下上一章中的图感受一下本质矩阵是如何体现对极约束的。</p>
+<ul>
+<li>在第一个相机坐标系中 ray vector <span class="math inline">\(\mathbf{p}\)</span> 平行于 <span class="math inline">\(\mathbf{X}_c\)</span>，第二个中 <span class="math inline">\(\mathbf{p}&#39;\)</span> 平行于 <span class="math inline">\(\mathbf{X}_c&#39;\)</span>；由于 <span class="math inline">\(\mathbf{X}_c&#39;^T\mathbf{E}\mathbf{X}_c=0\)</span>，也一定有
+<span class="math inline">\(\mathbf{p}&#39;^T\mathbf{E}\mathbf{p}=0\)</span>。</li>
+<li><span class="math inline">\(\mathbf{p}\)</span> 已知，<span class="math inline">\(\mathbf{Rp}\)</span>
+将向量转换到第二个相机坐标系下表示。</li>
+<li><span class="math inline">\(\mathbf{Ep}=[\mathbf{T}]_{\times}\cdot\mathbf{Rp}\)</span>，<span class="math inline">\(T\)</span>
+是由第一个相机指向第二个相机光心的平移向量。叉积的结果垂直于 <span class="math inline">\(T\)</span> 与 <span class="math inline">\(\mathbf{Rp}\)</span> 所在的平面 (即对极平面)，
+因此 <span class="math inline">\(\mathbf{N}=\mathbf{Ep}\)</span>
+是极平面的一个法向量。</li>
+<li><span class="math inline">\(\mathbf{p}&#39;^T\mathbf{N}=0\)</span>
+将 <span class="math inline">\(\mathbf{p}&#39;\)</span>
+限制在对极平面上，对极约束成立。</li>
+</ul>
+<p><br></p>
+<h2 id="fundamental-matrix">Fundamental Matrix</h2>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
