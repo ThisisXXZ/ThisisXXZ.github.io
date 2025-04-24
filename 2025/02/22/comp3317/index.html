@@ -38,7 +38,7 @@
 <meta property="og:image" content="https://www.thisisxxz.com/2025/02/22/comp3317/triangulation.png">
 <meta property="og:image" content="https://www.thisisxxz.com/2025/02/22/comp3317/epipolar.png">
 <meta property="article:published_time" content="2025-02-22T09:52:42.000Z">
-<meta property="article:modified_time" content="2025-04-14T16:01:56.566Z">
+<meta property="article:modified_time" content="2025-04-23T10:42:23.509Z">
 <meta property="article:author" content="XXZ">
 <meta property="article:tag" content="Mathematics">
 <meta property="article:tag" content="Computer Vision">
@@ -177,7 +177,7 @@
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#digital-image-processing"><span class="nav-number">1.</span> <span class="nav-text">Digital Image Processing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#feature-extraction"><span class="nav-number">2.</span> <span class="nav-text">Feature Extraction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#perspective-projective-camera"><span class="nav-number">3.</span> <span class="nav-text">Perspective &amp; Projective
 Camera</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#weak-perspective-affine-camera"><span class="nav-number">4.</span> <span class="nav-text">Weak-Perspective &amp; Affine
-Camera</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#camera-calibration"><span class="nav-number">5.</span> <span class="nav-text">Camera Calibration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stereo-vision"><span class="nav-number">6.</span> <span class="nav-text">Stereo Vision</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#essential-matrix"><span class="nav-number">7.</span> <span class="nav-text">Essential Matrix</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fundamental-matrix"><span class="nav-number">8.</span> <span class="nav-text">Fundamental Matrix</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+Camera</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#camera-calibration"><span class="nav-number">5.</span> <span class="nav-text">Camera Calibration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stereo-vision"><span class="nav-number">6.</span> <span class="nav-text">Stereo Vision</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#essential-matrix"><span class="nav-number">7.</span> <span class="nav-text">Essential Matrix</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fundamental-matrix"><span class="nav-number">8.</span> <span class="nav-text">Fundamental Matrix</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ransac"><span class="nav-number">9.</span> <span class="nav-text">RANSAC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">10.</span> <span class="nav-text">Reference</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -754,7 +754,7 @@ a_v X+b_v Y + c_vZ+d_v &amp;= 0
 \end{aligned}
 \]</span> 以上两个方程都各自在世界坐标系中定义了一个平面，而像素坐标
 <span class="math inline">\((u,v)\)</span> 所对应的世界坐标 <span class="math inline">\((X_0,Y_0,Z_0)\)</span>
-一定位于这<strong>两个平面的交线 (ray)</strong> 上。由于方程数量 (2)
+一定位于这<strong>两个平面的交线</strong> 上。由于方程数量 (2)
 小于未知数数量 (3)，想要将 2D 像素坐标还原为 3D
 世界坐标，仅仅一台标定好的相机是不够的。</p>
 <p>如果我们有两台标定好的相机 (或者一台相机在两个角度)，那么 <span class="math inline">\((X_0,Y_0,Z_0)\)</span> 就可以被两条交线的交点确定
@@ -769,7 +769,7 @@ a_v X+b_v Y + c_vZ+d_v &amp;= 0
 <li>3D 相机坐标点：<span class="math inline">\(\mathbf{X}_c=(X_c,Y_c,Z_c)\)</span></li>
 <li>像素图像坐标点：<span class="math inline">\((u,v)\)</span></li>
 <li>(3D 相机坐标系下) 图像坐标点 <span class="math inline">\(\mathbf{x}=(x, y, f)\)</span>，其中 <span class="math inline">\(x=(u-u_0)/k_u\)</span>, <span class="math inline">\(y=(v-v_0)/k_v\)</span></li>
-<li>射线向量 <span class="math inline">\(\mathbf{p}=\vec{O_c\mathbf{x}}=\begin{bmatrix}x
+<li><strong>射线向量 (ray vector)</strong> <span class="math inline">\(\mathbf{p}=\vec{O_c\mathbf{x}}=\begin{bmatrix}x
 &amp; y &amp; f\end{bmatrix}^T\)</span></li>
 </ul>
 <p>可以发现 <span class="math inline">\(\mathbf{p}\)</span> 与 <span class="math inline">\(\mathbf{X}_c\)</span> 被未知的 <span class="math inline">\(Z_c\)</span> 相联系： <span class="math display">\[
@@ -779,7 +779,7 @@ fZ_c/Z_c\end{bmatrix}=\frac{f}{Z_c}\mathbf{X}_c
 \]</span> 第二台相机有相同的表现：<span class="math inline">\(\mathbf{p}&#39;=f&#39;\mathbf{X}_c&#39;/Z_c&#39;\)</span>。</p>
 <p>假设这两个相机坐标系被已知的旋转矩阵 <span class="math inline">\(\mathbf{R}\)</span> 与变换矩阵 <span class="math inline">\(\mathbf{T}\)</span> 相联系，有 <span class="math inline">\(\mathbf{X}_c&#39;=\mathbf{RX}_c+\mathbf{T}\)</span>。利用
 <span class="math inline">\(\mathbf{X}&#39;_c\)</span> 与 <span class="math inline">\(\mathbf{p}&#39;\)</span> 的平行关系可以得到 stereo
-vision 中的核心方程 triangulation equation： <span class="math display">\[
+vision 中的核心方程 <strong>triangulation equation</strong>： <span class="math display">\[
 \begin{aligned}
 \mathbf{X}_c&#39;\times\mathbf{p}&#39;&amp;=0 \\
 (\mathbf{RX}_c+\mathbf{T})\times \mathbf{p}&#39;&amp;= 0 \\
@@ -788,6 +788,7 @@ vision 中的核心方程 triangulation equation： <span class="math display">\
 \]</span></p>
 <p>据此还原出未知深度 <span class="math inline">\(Z_c\)</span>。如果两部相机并未对应到同一个世界坐标点上，两条射线不会相交，且方程组
 inconsistent。</p>
+<p><em>Key point 3.</em> Affine Stereo (Chap.9 pp. 27 - 31).</p>
 <p><br></p>
 <h2 id="essential-matrix">Essential Matrix</h2>
 <p>对极几何 (epipolar geometry) 是双目立体视觉中的一种几何关系。基于
@@ -838,20 +839,107 @@ c)=c\cdot (a\times b)\)</span></li>
 </ul>
 <p>Refer 一下上一章中的图感受一下本质矩阵是如何体现对极约束的。</p>
 <ul>
-<li>在第一个相机坐标系中 ray vector <span class="math inline">\(\mathbf{p}\)</span> 平行于 <span class="math inline">\(\mathbf{X}_c\)</span>，第二个中 <span class="math inline">\(\mathbf{p}&#39;\)</span> 平行于 <span class="math inline">\(\mathbf{X}_c&#39;\)</span>；由于 <span class="math inline">\(\mathbf{X}_c&#39;^T\mathbf{E}\mathbf{X}_c=0\)</span>，也一定有
+<li>第一个相机坐标系中射线向量 <span class="math inline">\(\mathbf{p}\)</span> 平行于 <span class="math inline">\(\mathbf{X}_c\)</span>，第二个中 <span class="math inline">\(\mathbf{p}&#39;\)</span> 平行于 <span class="math inline">\(\mathbf{X}_c&#39;\)</span>；由于 <span class="math inline">\(\mathbf{X}_c&#39;^T\mathbf{E}\mathbf{X}_c=0\)</span>，有
 <span class="math inline">\(\mathbf{p}&#39;^T\mathbf{E}\mathbf{p}=0\)</span>。</li>
 <li><span class="math inline">\(\mathbf{p}\)</span> 已知，<span class="math inline">\(\mathbf{Rp}\)</span>
 将向量转换到第二个相机坐标系下表示。</li>
 <li><span class="math inline">\(\mathbf{Ep}=[\mathbf{T}]_{\times}\cdot\mathbf{Rp}\)</span>，<span class="math inline">\(T\)</span>
-是由第一个相机指向第二个相机光心的平移向量。叉积的结果垂直于 <span class="math inline">\(T\)</span> 与 <span class="math inline">\(\mathbf{Rp}\)</span> 所在的平面 (即对极平面)，
+是由第一个相机光心指向第二个相机光心的平移向量。叉积的结果垂直于 <span class="math inline">\(T\)</span> 与 <span class="math inline">\(\mathbf{Rp}\)</span> 所在的平面 (即对极平面)，
 因此 <span class="math inline">\(\mathbf{N}=\mathbf{Ep}\)</span>
 是极平面的一个法向量。</li>
 <li><span class="math inline">\(\mathbf{p}&#39;^T\mathbf{N}=0\)</span>
 将 <span class="math inline">\(\mathbf{p}&#39;\)</span>
 限制在对极平面上，对极约束成立。</li>
 </ul>
+<p>本质矩阵求对极点 (epipoles) <span class="math inline">\(\mathbf{p}_e\)</span>。利用 <span class="math inline">\(\mathbf{O}_c\mathbf{p}_e\)</span> 与转置向量 <span class="math inline">\(\mathbf{T}\)</span> 平行
+(转化到第二个相机坐标系下比较) 的关系列出方程： <span class="math display">\[
+\begin{aligned}
+\mathbf{Rp}_e+T&amp;=\lambda \mathbf{T} \\
+\mathbf{T}\times \mathbf{Rp}_e+\mathbf{T}\times \mathbf{T} &amp;=
+\lambda(\mathbf{T}\times \mathbf{T}) \\
+[\mathbf{T}]_{\times} \mathbf{Rp}_e &amp;=0 \\
+\mathbf{Ep}_e&amp;= 0
+\end{aligned}
+\]</span> 同理有 <span class="math inline">\(\mathbf{E}^T\mathbf{p}_e&#39;=0\)</span>。如果想求出极点的非平凡解，<span class="math inline">\(\det(\mathbf{E})=0\)</span> (i.e., 秩为 <span class="math inline">\(2\)</span>)。</p>
 <p><br></p>
 <h2 id="fundamental-matrix">Fundamental Matrix</h2>
+<p><em>Key point 1</em>. 基础矩阵</p>
+<p>本质矩阵使用 <span class="math inline">\(\mathbf{p}&#39;^T\mathbf{Ep}=0\)</span>
+表示对极约束；射线向量是在分别在两个相机坐标系下被表示的，有时这会带来不便。<strong>基础矩阵
+(fundamental matrix)</strong> 则直接从像素坐标系中体现对极约束。</p>
+<p>像素坐标 <span class="math inline">\(\tilde{\mathbf{w}}\)</span>，intrinsic matrix
+<span class="math inline">\(\mathbf{K}\)</span> 与射线向量 <span class="math inline">\(\mathbf{p}\)</span> 之间的关系： <span class="math display">\[
+\tilde{\mathbf{w}}=\begin{bmatrix}u\\v\\1\end{bmatrix} =
+\frac{1}{f}\begin{bmatrix}fk_u &amp; 0 &amp; u_0 \\ 0 &amp; fk_v &amp;
+v_0 \\ 0&amp; 0 &amp; 1 \end{bmatrix}\begin{bmatrix}x \\ y
+\\f\end{bmatrix}= \frac{1}{f}\mathbf{Kp}
+\]</span> 将 <span class="math inline">\(\mathbf{p}=f\mathbf{K}^{-1}\tilde{\mathbf{w}}\)</span>
+代入 <span class="math inline">\(\mathbf{p}&#39;^T\mathbf{Ep}=0\)</span>
+得 <span class="math inline">\(\tilde{\mathbf{w}}&#39;^T\mathbf{K}&#39;^{-T}\mathbf{EK}^{-1}\tilde{\mathbf{w}}=0\)</span>。令基础矩阵
+<span class="math inline">\(\mathbf{F}=\mathbf{K}&#39;^{-T}\mathbf{EK}^{-1}\)</span>，有
+<span class="math inline">\(\tilde{\mathbf{w}}&#39;^T\mathbf{F}\tilde{\mathbf{w}}=0\)</span>。这个方程的几何含义其实就是本质矩阵的降维版：<span class="math inline">\(\mathbf{n}&#39;=\mathbf{F}\tilde{\mathbf{w}}\)</span>
+是第二张相片中对极线的法向量，<span class="math inline">\(\tilde{\mathbf{w}}&#39;^T\mathbf{n}&#39;=0\)</span>
+将对应的坐标点限制在对极线上。关于对极点，同样有 <span class="math inline">\(\mathbf{F}\tilde{\mathbf{w}}_e=0\)</span> 与 <span class="math inline">\(\mathbf{F}^T\tilde{\mathbf{w}}_e&#39;=0\)</span>。</p>
+<p>设定 scale <span class="math inline">\(f_{22}=1\)</span> (<span class="math inline">\(-1\)</span> DoF)，<span class="math inline">\(\mathbf{F}\)</span> 继承了 <span class="math inline">\(\mathbf{E}\)</span> 的 <span class="math inline">\(\det=0\)</span> 约束 (<span class="math inline">\(-1\)</span> DoF)，所以 <span class="math inline">\(\mathbf{F}\)</span> 一共有 <span class="math inline">\(9-2=7\)</span> DoF。</p>
+<p>已标定相机的基础矩阵可直接通过 <span class="math inline">\(\mathbf{F}=\mathbf{K}&#39;^{-T}[\mathbf{T}]_{\times}\mathbf{R}\mathbf{K}^{-1}\)</span>
+求出。</p>
+<p>未标定相机的基础矩阵也可以通过采样 <span class="math inline">\(&gt;
+7\)</span> 点对来 estimate： <span class="math display">\[
+\begin{bmatrix}u&#39;&amp;v&#39;&amp;1\end{bmatrix}\begin{bmatrix}f_{00}
+&amp; f_{01} &amp; f_{02} \\ f_{10} &amp; f_{11} &amp; f_{12} \\ f_{20}
+&amp; f_{21} &amp;
+f_{22}\end{bmatrix}\begin{bmatrix}u\\v\\1\end{bmatrix}=0
+\]</span> 如果采样的点噪音太多，得到的 <span class="math inline">\(\mathbf{F}\)</span> 不一定满足 rank-2 的约束。将其
+SVD 分解，把三角矩阵中最小的奇异值替换为 <span class="math inline">\(0\)</span>。这样得到的 <span class="math inline">\(\mathbf{F}&#39;\)</span> 满足 rank-2
+约束且与原来的 <span class="math inline">\(\mathbf{F}\)</span> 距离最近
+(in Frobenius norm)。</p>
+<p><em>Key point 2.</em> The correspondence problem. (chap.9 pp.11 -
+17)</p>
+<p>NCC (Normalized cross-correlation) 可解对应问题 (衡量特征点所在 patch
+之间的相关度)。但由于图像强度 (intensities) 与视点 (viewpoints)
+有关，NCC 常常是不可靠的。</p>
+<p>可用于简化对应问题的几个约束
+(考虑左侧图像上的特征点在右侧图像上的匹配)：</p>
+<ul>
+<li>Uniqueness constriant.
+<strong>不透明物体</strong>上的点最多有一个匹配。</li>
+<li>Ordering constraint.
+<strong>不透明物体表面</strong>上的一系列点在左侧与右侧图像上的顺序一致。</li>
+<li>Disparity gradient constraint.
+两点之间的深度差异在左侧与右侧图像中不会超过一定限制。</li>
+</ul>
+<p><em>Key point 3</em>. Structure recovery. (chap.9 pp.18 - 19)</p>
+<p>Structure recovery 指的是从 2D 还原到 3D 世界坐标系的过程。</p>
+<p><br></p>
+<h2 id="ransac">RANSAC</h2>
+<p>RANSAC 的全称是 <strong>RANdom SAmple Consensue</strong>
+(随机采样一致)。</p>
+<p>它是一种迭代方法，用于从含有 outliers
+的数据中估计模型参数。与传统方法先用尽可能多的数据再剔除 outliers
+不同，RANSAC 先从最小数据集 (smallest possible set)
+开始，逐步加入与模型一致的数据点。</p>
+<p>RANSAC 流程：</p>
+<ul>
+<li>从数据集中随机采样一个最小集 <span class="math inline">\(s_i\)</span></li>
+<li>用 <span class="math inline">\(s_i\)</span> 评估模型参数 <span class="math inline">\(\theta_i\)</span></li>
+<li>找出与该模型 <span class="math inline">\(\theta_i\)</span>
+距离在误差阈值 <span class="math inline">\(t\)</span> 内的所有点 <span class="math inline">\(S_i\)</span> 形成 <span class="math inline">\(s_i\)</span> 的一致集 (consensus set)</li>
+<li>若 <span class="math inline">\(|S_i|&gt;\)</span> 评估阈值 <span class="math inline">\(T\)</span>，使用 <span class="math inline">\(S_i\)</span> 重新评估模型得到 <span class="math inline">\(\theta_r\)</span> 并终止。</li>
+<li>重复以上步骤 <span class="math inline">\(N\)</span>
+次并记录最佳模型。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> trial <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">    maybeInliers := d</span><br><span class="line">    maybeModel := parameters fitted to maybeInliers</span><br><span class="line">    alsoInliers := empty <span class="built_in">set</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> point <span class="keyword">in</span> data <span class="keyword">not</span> <span class="keyword">in</span> maybeInliers:</span><br><span class="line">        <span class="keyword">if</span> point fits maybeModel <span class="keyword">with</span> an error &lt;= t:</span><br><span class="line">            alsoInliners.add(point)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> alsoInliers.size &gt; T:</span><br><span class="line">        betterModel := parameters fitted to (maybeInliers + alsoInliers)</span><br><span class="line">        currentErr := a measure of how well betterModel fits these points</span><br><span class="line">        <span class="keyword">if</span> currentErr &lt; bestErr:</span><br><span class="line">            bestModel := betterModel</span><br><span class="line">            bestErr := currentErr</span><br></pre></td></tr></table></figure>
+<p>令 <span class="math inline">\(d\)</span>
+为随机采样的最小集中的点数，<span class="math inline">\(w\)</span>
+为某点是 inlier 的概率，<span class="math inline">\(N\)</span>
+次采样中至少一次随机采样获得的最小集中不含有 outliers 的概率为 <span class="math inline">\(p\)</span>。那么有： <span class="math display">\[
+\begin{aligned}
+1-p&amp;=(1-w^d)^N \\
+N&amp;=\frac{\log(1-p)}{\log(1-w^d)}
+\end{aligned}
+\]</span> 将 <span class="math inline">\(N\)</span>
+设为这个值可以保证至少一次能够选出最大一致集 <span class="math inline">\(S_{max}\)</span>。评估阈值 <span class="math inline">\(T\)</span> 通常设为 <span class="math inline">\(w\cdot n\)</span> (<span class="math inline">\(n\)</span> 为全数据集大小)，令一致集 <span class="math inline">\(S_i\)</span> 可以覆盖所有的 inliers。</p>
+<p>RANSAC 常常用于评估基础矩阵 <span class="math inline">\(\mathbf{F}\)</span>。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
