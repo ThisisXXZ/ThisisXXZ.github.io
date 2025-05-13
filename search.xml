@@ -192,8 +192,8 @@ DBMS 的基本构成。</p>
 <li>物理层 (Physical level)</li>
 <li>逻辑层 (Logical level)：描述数据间的关系，与下层的 physical data
 相互独立。结构 Schema 与实例 Instance 都是该层的概念。</li>
-<li>视图层 (View level)：类似于
-encapsulation，不同用户有不同的视图，且不关心内部实现。简化了数据库的交互性。</li>
+<li>视图层 (View level)：类似
+encapsulation，不同用户有不同视图，且不关心内部实现。简化了数据库的交互性。</li>
 </ul>
 <figure>
 <img data-src="DBMS_arch.png" alt="DBMS architecture">
@@ -260,12 +260,17 @@ many-side) 的关系集，多边侧的 table 中要加入单边侧的主键
 <li>Customer (<u>name</u>, credit, address, age)</li>
 <li>Employee (<u>name</u>, salary, address, age)</li>
 <li>注意，这里 name 并不是外键！很好理解，完全参与下 Person 的 table
-没有必要保留了。</li>
+没有必要保留了。(如需保留，前一种方法也可以继续使用)</li>
 </ul></li>
 </ul>
+<p>关于超键 super keys <span class="math inline">\(\to\)</span> 候选键
+candidate keys <span class="math inline">\(\to\)</span> 主键 primary
+key。</p>
 <p><br></p>
 <h2 id="sql">SQL</h2>
-<p>基本 SQL。详细的介绍每个语法意义不大，在这里写一些经典例题好了。</p>
+<p>基本 SQL。详细的介绍每个语法意义不大。</p>
+<p>掌握 CTE (Common Table Expression)
+<code>WITH...AS...AS...SELECT...</code> 与 nested query 会很有益处。</p>
 <figure>
 <img data-src="sql.png" alt="SQL summary">
 <figcaption aria-hidden="true">SQL summary</figcaption>
@@ -309,7 +314,7 @@ q\in S\}\)</span>，<span class="math inline">\(R\)</span> 与 <span class="math
 <li>重命名符 <span class="math inline">\(\rho_X(E)\)</span>，<span class="math inline">\(E\)</span> 是一个关系代数表达式</li>
 </ul></li>
 </ul>
-<p>五组额外运算符：</p>
+<p>五组额外运算符与 aggregation：</p>
 <ul>
 <li>Set intersection <span class="math inline">\(\cap\)</span>
 <ul>
@@ -323,26 +328,109 @@ S}(\sigma_{R.A_1=S.A_1\land ...\land R.A_n=S.A_n}(R\times S))\)</span>
 where <span class="math inline">\(R\cap
 S=\{A_1,A_2,...,A_n\}\)</span></li>
 </ul></li>
-<li>Assignment <span class="math inline">\(\leftarrow\)</span></li>
+<li>Assignment <span class="math inline">\(\leftarrow\)</span>
+<ul>
+<li>定义关系变量如 <span class="math inline">\(temp_1\leftarrow
+\pi_a(R)\)</span>, <span class="math inline">\(temp_2\leftarrow
+\pi_a(S)\)</span>, <span class="math inline">\(result\leftarrow
+temp_1-temp_2\)</span></li>
+</ul></li>
 <li>Left outer join <span class="math inline">\(⟕\)</span>, Right outer
-join <span class="math inline">\(⟖\)</span></li>
-<li>Division <span class="math inline">\(\div\)</span></li>
-</ul>
-<p>几个等价原则 (Equivalence rules)，用于查询优化。</p>
+join <span class="math inline">\(⟖\)</span>
 <ul>
-<li></li>
+<li>就是 <code>LEFT JOIN</code> 与 <code>RIGHT JOIN</code>
+啦。<code>LEFT JOIN</code> 保留左侧所有 entry 右边补
+<code>null</code>；<code>RIGHT JOIN</code> 反之。</li>
+</ul></li>
+<li>Division <span class="math inline">\(\div\)</span>
+<ul>
+<li>很重要的运算符。<span class="math inline">\(R=\{\text{student},
+\text{course}\}\)</span> (学生的选课记录)，<span class="math inline">\(S=\{\text{course}\}\)</span> (一个必修课
+list)，那么 <span class="math inline">\(R\div S\)</span>
+表示所有选择了所有必修课的学生。</li>
+<li><span class="math inline">\(R\div S=\{t|t\in \pi_{R-S}(R)\land
+(\forall s\in S, ((t\cup s)\in R))\}\)</span></li>
+<li>实现：<span class="math inline">\(R(X,Y), S(Y): R\div
+S=\pi_{X}(R)-\pi_X(\pi_X(R)\times S - R)\)</span></li>
+<li><span class="math inline">\(R\times S\div S=R\)</span></li>
+</ul></li>
+<li>Aggregation <span class="math inline">\(g\)</span>
+<ul>
+<li>即 <code>GROUP BY</code>。$ {G_1,...,G_n}g_{F_1,...,F_n}$，其中
+<span class="math inline">\(G_1,...,G_n\)</span> 是分组属性，<span class="math inline">\(F_1,...,F_n\)</span> 则可以是一系列汇总函数如
+<code>AVG</code>, <code>SUM</code>, <code>COUNT</code>,
+<code>COUNT-DISTINCT</code> 等等。</li>
+</ul></li>
 </ul>
+<p>几个等价原则 (Equivalence rules)，用于查询优化
+(这学期不考，无敌了)。</p>
 <p><br></p>
-<h2 id="system-design">System Design</h2>
-<p>提高数据库时空效率的三大系统设计目标：</p>
+<h2 id="database-normalization">Database Normalization</h2>
+<p>函数依赖 (functional dependency, FD)。</p>
 <ul>
-<li>Lossless-join</li>
-<li>No redundancy (BCNF)</li>
-<li>Dependency preservation</li>
+<li>数据库关系 <span class="math inline">\(R\)</span>
+中两个属性集合间的约束。FD <span class="math inline">\(X\to
+Y\)</span>，当且仅当 <span class="math inline">\(R\)</span> 上的每一个
+<span class="math inline">\(X\)</span> 精确的关联 <span class="math inline">\(R\)</span> 上的一个 <span class="math inline">\(Y\)</span> (uniquely determine)。</li>
+<li>形如 <span class="math inline">\(XY\to X\)</span> 的 FD
+是平凡的。</li>
+<li>依赖 (function dependency, FD) 并没有 explicit 的在 SQL
+中表示，而是通过一系列超键的对应关系组织起来的。</li>
 </ul>
-<p>数据库设计并不能总是满足这三个目标。注意依赖 (function dependency,
-FD) 并没有 explicit 的在 SQL
-中表示，而是通过一系列超键的对应关系组织起来的。</p>
+<p><em>Armstrong's Axiom</em>.</p>
+<ul>
+<li>自反性 reflexivity：若 <span class="math inline">\(\beta\subseteq
+\alpha\)</span>，有 <span class="math inline">\(\alpha\to
+\beta\)</span></li>
+<li>传递性 transitivity：若 <span class="math inline">\(\alpha\to\beta,\beta\to\gamma\)</span>，有 <span class="math inline">\(\alpha\to\gamma\)</span></li>
+<li>增广 augmentation：若 <span class="math inline">\(\alpha\to\beta\)</span>，有 <span class="math inline">\(\gamma\alpha\to\gamma\beta\)</span></li>
+<li>交 union：若 <span class="math inline">\(\alpha\to\beta\)</span> 且
+<span class="math inline">\(\alpha\to\gamma\)</span>，有 <span class="math inline">\(\alpha\to\beta\gamma\)</span></li>
+<li>分解 decomposition：若 <span class="math inline">\(\alpha\to\beta\gamma\)</span>，有 <span class="math inline">\(\alpha\to\beta\)</span> 与 <span class="math inline">\(\alpha\to\gamma\)</span></li>
+<li>伪传递性 pseudo-transitivity：若 <span class="math inline">\(\alpha\to\beta\)</span> 且 <span class="math inline">\(\gamma\beta\to\delta\)</span>，有 <span class="math inline">\(\gamma\alpha\to\delta\)</span></li>
+</ul>
+<p>给定关系集 <span class="math inline">\(R(\alpha,\beta,...)\)</span>
+与函数依赖集 <span class="math inline">\(F\)</span>：</p>
+<ul>
+<li>属性闭包 attribute closure <span class="math inline">\(\alpha^+=\{\text{attributes functionally
+determined by }\alpha\}\)</span>。</li>
+<li>函数依赖闭包 functional dependency closure <span class="math inline">\(F^+=\{\text{all FDs logically implied by
+}F\}\)</span>。</li>
+</ul>
+<p><strong>无损连接 Lossless-join</strong>：关系 <span class="math inline">\(R\)</span> 分解后得到一系列子关系 <span class="math inline">\(R_1,R_2,...,R_n\)</span>，将它们自然连接 (natural
+join) 起来后能完全还原 <span class="math inline">\(R\)</span> (如果有关
+<span class="math inline">\(R\)</span>
+的信息在分解后损失掉了，自然连接后的结果将会包括很多新的元组)。</p>
+<p><strong>无冗余 No redundancy</strong>：所有的 FDs
+都由某个候选键决定，避免由于部份依赖或依赖的传递性造成的数据冗余。<span class="math inline">\(R\)</span> 有无冗余可以通过检查其是否符合
+<strong>BC 正规形式 (Boyce-Codd Normal Form, BCNF)</strong> 来判定。</p>
+<ul>
+<li>对于所有形如 <span class="math inline">\(\alpha \to \beta\)</span>
+且属于 <span class="math inline">\(F^+\)</span> 的函数依赖，检查 <span class="math inline">\(\alpha^+ = R\)</span> 是否成立，即判断 <span class="math inline">\(\alpha\)</span> 是否为关系模式 <span class="math inline">\(R\)</span> 的超键。若存在任一 <span class="math inline">\(\alpha\)</span> 不是超键，则 <span class="math inline">\(R\)</span> 不符合 BCNF。</li>
+</ul>
+<p><strong>依赖保留 Dependency preserving</strong>：比如 <span class="math inline">\(R(\alpha,\beta,\gamma),
+F=\{\alpha\to\beta,\alpha\to\gamma\}\)</span>。若把 <span class="math inline">\(R\)</span> 分解成 <span class="math inline">\(R_1(\alpha,\beta)\)</span> 与 <span class="math inline">\(R_2(\gamma)\)</span>，那么 <span class="math inline">\(\alpha\to\beta\)</span> 在 <span class="math inline">\(R_1\)</span> 中被保留，<span class="math inline">\(\alpha\to\gamma\)</span>
+则丢失了。所以我们想要在分解后仍然能保留所有的
+FDs。在做题的时候可以发现，有些 FD 好像被丢失了，但其实可以通过
+Armstrong's Axiom 还原，这点要注意。</p>
+<ul>
+<li>若 <span class="math inline">\(R\)</span> 被分解为 <span class="math inline">\(R_1,...,R_n\)</span>，对应的 <span class="math inline">\(F\)</span> 被拆成 <span class="math inline">\(F_1,...,F_n\)</span>；依赖保留当且仅当 <span class="math inline">\((F_1\cup {...}\cup F_n)^+=F^+\)</span>。</li>
+</ul>
+<p>解这类题目的算法：</p>
+<figure>
+<img data-src="normalization.png" alt="唯一的变量在于选取 \alpha\to\beta 的顺序">
+<figcaption aria-hidden="true">唯一的变量在于选取 <span class="math inline">\(\alpha\to\beta\)</span> 的顺序</figcaption>
+</figure>
+<p>这只能保证 lossless-join 与 BCNF，因此在结束后要加一个 dependency
+preserving verification 的步骤。</p>
+<p><br></p>
+<h2 id="more-on...">More On...</h2>
+<ul>
+<li>Indexing (一些和 <span class="math inline">\(B^*\)</span>
+树有关的内容，挺数据结构的)</li>
+<li>SQL Injection</li>
+</ul>
+<p>都不用考，耶耶耶。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
