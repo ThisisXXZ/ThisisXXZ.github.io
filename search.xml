@@ -159,9 +159,113 @@ NexT.Pisces。</strong></p>
       </tags>
   </entry>
   <entry>
+    <title>BI 论文阅读</title>
+    <url>/2025/05/14/BI-paper-reading/</url>
+    <content><![CDATA[<p>还是挺开心的！似乎大三这一整年的迷茫和摸索终于有了一个立足之处。希望我的热情能重新在这里燃起。</p>
+<span id="more"></span>
+<p><br></p>
+<h2 id="explaining-queries">Explaining Queries</h2>
+<p><a href="https://arxiv.org/abs/1808.04614">Explaining Queries over
+Web Tables to Non-Experts</a> 1808</p>
+<p>是一篇前 LLM 时代的文章，还能看到 semantic
+parser，好有年代感呀！大概是给 web query 算法做了一些可解释性
+(包括自然语言解释与可视化)，让用户也能参与决策，从而提高查询准确率。</p>
+<p>整个系统主要由四个 component 构成：</p>
+<ul>
+<li>Semantic Parser：把用户的 NL question 翻译成一系列 candidate formal
+queries (lambda DCS)。</li>
+<li>Query Explanation Engine：输入 lambda DCS query，生成两种解释：
+<ul>
+<li>NL utterances</li>
+<li>Provenance-Based Highlights：可视化。把 query 所涉及的 table cell
+高亮处理。</li>
+</ul></li>
+<li>User Interaction Interface：用户可以查看每个 candidate query
+的解释，并从中选出最正确的一个。</li>
+<li>Retraining System (离线)：根据用户 feedback (一系列 question-query
+pairs) 训练 semantic parser。</li>
+</ul>
+<p>关于 lambda DCS：一种 rule-based 语言，用于桥接 NL query 与 SQL。</p>
+<p><br></p>
+<h2 id="why-ai-not-a-panacea">Why AI not a Panacea</h2>
+<p><a href="https://arxiv.org/pdf/2304.08366">Why is AI not a Panacea
+for Data Workers? An Interview Study on HAC in Data Storytelling</a>
+2304</p>
+<p>挺新奇的，是一篇访谈纪要式的文章，我还是第一次读到这种。采访了 18 位
+data storytelling 相关领域的人士。问题有三：1. 在哪些方面与 AI 协作？2.
+如何与 AI 协作？3. 为何或为何不青睐与 AI 协作？</p>
+<p>可以看到这篇论文里提到的一些问题有在一定程度上得到解决。比如 AI
+的单一模态问题，就现在来说大部分模型都已经有相对成熟的图像理解能力了。</p>
+<p>这篇论文在宏观上把 data storytelling workflow
+定义为三个非线性的阶段：</p>
+<ul>
+<li>Planning: Decide core message, collect facts, outline story</li>
+<li>Implementation: Prepare pieces and integrate them, style</li>
+<li>Communication: Share the story</li>
+</ul>
+<p>AI 承担的角色 (能动性由高到低)：</p>
+<ul>
+<li>Creator: Fully performs a task</li>
+<li>Optimizer: Enhance human-created content</li>
+<li>Reviewer: Evaluates and suggests improvement</li>
+<li>Assistant: Provides suggestions/support without modifying
+content</li>
+</ul>
+<p><br></p>
+<h2 id="datanarrative">DataNarrative</h2>
+<p><a href="https://arxiv.org/pdf/2408.05346">DATANARRATIVE: Automated
+Data-Driven Storytelling with Visualization and Texts</a> 2408</p>
+<p>一个 agentic framework 和一个 benchmark。这个范式我倒是挺熟悉的。</p>
+<p>一条 data 包括：</p>
+<ul>
+<li>一系列 data tables (包括 chart images，描述文本，元数据) <span class="math inline">\(D\)</span></li>
+<li>一个 user intent 或者说 story theme <span class="math inline">\(I\)</span></li>
+<li>其他的 guidelines <span class="math inline">\(G\)</span></li>
+</ul>
+<p>数据从 Pew，Tableau，GapMinder
+三个地方洗出来，一般来说一篇文章对应一条数据。把 HTML 爬下来之后手工或者
+LLM 筛选文章中的图表与对应的描述文本，user intention
+的话就直接用文章标题。</p>
+<p>这个 framework 则包括两个 LLM agent，actor 与
+critic，分两阶段三步骤：</p>
+<ul>
+<li>Planning stage
+<ul>
+<li>Reflection: 对输入的 data tables 进行全面理解与分析</li>
+<li>Outline generation：根据 reflection 的内容生成故事大纲</li>
+</ul></li>
+<li>Narration stage
+<ul>
+<li>故事生成阶段，包括叙述文本与相关的视图 (visualizations)</li>
+</ul></li>
+</ul>
+<p>对于每一个步骤，actor 首先生成一版，critic
+进行检查并提供修改建议，actor 再根据这些 feedback 进行
+refine。因此一次生成会涉及 <span class="math inline">\(3\times
+3=9\)</span> 次模型调用。</p>
+<p>Evaluation 由 LLM 与 human judges 完成。其中，原来的文章内容作为 soft
+label 提供给 LLM 裁判进行参考，用于比较 agentic approach 与 direct
+prompting 生成的故事哪个更优。这也算是 open-ended NLG eval
+的一种常见范式了。</p>
+<p><br></p>
+<h2 id="a-survey-on-annotations">A Survey on Annotations</h2>
+<p><a href="https://arxiv.org/pdf/2410.05579">A Survey on Annotations in
+InfoVis: Empirical Insights, Applications, and Challenges</a> 2410</p>
+<p>也是一篇挺神奇的论文。针对可视化中的 annotations
+(图表中的标示，批注等补充说明的元素) 写了一篇研究综述。</p>
+<p><br></p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>Human-Computer Interaction</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>DBMS 入门（复习）</title>
     <url>/2025/05/10/comp3278/</url>
-    <content><![CDATA[<p>这门课我其实体验一般。不过 Chen Yi 老师是新加入 HKU
+    <content><![CDATA[<p>这门课其实体验不太好。不过 Chen Yi 老师是新加入 HKU
 的，第一堂课，教学经验难免不足，希望之后能越来越好。</p>
 <span id="more"></span>
 <p><br></p>
@@ -1880,6 +1984,11 @@ post-ordered).</li>
 way”。考虑到任意一条最短路长度 <span class="math inline">\(\leq
 |V|-1\)</span>，将所有边松弛 <span class="math inline">\(|V|-1\)</span>
 次即可。复杂度 <span class="math inline">\(O(|V||E|)\)</span>。队列优化是 SPFA。</p>
+<p>Floyd-Warshall 算法。多源最短路，有负权边无负环。<span class="math inline">\(f[i,j,k]\)</span> 表示从 <span class="math inline">\(i\)</span> 到 <span class="math inline">\(j\)</span>，考虑 <span class="math inline">\(1..k\)</span> 作为中间点的最短路。</p>
+<ul>
+<li><span class="math inline">\(f[i,j,k]=\min(f[i,j,k-1],
+f[i,k,k-1]+f[k,j,k-1])\)</span>。</li>
+</ul>
 <p>DAG 求最短路。很明显，按照拓扑序松弛即可。复杂度 <span class="math inline">\(O(|V|+|E|)\)</span>。</p>
 <p><br></p>
 <h2 id="mst">MST</h2>
@@ -1889,6 +1998,127 @@ MST 邻接点中边权最小的扩展。实现基本和 Dijkstra 一致，但更
 <span class="math inline">\(\text{dist}\)</span>
 数组，只需要维护一个布尔 <span class="math inline">\(\text{vis}\)</span>
 数组，向堆中加入 <span class="math inline">\((v,e)\)</span> 即可。</p>
+<p>Kruskal 算法。我第一个学会的最小生成树算法，讲起来还有点怀念。并查集
+Disjoint set 优化后能跑到 <span class="math inline">\(O(m\log
+n)\)</span>。</p>
+<p><br></p>
+<h2 id="greedy-algorithm">Greedy Algorithm</h2>
+<p>介绍了几个简单的贪心模型。</p>
+<p>任务调度 (Job scheduling)：有一系列任务。任务 <span class="math inline">\(i\)</span> 需要 <span class="math inline">\(t_i\)</span> 时间，deadline 是 <span class="math inline">\(d_i\)</span>。完成所有任务是否可行？</p>
+<p>贪心：<span class="math inline">\(d_i\)</span>
+越早，任务排序越前。证明：</p>
+<ul>
+<li>若按照该顺序，任务 <span class="math inline">\(j\)</span> 无法在
+<span class="math inline">\(d_j\)</span> 前完成，说明 <span class="math inline">\(1..d_j\)</span> 时间区间内需要完成的任务量 <span class="math inline">\(s_1+s_2+{...}+s_j&gt; d_j\)</span>。无解。</li>
+</ul>
+<p>区间调度 (Interval scheduling)：有一系列区间 <span class="math inline">\([s_i,f_i]\)</span>，选择尽量多的区间使他们互不相交。</p>
+<p>贪心：结束时间 <span class="math inline">\(f_i\)</span>
+越早，任务排序越前。证明：</p>
+<ul>
+<li>假设贪心算法非最优。</li>
+<li>令 <span class="math inline">\(i_1,i_2,...,i_k\)</span>
+为贪心解，<span class="math inline">\(j_1,j_2,...,j_m\)</span>
+为最优解。</li>
+<li><span class="math inline">\(r\)</span>
+为贪心解与最优解的最大公共前缀和的长度，即 <span class="math inline">\(i_1=j_1,i_2=j_2,...,i_r=j_r\)</span>。</li>
+<li>考虑 <span class="math inline">\(i_{r+1}\)</span> 与 <span class="math inline">\(j_{r+1}\)</span>；根据贪心策略，<span class="math inline">\(i_{r+1}\)</span> 的结束时间一定不晚于 <span class="math inline">\(j_{r+1}\)</span> 的结束时间。那么，将最优解中的
+<span class="math inline">\(j_{r+1}\)</span> 换成 <span class="math inline">\(i_{r+1}\)</span> 并不会影响后续的选择。</li>
+<li>重复以上的调整，最终 <span class="math inline">\(r\)</span> 增加到
+<span class="math inline">\(n\)</span>，贪心的最优性得证。</li>
+</ul>
+<p>最小化延迟安排 (Lateness minimum)：有一系列任务。任务 <span class="math inline">\(i\)</span> 需要 <span class="math inline">\(t_i\)</span> 时间，deadline 是 <span class="math inline">\(d_i\)</span>。若任务从时间 <span class="math inline">\(s_i\)</span> 开始，其延迟被定义为 <span class="math inline">\(L_i=\max(0,s_i+t_i-d_i)\)</span>。安排这一系列任务，最小化
+<span class="math inline">\(L=\max L_i\)</span>。</p>
+<p>贪心：<span class="math inline">\(d_i\)</span>
+越早，任务排序越前。证明：</p>
+<ul>
+<li>任意非贪心算法中一定存在相邻逆序对 <span class="math inline">\(i,j\)</span>，<span class="math inline">\(i\)</span> 排在 <span class="math inline">\(j\)</span> 前面，deadline <span class="math inline">\(d_i\)</span> 却在 <span class="math inline">\(d_j\)</span> 后面。</li>
+<li><span class="math inline">\(L_i=f_i-d_i,L_j=f_j-d_j\)</span> 且
+<span class="math inline">\(d_i&gt;d_j,f_i&lt;f_j\)</span></li>
+<li>若交换该逆序对，有 <span class="math inline">\(f_i&#39;=f_j,f_j&#39;&lt;f_j\)</span>。可以发现
+<span class="math inline">\(L_i&#39;&gt;L_i\)</span> 但 <span class="math inline">\(L_i&#39;&lt;L_j\)</span> (因为 <span class="math inline">\(d_i&gt;d+j\)</span>)；<span class="math inline">\(L_j&#39;&lt;L_j\)</span> (因为 <span class="math inline">\(f_j&#39;&lt;f_j\)</span>)。也就是说，交换之后
+<span class="math inline">\(L_i\)</span> 增加了，但并未超过 <span class="math inline">\(L_j\)</span>；<span class="math inline">\(L_j\)</span> 则减少了。即 <span class="math inline">\(\max(L_i,L_j)&gt;\max(L_i&#39;,L_j&#39;)\)</span>。</li>
+<li>重复以上过程，任意解都能被调整为贪心解，且 <span class="math inline">\(L\)</span> 单调不升。贪心最优性得证。</li>
+</ul>
+<p><br></p>
+<h2 id="dp">DP</h2>
+<p>几个简单的 DP 模型。</p>
+<p>编辑距离 (Edit distance)：给定字符串 <span class="math inline">\(X[1..m]\)</span> 与 <span class="math inline">\(Y[1..n]\)</span>，求它们的编辑距离。</p>
+<figure>
+<img data-src="edit_distance.png" alt="\text{edit_distance}(SNOWY, SUNNY)=3">
+<figcaption aria-hidden="true"><span class="math inline">\(\text{edit_distance}(SNOWY,
+SUNNY)=3\)</span></figcaption>
+</figure>
+<p>令 <span class="math inline">\(f[i, j]\)</span> 为 <span class="math inline">\(X[1..i]\)</span> 与 <span class="math inline">\(Y[1..j]\)</span> 之间的编辑距离。经典尾部 DP，考虑
+<span class="math inline">\(X[i]\)</span> 与 <span class="math inline">\(Y[j]\)</span> 对齐的成本。三种情况：<span class="math inline">\(X[i]\)</span> 对齐占位符，从 <span class="math inline">\(f[i-1,j]\)</span> 转移；<span class="math inline">\(Y[j]\)</span> 对齐占位符，从 <span class="math inline">\(f[i,j-1]\)</span> 转移；<span class="math inline">\(X[i]\)</span> 对齐 <span class="math inline">\(Y[i]\)</span>，考虑这两个字符是否相等，并从 <span class="math inline">\(f[i-1,j-1]\)</span> 转移。</p>
+<p>最长上升子序列 (Longest increasing subsequence,
+LIS)。太经典就不讲了。</p>
+<p>背包问题 (Knapsack problem)。真怀念！</p>
+<ul>
+<li>01 背包倒序枚举容量</li>
+<li>完全背包正序枚举</li>
+<li>多重背包朴素 <span class="math inline">\(O(NVS)\)</span>，二进制优化
+(将每种物品的数量做二进制拆分后跑 01 背包) <span class="math inline">\(O(NV\log S)\)</span></li>
+<li>分组背包 (每组跑一遍 01 背包)</li>
+</ul>
+<p><br></p>
+<h2 id="network-flow">Network Flow</h2>
+<p>其实有点没想到会讲网络流，感觉已经是相当高级的算法了。</p>
+<p>Ford-Fulkerson 求最大流。</p>
+<p>残差网络 (residual network) <span class="math inline">\(G_f\)</span>
+构建：</p>
+<ul>
+<li>正向边 forward edge <span class="math inline">\((u,v)\)</span>，残差为 <span class="math inline">\(c(u,v)-f(u,v)\)</span> [容量减流量]</li>
+<li>反向边 backward edge <span class="math inline">\((u,v)\)</span>，残差为 <span class="math inline">\(f(u,v)\)</span> [流量]</li>
+<li>(去掉残差为 0 的边)</li>
+<li>注意这里的正向/反向只是一个标签，不代表边的有向性。原图是有向图，而残差网络是无向图。</li>
+</ul>
+<p>跑增广路：</p>
+<ul>
+<li>在 <span class="math inline">\(G_f\)</span> 里找一条从 <span class="math inline">\(s\)</span> 到 <span class="math inline">\(t\)</span> 的路径 (若 <span class="math inline">\(s\)</span> 与 <span class="math inline">\(t\)</span> 不连通，增广完毕得到最大流)</li>
+<li>若该路径上的最小残差为 <span class="math inline">\(\epsilon\)</span>，对路径上的每一条边 <span class="math inline">\((u,v)\)</span>：
+<ul>
+<li>如果是正向边，增流 <span class="math inline">\(f(u,v)=f(u,v)+\epsilon\)</span></li>
+<li>如果是反向边，减流 <span class="math inline">\(f(u,v)=f(u,v)-\epsilon\)</span></li>
+</ul></li>
+</ul>
+<p>最大流最小割定理。可以证明一切流都不能超过任何 s-t
+割，所以经过图的最大流就是图的最小割。直观上理解，通过能力最弱的断面
+(最小割) 的总流量就是整个网络的最大流量。</p>
+<ul>
+<li><span class="math inline">\(c(S,T)=\sum_{e\in\text{out}(S)}
+c(e)\)</span></li>
+<li><span class="math inline">\(c_{\text{other}}(S&#39;,T&#39;)\geq
+c_{\min}(S,T)\geq v_{\max}(f)\geq v_{\text{other}}(f&#39;)\)</span></li>
+</ul>
+<p>一些应用问题。</p>
+<p>Edge-disjoint paths (不相交路径)：找到 <span class="math inline">\(G\)</span> 中由 <span class="math inline">\(s\)</span> 到 <span class="math inline">\(t\)</span> 的不相交路径集合。<span class="math inline">\(G\)</span>
+中的每条边至多出现在一条此类路径中。</p>
+<ul>
+<li>所有边容量设为 <span class="math inline">\(1\)</span>
+跑一遍最大流即可。流量是不相交路径的数量，所有流为 <span class="math inline">\(1\)</span> 的边共同组成不相交路径集合。</li>
+</ul>
+<p>Bipartite matching
+(二分图匹配)。加源汇点，源点连左图，右图连汇点，容量无限大；二分图边容量设为
+<span class="math inline">\(1\)</span> 跑最大流。</p>
+<p>Image segmentation (图像分割)。将像素分为前景与后景。</p>
+<ul>
+<li>max likelihood: <span class="math inline">\(\arg_{F,B}\max\prod_{p\in F}f_p \cdot
+\prod_{p\notin F}b_p\cdot \prod_{(p,q):p\in F,q\in
+B}c_{pq}\)</span></li>
+<li>max log-likelihood: <span class="math inline">\(\arg_{F,B}\max\)</span> <span class="math inline">\(\sum_{p\in F} \log f_p+\sum_{p\notin F}\log b_p +
+\sum_{(p,q):p\in F,q\in B}\log c_{pq}\)</span></li>
+<li>min negative log-likelihood: <span class="math inline">\(\arg_{F,B}
+\min \sum_{p\in F} \log (1/f_p)+\sum_{p\notin F}\log (1/b_p) +
+\sum_{(p,q):p\in F,q\in B}\log (1/c_{pq})\)</span></li>
+<li>源点向每个像素 <span class="math inline">\(p\)</span> 连边，容量为
+<span class="math inline">\(\log
+(1/f_p)\)</span>；每个像素向汇点连边，容量为 <span class="math inline">\(\log(1/b_p)\)</span>；相邻像素 <span class="math inline">\((p,q)\)</span> 连边，容量为 <span class="math inline">\(\log(1/c_{pq})\)</span></li>
+<li>跑最小割即可</li>
+</ul>
+<p><br></p>
+<h2 id="p-np">P &amp; NP</h2>
+<p>这个话题感觉我至少已经学过三遍了。Princeton 算法课学过一遍，NUS
+计算理论课学过一遍 (虽然考得稀烂)，这里就不再赘述了。</p>
 <p><br></p>
 <h2 id="reference">Reference</h2>
 <div class="note warning"><p>  This article is a self-administered course note.</p>
