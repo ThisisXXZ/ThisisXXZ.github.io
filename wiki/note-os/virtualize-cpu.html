@@ -17,14 +17,18 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   
-  <title>人文 - ThisisXXZ's Blog</title>
+  <title>OS: CPU 虚拟化机制 - ThisisXXZ's Blog</title>
 
   
-    <meta property="og:type" content="website">
-<meta property="og:title" content="人文">
-<meta property="og:url" content="https://www.thisisxxz.com/wiki/tags/%E4%BA%BA%E6%96%87/index.html">
+    <meta name="description" content="系统调用系统调用 (system call) 是 OS 提供的一系列 API。这一机制使得进程能够请求内核执行受限操作 (restricted operations)。 CPU 的两种工作模式：  内核态 (kernel mode)：OS 内核运行在内核态下，具有最高权限。 用户态 (user mode)：应用程序运行在用户态下，只能执行有限指令，不能直接访问物理资源。  上下文切换上下文切换 (">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CPU 虚拟化机制">
+<meta property="og:url" content="https://www.thisisxxz.com/wiki/note-os/virtualize-cpu.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="系统调用系统调用 (system call) 是 OS 提供的一系列 API。这一机制使得进程能够请求内核执行受限操作 (restricted operations)。 CPU 的两种工作模式：  内核态 (kernel mode)：OS 内核运行在内核态下，具有最高权限。 用户态 (user mode)：应用程序运行在用户态下，只能执行有限指令，不能直接访问物理资源。  上下文切换上下文切换 (">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-12-03T15:54:13.833Z">
+<meta property="article:modified_time" content="2025-12-03T15:54:13.833Z">
 <meta property="article:author" content="XXZ">
 <meta name="twitter:card" content="summary">
   
@@ -47,52 +51,87 @@
 </head>
 <body>
 
-<div class="l_body s:aa index tech" id="start" layout="index_wiki" ><aside class="l_left"><div class="leftbar-container">
 
 
-<header class="header"><div class="logo-wrap"><a class="avatar" href="/explore/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/site_avatars/avatar-sumire.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">Objet petit a</div><div class="sub normal cap">愿我拥有改变可改变之物的勇气</div><div class="sub hover cap" style="opacity:0"> 与接受不可改变之物的平静</div></a></div></header>
+<div class="l_body s:aa content tech" id="start" layout="page" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><div class="icon"><img no-lazy class="icon" src="https://api.iconify.design/catppuccin:macos.svg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></div><a class="title" href="/wiki/note-os/index.html"><div class="main" ff="title">OS</div><div class="sub normal cap">The nice thing about standards is that</div><div class="sub hover cap" style="opacity:0"> you have so many to choose from.</div></a></div></header>
 
 <div class="nav-area">
-<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="Search"></form><div id="search-result"></div><div class="search-no-result">No Results!</div></div>
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" data-filter="/wiki/note-os/" placeholder="在 note/os 中搜索..."></form><div id="search-result"></div><div class="search-no-result">No Results!</div></div>
 
 
 <nav class="menu dis-select"><a class="nav-item" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M22 6.426v11.148c0 1.847-1.6 3.015-2.903 2.118L13 15.232V8.768l6.097-4.46C20.399 3.411 22 4.58 22 6.426" clip-rule="evenodd" opacity="0.5"/><path fill="currentColor" d="M13 7.123v9.754c0 1.616-1.467 2.638-2.661 1.853L2.92 13.853c-1.228-.807-1.228-2.899 0-3.706l7.42-4.877c1.193-.785 2.66.237 2.66 1.853"/></svg></a><a class="nav-item active" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6.95c0-.883 0-1.324.07-1.692A4 4 0 0 1 5.257 2.07C5.626 2 6.068 2 6.95 2c.386 0 .58 0 .766.017a4 4 0 0 1 2.18.904c.144.119.28.255.554.529L11 4c.816.816 1.224 1.224 1.712 1.495a4 4 0 0 0 .848.352C14.098 6 14.675 6 15.828 6h.374c2.632 0 3.949 0 4.804.77q.119.105.224.224c.77.855.77 2.172.77 4.804V14c0 3.771 0 5.657-1.172 6.828S17.771 22 14 22h-4c-3.771 0-5.657 0-6.828-1.172S2 17.771 2 14z" opacity="0.5"/><path fill="currentColor" d="M20 6.238c0-.298-.005-.475-.025-.63a3 3 0 0 0-2.583-2.582C17.197 3 16.965 3 16.5 3H9.988c.116.104.247.234.462.45L11 4c.816.816 1.224 1.224 1.712 1.495a4 4 0 0 0 .849.352C14.098 6 14.675 6 15.829 6h.373c1.78 0 2.957 0 3.798.238"/><path fill="currentColor" fill-rule="evenodd" d="M12.25 10a.75.75 0 0 1 .75-.75h5a.75.75 0 0 1 0 1.5h-5a.75.75 0 0 1-.75-.75" clip-rule="evenodd"/></svg></a><a class="nav-item" title="专栏" href="/topic/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M2 16.144V4.998c0-1.098.886-1.99 1.982-1.923c.977.06 2.131.179 3.018.413c1.05.276 2.296.866 3.282 1.388A3.5 3.5 0 0 0 12 5.275v15.2a3.46 3.46 0 0 1-1.628-.406c-1-.532-2.29-1.15-3.372-1.435c-.877-.232-2.016-.35-2.985-.411C2.906 18.153 2 17.255 2 16.143" clip-rule="evenodd" opacity="0.5"/><path fill="currentColor" d="M22 16.144V4.934c0-1.073-.846-1.953-1.918-1.916c-1.129.04-2.535.156-3.582.47c-.908.271-1.965.816-2.826 1.315A3.5 3.5 0 0 1 12 5.275v15.2c.56 0 1.121-.136 1.628-.406c1-.532 2.29-1.15 3.372-1.435c.877-.232 2.016-.35 2.985-.411c1.109-.07 2.015-.968 2.015-2.08"/></svg></a><a class="nav-item" title="探索" href="/explore/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m21.242 13.708l-7.534 7.534a3 3 0 0 1-.369.312A2.33 2.33 0 0 1 12 22c0-.552 0-1.049.003-1.5c.012-1.834.075-2.911.39-3.812a7 7 0 0 1 4.295-4.295c.9-.315 1.978-.378 3.812-.39C20.951 12 21.448 12 22 12c0 .486-.169.946-.446 1.34a3 3 0 0 1-.312.368"/><path fill="currentColor" d="M12 2c5.523 0 10 4.477 10 10c-.552 0-1.049 0-1.5.003c-1.834.012-2.911.075-3.812.39a7 7 0 0 0-4.295 4.295c-.315.9-.378 1.978-.39 3.812C12 20.951 12 21.448 12 22C6.477 22 2 17.523 2 12S6.477 2 12 2" opacity="0.5"/><path fill="currentColor" d="M10 10.5c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S8.448 9 9 9s1 .672 1 1.5m5 1.5c.552 0 1-.672 1-1.5S15.552 9 15 9s-1 .672-1 1.5s.448 1.5 1 1.5m-6.603 3.553a.75.75 0 0 1 1.05-.155a4.27 4.27 0 0 0 3.133.812q-.102.235-.187.478a5.6 5.6 0 0 0-.25 1.06L12 17.75a5.77 5.77 0 0 1-3.447-1.148a.75.75 0 0 1-.156-1.049"/></svg></a></nav>
 </div>
 <div class="widgets">
 
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">序</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-os/index.html#start"><span class="toc-text">扉页</span></a></div><div class="widget-header dis-select"><span class="name">基本概念</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-os/introduction.html"><span class="toc-text">OS 概述</span></a><a class="link" href="/wiki/note-os/os-architecture.html"><span class="toc-text">OS 架构</span></a></div><div class="widget-header dis-select"><span class="name">进程</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-os/process-abstraction.html"><span class="toc-text">最基本抽象之进程</span></a><a class="link active" href="/wiki/note-os/virtualize-cpu.html"><span class="toc-text">CPU 虚拟化机制</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="link" href="/wiki/note-os/scheduling.html"><span class="toc-text">CPU 虚拟化策略：调度</span></a></div></widget>
 
-<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Recent Update</span></div><div class="widget-body fs14"><a class="item title" href="/wiki/note-os/virtualize-cpu.html"><span class="title"><strong>OS</strong><span class="dot"></span>CPU 虚拟化机制</span></a><a class="item title" href="/wiki/note-os/introduction.html"><span class="title"><strong>OS</strong><span class="dot"></span>OS 概述</span></a><a class="item title" href="/wiki/note-os/scheduling.html"><span class="title"><strong>OS</strong><span class="dot"></span>CPU 虚拟化策略：调度</span></a><a class="item title" href="/wiki/note-os/process-abstraction.html"><span class="title"><strong>OS</strong><span class="dot"></span>最基本抽象之进程</span></a><a class="item title" href="/wiki/note-os/os-architecture.html"><span class="title"><strong>OS</strong><span class="dot"></span>OS 架构</span></a><a class="item title" href="/wiki/note-art-history/abstraction.html"><span class="title"><strong>Western Art</strong><span class="dot"></span>抽象艺术</span></a><a class="item title" href="/wiki/note-art-history/late-19th-century.html"><span class="title"><strong>Western Art</strong><span class="dot"></span>十九世纪末</span></a><a class="item title" href="/wiki/note-art-history/realism.html"><span class="title"><strong>Western Art</strong><span class="dot"></span>现实主义</span></a><a class="item title" href="/wiki/note-art-history/romanticism.html"><span class="title"><strong>Western Art</strong><span class="dot"></span>浪漫主义与大革命</span></a><a class="item title" href="/wiki/note-art-history/rococo.html"><span class="title"><strong>Western Art</strong><span class="dot"></span>洛可可与启蒙运动</span></a></div></widget>
+<widget class="widget-wrapper post-card"><div class="widget-header dis-select"><span class="name">More: 科技</span></div><div class="widget-body"><a class="item wiki" href="/wiki/note-astronomy/index.html"><span class="title">飘飘何所似 Our Place in the Universe</span><span class="excerpt">西方天文学及其发展史相关，主要是课程 CCST9012 的内容。</span></a><a class="item wiki" href="/wiki/note-cryptography/index.html"><span class="title">密码学 Cryptography</span><span class="excerpt">密码学相关，主要是课程 COMP3357 的内容。</span></a><a class="item wiki" href="/wiki/note-dsa/index.html"><span class="title">数据结构与算法 DS & A</span><span class="excerpt">数据结构与算法相关。</span></a><a class="item wiki" href="/wiki/note-pl/index.html"><span class="title">编程语言 Programming Languages</span><span class="excerpt">编程语言相关，主要是 UW 课程 CSE341 的内容。</span></a></div></widget>
 </div>
 <footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/ThisisXXZ" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/npm/simple-icons@15.13.0/icons/github.svg" width="16"/></a><a class="social" href="mailto:xxz.7203@gmail.com" rel="noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/npm/simple-icons@15.13.0/icons/gmail.svg" width="16"/></a><a class="social" href="https://steamcommunity.com/profiles/76561198827062562/" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/npm/simple-icons@15.13.0/icons/steam.svg" width="16"/></a><a class="social" href="https://www.cnblogs.com/VeniVidiVici/" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/npm/simple-icons@15.13.0/icons/bookstack.svg" width="16"/></a></div></footer>
 </div></aside><div class="l_main" id="main">
 
-<header class="header mobile-only"><div class="logo-wrap"><a class="avatar" href="/explore/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/site_avatars/avatar-sumire.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">Objet petit a</div><div class="sub normal cap">愿我拥有改变可改变之物的勇气</div><div class="sub hover cap" style="opacity:0"> 与接受不可改变之物的平静</div></a></div></header>
 
 
 
 
-<div class="navbar top"><nav class="wiki"><a href="/wiki">All Products</a></a><a class="active" href="/wiki/tags/%E4%BA%BA%E6%96%87/index.html">人文</a></a><a href="/wiki/tags/%E7%A7%91%E6%8A%80/index.html">科技</a></a></nav></div>
-<div class="post-list wiki filter"><a class="post-card wiki" href="/wiki/note-moral-dilemma/index.html">
-<article class="md-text"><div class="preview"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.iconify.design/game-icons:prisoner.svg"/></div><div class="excerpt"><div class="caps"><span class="cap breadcrumb" style="--text-p2:#FF0000;--theme-block:#FF000020">人文</span></div><h2 class="post-title">道德议题 Moral Controversies</h2><p>现代社会的若干道德议题与伦理学相关，主要是课程 CCHU9009 的内容。</p></div></article>
-</a></div><div class="post-list wiki filter"><a class="post-card wiki" href="/wiki/note-art-history/index.html">
-<article class="md-text"><div class="preview"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.iconify.design/game-icons:greek-sphinx.svg?color=%23a47c17"/></div><div class="excerpt"><div class="caps"><span class="cap breadcrumb" style="--text-p2:#FF0000;--theme-block:#FF000020">人文</span></div><h2 class="post-title">西方艺术史 Western Art History</h2><p>西方艺术史相关，主要是课程 ARTH1001 的内容。</p></div></article>
-</a></div><div class="post-list wiki filter"><a class="post-card wiki" href="/wiki/note-astronomy/index.html">
-<article class="md-text"><div class="preview"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.iconify.design/streamline-ultimate-color:astronomy-planet-ring.svg"/></div><div class="excerpt"><div class="caps"><span class="cap breadcrumb" style="--text-p2:#FF0000;--theme-block:#FF000020">人文</span><span class="cap breadcrumb" style="--text-p2:#4169E1;--theme-block:#4169E120">科技</span></div><h2 class="post-title">飘飘何所似 Our Place in the Universe</h2><p>西方天文学及其发展史相关，主要是课程 CCST9012 的内容。</p></div></article>
-</a></div>
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">Wiki</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/note-os/index.html">OS</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2025-12-03T15:54:13.833Z">2025-12-03</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>CPU 虚拟化机制</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><p><strong>系统调用 (system call)</strong> 是 OS 提供的一系列 API。这一机制使得进程能够请求内核执行受限操作 (restricted operations)。</p>
+<p>CPU 的两种工作模式：</p>
+<ul>
+<li><strong>内核态 (kernel mode)</strong>：OS 内核运行在内核态下，具有最高权限。</li>
+<li><strong>用户态 (user mode)</strong>：应用程序运行在用户态下，只能执行有限指令，不能直接访问物理资源。</li>
+</ul>
+<h2 id="上下文切换"><a href="#上下文切换" class="headerlink" title="上下文切换"></a>上下文切换</h2><p><strong>上下文切换 (context switching)</strong> 机制是 CPU 虚拟化的核心机制，它使得 CPU 能够被多进程分时共享 (time sharing)，从而创造出「进程独立拥有自己的 CPU」的幻象 (illusion)。</p>
+<h2 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h2>
+<div class="article-footer fs14"></div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Prev</div><a href="/wiki/note-os/process-abstraction.html">最基本抽象之进程</a></div><div class="item" id="next"><div class="note">Next</div><a href="/wiki/note-os/scheduling.html">CPU 虚拟化策略：调度</a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>Wovon man nicht sprechen kann, darüber muss man schweigen.</p>
+
+    </section>
+    <section class='body cmt-body giscus'>
+      
+
+<svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg>
+
+<div id="giscus" src="https://giscus.app/client.js" data-repo="ThisisXXZ/blog-comment" data-repo-id="R_kgDOPsBRqA" data-category="Announcements" data-category-id="DIC_kwDOPsBRqM4CvI6h" data-mapping="pathname" data-strict="0" data-reactions-enabled="0" data-emit-metadata="0" data-input-position="top" data-theme="https://thisisxxz.com/css/giscus-custom.css" data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous"></div>
+
+    </section>
+  </div>
+
+
+
 <footer class="page-footer footnote"><hr><div class="text"><p>Powered by <a target="_blank" rel="noopener" href="https://hexo.io/zh-tw/">Hexo</a> and <a target="_blank" rel="noopener" href="https://xaoxuu.com/wiki/stellar/">Stellar 1.33</a>. Licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.<br>そして、次の曲が始まるのです。</p>
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
 <div class="widgets">
-<widget class="widget-wrapper markdown"><div class="widget-header dis-select"><span class="name">「WIKI」站，到了</span></div><div class="widget-body fs14"><p>欢迎来到「<strong>WIKI</strong>」！</p>
-<p>————————————————</p>
-<p>WIKI 项目的页面通常不会有太多的变动，我在这里存放体系化的内容，用于组成我个人的知识库。</p>
-<p>比起不断随时间更新的「经历」，它更像是妥善存放的「收藏」。</p>
-<p>若想回到主页，请使用左侧边栏的「<strong>快退</strong>⏪」按钮。感谢 Maxine Caulfield 为本功能提供的支持！</p>
-<p>————————————————</p>
-<p><em>下一站去哪里呢？</em></p>
 
-<div class="linklist center" style="grid-template-columns:repeat(1,1fr);">
-<a class="link" title="高速铁路「开往」" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html"><div class="flex"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="currentColor" d="M11 19v-6l-2-1V9h6v3l-2 1v6l5 1v2H6v-2zM10 2.223V1h4v1.223a9.003 9.003 0 0 1 2.993 16.266l-1.11-1.664a7 7 0 1 0-7.767 0l-1.109 1.664A9.003 9.003 0 0 1 10 2.223"/></svg><span>高速铁路「开往」</span></div></a></div></div></widget>
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-text">系统调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2"><span class="toc-text">上下文切换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD"><span class="toc-text">中断</span></a></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.46 1.25h3.08c1.603 0 2.86 0 3.864.095c1.023.098 1.861.3 2.6.752a5.75 5.75 0 0 1 1.899 1.899c.452.738.654 1.577.752 2.6c.095 1.004.095 2.261.095 3.865v1.067c0 1.141 0 2.036-.05 2.759c-.05.735-.153 1.347-.388 1.913a5.75 5.75 0 0 1-3.112 3.112c-.805.334-1.721.408-2.977.43a10.81 10.81 0 0 0-.929.036c-.198.022-.275.054-.32.08c-.047.028-.112.078-.224.232c-.121.166-.258.396-.476.764l-.542.916c-.773 1.307-2.69 1.307-3.464 0l-.542-.916a10.605 10.605 0 0 0-.476-.764c-.112-.154-.177-.204-.224-.232c-.045-.026-.122-.058-.32-.08c-.212-.023-.49-.03-.93-.037c-1.255-.021-2.171-.095-2.976-.429A5.75 5.75 0 0 1 1.688 16.2c-.235-.566-.338-1.178-.389-1.913c-.049-.723-.049-1.618-.049-2.76v-1.066c0-1.604 0-2.86.095-3.865c.098-1.023.3-1.862.752-2.6a5.75 5.75 0 0 1 1.899-1.899c.738-.452 1.577-.654 2.6-.752C7.6 1.25 8.857 1.25 10.461 1.25M6.739 2.839c-.914.087-1.495.253-1.959.537A4.25 4.25 0 0 0 3.376 4.78c-.284.464-.45 1.045-.537 1.96c-.088.924-.089 2.11-.089 3.761v1c0 1.175 0 2.019.046 2.685c.045.659.131 1.089.278 1.441a4.25 4.25 0 0 0 2.3 2.3c.515.214 1.173.294 2.429.316h.031c.398.007.747.013 1.037.045c.311.035.616.104.909.274c.29.17.5.395.682.645c.169.232.342.525.538.856l.559.944a.52.52 0 0 0 .882 0l.559-.944c.196-.331.37-.624.538-.856c.182-.25.392-.476.682-.645c.293-.17.598-.24.909-.274c.29-.032.639-.038 1.037-.045h.032c1.255-.022 1.913-.102 2.428-.316a4.25 4.25 0 0 0 2.3-2.3c.147-.352.233-.782.278-1.441c.046-.666.046-1.51.046-2.685v-1c0-1.651 0-2.837-.089-3.762c-.087-.914-.253-1.495-.537-1.959a4.25 4.25 0 0 0-1.403-1.403c-.464-.284-1.045-.45-1.96-.537c-.924-.088-2.11-.089-3.761-.089h-3c-1.651 0-2.837 0-3.762.089" clip-rule="evenodd"/><path fill="currentColor" d="M9 11a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><span>Join Discussion</span></a></div></widget>
 </div></aside><div class='float-panel blur'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
@@ -415,6 +454,30 @@
 
 
 <!-- optional -->
+
+  <script type="module">
+  const el = document.querySelector('#comments #giscus');
+  util.viewportLazyload(el, load_discus, true);
+
+  function load_discus() {
+    if (!el) return;
+    try {
+        el.innerHTML = '';
+      } catch (error) {
+        console.error(error);
+      }
+      const script = document.createElement('script');
+      script.async = true;
+      for (const key of Object.keys(el.attributes)) {
+        const attr = el.attributes[key];
+        if (['class', 'id'].includes(attr.name) === false) {
+          script.setAttribute(attr.name, attr.value);
+        }
+      }
+      el.appendChild(script);
+  }
+</script>
+
 
 
 
