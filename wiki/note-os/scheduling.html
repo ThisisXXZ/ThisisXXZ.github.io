@@ -17,16 +17,18 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   
-  <title>OS: CPU 虚拟化策略：调度 - ThisisXXZ's Blog</title>
+  <title>OS: 调度策略 - ThisisXXZ's Blog</title>
 
   
-    <meta property="og:type" content="website">
-<meta property="og:title" content="CPU 虚拟化策略：调度">
+    <meta name="description" content="前文介绍的几个底层机制使得进程切换成为可能。 调度器 (scheduler) 所采用的高层策略则决定了 OS「选择哪个进程进行切换」。 调度指标CPU 突发 (CPU burst)： 进程占用 CPU 的时间 $T_{burst}$。 周转时间 (turnaround time)，表征效率：$T_{turnaround}&#x3D;T_{completion}-T_{arrival}$响应时间 (">
+<meta property="og:type" content="website">
+<meta property="og:title" content="调度策略">
 <meta property="og:url" content="https://www.thisisxxz.com/wiki/note-os/scheduling.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="前文介绍的几个底层机制使得进程切换成为可能。 调度器 (scheduler) 所采用的高层策略则决定了 OS「选择哪个进程进行切换」。 调度指标CPU 突发 (CPU burst)： 进程占用 CPU 的时间 $T_{burst}$。 周转时间 (turnaround time)，表征效率：$T_{turnaround}&#x3D;T_{completion}-T_{arrival}$响应时间 (">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2025-12-03T14:53:24.572Z">
-<meta property="article:modified_time" content="2025-12-03T14:53:24.572Z">
+<meta property="article:published_time" content="2025-12-04T15:04:19.025Z">
+<meta property="article:modified_time" content="2025-12-04T15:04:19.025Z">
 <meta property="article:author" content="XXZ">
 <meta name="twitter:card" content="summary">
   
@@ -64,7 +66,7 @@
 </div>
 <div class="widgets">
 
-<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">序</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-os/index.html#start"><span class="toc-text">扉页</span></a></div><div class="widget-header dis-select"><span class="name">基本概念</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-os/introduction.html"><span class="toc-text">OS 概述</span></a><a class="link" href="/wiki/note-os/os-architecture.html"><span class="toc-text">OS 架构</span></a></div><div class="widget-header dis-select"><span class="name">进程</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-os/process-abstraction.html"><span class="toc-text">最基本抽象之进程</span></a><a class="link" href="/wiki/note-os/virtualize-cpu.html"><span class="toc-text">CPU 虚拟化机制</span></a><a class="link active" href="/wiki/note-os/scheduling.html"><span class="toc-text">CPU 虚拟化策略：调度</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a></div></widget>
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">序</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-os/index.html#start"><span class="toc-text">扉页</span></a></div><div class="widget-header dis-select"><span class="name">基本概念</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-os/introduction.html"><span class="toc-text">OS 概述</span></a><a class="link" href="/wiki/note-os/os-architecture.html"><span class="toc-text">OS 架构</span></a></div><div class="widget-header dis-select"><span class="name">进程与线程</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-os/process.html"><span class="toc-text">进程</span></a><a class="link" href="/wiki/note-os/virtualize-cpu.html"><span class="toc-text">CPU 虚拟化机制</span></a><a class="link active" href="/wiki/note-os/scheduling.html"><span class="toc-text">调度策略</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="link" href="/wiki/note-os/thread.html"><span class="toc-text">线程</span></a></div><div class="widget-header dis-select"><span class="name">并发</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-os/concurrency.html"><span class="toc-text">并发问题</span></a><a class="link" href="/wiki/note-os/synchronization.html"><span class="toc-text">同步原语</span></a><a class="link" href="/wiki/note-os/deadlock.html"><span class="toc-text">死锁</span></a></div></widget>
 
 <widget class="widget-wrapper post-card"><div class="widget-header dis-select"><span class="name">More: 科技</span></div><div class="widget-body"><a class="item wiki" href="/wiki/note-astronomy/index.html"><span class="title">飘飘何所似 Our Place in the Universe</span><span class="excerpt">西方天文学及其发展史相关，主要是课程 CCST9012 的内容。</span></a><a class="item wiki" href="/wiki/note-cryptography/index.html"><span class="title">密码学 Cryptography</span><span class="excerpt">密码学相关，主要是课程 COMP3357 的内容。</span></a><a class="item wiki" href="/wiki/note-dsa/index.html"><span class="title">数据结构与算法 DS & A</span><span class="excerpt">数据结构与算法相关。</span></a><a class="item wiki" href="/wiki/note-pl/index.html"><span class="title">编程语言 Programming Languages</span><span class="excerpt">编程语言相关，主要是 UW 课程 CSE341 的内容。</span></a></div></widget>
 </div>
@@ -79,21 +81,73 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">Wiki</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/note-os/index.html">OS</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2025-12-03T14:53:24.572Z">2025-12-03</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2025-12-04T15:04:19.025Z">2025-12-04</time></span></div></div></div>
     
     <div class="bottom only-title">
       
       <div class="text-area">
-        <h1 class="text title"><span>CPU 虚拟化策略：调度</span></h1>
+        <h1 class="text title"><span>调度策略</span></h1>
         
       </div>
     </div>
     
   </div>
-  </div><article class="md-text content">
+  </div><article class="md-text content"><p>前文介绍的几个底层机制使得进程切换成为可能。</p>
+<p><strong>调度器 (scheduler)</strong> 所采用的高层策略则决定了 OS「选择哪个进程进行切换」。</p>
+<h2 id="调度指标"><a href="#调度指标" class="headerlink" title="调度指标"></a>调度指标</h2><p><strong>CPU 突发 (CPU burst)</strong>： 进程占用 CPU 的时间 $T_{burst}$。</p>
+<p><strong>周转时间 (turnaround time)</strong>，表征效率：$T_{turnaround}&#x3D;T_{completion}-T_{arrival}$<br><strong>响应时间 (response time)</strong>，表征公平：$T_{response}&#x3D;T_{firstrun}-T_{arrival}$<br><strong>等待时间 (wait time)</strong>：$T_{wait}&#x3D;T_{turnaround}-T_{burst}$ </p>
+<h2 id="FIFO"><a href="#FIFO" class="headerlink" title="FIFO"></a>FIFO</h2><p>先进先出 (First-In-First-Out, FIFO) 策略。</p>
+<p><strong>车队效应 (convoy effects)</strong>：短进程可能被 <strong>CPU 密集型 (CPU-bounded)</strong> 进程阻塞，增大平均等待时间。</p>
+<h2 id="SJF"><a href="#SJF" class="headerlink" title="SJF"></a>SJF</h2><p>短任务优先 (Shortest-Job-First, SJF) 策略。</p>
+<p>若所有任务的到达时间相同，SJF 策略最优。</p>
+<p><strong>非抢占式 (non-preemtive)</strong>：进程一旦开始运行就会一直占据 CPU 直到终止。导致车队效应。<br>长进程<strong>饥饿 (starvation)</strong>。</p>
+<h2 id="STCF"><a href="#STCF" class="headerlink" title="STCF"></a>STCF</h2><p>最短完成时间优先 (Shortest Time-to-Completion First, STCF) 策略。</p>
+<p>SJF 的抢占式版本。</p>
+<p>新到达的进程触发调度器，比较所有可运行进程（包括当前进程和新进程）剩余的执行时间，并切换到其中最短的那个。</p>
+<p>若所有任务没有 I&#x2F;O，STCF 策略最优。</p>
+<h2 id="RR"><a href="#RR" class="headerlink" title="RR"></a>RR</h2><p>轮转 (Round-Robin, RR) 策略。</p>
+<p>就绪队列中的每个进程依次按固定<strong>时间片 (time quantum)</strong> 轮流运行。就绪队列是 FIFO 的。</p>
+<ul>
+<li>时间片一定是计时器中断周期的整数倍</li>
+</ul>
+<p>交互式 (interactive) 进程希望尽量缩短响应时间，适用于 RR。</p>
+<p>周转时间指标很差。</p>
+<h2 id="有-I-O-的任务"><a href="#有-I-O-的任务" class="headerlink" title="有 I&#x2F;O 的任务"></a>有 I&#x2F;O 的任务</h2><p>I&#x2F;O 将任务的执行过程切分成多个 CPU burst。</p>
+<p>当任务发起 I&#x2F;O 时，它释放 CPU 并离开就绪队列；I&#x2F;O 完成后，任务重新回到就绪队列，并准备继续执行下一个 CPU burst。</p>
+<h2 id="MLFQ"><a href="#MLFQ" class="headerlink" title="MLFQ"></a>MLFQ</h2><p>一个优秀的调度算法应该满足：</p>
+<ul>
+<li>最小化交互式任务的响应时间</li>
+<li>在没有关于任务的先验知识的情况下，最小化周转时间（学习算法？）</li>
+</ul>
+<p>让我们见见 <strong>多级反馈队列 (Multilevel Feedback Queue, MLFQ)</strong>  策略。</p>
+<p>MLFQ 维护多个优先级不同的就绪队列，其中优先级较高的队列时间片较小，较低的队列时间片较大。每个队列有一个时间额度 (time allotment)。</p>
+<ul>
+<li>若 $\text{Priority}(A) &gt; \text{Priority}(B)$，运行 $A$。</li>
+<li>若 $\text{Priority}(A) &#x3D; \text{Priority}(B)$，根据该队列的时间片大小使用轮转调度。</li>
+<li>新任务进入最高优先级队列。</li>
+<li>若一个任务用完了所在队列的时间额度，将其降低至下一个较低优先级队列。</li>
+<li>以 $S$ 为周期将所有任务提升 (boost) 至最高优先级队列。</li>
+</ul>
+<h2 id="公平份额调度"><a href="#公平份额调度" class="headerlink" title="公平份额调度"></a>公平份额调度</h2><p>公平份额调度 (fair share scheduling) 是<strong>进程组 (process groups)</strong> 级别的调度策略。</p>
+<ul>
+<li>想要优先属于同一应用的多个进程？</li>
+<li>多用户环境，保证每个用户所创建进程享有公平的份额？</li>
+</ul>
+<p><strong>彩票调度 (lottery scheduling)</strong>：恭喜这位中奖的进程！你可以来占用 CPU 了！<br>步长调度 (stride scheduling)</p>
+<h2 id="多处理器调度"><a href="#多处理器调度" class="headerlink" title="多处理器调度"></a>多处理器调度</h2><p>单队列多核调度。</p>
+<ul>
+<li>并发问题</li>
+<li><strong>处理器亲和性 (CPU affinity)</strong> 问题</li>
+</ul>
+<p>多队列调度。</p>
+<ul>
+<li>每个队列有自己的队列，新任务根据某个启发 (heuristic) 被分配给某个队列</li>
+<li>队列间负载平衡：<strong>工作窃取 (work stealing)</strong></li>
+</ul>
+
 <div class="article-footer fs14"></div>
 </article>
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Prev</div><a href="/wiki/note-os/virtualize-cpu.html">CPU 虚拟化机制</a></div><div class="item" id="next"></div></section></div>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Prev</div><a href="/wiki/note-os/virtualize-cpu.html">CPU 虚拟化机制</a></div><div class="item" id="next"><div class="note">Next</div><a href="/wiki/note-os/thread.html">线程</a></div></section></div>
 
 
   <div class="related-wrap md-text" id="comments">
@@ -116,7 +170,14 @@
 <footer class="page-footer footnote"><hr><div class="text"><p>Powered by <a target="_blank" rel="noopener" href="https://hexo.io/zh-tw/">Hexo</a> and <a target="_blank" rel="noopener" href="https://xaoxuu.com/wiki/stellar/">Stellar 1.33</a>. Licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.<br>そして、次の曲が始まるのです。</p>
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
-</aside><div class='float-panel blur'>
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E6%8C%87%E6%A0%87"><span class="toc-text">调度指标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FIFO"><span class="toc-text">FIFO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SJF"><span class="toc-text">SJF</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#STCF"><span class="toc-text">STCF</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RR"><span class="toc-text">RR</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%89-I-O-%E7%9A%84%E4%BB%BB%E5%8A%A1"><span class="toc-text">有 I&#x2F;O 的任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MLFQ"><span class="toc-text">MLFQ</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AC%E5%B9%B3%E4%BB%BD%E9%A2%9D%E8%B0%83%E5%BA%A6"><span class="toc-text">公平份额调度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E5%A4%84%E7%90%86%E5%99%A8%E8%B0%83%E5%BA%A6"><span class="toc-text">多处理器调度</span></a></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.46 1.25h3.08c1.603 0 2.86 0 3.864.095c1.023.098 1.861.3 2.6.752a5.75 5.75 0 0 1 1.899 1.899c.452.738.654 1.577.752 2.6c.095 1.004.095 2.261.095 3.865v1.067c0 1.141 0 2.036-.05 2.759c-.05.735-.153 1.347-.388 1.913a5.75 5.75 0 0 1-3.112 3.112c-.805.334-1.721.408-2.977.43a10.81 10.81 0 0 0-.929.036c-.198.022-.275.054-.32.08c-.047.028-.112.078-.224.232c-.121.166-.258.396-.476.764l-.542.916c-.773 1.307-2.69 1.307-3.464 0l-.542-.916a10.605 10.605 0 0 0-.476-.764c-.112-.154-.177-.204-.224-.232c-.045-.026-.122-.058-.32-.08c-.212-.023-.49-.03-.93-.037c-1.255-.021-2.171-.095-2.976-.429A5.75 5.75 0 0 1 1.688 16.2c-.235-.566-.338-1.178-.389-1.913c-.049-.723-.049-1.618-.049-2.76v-1.066c0-1.604 0-2.86.095-3.865c.098-1.023.3-1.862.752-2.6a5.75 5.75 0 0 1 1.899-1.899c.738-.452 1.577-.654 2.6-.752C7.6 1.25 8.857 1.25 10.461 1.25M6.739 2.839c-.914.087-1.495.253-1.959.537A4.25 4.25 0 0 0 3.376 4.78c-.284.464-.45 1.045-.537 1.96c-.088.924-.089 2.11-.089 3.761v1c0 1.175 0 2.019.046 2.685c.045.659.131 1.089.278 1.441a4.25 4.25 0 0 0 2.3 2.3c.515.214 1.173.294 2.429.316h.031c.398.007.747.013 1.037.045c.311.035.616.104.909.274c.29.17.5.395.682.645c.169.232.342.525.538.856l.559.944a.52.52 0 0 0 .882 0l.559-.944c.196-.331.37-.624.538-.856c.182-.25.392-.476.682-.645c.293-.17.598-.24.909-.274c.29-.032.639-.038 1.037-.045h.032c1.255-.022 1.913-.102 2.428-.316a4.25 4.25 0 0 0 2.3-2.3c.147-.352.233-.782.278-1.441c.046-.666.046-1.51.046-2.685v-1c0-1.651 0-2.837-.089-3.762c-.087-.914-.253-1.495-.537-1.959a4.25 4.25 0 0 0-1.403-1.403c-.464-.284-1.045-.45-1.96-.537c-.924-.088-2.11-.089-3.761-.089h-3c-1.651 0-2.837 0-3.762.089" clip-rule="evenodd"/><path fill="currentColor" d="M9 11a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><span>Join Discussion</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
   </button>
@@ -587,6 +648,33 @@
       })
     }
   });
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+    processEscapes: true
+  }
+});
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+});
+// Prevent MathJax from shrinking to match body font x-height (common with CJK/web fonts)
+MathJax.Hub.Config({
+  "HTML-CSS": {
+    matchFontHeight: false,
+    scale: 110 // Adjust if needed: 100–115; this helps math size match body text visually
+  }
+});
+MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for(i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
 </script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
