@@ -17,22 +17,18 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   
-  <title>OS: 文件系统的组织 - ThisisXXZ's Blog</title>
+  <title>Woman Literature: 序 - ThisisXXZ's Blog</title>
 
   
-    <meta name="description" content="总组织磁盘的最基本存储单位不是字节，而是块 (block)。常用的块大小为 4KB。 一个组织在该磁盘上的文件系统：  数据区域 (data region)：占据绝大部分的块。毕竟磁盘本身就是数据的存储设备！ 超级块 (superblock)：通常在第 0 块。 数据位图 (data bitmap) inode 位图 (inode bitmap) inode 表 (inode table)  超级">
-<meta property="og:type" content="website">
-<meta property="og:title" content="文件系统的组织">
-<meta property="og:url" content="https://www.thisisxxz.com/wiki/note-os/file-system.html">
+    <meta property="og:type" content="website">
+<meta property="og:title" content="序">
+<meta property="og:url" content="https://www.thisisxxz.com/wiki/note-cn-woman-literature/index.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="总组织磁盘的最基本存储单位不是字节，而是块 (block)。常用的块大小为 4KB。 一个组织在该磁盘上的文件系统：  数据区域 (data region)：占据绝大部分的块。毕竟磁盘本身就是数据的存储设备！ 超级块 (superblock)：通常在第 0 块。 数据位图 (data bitmap) inode 位图 (inode bitmap) inode 表 (inode table)  超级">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/comp3230-mli.png">
-<meta property="article:published_time" content="2025-12-13T11:35:55.692Z">
-<meta property="article:modified_time" content="2025-12-13T11:35:55.692Z">
+<meta property="article:published_time" content="2026-01-31T10:14:38.151Z">
+<meta property="article:modified_time" content="2026-01-31T10:14:38.151Z">
 <meta property="article:author" content="XXZ">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/comp3230-mli.png">
   
   
   
@@ -58,19 +54,19 @@
 <div class="l_body s:aa content tech" id="start" layout="page" ><aside class="l_left"><div class="leftbar-container">
 
 
-<header class="header"><div class="logo-wrap"><div class="icon"><img no-lazy class="icon" src="https://api.iconify.design/catppuccin:macos.svg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></div><a class="title" href="/wiki/note-os/index.html"><div class="main" ff="title">OS</div><div class="sub normal cap">The nice thing about standards is that</div><div class="sub hover cap" style="opacity:0"> you have so many to choose from.</div></a></div></header>
+<header class="header"><div class="logo-wrap"><div class="icon"><img no-lazy class="icon" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0Ij48ZyBmaWxsPSJub25lIj48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMy4zOTIgMi40MzVBMS40MzUgMS40MzUgMCAwIDEgNC44MjYgMWgxNC44Mjd2OC4xM0gzLjM5MnoiLz48cGF0aCBmaWxsPSIjZjI2MjgwIiBzdHJva2U9IiMxOTE5MTkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgZD0iTTIwLjEzIDMuODdhLjQ4LjQ4IDAgMCAxIC40NzkuNDc4djE4LjE3NGEuNDguNDggMCAwIDEtLjQ3OC40NzhINS4zMDVhMS45MiAxLjkyIDAgMCAxLTEuOTEzLTEuOTEzVjIuNDM1QTEuNDM1IDEuNDM1IDAgMCAwIDQuODI2IDMuODd6IiBzdHJva2Utd2lkdGg9IjEiLz48cGF0aCBzdHJva2U9IiMxOTE5MTkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgZD0iTTMuMzkyIDIuNDM1QTEuNDM1IDEuNDM1IDAgMCAxIDQuODI2IDFoMTQuODI3IiBzdHJva2Utd2lkdGg9IjEiLz48cGF0aCBmaWxsPSIjZTZjMWM4IiBkPSJNMTMuNzc0IDE2LjAwOGE2LjA2IDYuMDYgMCAwIDAgMy41ODItLjc1YS40OC40OCAwIDAgMCAuMTM3LS43MThjLS40MTUtLjQ4NS0uNzAyLTEuMTI2LS44MjktMi45OTZjLS4yNC0zLjU1NS0yLjYzOC00LjgwNS00LjY5Ny00LjgwNVM3LjUxIDcuOTkgNy4yNjkgMTEuNTQ0Yy0uMTI2IDEuODctLjQxNCAyLjUxLS44MjggMi45OTZhLjQ4LjQ4IDAgMCAwIC4xMzcuNzE5YTYuMDcgNi4wNyAwIDAgMCAzLjU4Mi43NDkiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNNi41NzcgMTUuMjU4cS4yNDcuMTQzLjQ5NS4yNTdxLjE1My0uNzgzLjE5Ny0xLjU4Yy4yNC0zLjU1NCAyLjYzOC00LjgwNSA0LjY5Ny00LjgwNXM0LjQ1OCAxLjI1IDQuNjk4IDQuODA1cS4wNDQuNzk3LjE5NyAxLjU4YTUgNSAwIDAgMCAuNDk1LS4yNTdhLjQ3OC40NzggMCAwIDAgLjEzNi0uNzE4Yy0uNDE0LS40ODUtLjcwMS0xLjEyNi0uODI4LTIuOTk2Yy0uMjQtMy41NTUtMi42MzgtNC44MDUtNC42OTgtNC44MDVTNy41MSA3Ljk5IDcuMjcgMTEuNTQ0Yy0uMTI2IDEuODctLjQxNCAyLjUxLS44MjkgMi45OTZhLjQ4LjQ4IDAgMCAwIC4xMzcuNzE4Ii8+PHBhdGggc3Ryb2tlPSIjMTkxOTE5IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Ik0xMy43NzQgMTYuMDA4YTYuMDYgNi4wNiAwIDAgMCAzLjU4Mi0uNzVhLjQ4LjQ4IDAgMCAwIC4xMzctLjcxOGMtLjQxNS0uNDg1LS43MDItMS4xMjYtLjgyOS0yLjk5NmMtLjI0LTMuNTU1LTIuNjM4LTQuODA1LTQuNjk3LTQuODA1UzcuNTEgNy45OSA3LjI2OSAxMS41NDRjLS4xMjYgMS44Ny0uNDE0IDIuNTEtLjgyOCAyLjk5NmEuNDguNDggMCAwIDAgLjEzNy43MTlhNi4wNyA2LjA3IDAgMCAwIDMuNTgyLjc0OSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTE3LjA3NyAxOC40MjRjLS44MTYtLjMzNy0xLjc4MS0uNjgyLTIuODMtMS4wN2EuNzI1LjcyNSAwIDAgMS0uNDc5LS42Nzh2LTEuMzJhLjcyLjcyIDAgMCAxIC4yMzYtLjUzNWEyLjYgMi42IDAgMCAwIC44NDgtMS45MzlWMTEuODNhLjk0NS45NDUgMCAwIDAtLjY3LS45MDVhNC43IDQuNyAwIDAgMS0xLjg5NS0xLjEzM2EuNDczLjQ3MyAwIDAgMC0uNjUgMGE0LjcgNC43IDAgMCAxLTEuOSAxLjEzYS45NDUuOTQ1IDAgMCAwLS42Ny45MDV2MS4wNTJhMi42IDIuNiAwIDAgMCAuODQ4IDEuOTM5YS43Mi43MiAwIDAgMSAuMjM3LjUzNXYxLjMyYS43My43MyAwIDAgMS0uNDc0LjY3OGMtMS4wNTIuMzg4LTIuMDEzLjczNC0yLjgzIDEuMDciLz48cGF0aCBzdHJva2U9IiMxOTE5MTkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgZD0iTTE3LjA3NyAxOC40MjRjLS44MTYtLjMzNy0xLjc4MS0uNjgyLTIuODMtMS4wN2EuNzI1LjcyNSAwIDAgMS0uNDc5LS42Nzh2LTEuMzJhLjcyLjcyIDAgMCAxIC4yMzYtLjUzNWEyLjYgMi42IDAgMCAwIC44NDgtMS45MzlWMTEuODNhLjk0NS45NDUgMCAwIDAtLjY3LS45MDVhNC43IDQuNyAwIDAgMS0xLjg5NS0xLjEzM2EuNDczLjQ3MyAwIDAgMC0uNjUgMGE0LjcgNC43IDAgMCAxLTEuOSAxLjEzYS45NDUuOTQ1IDAgMCAwLS42Ny45MDV2MS4wNTJhMi42IDIuNiAwIDAgMCAuODQ4IDEuOTM5YS43Mi43MiAwIDAgMSAuMjM3LjUzNXYxLjMyYS43My43MyAwIDAgMS0uNDc0LjY3OGMtMS4wNTIuMzg4LTIuMDEzLjczNC0yLjgzIDEuMDciIHN0cm9rZS13aWR0aD0iMSIvPjwvZz48L3N2Zz4="></div><a class="title" href="/wiki/note-cn-woman-literature/index.html"><div class="main" ff="title">Woman Literature</div><div class="sub normal cap">生当作人杰，死亦为鬼雄</div><div class="sub hover cap" style="opacity:0"> 至今思项羽，不肯过江东</div></a></div></header>
 
 <div class="nav-area">
-<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" data-filter="/wiki/note-os/" placeholder="在 note/os 中搜索..."></form><div id="search-result"></div><div class="search-no-result">No Results!</div></div>
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" data-filter="/wiki/note-cn-woman-literature/" placeholder="在 note/cn-woman-literature 中搜索..."></form><div id="search-result"></div><div class="search-no-result">No Results!</div></div>
 
 
 <nav class="menu dis-select"><a class="nav-item" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M22 6.426v11.148c0 1.847-1.6 3.015-2.903 2.118L13 15.232V8.768l6.097-4.46C20.399 3.411 22 4.58 22 6.426" clip-rule="evenodd" opacity="0.5"/><path fill="currentColor" d="M13 7.123v9.754c0 1.616-1.467 2.638-2.661 1.853L2.92 13.853c-1.228-.807-1.228-2.899 0-3.706l7.42-4.877c1.193-.785 2.66.237 2.66 1.853"/></svg></a><a class="nav-item active" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6.95c0-.883 0-1.324.07-1.692A4 4 0 0 1 5.257 2.07C5.626 2 6.068 2 6.95 2c.386 0 .58 0 .766.017a4 4 0 0 1 2.18.904c.144.119.28.255.554.529L11 4c.816.816 1.224 1.224 1.712 1.495a4 4 0 0 0 .848.352C14.098 6 14.675 6 15.828 6h.374c2.632 0 3.949 0 4.804.77q.119.105.224.224c.77.855.77 2.172.77 4.804V14c0 3.771 0 5.657-1.172 6.828S17.771 22 14 22h-4c-3.771 0-5.657 0-6.828-1.172S2 17.771 2 14z" opacity="0.5"/><path fill="currentColor" d="M20 6.238c0-.298-.005-.475-.025-.63a3 3 0 0 0-2.583-2.582C17.197 3 16.965 3 16.5 3H9.988c.116.104.247.234.462.45L11 4c.816.816 1.224 1.224 1.712 1.495a4 4 0 0 0 .849.352C14.098 6 14.675 6 15.829 6h.373c1.78 0 2.957 0 3.798.238"/><path fill="currentColor" fill-rule="evenodd" d="M12.25 10a.75.75 0 0 1 .75-.75h5a.75.75 0 0 1 0 1.5h-5a.75.75 0 0 1-.75-.75" clip-rule="evenodd"/></svg></a><a class="nav-item" title="专栏" href="/topic/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M2 16.144V4.998c0-1.098.886-1.99 1.982-1.923c.977.06 2.131.179 3.018.413c1.05.276 2.296.866 3.282 1.388A3.5 3.5 0 0 0 12 5.275v15.2a3.46 3.46 0 0 1-1.628-.406c-1-.532-2.29-1.15-3.372-1.435c-.877-.232-2.016-.35-2.985-.411C2.906 18.153 2 17.255 2 16.143" clip-rule="evenodd" opacity="0.5"/><path fill="currentColor" d="M22 16.144V4.934c0-1.073-.846-1.953-1.918-1.916c-1.129.04-2.535.156-3.582.47c-.908.271-1.965.816-2.826 1.315A3.5 3.5 0 0 1 12 5.275v15.2c.56 0 1.121-.136 1.628-.406c1-.532 2.29-1.15 3.372-1.435c.877-.232 2.016-.35 2.985-.411c1.109-.07 2.015-.968 2.015-2.08"/></svg></a><a class="nav-item" title="探索" href="/explore/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m21.242 13.708l-7.534 7.534a3 3 0 0 1-.369.312A2.33 2.33 0 0 1 12 22c0-.552 0-1.049.003-1.5c.012-1.834.075-2.911.39-3.812a7 7 0 0 1 4.295-4.295c.9-.315 1.978-.378 3.812-.39C20.951 12 21.448 12 22 12c0 .486-.169.946-.446 1.34a3 3 0 0 1-.312.368"/><path fill="currentColor" d="M12 2c5.523 0 10 4.477 10 10c-.552 0-1.049 0-1.5.003c-1.834.012-2.911.075-3.812.39a7 7 0 0 0-4.295 4.295c-.315.9-.378 1.978-.39 3.812C12 20.951 12 21.448 12 22C6.477 22 2 17.523 2 12S6.477 2 12 2" opacity="0.5"/><path fill="currentColor" d="M10 10.5c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S8.448 9 9 9s1 .672 1 1.5m5 1.5c.552 0 1-.672 1-1.5S15.552 9 15 9s-1 .672-1 1.5s.448 1.5 1 1.5m-6.603 3.553a.75.75 0 0 1 1.05-.155a4.27 4.27 0 0 0 3.133.812q-.102.235-.187.478a5.6 5.6 0 0 0-.25 1.06L12 17.75a5.77 5.77 0 0 1-3.447-1.148a.75.75 0 0 1-.156-1.049"/></svg></a></nav>
 </div>
 <div class="widgets">
 
-<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">序</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-os/index.html#start"><span class="toc-text">扉页</span></a></div><div class="widget-header dis-select"><span class="name">基本概念</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-os/introduction.html"><span class="toc-text">OS 概述</span></a><a class="link" href="/wiki/note-os/os-architecture.html"><span class="toc-text">OS 架构</span></a></div><div class="widget-header dis-select"><span class="name">进程与线程</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-os/process.html"><span class="toc-text">进程</span></a><a class="link" href="/wiki/note-os/virtualize-cpu.html"><span class="toc-text">CPU 虚拟化机制</span></a><a class="link" href="/wiki/note-os/scheduling.html"><span class="toc-text">调度策略</span></a><a class="link" href="/wiki/note-os/thread.html"><span class="toc-text">线程</span></a></div><div class="widget-header dis-select"><span class="name">并发</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-os/concurrency.html"><span class="toc-text">并发问题与同步</span></a><a class="link" href="/wiki/note-os/mutex-lock.html"><span class="toc-text">互斥锁</span></a><a class="link" href="/wiki/note-os/condition-var.html"><span class="toc-text">条件变量</span></a><a class="link" href="/wiki/note-os/semaphore.html"><span class="toc-text">信号量</span></a><a class="link" href="/wiki/note-os/deadlock.html"><span class="toc-text">死锁</span></a></div><div class="widget-header dis-select"><span class="name">内存管理</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-os/address-space.html"><span class="toc-text">地址翻译</span></a><a class="link" href="/wiki/note-os/segmentation.html"><span class="toc-text">分段</span></a><a class="link" href="/wiki/note-os/paging.html"><span class="toc-text">分页</span></a><a class="link" href="/wiki/note-os/tlb.html"><span class="toc-text">转译后备缓冲</span></a><a class="link" href="/wiki/note-os/multilevel-page-table.html"><span class="toc-text">多级页表</span></a><a class="link" href="/wiki/note-os/swapping.html"><span class="toc-text">交换空间与页错误</span></a></div><div class="widget-header dis-select"><span class="name">文件管理</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-os/file.html"><span class="toc-text">文件与目录</span></a><a class="link active" href="/wiki/note-os/file-system.html"><span class="toc-text">文件系统的组织</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="link" href="/wiki/note-os/file-cache.html"><span class="toc-text">缓存与缓冲</span></a><a class="link" href="/wiki/note-os/protection.html"><span class="toc-text">数据保护</span></a></div></widget>
 
-<widget class="widget-wrapper post-card"><div class="widget-header dis-select"><span class="name">More: 科技</span></div><div class="widget-body"><a class="item wiki" href="/wiki/note-astronomy/index.html"><span class="title">飘飘何所似 Our Place in the Universe</span><span class="excerpt">西方天文学及其发展史相关，主要是课程 CCST9012 的内容。</span></a><a class="item wiki" href="/wiki/note-cryptography/index.html"><span class="title">密码学 Cryptography</span><span class="excerpt">密码学相关，主要是课程 COMP3357 的内容。</span></a><a class="item wiki" href="/wiki/note-dsa/index.html"><span class="title">数据结构与算法 DS & A</span><span class="excerpt">数据结构与算法相关。</span></a><a class="item wiki" href="/wiki/note-pl/index.html"><span class="title">编程语言 Programming Languages</span><span class="excerpt">编程语言相关，主要是 UW 课程 CSE341 的内容。</span></a></div></widget>
+
+<widget class="widget-wrapper post-card"><div class="widget-header dis-select"><span class="name">More: 人文</span></div><div class="widget-body"><a class="item wiki" href="/wiki/note-art-history/index.html"><span class="title">西方艺术史 Western Art History</span><span class="excerpt">西方艺术史相关，主要是课程 ARTH1001 的内容。</span></a><a class="item wiki" href="/wiki/note-astronomy/index.html"><span class="title">飘飘何所似 Our Place in the Universe</span><span class="excerpt">西方天文学及其发展史相关，主要是课程 CCST9012 的内容。</span></a><a class="item wiki" href="/wiki/note-moral-dilemma/index.html"><span class="title">道德议题 Moral Controversies</span><span class="excerpt">现代社会的若干道德议题与伦理学相关，主要是课程 CCHU9009 的内容。</span></a></div></widget>
 </div>
 <footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/ThisisXXZ" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/npm/simple-icons@15.13.0/icons/github.svg" width="16"/></a><a class="social" href="mailto:xxz.7203@gmail.com" rel="noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/npm/simple-icons@15.13.0/icons/gmail.svg" width="16"/></a><a class="social" href="https://steamcommunity.com/profiles/76561198827062562/" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/npm/simple-icons@15.13.0/icons/steam.svg" width="16"/></a><a class="social" href="https://www.cnblogs.com/VeniVidiVici/" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/npm/simple-icons@15.13.0/icons/bookstack.svg" width="16"/></a></div></footer>
 </div></aside><div class="l_main" id="main">
@@ -82,81 +78,22 @@
 <div class="article banner top">
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
-<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">Wiki</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/note-os/index.html">OS</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2025-12-13T11:35:55.692Z">2025-12-13</time></span></div></div></div>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">Wiki</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/note-cn-woman-literature/index.html">Woman Literature</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-01-31T10:14:38.151Z">2026-01-31</time></span></div></div></div>
     
     <div class="bottom only-title">
       
       <div class="text-area">
-        <h1 class="text title"><span>文件系统的组织</span></h1>
+        <h1 class="text title"><span>序</span></h1>
         
       </div>
     </div>
     
   </div>
-  </div><article class="md-text content"><h2 id="总组织"><a href="#总组织" class="headerlink" title="总组织"></a>总组织</h2><p>磁盘的最基本存储单位不是字节，而是<strong>块 (block)</strong>。常用的块大小为 4KB。</p>
-<p>一个组织在该磁盘上的文件系统：</p>
-<ul>
-<li><strong>数据区域 (data region)</strong>：占据绝大部分的块。毕竟磁盘本身就是数据的存储设备！</li>
-<li><strong>超级块 (superblock)</strong>：通常在第 0 块。</li>
-<li><strong>数据位图 (data bitmap)</strong></li>
-<li><strong>inode 位图 (inode bitmap)</strong></li>
-<li><strong>inode 表 (inode table)</strong></li>
-</ul>
-<h2 id="超级块"><a href="#超级块" class="headerlink" title="超级块"></a>超级块</h2><p>超级块存储该文件系统本身的元数据。</p>
-<ul>
-<li>文件系统标识符</li>
-<li>有多少 inode？有多少数据块？</li>
-<li>inode 位图，inode 表，数据位图的地址？</li>
-<li>根目录的 inode？</li>
-</ul>
-<p>超级块很重要，因此文件系统会在存储设备里做几个备份。</p>
-<h2 id="inode"><a href="#inode" class="headerlink" title="inode"></a>inode</h2><p>上一节我们说到 inode number 是文件的独特标识符。</p>
-<p>inode 本身是文件的元数据单位，又被称为<strong>文件管理块 (file control block, FCB)</strong>。它存储了对应文件的：</p>
-<ul>
-<li>类型</li>
-<li>大小</li>
-<li>所有者 (ownership)</li>
-<li>权限 (permission)</li>
-<li>最后访问时间</li>
-<li>硬链接的引用计数</li>
-<li><strong>文件内容的地址</strong>：即该文件所有的数据块地址。如何索引？</li>
-</ul>
-<p>有三种方式。</p>
-<h3 id="多级索引"><a href="#多级索引" class="headerlink" title="多级索引"></a>多级索引</h3><p><strong>多级索引 (multi-level index)</strong> 在 inode 中存储多个直接指针 (direct pointer)，少数间接指针 (indirect pointer) ，包括次级间接指针 (double indirect pointer) 与三级间接指针 (triple indirect pointer)。 </p>
-<p>间接指针指向的是一个<strong>专门存储地址的数据块</strong>。假设一个数据块大小为 $a$，每个数据块可以存储 $n$ 个数据块的地址，那么一个 $k$ 级间接指针可以覆盖 $an^k$ 大小的磁盘空间。</p>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/comp3230-mli.png" style="width:550px;"/></div></div>
-
-<p>直接指针可以索引多数文件：只有那些较大的文件才会涉及到间接指针。</p>
-<h3 id="链表索引"><a href="#链表索引" class="headerlink" title="链表索引"></a>链表索引</h3><p><strong>链表索引 (linked-list index)</strong> 在 inode 中存储一个指针，指向该文件的第一个数据块。</p>
-<p>同时，第 $n$ 个<strong>数据块中</strong>将会储存指向第 $n+1$ 数据块的指针。</p>
-<h3 id="表索引"><a href="#表索引" class="headerlink" title="表索引"></a>表索引</h3><p>和链表索引不同的是，<strong>表索引 (tabular index)</strong> 单独拉出一张表来记录每个数据块的下一个数据块，而不是把这个信息维护在数据块里面。</p>
-<p>表中记录的是数据块的编号而不是实际的指针。</p>
-<ul>
-<li>第 2 个数据块的下一个数据块是 5，那么 $T[2]&#x3D;5$</li>
-</ul>
-<p>表可以被缓存从而提高搜索与遍历的效率。</p>
-<h2 id="inode-表"><a href="#inode-表" class="headerlink" title="inode 表"></a>inode 表</h2><p>文件的 inode 存在哪里呢？当然是 <strong>inode 表 (inode table)</strong>！</p>
-<p>给定文件的标识符 inode number，可以通过查 inode 表获得它的 inode。</p>
-<p>硬盘中被地址索引 (addressable) 的单位是扇区 (sector)。假设 inode 表中每个 block 存储一个 inode，计算给定 inode number 所在的扇区：</p>
-<div class="tag-plugin colorful note" color="blue" child="codeblock"><div class="body"><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">blk    = (inumber * <span class="keyword">sizeof</span>(<span class="type">inode_t</span>)) / blockSize;</span><br><span class="line">sector = ((blk * blockSize) + inodeStartAddr) / sectorSize;</span><br></pre></td></tr></table></figure></div></div>
-
-<h2 id="空闲空间管理"><a href="#空闲空间管理" class="headerlink" title="空闲空间管理"></a>空闲空间管理</h2><p><strong>inode 位图 (inode bitmap)</strong> 的每一位标识对应的 inode 在 inode 表中是空闲的还是正在被使用的。这个简单的数据结构用于辅助 inode 的分配与释放。</p>
-<p><strong>数据位图 (data bitmap)</strong> 起到同样的作用，每一位标识对应的数据块是空闲的还是被文件占用的（$x$ 个数据块，$x$ 位，数据位图占用 $x&#x2F;8$ 字节）。</p>
-<h3 id="空闲链表索引"><a href="#空闲链表索引" class="headerlink" title="空闲链表索引"></a>空闲链表索引</h3><p>数据位图的替代。</p>
-<p>和链表索引一样，只不过空闲链表 (free link-list) 索引的是空闲的数据块，链表索引的是某个文件拥有的数据块。</p>
-<h3 id="空闲块表索引"><a href="#空闲块表索引" class="headerlink" title="空闲块表索引"></a>空闲块表索引</h3><p>空闲块表是一个由块组织而成的空闲空间索引。</p>
-<p>假设每个块可以存储 $n$ 个数据块的地址，那么空闲块表中的每个块：</p>
-<ul>
-<li>前 $n-1$ 项，每项指向数据区域的一个空闲块</li>
-<li>第 $n$ 项，指向空闲块表中的下一个块</li>
-</ul>
-<p>缺点：数据分散在不连续的块上。对于硬盘而言，I&#x2F;O 效率会大大降低。</p>
-<h2 id="阅读"><a href="#阅读" class="headerlink" title="阅读"></a>阅读</h2><p>Chapter 40 – File System Implementation, <em>OSTEP</em>,<br><a target="_blank" rel="noopener" href="http://pages.cs.wisc.edu/~remzi/OSTEP/file-implementation.pdf">http://pages.cs.wisc.edu/~remzi/OSTEP/file-implementation.pdf</a></p>
-
+  </div><article class="md-text content">
 <div class="article-footer fs14"></div>
 </article>
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Prev</div><a href="/wiki/note-os/file.html">文件与目录</a></div><div class="item" id="next"><div class="note">Next</div><a href="/wiki/note-os/file-cache.html">缓存与缓冲</a></div></section></div>
+
 
 
   <div class="related-wrap md-text" id="comments">
@@ -179,14 +116,7 @@
 <footer class="page-footer footnote"><hr><div class="text"><p>Powered by <a target="_blank" rel="noopener" href="https://hexo.io/zh-tw/">Hexo</a> and <a target="_blank" rel="noopener" href="https://xaoxuu.com/wiki/stellar/">Stellar 1.33</a>. Licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.<br>そして、次の曲が始まるのです。</p>
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
-<div class="widgets">
-
-
-
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%84%E7%BB%87"><span class="toc-text">总组织</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B6%85%E7%BA%A7%E5%9D%97"><span class="toc-text">超级块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#inode"><span class="toc-text">inode</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E7%BA%A7%E7%B4%A2%E5%BC%95"><span class="toc-text">多级索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%93%BE%E8%A1%A8%E7%B4%A2%E5%BC%95"><span class="toc-text">链表索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A8%E7%B4%A2%E5%BC%95"><span class="toc-text">表索引</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#inode-%E8%A1%A8"><span class="toc-text">inode 表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A9%BA%E9%97%B2%E7%A9%BA%E9%97%B4%E7%AE%A1%E7%90%86"><span class="toc-text">空闲空间管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A9%BA%E9%97%B2%E9%93%BE%E8%A1%A8%E7%B4%A2%E5%BC%95"><span class="toc-text">空闲链表索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A9%BA%E9%97%B2%E5%9D%97%E8%A1%A8%E7%B4%A2%E5%BC%95"><span class="toc-text">空闲块表索引</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%85%E8%AF%BB"><span class="toc-text">阅读</span></a></li></ol></div><div class="widget-footer">
-
-<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.46 1.25h3.08c1.603 0 2.86 0 3.864.095c1.023.098 1.861.3 2.6.752a5.75 5.75 0 0 1 1.899 1.899c.452.738.654 1.577.752 2.6c.095 1.004.095 2.261.095 3.865v1.067c0 1.141 0 2.036-.05 2.759c-.05.735-.153 1.347-.388 1.913a5.75 5.75 0 0 1-3.112 3.112c-.805.334-1.721.408-2.977.43a10.81 10.81 0 0 0-.929.036c-.198.022-.275.054-.32.08c-.047.028-.112.078-.224.232c-.121.166-.258.396-.476.764l-.542.916c-.773 1.307-2.69 1.307-3.464 0l-.542-.916a10.605 10.605 0 0 0-.476-.764c-.112-.154-.177-.204-.224-.232c-.045-.026-.122-.058-.32-.08c-.212-.023-.49-.03-.93-.037c-1.255-.021-2.171-.095-2.976-.429A5.75 5.75 0 0 1 1.688 16.2c-.235-.566-.338-1.178-.389-1.913c-.049-.723-.049-1.618-.049-2.76v-1.066c0-1.604 0-2.86.095-3.865c.098-1.023.3-1.862.752-2.6a5.75 5.75 0 0 1 1.899-1.899c.738-.452 1.577-.654 2.6-.752C7.6 1.25 8.857 1.25 10.461 1.25M6.739 2.839c-.914.087-1.495.253-1.959.537A4.25 4.25 0 0 0 3.376 4.78c-.284.464-.45 1.045-.537 1.96c-.088.924-.089 2.11-.089 3.761v1c0 1.175 0 2.019.046 2.685c.045.659.131 1.089.278 1.441a4.25 4.25 0 0 0 2.3 2.3c.515.214 1.173.294 2.429.316h.031c.398.007.747.013 1.037.045c.311.035.616.104.909.274c.29.17.5.395.682.645c.169.232.342.525.538.856l.559.944a.52.52 0 0 0 .882 0l.559-.944c.196-.331.37-.624.538-.856c.182-.25.392-.476.682-.645c.293-.17.598-.24.909-.274c.29-.032.639-.038 1.037-.045h.032c1.255-.022 1.913-.102 2.428-.316a4.25 4.25 0 0 0 2.3-2.3c.147-.352.233-.782.278-1.441c.046-.666.046-1.51.046-2.685v-1c0-1.651 0-2.837-.089-3.762c-.087-.914-.253-1.495-.537-1.959a4.25 4.25 0 0 0-1.403-1.403c-.464-.284-1.045-.45-1.96-.537c-.924-.088-2.11-.089-3.761-.089h-3c-1.651 0-2.837 0-3.762.089" clip-rule="evenodd"/><path fill="currentColor" d="M9 11a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><span>Join Discussion</span></a></div></widget>
-</div></aside><div class='float-panel blur'>
+</aside><div class='float-panel blur'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
   </button>
@@ -657,33 +587,6 @@
       })
     }
   });
-</script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {
-    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-    processEscapes: true
-  }
-});
-MathJax.Hub.Config({
-  tex2jax: {
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-  }
-});
-// Prevent MathJax from shrinking to match body font x-height (common with CJK/web fonts)
-MathJax.Hub.Config({
-  "HTML-CSS": {
-    matchFontHeight: false,
-    scale: 110 // Adjust if needed: 100–115; this helps math size match body text visually
-  }
-});
-MathJax.Hub.Queue(function() {
-  var all = MathJax.Hub.getAllJax(), i;
-  for(i=0; i < all.length; i += 1) {
-    all[i].SourceElement().parentNode.className += ' has-jax';
-  }
-});
 </script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
