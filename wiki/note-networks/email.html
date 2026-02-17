@@ -20,15 +20,19 @@
   <title>Computer Networks: 电子邮件 - ThisisXXZ's Blog</title>
 
   
-    <meta property="og:type" content="website">
+    <meta name="description" content="电子邮件电子邮件在互联网诞生之初就是最受欢迎的应用之一。 用户-服务器模型。三个组分：  用户代理（user agent）：类似于前端，用于撰写，编辑，阅读邮件 邮件服务器（mail server），维护邮箱（mailbox）与消息队列（message queue） 协议  邮件服务器是与其他用户共享的如果邮件服务器运行在本地主机上，那么为了接收随时可能到达的新邮件，本地主机必须始终在线并保持互联">
+<meta property="og:type" content="website">
 <meta property="og:title" content="电子邮件">
 <meta property="og:url" content="https://www.thisisxxz.com/wiki/note-networks/email.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="电子邮件电子邮件在互联网诞生之初就是最受欢迎的应用之一。 用户-服务器模型。三个组分：  用户代理（user agent）：类似于前端，用于撰写，编辑，阅读邮件 邮件服务器（mail server），维护邮箱（mailbox）与消息队列（message queue） 协议  邮件服务器是与其他用户共享的如果邮件服务器运行在本地主机上，那么为了接收随时可能到达的新邮件，本地主机必须始终在线并保持互联">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-02-12T14:00:24.827Z">
-<meta property="article:modified_time" content="2026-02-12T14:00:24.827Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/netw-smtp.png">
+<meta property="article:published_time" content="2026-02-17T11:28:35.554Z">
+<meta property="article:modified_time" content="2026-02-17T11:28:35.554Z">
 <meta property="article:author" content="XXZ">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/netw-smtp.png">
   
   
   
@@ -79,7 +83,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">Wiki</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/note-networks/index.html">Computer Networks</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-02-12T14:00:24.827Z">2026-02-12</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-02-17T11:28:35.554Z">2026-02-17</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -90,7 +94,74 @@
     </div>
     
   </div>
-  </div><article class="md-text content">
+  </div><article class="md-text content"><h2 id="电子邮件"><a href="#电子邮件" class="headerlink" title="电子邮件"></a>电子邮件</h2><p>电子邮件在互联网诞生之初就是最受欢迎的应用之一。</p>
+<p>用户-服务器模型。三个组分：</p>
+<ul>
+<li>用户代理（user agent）：类似于前端，用于撰写，编辑，阅读邮件</li>
+<li>邮件服务器（mail server），维护邮箱（mailbox）与消息队列（message queue）</li>
+<li>协议</li>
+</ul>
+<div class="tag-plugin colorful note" color="green"><div class="title">邮件服务器是与其他用户共享的</div><div class="body"><p>如果邮件服务器运行在本地主机上，那么为了接收随时可能到达的新邮件，本地主机必须始终在线并保持互联网连接；这对于很多用户而言并不现实。因此，典型的做法是用户在本地主机上运行用户代理，但通过一台始终在线的共享邮件服务器使用存放在其中的邮箱与消息队列。</p></div></div>
+
+<h2 id="SMTP"><a href="#SMTP" class="headerlink" title="SMTP"></a>SMTP</h2><p>简单邮件传输协议（Simple Mail Transfer Protocol, SMTP）。</p>
+<p>发送邮件的<strong>邮件服务器</strong>是 SMTP 用户（SMTP client），接受邮件的<strong>邮件服务器</strong>是 SMTP 服务器（SMTP server）。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/netw-smtp.png" alt="注意第三步到第四步是从 Alice 的消息队列到 Bob 的邮箱" style="width:600px;"/></div><div class="image-meta"><span class="image-caption center">注意第三步到第四步是从 Alice 的消息队列到 Bob 的邮箱</span></div></div>
+<ul>
+<li>Alice 启动她的用户代理，撰写并发送邮件</li>
+<li>Alice 的用户代理将邮件发送至她的邮件服务器，放入<strong>消息队列</strong>中</li>
+<li>运行在 Alice 邮件服务器上的 SMTP 客户端看到消息队列中的这封邮件后，与运行在 Bob 邮件服务器上的 SMTP 服务器端建立一条 TCP 连接</li>
+<li><wavy>SMTP 握手</wavy>后，SMTP 客户端将 Alice 的邮件通过 TCP 连接发送出去</li>
+<li>运行在 Bob 邮件服务器上的 SMTP 服务器端接受该邮件，放入<strong>邮箱（mailbox）</strong></li>
+<li>Bob 在方便时启动他的用户代理读取这封邮件</li>
+</ul>
+<p>注意一：SMTP 直接在发送者与接收者的邮件服务器间建立连接，不使用中间服务器</p>
+<p>注意二：SMTP 握手阶段</p>
+<ul>
+<li>服务器端问候：<code>S: 200 [server host name]</code></li>
+<li>客户端打招呼：<code>C: HELO [client host name]</code></li>
+<li>服务器端确认：<code>S: 250 Hello [client], pleased to meet you</code></li>
+<li>客户端声明发件者：<code>C: MAIL FROM: &lt;sender_address&gt;</code></li>
+<li>服务器端确认：<code>S: 250 sender_address ... Sender ok</code></li>
+<li>客户端声明收件者：<code>C: RCPT TO: &lt;recipient_address&gt;</code></li>
+<li>服务器端确认：<code>S: 250 recipient_address ... Recipient ok</code></li>
+</ul>
+<p>注意三：SMTP 传输阶段</p>
+<ul>
+<li>客户端声明开始传输：<code>C: DATA</code></li>
+<li>服务器端确认：<code>S: 354 Enter mail</code></li>
+<li>客户端开始传输：<code>C: XXX</code></li>
+<li><code>C: YYY</code></li>
+<li><code>C: ZZZ</code></li>
+<li>客户端传输完毕，使用句点 <code>.</code> 标识传输结束 <code>C: .</code></li>
+<li>服务器端确认传输完毕：<code>S: 250 Message accepted by delivery</code></li>
+</ul>
+<p>注意四：SMTP 结束阶段</p>
+<ul>
+<li>客户端声明关闭连接：<code>C: QUIT</code></li>
+<li>服务器端关闭连接：<code>S: 221 [server] closing connection</code></li>
+</ul>
+<p>一些 SMTP 命令：<code>HELO</code>, <code>MAIL FROM</code>, <code>RCPT TO</code>, <code>DATA</code>, <code>QUIT</code>。</p>
+<h2 id="邮件消息的格式"><a href="#邮件消息的格式" class="headerlink" title="邮件消息的格式"></a>邮件消息的格式</h2><p>邮件消息，即客户端在 <code>DATA</code> 后传输的数据内容 <code>[XXX, YYY, ZZZ, ...]</code> 所需要遵循的格式。</p>
+<p>邮件头：</p>
+<ul>
+<li><code>Date: </code></li>
+<li><code>From: </code></li>
+<li><code>To: </code></li>
+<li><code>Subject: </code></li>
+<li>…</li>
+</ul>
+<p>[空行]</p>
+<p>[正文]（ASCII 格式）</p>
+<h2 id="邮件访问协议"><a href="#邮件访问协议" class="headerlink" title="邮件访问协议"></a>邮件访问协议</h2><p>SMTP 协议规定了邮件如何<mark class="tag-plugin colorful mark" color="yellow">从用户代理提交到发送方邮件服务器</mark>，以及如何将其继续<mark class="tag-plugin colorful mark" color="yellow">推送（push）至接收方邮件服务器</mark>；至于 Bob 的<mark class="tag-plugin colorful mark" color="blue">用户代理如何从邮件服务器上拉取（pull）邮件</mark>，则通常由邮件访问协议（mail access protocol）来规定。</p>
+<p>邮局协议（Post Office Protocol, POP3），无状态</p>
+<ul>
+<li>认证（authorization）阶段 <code>user</code>, <code>pass</code>，服务器响应 <code>+OK</code>, <code>-ERR</code></li>
+<li>事务（transaction）阶段：<code>list</code> 查询消息列表，<code>retr</code> 拉取对应消息，<code>dele</code> 标记删除消息，<code>quit</code>。「下载后删除」（download-and-delete）模式：读取一条消息就标记删除一条消息。</li>
+<li>更新（update）阶段：邮件服务器真正删除事务阶段中被 <code>dele</code> 标记删除的消息</li>
+</ul>
+<p>互联网邮件访问协议（Internet Mail Access Protocol, IMAP），有状态，支持将消息组织在文件夹中</p>
+<p>HTTP：Web-based 电邮的访问协议。Web-based 电邮<mark class="tag-plugin colorful mark" color="blue">从用户代理提交到发送方邮件服务器</mark>使用 HTTP 协议，将其继续<mark class="tag-plugin colorful mark" color="yellow">推送至接收方邮件服务器</mark>使用 SMTP 协议，接收方的<mark class="tag-plugin colorful mark" color="blue">用户代理从邮件服务器上拉取邮件</mark>仍使用 HTTP 协议。</p>
+
 <div class="article-footer fs14"></div>
 </article>
 <div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Prev</div><a href="/wiki/note-networks/web-http.html">Web 与 HTTP</a></div><div class="item" id="next"><div class="note">Next</div><a href="/wiki/note-networks/dns.html">互联网目录：DNS</a></div></section></div>
@@ -116,7 +187,14 @@
 <footer class="page-footer footnote"><hr><div class="text"><p>Powered by <a target="_blank" rel="noopener" href="https://hexo.io/zh-tw/">Hexo</a> and <a target="_blank" rel="noopener" href="https://xaoxuu.com/wiki/stellar/">Stellar 1.33</a>. Licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.<br>そして、次の曲が始まるのです。</p>
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
-</aside><div class='float-panel blur'>
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6"><span class="toc-text">电子邮件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SMTP"><span class="toc-text">SMTP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%82%AE%E4%BB%B6%E6%B6%88%E6%81%AF%E7%9A%84%E6%A0%BC%E5%BC%8F"><span class="toc-text">邮件消息的格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%82%AE%E4%BB%B6%E8%AE%BF%E9%97%AE%E5%8D%8F%E8%AE%AE"><span class="toc-text">邮件访问协议</span></a></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.46 1.25h3.08c1.603 0 2.86 0 3.864.095c1.023.098 1.861.3 2.6.752a5.75 5.75 0 0 1 1.899 1.899c.452.738.654 1.577.752 2.6c.095 1.004.095 2.261.095 3.865v1.067c0 1.141 0 2.036-.05 2.759c-.05.735-.153 1.347-.388 1.913a5.75 5.75 0 0 1-3.112 3.112c-.805.334-1.721.408-2.977.43a10.81 10.81 0 0 0-.929.036c-.198.022-.275.054-.32.08c-.047.028-.112.078-.224.232c-.121.166-.258.396-.476.764l-.542.916c-.773 1.307-2.69 1.307-3.464 0l-.542-.916a10.605 10.605 0 0 0-.476-.764c-.112-.154-.177-.204-.224-.232c-.045-.026-.122-.058-.32-.08c-.212-.023-.49-.03-.93-.037c-1.255-.021-2.171-.095-2.976-.429A5.75 5.75 0 0 1 1.688 16.2c-.235-.566-.338-1.178-.389-1.913c-.049-.723-.049-1.618-.049-2.76v-1.066c0-1.604 0-2.86.095-3.865c.098-1.023.3-1.862.752-2.6a5.75 5.75 0 0 1 1.899-1.899c.738-.452 1.577-.654 2.6-.752C7.6 1.25 8.857 1.25 10.461 1.25M6.739 2.839c-.914.087-1.495.253-1.959.537A4.25 4.25 0 0 0 3.376 4.78c-.284.464-.45 1.045-.537 1.96c-.088.924-.089 2.11-.089 3.761v1c0 1.175 0 2.019.046 2.685c.045.659.131 1.089.278 1.441a4.25 4.25 0 0 0 2.3 2.3c.515.214 1.173.294 2.429.316h.031c.398.007.747.013 1.037.045c.311.035.616.104.909.274c.29.17.5.395.682.645c.169.232.342.525.538.856l.559.944a.52.52 0 0 0 .882 0l.559-.944c.196-.331.37-.624.538-.856c.182-.25.392-.476.682-.645c.293-.17.598-.24.909-.274c.29-.032.639-.038 1.037-.045h.032c1.255-.022 1.913-.102 2.428-.316a4.25 4.25 0 0 0 2.3-2.3c.147-.352.233-.782.278-1.441c.046-.666.046-1.51.046-2.685v-1c0-1.651 0-2.837-.089-3.762c-.087-.914-.253-1.495-.537-1.959a4.25 4.25 0 0 0-1.403-1.403c-.464-.284-1.045-.45-1.96-.537c-.924-.088-2.11-.089-3.761-.089h-3c-1.651 0-2.837 0-3.762.089" clip-rule="evenodd"/><path fill="currentColor" d="M9 11a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><span>Join Discussion</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
   </button>

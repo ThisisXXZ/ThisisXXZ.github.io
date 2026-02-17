@@ -20,13 +20,15 @@
   <title>Computer Networks: Web 与 HTTP - ThisisXXZ's Blog</title>
 
   
-    <meta property="og:type" content="website">
+    <meta name="description" content="WebWeb，或万维网（World Wide Web），是一个互联网应用。 它本质上是一个信息空间，在其中，文档和其他 Web 资源通过统一资源定位符（Uniform Resource Locator, URL）来标识，借助超文本链接（hypertext links）相互关联，并且可以通过互联网进行访问。 网页（web page）：即文档，包括一个基础 HTML 文件与若干被 URL 标识的对象。">
+<meta property="og:type" content="website">
 <meta property="og:title" content="Web 与 HTTP">
 <meta property="og:url" content="https://www.thisisxxz.com/wiki/note-networks/web-http.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="WebWeb，或万维网（World Wide Web），是一个互联网应用。 它本质上是一个信息空间，在其中，文档和其他 Web 资源通过统一资源定位符（Uniform Resource Locator, URL）来标识，借助超文本链接（hypertext links）相互关联，并且可以通过互联网进行访问。 网页（web page）：即文档，包括一个基础 HTML 文件与若干被 URL 标识的对象。">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-02-12T13:59:47.407Z">
-<meta property="article:modified_time" content="2026-02-12T13:59:47.407Z">
+<meta property="article:published_time" content="2026-02-17T07:28:14.208Z">
+<meta property="article:modified_time" content="2026-02-17T07:28:14.208Z">
 <meta property="article:author" content="XXZ">
 <meta name="twitter:card" content="summary">
   
@@ -79,7 +81,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">Wiki</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/note-networks/index.html">Computer Networks</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-02-12T13:59:47.407Z">2026-02-12</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-02-17T07:28:14.208Z">2026-02-17</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -90,7 +92,63 @@
     </div>
     
   </div>
-  </div><article class="md-text content">
+  </div><article class="md-text content"><h2 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h2><p>Web，或万维网（World Wide Web），是一个互联网应用。</p>
+<p>它本质上是一个信息空间，在其中，文档和其他 Web 资源通过<wavy>统一资源定位符（Uniform Resource Locator, URL）</wavy>来标识，借助超文本链接（hypertext links）相互关联，并且可以通过互联网进行访问。</p>
+<p>网页（web page）：即文档，包括一个基础 HTML 文件与若干被 URL 标识的对象。</p>
+<p>URL：</p>
+<ul>
+<li>协议（scheme）：<code>https</code></li>
+<li><code>://</code></li>
+<li>主机（host）域名或 IP：<code>thisisxxz.com</code></li>
+<li>路径（path）：<code>/wiki/note-networks/web-http.html</code></li>
+</ul>
+<h2 id="HTTP-1-X"><a href="#HTTP-1-X" class="headerlink" title="HTTP&#x2F;1.X"></a>HTTP&#x2F;1.X</h2><p>Web 的应用层协议是超文本传输协议（Hypertext Transfer Protocol, HTTP）。是用户-服务器模型。其中：</p>
+<ul>
+<li>用户程序：浏览器，HTTP 请求（request），获取并渲染 Web 资源</li>
+<li>服务器程序：Web 服务器，HTTP 响应（response），发送 Web 资源</li>
+</ul>
+<p>HTTP 本身是<wavy>无状态协议（stateless protocol）</wavy>，意味着在协议层面 HTTP 服务器不保存任何关于客户端的信息。HTTP 服务器始终运行，并且有固定的 IP 地址。</p>
+<p>HTTP&#x2F;1.0：非持久（non-persistent）连接。请求一个对象就要开一个 TCP 连接。<br>HTTP&#x2F;1.1：持久（persistent）连接。多个对象甚至网页都能通过单条持久 TCP 连接传输。HTTP 服务器会在连接一段时间内未使用后将其关闭。</p>
+<p>HTTP 请求消息：</p>
+<ul>
+<li>请求行（request line）：GET, POST, HEAD, PUT, DELETE [path] [scheme]</li>
+<li>头（headers）</li>
+<li>请求体（entity body）：给 POST，PUT 用于上传</li>
+</ul>
+<p>HTTP 响应消息：</p>
+<ul>
+<li>状态行（status line）：200 OK, 301 Moved Permanently, 400 Bad Request, 403 Forbidden, 404 Not Found, 500 Internal Server Error, 505 HTTP Version Not Supported</li>
+<li>头（headers）</li>
+<li>响应体：发送 Web 资源</li>
+</ul>
+<h2 id="Cookies"><a href="#Cookies" class="headerlink" title="Cookies"></a>Cookies</h2><p>我们都爱魔法饼干！</p>
+<p>Cookies 在无状态的 HTTP 上构建一个用户会话层（user session layer）。Cookie 首先在服务器端生成，存储在后端数据库里，并向用户端浏览器中 Set。用户端浏览器在 Cookie 文件中记录该 Cookie，在每次向服务器端发送请求时附上 Cookie 头。</p>
+<ul>
+<li>HTTP 响应消息中的一行 Cookie 头 <code>Set-cookie</code></li>
+<li>HTTP 请求消息中的一行 Cookie 头 <code>Cookie</code></li>
+<li>存放在用户端系统上，由浏览器管理的 Cookie 文件（主机名是键，Cookie 是值）</li>
+<li>服务器端的后端数据库（Cookie 是键，服务器状态等是值）</li>
+</ul>
+<h2 id="代理服务器"><a href="#代理服务器" class="headerlink" title="代理服务器"></a>代理服务器</h2><p>代理服务器（proxy server），又称 Web 缓存（Web caching）。</p>
+<p>代理服务器是源 Web 服务器（origin Web server）的缓存，它有自己的磁盘存储，在其中保存最近请求过的对象副本，以更迅速的满足 HTTP 请求。客户端与代理服务器间通常存在高速连接。</p>
+<p>代理服务器通常由 ISP 购买并部署。</p>
+<wavy>内容分发网络（Content Delivery Network, CDN）</wavy>是一套分布式的全球代理服务器网络。本站的所有图片资源均采用公共 CDN jsDelivr 进行加速！
+
+<p>conditional GET 是代理服务器确认其储存的对象副本是否过时的方式，通过在 GET 请求中加入 <code>If-Modified-Since</code> 的头实现。</p>
+<h2 id="HTTP-2-0"><a href="#HTTP-2-0" class="headerlink" title="HTTP&#x2F;2.0"></a>HTTP&#x2F;2.0</h2><p>HTTP&#x2F;1.1 单条持久 TCP 连接的问题：<wavy>队头阻塞（Head of Line, HOL）</wavy>。假设某网页包含一个 HTML 基础页面，一段大型视频片段，许多小对象；并且客户端与服务器间的路径上有一段低速瓶颈。位于队头的视频片段会占据单条 TCP 连接，阻塞其后的小对象，使得用户感知的时延（user-perceived delay）巨大，这就是 HOL。</p>
+<p>此外，TCP 拥塞控制机制使共享同一瓶颈链路的每条 TCP 连接均分带宽份额，通过为传输单个 Web 页面打开多条 TCP 连接，浏览器可以「作弊」占用更大份额的链路带宽！</p>
+<p>HTTP&#x2F;2 的目标：消除，或至少是减少为传输单个 Web 页面所建立的并行 TCP 连接数量；同时缓解 HOL。</p>
+<p>HTTP&#x2F;2 的<strong>分帧子层（framing sub-layer）</strong>：</p>
+<ul>
+<li>将每条 HTTP 响应拆分为多帧，并交错（interleaved）着通过单条持久化 TCP 连接发送出去（把「深度发送」变为「宽度发送」，减少用户感知时延）。</li>
+<li>拆帧后还会进行二进制编码，易于高效解析与错误恢复。</li>
+<li>帧到达客户端后在分帧子层重组为原始响应再交由浏览器处理。</li>
+</ul>
+<p>HTTP&#x2F;2 的<strong>消息优先级（message prioritization）</strong>：客户端并发的向服务器发送请求时会附上权重；服务器按照该权重优先发送高优先级响应的各帧。</p>
+<p>HTTP&#x2F;2 的<strong>服务器推送（server push）</strong>：服务器能够解析基础 HTML 文件，识别出所需的对象，并在客户端发起对这些对象的显示请求之前就向它推送。</p>
+<h2 id="HTTP-3-0"><a href="#HTTP-3-0" class="headerlink" title="HTTP&#x2F;3.0"></a>HTTP&#x2F;3.0</h2><p>2022 年 7 月标准化。</p>
+<p>QUIC，基于 UDP 的多工传输协议。</p>
+
 <div class="article-footer fs14"></div>
 </article>
 <div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Prev</div><a href="/wiki/note-networks/socket.html">套接字编程</a></div><div class="item" id="next"><div class="note">Next</div><a href="/wiki/note-networks/email.html">电子邮件</a></div></section></div>
@@ -116,7 +174,14 @@
 <footer class="page-footer footnote"><hr><div class="text"><p>Powered by <a target="_blank" rel="noopener" href="https://hexo.io/zh-tw/">Hexo</a> and <a target="_blank" rel="noopener" href="https://xaoxuu.com/wiki/stellar/">Stellar 1.33</a>. Licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.<br>そして、次の曲が始まるのです。</p>
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
-</aside><div class='float-panel blur'>
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Web"><span class="toc-text">Web</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-1-X"><span class="toc-text">HTTP&#x2F;1.X</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cookies"><span class="toc-text">Cookies</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-text">代理服务器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-2-0"><span class="toc-text">HTTP&#x2F;2.0</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-3-0"><span class="toc-text">HTTP&#x2F;3.0</span></a></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.46 1.25h3.08c1.603 0 2.86 0 3.864.095c1.023.098 1.861.3 2.6.752a5.75 5.75 0 0 1 1.899 1.899c.452.738.654 1.577.752 2.6c.095 1.004.095 2.261.095 3.865v1.067c0 1.141 0 2.036-.05 2.759c-.05.735-.153 1.347-.388 1.913a5.75 5.75 0 0 1-3.112 3.112c-.805.334-1.721.408-2.977.43a10.81 10.81 0 0 0-.929.036c-.198.022-.275.054-.32.08c-.047.028-.112.078-.224.232c-.121.166-.258.396-.476.764l-.542.916c-.773 1.307-2.69 1.307-3.464 0l-.542-.916a10.605 10.605 0 0 0-.476-.764c-.112-.154-.177-.204-.224-.232c-.045-.026-.122-.058-.32-.08c-.212-.023-.49-.03-.93-.037c-1.255-.021-2.171-.095-2.976-.429A5.75 5.75 0 0 1 1.688 16.2c-.235-.566-.338-1.178-.389-1.913c-.049-.723-.049-1.618-.049-2.76v-1.066c0-1.604 0-2.86.095-3.865c.098-1.023.3-1.862.752-2.6a5.75 5.75 0 0 1 1.899-1.899c.738-.452 1.577-.654 2.6-.752C7.6 1.25 8.857 1.25 10.461 1.25M6.739 2.839c-.914.087-1.495.253-1.959.537A4.25 4.25 0 0 0 3.376 4.78c-.284.464-.45 1.045-.537 1.96c-.088.924-.089 2.11-.089 3.761v1c0 1.175 0 2.019.046 2.685c.045.659.131 1.089.278 1.441a4.25 4.25 0 0 0 2.3 2.3c.515.214 1.173.294 2.429.316h.031c.398.007.747.013 1.037.045c.311.035.616.104.909.274c.29.17.5.395.682.645c.169.232.342.525.538.856l.559.944a.52.52 0 0 0 .882 0l.559-.944c.196-.331.37-.624.538-.856c.182-.25.392-.476.682-.645c.293-.17.598-.24.909-.274c.29-.032.639-.038 1.037-.045h.032c1.255-.022 1.913-.102 2.428-.316a4.25 4.25 0 0 0 2.3-2.3c.147-.352.233-.782.278-1.441c.046-.666.046-1.51.046-2.685v-1c0-1.651 0-2.837-.089-3.762c-.087-.914-.253-1.495-.537-1.959a4.25 4.25 0 0 0-1.403-1.403c-.464-.284-1.045-.45-1.96-.537c-.924-.088-2.11-.089-3.761-.089h-3c-1.651 0-2.837 0-3.762.089" clip-rule="evenodd"/><path fill="currentColor" d="M9 11a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><span>Join Discussion</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
   </button>
