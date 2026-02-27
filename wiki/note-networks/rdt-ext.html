@@ -17,25 +17,23 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   
-  <title>Computer Networks: 可靠数据传输 RDT - ThisisXXZ's Blog</title>
+  <title>Computer Networks: RDT：其他机制 - ThisisXXZ's Blog</title>
 
   
-    <meta name="description" content="如果要列出计网中的十大问题，可靠数据传输（Reliable Data Transfer, RDT）甚至有机会竞争榜首。RDT 能在应用层，传输层，与链路层中实现。 以渐进的方式发展出 RDT 机制。先作一些假设：  服务器-用户模型，且只考虑从用户向服务器的单向数据传输（unidirectional data transfer） 使用有限状态自动机（finite state machine, FS">
+    <meta name="description" content="流水线式 RDT 协议stop-and-wait 协议中，每发送一个包发送方就阻塞，等待 ACK 后（瓶颈是 RTT）才能做出行动。流水线式 RDT 协议（pipelined RDT protocol）令发送方每次发送 $n$ 个包，这就能获得 $n$ 倍的利用率（utilization）提升。  利用率：发送方实际把比特推到信道中的时间（传输时延）占总时间的比例  流水线式 RDT 协议要求：">
 <meta property="og:type" content="website">
-<meta property="og:title" content="可靠数据传输 RDT">
-<meta property="og:url" content="https://www.thisisxxz.com/wiki/note-networks/reliable-data-trans.html">
+<meta property="og:title" content="RDT：其他机制">
+<meta property="og:url" content="https://www.thisisxxz.com/wiki/note-networks/rdt-ext.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="如果要列出计网中的十大问题，可靠数据传输（Reliable Data Transfer, RDT）甚至有机会竞争榜首。RDT 能在应用层，传输层，与链路层中实现。 以渐进的方式发展出 RDT 机制。先作一些假设：  服务器-用户模型，且只考虑从用户向服务器的单向数据传输（unidirectional data transfer） 使用有限状态自动机（finite state machine, FS">
+<meta property="og:description" content="流水线式 RDT 协议stop-and-wait 协议中，每发送一个包发送方就阻塞，等待 ACK 后（瓶颈是 RTT）才能做出行动。流水线式 RDT 协议（pipelined RDT protocol）令发送方每次发送 $n$ 个包，这就能获得 $n$ 倍的利用率（utilization）提升。  利用率：发送方实际把比特推到信道中的时间（传输时延）占总时间的比例  流水线式 RDT 协议要求：">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/netw-rdt1.0.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/netw-rdt2.0.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/netw-rdt2.1.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/netw-rdt2.1-rcpt.png">
-<meta property="article:published_time" content="2026-02-24T09:43:59.840Z">
-<meta property="article:modified_time" content="2026-02-24T09:43:59.840Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/netw-gbn.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/netw-sr.png">
+<meta property="article:published_time" content="2026-02-27T16:05:12.600Z">
+<meta property="article:modified_time" content="2026-02-27T16:05:12.600Z">
 <meta property="article:author" content="XXZ">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/netw-rdt1.0.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/netw-gbn.png">
   
   
   
@@ -71,7 +69,7 @@
 </div>
 <div class="widgets">
 
-<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">序</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-networks/index.html#start"><span class="toc-text">扉页</span></a></div><div class="widget-header dis-select"><span class="name">基本概念</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-networks/introduction.html"><span class="toc-text">计算机网络概述</span></a></div><div class="widget-header dis-select"><span class="name">应用层</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-networks/network-app.html"><span class="toc-text">网络应用概述</span></a><a class="link" href="/wiki/note-networks/socket.html"><span class="toc-text">套接字编程</span></a><a class="link" href="/wiki/note-networks/web-http.html"><span class="toc-text">Web 与 HTTP</span></a><a class="link" href="/wiki/note-networks/email.html"><span class="toc-text">电子邮件</span></a><a class="link" href="/wiki/note-networks/dns.html"><span class="toc-text">互联网目录：DNS</span></a></div><div class="widget-header dis-select"><span class="name">传输层</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-networks/trans-intro.html"><span class="toc-text">传输层概述</span></a><a class="link" href="/wiki/note-networks/multiplexing.html"><span class="toc-text">复用与分用</span></a><a class="link" href="/wiki/note-networks/udp.html"><span class="toc-text">无连接传输：UDP</span></a><a class="link active" href="/wiki/note-networks/reliable-data-trans.html"><span class="toc-text">可靠数据传输 RDT</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="link" href="/wiki/note-networks/tcp.html"><span class="toc-text">连接面向传输：TCP</span></a><a class="link" href="/wiki/note-networks/congestion-control.html"><span class="toc-text">拥塞控制机制</span></a></div></widget>
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">序</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-networks/index.html#start"><span class="toc-text">扉页</span></a></div><div class="widget-header dis-select"><span class="name">基本概念</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-networks/introduction.html"><span class="toc-text">计算机网络概述</span></a></div><div class="widget-header dis-select"><span class="name">应用层</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-networks/network-app.html"><span class="toc-text">网络应用概述</span></a><a class="link" href="/wiki/note-networks/socket.html"><span class="toc-text">套接字编程</span></a><a class="link" href="/wiki/note-networks/web-http.html"><span class="toc-text">Web 与 HTTP</span></a><a class="link" href="/wiki/note-networks/email.html"><span class="toc-text">电子邮件</span></a><a class="link" href="/wiki/note-networks/dns.html"><span class="toc-text">互联网目录：DNS</span></a></div><div class="widget-header dis-select"><span class="name">传输层</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-networks/trans-intro.html"><span class="toc-text">传输层概述</span></a><a class="link" href="/wiki/note-networks/multiplexing.html"><span class="toc-text">复用与分用</span></a><a class="link" href="/wiki/note-networks/udp.html"><span class="toc-text">无连接传输：UDP</span></a><a class="link" href="/wiki/note-networks/rdt.html"><span class="toc-text">RDT：交替比特协议</span></a><a class="link active" href="/wiki/note-networks/rdt-ext.html"><span class="toc-text">RDT：其他机制</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="link" href="/wiki/note-networks/tcp.html"><span class="toc-text">连接面向传输：TCP</span></a><a class="link" href="/wiki/note-networks/congestion-control.html"><span class="toc-text">拥塞控制机制</span></a></div></widget>
 
 <widget class="widget-wrapper post-card"><div class="widget-header dis-select"><span class="name">More: 科技</span></div><div class="widget-body"><a class="item wiki" href="/wiki/note-cryptography/index.html"><span class="title">密码学 Cryptography</span><span class="excerpt">密码学相关，主要是课程 COMP3357 的内容。</span></a><a class="item wiki" href="/wiki/note-astronomy/index.html"><span class="title">飘飘何所似 Our Place in the Universe</span><span class="excerpt">西方天文学及其发展史相关，主要是课程 CCST9012 的内容。</span></a><a class="item wiki" href="/wiki/note-dsa/index.html"><span class="title">数据结构与算法 DS & A</span><span class="excerpt">数据结构与算法相关。</span></a><a class="item wiki" href="/wiki/note-vlsi/index.html"><span class="title">VLSI 设计原理 VLSI Design Principles</span><span class="excerpt">超大规模集成电路设计原理相关，主要是课程 ELEC4642 的内容。</span></a><a class="item wiki" href="/wiki/note-os/index.html"><span class="title">操作系统 Operating System</span><span class="excerpt">操作系统相关，主要是课程 COMP3230 的内容。</span></a><a class="item wiki" href="/wiki/note-pl/index.html"><span class="title">编程语言 Programming Languages</span><span class="excerpt">编程语言相关，主要是 UW 课程 CSE341 的内容。</span></a></div></widget>
 </div>
@@ -86,86 +84,79 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">Wiki</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/note-networks/index.html">Computer Networks</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-02-24T09:43:59.840Z">2026-02-24</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-02-27T16:05:12.600Z">2026-02-28</time></span></div></div></div>
     
     <div class="bottom only-title">
       
       <div class="text-area">
-        <h1 class="text title"><span>可靠数据传输 RDT</span></h1>
+        <h1 class="text title"><span>RDT：其他机制</span></h1>
         
       </div>
     </div>
     
   </div>
-  </div><article class="md-text content"><p>如果要列出计网中的十大问题，可靠数据传输（Reliable Data Transfer, RDT）甚至有机会竞争榜首。RDT 能在应用层，传输层，与链路层中实现。</p>
-<p>以渐进的方式发展出 RDT 机制。先作一些假设：</p>
+  </div><article class="md-text content"><h2 id="流水线式-RDT-协议"><a href="#流水线式-RDT-协议" class="headerlink" title="流水线式 RDT 协议"></a>流水线式 RDT 协议</h2><p>stop-and-wait 协议中，每发送一个包发送方就阻塞，等待 ACK 后（瓶颈是 RTT）才能做出行动。流水线式 RDT 协议（pipelined RDT protocol）令发送方每次发送 $n$ 个包，这就能获得 $n$ 倍的利用率（utilization）提升。</p>
 <ul>
-<li>服务器-用户模型，且只考虑从用户向服务器的单向数据传输（unidirectional data transfer）</li>
-<li>使用有限状态自动机（finite state machine, FSM）描述</li>
+<li>利用率：发送方实际把比特推到信道中的时间（传输时延）占总时间的比例</li>
 </ul>
-<h2 id="rdt-1-0：完全可靠信道"><a href="#rdt-1-0：完全可靠信道" class="headerlink" title="rdt 1.0：完全可靠信道"></a>rdt 1.0：完全可靠信道</h2><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/netw-rdt1.0.png" alt="横线上方：触发转移（transition）的事件；下方：事件发生时采取的行动" style="width:350px;"/></div><div class="image-meta"><span class="image-caption center">横线上方：触发转移（transition）的事件；下方：事件发生时采取的行动</span></div></div>
-
-<h2 id="rdt-2-0：可能发生位错误的信道"><a href="#rdt-2-0：可能发生位错误的信道" class="headerlink" title="rdt 2.0：可能发生位错误的信道"></a>rdt 2.0：可能发生位错误的信道</h2><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/netw-rdt2.0.png" style="width:500px;"/></div></div>
+<p>流水线式 RDT 协议要求：</p>
+<ul>
+<li>序号（sequence number）的范围变大，用于区分一次性发送的不同包</li>
+<li>发送方与接收方均需要实现缓冲（buffer）储存多个包</li>
+<li>新的处理丢包，高延迟包，位错误的机制：接下来介绍的回退 N 帧协议与选择重传协议</li>
+</ul>
+<h2 id="回退-N-帧协议"><a href="#回退-N-帧协议" class="headerlink" title="回退 N 帧协议"></a>回退 N 帧协议</h2><p>回退 N 帧协议（Go-Back-N Protocol, GBN）是一种滑动窗口（sliding window）协议。</p>
+<p>滑动窗口大小为 $N$，序号占 $k$ 位，则 $N\leq 2^k$。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/netw-gbn.png" style="width:600px;"/></div></div>
+<ul>
+<li><code>[0, base-1]</code>：已发送并收到 ACK 的包的序号</li>
+<li><code>[base, nextseqsum-1]</code>：已发送但并未收到 ACK 的包的序号</li>
+<li><code>[nextseqsum, base+N-1]</code>：可用于待发送的包的序号</li>
+</ul>
+<p>发送方维护两个指针 <code>base = 1</code> 与 <code>nextseqsum = 1</code>：</p>
+<ul>
+<li>上一层调用 <code>rdt_send()</code>：若窗口未满，使用 <code>nextseqsum</code> 创建新包并发送，令 <code>nextseqsum++</code>；若窗口已满（<code>nextseqsum = base+N</code>），把数据退还给上一层（或其他缓存机制）</li>
+<li>收到 ACK <code>n</code>：GBN 中的 ACK 是<strong>累计确认（cumulative acknowledgement）</strong>，意味着<wavy>接收方成功接收了所有序号不超过 n 的包</wavy>，令 <code>base = chkmax(n+1)</code>，<code>nextseqsum = chkmax(n+1)</code></li>
+<li>超时：计时器追踪包 <code>base</code>（<wavy>最早的已发送但并未收到 ACK 的包</wavy>，因此当 <code>base = nextseqsum</code> 时计时器闲置），若超时，重传 <code>[base, nextseqsum-1]</code> 中的所有包后重启计时器；若收到 ACK 使得 <code>base</code> 移动，重启计时器。</li>
+</ul>
+<p>接收方维护一个指针 <code>expectedseqnum = 1</code>：</p>
+<ul>
+<li>收到包 <code>n</code>：若 <code>n = expectedseqnum</code> 并且校验成功，那么交付数据，令 <code>expectedseqnum++</code>，向发送方发送 ACK <code>n</code>；否则（无论是 <code>n != expectedseqnum</code> 还是校验失败）丢弃包 <code>n</code>，向发送方发送 ACK <code>expectedseqnum-1</code>（最近一次按序接受的包）</li>
+</ul>
+<p>接收方只看单调递增的 <code>expectedseqnum</code>，它会丢弃任何失序（out-of-order）的包。假如说当前 <code>expectedseqnum = n</code> 但收到了包 <code>n+1</code>，即使知道这个包是一定会被接受的，GBN 仍然将其丢弃。这样做的好处是接收方的逻辑简洁，坏处是重传次数多。</p>
+<h2 id="选择重传协议"><a href="#选择重传协议" class="headerlink" title="选择重传协议"></a>选择重传协议</h2><p>选择重传协议（Selective Repeat Protocol, SR）是 GBN 的按需重传版本。即，发送方只重传那些它「认为」需要重传的数据包。</p>
+<p>发送方与接收方均维护长度为 $N$ 的滑动窗口与序号的映射，双方根据 ACK 信号的收发进行同步（synchronization）。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/netw-sr.png" style="width:600px;"/></div></div>
 
 <p>发送方：</p>
 <ul>
-<li>发送数据</li>
-<li>在收到确认之前阻塞<ul>
-<li>若收到<wavy>确认（acknowledgements, ACKs）</wavy>，解除阻塞</li>
-<li>若收到<wavy>否认（negative acknowledgements, NAKs）</wavy>，重传数据（retransmission）</li>
+<li>上一层调用 <code>rdt_send()</code>：同 GBN</li>
+<li>收到 ACK <code>n</code>：若 <code>n</code> 在窗口内（<code>[send_base, send_base+N-1]</code>），将 <code>n</code> 标记为 ACKed（已确认）；若 <code>n = send_base</code>，向前移动 <code>send_base</code> 至当前尚未 ACKed 的最小序号处</li>
+<li>超时：为减少重传次数，每个包都拥有各自的计时器（可以用一个硬件计时器模拟多个逻辑计时器）；超时后重传并重置计时器，收到 ACK 后停止计时器</li>
 </ul>
-</li>
-</ul>
-<p>确认与否认都是一个 1 比特的信号。</p>
-<div class="tag-plugin colorful note" color="blue"><div class="title">自动请求重发协议（Automatic&nbsp;Repeat&nbsp;reQuest&nbsp;protocols,&nbsp;ARQ）</div><div class="body"><p>基于确认信号或者指定的时限（timeouts）与重发（retransmissions）的 RDT 机制被称为自动请求重发协议 ARQ。</p></div></div>
-
-<div class="tag-plugin colorful note" color="red"><div class="title">停止等待协议（stop-and-wait&nbsp;protocols）</div><div class="body"><p>ARQ 的一种。发送方在送出数据后收到确认信号之前阻塞，以此为特征的机制被称为停止等待协议。</p></div></div>
-
 <p>接收方：</p>
 <ul>
-<li>接收数据</li>
-<li>校验数据<ul>
-<li>若校验成功，向接收方发送 ACK 信号</li>
-<li>若校验失败，向接收方发送 NAK 信号</li>
+<li>收到窗口内（<code>[rcv_base, rcv_base+N-1]</code>）的包 <code>n</code> 并成功校验：向发送方发送 ACK <code>n</code>，将其缓存并标记。若从基序号开始有一段连续的标记为已缓存的包（<code>[rcv_base, rcv_base+k]</code>），则按顺序一并交付，并向前移动 <code>rcv_base</code> 至当前尚未被缓存的最小序号处（<code>rcv_base+k+1</code>）</li>
+<li>[*] 收到<strong>前一个窗口</strong>（<code>[rcv_base-N, rcv_base-1]</code>）的包 <code>n</code> 并成功校验：向发送方发送 ACK <code>n</code></li>
+<li>其余情况：忽略收到的包</li>
 </ul>
-</li>
-</ul>
-<h2 id="rdt-2-1：一个修正"><a href="#rdt-2-1：一个修正" class="headerlink" title="rdt 2.1：一个修正"></a>rdt 2.1：一个修正</h2><p>一个问题是：确认信号本身也有可能发生位错误！考虑重传（retransmission）修正：收到 garbled 的 ACK 或 NAK 信号时（注意，确认信号也是带校验和的，发送方能够检测其是否 corrupt），发送方直接重传一遍数据。</p>
-<p>这又引出一个问题：接收方无法得知新收到的数据包是新数据包还是一次重传（因为它并不知道自己上次发送的确认信号是否在传输过程中 corrupt）。</p>
-<p>为此在头中引入一个新字段，让发送方在其中填入<strong>序号（sequence number）</strong>；接收方只需要检测该序号就能判断收到的数据包是否为重传。</p>
-<p>发送方：</p>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/netw-rdt2.1.png" alt="在 stop-and-wait 模型中，只需要模二（modulo-2 arithmetic）序号 0/1 用于滚动区分前后两个数据包" style="width:550px;"/></div><div class="image-meta"><span class="image-caption center">在 stop-and-wait 模型中，只需要模二（modulo-2 arithmetic）序号 0/1 用于滚动区分前后两个数据包</span></div></div>
-
-<p>接收方：</p>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/netw-rdt2.1-rcpt.png" style="width:600px;"/></div></div>
-
-<h2 id="rdt-2-2：取消-NAK-信号"><a href="#rdt-2-2：取消-NAK-信号" class="headerlink" title="rdt 2.2：取消 NAK 信号"></a>rdt 2.2：取消 NAK 信号</h2><p>是 rdt 2.1 的等价模型，但是仅使用 ACK 信号 + 序号。</p>
-<p>接收方：</p>
+<p>[*] 的原因：考虑初始状态下发送方与接收方的窗口同步，均是 <code>[k, k+N-1]</code></p>
 <ul>
-<li>总是发送最近一次校验成功数据包的序号：收到第 $n$ 个数据包时，若校验成功，发送 ACK + seq #$n$；否则发送 ACK + seq #$(n-1)$。</li>
+<li>发送方发送包 <code>[k, k+N-1]</code></li>
+<li>接收方均正确接收，逐一 ACK，窗口移动至 <code>[k+N, k+2N-1]</code></li>
+<li>ACK <code>k</code> 丢失，因此发送方的窗口仍然卡在 <code>[k, k+N-1]</code></li>
+<li>发送方包 <code>k</code> 的计时器超时，触发重传</li>
+<li>此时 <code>k</code> 属于接收方前一个窗口内的包，但仍需要回复 ACK <code>k</code> 使得<strong>发送方的窗口正确同步</strong></li>
 </ul>
-<p>发送方：</p>
+<p>SR 中窗口大小 $N$ 与序号空间大小 $M&#x3D;2^k$ 的关系：序号必须唯一标识窗口内的所有不同包以避免两个包模 $M$ 映射到同一序号。发送方与接收方的窗口完全错开时最多会有 $2N$ 个不同的数据包（见上），因此 $M\geq 2N$。 </p>
 <ul>
-<li>若收到重复的 ACK + seq #$(n-1)$，得知数据包 $n$ 未发送成功，重传</li>
-<li>否则继续传输第 $n+1$ 个数据包</li>
+<li>GBN：发送方 $N$ 个包，接收方 $1$ 个包（<code>expectedseqnum</code>），因此 $M\geq N+1$</li>
+<li>交替比特：发送方 $1$ 个包，接收方 $1$ 个包，因此 $M\geq 2$</li>
 </ul>
-<p>（以上的序号 $n$ 均为模 2 意义下的）</p>
-<h2 id="rdt-3-0：可能发生丢包与位错误的信道"><a href="#rdt-3-0：可能发生丢包与位错误的信道" class="headerlink" title="rdt 3.0：可能发生丢包与位错误的信道"></a>rdt 3.0：可能发生丢包与位错误的信道</h2><p>丢包如何处理？</p>
-<p>发送方设置一个倒数计时器（countdown timer），每次发送一个包后重置并启动。若在指定的 timeout 后未收到 ACK 信号，触发重传。</p>
-<ul>
-<li>ACK 包丢了怎么办？&#x3D;&gt; 发送方重传，但由于序号的存在，接收方能够识别 duplication，再次 ACK 即可。</li>
-</ul>
-<p>timeout 参数的设置很重要：</p>
-<ul>
-<li>太短：并未丢包也可能触发重传，引发频繁的 duplication</li>
-<li>太长：无法迅速处理丢包</li>
-<li>一个 estimation：将 timeout 设置成发送方与接收方间的<strong>往返时延（round trip time, RTT）</strong></li>
-</ul>
-<p>Rdt 3.0 是一个完整的 RDT，被称为交替比特协议（alternating-bit protocol）。它的表现很差！主要的瓶颈是 stop-and-wait。</p>
 
 <div class="article-footer fs14"></div>
 </article>
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Prev</div><a href="/wiki/note-networks/udp.html">无连接传输：UDP</a></div><div class="item" id="next"><div class="note">Next</div><a href="/wiki/note-networks/tcp.html">连接面向传输：TCP</a></div></section></div>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Prev</div><a href="/wiki/note-networks/rdt.html">RDT：交替比特协议</a></div><div class="item" id="next"><div class="note">Next</div><a href="/wiki/note-networks/tcp.html">连接面向传输：TCP</a></div></section></div>
 
 
   <div class="related-wrap md-text" id="comments">
@@ -192,7 +183,7 @@
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#rdt-1-0%EF%BC%9A%E5%AE%8C%E5%85%A8%E5%8F%AF%E9%9D%A0%E4%BF%A1%E9%81%93"><span class="toc-text">rdt 1.0：完全可靠信道</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rdt-2-0%EF%BC%9A%E5%8F%AF%E8%83%BD%E5%8F%91%E7%94%9F%E4%BD%8D%E9%94%99%E8%AF%AF%E7%9A%84%E4%BF%A1%E9%81%93"><span class="toc-text">rdt 2.0：可能发生位错误的信道</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rdt-2-1%EF%BC%9A%E4%B8%80%E4%B8%AA%E4%BF%AE%E6%AD%A3"><span class="toc-text">rdt 2.1：一个修正</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rdt-2-2%EF%BC%9A%E5%8F%96%E6%B6%88-NAK-%E4%BF%A1%E5%8F%B7"><span class="toc-text">rdt 2.2：取消 NAK 信号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rdt-3-0%EF%BC%9A%E5%8F%AF%E8%83%BD%E5%8F%91%E7%94%9F%E4%B8%A2%E5%8C%85%E4%B8%8E%E4%BD%8D%E9%94%99%E8%AF%AF%E7%9A%84%E4%BF%A1%E9%81%93"><span class="toc-text">rdt 3.0：可能发生丢包与位错误的信道</span></a></li></ol></div><div class="widget-footer">
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%BC%8F-RDT-%E5%8D%8F%E8%AE%AE"><span class="toc-text">流水线式 RDT 协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9E%E9%80%80-N-%E5%B8%A7%E5%8D%8F%E8%AE%AE"><span class="toc-text">回退 N 帧协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E9%87%8D%E4%BC%A0%E5%8D%8F%E8%AE%AE"><span class="toc-text">选择重传协议</span></a></li></ol></div><div class="widget-footer">
 
 <a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.46 1.25h3.08c1.603 0 2.86 0 3.864.095c1.023.098 1.861.3 2.6.752a5.75 5.75 0 0 1 1.899 1.899c.452.738.654 1.577.752 2.6c.095 1.004.095 2.261.095 3.865v1.067c0 1.141 0 2.036-.05 2.759c-.05.735-.153 1.347-.388 1.913a5.75 5.75 0 0 1-3.112 3.112c-.805.334-1.721.408-2.977.43a10.81 10.81 0 0 0-.929.036c-.198.022-.275.054-.32.08c-.047.028-.112.078-.224.232c-.121.166-.258.396-.476.764l-.542.916c-.773 1.307-2.69 1.307-3.464 0l-.542-.916a10.605 10.605 0 0 0-.476-.764c-.112-.154-.177-.204-.224-.232c-.045-.026-.122-.058-.32-.08c-.212-.023-.49-.03-.93-.037c-1.255-.021-2.171-.095-2.976-.429A5.75 5.75 0 0 1 1.688 16.2c-.235-.566-.338-1.178-.389-1.913c-.049-.723-.049-1.618-.049-2.76v-1.066c0-1.604 0-2.86.095-3.865c.098-1.023.3-1.862.752-2.6a5.75 5.75 0 0 1 1.899-1.899c.738-.452 1.577-.654 2.6-.752C7.6 1.25 8.857 1.25 10.461 1.25M6.739 2.839c-.914.087-1.495.253-1.959.537A4.25 4.25 0 0 0 3.376 4.78c-.284.464-.45 1.045-.537 1.96c-.088.924-.089 2.11-.089 3.761v1c0 1.175 0 2.019.046 2.685c.045.659.131 1.089.278 1.441a4.25 4.25 0 0 0 2.3 2.3c.515.214 1.173.294 2.429.316h.031c.398.007.747.013 1.037.045c.311.035.616.104.909.274c.29.17.5.395.682.645c.169.232.342.525.538.856l.559.944a.52.52 0 0 0 .882 0l.559-.944c.196-.331.37-.624.538-.856c.182-.25.392-.476.682-.645c.293-.17.598-.24.909-.274c.29-.032.639-.038 1.037-.045h.032c1.255-.022 1.913-.102 2.428-.316a4.25 4.25 0 0 0 2.3-2.3c.147-.352.233-.782.278-1.441c.046-.666.046-1.51.046-2.685v-1c0-1.651 0-2.837-.089-3.762c-.087-.914-.253-1.495-.537-1.959a4.25 4.25 0 0 0-1.403-1.403c-.464-.284-1.045-.45-1.96-.537c-.924-.088-2.11-.089-3.761-.089h-3c-1.651 0-2.837 0-3.762.089" clip-rule="evenodd"/><path fill="currentColor" d="M9 11a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><span>Join Discussion</span></a></div></widget>
 </div></aside><div class='float-panel blur'>
