@@ -29,8 +29,9 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-mos-transistor.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-transmission-gate.png">
-<meta property="article:published_time" content="2026-02-03T11:58:57.361Z">
-<meta property="article:modified_time" content="2026-02-03T11:58:57.361Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-inverting-mux.png">
+<meta property="article:published_time" content="2026-02-28T12:23:06.620Z">
+<meta property="article:modified_time" content="2026-02-28T12:23:06.620Z">
 <meta property="article:author" content="XXZ">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-mos-transistor.png">
@@ -84,7 +85,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">Wiki</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/note-vlsi/index.html">VLSI Design</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-02-03T11:58:57.361Z">2026-02-03</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-02-28T12:23:06.620Z">2026-02-28</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -142,8 +143,8 @@
 <li>画 PDN，由于需要把表达式下拉至 0，又 nMOS 栅极输入 1 导通，把表达式 $Y$ 取反后组装</li>
 <li>画 PUN，由于需要把表达式上拉至 1，又 pMOS 栅极输入 0 导通，把表达式中所有的变量取反后组装（或使用 <wavy>conduction complements</wavy> 原则，把 PDN 中串联改并联，并联改串联即可）</li>
 </ul>
-<p>性质一：静态 CMOS 逻辑门是<wavy>完全恢复（fully restored）</wavy>的。</p>
-<div class="tag-plugin colorful note" color="green"><div class="title">完全恢复（fully&nbsp;restored）</div><div class="body"><p><del>点一下睡袋（呸）</del> 指一个逻辑级在稳态时能把输出节点强驱动（strongly driven）到接近电源轨的全摆幅电平（0 或 $V_{DD}$），并通过带增益把可能劣化的输入电平拉回到标准逻辑电平，使电平劣化不会在级联中继续累积。静态 CMOS 逻辑中 nMOS 只负责下拉至强 0，pMOS 只负责上拉至强 1，且二者互斥，因此输出电平一定是全摆幅的。</p></div></div>
+<p>性质一：静态 CMOS 逻辑门是<wavy>完全恢复（fully restoring）</wavy>的。</p>
+<div class="tag-plugin colorful note" color="green"><div class="title">完全恢复（fully&nbsp;restoring）</div><div class="body"><p><del>点一下睡袋（呸）</del> 指一个逻辑级在稳态时能把输出节点强驱动（strongly driven）到接近电源轨的全摆幅电平（0 或 $V_{DD}$），并通过带增益把可能劣化的输入电平拉回到标准逻辑电平，使电平劣化不会在级联中继续累积。静态 CMOS 逻辑中 nMOS 只负责下拉至强 0，pMOS 只负责上拉至强 1，且二者互斥，因此输出电平一定是全摆幅的。</p></div></div>
 
 <p>性质二：静态 CMOS 逻辑门是<wavy>反相（inverting）</wavy>的。</p>
 <div class="tag-plugin colorful note" color="red"><div class="title">反相（inverting）</div><div class="body"><p>指该逻辑级实现的布尔关系在输出端带有一个逻辑取反，即输出等于某个函数的补 $y&#x3D;\overline{f(x)}$；比如非门 $y&#x3D;\overline A$，与非门 $y&#x3D;\overline{A\cdot B}$, 或非门 $y&#x3D;\overline{A+B}$。</p></div></div>
@@ -155,8 +156,55 @@
 <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-transmission-gate.png" alt="gb 是 g 的互补信号" style="width:400px;"/></div><div class="image-meta"><span class="image-caption center">gb 是 g 的互补信号</span></div></div>
 
 <p>需要同时提供控制输入（control input）信号 $g$ 与其互补信号 $gb$ 的逻辑被称为<wavy>双轨逻辑（double rail logic）</wavy>。理解成有两个栅极就好。</p>
-<p>传输门的输出电压来自上一级节点，而非 $V_{DD}$ 或 GND，没有驱动能力，因此是 non-restored 的。同样，传输门的理想行为近似 $V_{in}\approx V_{out}$，为同向传输，并非反相。</p>
-<h2 id="三态逻辑"><a href="#三态逻辑" class="headerlink" title="三态逻辑"></a>三态逻辑</h2><h2 id="多路复用器"><a href="#多路复用器" class="headerlink" title="多路复用器"></a>多路复用器</h2><h2 id="时序逻辑"><a href="#时序逻辑" class="headerlink" title="时序逻辑"></a>时序逻辑</h2>
+<p>传输门的输出电压来自上一级节点，而非 $V_{DD}$ 或 GND，没有驱动能力，因此是 <strong>non-restoring</strong> 的。它的理想行为近似 $V_{in}\approx V_{out}$，为同向传输，并非反相。</p>
+<h2 id="三态逻辑"><a href="#三态逻辑" class="headerlink" title="三态逻辑"></a>三态逻辑</h2><p>三态逻辑（tristate）指的是三种输出驱动状态：低电平 $0$, 高电平 $1$ 与高阻态 $Z$。</p>
+<p>三态缓冲器（tristate buffer）：逻辑功能与传输门相同（真值表一致），但它的输出电压来自 VDD 与 GND，因此是 <strong>restoring</strong> 的，能够保证输出一定是三态中的其中一个。</p>
+<table>
+<thead>
+<tr>
+<th>$EN&#x2F;\overline{EN}$</th>
+<th>$A$</th>
+<th>$Y$</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0&#x2F;1</td>
+<td>0</td>
+<td>Z</td>
+</tr>
+<tr>
+<td>0&#x2F;1</td>
+<td>1</td>
+<td>Z</td>
+</tr>
+<tr>
+<td>1&#x2F;0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1&#x2F;0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<p>三态反相器（tristate inverter）：EN 为 0 时两个晶体管均关断，输出为 $Z$，EN 为 1 时表现与反相器一致。<strong>restoring</strong>。</p>
+<p>三态总线（tristate bus）：现已被多路复用器替代。</p>
+<h2 id="多路复用器"><a href="#多路复用器" class="headerlink" title="多路复用器"></a>多路复用器</h2><p>多路复用器（multiplexer, MUX）是 CMOS 存储单元（memory elements）与数据处理结构中的关键组件。它通过选择信号（select signal）$S&#x2F;\overline{S}$ 在多个输入中选择一个作为输出。</p>
+<p>譬如 2:1 MUX，选择信号为 0 时选择输入 $D0$，选择信号为 1 时选择输入 $D1$，逻辑函数为：<br>$$<br>Y&#x3D;\overline{S}\cdot D0+S\cdot D1<br>$$</p>
+<p>2:1 MUX 的几个实现方式：</p>
+<ul>
+<li>传输门 MUX：两个传输门连接在一起，选择信号 $S$ 与其互补信号 $\overline{S}$ 在任意时刻只会使其中一个传输门导通。这样组成的 MUX 是 <strong>non-restoring</strong> 的，仅需要四个晶体管。</li>
+<li>反相 2:1 MUX（$Y&#x3D;(\overline{\overline{S}\cdot D0+S\cdot D1})$）：用复合 AOI22 电路或两个三态反相器并联。再在最后连接一个反相器组成 2:1 MUX。这样组成的 MUX 是 <strong>restoring</strong> 的。</li>
+</ul>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-inverting-mux.png"/></div></div>
+
+<p>4:1 MUX：使用两个选择信号 $S0$, $S1$ 从四个输入中选择一个作为输出</p>
+<ul>
+<li>两层 2:1 MUX</li>
+<li>或四个三态反相器并联</li>
+</ul>
+<h2 id="时序逻辑"><a href="#时序逻辑" class="headerlink" title="时序逻辑"></a>时序逻辑</h2>
 <div class="article-footer fs14"></div>
 </article>
 <div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Prev</div><a href="/wiki/note-vlsi/index.html">扉页</a></div><div class="item" id="next"><div class="note">Next</div><a href="/wiki/note-vlsi/cmos-fabrication.html">CMOS 制造工艺</a></div></section></div>
