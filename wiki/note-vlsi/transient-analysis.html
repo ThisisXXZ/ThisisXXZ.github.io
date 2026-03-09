@@ -17,23 +17,20 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   
-  <title>VLSI Design: CMOS 制造工艺 - ThisisXXZ's Blog</title>
+  <title>VLSI Design: 瞬态分析 - ThisisXXZ's Blog</title>
 
   
-    <meta name="description" content="反相器组成以如何制造一个反相器为例。 p 衬底 n 井型  包含一对 nMOS 和 pMOS 晶体管。 晶体管包括  高掺杂的源极，漏极 高掺杂的多晶硅栅极（polysilicon gate）与一层超薄二氧化硅绝缘栅氧（gate oxide） 一层覆盖的厚二氧化硅绝缘场氧（field oxide），上有蚀刻的接触孔（contact）  一些布线  两晶体管的多晶硅栅极接在一起构成输入 A nMOS">
+    <meta name="description" content="直流分析关注稳态：当输入 $V_{in}$ 为常数时，输出 $V_{out}$ 稳定后的数值。瞬态分析（transient analysis）则关注当输入 $V_{in}$ 变化时，输出 $V_{out}$ 的变化。 瞬态分析常研究阶跃输入（step&#x2F;ramp input）的响应。即输入由 0 突变到 VDD 或从 VDD 突变到 0。相应的，输出的变化即是阶跃响应（step response）。">
 <meta property="og:type" content="website">
-<meta property="og:title" content="CMOS 制造工艺">
-<meta property="og:url" content="https://www.thisisxxz.com/wiki/note-vlsi/cmos-fabrication.html">
+<meta property="og:title" content="瞬态分析">
+<meta property="og:url" content="https://www.thisisxxz.com/wiki/note-vlsi/transient-analysis.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="反相器组成以如何制造一个反相器为例。 p 衬底 n 井型  包含一对 nMOS 和 pMOS 晶体管。 晶体管包括  高掺杂的源极，漏极 高掺杂的多晶硅栅极（polysilicon gate）与一层超薄二氧化硅绝缘栅氧（gate oxide） 一层覆盖的厚二氧化硅绝缘场氧（field oxide），上有蚀刻的接触孔（contact）  一些布线  两晶体管的多晶硅栅极接在一起构成输入 A nMOS">
+<meta property="og:description" content="直流分析关注稳态：当输入 $V_{in}$ 为常数时，输出 $V_{out}$ 稳定后的数值。瞬态分析（transient analysis）则关注当输入 $V_{in}$ 变化时，输出 $V_{out}$ 的变化。 瞬态分析常研究阶跃输入（step&#x2F;ramp input）的响应。即输入由 0 突变到 VDD 或从 VDD 突变到 0。相应的，输出的变化即是阶跃响应（step response）。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-inverter.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-inverter-mask-set.png">
-<meta property="article:published_time" content="2026-02-23T03:33:52.404Z">
-<meta property="article:modified_time" content="2026-02-23T03:33:52.404Z">
+<meta property="article:published_time" content="2026-03-09T16:05:02.747Z">
+<meta property="article:modified_time" content="2026-03-09T16:05:02.747Z">
 <meta property="article:author" content="XXZ">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-inverter.png">
   
   
   
@@ -69,7 +66,7 @@
 </div>
 <div class="widgets">
 
-<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">序</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/index.html#start"><span class="toc-text">扉页</span></a></div><div class="widget-header dis-select"><span class="name">CMOS</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/cmos-logic.html"><span class="toc-text">CMOS 逻辑</span></a><a class="link active" href="/wiki/note-vlsi/cmos-fabrication.html"><span class="toc-text">CMOS 制造工艺</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="link" href="/wiki/note-vlsi/cmos-layout.html"><span class="toc-text">CMOS 布局</span></a></div><div class="widget-header dis-select"><span class="name">晶体管理论</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/iv-characteristics.html"><span class="toc-text">IV 特性</span></a><a class="link" href="/wiki/note-vlsi/cv-characteristics.html"><span class="toc-text">CV 特性</span></a><a class="link" href="/wiki/note-vlsi/dc-analysis.html"><span class="toc-text">直流分析</span></a><a class="link" href="/wiki/note-vlsi/transient-analysis.html"><span class="toc-text">瞬态分析</span></a></div><div class="widget-header dis-select"><span class="name">延迟</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/rc-delay.html"><span class="toc-text">RC 延迟模型</span></a><a class="link" href="/wiki/note-vlsi/linear-delay.html"><span class="toc-text">线性延迟模型</span></a></div></widget>
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">序</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/index.html#start"><span class="toc-text">扉页</span></a></div><div class="widget-header dis-select"><span class="name">CMOS</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/cmos-logic.html"><span class="toc-text">CMOS 逻辑</span></a><a class="link" href="/wiki/note-vlsi/cmos-fabrication.html"><span class="toc-text">CMOS 制造工艺</span></a><a class="link" href="/wiki/note-vlsi/cmos-layout.html"><span class="toc-text">CMOS 布局</span></a></div><div class="widget-header dis-select"><span class="name">晶体管理论</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/iv-characteristics.html"><span class="toc-text">IV 特性</span></a><a class="link" href="/wiki/note-vlsi/cv-characteristics.html"><span class="toc-text">CV 特性</span></a><a class="link" href="/wiki/note-vlsi/dc-analysis.html"><span class="toc-text">直流分析</span></a><a class="link active" href="/wiki/note-vlsi/transient-analysis.html"><span class="toc-text">瞬态分析</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a></div><div class="widget-header dis-select"><span class="name">延迟</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/rc-delay.html"><span class="toc-text">RC 延迟模型</span></a><a class="link" href="/wiki/note-vlsi/linear-delay.html"><span class="toc-text">线性延迟模型</span></a></div></widget>
 
 <widget class="widget-wrapper post-card"><div class="widget-header dis-select"><span class="name">More: 科技</span></div><div class="widget-body"><a class="item wiki" href="/wiki/note-dsa/index.html"><span class="title">数据结构与算法 DS & A</span><span class="excerpt">数据结构与算法相关。</span></a><a class="item wiki" href="/wiki/note-networks/index.html"><span class="title">计算机网络 Computer Networks</span><span class="excerpt">计算机与通信网络相关，主要是课程 COMP3234 的内容。</span></a><a class="item wiki" href="/wiki/note-astronomy/index.html"><span class="title">飘飘何所似 Our Place in the Universe</span><span class="excerpt">西方天文学及其发展史相关，主要是课程 CCST9012 的内容。</span></a><a class="item wiki" href="/wiki/note-cryptography/index.html"><span class="title">密码学 Cryptography</span><span class="excerpt">密码学相关，主要是课程 COMP3357 的内容。</span></a><a class="item wiki" href="/wiki/note-os/index.html"><span class="title">操作系统 Operating System</span><span class="excerpt">操作系统相关，主要是课程 COMP3230 的内容。</span></a><a class="item wiki" href="/wiki/note-pl/index.html"><span class="title">编程语言 Programming Languages</span><span class="excerpt">编程语言相关，主要是 UW 课程 CSE341 的内容。</span></a></div></widget>
 </div>
@@ -84,90 +81,34 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">Wiki</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/note-vlsi/index.html">VLSI Design</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-02-23T03:33:52.404Z">2026-02-23</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-03-09T16:05:02.747Z">2026-03-10</time></span></div></div></div>
     
     <div class="bottom only-title">
       
       <div class="text-area">
-        <h1 class="text title"><span>CMOS 制造工艺</span></h1>
+        <h1 class="text title"><span>瞬态分析</span></h1>
         
       </div>
     </div>
     
   </div>
-  </div><article class="md-text content"><h2 id="反相器组成"><a href="#反相器组成" class="headerlink" title="反相器组成"></a>反相器组成</h2><p>以如何制造一个反相器为例。</p>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-inverter.png" alt="p 衬底 n 井型" style="width:600px;"/></div><div class="image-meta"><span class="image-caption center">p 衬底 n 井型</span></div></div>
-
-<p>包含一对 nMOS 和 pMOS 晶体管。</p>
-<p>晶体管包括</p>
-<ul>
-<li>高掺杂的源极，漏极</li>
-<li>高掺杂的<wavy>多晶硅栅极（polysilicon gate）</wavy>与一层超薄二氧化硅绝缘<wavy>栅氧（gate oxide）</wavy></li>
-<li>一层覆盖的厚二氧化硅绝缘<wavy>场氧（field oxide）</wavy>，上有蚀刻的<wavy>接触孔（contact）</wavy></li>
-</ul>
-<p>一些布线</p>
-<ul>
-<li>两晶体管的多晶硅栅极接在一起构成输入 A</li>
-<li>nMOS 源极接金属地线，pMOS 源极接金属 $V_{DD}$ 线</li>
-<li>两晶体管的漏极接在一起构成输出 Y</li>
-<li>为防止 p 衬底与 n 掺杂源漏极构成 PN 结正向偏置，将 p 衬底通过重掺杂<wavy>衬底接触（substrate tap）</wavy>接地；同理，将 n 井通过重掺杂的<wavy>井接触（well tap）</wavy>接 $V_{DD}$</li>
-</ul>
-<div class="tag-plugin colorful note" color="blue"><div class="title">接触（taps）</div><div class="body"><p>金属与轻掺杂半导体间会形成肖特基二极管（Schottky diode），只允许电流单向流动。为使衬底与井接入电压避免 PN 结正向偏置，需要专门创造出一个重掺杂的区域，其与金属能形成良好的欧姆接触（Ohmic contact），从而为双向电流提供低电阻通路。这个区域就称为接触（taps）。</p></div></div>
-
-<h2 id="制造工艺"><a href="#制造工艺" class="headerlink" title="制造工艺"></a>制造工艺</h2><p>可以看看 <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=1Lad28K3Xi0">这个视频</a>。</p>
-<p>芯片是经一系列步骤「印」上去的，因此成本与面积而非晶体管数量有关。</p>
-<p>晶圆（silicon wafer）和晶圆厂（fabs）。</p>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-inverter-mask-set.png" alt="反相器的掩膜（mask）组，俯视角" style="width:400px;"/></div><div class="image-meta"><span class="image-caption center">反相器的掩膜（mask）组，俯视角</span></div></div>
-
-<h2 id="n-井的植入"><a href="#n-井的植入" class="headerlink" title="n 井的植入"></a>n 井的植入</h2><mark class="tag-plugin colorful mark" color="yellow">第一步：氧化 Oxidation</mark>
-
-<p>晶圆在氧化炉中与水或氧气反应，生成二氧化硅层。</p>
-<mark class="tag-plugin colorful mark" color="blue">第二步：光刻 Lithography</mark>
-
-<p>在晶圆上旋涂（spin）正性有机光刻胶（photoresist），其受光照处会软化。</p>
-<p>用 n 井掩模版对光刻胶曝光（exposed through the n-well mask），去除（strip off）软化的光刻胶，露出对应位置的氧化层。</p>
-<mark class="tag-plugin colorful mark" color="red">第三步：蚀刻 Etching</mark>
-
-<p>用氢氟酸（hydrofluoric acid）蚀刻未被光刻胶保护的氧化层，然后使用食人鱼蚀刻液（piranha etch，多种酸的混合液）去除剩余的光刻胶。</p>
-<mark class="tag-plugin colorful mark" color="green">第四步 引入掺杂原子</mark>
-
-<p>井将形成在衬底未被氧化层覆盖的位置。</p>
-<p>有两种方法引入掺杂原子：</p>
-<ul>
-<li><wavy>扩散（diffusion）</wavy>：将晶圆放入含有掺杂剂气体的炉管中加热，掺杂原子会向衬底内部扩散</li>
-<li><wavy>离子注入（ion implantation）</wavy>：掺杂离子在电场中被加速，被轰击注入（blasted into）衬底</li>
-</ul>
-<p>由于横向扩散（lateral diffusion），井的宽度会比氧化层开口稍宽些。</p>
-<p>形成井后，使用氢氟酸将氧化层去除，得到了带有 n 井的裸晶圆。</p>
-<h2 id="多晶硅栅极的植入"><a href="#多晶硅栅极的植入" class="headerlink" title="多晶硅栅极的植入"></a>多晶硅栅极的植入</h2><p>第一步：氧化</p>
-<p>在炉管中生长出极薄的二氧化硅栅氧（gate oxide）层。</p>
-<mark class="tag-plugin colorful mark" color="orange">第二步：化学气相沉积（Chemical Vapor Decomposition，CVD）</mark>
-
-<p>将晶圆至于充满硅烷气体（Silane gas）的炉管中加热，生长出多晶硅层。</p>
-<p>第三步：重掺杂</p>
-<p>多晶硅层被重掺杂，称为导电性较好的导体。</p>
-<p>第四 ~ N 步：同上，用光刻胶配合多晶硅掩膜版对晶圆进行图形化处理（patterned），得到带有薄栅氧的多晶硅栅极的晶圆。</p>
-<h2 id="引入-n-与-p-扩散区域"><a href="#引入-n-与-p-扩散区域" class="headerlink" title="引入 n 与 p 扩散区域"></a>引入 n 与 p 扩散区域</h2><p>n 扩散区域包括 p 衬底中的两个 n 掺杂的源极区和漏极区与一个 n 井中的井接触。</p>
-<p>第「一」步：类似的，使用氧化与掩膜暴露出需要引入掺杂剂的区域。</p>
-<p>第二步：引入掺杂原子：</p>
-<ul>
-<li>虽常用离子注入，但按传统仍将其称为 <wavy>n 扩散（n-diffusion）</wavy></li>
-<li><wavy>自对准（self-aligned）工艺</wavy>：已形成的多晶硅栅极会阻挡掺杂进入其下方，使得源漏之间会自动在栅下保留一段沟道区域；这一段无需在掩膜中精确的对准。</li>
-</ul>
-<p>形成 n 扩散区域后去除氧化层。</p>
-<p>第「三」步：用同样的步骤引入 p 扩散区域：n 井中两个 p 掺杂的源漏区和一个 p 衬底中的衬底接触。</p>
-<h2 id="场氧，接触孔与金属化"><a href="#场氧，接触孔与金属化" class="headerlink" title="场氧，接触孔与金属化"></a>场氧，接触孔与金属化</h2><p>第一步：生长厚厚的场氧（field oxide）层使晶圆与之后的金属层绝缘。</p>
-<p>第「二」步：在场氧层上使用接触孔掩膜进行图形化，使得多晶硅或扩散区能够通过接触孔（contact cuts）与金属相连接。</p>
-<mark class="tag-plugin colorful mark" color="purple">第三步：金属化</mark>
-<ul>
-<li>在整个晶圆上<wavy>溅镀（sputtering）</wavy>铝（铝也会填充接触孔）</li>
-<li>在金属层上使用金属掩膜进行图形化，使用等离子体蚀刻（plasma etching）掉多余的金属，留下导线（wires）所在的区域</li>
-</ul>
-<div class="tag-plugin colorful note" color="blue"><div class="title">溅镀（sputter）</div><div class="body"><p>一种物理气相沉积技术，通过将铝轰击成蒸气，使其均匀覆盖在晶圆表面。</p></div></div>
+  </div><article class="md-text content"><p>直流分析关注稳态：当输入 $V_{in}$ 为常数时，输出 $V_{out}$ 稳定后的数值。瞬态分析（transient analysis）则关注当输入 $V_{in}$ 变化时，输出 $V_{out}$ 的变化。</p>
+<p>瞬态分析常研究<mark class="tag-plugin colorful mark" color="yellow">阶跃输入（step/ramp input）</mark>的响应。即输入由 0 突变到 VDD 或从 VDD 突变到 0。相应的，输出的变化即是阶跃响应（step response）。</p>
+<h2 id="反相器阶跃响应"><a href="#反相器阶跃响应" class="headerlink" title="反相器阶跃响应"></a>反相器阶跃响应</h2><p>考虑一个有负载电容的理想反相器。在时刻 $t_0$ 施加一个上升的阶跃电压，有：<br>$$<br>V_{in}(t)&#x3D;u(t-t_0)V_{DD}<br>$$</p>
+<p>在 $t_0$ 之前，$V_{out}&#x3D;V_{DD}$，研究 $V_{out}(t\geq t_0)$。考虑电容充电放电的微分方程：若电容 $C$ 以电流 $I$ 充电，电容两端的电压变化遵循：</p>
+<p>$$<br>I&#x3D;C\frac{dV}{dt}<br>$$</p>
+<p>那么对于施加上升阶跃输入的反相器而言，nMOS 开启，$I_{dsn}$ 开始流动为负载电容放电，有：</p>
+<p>$$<br>\frac{dV_{out}(t)}{dt}&#x3D;-\frac{I_{dsn}(t)}{C_{load}}<br>$$</p>
+<p>nMOS 的输出极为漏极，源极接地，所以输出电压为漏源电压 $V_{out}&#x3D;V_{ds}$。代入 nMOS 的一阶晶体管模型（见「IV 特性」一节），有：</p>
+<p>$$</p>
+<p>$$</p>
+<p>作出理想反相器的上升阶跃响应图：</p>
+<h2 id="串联反相器的延迟评估"><a href="#串联反相器的延迟评估" class="headerlink" title="串联反相器的延迟评估"></a>串联反相器的延迟评估</h2><p>关于延迟的具体介绍见下一节。</p>
+<p>瞬态分析从变化的角度研究 $V_{in}$-$V_{out}$，天然的适合延迟分析。</p>
 
 <div class="article-footer fs14"></div>
 </article>
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Prev</div><a href="/wiki/note-vlsi/cmos-logic.html">CMOS 逻辑</a></div><div class="item" id="next"><div class="note">Next</div><a href="/wiki/note-vlsi/cmos-layout.html">CMOS 布局</a></div></section></div>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Prev</div><a href="/wiki/note-vlsi/dc-analysis.html">直流分析</a></div><div class="item" id="next"><div class="note">Next</div><a href="/wiki/note-vlsi/rc-delay.html">RC 延迟模型</a></div></section></div>
 
 
   <div class="related-wrap md-text" id="comments">
@@ -194,7 +135,7 @@
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E7%9B%B8%E5%99%A8%E7%BB%84%E6%88%90"><span class="toc-text">反相器组成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B6%E9%80%A0%E5%B7%A5%E8%89%BA"><span class="toc-text">制造工艺</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#n-%E4%BA%95%E7%9A%84%E6%A4%8D%E5%85%A5"><span class="toc-text">n 井的植入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%99%B6%E7%A1%85%E6%A0%85%E6%9E%81%E7%9A%84%E6%A4%8D%E5%85%A5"><span class="toc-text">多晶硅栅极的植入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E5%85%A5-n-%E4%B8%8E-p-%E6%89%A9%E6%95%A3%E5%8C%BA%E5%9F%9F"><span class="toc-text">引入 n 与 p 扩散区域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%BA%E6%B0%A7%EF%BC%8C%E6%8E%A5%E8%A7%A6%E5%AD%94%E4%B8%8E%E9%87%91%E5%B1%9E%E5%8C%96"><span class="toc-text">场氧，接触孔与金属化</span></a></li></ol></div><div class="widget-footer">
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E7%9B%B8%E5%99%A8%E9%98%B6%E8%B7%83%E5%93%8D%E5%BA%94"><span class="toc-text">反相器阶跃响应</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%B2%E8%81%94%E5%8F%8D%E7%9B%B8%E5%99%A8%E7%9A%84%E5%BB%B6%E8%BF%9F%E8%AF%84%E4%BC%B0"><span class="toc-text">串联反相器的延迟评估</span></a></li></ol></div><div class="widget-footer">
 
 <a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.46 1.25h3.08c1.603 0 2.86 0 3.864.095c1.023.098 1.861.3 2.6.752a5.75 5.75 0 0 1 1.899 1.899c.452.738.654 1.577.752 2.6c.095 1.004.095 2.261.095 3.865v1.067c0 1.141 0 2.036-.05 2.759c-.05.735-.153 1.347-.388 1.913a5.75 5.75 0 0 1-3.112 3.112c-.805.334-1.721.408-2.977.43a10.81 10.81 0 0 0-.929.036c-.198.022-.275.054-.32.08c-.047.028-.112.078-.224.232c-.121.166-.258.396-.476.764l-.542.916c-.773 1.307-2.69 1.307-3.464 0l-.542-.916a10.605 10.605 0 0 0-.476-.764c-.112-.154-.177-.204-.224-.232c-.045-.026-.122-.058-.32-.08c-.212-.023-.49-.03-.93-.037c-1.255-.021-2.171-.095-2.976-.429A5.75 5.75 0 0 1 1.688 16.2c-.235-.566-.338-1.178-.389-1.913c-.049-.723-.049-1.618-.049-2.76v-1.066c0-1.604 0-2.86.095-3.865c.098-1.023.3-1.862.752-2.6a5.75 5.75 0 0 1 1.899-1.899c.738-.452 1.577-.654 2.6-.752C7.6 1.25 8.857 1.25 10.461 1.25M6.739 2.839c-.914.087-1.495.253-1.959.537A4.25 4.25 0 0 0 3.376 4.78c-.284.464-.45 1.045-.537 1.96c-.088.924-.089 2.11-.089 3.761v1c0 1.175 0 2.019.046 2.685c.045.659.131 1.089.278 1.441a4.25 4.25 0 0 0 2.3 2.3c.515.214 1.173.294 2.429.316h.031c.398.007.747.013 1.037.045c.311.035.616.104.909.274c.29.17.5.395.682.645c.169.232.342.525.538.856l.559.944a.52.52 0 0 0 .882 0l.559-.944c.196-.331.37-.624.538-.856c.182-.25.392-.476.682-.645c.293-.17.598-.24.909-.274c.29-.032.639-.038 1.037-.045h.032c1.255-.022 1.913-.102 2.428-.316a4.25 4.25 0 0 0 2.3-2.3c.147-.352.233-.782.278-1.441c.046-.666.046-1.51.046-2.685v-1c0-1.651 0-2.837-.089-3.762c-.087-.914-.253-1.495-.537-1.959a4.25 4.25 0 0 0-1.403-1.403c-.464-.284-1.045-.45-1.96-.537c-.924-.088-2.11-.089-3.761-.089h-3c-1.651 0-2.837 0-3.762.089" clip-rule="evenodd"/><path fill="currentColor" d="M9 11a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><span>Join Discussion</span></a></div></widget>
 </div></aside><div class='float-panel blur'>
