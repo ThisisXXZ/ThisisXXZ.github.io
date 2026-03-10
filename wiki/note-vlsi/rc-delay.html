@@ -20,17 +20,19 @@
   <title>VLSI Design: RC 延迟模型 - ThisisXXZ's Blog</title>
 
   
-    <meta name="description" content="延迟的定义当输入发生变化时，输出至少在污染延迟（contamination delay） 内保持原值，并至多在传播延迟（propagation delay） 内变为新的值。有时还会区分输出的上升延迟与下降延迟。 当单独提到延迟时，常常指的是传播延迟。 精确的延迟评估：建模后解复杂的微分方程，SPICE 电路仿真等。 有效阻抗RC 延迟模型Elmore 延迟">
+    <meta name="description" content="延迟的定义当输入发生变化时，输出至少在污染延迟（contamination delay） 内保持原值，并至多在传播延迟（propagation delay） 内变为新的值。有时还会区分输出的上升延迟与下降延迟。  污染延迟：输入跨过 50% 到输出跨过 50% 所需的最小时间 min-time 传播延迟：输入跨过 50% 到输出跨过 50% 所需的最大时间 max-time  当单独提到延迟时，常">
 <meta property="og:type" content="website">
 <meta property="og:title" content="RC 延迟模型">
 <meta property="og:url" content="https://www.thisisxxz.com/wiki/note-vlsi/rc-delay.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="延迟的定义当输入发生变化时，输出至少在污染延迟（contamination delay） 内保持原值，并至多在传播延迟（propagation delay） 内变为新的值。有时还会区分输出的上升延迟与下降延迟。 当单独提到延迟时，常常指的是传播延迟。 精确的延迟评估：建模后解复杂的微分方程，SPICE 电路仿真等。 有效阻抗RC 延迟模型Elmore 延迟">
+<meta property="og:description" content="延迟的定义当输入发生变化时，输出至少在污染延迟（contamination delay） 内保持原值，并至多在传播延迟（propagation delay） 内变为新的值。有时还会区分输出的上升延迟与下降延迟。  污染延迟：输入跨过 50% 到输出跨过 50% 所需的最小时间 min-time 传播延迟：输入跨过 50% 到输出跨过 50% 所需的最大时间 max-time  当单独提到延迟时，常">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-03-09T15:29:55.449Z">
-<meta property="article:modified_time" content="2026-03-09T15:29:55.449Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-effective-r.png">
+<meta property="article:published_time" content="2026-03-10T14:54:02.584Z">
+<meta property="article:modified_time" content="2026-03-10T14:54:02.584Z">
 <meta property="article:author" content="XXZ">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-effective-r.png">
   
   
   
@@ -81,7 +83,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">Wiki</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/note-vlsi/index.html">VLSI Design</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-03-09T15:29:55.449Z">2026-03-09</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-03-10T14:54:02.584Z">2026-03-10</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -93,9 +95,26 @@
     
   </div>
   </div><article class="md-text content"><h2 id="延迟的定义"><a href="#延迟的定义" class="headerlink" title="延迟的定义"></a>延迟的定义</h2><p>当输入发生变化时，输出至少在<strong>污染延迟（contamination delay）</strong> 内保持原值，并至多在<strong>传播延迟（propagation delay）</strong> 内变为新的值。有时还会区分输出的上升延迟与下降延迟。</p>
+<ul>
+<li>污染延迟：输入跨过 50% 到输出跨过 50% 所需的最小时间 min-time</li>
+<li>传播延迟：输入跨过 50% 到输出跨过 50% 所需的最大时间 max-time</li>
+</ul>
 <p>当单独提到延迟时，常常指的是传播延迟。</p>
 <p>精确的延迟评估：建模后解复杂的微分方程，SPICE 电路仿真等。</p>
-<h2 id="有效阻抗"><a href="#有效阻抗" class="headerlink" title="有效阻抗"></a>有效阻抗</h2><h2 id="RC-延迟模型"><a href="#RC-延迟模型" class="headerlink" title="RC 延迟模型"></a>RC 延迟模型</h2><h2 id="Elmore-延迟"><a href="#Elmore-延迟" class="headerlink" title="Elmore 延迟"></a>Elmore 延迟</h2>
+<p>本节介绍的是 RC 延迟模型，它用晶体管开关（switching）过程中平均的电阻与电容来近似非线性的 I-V 和 C-V 特性。它难以细致的模拟电路行为（比如预测某时刻电流的值，这还是得回到肖特基一阶晶体管模型），但能足够准确的估算延迟。</p>
+<h2 id="有效电阻"><a href="#有效电阻" class="headerlink" title="有效电阻"></a>有效电阻</h2><p>把晶体管视作一个与电阻串联的开关，它的有效电阻（effective R）是开关过程中各个时刻 $V_{ds}&#x2F;I_{ds}$ 的平均值。规定单位 nMOS 晶体管（$4\lambda&#x2F;2\lambda$）的有效电阻为 $R$。</p>
+<p>所以有一系列结论：</p>
+<ul>
+<li>单位 pMOS 晶体管的有效电阻为 $2R$（空穴迁移率低）</li>
+<li>宽度为单位晶体管 $k$ 倍的 nMOS 晶体管的有效电阻为 $R&#x2F;k$</li>
+<li>串联晶体管的总电阻等于各晶体管电阻之和</li>
+<li>并联晶体管的总电阻倒数等于各晶体管电阻倒数之和</li>
+</ul>
+<p>以计算一个理想反相器的有效导通电阻为例：给一个阶跃上升信号 $V_{GS}&#x3D;V_{DD}$，导通的是 nMOS 晶体管：</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-effective-r.png" style="width:350px;"/></div></div>
+
+<p>输出电压从 $V_{DD}$ 开始下降，到 $V_{DD}&#x2F;2$ 时反相器发生翻转，再到 $0$。一般而言，开关过程指的是输出逻辑电平切换的电压变化区间，即 $V_{out}:V_{DD}\to 0$；但因为传播延迟只计算到输出的 50% 切换点，所以常关注 $V_{out}:V_{DD}\to V_{DD}&#x2F;2$。</p>
+<h2 id="RC-延迟模型"><a href="#RC-延迟模型" class="headerlink" title="RC 延迟模型"></a>RC 延迟模型</h2><h2 id="Elmore-延迟"><a href="#Elmore-延迟" class="headerlink" title="Elmore 延迟"></a>Elmore 延迟</h2>
 <div class="article-footer fs14"></div>
 </article>
 <div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Prev</div><a href="/wiki/note-vlsi/transient-analysis.html">瞬态分析</a></div><div class="item" id="next"><div class="note">Next</div><a href="/wiki/note-vlsi/linear-delay.html">线性延迟模型</a></div></section></div>
@@ -125,7 +144,7 @@
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%B6%E8%BF%9F%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-text">延迟的定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%89%E6%95%88%E9%98%BB%E6%8A%97"><span class="toc-text">有效阻抗</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RC-%E5%BB%B6%E8%BF%9F%E6%A8%A1%E5%9E%8B"><span class="toc-text">RC 延迟模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Elmore-%E5%BB%B6%E8%BF%9F"><span class="toc-text">Elmore 延迟</span></a></li></ol></div><div class="widget-footer">
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%B6%E8%BF%9F%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-text">延迟的定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%89%E6%95%88%E7%94%B5%E9%98%BB"><span class="toc-text">有效电阻</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RC-%E5%BB%B6%E8%BF%9F%E6%A8%A1%E5%9E%8B"><span class="toc-text">RC 延迟模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Elmore-%E5%BB%B6%E8%BF%9F"><span class="toc-text">Elmore 延迟</span></a></li></ol></div><div class="widget-footer">
 
 <a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.46 1.25h3.08c1.603 0 2.86 0 3.864.095c1.023.098 1.861.3 2.6.752a5.75 5.75 0 0 1 1.899 1.899c.452.738.654 1.577.752 2.6c.095 1.004.095 2.261.095 3.865v1.067c0 1.141 0 2.036-.05 2.759c-.05.735-.153 1.347-.388 1.913a5.75 5.75 0 0 1-3.112 3.112c-.805.334-1.721.408-2.977.43a10.81 10.81 0 0 0-.929.036c-.198.022-.275.054-.32.08c-.047.028-.112.078-.224.232c-.121.166-.258.396-.476.764l-.542.916c-.773 1.307-2.69 1.307-3.464 0l-.542-.916a10.605 10.605 0 0 0-.476-.764c-.112-.154-.177-.204-.224-.232c-.045-.026-.122-.058-.32-.08c-.212-.023-.49-.03-.93-.037c-1.255-.021-2.171-.095-2.976-.429A5.75 5.75 0 0 1 1.688 16.2c-.235-.566-.338-1.178-.389-1.913c-.049-.723-.049-1.618-.049-2.76v-1.066c0-1.604 0-2.86.095-3.865c.098-1.023.3-1.862.752-2.6a5.75 5.75 0 0 1 1.899-1.899c.738-.452 1.577-.654 2.6-.752C7.6 1.25 8.857 1.25 10.461 1.25M6.739 2.839c-.914.087-1.495.253-1.959.537A4.25 4.25 0 0 0 3.376 4.78c-.284.464-.45 1.045-.537 1.96c-.088.924-.089 2.11-.089 3.761v1c0 1.175 0 2.019.046 2.685c.045.659.131 1.089.278 1.441a4.25 4.25 0 0 0 2.3 2.3c.515.214 1.173.294 2.429.316h.031c.398.007.747.013 1.037.045c.311.035.616.104.909.274c.29.17.5.395.682.645c.169.232.342.525.538.856l.559.944a.52.52 0 0 0 .882 0l.559-.944c.196-.331.37-.624.538-.856c.182-.25.392-.476.682-.645c.293-.17.598-.24.909-.274c.29-.032.639-.038 1.037-.045h.032c1.255-.022 1.913-.102 2.428-.316a4.25 4.25 0 0 0 2.3-2.3c.147-.352.233-.782.278-1.441c.046-.666.046-1.51.046-2.685v-1c0-1.651 0-2.837-.089-3.762c-.087-.914-.253-1.495-.537-1.959a4.25 4.25 0 0 0-1.403-1.403c-.464-.284-1.045-.45-1.96-.537c-.924-.088-2.11-.089-3.761-.089h-3c-1.651 0-2.837 0-3.762.089" clip-rule="evenodd"/><path fill="currentColor" d="M9 11a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><span>Join Discussion</span></a></div></widget>
 </div></aside><div class='float-panel blur'>
@@ -599,6 +618,33 @@
       })
     }
   });
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+    processEscapes: true
+  }
+});
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+});
+// Prevent MathJax from shrinking to match body font x-height (common with CJK/web fonts)
+MathJax.Hub.Config({
+  "HTML-CSS": {
+    matchFontHeight: false,
+    scale: 110 // Adjust if needed: 100–115; this helps math size match body text visually
+  }
+});
+MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for(i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
 </script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
