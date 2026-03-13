@@ -31,8 +31,9 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-3nand-caps-1.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-3nand-caps-2.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-delay-estimate.png">
-<meta property="article:published_time" content="2026-03-12T15:59:40.724Z">
-<meta property="article:modified_time" content="2026-03-12T15:59:40.724Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/ELEC-2nand-example.png">
+<meta property="article:published_time" content="2026-03-13T17:14:07.499Z">
+<meta property="article:modified_time" content="2026-03-13T17:14:07.499Z">
 <meta property="article:author" content="XXZ">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-effective-r.png">
@@ -86,7 +87,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">Wiki</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/note-vlsi/index.html">VLSI Design</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-03-12T15:59:40.724Z">2026-03-12</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-03-13T17:14:07.499Z">2026-03-14</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -154,12 +155,18 @@
 <li>次级门的负载电容：nMOS 栅电容 $C$ 与 pMOS 栅电容 $2C$</li>
 </ul>
 <p>所以输出节点上的总电容为 $C_{load}&#x3D;6C$，有效电阻为 $R$，延迟为 $6RC$。</p>
-<h2 id="Elmore-延迟"><a href="#Elmore-延迟" class="headerlink" title="Elmore 延迟"></a>Elmore 延迟</h2><p>如果一个电路能表示成一颗 <mark class="tag-plugin colorful mark" color="green">RC 树（无回路，单一源节点，所有电容接地的 RC 电路）</mark>的形式，就可以用 Elmore 模型估计从根节点（源节点）发生开关变化，到某一个叶节点（分支末端电容）发生变化的一阶常数延迟。</p>
+<h2 id="Elmore-延迟"><a href="#Elmore-延迟" class="headerlink" title="Elmore 延迟"></a>Elmore 延迟</h2><p>如果一个电路能表示成一颗 <mark class="tag-plugin colorful mark" color="green">RC 树（无回路，单一根节点，所有电容接地的 RC 电路）</mark>的形式，就可以用 Elmore 模型估计从根节点发生开关变化，到某一个叶节点（分支末端电容）发生变化的一阶常数延迟。</p>
+<div class="tag-plugin colorful note" color="green"><div class="title">源（source）与根节点（root）</div><div class="body"><p>源指的是施加在 RC 树上的信号，根节点则是信号传播（propagate）的起点。以反相器为例，pMOS 导通，VDD 把 RC 树拉向高电平，因此源是阶跃上升信号，VDD 是根节点；nMOS 导通，GND 把 RC 树拉向低电平，因此源是阶跃下降信号，GND 是根节点。</p></div></div>
+
 <p>计算方法：对树中每个叶节点 $k$ 求和，把该节点上的电容 $C_k$ 乘以<mark class="tag-plugin colorful mark" color="orange">从根节点 $s$ 到该节点 $k$ 与从根节点 $s$ 到目标叶节点 $i$ 的共享路径上的等效电阻</mark> $R_{ik}$。</p>
 <p>$$<br>\tau_{Di}&#x3D;\sum_{k&#x3D;1}^N C_k [R_{ik}&#x3D;R(\text{path}(s\to i)\cap \text{path}(s\to k))]<br>$$</p>
 <p>长线（long wire）的 Elmore 延迟：$\tau_N&#x3D;\sum_{i&#x3D;1}^N R_i \sum_{j&#x3D;i}^N C_j&#x3D;\sum_{i&#x3D;1}^N C_i \sum_{j&#x3D;1}^i R_j$。把长线分成 $N$ 等段，单位段的电阻为 $r$，电容为 $c$，则有：<br>$$<br>\begin{aligned}<br>\tau_{DN}&amp;&#x3D;(\frac{L}{N})^2(rc+2rc+…+Nrc)\\<br>&amp;&#x3D;(rcL^2)\frac{N(N+1)}{2N^2}\\<br>&amp;&#x3D;RC\frac{N+1}{2N}\\<br>&amp;&#x3D;\frac{RC}{2} \quad \text{for large } N \\<br>&amp;&#x3D;\frac{rcL^2}{2}<br>\end{aligned}<br>$$</p>
 <p>延迟与导线长度呈二次关系。</p>
 <h2 id="2-输入与非门：一例"><a href="#2-输入与非门：一例" class="headerlink" title="2 输入与非门：一例"></a>2 输入与非门：一例</h2><p>评估一个 $h$ 扇出的 2 输入与非门的上升与下降传播延迟。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/ELEC-2nand-example.png" style="width:400px;"/></div></div>
+
+<p>上升传播延迟：VDD 把 RC 树拉向高电平，将 VDD 视作根节点 $s$，$s\to Y$ 的路径上经过 pMOS（有效电阻 $R$），寄生电容 $6C$，负载电容 $4hC$，因此有 $t_{pdr}&#x3D;(6+4h)RC$。</p>
+<p>下降传播延迟：GND 把 RC 树拉向低电平，把 GND 视作根节点 $s$，$s\to Y$ 的路径上经过 nMOS1（有效电阻 $R&#x2F;2$），寄生电容 $2C$，nMOS2（有效电阻 $R&#x2F;2$），寄生电容 $6C$，负载电容 $4hC$，因此有 $t_{pdf}&#x3D;(2C)R&#x2F;2+(6C+4hC)(R&#x2F;2+R&#x2F;2)&#x3D;(7+4h)RC$。</p>
 
 <div class="article-footer fs14"></div>
 </article>
