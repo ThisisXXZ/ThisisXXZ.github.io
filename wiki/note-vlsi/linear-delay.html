@@ -17,20 +17,23 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   
-  <title>史前至十六世纪：答题总结 - ThisisXXZ's Blog</title>
+  <title>VLSI Design: 线性延迟模型 - ThisisXXZ's Blog</title>
 
   
-    <meta name="description" content="总结了一下。我简直是天才！ 一个最基本的句式是 A 体现了 B。  A: visual evidence, historical evidence, materials, techniques, locations B: religious, political, humanistic + ideas, effects, experiences  Religious&#x3D;&gt; Ferti">
+    <meta name="description" content="把实际延迟 $d_{abs}$ 除以一个基准时间常数 $\tau$，得到无量纲的归一化延迟 $d$。$d$ 是工艺无关的，因此可以作为比较电路结构优劣的标准。 $$d&#x3D;\frac{d_{abs}}{\tau}$$ $d$ 由两部分组成：$$d&#x3D;f+p$$其中 $f$ 是努力延迟（effort delay），取决于门的复杂度与扇出，是门实际在努力为负载电容充放电产生的延迟；$p$">
 <meta property="og:type" content="website">
-<meta property="og:title" content="史前至十六世纪：答题总结">
-<meta property="og:url" content="https://www.thisisxxz.com/wiki/note-art-history/midterm-3.html">
+<meta property="og:title" content="线性延迟模型">
+<meta property="og:url" content="https://www.thisisxxz.com/wiki/note-vlsi/linear-delay.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
-<meta property="og:description" content="总结了一下。我简直是天才！ 一个最基本的句式是 A 体现了 B。  A: visual evidence, historical evidence, materials, techniques, locations B: religious, political, humanistic + ideas, effects, experiences  Religious&#x3D;&gt; Ferti">
+<meta property="og:description" content="把实际延迟 $d_{abs}$ 除以一个基准时间常数 $\tau$，得到无量纲的归一化延迟 $d$。$d$ 是工艺无关的，因此可以作为比较电路结构优劣的标准。 $$d&#x3D;\frac{d_{abs}}{\tau}$$ $d$ 由两部分组成：$$d&#x3D;f+p$$其中 $f$ 是努力延迟（effort delay），取决于门的复杂度与扇出，是门实际在努力为负载电容充放电产生的延迟；$p$">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-02-19T10:31:19.380Z">
-<meta property="article:modified_time" content="2025-10-25T10:44:26.946Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-logical-effort.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-parasitic-delay.png">
+<meta property="article:published_time" content="2026-03-23T14:28:10.364Z">
+<meta property="article:modified_time" content="2026-03-23T14:28:10.364Z">
 <meta property="article:author" content="XXZ">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-logical-effort.png">
   
   
   
@@ -51,19 +54,24 @@
 </head>
 <body>
 
+
+
 <div class="l_body s:aa content tech" id="start" layout="page" ><aside class="l_left"><div class="leftbar-container">
 
 
-<header class="header"><div class="logo-wrap"><a class="avatar" href="/explore/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/site_avatars/avatar-sumire.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">Objet petit a</div><div class="sub normal cap">愿我拥有改变可改变之物的勇气</div><div class="sub hover cap" style="opacity:0"> 与接受不可改变之物的平静</div></a></div></header>
+<header class="header"><div class="logo-wrap"><div class="icon"><img no-lazy class="icon" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI4IDI4Ij48cGF0aCBmaWxsPSIjNjQ1NGRiIiBkPSJNMTAuODc1IDJjLjg5NSAwIDEuNzE5LjMwNCAyLjM3NS44MTRWOWgtMi4zOGEyLjI0OCAyLjI0OCAwIDAgMC00LjM3Ljc1YTIuMjUgMi4yNSAwIDAgMCA0LjM3Ljc1aDIuMzh2MTQuNTFhNC4xOCA0LjE4IDAgMCAxLTIuNzA2Ljk5YTQuMjA2IDQuMjA2IDAgMCAxLTQuMTEyLTMuMzI1bC0uMDQtLjE5QTQuNzQ4IDQuNzQ4IDAgMCAxIDMuMjg5IDE0LjVINi43NWMuNjkgMCAxLjI1LjU2IDEuMjUgMS4yNXYuMzhhMi4yNDggMi4yNDggMCAwIDAgLjc1IDQuMzdhMi4yNSAyLjI1IDAgMCAwIC43NS00LjM3di0uMzhBMi43NSAyLjc1IDAgMCAwIDYuNzUgMTNINC4xNDhhNC41IDQuNSAwIDAgMSAyLjg2OC03LjQ3NEEzLjg3NCAzLjg3NCAwIDAgMSAxMC44NzYgMm02LjI1IDBhMy44NzQgMy44NzQgMCAwIDEgMy44NTggMy41MjZhNC41IDQuNSAwIDAgMSAyLjM2IDcuOTZhNC43NSA0Ljc1IDAgMCAxLTEuNzM1IDguOTk4bC0uMDQuMTlBNC4yMDYgNC4yMDYgMCAwIDEgMTcuNDU2IDI2YTQuMTggNC4xOCAwIDAgMS0yLjcwNi0uOTlWMTloMi41QTIuNzUgMi43NSAwIDAgMCAyMCAxNi4yNXYtLjM4MmEyLjI0OCAyLjI0OCAwIDAgMC0uNzUtNC4zNjhhMi4yNDggMi4yNDggMCAwIDAtLjc1IDQuMzY4di4zODJjMCAuNjktLjU2IDEuMjUtMS4yNSAxLjI1aC0yLjVWMi44MTRBMy44NiAzLjg2IDAgMCAxIDE3LjEyNSAyTTguNzUgMTcuNWEuNzUuNzUgMCAxIDEgMCAxLjVhLjc1Ljc1IDAgMCAxIDAtMS41bTEwLjUtNC41YS43NS43NSAwIDEgMSAwIDEuNWEuNzUuNzUgMCAwIDEgMC0xLjVNOC43NSA5YS43NS43NSAwIDEgMSAwIDEuNWEuNzUuNzUgMCAwIDEgMC0xLjUiLz48L3N2Zz4="></div><a class="title" href="/wiki/note-vlsi/index.html"><div class="main" ff="title">VLSI Design</div><div class="sub cap">我的 EDA 第一步</div></a></div></header>
 
 <div class="nav-area">
-<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="Search"></form><div id="search-result"></div><div class="search-no-result">No Results!</div></div>
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" data-filter="/wiki/note-vlsi/" placeholder="在 note/vlsi 中搜索..."></form><div id="search-result"></div><div class="search-no-result">No Results!</div></div>
 
 
-<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M22 6.426v11.148c0 1.847-1.6 3.015-2.903 2.118L13 15.232V8.768l6.097-4.46C20.399 3.411 22 4.58 22 6.426" clip-rule="evenodd" opacity="0.5"/><path fill="currentColor" d="M13 7.123v9.754c0 1.616-1.467 2.638-2.661 1.853L2.92 13.853c-1.228-.807-1.228-2.899 0-3.706l7.42-4.877c1.193-.785 2.66.237 2.66 1.853"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6.95c0-.883 0-1.324.07-1.692A4 4 0 0 1 5.257 2.07C5.626 2 6.068 2 6.95 2c.386 0 .58 0 .766.017a4 4 0 0 1 2.18.904c.144.119.28.255.554.529L11 4c.816.816 1.224 1.224 1.712 1.495a4 4 0 0 0 .848.352C14.098 6 14.675 6 15.828 6h.374c2.632 0 3.949 0 4.804.77q.119.105.224.224c.77.855.77 2.172.77 4.804V14c0 3.771 0 5.657-1.172 6.828S17.771 22 14 22h-4c-3.771 0-5.657 0-6.828-1.172S2 17.771 2 14z" opacity="0.5"/><path fill="currentColor" d="M20 6.238c0-.298-.005-.475-.025-.63a3 3 0 0 0-2.583-2.582C17.197 3 16.965 3 16.5 3H9.988c.116.104.247.234.462.45L11 4c.816.816 1.224 1.224 1.712 1.495a4 4 0 0 0 .849.352C14.098 6 14.675 6 15.829 6h.373c1.78 0 2.957 0 3.798.238"/><path fill="currentColor" fill-rule="evenodd" d="M12.25 10a.75.75 0 0 1 .75-.75h5a.75.75 0 0 1 0 1.5h-5a.75.75 0 0 1-.75-.75" clip-rule="evenodd"/></svg></a><a class="nav-item" title="专栏" href="/topic/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M2 16.144V4.998c0-1.098.886-1.99 1.982-1.923c.977.06 2.131.179 3.018.413c1.05.276 2.296.866 3.282 1.388A3.5 3.5 0 0 0 12 5.275v15.2a3.46 3.46 0 0 1-1.628-.406c-1-.532-2.29-1.15-3.372-1.435c-.877-.232-2.016-.35-2.985-.411C2.906 18.153 2 17.255 2 16.143" clip-rule="evenodd" opacity="0.5"/><path fill="currentColor" d="M22 16.144V4.934c0-1.073-.846-1.953-1.918-1.916c-1.129.04-2.535.156-3.582.47c-.908.271-1.965.816-2.826 1.315A3.5 3.5 0 0 1 12 5.275v15.2c.56 0 1.121-.136 1.628-.406c1-.532 2.29-1.15 3.372-1.435c.877-.232 2.016-.35 2.985-.411c1.109-.07 2.015-.968 2.015-2.08"/></svg></a><a class="nav-item" title="探索" href="/explore/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m21.242 13.708l-7.534 7.534a3 3 0 0 1-.369.312A2.33 2.33 0 0 1 12 22c0-.552 0-1.049.003-1.5c.012-1.834.075-2.911.39-3.812a7 7 0 0 1 4.295-4.295c.9-.315 1.978-.378 3.812-.39C20.951 12 21.448 12 22 12c0 .486-.169.946-.446 1.34a3 3 0 0 1-.312.368"/><path fill="currentColor" d="M12 2c5.523 0 10 4.477 10 10c-.552 0-1.049 0-1.5.003c-1.834.012-2.911.075-3.812.39a7 7 0 0 0-4.295 4.295c-.315.9-.378 1.978-.39 3.812C12 20.951 12 21.448 12 22C6.477 22 2 17.523 2 12S6.477 2 12 2" opacity="0.5"/><path fill="currentColor" d="M10 10.5c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S8.448 9 9 9s1 .672 1 1.5m5 1.5c.552 0 1-.672 1-1.5S15.552 9 15 9s-1 .672-1 1.5s.448 1.5 1 1.5m-6.603 3.553a.75.75 0 0 1 1.05-.155a4.27 4.27 0 0 0 3.133.812q-.102.235-.187.478a5.6 5.6 0 0 0-.25 1.06L12 17.75a5.77 5.77 0 0 1-3.447-1.148a.75.75 0 0 1-.156-1.049"/></svg></a></nav>
+<nav class="menu dis-select"><a class="nav-item" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M22 6.426v11.148c0 1.847-1.6 3.015-2.903 2.118L13 15.232V8.768l6.097-4.46C20.399 3.411 22 4.58 22 6.426" clip-rule="evenodd" opacity="0.5"/><path fill="currentColor" d="M13 7.123v9.754c0 1.616-1.467 2.638-2.661 1.853L2.92 13.853c-1.228-.807-1.228-2.899 0-3.706l7.42-4.877c1.193-.785 2.66.237 2.66 1.853"/></svg></a><a class="nav-item active" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6.95c0-.883 0-1.324.07-1.692A4 4 0 0 1 5.257 2.07C5.626 2 6.068 2 6.95 2c.386 0 .58 0 .766.017a4 4 0 0 1 2.18.904c.144.119.28.255.554.529L11 4c.816.816 1.224 1.224 1.712 1.495a4 4 0 0 0 .848.352C14.098 6 14.675 6 15.828 6h.374c2.632 0 3.949 0 4.804.77q.119.105.224.224c.77.855.77 2.172.77 4.804V14c0 3.771 0 5.657-1.172 6.828S17.771 22 14 22h-4c-3.771 0-5.657 0-6.828-1.172S2 17.771 2 14z" opacity="0.5"/><path fill="currentColor" d="M20 6.238c0-.298-.005-.475-.025-.63a3 3 0 0 0-2.583-2.582C17.197 3 16.965 3 16.5 3H9.988c.116.104.247.234.462.45L11 4c.816.816 1.224 1.224 1.712 1.495a4 4 0 0 0 .849.352C14.098 6 14.675 6 15.829 6h.373c1.78 0 2.957 0 3.798.238"/><path fill="currentColor" fill-rule="evenodd" d="M12.25 10a.75.75 0 0 1 .75-.75h5a.75.75 0 0 1 0 1.5h-5a.75.75 0 0 1-.75-.75" clip-rule="evenodd"/></svg></a><a class="nav-item" title="专栏" href="/topic/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M2 16.144V4.998c0-1.098.886-1.99 1.982-1.923c.977.06 2.131.179 3.018.413c1.05.276 2.296.866 3.282 1.388A3.5 3.5 0 0 0 12 5.275v15.2a3.46 3.46 0 0 1-1.628-.406c-1-.532-2.29-1.15-3.372-1.435c-.877-.232-2.016-.35-2.985-.411C2.906 18.153 2 17.255 2 16.143" clip-rule="evenodd" opacity="0.5"/><path fill="currentColor" d="M22 16.144V4.934c0-1.073-.846-1.953-1.918-1.916c-1.129.04-2.535.156-3.582.47c-.908.271-1.965.816-2.826 1.315A3.5 3.5 0 0 1 12 5.275v15.2c.56 0 1.121-.136 1.628-.406c1-.532 2.29-1.15 3.372-1.435c.877-.232 2.016-.35 2.985-.411c1.109-.07 2.015-.968 2.015-2.08"/></svg></a><a class="nav-item" title="探索" href="/explore/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m21.242 13.708l-7.534 7.534a3 3 0 0 1-.369.312A2.33 2.33 0 0 1 12 22c0-.552 0-1.049.003-1.5c.012-1.834.075-2.911.39-3.812a7 7 0 0 1 4.295-4.295c.9-.315 1.978-.378 3.812-.39C20.951 12 21.448 12 22 12c0 .486-.169.946-.446 1.34a3 3 0 0 1-.312.368"/><path fill="currentColor" d="M12 2c5.523 0 10 4.477 10 10c-.552 0-1.049 0-1.5.003c-1.834.012-2.911.075-3.812.39a7 7 0 0 0-4.295 4.295c-.315.9-.378 1.978-.39 3.812C12 20.951 12 21.448 12 22C6.477 22 2 17.523 2 12S6.477 2 12 2" opacity="0.5"/><path fill="currentColor" d="M10 10.5c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S8.448 9 9 9s1 .672 1 1.5m5 1.5c.552 0 1-.672 1-1.5S15.552 9 15 9s-1 .672-1 1.5s.448 1.5 1 1.5m-6.603 3.553a.75.75 0 0 1 1.05-.155a4.27 4.27 0 0 0 3.133.812q-.102.235-.187.478a5.6 5.6 0 0 0-.25 1.06L12 17.75a5.77 5.77 0 0 1-3.447-1.148a.75.75 0 0 1-.156-1.049"/></svg></a></nav>
 </div>
 <div class="widgets">
-<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Recent Update</span></div><div class="widget-body fs14"><a class="item title" href="/review-film/chinese-film/"><span class="title">银幕里的中国：光影变迁五十年</span></a><a class="item title" href="/review-book/teachers-in-chambers/"><span class="title">闺秀之传，难乎不难!</span></a><a class="item title" href="/log-251029/"><span class="title">我的第二次反向传播</span></a><a class="item title" href="/review-book/myth-sisyphus/"><span class="title">应当设想，西西弗是幸福的</span></a><a class="item title" href="/cchu9009/"><span class="title">CCHU9009 我的两篇哲学小论文</span></a><a class="item title" href="/ncurses/"><span class="title">ncurses 库学习笔记</span></a><a class="item title" href="/diary-251115/"><span class="title">251115 致十年后的自己</span></a><a class="item title" href="/review-book/a-hora/"><span class="title">我想吐出一千个角的星星</span></a><a class="item title" href="/review-book/tree-baron/"><span class="title">不再有树，也不再有男爵</span></a><a class="item title" href="/log-240115/"><span class="title">我的第一次反向传播</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">序</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/index.html#start"><span class="toc-text">扉页</span></a></div><div class="widget-header dis-select"><span class="name">CMOS</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/cmos-logic.html"><span class="toc-text">CMOS 逻辑</span></a><a class="link" href="/wiki/note-vlsi/cmos-fabrication.html"><span class="toc-text">CMOS 制造工艺</span></a><a class="link" href="/wiki/note-vlsi/cmos-layout.html"><span class="toc-text">CMOS 布局</span></a></div><div class="widget-header dis-select"><span class="name">晶体管理论</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/iv-characteristics.html"><span class="toc-text">IV 特性</span></a><a class="link" href="/wiki/note-vlsi/cv-characteristics.html"><span class="toc-text">CV 特性</span></a><a class="link" href="/wiki/note-vlsi/dc-analysis.html"><span class="toc-text">直流分析</span></a><a class="link" href="/wiki/note-vlsi/transient-analysis.html"><span class="toc-text">瞬态分析</span></a></div><div class="widget-header dis-select"><span class="name">延迟</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/rc-delay.html"><span class="toc-text">RC 延迟模型</span></a><a class="link active" href="/wiki/note-vlsi/linear-delay.html"><span class="toc-text">线性延迟模型</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a></div></widget>
+
+<widget class="widget-wrapper post-card"><div class="widget-header dis-select"><span class="name">More: 科技</span></div><div class="widget-body"><a class="item wiki" href="/wiki/note-astronomy/index.html"><span class="title">飘飘何所似：我们在宇宙中的位置<br />Our Place in the Universe</span><span class="excerpt">西方天文学及其发展史，主要是课程 CCST9012 的内容。</span></a><a class="item wiki" href="/wiki/note-cryptography/index.html"><span class="title">密码学 Cryptography</span><span class="excerpt">密码学，主要是课程 COMP3357 的内容。</span></a><a class="item wiki" href="/wiki/note-dsa/index.html"><span class="title">数据结构与算法<br />Data Structures & Algorithms</span><span class="excerpt">数据结构与算法。</span></a><a class="item wiki" href="/wiki/note-os/index.html"><span class="title">操作系统 Operating System</span><span class="excerpt">操作系统，主要是课程 COMP3230 的内容。</span></a><a class="item wiki" href="/wiki/note-networks/index.html"><span class="title">计算机网络 Computer Networks</span><span class="excerpt">计算机与通信网络，主要是课程 COMP3234 的内容。</span></a><a class="item wiki" href="/wiki/note-pl/index.html"><span class="title">编程语言 Programming Languages</span><span class="excerpt">编程语言，主要是 UW 课程 CSE341 的内容。</span></a></div></widget>
 </div>
 <footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/ThisisXXZ" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/npm/simple-icons@15.13.0/icons/github.svg" width="16"/></a><a class="social" href="mailto:xxz.7203@gmail.com" rel="noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/npm/simple-icons@15.13.0/icons/gmail.svg" width="16"/></a><a class="social" href="https://steamcommunity.com/profiles/76561198827062562/" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/npm/simple-icons@15.13.0/icons/steam.svg" width="16"/></a><a class="social" href="https://www.cnblogs.com/VeniVidiVici/" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/npm/simple-icons@15.13.0/icons/bookstack.svg" width="16"/></a></div></footer>
 </div></aside><div class="l_main" id="main">
@@ -75,99 +83,54 @@
 <div class="article banner top">
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
-
-  <span class="sep"></span>
-  <a class="cap breadcrumb" href="/wiki/note-art-history/midterm-3.html">史前至十六世纪：答题总结</a>
-  </div>
-<div class="flex-row" id="post-meta"><span class="text created">Posted on: <time datetime="2026-02-19T10:31:19.380Z">2026-02-19</time></span><span class="sep updated"></span><span class="text updated">Updated on: <time datetime="2025-10-25T10:44:26.946Z">2025-10-25</time></span></div></div></div>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">Wiki</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/note-vlsi/index.html">VLSI Design</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-03-23T14:28:10.364Z">2026-03-23</time></span></div></div></div>
     
     <div class="bottom only-title">
       
       <div class="text-area">
-        <h1 class="text title"><span>史前至十六世纪：答题总结</span></h1>
+        <h1 class="text title"><span>线性延迟模型</span></h1>
         
       </div>
     </div>
     
   </div>
-  </div><article class="md-text content"><p>总结了一下。我简直是天才！</p>
-<p>一个最基本的句式是 A 体现了 B。</p>
+  </div><article class="md-text content"><p>把实际延迟 $d_{abs}$ 除以一个基准时间常数 $\tau$，得到无量纲的归一化延迟 $d$。$d$ 是工艺无关的，因此可以作为比较电路结构优劣的标准。</p>
+<p>$$<br>d&#x3D;\frac{d_{abs}}{\tau}<br>$$</p>
+<p>$d$ 由两部分组成：<br>$$<br>d&#x3D;f+p<br>$$<br>其中 $f$ 是<mark class="tag-plugin colorful mark" color="green">努力延迟（effort delay）</mark>，取决于门的复杂度与扇出，是门实际在努力为负载电容充放电产生的延迟；$p$ 是<mark class="tag-plugin colorful mark" color="red">寄生延迟（parasitic delay）</mark>，是门内部的寄生电容充放电产生的延迟。当 $f&#x3D;0$（无负载电容时），$d$ 函数的截距（interception）即为 $p$。</p>
+<p>$$<br>f&#x3D;gh<br>$$</p>
+<p>$g$ 是<mark class="tag-plugin colorful mark" color="blue">逻辑努力（logical effort）</mark>，表征门的复杂度。而<mark class="tag-plugin colorful mark" color="orange">电气逻辑（electrical effort）</mark>则表征门的扇出，其计算方式是负载（输出）电容与门输入电容的比值：</p>
+<p>$$<br>h&#x3D;\frac{C_{out}}{C_{in}}<br>$$</p>
+<h2 id="逻辑努力"><a href="#逻辑努力" class="headerlink" title="逻辑努力"></a>逻辑努力</h2><p>如何表征一个逻辑门的复杂度？选取标准反相器作为归一化的标准。一个逻辑门越复杂，它的输入电容越大。定义逻辑努力 $g$ 为：<wavy>该门的输入电容与一个能提供相同输出电流的标准反相器的输入电容之比</wavy>。</p>
+<p>显然标准反相器的逻辑努力为 $1$。</p>
+<p>计算逻辑努力时，仅需：</p>
 <ul>
-<li>A: visual evidence, historical evidence, materials, techniques, locations</li>
-<li>B: religious, political, humanistic + ideas, effects, experiences</li>
+<li>第一步：将门按照标准反相器的有效电阻（PUN 与 PDN 分别为 $R$）尺寸化（调整各部分晶体管的宽度使其 PUN 与 PDN 分别为 $R$，晶体管宽度与其有效电阻成反比），使其输出电流与标准反相器一致</li>
+<li>第二步：计算该门输入晶体管的宽度之和，除以 $3$ 得到 $g$（晶体管宽度与其电容成正比，标准反相器的输入晶体管宽度之和为 pMOS $2$ + nMOS $1&#x3D;3$）</li>
 </ul>
-<h2 id="Religious"><a href="#Religious" class="headerlink" title="Religious"></a>Religious</h2><p>&#x3D;&gt; <strong>Fertility, Survival</strong></p>
-<ul>
-<li>e.g., Symbolizes fertility, nourishment, and the survival of the community</li>
-<li><em>Venus of Willendorf</em>: Exaggerated breasts, belly, and hips</li>
-</ul>
-<p>&#x3D;&gt; <strong>Afterlife, Salvation, Resurrection</strong></p>
-<ul>
-<li>e.g., Reinforces hope for eternal life, salvation, and resurrection</li>
-<li><em>Nebamun’s tomb</em>: Banquet and hunting scenes -&gt; eternal pleasure after death</li>
-</ul>
-<p>&#x3D;&gt; <strong>Suffering, Identification with Christ</strong></p>
-<ul>
-<li>e.g., Encourages viewers (especially the sick and dying) to identify with Christ’s suffering and find comfort in shared pain</li>
-</ul>
-<p>&#x3D;&gt; <strong>Divine Authority, Intercession</strong></p>
-<ul>
-<li>e.g., expresses the Virgin or Christ as mediator between humanity and God; asserts divine authority and intercession</li>
-<li>Duccio’s <em>Maestà</em>: Virgin enthroned, surrounded by saints</li>
-<li>Byzantine mosaics at San Vitale: Gold backgrounds and iconic frontal figures</li>
-<li>Titian’s <em>Assumption</em>: Brilliant red robe and central placement of Virgin</li>
-</ul>
-<p>&#x3D;&gt; <strong>Moral Reminder, Judgment</strong></p>
-<ul>
-<li>e.g., Warns viewers about sin and salvation, reminding them of final judgment</li>
-<li>Sainte-Foy portal: Christ enthroned at center, damned tortured below, blessed orderly above</li>
-<li>Giotto’s <em>Last Judgment</em>: naturalistic bodies, vivid gestures, placement above exit</li>
-</ul>
-<p>&#x3D;&gt; <strong>Sacred Space, Divine Light</strong></p>
-<ul>
-<li>e.g., Creates an atmosphere of transcendence, awe, and divine presence</li>
-</ul>
-<p>&#x3D;&gt; <strong>Devotion, Meditation, Personal Piety</strong></p>
-<ul>
-<li>e.g., Aids prayer, meditation, and personal spiritual reflection; connects the sacred with daily life</li>
-<li>Mérode Triptych: Domestic setting with everyday symbolic objects</li>
-<li><em>Lindisfarne Gospels</em> carpet page: Intricate interlace forming a cross</li>
-</ul>
-<h2 id="Political"><a href="#Political" class="headerlink" title="Political"></a>Political</h2><p>&#x3D;&gt; <strong>Imperial Power, Authority</strong></p>
-<ul>
-<li>e.g., Projects the emperor’s authority, portrays him as a victorious, wise, divinely sanctioned leader</li>
-<li>Column of Trajan: continuous spiral reliefs showing military victories</li>
-<li>Augustus of Prima Porta: raised arm, cuirass relief, idealized youthful body</li>
-</ul>
-<p>&#x3D;&gt; <strong>Divine Sanction, Deification</strong></p>
-<ul>
-<li>e.g., Suggests rulers’ power comes from God; legitimizes their rule as sacred</li>
-<li>San Vitale mosaics: Justinian and Theodora haloed, offering Eucharist</li>
-<li>Augustus barefoot: recalls gods&#x2F;heroes</li>
-</ul>
-<p>&#x3D;&gt; <strong>Propaganda, Public Memory</strong></p>
-<ul>
-<li>e.g., Shapes public perception, glorifies leadership, ensures achievements are remembered by all citizens</li>
-<li>Column of Trajan in central forum: monumental scale, visible landmark</li>
-</ul>
-<p>&#x3D;&gt; <strong>Military Triumph, Civic Pride</strong></p>
-<ul>
-<li>e.g., Connects leaders&#x2F;cities with military victory, resilience, and civic pride</li>
-<li><em>David</em> (Donatello): small Florence as victorious republic</li>
-<li>Titian’s Assumption at Venice’s main altar: monumental national commission</li>
-</ul>
-<p>&#x3D;&gt; <strong>Social or Civic Order</strong></p>
-<ul>
-<li>e.g., Reinforces moral, social, and civic responsibilities of citizens and rulers</li>
-<li>Lorenzetti’s <em>Effects of Good Government</em>: detailed city and countryside, allegories of Justice and Concord</li>
-</ul>
-<p>&#x3D;&gt; <strong>Patron Prestige</strong></p>
-<ul>
-<li>e.g., Patron demonstrates wealth, piety, cultural sophistication; consolidates family or personal status</li>
-<li>Enrico Scrovegni in Giotto’s Arena Chapel, depicted offering the chapel to angels</li>
-<li><em>Satyr and Maenad</em>: Lavish domestic frescos</li>
-</ul>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-logical-effort.png" alt="常用门的逻辑努力" style="width:500px;"/></div><div class="image-meta"><span class="image-caption center">常用门的逻辑努力</span></div></div>
+
+<h2 id="寄生延迟"><a href="#寄生延迟" class="headerlink" title="寄生延迟"></a>寄生延迟</h2><p>粗略估计寄生延迟的方法：输出节点 $Y$ 的扩散电容与 $3C$ 的比值（归一化，标准反相器输出节点处的扩散电容为 $3C$），单位为 $\tau$。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-parasitic-delay.png" alt="常用门的寄生延迟" style="width:500px;"/></div><div class="image-meta"><span class="image-caption center">常用门的寄生延迟</span></div></div>
+
+<p>这忽略了门内部的扩散电容，比如串联 MOS 中夹着的（共享）扩散电容。因此有时会使用 Elmore 延迟模型来更准确的计算寄生延迟。</p>
+<h2 id="路径上的逻辑努力"><a href="#路径上的逻辑努力" class="headerlink" title="路径上的逻辑努力"></a>路径上的逻辑努力</h2><p>计算多级路径（multistage path）中各级的逻辑努力与电气努力。</p>
+<p>关注的路径（path of interest）的逻辑努力：</p>
+<p>$$<br>G&#x3D;\prod g_i<br>$$</p>
+<p>路径电气努力（在这个定义中就考虑旁支负载 $B$）：</p>
+<p>$$<br>H&#x3D;\prod h_i&#x3D;\prod \frac{C_{out, i}}{C_{in, i}}<br>$$</p>
+<p>路径努力（path effort）：</p>
+<p>$$<br>F&#x3D;GH<br>$$</p>
+<p>注意只要路径的输入电容与负载电容不变，路径努力 $F$ 就与该路径上电容的尺寸无关。</p>
+<p>考虑路径的总延迟 $D$：</p>
+<p>$$<br>\begin{aligned}<br>D&amp;&#x3D;\sum d_i&#x3D;D_F+P \\<br>D_F&amp;&#x3D;\sum f_i \\<br>P&amp;&#x3D;\sum p_i<br>\end{aligned}<br>$$</p>
+<p>路径努力 $F&#x3D;\prod f_i$ 为一定值，为使路径努力延迟（path effort delay）$D_F&#x3D;\sum f_i$ 最小化，每个 $f_i$ 均应相等。因此路径上每一级（门）的努力延迟应为</p>
+<p>$$<br>\hat{f}&#x3D;g_ih_i&#x3D;F^{1&#x2F;N}<br>$$</p>
+
+<div class="article-footer fs14"></div>
 </article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Prev</div><a href="/wiki/note-vlsi/rc-delay.html">RC 延迟模型</a></div><div class="item" id="next"></div></section></div>
+
 
   <div class="related-wrap md-text" id="comments">
     <section class='header cmt-title cap theme'>
@@ -191,7 +154,9 @@
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
 <div class="widgets">
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Religious"><span class="toc-text">Religious</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Political"><span class="toc-text">Political</span></a></li></ol></div><div class="widget-footer">
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E5%8A%AA%E5%8A%9B"><span class="toc-text">逻辑努力</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%84%E7%94%9F%E5%BB%B6%E8%BF%9F"><span class="toc-text">寄生延迟</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%AF%E5%BE%84%E4%B8%8A%E7%9A%84%E9%80%BB%E8%BE%91%E5%8A%AA%E5%8A%9B"><span class="toc-text">路径上的逻辑努力</span></a></li></ol></div><div class="widget-footer">
 
 <a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.46 1.25h3.08c1.603 0 2.86 0 3.864.095c1.023.098 1.861.3 2.6.752a5.75 5.75 0 0 1 1.899 1.899c.452.738.654 1.577.752 2.6c.095 1.004.095 2.261.095 3.865v1.067c0 1.141 0 2.036-.05 2.759c-.05.735-.153 1.347-.388 1.913a5.75 5.75 0 0 1-3.112 3.112c-.805.334-1.721.408-2.977.43a10.81 10.81 0 0 0-.929.036c-.198.022-.275.054-.32.08c-.047.028-.112.078-.224.232c-.121.166-.258.396-.476.764l-.542.916c-.773 1.307-2.69 1.307-3.464 0l-.542-.916a10.605 10.605 0 0 0-.476-.764c-.112-.154-.177-.204-.224-.232c-.045-.026-.122-.058-.32-.08c-.212-.023-.49-.03-.93-.037c-1.255-.021-2.171-.095-2.976-.429A5.75 5.75 0 0 1 1.688 16.2c-.235-.566-.338-1.178-.389-1.913c-.049-.723-.049-1.618-.049-2.76v-1.066c0-1.604 0-2.86.095-3.865c.098-1.023.3-1.862.752-2.6a5.75 5.75 0 0 1 1.899-1.899c.738-.452 1.577-.654 2.6-.752C7.6 1.25 8.857 1.25 10.461 1.25M6.739 2.839c-.914.087-1.495.253-1.959.537A4.25 4.25 0 0 0 3.376 4.78c-.284.464-.45 1.045-.537 1.96c-.088.924-.089 2.11-.089 3.761v1c0 1.175 0 2.019.046 2.685c.045.659.131 1.089.278 1.441a4.25 4.25 0 0 0 2.3 2.3c.515.214 1.173.294 2.429.316h.031c.398.007.747.013 1.037.045c.311.035.616.104.909.274c.29.17.5.395.682.645c.169.232.342.525.538.856l.559.944a.52.52 0 0 0 .882 0l.559-.944c.196-.331.37-.624.538-.856c.182-.25.392-.476.682-.645c.293-.17.598-.24.909-.274c.29-.032.639-.038 1.037-.045h.032c1.255-.022 1.913-.102 2.428-.316a4.25 4.25 0 0 0 2.3-2.3c.147-.352.233-.782.278-1.441c.046-.666.046-1.51.046-2.685v-1c0-1.651 0-2.837-.089-3.762c-.087-.914-.253-1.495-.537-1.959a4.25 4.25 0 0 0-1.403-1.403c-.464-.284-1.045-.45-1.96-.537c-.924-.088-2.11-.089-3.761-.089h-3c-1.651 0-2.837 0-3.762.089" clip-rule="evenodd"/><path fill="currentColor" d="M9 11a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><span>Join Discussion</span></a></div></widget>
 </div></aside><div class='float-panel blur'>
@@ -665,6 +630,33 @@
       })
     }
   });
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+    processEscapes: true
+  }
+});
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+});
+// Prevent MathJax from shrinking to match body font x-height (common with CJK/web fonts)
+MathJax.Hub.Config({
+  "HTML-CSS": {
+    matchFontHeight: false,
+    scale: 110 // Adjust if needed: 100–115; this helps math size match body text visually
+  }
+});
+MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for(i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
 </script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
