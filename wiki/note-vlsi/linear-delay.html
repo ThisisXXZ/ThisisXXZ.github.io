@@ -29,8 +29,9 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-logical-effort.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-parasitic-delay.png">
-<meta property="article:published_time" content="2026-03-23T14:28:10.364Z">
-<meta property="article:modified_time" content="2026-03-23T14:28:10.364Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-delay-sensitivity.png">
+<meta property="article:published_time" content="2026-03-25T14:51:13.748Z">
+<meta property="article:modified_time" content="2026-03-25T14:51:13.748Z">
 <meta property="article:author" content="XXZ">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-logical-effort.png">
@@ -84,7 +85,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">Wiki</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/note-vlsi/index.html">VLSI Design</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-03-23T14:28:10.364Z">2026-03-23</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-03-25T14:51:13.748Z">2026-03-25</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -114,7 +115,7 @@
 <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-parasitic-delay.png" alt="常用门的寄生延迟" style="width:500px;"/></div><div class="image-meta"><span class="image-caption center">常用门的寄生延迟</span></div></div>
 
 <p>这忽略了门内部的扩散电容，比如串联 MOS 中夹着的（共享）扩散电容。因此有时会使用 Elmore 延迟模型来更准确的计算寄生延迟。</p>
-<h2 id="路径上的逻辑努力"><a href="#路径上的逻辑努力" class="headerlink" title="路径上的逻辑努力"></a>路径上的逻辑努力</h2><p>计算多级路径（multistage path）中各级的逻辑努力与电气努力。</p>
+<h2 id="最小化路径上的努力延迟"><a href="#最小化路径上的努力延迟" class="headerlink" title="最小化路径上的努力延迟"></a>最小化路径上的努力延迟</h2><p>计算多级路径（multistage path）中各级的逻辑努力与电气努力。</p>
 <p>关注的路径（path of interest）的逻辑努力：</p>
 <p>$$<br>G&#x3D;\prod g_i<br>$$</p>
 <p>路径电气努力（在这个定义中就考虑旁支负载 $B$）：</p>
@@ -124,9 +125,30 @@
 <p>注意只要路径的输入电容与负载电容不变，路径努力 $F$ 就与该路径上电容的尺寸无关。</p>
 <p>考虑路径的总延迟 $D$：</p>
 <p>$$<br>\begin{aligned}<br>D&amp;&#x3D;\sum d_i&#x3D;D_F+P \\<br>D_F&amp;&#x3D;\sum f_i \\<br>P&amp;&#x3D;\sum p_i<br>\end{aligned}<br>$$</p>
-<p>路径努力 $F&#x3D;\prod f_i$ 为一定值，为使路径努力延迟（path effort delay）$D_F&#x3D;\sum f_i$ 最小化，每个 $f_i$ 均应相等。因此路径上每一级（门）的努力延迟应为</p>
+<p>路径努力 $F&#x3D;\prod f_i$ 为一定值，为最小化路径努力延迟（path effort delay）$D_F&#x3D;\sum f_i$，每个 $f_i$ 均应相等。因此路径上每一级的最优努力延迟应为：</p>
 <p>$$<br>\hat{f}&#x3D;g_ih_i&#x3D;F^{1&#x2F;N}<br>$$</p>
+<p><strong>从后往前</strong>（路径终点的负载电容不变且已知）逐个计算第 $i$ 级门的最优输入电容：</p>
+<p>$$<br>\hat{f}&#x3D;g_ih_i&#x3D;g_i\frac{C_{out, i}}{C_{in, i}} \\<br>\Longrightarrow C_{in, i}&#x3D;\frac{g_iC_{out, i}}{\hat{f}}<br>$$</p>
+<p>调整对应逻辑门的尺寸（宽度）以达到最优输入电容。</p>
+<p>例题见 Lecture 5 pp. 28-32。</p>
+<h2 id="最优级数（一）"><a href="#最优级数（一）" class="headerlink" title="最优级数（一）"></a>最优级数（一）</h2><p>考虑一条 64 位的数据通路（datapath），被若干个单位反相器驱动。最优级数是多少？</p>
+<p>单位反相器的逻辑努力 $g_i&#x3D;1$，路径的逻辑努力 $G&#x3D;\prod g_i&#x3D;1$</p>
+<p>路径的电气努力 $F&#x3D;64\prod(1&#x2F;1)&#x3D;64$</p>
+<p>所以有 $D_F&#x3D;F^{1&#x2F;N}$</p>
+<p>单位反相器的寄生延迟 $p_{inv}(i)\approx 1$，路径的寄生延迟 $P&#x3D;\sum p_{inv}(i)&#x3D;N$</p>
+<p>所以路径的总延迟可以表示为关于级数 $N$ 的函数 $D&#x3D;N(64)^{1&#x2F;N}+N$</p>
+<h2 id="最优级数（二）"><a href="#最优级数（二）" class="headerlink" title="最优级数（二）"></a>最优级数（二）</h2><p>第二个场景，有一个 $n_1$ 级，路径努力为 $F$ 的逻辑块（logic block），在其末端再加若干个单位反相器，最优总级数 $N$ 是多少？</p>
+<p>增加反相器并不会改变路径的逻辑努力 $G$ 与电气努力 $F$，但会增加路径的寄生延迟 $P$。新路径的最佳总延迟为：</p>
+<p>$$<br>D&#x3D;NF^{1&#x2F;N}+\sum_{i&#x3D;1}^{n_1} p_i+(N-n_1)p_{inv}<br>$$</p>
+<p>$D(N)$ 先降后升，令导数 $&#x3D;0$，求最小化 $D$ 的极值点 $\hat{N}$：</p>
+<p>$$<br>\begin{aligned}<br>\frac{dD}{dN}&#x3D;-F^{1&#x2F;N}\ln F^{1&#x2F;N}+F^{1&#x2F;N}+p_{inv}&amp;&#x3D;0 \\<br>\Rightarrow p_{inv}+\rho(1-\ln \rho)&amp;&#x3D;0 \text{ where }\rho&#x3D;F^{1&#x2F;\hat{N}}<br>\end{aligned}<br>$$</p>
+<p>该式无形式解。若忽略反相器的寄生延迟（$p_{inv}&#x3D;0$），有级努力（stage effort）$\rho&#x3D;e$；通常地，有 $p_{inv}&#x3D;1$，此时方程的数值解为 $\rho&#x3D;3.59$。</p>
+<p>使得总延迟最小的最佳级数为 $\hat{N}&#x3D;\log_{\rho} F$。</p>
+<h2 id="敏感度分析"><a href="#敏感度分析" class="headerlink" title="敏感度分析"></a>敏感度分析</h2><p>敏感度（sensitivity）：当采用的级数偏离最佳值时，延迟会对这种偏离有多敏感？</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-delay-sensitivity.png" alt="延迟与最小延迟的比值（偏离度）与级数的关系" style="width:400px;"/></div><div class="image-meta"><span class="image-caption center">延迟与最小延迟的比值（偏离度）与级数的关系</span></div></div>
 
+<p>级数在理论最佳级数的 $2&#x2F;3$ 到 $3&#x2F;2$ 之间（相应的，级努力在 $2.4\sim 6$ 范围内），延迟都能保持在最小延迟的 $15\%$ 以内。工程上常取级努力 $\rho&#x3D;4$，便于快速计算合适的级数。这解释了为何 4 扇出反相器是一个代表性的逻辑门延迟单元。</p>
+<h2 id="一个例子：解码器设计"><a href="#一个例子：解码器设计" class="headerlink" title="一个例子：解码器设计"></a>一个例子：解码器设计</h2>
 <div class="article-footer fs14"></div>
 </article>
 <div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Prev</div><a href="/wiki/note-vlsi/rc-delay.html">RC 延迟模型</a></div><div class="item" id="next"></div></section></div>
@@ -156,7 +178,7 @@
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E5%8A%AA%E5%8A%9B"><span class="toc-text">逻辑努力</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%84%E7%94%9F%E5%BB%B6%E8%BF%9F"><span class="toc-text">寄生延迟</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%AF%E5%BE%84%E4%B8%8A%E7%9A%84%E9%80%BB%E8%BE%91%E5%8A%AA%E5%8A%9B"><span class="toc-text">路径上的逻辑努力</span></a></li></ol></div><div class="widget-footer">
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E5%8A%AA%E5%8A%9B"><span class="toc-text">逻辑努力</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%84%E7%94%9F%E5%BB%B6%E8%BF%9F"><span class="toc-text">寄生延迟</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%B0%8F%E5%8C%96%E8%B7%AF%E5%BE%84%E4%B8%8A%E7%9A%84%E5%8A%AA%E5%8A%9B%E5%BB%B6%E8%BF%9F"><span class="toc-text">最小化路径上的努力延迟</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E4%BC%98%E7%BA%A7%E6%95%B0%EF%BC%88%E4%B8%80%EF%BC%89"><span class="toc-text">最优级数（一）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E4%BC%98%E7%BA%A7%E6%95%B0%EF%BC%88%E4%BA%8C%EF%BC%89"><span class="toc-text">最优级数（二）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%8F%E6%84%9F%E5%BA%A6%E5%88%86%E6%9E%90"><span class="toc-text">敏感度分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90%EF%BC%9A%E8%A7%A3%E7%A0%81%E5%99%A8%E8%AE%BE%E8%AE%A1"><span class="toc-text">一个例子：解码器设计</span></a></li></ol></div><div class="widget-footer">
 
 <a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.46 1.25h3.08c1.603 0 2.86 0 3.864.095c1.023.098 1.861.3 2.6.752a5.75 5.75 0 0 1 1.899 1.899c.452.738.654 1.577.752 2.6c.095 1.004.095 2.261.095 3.865v1.067c0 1.141 0 2.036-.05 2.759c-.05.735-.153 1.347-.388 1.913a5.75 5.75 0 0 1-3.112 3.112c-.805.334-1.721.408-2.977.43a10.81 10.81 0 0 0-.929.036c-.198.022-.275.054-.32.08c-.047.028-.112.078-.224.232c-.121.166-.258.396-.476.764l-.542.916c-.773 1.307-2.69 1.307-3.464 0l-.542-.916a10.605 10.605 0 0 0-.476-.764c-.112-.154-.177-.204-.224-.232c-.045-.026-.122-.058-.32-.08c-.212-.023-.49-.03-.93-.037c-1.255-.021-2.171-.095-2.976-.429A5.75 5.75 0 0 1 1.688 16.2c-.235-.566-.338-1.178-.389-1.913c-.049-.723-.049-1.618-.049-2.76v-1.066c0-1.604 0-2.86.095-3.865c.098-1.023.3-1.862.752-2.6a5.75 5.75 0 0 1 1.899-1.899c.738-.452 1.577-.654 2.6-.752C7.6 1.25 8.857 1.25 10.461 1.25M6.739 2.839c-.914.087-1.495.253-1.959.537A4.25 4.25 0 0 0 3.376 4.78c-.284.464-.45 1.045-.537 1.96c-.088.924-.089 2.11-.089 3.761v1c0 1.175 0 2.019.046 2.685c.045.659.131 1.089.278 1.441a4.25 4.25 0 0 0 2.3 2.3c.515.214 1.173.294 2.429.316h.031c.398.007.747.013 1.037.045c.311.035.616.104.909.274c.29.17.5.395.682.645c.169.232.342.525.538.856l.559.944a.52.52 0 0 0 .882 0l.559-.944c.196-.331.37-.624.538-.856c.182-.25.392-.476.682-.645c.293-.17.598-.24.909-.274c.29-.032.639-.038 1.037-.045h.032c1.255-.022 1.913-.102 2.428-.316a4.25 4.25 0 0 0 2.3-2.3c.147-.352.233-.782.278-1.441c.046-.666.046-1.51.046-2.685v-1c0-1.651 0-2.837-.089-3.762c-.087-.914-.253-1.495-.537-1.959a4.25 4.25 0 0 0-1.403-1.403c-.464-.284-1.045-.45-1.96-.537c-.924-.088-2.11-.089-3.761-.089h-3c-1.651 0-2.837 0-3.762.089" clip-rule="evenodd"/><path fill="currentColor" d="M9 11a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><span>Join Discussion</span></a></div></widget>
 </div></aside><div class='float-panel blur'>
