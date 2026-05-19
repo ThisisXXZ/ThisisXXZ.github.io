@@ -20,15 +20,22 @@
   <title>VLSI Design: 小信号模型 - ThisisXXZ's Blog</title>
 
   
-    <meta property="og:type" content="website">
+    <meta name="description" content="模拟信号（传感器输出的电压，麦克风信号，无线接收信号等）通常很小，数字电路无法识别，所以需要放大器（amplifier）作为模拟信号与数字信号间的桥梁。 考虑一个放大器，前级是一个信号源加一个内阻 $R_S$，放大器输入阻抗是 $R_{in}$。进入放大器的电压是： $$v_{in}&#x3D;v_s\frac{R_{in}}{R_S+R_{in}}$$ 为使 $v_{in}&#x3D;v_s$，">
+<meta property="og:type" content="website">
 <meta property="og:title" content="小信号模型">
 <meta property="og:url" content="https://www.thisisxxz.com/wiki/note-vlsi/small-signal-model.html">
 <meta property="og:site_name" content="ThisisXXZ&#39;s Blog">
+<meta property="og:description" content="模拟信号（传感器输出的电压，麦克风信号，无线接收信号等）通常很小，数字电路无法识别，所以需要放大器（amplifier）作为模拟信号与数字信号间的桥梁。 考虑一个放大器，前级是一个信号源加一个内阻 $R_S$，放大器输入阻抗是 $R_{in}$。进入放大器的电压是： $$v_{in}&#x3D;v_s\frac{R_{in}}{R_S+R_{in}}$$ 为使 $v_{in}&#x3D;v_s$，">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-05-15T17:18:58.637Z">
-<meta property="article:modified_time" content="2026-05-15T17:18:58.637Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-common-source-amp.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-small-model.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-source-follower.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-sf-rout.png">
+<meta property="article:published_time" content="2026-05-18T15:32:21.149Z">
+<meta property="article:modified_time" content="2026-05-18T15:32:21.149Z">
 <meta property="article:author" content="XXZ">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-common-source-amp.png">
   
   
   
@@ -64,7 +71,7 @@
 </div>
 <div class="widgets">
 
-<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">序</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/index.html#start"><span class="toc-text">扉页</span></a></div><div class="widget-header dis-select"><span class="name">CMOS</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/cmos-logic.html"><span class="toc-text">CMOS 逻辑</span></a><a class="link" href="/wiki/note-vlsi/cmos-fabrication.html"><span class="toc-text">CMOS 制造工艺</span></a><a class="link" href="/wiki/note-vlsi/cmos-layout.html"><span class="toc-text">CMOS 布局</span></a></div><div class="widget-header dis-select"><span class="name">晶体管理论</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/iv-characteristics.html"><span class="toc-text">IV 特性</span></a><a class="link" href="/wiki/note-vlsi/cv-characteristics.html"><span class="toc-text">CV 特性</span></a><a class="link" href="/wiki/note-vlsi/dc-analysis.html"><span class="toc-text">直流分析</span></a><a class="link" href="/wiki/note-vlsi/transient-analysis.html"><span class="toc-text">瞬态分析</span></a></div><div class="widget-header dis-select"><span class="name">延迟</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/rc-delay.html"><span class="toc-text">RC 延迟模型</span></a><a class="link" href="/wiki/note-vlsi/linear-delay.html"><span class="toc-text">线性延迟模型</span></a></div><div class="widget-header dis-select"><span class="name">数字电路设计</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/combinational-logic.html"><span class="toc-text">更多的组合逻辑</span></a><a class="link" href="/wiki/note-vlsi/memory-fsms.html"><span class="toc-text">存储器与状态机</span></a><a class="link" href="/wiki/note-vlsi/adders.html"><span class="toc-text">加法器</span></a></div><div class="widget-header dis-select"><span class="name">测试</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/fault-models.html"><span class="toc-text">故障模型</span></a><a class="link" href="/wiki/note-vlsi/design-for-testability.html"><span class="toc-text">可测试性设计</span></a></div><div class="widget-header dis-select"><span class="name">模拟电路设计</span></div><div class="widget-body fs14"><a class="link active" href="/wiki/note-vlsi/small-signal-model.html"><span class="toc-text">小信号模型</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a></div></widget>
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">序</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/index.html#start"><span class="toc-text">扉页</span></a></div><div class="widget-header dis-select"><span class="name">CMOS</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/cmos-logic.html"><span class="toc-text">CMOS 逻辑</span></a><a class="link" href="/wiki/note-vlsi/cmos-fabrication.html"><span class="toc-text">CMOS 制造工艺</span></a><a class="link" href="/wiki/note-vlsi/cmos-layout.html"><span class="toc-text">CMOS 布局</span></a></div><div class="widget-header dis-select"><span class="name">晶体管理论</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/iv-characteristics.html"><span class="toc-text">IV 特性</span></a><a class="link" href="/wiki/note-vlsi/cv-characteristics.html"><span class="toc-text">CV 特性</span></a><a class="link" href="/wiki/note-vlsi/dc-analysis.html"><span class="toc-text">直流分析</span></a><a class="link" href="/wiki/note-vlsi/transient-analysis.html"><span class="toc-text">瞬态分析</span></a></div><div class="widget-header dis-select"><span class="name">延迟</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/rc-delay.html"><span class="toc-text">RC 延迟模型</span></a><a class="link" href="/wiki/note-vlsi/linear-delay.html"><span class="toc-text">线性延迟模型</span></a></div><div class="widget-header dis-select"><span class="name">数字电路设计</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/combinational-logic.html"><span class="toc-text">更多的组合逻辑</span></a><a class="link" href="/wiki/note-vlsi/memory-fsms.html"><span class="toc-text">存储器与状态机</span></a><a class="link" href="/wiki/note-vlsi/adders.html"><span class="toc-text">加法器</span></a></div><div class="widget-header dis-select"><span class="name">测试</span></div><div class="widget-body fs14"><a class="link" href="/wiki/note-vlsi/fault-models.html"><span class="toc-text">故障模型</span></a><a class="link" href="/wiki/note-vlsi/design-for-testability.html"><span class="toc-text">可测试性设计</span></a></div><div class="widget-header dis-select"><span class="name">模拟电路设计</span></div><div class="widget-body fs14"><a class="link active" href="/wiki/note-vlsi/small-signal-model.html"><span class="toc-text">小信号模型</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="link" href="/wiki/note-vlsi/opamps.html"><span class="toc-text">运算放大器</span></a></div></widget>
 
 <widget class="widget-wrapper post-card"><div class="widget-header dis-select"><span class="name">More: 科技</span></div><div class="widget-body"><a class="item wiki" href="/wiki/note-astronomy/index.html"><span class="title">飘飘何所似：我们在宇宙中的位置<br />Our Place in the Universe</span><span class="excerpt">西方天文学及其发展史，主要是课程 CCST9012 的内容。</span></a><a class="item wiki" href="/wiki/note-cryptography/index.html"><span class="title">密码学 Cryptography</span><span class="excerpt">密码学，主要是课程 COMP3357 的内容。</span></a><a class="item wiki" href="/wiki/note-dsa/index.html"><span class="title">数据结构与算法<br />Data Structures & Algorithms</span><span class="excerpt">数据结构与算法。</span></a><a class="item wiki" href="/wiki/note-networks/index.html"><span class="title">计算机网络 Computer Networks</span><span class="excerpt">计算机与通信网络，主要是课程 COMP3234 的内容。</span></a><a class="item wiki" href="/wiki/note-pl/index.html"><span class="title">编程语言 Programming Languages</span><span class="excerpt">编程语言，主要是 UW 课程 CSE341 的内容。</span></a><a class="item wiki" href="/wiki/note-os/index.html"><span class="title">操作系统 Operating System</span><span class="excerpt">操作系统，主要是课程 COMP3230 的内容。</span></a></div></widget>
 </div>
@@ -79,7 +86,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">Home</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">Wiki</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/note-vlsi/index.html">VLSI Design</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-05-15T17:18:58.637Z">2026-05-16</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">Updated on: <time datetime="2026-05-18T15:32:21.149Z">2026-05-18</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -90,10 +97,109 @@
     </div>
     
   </div>
-  </div><article class="md-text content">
+  </div><article class="md-text content"><p>模拟信号（传感器输出的电压，麦克风信号，无线接收信号等）通常很小，数字电路无法识别，所以需要放大器（amplifier）作为模拟信号与数字信号间的桥梁。</p>
+<p>考虑一个放大器，前级是一个信号源加一个内阻 $R_S$，放大器输入阻抗是 $R_{in}$。进入放大器的电压是：</p>
+<p>$$<br>v_{in}&#x3D;v_s\frac{R_{in}}{R_S+R_{in}}<br>$$</p>
+<p>为使 $v_{in}&#x3D;v_s$，理想放大器的输入阻抗 $R_{in}&#x3D;\infty$。接下来看输出端。若放大器内部理想输出电压为 $A_v v_{in}$，输出阻抗为 $R_{out}$，后接负载 $R_L$，那么负载分压为：</p>
+<p>$$<br>v_L&#x3D;A_v v_{in} \frac{R_L}{R_{L}+R_{out}}<br>$$</p>
+<p>为使 $v_L&#x3D;A_v v_{in}$，理想放大器的输出阻抗为 $R_{out}&#x3D;0$。</p>
+<p>MOS 管天然适合做放大器，因为栅极基本不吸收电流，所以输入阻抗无限大；但 MOS 的漏级电流又受到 $V_{GS}$ 控制。一个较小的栅源电压变化 $v_{gs}$，引起漏极电流的变化 $g_m v_{gs}$，这是 MOS 放大器的基本机制。</p>
+<h2 id="共源极放大器"><a href="#共源极放大器" class="headerlink" title="共源极放大器"></a>共源极放大器</h2><p>共源极放大器（common source amplifier，CS）得名于源级作为输入信号与输出信号共同参考的端点。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-common-source-amp.png" alt="CS 的结构" style="width:200px;"/></div><div class="image-meta"><span class="image-caption center">CS 的结构</span></div></div>
+
+<p>CS 的工作原理是：$V_{in}$ 升高，$I_d$ 升高，$R_L$ 从 $v_{ds}$ 中分压更多，所以 $V_{out}$ 降低。CS 是<wavy>反相放大器</wavy>。</p>
+<p>我们期望 $V_{in}&#x3D;v_{gs}$ 是控制 $I_d$ 的主要因素，所以 MOS 管一定要处在饱和状态（见 <a target="_blank" rel="noopener" href="https://thisisxxz.com/wiki/note-vlsi/iv-characteristics.html">一阶晶体管模型</a>）。设定好合适的 DC bias 使得 $V_{out}&gt;V_{in}-V_T$ 让 MOS 稳定的处在饱和区，小信号在这个工作点上做小幅的摆动。 </p>
+<p>接下来分析一下 CS 的小信号模型（small signal model）。小信号模型只分析变化量，所有固定的 DC 电流源都视为接地，即 AC ground。小信号变化作用在栅极上 $v_g&#x3D;v_{in}$。</p>
+<p>首先是两个重要的参数，放大倍率 $g_m$（$v_{in}$ 的变化导致 $I_{ds}$ 变化的能力有多强）与沟道长度调制（channel length modulation）带来的等效输出电阻 $r_o$。</p>
+<p>回忆饱和 MOS 管的 IV 模型：</p>
+<p>$$<br>I_{ds}&#x3D;\frac{\beta}{2}(V_{gs}-V_T)\Rightarrow I_{DS}&#x3D;\frac{\beta}{2}(V_{GS}-V_T)<br>$$</p>
+<p>由于输入信号的摆动足够小，可以做一个线性近似。在 DC bias 工作点 $(V_{GS}, V_{DS}, I_{DS})$ 处对 $V_{gs}$ 求导，有跨导（transconductance）$g_m$：</p>
+<p>$$<br>g_m&#x3D;\frac{\partial I_{ds}}{\partial V_{gs}}&#x3D;\left.\beta(V_{gs}-V_T)\right|_{v_{gs}&#x3D;V_{GS}}&#x3D;\beta(V_{GS}-V_T)&#x3D;\sqrt{2\beta I_{DS}}<br>$$</p>
+<p>带沟道长度调制的饱和 MOS 管 IV 模型还与 $V_{ds}$ 有关：</p>
+<p>$$<br>I_{ds}&#x3D;\frac{\beta}{2}(V_{gs}-V_T)^2(1+\lambda V_{ds})\Rightarrow I_{DS}&#x3D;\frac{\beta}{2}(V_{GS}-V_T)^2(1+\lambda V_{DS})<br>$$</p>
+<p>对 $V_{ds}$ 求导，得到输出电导（output conductance）$g_{ds}$ 与其倒数等效输出电阻 $r_o$：</p>
+<p>$$<br>g_{ds}&#x3D;\frac{\partial I_{ds}}{\partial V_{ds}}&#x3D;\left.\frac{\lambda\beta}{2}(V_{gs}-V_T)^2\right|_{v_{gs}&#x3D;V_{GS}}&#x3D;\lambda I_{DS}\Rightarrow r_o&#x3D;\frac{1}{g_{ds}}&#x3D;\frac{1}{\lambda I_{DS}}<br>$$</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-small-model.png" alt="小信号模型：电流源 $g_m v_{gs}$ 与等效输出电阻 $r_o$" style="width:350px;"/></div><div class="image-meta"><span class="image-caption center">小信号模型：电流源 $g_m v_{gs}$ 与等效输出电阻 $r_o$</span></div></div>
+
+<p>有了这两个参数，便可以求取放大器的：</p>
+<mark class="tag-plugin colorful mark" color="red">输入与输出电阻</mark>：栅极不通电，输入电阻 $R_{in}=\infty$；输出电阻是负载与沟道长度调制等效电阻的并联 $R_{out}=r_o//R_L$。
+
+<p>求输出电阻时，可以把 $v_{in}$ 设为 AC ground，从 $v_{out}$ 处往里看。</p>
+<mark class="tag-plugin colorful mark" color="green">增益（gain）</mark>：
+
+<p>$$<br>i_d&#x3D;g_m v_{gs}&#x3D;g_m(v_{in}-0)&#x3D;g_m v_{in}<br>$$</p>
+<p>整个图可视作小信号电流，$r_o$，$R_L$ 在 $v_{out}$ 与 AC ground 间的并联。小信号电流 $i_d&gt;0$ 从漏极流向源极，定义这个方向为正方向。输出端处没有电流，根据 KCL，电阻支路的电流为 $-i_d$。</p>
+<p>$$<br>A&#x3D;\frac{v_{out}}{v_{in}}&#x3D;\frac{-i_d (r_o&#x2F;&#x2F;R_L)}{v_{in}}&#x3D;-g_m(r_o&#x2F;&#x2F;R_L)<br>$$</p>
+<p>$v_{in}$ 上升，$v_{out}$ 因为 $R_{out}$ 的分压下降了；所以增益 $A$ 为负，CS 是<wavy>反相</wavy>的。</p>
+<h2 id="偏置"><a href="#偏置" class="headerlink" title="偏置"></a>偏置</h2><p>图示见 Lecture 10, pp.10，不太好截。</p>
+<p>CS 的 MOS 管一定要置于饱和状态才能工作。有两种方法，</p>
+<p>分压偏置（voltage divider biasing），源极经过一个额外的电阻 $R_S$ 接地，漏级经过一个额外的电阻 $R_D$ 接 $V_{DD}$。</p>
+<p>$$<br>\begin{aligned}<br>V_{GS}&amp;&#x3D;V_G-V_S&#x3D;\frac{V_{DD}R_2}{R_1+R_2}-I_{DS} R_S \\<br>I_{DS}&amp;&#x3D;\frac{\beta}{2}(V_{GS}-V_t)^2<br>\end{aligned}<br>$$</p>
+<p>求解出工作点 $(V_{GS}, V_{DS}, I_{DS})$，检查是否满足 $V_{DS}&gt;V_{GS}-V_T$。</p>
+<p>自偏置（Self-Biasing），不做分压，接一个额外的栅极电阻 $R_G$。</p>
+<p>$$<br>\begin{aligned}<br>V_{DD}&amp;&#x3D;I_D R_D+V_{GS}+I_D R_S\\<br>I_{DS}&amp;&#x3D;\frac{\beta}{2}(V_{GS}-V_t)^2<br>\end{aligned}<br>$$</p>
+<p>同样可求解出工作点，但自偏置无需检查饱和条件。这是因为 $V_{D}&#x3D;V_{G}$（栅极上无电流），一定有 $V_D&gt;V_G-V_T$，所以 $V_{DS}&gt;V_{GS}-V_T$ 自然满足了。</p>
+<h2 id="MOS-连接的小信号等效电阻"><a href="#MOS-连接的小信号等效电阻" class="headerlink" title="MOS 连接的小信号等效电阻"></a>MOS 连接的小信号等效电阻</h2><p>分析等效电阻，假设栅极施加了固定的的偏置电压 $v_{g}&#x3D;V_b$，将其视作 AC ground 即 $v_{g}&#x3D;0$。从漏级加测试电压 $v_T$，漏源间有测试电流 $i_T$。</p>
+<mark class="tag-plugin colorful mark" color="yellow">单 NMOS</mark> [Lecture 10 pp.11]
+
+<p>$v_{gs}&#x3D;0\Rightarrow R&#x3D;r_o$</p>
+<mark class="tag-plugin colorful mark" color="red">源极退化的 NMOS</mark>（Degenerated source，即源极通过额外的电阻 $R_s$ 接地）[Lecture 10 pp.12]
+
+<p>$$<br>v_{gs}&#x3D;v_g-v_s&#x3D;-i_T R_s<br>$$</p>
+<p>$g_m v_{gs}&#x3D;- g_m i_T R_s$，相当于产生了从源到漏的小信号电流，与 $R_s$ <wavy>并联</wavy>。计算测试电压 $v_T$：</p>
+<p>$$<br>v_T&#x3D;(i_T-g_m v_{gs})r_o+i_T R_s&#x3D;(i_T+g_m i_T R_s)r_o+i_T R_s<br>$$</p>
+<p>所以有等效电阻：</p>
+<p>$$<br>R&#x3D;\frac{v_T}{i_T}&#x3D;R_s+r_o+g_m R_s r_o<br>$$</p>
+<mark class="tag-plugin colorful mark" color="green">二极管接 MOS</mark>（Diode-connected MOS）[Lecture 10 pp.13]
+
+<p>测试电压 $v_T$ 同时作为栅极电压 $v_g$ 的来源。所以有：</p>
+<p>$$<br>v_{gs}&#x3D;v_g-v_s&#x3D;v_T-i_T R_s<br>$$</p>
+<p>有等效电阻：</p>
+<p>$$<br>\begin{aligned}<br>R &amp;&#x3D;\frac{v_T}{i_T}&#x3D;\frac{(i_T-g_m v_{gs})r_o+i_T R_s}{i_T}&#x3D;\frac{(i_T-g_m v_T+g_m i_T R_s)r_o+i_T R_s}{i_T} \\<br>R &amp;&#x3D; r_o-g_m R r_o + g_m R_s r_o+R_s \\<br>R &amp;&#x3D; \frac{R_s+r_o+g_m R_s r_o}{1+g_m r_o}&#x3D;r_o&#x2F;&#x2F;\frac{1}{g_m}+R_s<br>\end{aligned}<br>$$</p>
+<p>以上这些 MOS 连接均可作为 CS 中的有源负载（active load）。与电阻负载（resistor load）$R_L$ 相比，有源负载可以用更省的面积提供较大的等效电阻。</p>
+<h2 id="源极退化的-CS"><a href="#源极退化的-CS" class="headerlink" title="源极退化的 CS"></a>源极退化的 CS</h2><p>假设小信号输入 $v_{in}$ 引起了小信号电流 $i_d$。忽略沟道长度调制（即 $r_o&#x3D;\infty$）。</p>
+<p>电阻 $R_s$ 作为源极退化电阻（degeneration resistor）：</p>
+<p>$$<br>\begin{aligned}<br>v_{gs} &amp;&#x3D; v_{in}-i_d R_s \\<br>i_d &amp;&#x3D; g_m v_{gs}&#x3D; g_m(v_{in}-i_d R_s) \Rightarrow v_{in}&#x3D;\frac{i_d}{g_m}+i_d R_s \\<br>A &amp;&#x3D; \frac{v_{out}}{v_{in}}&#x3D;\frac{i_d R_L}{i_d R_s+\frac{i_d}{g_m}}&#x3D;\frac{g_m R_L}{g_m R_s+1}<br>\end{aligned}<br>$$</p>
+<p>[A] diode-connected 负载作为源极退化电阻：</p>
+<p>上面我们求了源极退化的二极管接 MOS 的等效电阻 $r_o&#x2F;&#x2F;\frac{1}{g_m}+R_s$，这里我们把二极管接 MOS 本身作为源极退化电阻，所以 $R_s&#x3D;r_o&#x2F;&#x2F;\frac{1}{g_m}$。</p>
+<p>代入上式得：</p>
+<p>$$<br>A&#x3D;\frac{g_{m1} R_L}{g_{m1} R_s+1}&#x3D;\frac{g_{m1} R_L}{g_{m1}(r_{o2}&#x2F;&#x2F;\frac{1}{g_{m2}})+1}<br>$$</p>
+<p>[B] 偏置晶体管（biased transistor）作为源极退化电阻：</p>
+<p>对应单 NMOS 的情况，$R_s&#x3D;r_o$，所以：<br>$$<br>A&#x3D;\frac{g_{m1} R_L}{g_{m1} r_{o2}+1}<br>$$</p>
+<p>以上 CS 的 $R_{in}&#x3D;\infty$，至于 $R_{out}$，使用上节的结论，从 $v_{out}$ pin 看进来组合一下即可。所以有:</p>
+<ul>
+<li>A $R_{out}&#x3D;R_L&#x2F;&#x2F;(r_{o1}+(\frac{1}{g_{m2}}&#x2F;&#x2F;r_{o2})+g_{m1} r_{o1}(\frac{1}{g_{m2}}&#x2F;&#x2F;r_{o2}))$ [图在 Lecture 10 pp.21]</li>
+<li>B $R_{out}&#x3D;R_L&#x2F;&#x2F;(r_{o1}+g_{m1}r_{o1}r_{o2}+r_{o2})$ [图在 Lecture 10 pp.22]</li>
+</ul>
+<h2 id="共栅极放大器"><a href="#共栅极放大器" class="headerlink" title="共栅极放大器"></a>共栅极放大器</h2><p>共栅极放大器（Common Gate Amplifier，CG）和 CS 的显著区别是：CS 的输入在 gate，输入端几乎不吸电流；而 CG 的输入在源极，它本身是电流通路的一部分，所以 $v_{in}$ 不仅控制 $i_d$，它还提供输入电流 $i_{in}$。</p>
+<p>$$<br>\begin{aligned}<br>v_{gs}&amp;&#x3D;v_g-v_s&#x3D;-v_{in} \\<br>i_d &amp;&#x3D;g_m v_{gs}&#x3D;-g_m v_{in} \\<br>\end{aligned}<br>$$</p>
+<p>$i_d&lt;0$，小信号电流的实际方向是从源极流向漏极，抬高 $v_{out}$：CG 是<wavy>同相</wavy>的。假设 $i_{in}$ 的方向同样从源极流向漏极，根据 KCL 流入等于流出有：</p>
+<p>$$<br>i_{in}+\frac{v_{out}-v_{in}}{r_o}&#x3D;-i_d<br>$$</p>
+<p>又因为 $R_L$ 上分压为 $v_{out}$，有：</p>
+<p>$$<br>\begin{aligned}<br>v_{out}&amp;&#x3D;i_{in}R_L \\<br>v_{out}&amp;&#x3D;(-i_d-\frac{v_{out}-v_{in}}{r_o})R_L \\<br>v_{out}(-\frac{r_o}{R_L}-1)&amp;&#x3D;i_d r_o-v_{in} \\<br>v_{out}&amp;&#x3D;\frac{(g_m r_o+1) R_L v_{in}}{R_L+r_o}<br>\end{aligned}<br>$$</p>
+<p>增益为：</p>
+<p>$$<br>A&#x3D;\frac{v_{out}}{v_{in}}&#x3D;\frac{(g_m r_o+1) R_L}{R_L+r_o}<br>$$</p>
+<p>输入电阻 $R_{in}&#x3D;\frac{v_{in}}{i_{in}}$，输出电阻则将 $v_{in}$ 接地，从 $v_{out}$ 处看进来，仍是 $r_o&#x2F;&#x2F;R_D$。</p>
+<h2 id="共漏极放大器"><a href="#共漏极放大器" class="headerlink" title="共漏极放大器"></a>共漏极放大器</h2><p>共漏极放大器（Common Drain Amplifier），又称源极跟随器（Source Follower，SF），有源极退化电阻 $R_s$，没有负载电阻 $R_L$。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-source-follower.png" style="width:400px;"/></div></div>
+
+<p>注意输出端与源极相连，所以 $v_{out}&#x3D;v_s$。</p>
+<p>$$<br>\begin{aligned}<br>v_{gs}&amp;&#x3D;v_g-v_s&#x3D;v_{in}-v_{out} \\<br>i_d&amp;&#x3D;g_m v_{gs}&#x3D;g_m(v_{in}-v_{out}) \\<br>\end{aligned}<br>$$</p>
+<p>假设 $v_{in}&gt;v_{out}$，有 $i_d&gt;0$，电流方向为正，由漏极到源极。假设电流同样由漏极到源极经过 $r_o$ 和 $R_s$，根据 KCL 流入 &#x3D; 流出，有：</p>
+<p>$$<br>\begin{aligned}<br>i_d+\frac{0-v_{out}}{r_o}&#x3D;\frac{v_{out}-0}{R_s}<br>v_{out}&amp;&#x3D;\frac{g_m v_{in}}{g_m + \frac{1}{r_o}+\frac{1}{R_s}}<br>\end{aligned}<br>$$</p>
+<p>所以有增益：</p>
+<p>$$<br>A&#x3D;\frac{v_{out}}{v_{in}}&#x3D;\frac{g_m}{g_m + \frac{1}{r_o}+\frac{1}{R_s}}&#x3D;\frac{g_m(r_o&#x2F;&#x2F;R_s)}{1+g_m(r_o&#x2F;&#x2F;R_s)}\approx 1<br>$$</p>
+<p>$v_{out}$ 会跟随 $v_{in}$，所以 CD 也被称为源极跟随器。</p>
+<p>$R_{in}&#x3D;\infty$</p>
+<p>$R_{out}$ 的话，设置 $v_{in}&#x3D;0$，从 $v_{out}$ 处加测试电压 $v_T$，通过退化电阻抬高 $v_s$，所以 $v_{gs}&#x3D;-v_T&lt;0$，MOS 产生从源到漏的小信号电流 $g_mv_{gs}$ 和 $r_o$。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/elec-sf-rout.png" style="width:150px;"/></div></div>
+
+<p>根据 KCL 流入等于流出：</p>
+<p>$$<br>\begin{aligned}<br>i_T&amp;&#x3D;\frac{v_T}{R_s}+(-g_m v_{gs})+\frac{v_T}{r_o} \\<br>i_T&amp;&#x3D;v_T(g_m+\frac{1}{R_s}+\frac{1}{r_o}) \\<br>R_{out}&amp;&#x3D;\frac{v_T}{i_T}&#x3D;\frac{1}{g_m+\frac{1}{R_s}+\frac{1}{r_o}}<br>\end{aligned}<br>$$</p>
+
 <div class="article-footer fs14"></div>
 </article>
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Prev</div><a href="/wiki/note-vlsi/design-for-testability.html">可测试性设计</a></div><div class="item" id="next"></div></section></div>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">Prev</div><a href="/wiki/note-vlsi/design-for-testability.html">可测试性设计</a></div><div class="item" id="next"><div class="note">Next</div><a href="/wiki/note-vlsi/opamps.html">运算放大器</a></div></section></div>
 
 
   <div class="related-wrap md-text" id="comments">
@@ -116,7 +222,14 @@
 <footer class="page-footer footnote"><hr><div class="text"><p>Powered by <a target="_blank" rel="noopener" href="https://hexo.io/zh-tw/">Hexo</a> and <a target="_blank" rel="noopener" href="https://xaoxuu.com/wiki/stellar/">Stellar 1.33</a>. Licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.<br>そして、次の曲が始まるのです。</p>
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
-</aside><div class='float-panel blur'>
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">On This Page</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B1%E6%BA%90%E6%9E%81%E6%94%BE%E5%A4%A7%E5%99%A8"><span class="toc-text">共源极放大器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%81%8F%E7%BD%AE"><span class="toc-text">偏置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MOS-%E8%BF%9E%E6%8E%A5%E7%9A%84%E5%B0%8F%E4%BF%A1%E5%8F%B7%E7%AD%89%E6%95%88%E7%94%B5%E9%98%BB"><span class="toc-text">MOS 连接的小信号等效电阻</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E6%9E%81%E9%80%80%E5%8C%96%E7%9A%84-CS"><span class="toc-text">源极退化的 CS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B1%E6%A0%85%E6%9E%81%E6%94%BE%E5%A4%A7%E5%99%A8"><span class="toc-text">共栅极放大器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B1%E6%BC%8F%E6%9E%81%E6%94%BE%E5%A4%A7%E5%99%A8"><span class="toc-text">共漏极放大器</span></a></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>Scroll to Top</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.46 1.25h3.08c1.603 0 2.86 0 3.864.095c1.023.098 1.861.3 2.6.752a5.75 5.75 0 0 1 1.899 1.899c.452.738.654 1.577.752 2.6c.095 1.004.095 2.261.095 3.865v1.067c0 1.141 0 2.036-.05 2.759c-.05.735-.153 1.347-.388 1.913a5.75 5.75 0 0 1-3.112 3.112c-.805.334-1.721.408-2.977.43a10.81 10.81 0 0 0-.929.036c-.198.022-.275.054-.32.08c-.047.028-.112.078-.224.232c-.121.166-.258.396-.476.764l-.542.916c-.773 1.307-2.69 1.307-3.464 0l-.542-.916a10.605 10.605 0 0 0-.476-.764c-.112-.154-.177-.204-.224-.232c-.045-.026-.122-.058-.32-.08c-.212-.023-.49-.03-.93-.037c-1.255-.021-2.171-.095-2.976-.429A5.75 5.75 0 0 1 1.688 16.2c-.235-.566-.338-1.178-.389-1.913c-.049-.723-.049-1.618-.049-2.76v-1.066c0-1.604 0-2.86.095-3.865c.098-1.023.3-1.862.752-2.6a5.75 5.75 0 0 1 1.899-1.899c.738-.452 1.577-.654 2.6-.752C7.6 1.25 8.857 1.25 10.461 1.25M6.739 2.839c-.914.087-1.495.253-1.959.537A4.25 4.25 0 0 0 3.376 4.78c-.284.464-.45 1.045-.537 1.96c-.088.924-.089 2.11-.089 3.761v1c0 1.175 0 2.019.046 2.685c.045.659.131 1.089.278 1.441a4.25 4.25 0 0 0 2.3 2.3c.515.214 1.173.294 2.429.316h.031c.398.007.747.013 1.037.045c.311.035.616.104.909.274c.29.17.5.395.682.645c.169.232.342.525.538.856l.559.944a.52.52 0 0 0 .882 0l.559-.944c.196-.331.37-.624.538-.856c.182-.25.392-.476.682-.645c.293-.17.598-.24.909-.274c.29-.032.639-.038 1.037-.045h.032c1.255-.022 1.913-.102 2.428-.316a4.25 4.25 0 0 0 2.3-2.3c.147-.352.233-.782.278-1.441c.046-.666.046-1.51.046-2.685v-1c0-1.651 0-2.837-.089-3.762c-.087-.914-.253-1.495-.537-1.959a4.25 4.25 0 0 0-1.403-1.403c-.464-.284-1.045-.45-1.96-.537c-.924-.088-2.11-.089-3.761-.089h-3c-1.651 0-2.837 0-3.762.089" clip-rule="evenodd"/><path fill="currentColor" d="M9 11a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><span>Join Discussion</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
   </button>
