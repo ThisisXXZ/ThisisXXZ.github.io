@@ -161,6 +161,71 @@ const init = {
       });
     })
   },
+  docTree: () => {
+    utils.jq(() => {
+      const container = document.querySelector('.l_left .widgets');
+      const tree = document.querySelector('.l_left .widgets .doc-tree');
+      if (container == null || tree == null) {
+        return;
+      }
+
+      const storageKey = 'Stellar.docTreeScroll';
+      let pending = null;
+      try {
+        pending = JSON.parse(sessionStorage.getItem(storageKey));
+        sessionStorage.removeItem(storageKey);
+      } catch (error) {
+        pending = null;
+      }
+
+      tree.querySelectorAll('a.link').forEach(link => {
+        link.addEventListener('click', event => {
+          if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+            return;
+          }
+          const target = new URL(link.href, window.location.href);
+          if (target.origin !== window.location.origin || target.pathname === window.location.pathname) {
+            return;
+          }
+          try {
+            sessionStorage.setItem(storageKey, JSON.stringify({
+              targetPath: target.pathname,
+              scrollTop: container.scrollTop,
+              timestamp: Date.now()
+            }));
+          } catch (error) {
+            // Browsing still works when storage is unavailable.
+          }
+        });
+      });
+
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        const canRestore = pending != null
+          && pending.targetPath === window.location.pathname
+          && Number.isFinite(pending.scrollTop)
+          && Date.now() - pending.timestamp < 30000;
+        if (canRestore) {
+          container.scrollTop = pending.scrollTop;
+          return;
+        }
+
+        const active = tree.querySelector('a.link.active');
+        if (active == null) {
+          return;
+        }
+        const containerRect = container.getBoundingClientRect();
+        const activeRect = active.getBoundingClientRect();
+        const isVisible = activeRect.top >= containerRect.top && activeRect.bottom <= containerRect.bottom;
+        if (isVisible) {
+          return;
+        }
+        const activeTop = activeRect.top - containerRect.top + container.scrollTop;
+        const targetTop = activeTop - (container.clientHeight - activeRect.height) / 2;
+        const maxScrollTop = container.scrollHeight - container.clientHeight;
+        container.scrollTop = Math.max(0, Math.min(targetTop, maxScrollTop));
+      }));
+    })
+  },
   relativeDate: (selector) => {
     selector.forEach(item => {
       const $this = item
@@ -206,5 +271,6 @@ const init = {
 // init
 init.toc()
 init.sidebar()
+init.docTree()
 init.relativeDate(document.querySelectorAll('#post-meta time'))
 init.registerTabsTag()
