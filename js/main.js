@@ -161,6 +161,22 @@ const init = {
       });
     })
   },
+  timelineYears: () => {
+    document.querySelectorAll('.widget-wrapper.timeline .timeline-year-toggle').forEach((button, index) => {
+      const remaining = button.parentElement.querySelector('.timeline-year-rest');
+      if (!remaining) return;
+      remaining.id = 'timeline-year-rest-' + index;
+      button.setAttribute('aria-controls', remaining.id);
+      const setExpanded = expanded => {
+        remaining.hidden = !expanded;
+        button.setAttribute('aria-expanded', String(expanded));
+      };
+      setExpanded(false);
+      button.addEventListener('click', () => {
+        setExpanded(button.getAttribute('aria-expanded') !== 'true');
+      });
+    });
+  },
   docTree: () => {
     utils.jq(() => {
       const container = document.querySelector('.l_left .widgets');
@@ -271,6 +287,7 @@ const init = {
 // init
 init.toc()
 init.sidebar()
+init.timelineYears()
 init.docTree()
 init.relativeDate(document.querySelectorAll('#post-meta time'))
 init.registerTabsTag()
