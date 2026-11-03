@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="/fonts/page-de88abcc75ba.css">
   <meta name="traditional-fonts" content="/fonts/traditional-5a314de09f8f.css">
   <script type="module" src="/language.js"></script>
-  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs.js" defer></script><script src="/reading.js" defer></script>
   
   
   <script src="/toc.js" defer></script>
@@ -81,7 +81,7 @@
 <li>查页表，得到 VPN 对应的 PFN</li>
 <li>连接 PFN 与 offset 即可得到物理地址</li>
 </ul>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <figure class="code-block"><figcaption>Paging address translation</figcaption><div class="code-tools"><span>c</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>VPN      = (VirtualAddress &amp; VPN_MASK) &gt;&gt; SHIFT
 PTEAddr  = PageTableBaseRegister + (VPN * <span class="hljs-keyword">sizeof</span>(PTE))
 PTE = AccessMemory(PTEAddr)
@@ -95,7 +95,7 @@ PTE = AccessMemory(PTEAddr)
     PhysAddr = (PFN &lt;&lt; SHIFT) | offset
     Register = AccessMemory(PhysAddr)
 </code></pre></figure>
-</aside>
+</div></div>
 <h2 id="朴素分页的资源开销">朴素分页的资源开销</h2>
 <p>以上描述的朴素分页的时空开销都不理想。</p>
 <p>页表的空间占用很夸张，因此储存在内存而非 MMU 中。MMU 维护<strong>页表基址寄存器 (page-table base register, PTBR)</strong> 来定位对应线程页表的位置（因此上下文切换时 OS 也需要对其更新）。</p>

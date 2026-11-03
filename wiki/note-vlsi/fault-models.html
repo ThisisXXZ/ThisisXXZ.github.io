@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="/fonts/page-a561b24f5e8c.css">
   <meta name="traditional-fonts" content="/fonts/traditional-81be470d3e74.css">
   <script type="module" src="/language.js"></script>
-  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs.js" defer></script><script src="/reading.js" defer></script>
   
   
   
@@ -46,8 +46,8 @@
       
       <div class="prose"><h2 id="测试">测试</h2>
 <p>测试很重要，毋庸置疑。</p>
-<p>=&gt; <mark>逻辑验证（logic verification）</mark>：流片之前，检查 HDL 设计在仿真 testbench 中表现是否正确。很依赖测试工程师的经验。</p>
-<p>=&gt; <mark>硅调试（silicon debugging）</mark>：第一批芯片制造出来之后出问题，靠硅调试找故障原因是逻辑问题（logic bugs）还是电气故障（electrical failures）。成本很高。</p>
+<p>=&gt; <mark class="tag-plugin colorful mark" color="yellow">逻辑验证（logic verification）</mark>：流片之前，检查 HDL 设计在仿真 testbench 中表现是否正确。很依赖测试工程师的经验。</p>
+<p>=&gt; <mark class="tag-plugin colorful mark" color="yellow">硅调试（silicon debugging）</mark>：第一批芯片制造出来之后出问题，靠硅调试找故障原因是逻辑问题（logic bugs）还是电气故障（electrical failures）。成本很高。</p>
 <p>Shmoo plot：改变电压，观察芯片的频率表现。正常来讲，电压越高，芯片能跑的频率越高。</p>
 <ul>
 <li>brick wall：突然 fail。原因可能是 bistable initialization。</li>
@@ -56,7 +56,7 @@
 <li>floor：低频工作时 fail。原因可能是 leakage，charge sharing 或 race。</li>
 <li>finger：某些特定频率 fail。原因可能是 coupling alignment。</li>
 </ul>
-<p>=&gt; <mark>量产测试（manufacturing test）</mark>：量产阶段的测试。芯片的良率不可能是 100%，因此每颗制造出来的芯片都需要检测有无物理缺陷。通过昂贵的 manufacturing tester 进行，需要在尽量短的时间内覆盖尽量多的错误情况，合适的测试向量（<span class="text-wavy">test vector</span>）的选取至关重要。</p>
+<p>=&gt; <mark class="tag-plugin colorful mark" color="yellow">量产测试（manufacturing test）</mark>：量产阶段的测试。芯片的良率不可能是 100%，因此每颗制造出来的芯片都需要检测有无物理缺陷。通过昂贵的 manufacturing tester 进行，需要在尽量短的时间内覆盖尽量多的错误情况，合适的测试向量（<wavy>test vector</wavy>）的选取至关重要。</p>
 <h2 id="故障模型">故障模型</h2>
 <p>最简单的故障模型：Stuck-At 模型，即所有故障的发生一定源于某个节点「卡在」了 0/1，即，被 GND 或 VDD 短路了。卡在 0 记作 SA0，1 记作 SA1。</p>
 <p>两个测试原则：</p>
@@ -65,7 +65,7 @@
 <li>可控制性（controllability）：可不可以通过内部 input pins 将某个内部节点的值设为 0 或 1</li>
 </ul>
 <p>组合逻辑一般比较容易观测和控制；但 FSM 就比较难了，因为测试工程师不一定知道完整的状态转移表。</p>
-<p>测试时，最好能够找到一组最小的测试向量集，使得每个节点都能被检测到是否卡住。一组测试向量集可以检测的故障与可能出现的故障总数之比为故障覆盖率（<span class="text-wavy">fault coverage</span>）。</p>
+<p>测试时，最好能够找到一组最小的测试向量集，使得每个节点都能被检测到是否卡住。一组测试向量集可以检测的故障与可能出现的故障总数之比为故障覆盖率（<wavy>fault coverage</wavy>）。</p>
 </div></article>
       <nav class="post-end chapter-pagination" aria-label="读完之后">
         <a href="/wiki/note-vlsi/">← 返回专题目录</a>

@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="/fonts/page-94020bb8ee80.css">
   <meta name="traditional-fonts" content="/fonts/traditional-1b06b6f35568.css">
   <script type="module" src="/language.js"></script>
-  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs.js" defer></script><script src="/reading.js" defer></script>
   
   
   <script src="/toc.js" defer></script>
@@ -70,9 +70,8 @@
 <p>OS 代码有时会采取禁用中断实现互斥锁。</p>
 <h2 id="原子指令与自旋锁">原子指令与自旋锁</h2>
 <p>依赖硬件支持的两种<strong>原子指令 (atomic instructions)</strong> 来实现互斥锁。</p>
-<div class="post-grid" style="--columns:2">
-<div>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin grid" style="grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));"><div class="cell" style="">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <figure class="code-block"><figcaption>Test-and-Set</figcaption><div class="code-tools"><span>c</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-type">int</span> <span class="hljs-title function_">TestAndSet</span><span class="hljs-params">(<span class="hljs-type">int</span> *ptr, 
                <span class="hljs-type">int</span> new)</span> {
     <span class="hljs-type">int</span> old = *ptr;
@@ -82,10 +81,10 @@
 
 
 </code></pre></figure>
-</aside>
+</div></div>
 </div>
-<div>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="cell" style="">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <figure class="code-block"><figcaption>Compare-and-Swap</figcaption><div class="code-tools"><span>c</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-type">void</span> <span class="hljs-title function_">CompareAndSwap</span><span class="hljs-params">(<span class="hljs-type">int</span> *ptr, 
                     <span class="hljs-type">int</span> expected, 
                     <span class="hljs-type">int</span> new)</span> {
@@ -95,18 +94,18 @@
     <span class="hljs-keyword">return</span> temp;
 }
 </code></pre></figure>
-</aside>
+</div></div>
 </div>
 </div>
 <p>使用这两种原子指令实现一个简单的<strong>自旋锁 (spin lock)</strong>，未能获取 (acquire) 锁的线程在 <code>while</code> 循环中自旋等待 (spin waiting)。</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <figure class="code-block"><div class="code-tools"><span>c</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-type">int</span> flag = <span class="hljs-number">0</span>;
 <span class="hljs-keyword">while</span> (TestAndSet(&amp;flag, <span class="hljs-number">1</span>) == <span class="hljs-number">1</span>);
 <span class="hljs-comment">// or while (CompareAndSwap(&amp;flag, 0, 1));</span>
 critical_section();
 flag = <span class="hljs-number">0</span>;
 </code></pre></figure>
-</aside>
+</div></div>
 <p>评估：</p>
 <ul>
 <li>能够保证互斥访问</li>
@@ -115,14 +114,14 @@ flag = <span class="hljs-number">0</span>;
 </ul>
 <h2 id="让步">让步</h2>
 <p>很自然的想法。与其自旋等待占用 CPU 资源，不如主动<strong>让出 (yield)</strong> 自己的时间片，结束本轮的调度。</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <figure class="code-block"><div class="code-tools"><span>c</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-type">int</span> flag = <span class="hljs-number">0</span>;
 <span class="hljs-keyword">while</span> (TestAndSet(&amp;flag, <span class="hljs-number">1</span>) == <span class="hljs-number">1</span>)   <span class="hljs-comment">// or while (CompareAndSwap(&amp;flag, 0, 1))</span>
     yield();
 critical_section();
 flag = <span class="hljs-number">0</span>;
 </code></pre></figure>
-</aside>
+</div></div>
 <ul>
 <li>单核线程较多时，开销还是很大</li>
 <li>仍未保证公平</li>
@@ -134,7 +133,7 @@ flag = <span class="hljs-number">0</span>;
 <li><code>unpark(threadID)</code>：唤醒指定的线程</li>
 <li><code>setpark()</code>：标记当前线程即将进入睡眠，使得若在真正执行 <code>park()</code> 之前收到了 <code>unpark()</code>， <code>park()</code> 会立即返回而不会阻塞。</li>
 </ul>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <figure class="code-block"><div class="code-tools"><span>c</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> __<span class="hljs-title">lock_t</span> {</span>
     <span class="hljs-type">int</span> flag;
     <span class="hljs-type">int</span> guard;
@@ -174,7 +173,7 @@ flag = <span class="hljs-number">0</span>;
     m-&gt;guard = <span class="hljs-number">0</span>;
 }
 </code></pre></figure>
-</aside>
+</div></div>
 <ul>
 <li>引入的队列保证了公平，线程按照 FIFO 顺序被唤醒</li>
 <li>guard 自旋锁控制队列的入口，但其保护的代码是简单的队列逻辑 (L. 17-25 与 L. 32-37) 而非用户指定的关键区，所以自旋开销很小</li>

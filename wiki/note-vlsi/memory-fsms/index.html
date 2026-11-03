@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="/fonts/page-16a82348b767.css">
   <meta name="traditional-fonts" content="/fonts/traditional-d8016acec365.css">
   <script type="module" src="/language.js"></script>
-  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs.js" defer></script><script src="/reading.js" defer></script>
   
   
   <script src="/toc.js" defer></script>
@@ -55,7 +55,7 @@
   </aside>
       <div class="prose"><h2 id="存储器阵列">存储器阵列</h2>
 <p>存储器阵列（memory arrays）分为随机访问存储（random access memory），串行访问存储（serial access memory）与内容可寻址存储（content addressable memory）。</p>
-<p>随机访问存储就是给定地址，访问位于该地址的存储。访问延迟与地址值无关。其又分为<span class="text-wavy">易失的（volatile）</span> RAM 与不易失的 ROM。</p>
+<p>随机访问存储就是给定地址，访问位于该地址的存储。访问延迟与地址值无关。其又分为<wavy>易失的（volatile）</wavy> RAM 与不易失的 ROM。</p>
 <p>RAM 又分为 SRAM（Static RAM）与 DRAM（Dynamic RAM）。</p>
 <p>存储器阵列的结构：</p>
 <ul>
@@ -80,14 +80,12 @@
 <li>Read：一对位线预充至高电平，<code>word=1</code>；假设内部节点 <code>A=1, A_b=0</code>，左边的位线仍然保持高电平，右边的位线通过 N3 慢慢放电；感测放大器（sense amplifier）检测到差分电压，判断 <code>A=1</code>；反之同理。</li>
 <li>Write：若要写入 <code>A=1</code>，位线 <code>bit</code> 预充至高电平，<code>bit_b</code> 低电平，<code>word=1</code>；<code>bit</code> 通过导通的 N2 将 <code>A</code> 拉高，<code>bit_b</code> 通过导通的 N4 将 <code>A_b</code> 拉低。</li>
 </ul>
-<aside class="post-note" role="note" aria-labelledby="note-label-1">
-<p class="note-label" id="note-label-1">读入扰动（read disturb）</p>
+<div class="tag-plugin colorful note" role="note" aria-labelledby="note-label-1"><div class="title" id="note-label-1"><strong>读入扰动（read disturb）</strong></div><div class="body">
 <p>执行读入操作时，两个位线均预充为高电平。假设内部节点 <code>A_b=0</code>，位线 <code>bit_b=1</code> 会试图通过 N4 把 <code>A_b</code> 拉高；如果真的拉高到 1，单元中存储的值就被影响了。因此 N3 拉低 <code>A_b</code> 一定要强于 N4 拉高 <code>A_b</code>，晶体管 N3 &gt;&gt; N4，同理 N1 &gt;&gt; N2。</p>
-</aside>
-<aside class="post-note" role="note" aria-labelledby="note-label-2">
-<p class="note-label" id="note-label-2">可写性（writability）</p>
+</div></div>
+<div class="tag-plugin colorful note" role="note" aria-labelledby="note-label-2"><div class="title" id="note-label-2"><strong>可写性（writability）</strong></div><div class="body">
 <p>考虑内部节点 <code>A=1</code>，将要被写入位线 <code>bit=0</code>；位线通过 N2 试图将 <code>A</code> 拉低，因此 N2 拉低 <code>A</code> 一定要强于 P1 拉高 <code>A</code>，所以有 N2 &gt;&gt; P1，同理 N4 &gt;&gt; P2。</p>
-</aside>
+</div></div>
 <p>这种安排（N1,N3 &gt;&gt; N2,N4 &gt;&gt; P1,P2），使得在写入翻转过程中是低位线负责 overpower 高内部节点，高位线只负责提供互补条件。</p>
 <p>6T SRAM 棒图见 Lecture 7 pp.14。</p>
 <h2 id="DRAM">DRAM</h2>

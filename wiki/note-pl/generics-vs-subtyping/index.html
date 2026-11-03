@@ -27,7 +27,7 @@
   <link rel="stylesheet" href="/fonts/page-bddc38a61c9e.css">
   <meta name="traditional-fonts" content="/fonts/traditional-1f9a97947917.css">
   <script type="module" src="/language.js"></script>
-  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs.js" defer></script><script src="/reading.js" defer></script>
   
   
   <script src="/toc.js" defer></script>
@@ -90,9 +90,9 @@
 </code></pre></figure>
 <p>这是用 subtyping 实现 generics 的一个例子：由于 <code>Object</code> 类型是所有类型的 supertype，任何类型的数据都能传入 <code>LamePair</code> 的域中。问题出在从 <code>LamePair</code> 中提取数据：我们只能获得一个 <code>Object</code> 类型的数据，因此必须使用强制类型转换 downcast 来将其转换为“原本”的类型。</p>
 <p>downcast 将对被转换的数据类型执行 run-time checks，因此上述程序中的类型错误只有在运行时才能被侦测到；这一方面增加了动态检查的时空成本，一方面潜在降低了程序的安全性。</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>When you use <code>Object</code> and downcasts, you are essentially taking a dynamic typing approach: any object could be stored in an <code>Object</code> field, so it is up to programmers, without help from the type system, to keep straight what kind of data is where.</p>
-</aside>
+</div></div>
 <h2 id="What-is-subtyping-good-for?">What is subtyping good for?</h2>
 <p>subtyping 的优势区间在于 allowing code to be reused with data that has <em>extra information</em>.</p>
 <figure class="code-block"><div class="code-tools"><span>sml</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">fun</span> distToOrigin {x=x, y=y} =
@@ -108,13 +108,13 @@
 <li>More code reuse and expressiveness with the <em>combination</em> of the two ideas.</li>
 </ul>
 <p>generics 与 subtyping 的结合带来了 <em>bounded polymorphism</em>, 具体体现为 <em>bounded generic types</em>。</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>Bounded generic types allow us to say, for all types <code>'a</code> that are subtype of <code>T</code>.</p>
 <ul>
 <li>(generics) We use <code>'a</code> multiple times to indicate where two things must have the same type.</li>
 <li>(subtyping) We can treat <code>'a</code> as a subtype of <code>T</code>,  accessing whatever fields and methods we know a <code>T</code> has.</li>
 </ul>
-</aside>
+</div></div>
 <p>见下例，<code>Point</code> 类中定义了 <code>distance</code> 方法。</p>
 <figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Pt</span> {
     <span class="hljs-type">double</span> x, y;

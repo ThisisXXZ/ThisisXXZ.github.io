@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="/fonts/page-88d0c1172b02.css">
   <meta name="traditional-fonts" content="/fonts/traditional-2a014f970fd9.css">
   <script type="module" src="/language.js"></script>
-  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs.js" defer></script><script src="/reading.js" defer></script>
   
   
   <script src="/toc.js" defer></script>
@@ -57,9 +57,9 @@
 <p>继承是 OOP 的灵魂之一：But so far all our examples have been classes with 1 (immediate) superclass. If inheritance is so powerful, why not allow ways to use more code defined in other places?</p>
 <p>下面我们将介绍三个有紧密联系，但不同的 ideas；它们均能在一定程度上实现比单继承更加强大的代码复用。由强到弱分别是：<em>multiple inheritance (多继承)</em>，<em>mixins (混入)</em> 与 <em>interfaces (接口)</em>。</p>
 <h2 id="C++:-Multiple-Inheritance">C++: Multiple Inheritance</h2>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>Languages with multiple inheritance let one class <em>extend</em> multiple other classes.</p>
-</aside>
+</div></div>
 <p>当某个类同时具有多个父类的特征时，多继承是一个很自然的想法。举例来说，考虑类 <code>Person</code> 的两个子类 <code>Cowboy</code> 与 <code>Artist</code>，当我们想实现一个艺术家牛仔时，我们仅需要定义同时继承自 <code>Cowboy</code> 类与 <code>Artist</code> 类的 <code>CowboyArtist</code> 类即可。</p>
 <p>Intuitively，我们将多继承定义为子类继承多个父类中的所有方法与成员变量，但我们能够很容易发现这个定义的不妥之处：若多个父类中的方法或成员变量存在重复，或者冲突，又如何处理？</p>
 <p>一个典型的例子是同名方法问题。若 <code>Cowboy</code> 类中定义了方法 <code>draw</code> (draw a gun, 指拔枪)，且 <code>Artist</code> 类中也定义了方法 <code>draw</code> (draw a picture, 指画画)，那么 <code>CowboyArtist</code> 类该如何继承这两个行为完全不同的同名方法？若两个方法都继承，又应该如何进行区分？</p>
@@ -107,9 +107,9 @@
 <p>在 Java 或 C# 中，一个类只能有一个直接父类，但却可以实现 (implement) 任意数量的 interfaces。</p>
 <p>一个 interface 声明了若干方法，且规定了这些方法的参数与返回值的类型 (type)。注意，interface 中声明的方法是待实现的，其函数体部分都是空置的。</p>
 <p>正是因为 interface 并不真正“定义”方法，而仅仅对方法命名并规定其类型，在 multiple inheritance 中出现的语义问题将得以避免。If two interfaces have a method-name conflict, a class can still implement them both. If two interfaces disagree on a method's type, no class can implement them both since type-checker will catch that.</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>A class type-checks only if it actually provides (directly or via inheritance) all the methods of all the interfaces it claims to implement.</p>
-</aside>
+</div></div>
 <p>关于 interface 还有一个很重要的概念：An interface is a type。所以如果类 <code>C</code> 实现了 interface <code>I</code>，我们就能将类 <code>C</code> 的实例传入某个形参类型为 <code>I</code> 的方法，这也是另一种意义上的 duck typing。</p>
 <p>与 multiple inheritance 和 mixins 不同，interfaces 并不继承任何代码；它的存在使得某些 statically typed languages 的 type system 更加灵活，允许了某种程度上的 duck typing。</p>
 <p>对于不存在 type system 限制的 dynamically typed languages，we can <em>already</em> pass any object to any method and call any method on any object (这也是 dynamic typing 的 essence 所在)，自然 interfaces 的存在就失去了意义。</p>

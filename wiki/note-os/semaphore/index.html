@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="/fonts/page-4f6fc300676d.css">
   <meta name="traditional-fonts" content="/fonts/traditional-3c11a15997eb.css">
   <script type="module" src="/language.js"></script>
-  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs.js" defer></script><script src="/reading.js" defer></script>
   
   
   <script src="/toc.js" defer></script>
@@ -69,7 +69,7 @@
 <li>同一时间最多只能有一个写线程访问共享资源</li>
 <li>写进程与读进程不可同时访问共享资源</li>
 </ul>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <figure class="code-block"><figcaption>A simple read-write lock</figcaption><div class="code-tools"><span>c</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-type">int</span> read_count = <span class="hljs-number">0</span>;
 
 <span class="hljs-type">void</span> <span class="hljs-title function_">acquire_readlock</span><span class="hljs-params">()</span> {
@@ -96,7 +96,7 @@
     sem_post(&amp;writelock);   <span class="hljs-comment">// writer unlocks the resource</span>
 }
 </code></pre></figure>
-</aside>
+</div></div>
 <h2 id="哲学家就餐问题">哲学家就餐问题</h2>
 <p><strong>哲学家就餐问题 (dining philosopher's problem)</strong> Dijkstra 提出的一种有趣的同步模型。</p>
 <p>5 个哲学家围坐在圆形餐桌旁，每位哲学家之间各有一支餐叉。哲学家会进行两种操作：</p>
@@ -115,7 +115,7 @@
 </ul>
 <h2 id="实现">实现</h2>
 <p>使用互斥锁与条件变量可以轻松实现信号量。</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <figure class="code-block"><figcaption>A simple implementation</figcaption><div class="code-tools"><span>c</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> __<span class="hljs-title">Sem_t</span> {</span>
     <span class="hljs-type">int</span> value;
     <span class="hljs-type">pthread_cond_t</span>  cond;
@@ -144,7 +144,7 @@
     Mutex_unlock(&amp;s-&gt;lock);
 }
 </code></pre></figure>
-</aside>
+</div></div>
 <h2 id="阅读">阅读</h2>
 <p>Chapter 31 – Semaphores, <em>OSTEP</em>,
 <a href="http://pages.cs.wisc.edu/~remzi/OSTEP/threads-sema.pdf">http://pages.cs.wisc.edu/~remzi/OSTEP/threads-sema.pdf</a></p>

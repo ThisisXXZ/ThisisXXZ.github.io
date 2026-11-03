@@ -31,7 +31,7 @@
   <link rel="stylesheet" href="/fonts/page-0ef66159eb4b.css">
   <meta name="traditional-fonts" content="/fonts/traditional-9bdf6e261eac.css">
   <script type="module" src="/language.js"></script>
-  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs.js" defer></script><script src="/reading.js" defer></script>
   
   
   <script src="/toc.js" defer></script>
@@ -107,11 +107,11 @@
 <p>文件的 inode 存在哪里呢？当然是 <strong>inode 表 (inode table)</strong>！</p>
 <p>给定文件的标识符 inode number，可以通过查 inode 表获得它的 inode。</p>
 <p>硬盘中被地址索引 (addressable) 的单位是扇区 (sector)。假设 inode 表中每个 block 存储一个 inode，计算给定 inode number 所在的扇区：</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <figure class="code-block"><div class="code-tools"><span>c</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>blk    = (inumber * <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">inode_t</span>)) / blockSize;
 sector = ((blk * blockSize) + inodeStartAddr) / sectorSize;
 </code></pre></figure>
-</aside>
+</div></div>
 <h2 id="空闲空间管理">空闲空间管理</h2>
 <p><strong>inode 位图 (inode bitmap)</strong> 的每一位标识对应的 inode 在 inode 表中是空闲的还是正在被使用的。这个简单的数据结构用于辅助 inode 的分配与释放。</p>
 <p><strong>数据位图 (data bitmap)</strong> 起到同样的作用，每一位标识对应的数据块是空闲的还是被文件占用的（<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></eq> 个数据块，<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></eq> 位，数据位图占用 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mi mathvariant="normal">/</mi><mn>8</mn></mrow><annotation encoding="application/x-tex">x/8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">x</span><span class="mord">/8</span></span></span></span></eq> 字节）。</p>

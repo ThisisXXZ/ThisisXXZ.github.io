@@ -29,7 +29,7 @@
   <link rel="stylesheet" href="/fonts/page-e1d84b2403b0.css">
   <meta name="traditional-fonts" content="/fonts/traditional-975f6db04bbe.css">
   <script type="module" src="/language.js"></script>
-  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs.js" defer></script><script src="/reading.js" defer></script>
   
   
   <script src="/toc.js" defer></script>
@@ -57,24 +57,23 @@
       <div class="prose"><p>多线程带来了并发问题。</p>
 <h2 id="一个经典的并发问题例子">一个经典的并发问题例子</h2>
 <p>全局变量 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">x=10</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">10</span></span></span></span></eq>，两个线程均令 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></eq> 自增。</p>
-<div class="post-grid" style="--columns:2">
-<div>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin grid" style="grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));"><div class="cell" style="">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <figure class="code-block"><figcaption>Thread 1</figcaption><div class="code-tools"><span>pseudo</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>func increment() {
     global x
     x++
 }
 </code></pre></figure>
-</aside>
+</div></div>
 </div>
-<div>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="cell" style="">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <figure class="code-block"><figcaption>Thread 2</figcaption><div class="code-tools"><span>pseudo</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>func increment() {
     global x
     x++
 }
 </code></pre></figure>
-</aside>
+</div></div>
 </div>
 </div>
 <p><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></eq> 可能是 11 或 12。</p>

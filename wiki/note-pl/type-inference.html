@@ -29,7 +29,7 @@
   <link rel="stylesheet" href="/fonts/page-f6acd4068984.css">
   <meta name="traditional-fonts" content="/fonts/traditional-9b8d7531ad15.css">
   <script type="module" src="/language.js"></script>
-  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs.js" defer></script><script src="/reading.js" defer></script>
   
   
   <script src="/toc.js" defer></script>
@@ -56,9 +56,9 @@
   </aside>
       <div class="prose"><p>Type Inference.</p>
 <p>type inference 是 ML 一个十分优雅的特性。在我接触过的所有 (极其有限的) 语言中从未见过这个 feature。</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>Statically typed languages. Every binding has a type that is determined at <strong>compile-time</strong>; The type-checker is a compile-time procedure that either accepts or rejects a program.</p>
-</aside>
+</div></div>
 <p>Java, C, ML 都是 <em>statically typed languages</em>。与之相对的是 <em>dynamically typed language</em>，例如 Racket, Ruby, Python。动态类型语言在运行时才会确定 bindings 的类型；因此在这些语言中类型错误是一种 run-time error 而非 compile-time error。</p>
 <p>与 Java 和 C 又不同，ML 的类型是隐式 (<em>implicitly typed</em>) 的，即我们几乎不需要声明 binding 的类型。这个 feature 真的非常的厉害，它使得：</p>
 <ul>
@@ -66,9 +66,9 @@
 <li>优雅的支持参数多态 (parametric polymorphism)。</li>
 </ul>
 <p>这样做的代价就是，ML 的 type-checker 远比其他显式类型语言的复杂。在程序员不具体声明 binding 类型的前提下，type-checker 需要根据代码与 bindings 之间的关系<strong>推断 (infer)</strong> 出所有可能的 <em>type annotations</em>。如果不存在任何一种解，type-checker 将会<strong>拒绝 (reject)</strong> 该程序。</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p><em>Parametric polymorphism</em>, or more commonly <em>generic types</em>, lets functions take argument of any type. In ML, when the inferencer determines a function's argument or result "could be anything", the resulting type uses <em>type variable</em> <code>'a</code>, <code>'b</code>, etc.</p>
-</aside>
+</div></div>
 <p>注意，虽然 type inference 与多态联系紧密，但它们终究是两个独立的概念：举例来说，Java 支持泛型 (generics types)，但它是一种显式类型语言，不支持类型推断。</p>
 <h2 id="Undecidability">Undecidability</h2>
 <blockquote class="post-quote">

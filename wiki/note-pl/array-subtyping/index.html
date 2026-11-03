@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="/fonts/page-11fe6798b4b2.css">
   <meta name="traditional-fonts" content="/fonts/traditional-c7f7b7e77900.css">
   <script type="module" src="/language.js"></script>
-  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs.js" defer></script><script src="/reading.js" defer></script>
   
   
   
@@ -64,9 +64,9 @@
 <li>Array indices are mutable.</li>
 </ul>
 <p>那么 Java 的 type system 就无法阻止某些程序的 field-missing 错误。事实确实如此，上述程序能够通过 Java 的 type check。为了解决这个问题，Java 引入了 <em>run-time checks</em>。</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>Java use run-time checks to maintain the <em>invariant</em> that an object of type <code>t[]</code> always holds objects that have type <code>t</code> or a subtype, but not a supertype.</p>
-</aside>
+</div></div>
 <p>于是当程序运行到 <code>pt_arr[0] = new Point(3, 4)</code> 这一语句时，Java 的 run-time check 会发现 <code>ColorPoint[]</code> 类的数组存储了其 supertype <code>Point</code> 类的对象，于是 <code>ArrayStoreException</code> 错误将被抛出。</p>
 <p>Java 与 C# 以加入 run-time checks 的代价换取了 depth subtyping，这是因为 depth subtyping 自有其意义：它的确提升了语言的灵活性 (flexibility) 与 type system 的 expressiveness。</p>
 <p>除了利用 run-time checks 之外，还有其他的方法可以达到相同的目的：</p>

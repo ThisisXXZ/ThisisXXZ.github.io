@@ -1,35 +1,37 @@
 // Progressive enhancements; text, links and disclosures also work without JS.
-document.querySelectorAll('[data-tabs]').forEach((group) => {
-  const list = group.querySelector(':scope > .tab-list');
-  const tabs = [...list.querySelectorAll('[data-tab]')];
-  const panels = [...group.querySelectorAll(':scope > [data-panel]')];
+// Stellar supplies click behaviour; this layer adds keyboard and screen-reader support.
+document.querySelectorAll('.tag-plugin.tabs').forEach((group) => {
+  const list = group.querySelector(':scope > .nav-tabs');
+  const tabs = [...list.querySelectorAll(':scope > .tab > a')];
+  const panels = [...group.querySelectorAll(':scope > .tab-content > .tab-pane')];
   list.setAttribute('role', 'tablist');
   list.setAttribute('aria-label', '内容版本');
-  const activate = (index) => {
-    tabs.forEach((tab, i) => {
+  const sync = () =>
+    tabs.forEach((tab, index) => {
+      const active = tab.parentElement.classList.contains('active');
       tab.setAttribute('role', 'tab');
-      tab.setAttribute('aria-selected', String(i === index));
-      tab.tabIndex = i === index ? 0 : -1;
-      panels[i].setAttribute('role', 'tabpanel');
-      panels[i].tabIndex = 0;
-      panels[i].hidden = i !== index;
+      tab.setAttribute('aria-selected', String(active));
+      tab.tabIndex = active ? 0 : -1;
+      panels[index].setAttribute('role', 'tabpanel');
+      panels[index].tabIndex = 0;
     });
-  };
-  tabs.forEach((tab, i) => {
-    tab.addEventListener('click', () => activate(i));
+  tabs.forEach((tab, i) =>
     tab.addEventListener('keydown', (event) => {
       let next;
       if (event.key === 'ArrowRight') next = (i + 1) % tabs.length;
       if (event.key === 'ArrowLeft') next = (i + tabs.length - 1) % tabs.length;
       if (event.key === 'Home') next = 0;
       if (event.key === 'End') next = tabs.length - 1;
+      if (event.key === ' ') next = i;
       if (next === undefined) return;
       event.preventDefault();
-      activate(next);
+      tabs[next].click();
       tabs[next].focus();
-    });
-  });
-  activate(Number(group.dataset.active) || 0);
+    })
+  );
+  group.addEventListener('tabs:click', sync);
+  if (!tabs.some((tab) => tab.parentElement.classList.contains('active'))) tabs[0]?.click();
+  sync();
   group.classList.add('tabs-ready');
 });
 

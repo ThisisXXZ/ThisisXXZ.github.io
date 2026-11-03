@@ -27,7 +27,7 @@
   <link rel="stylesheet" href="/fonts/page-494c4e3daf82.css">
   <meta name="traditional-fonts" content="/fonts/traditional-cb652914a4ac.css">
   <script type="module" src="/language.js"></script>
-  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs.js" defer></script><script src="/reading.js" defer></script>
   
   
   <script src="/toc.js" defer></script>
@@ -53,14 +53,14 @@
     <dialog class="toc-drawer" id="article-toc-drawer" aria-labelledby="article-toc-label"></dialog>
   </aside>
       <div class="prose"><p>Streams.</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>A stream is an infinite sequence of values.</p>
-</aside>
+</div></div>
 <p>We obviously cannot create such a sequence explicitly as it would literally take forever, but with <em>delayed evaluation</em> we can create the code that knows how to produce the infinite sequence.</p>
 <p>stream 是以 thunk 的形式表示的，当调用该 thunk 时将返回一个 pair <code>&lt;val, next-thunk&gt;</code>。其中，<code>val</code> 为序列中当前元素的值，而 <code>next-thunk</code> 为接下来的元素序列形成的 stream。</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>无限序列由 <code>cons</code> 单元的嵌套结构表示，<code>cons</code> 单元的 <code>car</code> 与 <code>cdr</code> 分别为当前值与被延时求值的对象 (promise)。序列的后一个 <code>cons</code> 单元通过求值 <code>cdr</code> 部分产生。这个过程不断重复，从而形成无限序列。</p>
-</aside>
+</div></div>
 <h2 id="Using-Streams">Using Streams</h2>
 <p><code>powers-of-two</code> 是 Racket 中的一个 built-in stream，它是一个由 2 的幂次方组成的无限值序列。注意 stream 本质上是一个包含 pair 的 thunk；因此在取值之前需要进行调用。</p>
 <figure class="code-block"><div class="code-tools"><span>scheme</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>&gt; (<span class="hljs-name"><span class="hljs-built_in">car</span></span> (<span class="hljs-name">power-of-two</span>))

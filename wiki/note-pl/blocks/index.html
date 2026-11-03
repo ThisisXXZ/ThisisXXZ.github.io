@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="/fonts/page-3e2413920338.css">
   <meta name="traditional-fonts" content="/fonts/traditional-a3686fef898d.css">
   <script type="module" src="/language.js"></script>
-  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs.js" defer></script><script src="/reading.js" defer></script>
   
   
   
@@ -70,9 +70,9 @@ x.times { puts <span class="hljs-string">"hi"</span> }
     puts sum
 }
 </code></pre></figure>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>Blocks, surprisingly, are NOT objects.</p>
-</aside>
+</div></div>
 <p>We cannot pass blocks as "regular" arguments to a method. Rather, any method can be passed either 0 or 1 blocks, after any other "regular" arguments.</p>
 <p><code>inject</code> 方法与 ML 中的 <code>fold</code> 类似，其维护一个参数  accumulator 并逐个处理数组中的元素。我们可以看到，<code>inject</code> 本身需要传入 accumulator 的初始值，此即为所谓 regular argument；而作为非对象的 block 在所有 regular argument 之后被传入。</p>
 <figure class="code-block"><div class="code-tools"><span>ruby</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>sum = [<span class="hljs-number">4</span>,<span class="hljs-number">6</span>,<span class="hljs-number">8</span>].inject(<span class="hljs-number">0</span>) { |<span class="hljs-params">acc, elt</span>| acc + elt }
@@ -95,9 +95,9 @@ foo (<span class="hljs-literal">true</span>) { puts <span class="hljs-string">"t
 foo (<span class="hljs-literal">false</span>) { puts <span class="hljs-string">"false"</span> }
 </code></pre></figure>
 <p>The above code prints <code>"true"</code> and then prints <code>"false"</code> 2 times. We could also pass arguments to a block by simply putting arguments after the <code>yield</code>, e.g., <code>yield 7</code> or <code>yield(8, "str")</code>.</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>The fact that a method may expect block is <em>implicit</em>; it is just that its body might use <code>yield</code>.</p>
-</aside>
+</div></div>
 <p>当方法的主体部分中使用了 <code>yield</code> 但调用方法时未向其传入 blocks，程序将会报错；In situations where a method may or may not expect a block, often other regular arguments determine whether a block should be present. If not, use <code>block_given?</code> method.</p>
 <figure class="code-block"><div class="code-tools"><span>ruby</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">def</span> <span class="hljs-title function_">count</span> i
     <span class="hljs-keyword">if</span> <span class="hljs-keyword">yield</span> i
@@ -110,15 +110,15 @@ foo (<span class="hljs-literal">false</span>) { puts <span class="hljs-string">"
 <p>以上的方法将以递增的参数调用传入的 block，并统计最终在第几次调用时返回 true。注意到这个奇怪的 block：<code>{ |x| yield x }</code>，it passes the caller's block as the callee's block argument.</p>
 <p>在第 n + 1 层递归中，<code>yield</code> 将调用这个 "pipe" block。而其主体部分 <code>{ |x| yield x }</code> 中又将执行一次 <code>yield</code>；而在参数绑定之后，该 <code>yield</code> 调用的是第 n 层递归中的 block。</p>
 <p>这就是 lexical scope 的威力：它保证了 pipe block <code>{ |x| yield x }</code> 被执行时的环境是其被定义处的环境 (即第n 层递归中的环境)，以这种方式实现了 block 由 caller-side 到 callee-side 的传递。</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>Blocks are not <em>first-class values</em>: we cannot store them in a field, pass them as a regular method argument, assign them to a variable, put them in an array, etc.</p>
-</aside>
+</div></div>
 <p>再次强调，blocks 并不是对象：因此 (在 Ruby 中) 其并非“一等公民”。这是它与 closure 最大的区别。但是 Ruby 提供了将 blocks 升级为一等公民的方式。</p>
 <p><code>Proc</code> 类是真正的 closure，其实例化的对象可以被储存，作为普通的参数传入函数……我们只需要调用 <code>lambda</code> 方法，就能将 blocks 升级为 <code>Proc</code> 类的对象。</p>
 <p>Ruby's design is an interesting contrast from ML and Racket, which just provide full closures as the natural choice. In Ruby, blocks are more convenient to use then <code>Proc</code> objects and suffice in most uses, but programmers still have <code>Proc</code> objects when needed. 这是一个很值得探讨的问题：</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>Is it better to distinguish blocks from closures and make the more common case easier with a less powerful construct, or is it better just to have one general fully powerful feature?</p>
-</aside>
+</div></div>
 </div></article>
       <nav class="post-end chapter-pagination" aria-label="读完之后">
         <a href="/wiki/note-pl/">← 返回专题目录</a>

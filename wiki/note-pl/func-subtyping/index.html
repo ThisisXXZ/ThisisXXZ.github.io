@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="/fonts/page-4bd9bf6613b9.css">
   <meta name="traditional-fonts" content="/fonts/traditional-8aa875aa1511.css">
   <script type="module" src="/language.js"></script>
-  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs.js" defer></script><script src="/reading.js" defer></script>
   
   
   
@@ -58,9 +58,9 @@
 <p>那么函数 <code>distMoved</code> 的类型为 <code>(({x:real,y:real}-&gt;{x:real,y:real}) * {x:real,y:real}) -&gt; real</code>.</p>
 <p>函数 <code>flip</code> 的类型为 <code>{x:real, y:real} -&gt; {x:real, y:real}</code>，与函数 <code>distMoved</code> 期待的参数类型是相符的；以函数 <code>flip</code> 为参数调用函数 <code>distMoved</code> 没有用到 subtyping。</p>
 <h2 id="Convariant-Return-Type">Convariant Return Type</h2>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>The subtyping for the return types works <em>covariant</em> as for the types overall.</p>
-</aside>
+</div></div>
 <p>函数类型与其返回值类型的 subtyping 关系是 covariant (协变) 的: If <code>ta &lt;: tb</code>, then <code>t -&gt; ta &lt;: t -&gt; tb</code>.</p>
 <figure class="code-block"><div class="code-tools"><span>sml</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">fun</span> flipGreen p = {x=~p.x, y=~p.y, color=<span class="hljs-string">"green"</span>}
 <span class="hljs-keyword">val</span> d = distMoved(flipGreen, {x=<span class="hljs-number">3.0</span>, y=<span class="hljs-number">4.0</span>})
@@ -72,9 +72,9 @@
 </ul>
 <p>可以看出函数类型与其返回值类型 subtyping 的协变关系。</p>
 <h2 id="Contravariant-Argument-Type">Contravariant Argument Type</h2>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>The subtyping for argument types is the reverse of the subtyping for the types overall.</p>
-</aside>
+</div></div>
 <p>函数类型与其参数类型的 subtyping 关系是 contravariant (逆变) 的: If <code>ta &lt;: tb</code>, then <code>tb -&gt; t &lt;: ta -&gt; t</code>.</p>
 <figure class="code-block"><div class="code-tools"><span>sml</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">fun</span> flipX_Y0 p = {x=~p.x, y=<span class="hljs-number">0</span>}
 <span class="hljs-keyword">val</span> d = distMoved(flipX_Y0, {x=<span class="hljs-number">3.0</span>, y=<span class="hljs-number">4.0</span>})
@@ -85,9 +85,9 @@
 <li>而 <code>flipX_Y0</code> 函数类型 <code>{x:real}-&gt;{x:real,y:real}</code> 是 <code>distMoved</code> 形参函数类型 <code>{x:real,y:real}-&gt;{x:real,y:real}</code> 的 subtype。</li>
 </ul>
 <p>可以看出函数类型与其参数类型 subtype 的逆变关系。</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>The general rule for function subtyping is: If <code>t3 &lt;: t1</code> (argument type) and <code>t2 &lt;: t4</code> (return type), then <code>t1-&gt;t2 &lt;: t3-&gt;t4</code>. This rule, combined with reflexivity lets us use contravariant arguments, covariant results, or both.</p>
-</aside>
+</div></div>
 <p>注意在 OOP 语言中，<code>self</code> (或 <code>this</code>) 是被特殊处理的，它的类型与对象的类型始终是 convariant (共变) 的。</p>
 </div></article>
       <nav class="post-end chapter-pagination" aria-label="读完之后">

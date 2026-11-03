@@ -27,7 +27,7 @@
   <link rel="stylesheet" href="/fonts/page-1d8e04154a1c.css">
   <meta name="traditional-fonts" content="/fonts/traditional-0033bc348976.css">
   <script type="module" src="/language.js"></script>
-  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs.js" defer></script><script src="/reading.js" defer></script>
   
   
   
@@ -45,18 +45,18 @@
       
       <div class="prose"><p>What is Static Checking?</p>
 <p>What is usually meant by "static checking" is anything done to reject a program at <em>compile-time</em>.</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>Compile-time is the time <em>after</em> a program (successfully) parses but <em>before</em> it runs.</p>
-</aside>
+</div></div>
 <p>注意，compile-time 是一个时间概念，虽然名字中含有 compile，但它与语言实现采用的是 interpreter 还是 compiler 无关。这进一步印证了我们之前所提到的语言实现并不是语言本身的 feature 这一观念。</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>The most common <em>approach</em> to define a language's static checking is via a <em>type system</em>.</p>
-</aside>
+</div></div>
 <p>type system 中包含一系列 typing rules，例如 (以 ML 为背景)：每个变量都有一个类型，条件语句的分支有着相同的类型，list 中的元素类型一致等等。static checking 则检查程序是否遵循了这些规则。</p>
 <p>注意在 ML 中，type inferencer 也是 static checking 的一部分，它对程序进行推断，判断是否存在一种可能的 type annotations，使得程序能够遵循 type system 中定义的规则。</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>The <em>purpose</em> of static checking is to reject programs that "make no sense" or "may try to misuse a language feature".</p>
-</aside>
+</div></div>
 <p>static checking 的确能够达到它设计之初的目的，但它并不是完美的；</p>
 <ul>
 <li>There are errors a type system typically does not prevent (such as array-bounds errors).</li>
@@ -65,9 +65,9 @@
 </ul>
 <p>值得注意的是第三点：Racket 的动态检查 (dynamic checking, i.e., run-time checking) 通过赋予并检测值的标签实现 (即上一节提到的 secret pattern-matching)，这使得它在运行时发现程序的错误。</p>
 <p>而静态检查则能在程序运行之前排除某些有问题的程序，这样做的代价 (trade-off) 是它将会拒绝某些实际上没有问题的程序 (例如拥有不同类型元素的 list)。</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>The typical points at which to prevent an error are compile-time and run-time. However, it is worth realizing that there is really a <em>continuum of eagerness</em> about when we declare something an error.</p>
-</aside>
+</div></div>
 <p>实际上，静态检查与动态检查并非是对立的概念，对于不同类型的错误，我们可以选择在 compile-time 将其检出，也可以选择等到 run-time 时再弹出错误；在这两个时间段之外进行处理也是一个可行但非典型的选择。</p>
 <p>如何掌握好 static checking 的 trade-off，平衡其检出错误的效率与语言的灵活性，才是一个更加实际且有意义的命题。</p>
 </div></article>

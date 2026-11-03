@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="/fonts/page-9bfa18b80e81.css">
   <meta name="traditional-fonts" content="/fonts/traditional-5eccb96c39c5.css">
   <script type="module" src="/language.js"></script>
-  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs.js" defer></script><script src="/reading.js" defer></script>
   
   
   
@@ -54,18 +54,18 @@
 <li>A complete logic proves <em>all</em> true things.</li>
 </ul>
 <p>如果一个 type system 能够兼具 soundness 与 completeness，那么它所接受的程序集合与所有不执行 X 的程序集合是完全等价的。可惜，理论是美好的，现实是残酷的：</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>In modern languages, type system are sound (they prevent what they claim to) but not complete (they reject program that need not reject).</p>
-</aside>
+</div></div>
 <p>以 ML 的 static checker 为例，若我们想避免的问题 X 为 "string 类型的值作为除法运算的运算数"：</p>
 <figure class="code-block"><div class="code-tools"><span>sml</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">fun</span> f1 x = <span class="hljs-number">4</span> div <span class="hljs-string">"hi"</span>                         <span class="hljs-comment">(* f1 never get called *)</span>
 <span class="hljs-keyword">fun</span> f2 x = <span class="hljs-keyword">if</span> <span class="hljs-literal">true</span> <span class="hljs-keyword">then</span> <span class="hljs-number">0</span> <span class="hljs-keyword">else</span> <span class="hljs-number">4</span> div <span class="hljs-string">"hi"</span>
 <span class="hljs-keyword">fun</span> f3 = <span class="hljs-keyword">if</span> x &lt;= abs x <span class="hljs-keyword">then</span> <span class="hljs-number">0</span> <span class="hljs-keyword">else</span> <span class="hljs-number">4</span> div <span class="hljs-string">"hi"</span>
 </code></pre></figure>
 <p>注意，上述的三个函数均不会执行 <code>4 div "hi"</code> 这一语句，但 ML 的 static checker 却会检出类型错误并拒绝程序运行。这也就是说，ML 并不能很好的处理假阳性程序，它的 static checker 并不是 complete 的。</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>It is <em>impossible</em> to implement a static checker that given any program in your language (a) always terminates, (b) is sound, (c) is complete.</p>
-</aside>
+</div></div>
 <p>为了确保 X 不出现，现代语言的设计者选择了 soundness 与 always terminates 而牺牲了 completeness。接受假阴性程序的后果要远大于拒绝假阳性程序的后果。</p>
 <p>与停机问题 (halting problem) 类似，一个总能停机的 static checker 不能兼具 soundness 与 completeness 的原因也是由图灵机的<em>不可决定性 (undecidability)</em> 决定的。</p>
 <p>非正式的设想一下，若我们想避免的问题 X 为程序进入死循环，那么一个既 sound 又 complete 的 static checker 本身就是对停机问题的通用解法。这样，我们把该问题的不可能性归约到了停机问题的不可能性上。</p>

@@ -29,7 +29,7 @@
   <link rel="stylesheet" href="/fonts/page-c4169caba5f1.css">
   <meta name="traditional-fonts" content="/fonts/traditional-f8abaede1471.css">
   <script type="module" src="/language.js"></script>
-  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs.js" defer></script><script src="/reading.js" defer></script>
   
   
   
@@ -54,9 +54,9 @@
 <li>static typing (与重要的 static checking 机制) v.s. dynamic typing.</li>
 </ul>
 <p>Part B 的内容比较多，于是分为 Part B-1 与 Part B-2 进行记录。第一部分将会介绍 Racket 语言基础与各种 idioms，而第二部分专注于 static 与 dynamic typing 的比较。</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>Racket 脱胎于 Scheme，而 Scheme 是 LISP 的一个著名的 programming dialect。LISP 语系都采用独特的完全用圆括号的前缀符号表示法，这一优美的语法使得其被称之为“上帝的编程语言”。</p>
-</aside>
+</div></div>
 <p>Racket 中的语素仅仅有两种：</p>
 <ul>
 <li><em>atom</em>: 例如 <code>#t</code>, <code>#f</code>, <code>34</code>, <code>"hi"</code>, <code>null</code> 等等。一种特别重要的 atom 被称为 identifier，它可能是：
@@ -73,9 +73,9 @@
 <li>第一个 atom 不是任何 special form。此时括号序列是一个 function call。</li>
 </ul>
 <p>对 Racket 的每一条语句，我们可以轻松的解析 <em>parsing</em> 并建立对应的语法树。sequence 则代表一颗颗子树，子树的根为 sequence 的第一个 atom。可以看出语法树的<strong>前序遍历</strong>对应的就是 Racket 的程序结构。这样的结构使得 Racket 的语法是 <em>unambiguous</em> 的，不用考虑优先级问题。</p>
-<aside class="post-note" role="note" aria-label="补充说明">
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
 <p>In Racket, <em>parentheses change the meaning of your program. You cannot add or remove them because you feel like it. They are NEVER optional or meaningless.</em></p>
-</aside>
+</div></div>
 <p>与其他语言不同，Racket 中的括号有举足轻重的地位，不能随便增删。举例来说，<code>(e)</code> means evaluate <code>e</code> and call the resulting function with 0 arguments. 所以 <code>(42)</code> 将会导致 run-time error。</p>
 </div></article>
       <nav class="post-end chapter-pagination" aria-label="读完之后">
