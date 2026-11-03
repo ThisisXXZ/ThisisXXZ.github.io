@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <link rel="canonical" href="https://www.thisisxxz.com/wiki/note-os/address-space.html">
+  <meta name="description" content="XXZ 的个人网站。文章、读书、游戏、电影与学习笔记。">
+  <title>地址翻译 — Lalande.</title>
+  <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f8f8f6'/%3E%3Ctext x='11' y='30' fill='%23525250' font-size='30' font-family='serif'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="/fonts/inter-normal-693b77d4f32e.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-italic-e564f652916d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-6e3038eb1109.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-53b5408be57d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-dd9002ff9906.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-282101c36d82.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-dd3c2b76268f.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-e5a3ff168795.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/page-0d68ecd40439.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-971586848f43.css">
+  <script type="module" src="/language.js"></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  
+  
+  <script src="/toc.js" defer></script>
+  
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="is-reading">
+  <a class="skip-link" href="#contents">跳到正文</a>
+  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/wiki/note-os/">操作系统</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">地址翻译</span></li></ol></nav>
+    <main class="reading" id="contents" tabindex="-1">
+      <article aria-labelledby="post-title"><header class="post-header">
+        <h1 id="post-title">地址翻译</h1>
+        <time datetime="2025-12-06" aria-label="发布于 2025.12.06">2025.12.06</time>
+      </header>
+      <aside class="article-toc" data-article-toc>
+    <button class="toc-toggle" type="button" aria-label="打开本文目录" aria-expanded="false" aria-haspopup="dialog" aria-controls="article-toc-drawer" hidden><span aria-hidden="true">目录</span></button>
+    <div class="toc-panel">
+      <div class="toc-header"><p class="toc-label" id="article-toc-label">本文目录</p><button class="toc-close" type="button" aria-label="关闭本文目录" hidden><span aria-hidden="true"></span></button></div>
+      <nav id="article-toc-links" aria-label="页内目录">
+      <ol><li><a href="#%E5%86%85%E5%AD%98%E8%99%9A%E6%8B%9F%E5%8C%96">内存虚拟化</a></li><li><a href="#%E7%9B%AE%E6%A0%87">目标</a></li><li><a href="#%E4%B8%89%E4%B8%AA%E5%81%87%E8%AE%BE">三个假设</a></li><li><a href="#%E5%8A%A8%E6%80%81%E9%87%8D%E5%AE%9A%E4%BD%8D%E4%B8%8E%E5%9C%B0%E5%9D%80%E7%BF%BB%E8%AF%91">动态重定位与地址翻译</a></li><li><a href="#%E9%98%85%E8%AF%BB">阅读</a></li></ol>
+      </nav>
+    </div>
+    <dialog class="toc-drawer" id="article-toc-drawer" aria-labelledby="article-toc-label"></dialog>
+  </aside>
+      <div class="prose"><h2 id="内存虚拟化">内存虚拟化</h2>
+<p><strong>内存虚拟化 (memory virtualization)</strong> 创造出一种假象：线程拥有一块属于自己的（足够大的）连续内存空间，从高地址到低地址依次是栈，堆，数据段与代码段。</p>
+<p>实现内存虚拟化同样需要 OS 与硬件的相关机制与策略。</p>
+<h2 id="目标">目标</h2>
+<ul>
+<li><strong>透明性 (transparency)</strong>：线程不能察觉到其地址空间是虚拟的</li>
+<li><strong>效率 (efficiency)</strong></li>
+<li><strong>保护 (protection)</strong>：线程只能访问自己的地址空间，与其他线程<strong>隔离 (isolation)</strong> 开</li>
+</ul>
+<h2 id="三个假设">三个假设</h2>
+<p>一步一步来。</p>
+<ul>
+<li>假设 1：一个线程所需的地址空间远小于内存的真实<strong>物理空间 (physical memory)</strong></li>
+<li>假设 2：一个线程的地址空间必须连续地映射到物理空间中</li>
+<li>假设 3：每个线程地地址空间大小相同</li>
+</ul>
+<h2 id="动态重定位与地址翻译">动态重定位与地址翻译</h2>
+<p>硬件支持：</p>
+<ul>
+<li>每个 CPU 的<strong>内存管理单元 (memory management unit, MMU)</strong> 存储了一对寄存器：<strong>基址寄存器 (base register)</strong> 与<strong>界限寄存器 (bound register)</strong></li>
+<li>线程访问某个虚拟地址时：
+<ul>
+<li>MMU 检查合法性：虚拟地址 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≤</mo></mrow><annotation encoding="application/x-tex">\leq</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mrel">≤</span></span></span></span></eq> 界限？若否，引发异常</li>
+<li>MMU <strong>地址翻译 (address translation)</strong>：物理地址 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo></mrow><annotation encoding="application/x-tex">=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">=</span></span></span></span></eq> 基址 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>+</mo></mrow><annotation encoding="application/x-tex">+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord">+</span></span></span></span></eq> 虚拟地址 =&gt; 访问物理地址</li>
+</ul>
+</li>
+<li>为 OS 提供的特权操作：更新基址与界限寄存器，注册异常处理器等</li>
+</ul>
+<p>OS 支持：</p>
+<ul>
+<li>通过 <strong>空闲列表 (free list)</strong> 管理内存空间：分配新线程的空间，回收终止线程的空间</li>
+<li>上下文切换时：
+<ul>
+<li>将当前线程的基址/界限寄存器储存到 PCB 中（它们是内核态寄存器！）</li>
+<li>将下一个线程的基址/界限寄存器加载进 MMU 中</li>
+</ul>
+</li>
+<li>提供异常处理器：通常是终止非法内存访问的线程</li>
+</ul>
+<p>只需要简单的修改基址寄存器，OS 可以将某个线程的地址空间在物理空间内任意移动：这个过程甚至可以在线程运行时发生。这被称为<strong>动态重定位 (dynamic relocation)</strong>。</p>
+<h2 id="阅读">阅读</h2>
+<p>Chapter 13 - The Abstraction: Address Spaces, <em>OSTEP</em>,
+<a href="http://pages.cs.wisc.edu/~remzi/OSTEP/vm-intro.pdf">http://pages.cs.wisc.edu/~remzi/OSTEP/vm-intro.pdf</a></p>
+<p>Chapter 15 – Mechanism: Address Translation, <em>OSTEP</em>
+<a href="http://pages.cs.wisc.edu/~remzi/OSTEP/vm-mechanism.pdf">http://pages.cs.wisc.edu/~remzi/OSTEP/vm-mechanism.pdf</a></p>
+</div></article>
+      <nav class="post-end chapter-pagination" aria-label="读完之后">
+        <a href="/wiki/note-os/">← 返回专题目录</a>
+        <a href="/wiki/note-os/deadlock.html" rel="prev"><span>上一篇</span>死锁</a>
+        <a class="next-post" href="/wiki/note-os/segmentation.html" rel="next"><span>下一篇</span>分段 <span aria-hidden="true">→</span></a>
+      </nav>
+    </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
+    <nav class="site-tools" aria-label="联系与语言">
+    <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a>
+    <div class="language-switch" role="group" aria-label="中文简繁切换" translate="no" hidden><button type="button" data-chinese-script="cn" lang="zh-Hans" aria-pressed="true" aria-label="简体中文（原文）">简</button><span aria-hidden="true">/</span><button type="button" data-chinese-script="tw" lang="zh-Hant" aria-pressed="false" aria-label="繁體中文">繁</button></div>
+  </nav><p class="language-status" role="status" translate="no" hidden></p>
+  </footer></div>
+</body>
+</html>

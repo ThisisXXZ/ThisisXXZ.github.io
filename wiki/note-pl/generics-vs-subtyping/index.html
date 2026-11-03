@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <link rel="canonical" href="https://www.thisisxxz.com/wiki/note-pl/generics-vs-subtyping.html">
+  <meta name="description" content="XXZ 的个人网站。文章、读书、游戏、电影与学习笔记。">
+  <title>泛型与子类型 — Lalande.</title>
+  <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f8f8f6'/%3E%3Ctext x='11' y='30' fill='%23525250' font-size='30' font-family='serif'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="/fonts/inter-normal-693b77d4f32e.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-italic-e564f652916d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-6e3038eb1109.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-cde11610f994.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-2f1a60899779.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-fe131bf473fc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/page-bddc38a61c9e.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-1f9a97947917.css">
+  <script type="module" src="/language.js"></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  
+  
+  <script src="/toc.js" defer></script>
+  
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="is-reading">
+  <a class="skip-link" href="#contents">跳到正文</a>
+  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/wiki/note-pl/">编程语言</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">泛型与子类型</span></li></ol></nav>
+    <main class="reading" id="contents" tabindex="-1">
+      <article aria-labelledby="post-title"><header class="post-header">
+        <h1 id="post-title">泛型与子类型</h1>
+        <time datetime="2023-07-31" aria-label="发布于 2023.07.31">2023.07.31</time>
+      </header>
+      <aside class="article-toc" data-article-toc>
+    <button class="toc-toggle" type="button" aria-label="打开本文目录" aria-expanded="false" aria-haspopup="dialog" aria-controls="article-toc-drawer" hidden><span aria-hidden="true">目录</span></button>
+    <div class="toc-panel">
+      <div class="toc-header"><p class="toc-label" id="article-toc-label">本文目录</p><button class="toc-close" type="button" aria-label="关闭本文目录" hidden><span aria-hidden="true"></span></button></div>
+      <nav id="article-toc-links" aria-label="页内目录">
+      <ol><li><a href="#Generics-v.s.-Subtyping">Generics v.s. Subtyping</a></li><li><a href="#What-are-generics-good-for%3F">What are generics good for?</a></li><li><a href="#Subtyping-is-bad-substitute-for-generics">Subtyping is bad substitute for generics</a></li><li><a href="#What-is-subtyping-good-for%3F">What is subtyping good for?</a></li><li><a href="#Bounded-Polymorphism">Bounded Polymorphism</a></li><li><a href="#Reference">Reference</a></li></ol>
+      </nav>
+    </div>
+    <dialog class="toc-drawer" id="article-toc-drawer" aria-labelledby="article-toc-label"></dialog>
+  </aside>
+      <div class="prose"><p>Generics v.s. Subtyping.</p>
+<h2 id="Generics-v.s.-Subtyping">Generics v.s. Subtyping</h2>
+<p>关于 generics (parametric polymorphism) 与 subtyping polymorphism 的比较也是一个很重要的话题。</p>
+<h2 id="What-are-generics-good-for?">What are generics good for?</h2>
+<p>先来看看 generics (parametric polymorphism) 的两种最常见的应用。</p>
+<ol>
+<li>
+<p>higher-order function 的复合。</p>
+<figure class="code-block"><div class="code-tools"><span>sml</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">val</span> compose : (<span class="hljs-symbol">'b</span> -&gt; <span class="hljs-symbol">'c</span>) * (<span class="hljs-symbol">'a</span> -&gt; <span class="hljs-symbol">'b</span>) -&gt; (<span class="hljs-symbol">'a</span> -&gt; <span class="hljs-symbol">'c</span>)
+</code></pre></figure>
+</li>
+<li>
+<p>functions that operate over collections/containers where different collections/containers can hold values of different types.</p>
+<figure class="code-block"><div class="code-tools"><span>sml</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">val</span> length : <span class="hljs-symbol">'a</span> <span class="hljs-built_in">list</span> -&gt; <span class="hljs-built_in">int</span>
+<span class="hljs-keyword">val</span> map : (<span class="hljs-symbol">'a</span> -&gt; <span class="hljs-symbol">'b</span>) * <span class="hljs-symbol">'a</span> <span class="hljs-built_in">list</span> -&gt; <span class="hljs-symbol">'b</span> <span class="hljs-built_in">list</span>
+<span class="hljs-keyword">val</span> swap : (<span class="hljs-symbol">'a</span> * <span class="hljs-symbol">'b</span>) -&gt; (<span class="hljs-symbol">'b</span> * <span class="hljs-symbol">'a</span>)
+</code></pre></figure>
+</li>
+</ol>
+<p>generic types 放松了对函数参数类型的限制，从而提高了代码的复用性。举例来说，如果没有 generics，那么对于每一对不同类型的 pair 都需要编写一个 <code>swap</code> 函数。</p>
+<h2 id="Subtyping-is-bad-substitute-for-generics">Subtyping is bad substitute for generics</h2>
+<p>在不支持 generics 的语言中，程序员有时会用 subtyping 实现 generics，但是：</p>
+<ul>
+<li>Somewhat lame generics.</li>
+<li>Doing so is like painting with a hammer instead of a paintbrush.</li>
+</ul>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">LamePair</span> {
+    Object x;
+    Object y;
+    LamePair(Object _x, Object _y) { x=_x; y=_y; }
+    <span class="hljs-type">LamePair</span> <span class="hljs-title function_">swap</span><span class="hljs-params">()</span> { <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">LamePair</span>(y,x); }
+    ...
+}
+
+<span class="hljs-type">String</span> <span class="hljs-variable">s</span> <span class="hljs-operator">=</span> (String)(<span class="hljs-keyword">new</span> <span class="hljs-title class_">LamePair</span>(<span class="hljs-string">"hi"</span>, <span class="hljs-number">4</span>).y); <span class="hljs-comment">// error caught only at run-time</span>
+</code></pre></figure>
+<p>这是用 subtyping 实现 generics 的一个例子：由于 <code>Object</code> 类型是所有类型的 supertype，任何类型的数据都能传入 <code>LamePair</code> 的域中。问题出在从 <code>LamePair</code> 中提取数据：我们只能获得一个 <code>Object</code> 类型的数据，因此必须使用强制类型转换 downcast 来将其转换为“原本”的类型。</p>
+<p>downcast 将对被转换的数据类型执行 run-time checks，因此上述程序中的类型错误只有在运行时才能被侦测到；这一方面增加了动态检查的时空成本，一方面潜在降低了程序的安全性。</p>
+<aside class="post-note" role="note" aria-label="补充说明">
+<p>When you use <code>Object</code> and downcasts, you are essentially taking a dynamic typing approach: any object could be stored in an <code>Object</code> field, so it is up to programmers, without help from the type system, to keep straight what kind of data is where.</p>
+</aside>
+<h2 id="What-is-subtyping-good-for?">What is subtyping good for?</h2>
+<p>subtyping 的优势区间在于 allowing code to be reused with data that has <em>extra information</em>.</p>
+<figure class="code-block"><div class="code-tools"><span>sml</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">fun</span> distToOrigin {x=x, y=y} =
+    <span class="hljs-type">Math</span>.sqrt(x*x + y*y)
+<span class="hljs-keyword">val</span> five = distToOrigin {x=<span class="hljs-number">3.0</span>, y=<span class="hljs-number">4.0</span>, color=<span class="hljs-string">"red"</span>}
+</code></pre></figure>
+<p>该代码在不支持 subtyping 的语言如 ML 中将不会 type check。而在支持 subtyping 的语言中，<code>distToOrigin</code> 函数既能作用于 <code>Point</code> 类的对象，又能作用于 <code>ColorPoint</code> 类的对象：其中 <code>ColorPoint</code> is data that has extra information for <code>Point</code>.</p>
+<h2 id="Bounded-Polymorphism">Bounded Polymorphism</h2>
+<p>既然 generics 与 subtyping 都有着各自的优势区间，许多 statically typed 语言 (例如 Java 与 C#) 选择同时实现这 generics 与 subtyping。同时拥有这两种 polymorphism 机制带来了：</p>
+<ul>
+<li>Some <em>complications</em>. (e.g. static overloading &amp; subtyping are more difficult to define)</li>
+<li>Merits brought by generics and subtyping separately.</li>
+<li>More code reuse and expressiveness with the <em>combination</em> of the two ideas.</li>
+</ul>
+<p>generics 与 subtyping 的结合带来了 <em>bounded polymorphism</em>, 具体体现为 <em>bounded generic types</em>。</p>
+<aside class="post-note" role="note" aria-label="补充说明">
+<p>Bounded generic types allow us to say, for all types <code>'a</code> that are subtype of <code>T</code>.</p>
+<ul>
+<li>(generics) We use <code>'a</code> multiple times to indicate where two things must have the same type.</li>
+<li>(subtyping) We can treat <code>'a</code> as a subtype of <code>T</code>,  accessing whatever fields and methods we know a <code>T</code> has.</li>
+</ul>
+</aside>
+<p>见下例，<code>Point</code> 类中定义了 <code>distance</code> 方法。</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Pt</span> {
+    <span class="hljs-type">double</span> x, y;
+    <span class="hljs-type">double</span> <span class="hljs-title function_">distance</span><span class="hljs-params">(Pt pt)</span> { <span class="hljs-keyword">return</span> Math.sqrt((x-pt.x)*(x-pt.x)+(y-pt.y)*(y-pt.y)); }
+    Pt(<span class="hljs-type">double</span> _x, <span class="hljs-type">double</span> _y) { x = _x; y = _y; }
+}
+</code></pre></figure>
+<p>接下来是一个静态函数，输入一个 <code>point</code> 类 list 与一个圆，返回 list 中所有在该圆内的 <code>point</code>。</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">static</span> <span class="hljs-type">List</span>&lt;Pt&gt; <span class="hljs-title function_">inCircle</span><span class="hljs-params">(List&lt;Pt&gt; pts, Pt center, <span class="hljs-type">double</span> radius)</span> {
+    <span class="hljs-type">List</span>&lt;Pt&gt; <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;Pt&gt;();
+    <span class="hljs-keyword">for</span> (Pt pt : pts)
+        <span class="hljs-keyword">if</span> (pt.distance(center) &lt;= radious)
+            result.add(pt)
+    <span class="hljs-keyword">return</span> result;
+}
+</code></pre></figure>
+<p>对于一个 <code>ColorPt</code> 类型的 list，我们能否将其传入 <code>inCircle</code> 方法实现代码的复用？该问题我们已经讨论过。</p>
+<ul>
+<li>一方面，list 中的各个 entry 是 mutable 的，这意味着 depth subtyping 不成立，<code>List&lt;ColorPt&gt;</code> 并非 <code>List&lt;Pt&gt;</code> 的 subtype。</li>
+<li>另一方面，即使 <code>List&lt;ColorPt&gt;</code> 传入了 <code>inCircle</code> 方法，其返回的 list 类型是 <code>List&lt;Pt&gt;</code> 而不是 <code>List&lt;ColorPt&gt;</code>，我们必须用到丑陋的 downcast。</li>
+</ul>
+<p>好消息是，Java 的 bounded polymorphism 使得我们能够结合 generics 与 subtyping，实现该功能：</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">static</span> &lt;T <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Pt</span>&gt; <span class="hljs-type">List</span>&lt;T&gt; <span class="hljs-title function_">inCircle</span><span class="hljs-params">(List&lt;T&gt; pts, Pt center, <span class="hljs-type">double</span> radius)</span> {
+    <span class="hljs-type">List</span>&lt;T&gt; <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;T&gt;();
+    <span class="hljs-keyword">for</span> (T pt : pts)
+        <span class="hljs-keyword">if</span> (pt.distance(center) &lt;= radius)
+            result.add(pt);
+    <span class="hljs-keyword">return</span> result;
+}
+</code></pre></figure>
+<p>利用 generics，我们将 <code>T</code> 声明为一个 generic type；利用 subtyping，我们规定该 generic type <code>T</code> 必须是 <code>Pt</code> 的 subtype。当传入 <code>List&lt;ColorPt&gt;</code> 时，<code>T</code> 将被指定为 <code>ColorPt</code>，且 <code>ColorPt</code> 的确是 <code>Pt</code> 的 subtype。</p>
+<p>这样，我们不仅能够传入 <code>List&lt;ColorPt&gt;</code> 类型的 list，该方法也将返回相同类型的 list 而无需用到 downcast。</p>
+<h2 id="Reference">Reference</h2>
+<p>Supplementry notes:</p>
+<p><a href="https://www.cnblogs.com/VeniVidiVici/p/16848669.html">My notes in CnBlogs</a>.</p>
+<p><a href="https://www.zhihu.com/question/57486254">Inheritance 与 subtyping 到底有什么区别 -知乎</a>.</p>
+<p>Course info:</p>
+<p><a href="https://www.coursera.org/learn/programming-languages-part-c">Programming Languages, Part C, University of Washington</a>, Lecturer: Professor Dan Grossman.</p>
+</div></article>
+      <nav class="post-end chapter-pagination" aria-label="读完之后">
+        <a href="/wiki/note-pl/">← 返回专题目录</a>
+        <a href="/wiki/note-pl/subtyping-for-oop.html" rel="prev"><span>上一篇</span>面向对象中的子类型</a>
+        
+      </nav>
+    </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
+    <nav class="site-tools" aria-label="联系与语言">
+    <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a>
+    <div class="language-switch" role="group" aria-label="中文简繁切换" translate="no" hidden><button type="button" data-chinese-script="cn" lang="zh-Hans" aria-pressed="true" aria-label="简体中文（原文）">简</button><span aria-hidden="true">/</span><button type="button" data-chinese-script="tw" lang="zh-Hant" aria-pressed="false" aria-label="繁體中文">繁</button></div>
+  </nav><p class="language-status" role="status" translate="no" hidden></p>
+  </footer></div>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <link rel="canonical" href="https://www.thisisxxz.com/wiki/note-pl/weak-typing.html">
+  <meta name="description" content="XXZ 的个人网站。文章、读书、游戏、电影与学习笔记。">
+  <title>弱类型 — Lalande.</title>
+  <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f8f8f6'/%3E%3Ctext x='11' y='30' fill='%23525250' font-size='30' font-family='serif'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="/fonts/inter-normal-693b77d4f32e.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-italic-e564f652916d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-6e3038eb1109.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-cde11610f994.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-1d6b50ba22e9.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-a84b8fb7aab0.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/page-b5092fc209d7.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-cf0226f1167e.css">
+  <script type="module" src="/language.js"></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="is-reading">
+  <a class="skip-link" href="#contents">跳到正文</a>
+  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/wiki/note-pl/">编程语言</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">弱类型</span></li></ol></nav>
+    <main class="reading" id="contents" tabindex="-1">
+      <article aria-labelledby="post-title"><header class="post-header">
+        <h1 id="post-title">弱类型</h1>
+        <time datetime="2023-07-19" aria-label="发布于 2023.07.19">2023.07.19</time>
+      </header>
+      
+      <div class="prose"><p>Weak Typing.</p>
+<p>接下来我们再来介绍一个语言概念，<em>strongly typed</em> language 与 <em>weakly typed</em> language。</p>
+<p>首先要强调，语言的强/弱类型与静态/动态类型是没有必然联系的两个概念。ML 与 Racket 虽然分别采用静态与动态类型系统，但它们都可被视为是强类型语言。</p>
+<p>对于想要阻止的问题 X，不同的语言有不同的处理方式：</p>
+<ul>
+<li>static checking: 利用 static checker 在 compile-time 检出。</li>
+<li>dynamic checking: 若 static checker 无法检出 X (语言不使用 static checker 或其 static checker 对问题 X 是 unsound 的)，则在语言实现中加入一些 dynamic checks 在 run-time 阻止 X 发生。</li>
+<li>......</li>
+<li>weak typing: 语言实现根本不对程序进行检查：认定 X 的出现是程序员本身的问题。若程序员本身没有发现问题，X 将会发生。(你程序员觉得是我的锅，那就是我的锅)</li>
+</ul>
+<p>C/C++ 是很典型的弱类型语言：举一个非常熟悉的例子，C/C++ 中的数组越界问题。即使我们访问了不合法的数组下标如 <code>a[-1]</code>，C/C++ 也不会阻止程序的运行，最后程序可能会因为访问某些未申请的内存而导致崩溃。</p>
+<p>所谓强类型语言，就是其类型系统 (type system) 中存在较多的 restrictions，阻止潜在 bug 程序的运行。而弱类型语言的 restrictions 就相对较少。</p>
+<p>相对于强类型语言，弱类型语言省去了进行检查的时间成本，存储数据 (例如 dynamic checks 所需要记录的 tags 信息) 的空间成本；但所付出的代价是，程序的 bug 更需要程序员本身进行检出而不能依靠强类型语言中的各种检查来发现。(相信我们都遇到过出现难以 de 出的奇怪 bug，最后发现是数组越界的抓狂时刻)</p>
+<p>因此，在实际应用中存在很多外置的 checking tools 对弱类型语言程序进行检查；这是一个折中的方案。</p>
+<p>另外需要强调的是，语言的强/弱类型比起是一种定义，不如说是一种相对的概念，具体可以参考<a href="https://learn.microsoft.com/zh-cn/archive/blogs/ericlippert/is-c-a-strongly-typed-or-a-weakly-typed-language">这个帖子</a>，回答者讲的很好。在中文语境下对强/弱类型似乎还有另外的定义，与变量的定义与类型转换规则相关。</p>
+<h2 id="Extended-Semantics">Extended Semantics</h2>
+<p>对于某个想要避免的问题 X，一些语言并不纠结是否将其检出的问题，它们选择扩展其 primitives 的语义。例如，传统的 <code>+</code> 只允许两个数字进行相加，一个 <code>string</code> 类型的参数是不合法的。</p>
+<p>而在 Python 中，<code>"Hello" + "World"</code> 这样的表达是合法的；这是因为 Python 扩展了 <code>+</code> 的 semantics，使其具有了连接两个 <code>string</code> 类型字符串的语义。</p>
+<p>关于是否将问题 X 所对应的本来应当视作 bug 的语句赋予新的意义这个问题见仁见智：一方面，这样的处理使得一些 bug 更难被检出。一方面，它又确实给程序员带来了很多方便。</p>
+<h2 id="Reference">Reference</h2>
+<p>Supplementary notes:</p>
+<p><a href="https://www.cnblogs.com/VeniVidiVici/p/16644030.html">My notes in CnBlogs</a>. <a href="https://www.cnblogs.com/VeniVidiVici/p/16667116.html">My implementation</a>.</p>
+<p><a href="https://learn.microsoft.com/zh-cn/archive/blogs/ericlippert/is-c-a-strongly-typed-or-a-weakly-typed-language">Is C# a strongly typed or weakly typed language?</a>.</p>
+<p>Course info:</p>
+<p><a href="https://www.coursera.org/learn/programming-languages-part-b">Programming Languages, Part B, University of Washington</a>, Lecturer: Professor Dan Grossman.</p>
+</div></article>
+      <nav class="post-end chapter-pagination" aria-label="读完之后">
+        <a href="/wiki/note-pl/">← 返回专题目录</a>
+        <a href="/wiki/note-pl/correctness.html" rel="prev"><span>上一篇</span>正确性</a>
+        <a class="next-post" href="/wiki/note-pl/class-based-oop.html" rel="next"><span>下一篇</span>基于类的面向对象 <span aria-hidden="true">→</span></a>
+      </nav>
+    </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
+    <nav class="site-tools" aria-label="联系与语言">
+    <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a>
+    <div class="language-switch" role="group" aria-label="中文简繁切换" translate="no" hidden><button type="button" data-chinese-script="cn" lang="zh-Hans" aria-pressed="true" aria-label="简体中文（原文）">简</button><span aria-hidden="true">/</span><button type="button" data-chinese-script="tw" lang="zh-Hant" aria-pressed="false" aria-label="繁體中文">繁</button></div>
+  </nav><p class="language-status" role="status" translate="no" hidden></p>
+  </footer></div>
+</body>
+</html>

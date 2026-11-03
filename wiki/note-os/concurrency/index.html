@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <link rel="canonical" href="https://www.thisisxxz.com/wiki/note-os/concurrency.html">
+  <meta name="description" content="XXZ 的个人网站。文章、读书、游戏、电影与学习笔记。">
+  <title>并发问题与同步 — Lalande.</title>
+  <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f8f8f6'/%3E%3Ctext x='11' y='30' fill='%23525250' font-size='30' font-family='serif'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="/fonts/inter-normal-693b77d4f32e.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-italic-e564f652916d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-6e3038eb1109.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-570f3f862bf2.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-dd9002ff9906.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-282101c36d82.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-dd3c2b76268f.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-3406325df935.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/page-e1d84b2403b0.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-975f6db04bbe.css">
+  <script type="module" src="/language.js"></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  
+  
+  <script src="/toc.js" defer></script>
+  
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="is-reading">
+  <a class="skip-link" href="#contents">跳到正文</a>
+  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/wiki/note-os/">操作系统</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">并发问题与同步</span></li></ol></nav>
+    <main class="reading" id="contents" tabindex="-1">
+      <article aria-labelledby="post-title"><header class="post-header">
+        <h1 id="post-title">并发问题与同步</h1>
+        <time datetime="2025-12-05" aria-label="发布于 2025.12.05">2025.12.05</time>
+      </header>
+      <aside class="article-toc" data-article-toc>
+    <button class="toc-toggle" type="button" aria-label="打开本文目录" aria-expanded="false" aria-haspopup="dialog" aria-controls="article-toc-drawer" hidden><span aria-hidden="true">目录</span></button>
+    <div class="toc-panel">
+      <div class="toc-header"><p class="toc-label" id="article-toc-label">本文目录</p><button class="toc-close" type="button" aria-label="关闭本文目录" hidden><span aria-hidden="true"></span></button></div>
+      <nav id="article-toc-links" aria-label="页内目录">
+      <ol><li><a href="#%E4%B8%80%E4%B8%AA%E7%BB%8F%E5%85%B8%E7%9A%84%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98%E4%BE%8B%E5%AD%90">一个经典的并发问题例子</a></li><li><a href="#%E7%AB%9E%E6%80%81%E6%9D%A1%E4%BB%B6">竞态条件</a></li><li><a href="#%E5%85%B3%E9%94%AE%E5%8C%BA">关键区</a></li><li><a href="#%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C">原子操作</a></li><li><a href="#%E4%BA%92%E6%96%A5">互斥</a></li><li><a href="#%E5%90%8C%E6%AD%A5">同步</a></li><li><a href="#%E9%98%85%E8%AF%BB">阅读</a></li></ol>
+      </nav>
+    </div>
+    <dialog class="toc-drawer" id="article-toc-drawer" aria-labelledby="article-toc-label"></dialog>
+  </aside>
+      <div class="prose"><p>多线程带来了并发问题。</p>
+<h2 id="一个经典的并发问题例子">一个经典的并发问题例子</h2>
+<p>全局变量 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">x=10</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">10</span></span></span></span></eq>，两个线程均令 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></eq> 自增。</p>
+<div class="post-grid" style="--columns:2">
+<div>
+<aside class="post-note" role="note" aria-label="补充说明">
+<figure class="code-block"><figcaption>Thread 1</figcaption><div class="code-tools"><span>pseudo</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>func increment() {
+    global x
+    x++
+}
+</code></pre></figure>
+</aside>
+</div>
+<div>
+<aside class="post-note" role="note" aria-label="补充说明">
+<figure class="code-block"><figcaption>Thread 2</figcaption><div class="code-tools"><span>pseudo</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>func increment() {
+    global x
+    x++
+}
+</code></pre></figure>
+</aside>
+</div>
+</div>
+<p><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></eq> 可能是 11 或 12。</p>
+<ul>
+<li>「自增」不是<strong>原子操作 (atomic operation)</strong>，它实际上由三个操作组成。
+<ul>
+<li><code>mov x, tmp</code></li>
+<li><code>add $0x1, tmp</code></li>
+<li><code>mov tmp, x</code></li>
+</ul>
+</li>
+<li><strong>不可控的线程调度 (uncontrolled scheduling)</strong></li>
+<li>线程共享地址空间，包括数据段中的全局变量 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></eq></li>
+</ul>
+<h2 id="竞态条件">竞态条件</h2>
+<p>以上的例子就是一个典型的<strong>竞态条件 (race condition)</strong>：执行结果依赖于不可控的事件出现顺序，即竞争 (race)。在多线程进程中，当多个线程并发地访问或修改一个共享资源时，往往就会有竞态条件。</p>
+<p>含有竞态条件的程序被称为不明确程序 (indeterminate program)，它的输出是不确定的。</p>
+<h2 id="关键区">关键区</h2>
+<p>因此，访问或修改特定共享资源的代码块，即<strong>关键区 (critical section)</strong>，必须被保护起来。</p>
+<h2 id="原子操作">原子操作</h2>
+<p>All or Nothing!</p>
+<p>解决方法之一：将自增操作<strong>原子化 (transaction)</strong>，使其不能在中途被中断。</p>
+<ul>
+<li>每有一个关键区就创建一个新的机器指令？不太现实。</li>
+</ul>
+<h2 id="互斥">互斥</h2>
+<p>解决方法之二：关键区必须被<strong>互斥 (mutual exclusion)</strong> 访问，即同一时刻最多只能有一个线程进入关键区。进入之后，关键区将被该线程「锁住」，其他线程需要等待。</p>
+<p>这也被称为<strong>串行访问 (serialized access)</strong>。</p>
+<h2 id="同步">同步</h2>
+<p>互斥本质上是一种<strong>同步 (synchronization)</strong> 机制：一个线程可能需要等待另一个线程完成某个任务后才能继续执行。OS 和硬件如何为同步提供支持？</p>
+<p>接下来将会介绍三种<strong>同步原语 (synchronization primitives)</strong>：互斥锁，条件变量与信号标。</p>
+<h2 id="阅读">阅读</h2>
+<p>Chapter 26 – Concurrency: An Introduction, <em>OSTEP</em>, <a href="http://pages.cs.wisc.edu/~remzi/OSTEP/threads-intro.pdf">http://pages.cs.wisc.edu/~remzi/OSTEP/threads-intro.pdf</a></p>
+</div></article>
+      <nav class="post-end chapter-pagination" aria-label="读完之后">
+        <a href="/wiki/note-os/">← 返回专题目录</a>
+        <a href="/wiki/note-os/thread.html" rel="prev"><span>上一篇</span>线程</a>
+        <a class="next-post" href="/wiki/note-os/mutex-lock.html" rel="next"><span>下一篇</span>互斥锁 <span aria-hidden="true">→</span></a>
+      </nav>
+    </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
+    <nav class="site-tools" aria-label="联系与语言">
+    <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a>
+    <div class="language-switch" role="group" aria-label="中文简繁切换" translate="no" hidden><button type="button" data-chinese-script="cn" lang="zh-Hans" aria-pressed="true" aria-label="简体中文（原文）">简</button><span aria-hidden="true">/</span><button type="button" data-chinese-script="tw" lang="zh-Hant" aria-pressed="false" aria-label="繁體中文">繁</button></div>
+  </nav><p class="language-status" role="status" translate="no" hidden></p>
+  </footer></div>
+</body>
+</html>

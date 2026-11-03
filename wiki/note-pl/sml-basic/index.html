@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <link rel="canonical" href="https://www.thisisxxz.com/wiki/note-pl/sml-basic.html">
+  <meta name="description" content="XXZ 的个人网站。文章、读书、游戏、电影与学习笔记。">
+  <title>SML 基础 — Lalande.</title>
+  <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f8f8f6'/%3E%3Ctext x='11' y='30' fill='%23525250' font-size='30' font-family='serif'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="/fonts/inter-normal-693b77d4f32e.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-italic-e564f652916d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-6e3038eb1109.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-60c46c3455ef.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-dd3c2b76268f.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-a6a9cc869829.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/page-11cb2ac43260.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-7002630ec1b4.css">
+  <script type="module" src="/language.js"></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  
+  
+  <script src="/toc.js" defer></script>
+  
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="is-reading">
+  <a class="skip-link" href="#contents">跳到正文</a>
+  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/wiki/note-pl/">编程语言</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">SML 基础</span></li></ol></nav>
+    <main class="reading" id="contents" tabindex="-1">
+      <article aria-labelledby="post-title"><header class="post-header">
+        <h1 id="post-title">SML 基础</h1>
+        <time datetime="2023-07-14" aria-label="发布于 2023.07.14">2023.07.14</time>
+      </header>
+      <aside class="article-toc" data-article-toc>
+    <button class="toc-toggle" type="button" aria-label="打开本文目录" aria-expanded="false" aria-haspopup="dialog" aria-controls="article-toc-drawer" hidden><span aria-hidden="true">目录</span></button>
+    <div class="toc-panel">
+      <div class="toc-header"><p class="toc-label" id="article-toc-label">本文目录</p><button class="toc-close" type="button" aria-label="关闭本文目录" hidden><span aria-hidden="true"></span></button></div>
+      <nav id="article-toc-links" aria-label="页内目录">
+      <ol><li><a href="#Variable-Bindings">Variable Bindings</a></li><li><a href="#Function-Bindings">Function Bindings</a></li><li><a href="#Function-Call">Function Call</a></li></ol>
+      </nav>
+    </div>
+    <dialog class="toc-drawer" id="article-toc-drawer" aria-labelledby="article-toc-label"></dialog>
+  </aside>
+      <div class="prose"><p>ML Basics.</p>
+<aside class="post-note" role="note" aria-label="补充说明">
+<p>An ML program is a sequence of <em>bindings</em>.</p>
+</aside>
+<p>绑定 (binding) 与我们熟悉的赋值语句 (assignment statement) 尽管形式相似，却有着本质的不同：最主要的区别在于 bindings 是 <em>immutable</em> 的，而 assignment statement 支持以赋值的形式 mutate 变量的值。</p>
+<ul>
+<li>Each binding gets <em>type-checked</em> and (assume it type-checks) then <em>evaluated</em>.</li>
+<li>What <em>type</em> of a binding has depends on a <em>static environment</em> or <em>context</em>, which is roughly the types of the preceding bindings.</li>
+<li>How a binding is evaluated depends on a <em>dynamic environment</em> or just <em>environment</em>, which is roughly the values of the preceding bindings.</li>
+</ul>
+<p>这也就是说，if <code>x</code> maps to some value <code>v</code> in some environment, it will forever map to <code>v</code> in that environment. There is NO assignment statement that changes <code>x</code> to map to a different value. 尽管你可以在之后引入新的 binding 来 <em>shadows</em> <code>x</code>，但这并不会改变之前的环境中 <code>x</code> 与 <code>v</code> 对应的事实。</p>
+<p>接下来，我们看看 ML 如何处理 variable bindings 与 function bindings。</p>
+<h2 id="Variable-Bindings">Variable Bindings</h2>
+<p>variable binding 的语法 (syntax) 如下：</p>
+<figure class="code-block"><div class="code-tools"><span>sml</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>var x = e;
+</code></pre></figure>
+<p><code>e</code> 是一个表达式 (expression)；注意表达式与值 (value) 之间的区别：A <em>value</em> is an expression that "has no more computation to do". Therefore, all values are expressions, but not all expressions are values.</p>
+<ul>
+<li>We use current static environment to type-check <code>e</code>, and (if it type-checks) add <code>x : t</code> back to the static environment where <code>t</code> is the type of <code>e</code>.</li>
+<li>We use current dynamic environment to evaluate <code>e</code>, and (if it type-checks) add <code>x = v</code> back to the dynamic environment where <code>v</code> is the value of <code>e</code>.</li>
+</ul>
+<h2 id="Function-Bindings">Function Bindings</h2>
+<p>function binding 的语法如下：</p>
+<figure class="code-block"><div class="code-tools"><span>sml</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">fun</span> x0 (x1:t1, ..., xn:tn) = e
+</code></pre></figure>
+<p>Binding <code>x0</code> takes arguments <code>x1, ..., xn</code> of types <code>t1, ..., tn</code> and has an expression <code>e</code> for its body.</p>
+<p><strong>Type-checking:</strong></p>
+<ul>
+<li>Type-check the body <code>e</code> in a static environment that (in addition to all the earlier binding) maps <code>x1</code> to <code>t1</code>, ... <code>xn</code> to <code>tn</code> and <code>x0</code> to <code>t1 * ... * tn -&gt; t</code>. Since <code>x0</code> is in the environment, we can make <em>recursive</em> function calls, i.e., <strong>a function definition can use itself.</strong></li>
+<li>For the function binding to type-check, body <code>e</code> must have the type <code>t</code>, i.e., the result type of <code>x0</code>.</li>
+<li>If the function binding type-checks, <code>x0 : t1 * ... * tn -&gt; t</code> is added to the static environment. Note that the arguments are not added to the top-level static environment.</li>
+</ul>
+<p>Note that <code>t</code> is never wrote down: it is up to the type-checker to figure out what <code>t</code> should be such that using it for the result type of <code>x0</code> makes everything work out. This is called <em>type inference</em>.</p>
+<p>**Evaluation: **</p>
+<p>function bindings 的 evaluation 就比较 trivial 了，这是因为在 ML 中，<em>A function is a value.</em></p>
+<p>我们仅仅需要将 <code>x0</code> 加入 current dynamic environment 即可。As expected for recursion, <code>x0</code> is in the dynamic environment in the function body and for subsequent bindings.</p>
+<h2 id="Function-Call">Function Call</h2>
+<p>function binding 的存在是为了支持 function calls。它的语法如下：</p>
+<figure class="code-block"><div class="code-tools"><span>sml</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>e0 (e1,...,en)
+</code></pre></figure>
+<p><strong>Typing rules:</strong></p>
+<p>若 <code>e0</code> 的类型为 <code>t1 * ... * tn -&gt; t</code> 且 <code>ei</code> 的类型为 <code>ti</code>，则整个函数调用的类型为 <code>t</code>.</p>
+<p><strong>Evaluation rules:</strong></p>
+<p>我们使用<strong>调用处的环境 (environment at the point of the call)</strong> 来 evaluate <code>e0</code> to <code>v0</code>, <code>e1</code> to <code>v1</code>, ..., <code>en</code> to <code>vn</code>. 若 <code>v0</code> 是函数，则函数调用是 type-checked 的。</p>
+<p>接下来，我们使用<strong>定义处的环境 (environment where the function is defined)</strong> extends 函数参数形成的 bindings <code>x1 = v1, ..., xn = vn</code> 来 evaluate 函数体。</p>
+</div></article>
+      <nav class="post-end chapter-pagination" aria-label="读完之后">
+        <a href="/wiki/note-pl/">← 返回专题目录</a>
+        <a href="/wiki/note-pl/preface.html" rel="prev"><span>上一篇</span>序</a>
+        <a class="next-post" href="/wiki/note-pl/first-class-func.html" rel="next"><span>下一篇</span>一等函数 <span aria-hidden="true">→</span></a>
+      </nav>
+    </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
+    <nav class="site-tools" aria-label="联系与语言">
+    <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a>
+    <div class="language-switch" role="group" aria-label="中文简繁切换" translate="no" hidden><button type="button" data-chinese-script="cn" lang="zh-Hans" aria-pressed="true" aria-label="简体中文（原文）">简</button><span aria-hidden="true">/</span><button type="button" data-chinese-script="tw" lang="zh-Hant" aria-pressed="false" aria-label="繁體中文">繁</button></div>
+  </nav><p class="language-status" role="status" translate="no" hidden></p>
+  </footer></div>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <link rel="canonical" href="https://www.thisisxxz.com/wiki/note-llm-systems/kv-cache.html">
+  <meta name="description" content="XXZ 的个人网站。文章、读书、游戏、电影与学习笔记。">
+  <title>缓存与分离 — Lalande.</title>
+  <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f8f8f6'/%3E%3Ctext x='11' y='30' fill='%23525250' font-size='30' font-family='serif'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="/fonts/inter-normal-693b77d4f32e.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-bdb0d67d70c4.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-6e3038eb1109.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-cde11610f994.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-e1c5fea66722.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-f03ed226e910.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/page-4f2409530a2f.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-95a4bceb5f9a.css">
+  <script type="module" src="/language.js"></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  
+  
+  <script src="/toc.js" defer></script>
+  
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="is-reading">
+  <a class="skip-link" href="#contents">跳到正文</a>
+  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/wiki/note-llm-systems/">大语言模型与系统</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">缓存与分离</span></li></ol></nav>
+    <main class="reading" id="contents" tabindex="-1">
+      <article aria-labelledby="post-title"><header class="post-header">
+        <h1 id="post-title">缓存与分离</h1>
+        <time datetime="2026-10-02" aria-label="发布于 2026.10.02">2026.10.02</time>
+      </header>
+      <aside class="article-toc" data-article-toc>
+    <button class="toc-toggle" type="button" aria-label="打开本文目录" aria-expanded="false" aria-haspopup="dialog" aria-controls="article-toc-drawer" hidden><span aria-hidden="true">目录</span></button>
+    <div class="toc-panel">
+      <div class="toc-header"><p class="toc-label" id="article-toc-label">本文目录</p><button class="toc-close" type="button" aria-label="关闭本文目录" hidden><span aria-hidden="true"></span></button></div>
+      <nav id="article-toc-links" aria-label="页内目录">
+      <ol><li><a href="#PagedAttention">PagedAttention</a></li><li><a href="#DistServe">DistServe</a></li><li><a href="#Mooncake">Mooncake</a></li></ol>
+      </nav>
+    </div>
+    <dialog class="toc-drawer" id="article-toc-drawer" aria-labelledby="article-toc-label"></dialog>
+  </aside>
+      <div class="prose"><h2 id="PagedAttention">PagedAttention</h2>
+<p>Woosuk Kwon et al., Efficient Memory Management for Large Language Model Serving with PagedAttention, SOSP 2023.</p>
+<p>vLLM 的核心。PagedAttention 解决的是 KV cache 的存储问题。</p>
+<p>关于 Transformer 的 attention：</p>
+<section class="math-block" tabindex="0" role="region" aria-label="公式，可横向滚动"><eqn><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>Attention</mtext><mo stretchy="false">(</mo><mi>Q</mi><mo separator="true">,</mo><mi>K</mi><mo separator="true">,</mo><mi>V</mi><mo stretchy="false">)</mo><mo>=</mo><mtext>softmax</mtext><mo stretchy="false">(</mo><mfrac><mrow><mi>Q</mi><msup><mi>K</mi><mi>T</mi></msup></mrow><msqrt><mi>d</mi></msqrt></mfrac><mo stretchy="false">)</mo><mi>V</mi></mrow><annotation encoding="application/x-tex">
+\text{Attention}(Q, K, V)=\text{softmax}(\frac{QK^T}{\sqrt{d}})V
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Attention</span></span><span class="mopen">(</span><span class="mord mathnormal">Q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:2.4483em;vertical-align:-0.93em;"></span><span class="mord text"><span class="mord">softmax</span></span><span class="mopen">(</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.5183em;"><span style="top:-2.1778em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9322em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal">d</span></span></span><span style="top:-2.8922em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"></path></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1078em;"><span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">Q</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.93em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">)</span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span></span></span></span></span></eqn></section><p>Decode 阶段每个 token 的 q 都要 attend 之前 tokens 的 k 和 v，所以维护一个持续增长的 KV cache。一个已经部署的模型常常需要处理并发的请求，对于每个请求都要维护一个 KV cache；这样，KV cache 的内存管理效率就成了推理的一个重要瓶颈。</p>
+<p>传统的方法为每个推理请求都预留一段连续的显存。这很容易产生 memory fragmentation。</p>
+<p>等等，这不跟 OS 里面的 memory 管理是一个问题吗？直接把 paging 的思想挪过来，把存储分成 logical block 和 physical block 两个抽象层级。KV cache 在逻辑上连续，物理上可能是不连续的。和 OS 一样，这样做的好处是可以按需分配显存，唯一可能产生的浪费是最后一个未填满的 block，所以有效降低了 internal 和 external fragmentation。</p>
+<p>还有一个很巧妙的设计是 Copy-on-Write（CoW）。在某些情况比如说 beam search 和 parallel sampling 中，LLM 要对一段相同的 prompt 生成四个不同的回答，有了 PagedAttention，我们直接让它们的 block table 指向相同的 logical blocks 就行。当这些请求各自生成不同的 tokens 时，再给各自需要修改的 block 分配独立空间。</p>
+<h2 id="DistServe">DistServe</h2>
+<p>Yinmin Zhong et al., DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving, OSDI 2024.</p>
+<p>Prefill 和 Decode 两个阶段的计算特征明显是不同的。传统 LLM 推理系统把这两个阶段放在同一批 GPU 上，利用 continuous batching 一起调度。这种设计的好处是可以复用模型权重和 KV cache 从而提高整体 throughput，但是 prefill-decode interference 还是会产生很多阻塞和竞争。</p>
+<p>可以看到 Prefill-heavy 的请求 TTFT 会比较长，Decode-heavy 的请求 TPOT 会比较长。如果把两个阶段放在同一张 GPU 上，TTFT 和 TPOT 就处于此消彼长的状态，没法同时优化。解决方法很简单：把 Prefill 和 Decode 放在不同的 GPU 上处理（disaggregation）。完整的处理流程是这样的：</p>
+<ul>
+<li>请求进入 prefill instance，处理 prompt，生成首个 token 和 KV cache</li>
+<li>prefill instance 把 KV cache 传给 decode instance</li>
+<li>decode instance 接着生成后续 tokens 直到请求结束</li>
+</ul>
+<p>DistServe 的成本：prefill 和 decode instance 各自保存模型权重的空间成本，以及 KV cache 的传输成本。DistServe 把 GPU 的分配也建模成一个优化问题（placement），在考虑网络拓扑的情况下把 GPU 分配给 prefill 和 decode，使得 goodput 尽量高。</p>
+<p>DistServe 的好处：消除了 prefill-decode interference，可以分别针对 TTFT 和 TPOT 优化两组 GPU，使资源的分配更灵活。比如说 prefill 通常更 compute-intensive，如果 TTFT 要求严格，可以增加 TP 让多个 GPU 同时执行一个 prefill。而 decode 很依赖 batching，如果 TPOT 要求严格，可以先通过 TP 降低单步延迟，再使用 PP 提高 throughput。这在传统的 colocated serving（prefill 和 decode 在同一批 GPU 上处理）中是难以实现的。</p>
+<h2 id="Mooncake">Mooncake</h2>
+<p>Ruoyu Qin et al., Mooncake: A KVCache-centric Disaggregated Architecture for LLM Serving, FAST 2025</p>
+<p>月之暗面给 Kimi 设计的长上下文推理系统。这篇文章看上去也偏系统一点。</p>
+<p>Prefill 阶段是非常 compute-intensive 的，但由于 LLM 的自回归特征，对 prefix 的复用能够有效减轻 prefill 的计算量。此前的本地 Prefix Caching 方法主要把可复用的 KV cache 存在 GPU 的显存中，但显存相当珍贵，月饼尝试把 KV cache 从 GPU 中独立出来，利用集群中相对空闲的 CPU DRAM，SSD 和高速网络，构建一个分布式 KV cache pool。这样，KV cache 就不再依附于某张特定的 GPU 而成为集群级别的资源。</p>
+<p>月饼是这样处理一个请求的：</p>
+<ul>
+<li>在分布式 KV cache pool 中寻找相同 prefix 的缓存，加载到 prefill GPU instance</li>
+<li>incremental prefill：只计算未命中的 token，生成新的 KV cache</li>
+<li>将新生成的 KV cache 传输到 decode GPU instance（传输过程是 layer-wise 的）</li>
+<li>利用 KV cache 进行 continuous batching，decode 出回答</li>
+</ul>
+<p>在分布式 KV cache pool 之上，有一个全局 cache-aware scheduler，月饼称其为 conductor。一方面，它综合考虑 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mtext>Queue</mtext></msub><mo separator="true">,</mo><msub><mi>T</mi><mtext>Transfer</mtext></msub><mo separator="true">,</mo><msub><mi>T</mi><mtext>Prefill</mtext></msub></mrow><annotation encoding="application/x-tex">T_{\text{Queue}},T_{\text{Transfer}},T_{\text{Prefill}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">Queue</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">Transfer</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">Prefill</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></eq> 与 SLO，把请求分配到合适的 GPU 上；另一方面，它还需要管理 cache 本身，对频繁访问的 KV blocks 进行 hot-spot replication，以缓解热点节点的网络拥塞；还要对不常被访问的 cache 进行 eviction/swapping，腾出存储空间。</p>
+<p>除此之外，还有两个机制。</p>
+<p>首先是 Chunked Pipeline Parallelism（CPP），它把特别长的 prompt 切成多个 chunks，并把 transformer layer 分配到不同节点上，通过 pipeline 处理。实际上是使用 PP 的思想，以减少 SP 中频繁的跨节点 collective communication。</p>
+<p>另一个是 prediction-based early rejection，即在执行 prefill 之前，conductor 会估计后续 decode 阶段是否有足够资源；如果判断负载过高，就拒绝请求，以降低那些注定无法在 SLO 内完成的请求导致的资源浪费。</p>
+<p>月饼这套系统很适用于具有长 prompt，重复 prefix，高并发和较高速节点互联的 serving workloads。prefix cache hit rate 和网络带宽都可能成为系统的瓶颈。</p>
+</div></article>
+      <nav class="post-end chapter-pagination" aria-label="读完之后">
+        <a href="/wiki/note-llm-systems/">← 返回专题目录</a>
+        <a href="/wiki/note-llm-systems/inference.html" rel="prev"><span>上一篇</span>推理与调度</a>
+        <a class="next-post" href="/wiki/note-llm-systems/speculative-decoding.html" rel="next"><span>下一篇</span>推测解码 <span aria-hidden="true">→</span></a>
+      </nav>
+    </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
+    <nav class="site-tools" aria-label="联系与语言">
+    <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a>
+    <div class="language-switch" role="group" aria-label="中文简繁切换" translate="no" hidden><button type="button" data-chinese-script="cn" lang="zh-Hans" aria-pressed="true" aria-label="简体中文（原文）">简</button><span aria-hidden="true">/</span><button type="button" data-chinese-script="tw" lang="zh-Hant" aria-pressed="false" aria-label="繁體中文">繁</button></div>
+  </nav><p class="language-status" role="status" translate="no" hidden></p>
+  </footer></div>
+</body>
+</html>

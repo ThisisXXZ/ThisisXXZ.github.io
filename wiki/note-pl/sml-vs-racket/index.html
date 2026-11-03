@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <link rel="canonical" href="https://www.thisisxxz.com/wiki/note-pl/sml-vs-racket.html">
+  <meta name="description" content="XXZ 的个人网站。文章、读书、游戏、电影与学习笔记。">
+  <title>SML 与 Racket 对比 — Lalande.</title>
+  <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f8f8f6'/%3E%3Ctext x='11' y='30' fill='%23525250' font-size='30' font-family='serif'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="/fonts/inter-normal-693b77d4f32e.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-italic-e564f652916d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-6e3038eb1109.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-9f8bfd999989.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-a590884aeee6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/page-4e43cf3c141b.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-a6f2cf6fbf25.css">
+  <script type="module" src="/language.js"></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="is-reading">
+  <a class="skip-link" href="#contents">跳到正文</a>
+  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/wiki/note-pl/">编程语言</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">SML 与 Racket 对比</span></li></ol></nav>
+    <main class="reading" id="contents" tabindex="-1">
+      <article aria-labelledby="post-title"><header class="post-header">
+        <h1 id="post-title">SML 与 Racket 对比</h1>
+        <time datetime="2023-07-19" aria-label="发布于 2023.07.19">2023.07.19</time>
+      </header>
+      
+      <div class="prose"><p>ML versus Racket.</p>
+<p>General semantics 上的异同：</p>
+<ul>
+<li>similarities:
+<ul>
+<li>have constructs that encourage a functional style.</li>
+<li>avoiding mutations, while allowing it where appropriate.</li>
+<li>using first-class closures.</li>
+<li>...</li>
+</ul>
+</li>
+<li>differences:
+<ul>
+<li>different syntax: ML's pattern matching, Racket's accessor functions for structs.</li>
+<li>Racket's mutiple variants of let-expressions (<code>let</code>, <code>let*</code>, <code>letrec</code>)</li>
+<li>(most important) <em>ML has a static type system that Racket does not!</em></li>
+</ul>
+</li>
+</ul>
+<aside class="post-note" role="note" aria-label="补充说明">
+<p>ML's static type system rejects lots of programs before running them by doing type-checking and reporting errors. To do so, ML enforces certain <em>restrictions</em> (e.g., all elements of a list must have the same type). As a result, ML ensures the absence of certain errors at <em>compile time</em>.</p>
+</aside>
+<p>理解两个语言区别的最好方式是从其中一个语言的角度审视另一个语言。抛开语法的桎梏，我们站在 ML 的视角，研究它的静态类型系统会对 Racket 的程序作何反应。</p>
+<figure class="code-block"><div class="code-tools"><span>scheme</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>(<span class="hljs-name"><span class="hljs-built_in">define</span></span> (<span class="hljs-name">f</span> y) (<span class="hljs-name"><span class="hljs-built_in">+</span></span> y (<span class="hljs-name"><span class="hljs-built_in">car</span></span> y)))
+</code></pre></figure>
+<p>ML 的静态类型系统可以识别到以上程序的类型错误并在编译时报告错误，阻止该程序进入运行阶段。而 Racket 只有该函数被调用时才会弹出 run-time error。</p>
+<figure class="code-block"><div class="code-tools"><span>scheme</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>(<span class="hljs-name"><span class="hljs-built_in">define</span></span> xs (<span class="hljs-name"><span class="hljs-built_in">list</span></span> <span class="hljs-number">1</span> <span class="hljs-literal">#t</span> <span class="hljs-string">"hi"</span>))
+</code></pre></figure>
+<p>然而 ML 也会 reject 一些在 Racket 视角下没有 bug 的程序；如上例，这个程序违反了 ML 的类型规则：list 中的所有元素类型应该保持一致。但这样的 list 定义在 Racket 中完全没有问题。</p>
+<p>从这个角度看，我们能够得出这样的结论：ML is roughly a <em>subset</em> of Racket. Programs that run produce similar answers, but ML rejects many more programs as illegal, i.e., not part of the language.</p>
+<p>那么，一个 ML 程序员又会如何看待 Racket 呢？他可能会认为 Racket is just ML where <em>every expression is part of one big datatype</em>.</p>
+<figure class="code-block"><div class="code-tools"><span>sml</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">datatype</span> theType = <span class="hljs-type">Int</span> <span class="hljs-keyword">of</span> <span class="hljs-built_in">int</span>
+                 | <span class="hljs-type">String</span> <span class="hljs-keyword">of</span> <span class="hljs-built_in">string</span>
+                 | <span class="hljs-type">Pair</span> <span class="hljs-keyword">of</span> theType <span class="hljs-keyword">of</span> theType * theType
+                 | <span class="hljs-type">Fun</span> <span class="hljs-keyword">of</span> theType -&gt; theType
+                 | ... <span class="hljs-comment">(* one constructor per built-in type *)</span>
+</code></pre></figure>
+<p>Racket 中的每个表达，都被某个 constructor 隐式的 (implicitly) 包装入这个 big datatype 中。例如 <code>42</code> 实际上是 <code>(Int 42)</code>；这能够使得每个表达的结果都是 <code>theType</code> 类型。</p>
+<p>并且，函数将检查其参数是否有正确的 constructors (in other words, "tags")，如果不合法，弹出错误；反之将调用函数的结果也隐式的包装在对应的 <code>theType</code> 类内。例如，<code>(+ a b)</code> 将检查 <code>a</code> 与 <code>b</code> 是否有标签 <code>Int</code>；如果有，则返回结果 <code>(Int a+b)</code>。</p>
+<figure class="code-block"><div class="code-tools"><span>sml</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">fun</span> car v = <span class="hljs-keyword">case</span> v <span class="hljs-keyword">of</span> <span class="hljs-type">Pair</span>(a, b) =&gt; a | _ =&gt; <span class="hljs-keyword">raise</span> ... <span class="hljs-comment">(* give some error *)</span>
+<span class="hljs-keyword">fun</span> pair? v = <span class="hljs-keyword">case</span> v <span class="hljs-keyword">of</span> <span class="hljs-type">Pair</span> _ =&gt; <span class="hljs-literal">true</span> | _ =&gt; <span class="hljs-literal">false</span>
+</code></pre></figure>
+<p>这是另外一个例子：我们用 ML 来展示 Racket 中存在的 implicit run-time pattern matching。由于这种 "secret pattern-matching" 是不对程序员暴露的，Racket 提供了类型检查函数例如 <code>pair?</code>。</p>
+<p>The fact that we can think of Racket in terms of <code>theType</code> suggests that anything you can do in Racket can be done, perhaps more awkwardly, in ML: The ML programmer could just program explicitly using something like <code>theType</code> definition above.</p>
+</div></article>
+      <nav class="post-end chapter-pagination" aria-label="读完之后">
+        <a href="/wiki/note-pl/">← 返回专题目录</a>
+        <a href="/wiki/note-pl/interpreter-compiler.html" rel="prev"><span>上一篇</span>解释器与编译器</a>
+        <a class="next-post" href="/wiki/note-pl/static-checking.html" rel="next"><span>下一篇</span>静态检查 <span aria-hidden="true">→</span></a>
+      </nav>
+    </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
+    <nav class="site-tools" aria-label="联系与语言">
+    <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a>
+    <div class="language-switch" role="group" aria-label="中文简繁切换" translate="no" hidden><button type="button" data-chinese-script="cn" lang="zh-Hans" aria-pressed="true" aria-label="简体中文（原文）">简</button><span aria-hidden="true">/</span><button type="button" data-chinese-script="tw" lang="zh-Hant" aria-pressed="false" aria-label="繁體中文">繁</button></div>
+  </nav><p class="language-status" role="status" translate="no" hidden></p>
+  </footer></div>
+</body>
+</html>

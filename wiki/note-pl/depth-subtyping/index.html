@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <link rel="canonical" href="https://www.thisisxxz.com/wiki/note-pl/depth-subtyping.html">
+  <meta name="description" content="XXZ 的个人网站。文章、读书、游戏、电影与学习笔记。">
+  <title>深度子类型 — Lalande.</title>
+  <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f8f8f6'/%3E%3Ctext x='11' y='30' fill='%23525250' font-size='30' font-family='serif'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="/fonts/inter-normal-693b77d4f32e.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-italic-e564f652916d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-6e3038eb1109.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-cde11610f994.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-ca487de2a622.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-fab014d6d149.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/page-6c5e5589b9be.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-065ed8dbaf91.css">
+  <script type="module" src="/language.js"></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="is-reading">
+  <a class="skip-link" href="#contents">跳到正文</a>
+  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/wiki/note-pl/">编程语言</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">深度子类型</span></li></ol></nav>
+    <main class="reading" id="contents" tabindex="-1">
+      <article aria-labelledby="post-title"><header class="post-header">
+        <h1 id="post-title">深度子类型</h1>
+        <time datetime="2023-07-31" aria-label="发布于 2023.07.31">2023.07.31</time>
+      </header>
+      
+      <div class="prose"><p>Depth Subtyping: A Bad Idea With Mutation.</p>
+<p>在使用 subtyping 时，最常见的错误如下：</p>
+<figure class="code-block"><div class="code-tools"><span>sml</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">fun</span> circleY (c:{center:{x:<span class="hljs-built_in">real</span>, y:<span class="hljs-built_in">real</span>}, r:<span class="hljs-built_in">real</span>}) =
+    c.center.y
+
+<span class="hljs-keyword">val</span> sphere:{center:{x:<span class="hljs-built_in">real</span>, y:<span class="hljs-built_in">real</span>, z:<span class="hljs-built_in">real</span>}, r:<span class="hljs-built_in">real</span>} = {center={x=<span class="hljs-number">3.0</span>, y=<span class="hljs-number">4.0</span>, z=<span class="hljs-number">5.0</span>}, r=<span class="hljs-number">1.0</span>}
+<span class="hljs-keyword">val</span> _ = circleY(sphere)
+</code></pre></figure>
+<p><code>circleY</code> 方法返回传入圆的圆心的 y 坐标。自然的，对于一个球 sphere，我们可能会认为其可以作为圆 circle 的子类型传入 <code>circleY</code> 方法，并成功得到球心的 y 坐标。</p>
+<p>实际上，circle 类型与 sphere 类型之间的关系并不遵循 width subtyping 规则：circle 类型的 fields 并不是 sphere 类型的子集，因此该程序将无法 type check。但抛开圆与球类型继承上的逻辑问题，该程序本质上是 false positive 的：它在运行时并不会出现 field missing 的错误。</p>
+<p>为了进一步提升 type system 的 expressiveness，不妨再添加一条 subtyping rule，称为 <em>depth subtyping</em>:</p>
+<ul>
+<li><em>Depth subtyping</em>: If <code>ta &lt;: tb</code>, then <code>{f1:t1,...,f:ta,...,fn:tn} &lt;: {f1:t1,...,f:tb,...,fn:tn}</code>.</li>
+</ul>
+<p>在该规则下，以上的程序就能 type-check 了。</p>
+<p>遗憾的是，depth subtyping 这一规则会破坏我们的 type system；一些 false negative 的程序将通过 type check。这也是程序员常犯的错误之一：认为 depth subtyping 是被允许的。见下例：</p>
+<figure class="code-block"><div class="code-tools"><span>sml</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">fun</span> setToOrigin (c:{center:{x:<span class="hljs-built_in">real</span>, y:<span class="hljs-built_in">real</span>}, r:<span class="hljs-built_in">real</span>}) =
+    c.center = {x=<span class="hljs-number">0.0</span>, y=<span class="hljs-number">0.0</span>}
+
+<span class="hljs-keyword">val</span> sphere:{center:{x:<span class="hljs-built_in">real</span>, y:<span class="hljs-built_in">real</span>, z:<span class="hljs-built_in">real</span>}, r:<span class="hljs-built_in">real</span>} = {center={x=<span class="hljs-number">3.0</span>, y=<span class="hljs-number">4.0</span>, z=<span class="hljs-number">0.0</span>}, r=<span class="hljs-number">1.0</span>}
+<span class="hljs-keyword">val</span> _ = setToOrigin(sphere)
+<span class="hljs-keyword">val</span> _ = sphere.center.z
+</code></pre></figure>
+<p>在允许 depth subtyping 的语言中，该程序能通过 type check。但在运行时，最后一行 <code>sphere.center.z</code> 将出现 field missing 错误；这是由于 <code>setToOrigin</code> 方法 <em>mutate</em> 其参数，使得 <code>center</code> 失去了 <code>z</code> 域。</p>
+<aside class="post-note" role="note" aria-label="补充说明">
+<p>In a language with records (or objects) with <em>getters</em> and <em>setters</em> for fields, depth subtyping is unsound, i.e., you cannot have a different type for a field in the subtype and the supertype.</p>
+</aside>
+<p>对于一个支持 subtyping 的语言，以下三个 features 最多只能同时做到其中两个：</p>
+<ul>
+<li>Fields of objects are settable (i.e., immutable).</li>
+<li>Supporting depth subtyping.</li>
+<li>Having a type system actually prevent field-missing errors.</li>
+</ul>
+</div></article>
+      <nav class="post-end chapter-pagination" aria-label="读完之后">
+        <a href="/wiki/note-pl/">← 返回专题目录</a>
+        <a href="/wiki/note-pl/intro.html" rel="prev"><span>上一篇</span>子类型概述</a>
+        <a class="next-post" href="/wiki/note-pl/array-subtyping.html" rel="next"><span>下一篇</span>数组子类型 <span aria-hidden="true">→</span></a>
+      </nav>
+    </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
+    <nav class="site-tools" aria-label="联系与语言">
+    <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a>
+    <div class="language-switch" role="group" aria-label="中文简繁切换" translate="no" hidden><button type="button" data-chinese-script="cn" lang="zh-Hans" aria-pressed="true" aria-label="简体中文（原文）">简</button><span aria-hidden="true">/</span><button type="button" data-chinese-script="tw" lang="zh-Hant" aria-pressed="false" aria-label="繁體中文">繁</button></div>
+  </nav><p class="language-status" role="status" translate="no" hidden></p>
+  </footer></div>
+</body>
+</html>

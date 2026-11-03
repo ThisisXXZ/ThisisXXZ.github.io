@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <link rel="canonical" href="https://www.thisisxxz.com/wiki/note-pl/type-inference.html">
+  <meta name="description" content="XXZ 的个人网站。文章、读书、游戏、电影与学习笔记。">
+  <title>类型推断 — Lalande.</title>
+  <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f8f8f6'/%3E%3Ctext x='11' y='30' fill='%23525250' font-size='30' font-family='serif'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="/fonts/inter-normal-693b77d4f32e.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-italic-e564f652916d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-bdb0d67d70c4.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-6e3038eb1109.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-cde11610f994.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-cd7f02536a51.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-dd3c2b76268f.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-75c5c7314b17.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/page-f6acd4068984.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-9b8d7531ad15.css">
+  <script type="module" src="/language.js"></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/reading.js" defer></script>
+  
+  
+  <script src="/toc.js" defer></script>
+  
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="is-reading">
+  <a class="skip-link" href="#contents">跳到正文</a>
+  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/wiki/note-pl/">编程语言</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">类型推断</span></li></ol></nav>
+    <main class="reading" id="contents" tabindex="-1">
+      <article aria-labelledby="post-title"><header class="post-header">
+        <h1 id="post-title">类型推断</h1>
+        <time datetime="2023-07-14" aria-label="发布于 2023.07.14">2023.07.14</time>
+      </header>
+      <aside class="article-toc" data-article-toc>
+    <button class="toc-toggle" type="button" aria-label="打开本文目录" aria-expanded="false" aria-haspopup="dialog" aria-controls="article-toc-drawer" hidden><span aria-hidden="true">目录</span></button>
+    <div class="toc-panel">
+      <div class="toc-header"><p class="toc-label" id="article-toc-label">本文目录</p><button class="toc-close" type="button" aria-label="关闭本文目录" hidden><span aria-hidden="true"></span></button></div>
+      <nav id="article-toc-links" aria-label="页内目录">
+      <ol><li><a href="#Undecidability">Undecidability</a></li><li><a href="#Overview-of-ML-Type-Inference">Overview of ML Type Inference</a></li><li><a href="#Reference">Reference</a></li></ol>
+      </nav>
+    </div>
+    <dialog class="toc-drawer" id="article-toc-drawer" aria-labelledby="article-toc-label"></dialog>
+  </aside>
+      <div class="prose"><p>Type Inference.</p>
+<p>type inference 是 ML 一个十分优雅的特性。在我接触过的所有 (极其有限的) 语言中从未见过这个 feature。</p>
+<aside class="post-note" role="note" aria-label="补充说明">
+<p>Statically typed languages. Every binding has a type that is determined at <strong>compile-time</strong>; The type-checker is a compile-time procedure that either accepts or rejects a program.</p>
+</aside>
+<p>Java, C, ML 都是 <em>statically typed languages</em>。与之相对的是 <em>dynamically typed language</em>，例如 Racket, Ruby, Python。动态类型语言在运行时才会确定 bindings 的类型；因此在这些语言中类型错误是一种 run-time error 而非 compile-time error。</p>
+<p>与 Java 和 C 又不同，ML 的类型是隐式 (<em>implicitly typed</em>) 的，即我们几乎不需要声明 binding 的类型。这个 feature 真的非常的厉害，它使得：</p>
+<ul>
+<li>binding 声明的流程大大简化；我们可以完全把类型的问题抛在一边。</li>
+<li>优雅的支持参数多态 (parametric polymorphism)。</li>
+</ul>
+<p>这样做的代价就是，ML 的 type-checker 远比其他显式类型语言的复杂。在程序员不具体声明 binding 类型的前提下，type-checker 需要根据代码与 bindings 之间的关系<strong>推断 (infer)</strong> 出所有可能的 <em>type annotations</em>。如果不存在任何一种解，type-checker 将会<strong>拒绝 (reject)</strong> 该程序。</p>
+<aside class="post-note" role="note" aria-label="补充说明">
+<p><em>Parametric polymorphism</em>, or more commonly <em>generic types</em>, lets functions take argument of any type. In ML, when the inferencer determines a function's argument or result "could be anything", the resulting type uses <em>type variable</em> <code>'a</code>, <code>'b</code>, etc.</p>
+</aside>
+<p>注意，虽然 type inference 与多态联系紧密，但它们终究是两个独立的概念：举例来说，Java 支持泛型 (generics types)，但它是一种显式类型语言，不支持类型推断。</p>
+<h2 id="Undecidability">Undecidability</h2>
+<blockquote class="post-quote">
+<p>When we say type inference may be <em>impossible</em>, we mean this is the technical sense of undecidability, like the famous <em>halting problem</em>.</p>
+</blockquote>
+<p>对于某些 type system，不存在一个有效的 type inference 能够同时满足以下三个条件：</p>
+<ul>
+<li>the inference process <em>always terminates</em>.</li>
+<li>the inference process always succeeds if inference is possible.</li>
+<li>the inference process always fails if inference is not possible.</li>
+</ul>
+<p>关于这一部分的详细内容将会在 P2 中介绍；由于 type inference 系统是 static checker 的一部分，这牵涉到 static checker 的正确性 (correctness) 问题。</p>
+<p>幸运的是，ML 的 type inference 算法设计得非常简洁与优美；虽然存在 non-trivial 的程序能够使得 inference 效率变得非常低，但在现实应用背景下这种情况几乎不可能发生。</p>
+<h2 id="Overview-of-ML-Type-Inference">Overview of ML Type Inference</h2>
+<p>ML 的 type inference 大致遵循以下规则：</p>
+<ul>
+<li>It determines the types of bindings <em>in order</em>, using the types of earlier binding to infer the types of later ones. This is why you cannot use later bindings in a file. (When you need to, use <em>mutual recursion</em> and type inference determines the types of all mutually recursive bindings together)</li>
+<li>For each <code>val</code> and <code>fun</code> binding, it analyzes the binding to determine necessary facts about its type. We gather facts for function calls, pattern-matches, etc.</li>
+<li>Afterward, use <em>type variable</em> (e.g., <code>'a</code>) for any unconstrained types in function arguments or results.</li>
+<li>Enforce the <em>value restriction</em> such that only variables and values can have polymorphic types.</li>
+</ul>
+<p>ML type inference 的这种 "going in order" 的优美设计使得其不会 reject 任何一个能够 type-check 的程序，同时也不会 accept 一个不能 type-check 的程序。因此，explicit type annotations really are optional.</p>
+<figure class="code-block"><div class="code-tools"><span>sml</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">fun</span> length xs =
+    <span class="hljs-keyword">case</span> xs <span class="hljs-keyword">of</span>
+        <span class="hljs-literal">[]</span> =&gt; <span class="hljs-number">0</span>
+      | x::xs' =&gt; <span class="hljs-number">1</span> + (length xs')
+</code></pre></figure>
+<p>我们来看这个例子：type inferencer 开始按照顺序进行类型推断。</p>
+<ul>
+<li><code>length</code> has type <code>T1-&gt;T2</code>.</li>
+<li><code>xs</code> has type <code>T1</code>. (参数)</li>
+<li><code>T1=T3 list</code>. (根据 <code>case...of</code> 的 pattern matching 得出)</li>
+<li><code>T2=int</code>. (函数返回值可以为 0)</li>
+<li><code>x</code> has type <code>T3</code> and <code>xs'</code> has type <code>T3 list</code>.</li>
+</ul>
+<p>至此，我们已经获得了所有变量的类型。最后 type inferencer 对于所有的 unconstrained types 统一的分配 <em>type variables</em>：<code>T3='a</code>, <code>T1=T3 list='a list</code>. 对于函数 <code>length</code> 的类型推断完成：<code>length: 'a list-&gt;int</code>.</p>
+<p>type variable <code>'a</code> indicates itself as a polymorphic datatype (or generic type). 因此，函数 <code>length</code> 体现了 parametric polymorphism：它的参数类型是一个多态类型。</p>
+<p>更多的例子，以及关于 <code>value restriction</code> 的相关介绍见课程提供的 <code>section3sum.pdf</code>。在之后，它还介绍了在 ML 中使用 signature 实现抽象的方式。但是这一部分内容并不是 functional programming 的核心 feature，在此按下不表。</p>
+<h2 id="Reference">Reference</h2>
+<p>Course info:</p>
+<p><a href="https://www.coursera.org/learn/programming-languages/">Programming Languages, Part A, University of Washington</a>, Lecturer: Professor Dan Grossman.</p>
+</div></article>
+      <nav class="post-end chapter-pagination" aria-label="读完之后">
+        <a href="/wiki/note-pl/">← 返回专题目录</a>
+        <a href="/wiki/note-pl/envs-and-closures.html" rel="prev"><span>上一篇</span>环境与闭包</a>
+        <a class="next-post" href="/wiki/note-pl/syntax.html" rel="next"><span>下一篇</span>Racket 语法 <span aria-hidden="true">→</span></a>
+      </nav>
+    </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
+    <nav class="site-tools" aria-label="联系与语言">
+    <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a>
+    <div class="language-switch" role="group" aria-label="中文简繁切换" translate="no" hidden><button type="button" data-chinese-script="cn" lang="zh-Hans" aria-pressed="true" aria-label="简体中文（原文）">简</button><span aria-hidden="true">/</span><button type="button" data-chinese-script="tw" lang="zh-Hant" aria-pressed="false" aria-label="繁體中文">繁</button></div>
+  </nav><p class="language-status" role="status" translate="no" hidden></p>
+  </footer></div>
+</body>
+</html>
