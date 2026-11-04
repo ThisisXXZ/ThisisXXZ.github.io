@@ -69,6 +69,11 @@ sub {
   font-family: var(--font-emphasis);
   font-weight: 500;
 }
+/* LXGW has upright faces only; allow slanting for explicit italics, never fake bold. */
+em,
+i {
+  font-synthesis: style;
+}
 ::selection {
   background: #e2e3dd;
   color: var(--strong);
@@ -3574,6 +3579,10 @@ a.post-link-card {
 
 /* comments.css */
 .comments {
+  /* Dynamic headings and emphasis need the comment font family too, not page subsets. */
+  --font-body: 'InterVariable', 'LXGW Comments', 'LXGW WenKai', 'Microsoft YaHei', sans-serif;
+  --font-emphasis: var(--font-body);
+  font-family: var(--font-body);
   margin-top: 3.5rem;
   padding-top: 2rem;
   border-top: 1px solid var(--line);
@@ -3599,9 +3608,6 @@ a.post-link-card {
   --waline-info-color: var(--muted);
   --waline-border: 1px solid var(--line);
   --waline-box-shadow: none;
-}
-.comments-mount {
-  font-family: 'InterVariable', 'LXGW Comments', 'LXGW WenKai', 'Microsoft YaHei', sans-serif;
 }
 .comments :is(input, textarea, button) {
   font-family: inherit;
@@ -3753,7 +3759,7 @@ a.post-link-card {
   padding: 0.35em 1em;
   font-size: 13px;
 }
-.comments :is(.wl-nick, .wl-count, .wl-content strong, .wl-content b) {
+.comments :is(h1, h2, h3, h4, h5, h6, .wl-nick, .wl-count, .wl-content strong, .wl-content b) {
   font-weight: 500;
 }
 .comments .wl-content {
