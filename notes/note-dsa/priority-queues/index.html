@@ -5,59 +5,402 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <link rel="canonical" href="https://www.thisisxxz.com/notes/note-dsa/priority-queues/">
-  <meta name="description" content="优先队列 · 数据结构与算法 — Lalande.">
+  <meta name="description" content="堆是一个很重要的数据结构；它是绝大多数优先队列 (priority queue) 的内部实现；其诞生也使得 的 in-place 排序算法成为可能。(堆排序) 但是堆排序仍然无法在日常应用中代替快速排序；它常常需要访问相距较远的地址取值，使得其底层的效率较为低下。 A binary tree is composed by recursively following the principles:…">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="优先队列">
+  <meta property="og:title" content="堆与优先队列">
   <meta property="og:url" content="https://www.thisisxxz.com/notes/note-dsa/priority-queues/">
   <meta property="og:site_name" content="Lalande.">
-  <meta property="og:description" content="优先队列 · 数据结构与算法 — Lalande.">
+  <meta property="og:description" content="堆是一个很重要的数据结构；它是绝大多数优先队列 (priority queue) 的内部实现；其诞生也使得 的 in-place 排序算法成为可能。(堆排序) 但是堆排序仍然无法在日常应用中代替快速排序；它常常需要访问相距较远的地址取值，使得其底层的效率较为低下。 A binary tree is composed by recursively following the principles:…">
   <meta property="og:locale" content="zh_CN">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="优先队列">
-  <meta name="twitter:description" content="优先队列 · 数据结构与算法 — Lalande.">
-  <meta property="article:published_time" content="2025-09-07">
-  <meta property="article:modified_time" content="2025-09-07">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="堆与优先队列">
+  <meta name="twitter:description" content="堆是一个很重要的数据结构；它是绝大多数优先队列 (priority queue) 的内部实现；其诞生也使得 的 in-place 排序算法成为可能。(堆排序) 但是堆排序仍然无法在日常应用中代替快速排序；它常常需要访问相距较远的地址取值，使得其底层的效率较为低下。 A binary tree is composed by recursively following the principles:…">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-2-binarytree-e8e8e988d4d1.webp">
+  <meta property="og:image:alt" content="Note that the bottom level is NOT balanced">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-2-binarytree-e8e8e988d4d1.webp">
+  <meta name="twitter:image:alt" content="Note that the bottom level is NOT balanced">
+  <meta property="article:published_time" content="2023-06-18">
+  <meta property="article:modified_time" content="2026-11-05">
   <meta property="article:author" content="XXZ">
-  <title>优先队列 — Lalande.</title>
+  <title>堆与优先队列 — Lalande.</title>
   <link rel="alternate" type="application/rss+xml" title="Lalande" href="/feed.xml">
   <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f8f8f6'/%3E%3Ctext x='11' y='30' fill='%23525250' font-size='30' font-family='serif'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/jack-frost-16-fda80e58c167.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/jack-frost-32-39b58fec28d1.png">
   <link rel="preload" href="/fonts/source-serif-4-normal-940a76eda138.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-bdb0d67d70c4.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/fonts/lxgw-500-dc5013941140.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/fonts/page-2bfe38d8a6b3.css">
-  <meta name="traditional-fonts" content="/fonts/traditional-af07e5881c10.css">
+  <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-6e3038eb1109.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-cde11610f994.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-85dadc8c673e.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-6d37d0b13920.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/page-52069c17ad55.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-b6960ff2c353.css">
   <script type="module" src="/language.js"></script>
-  <script src="/search-shortcut-edd07b9fabdb.js" defer></script>
+  <script src="/search-shortcut-37dd56f27c33.js" defer></script>
   <script defer src="https://cloud.umami.is/script.js" data-website-id="45d476b5-0328-4eab-85f4-8651edd42b2f" data-domains="www.thisisxxz.com,thisisxxz.com" data-exclude-search="true" data-exclude-hash="true"></script>
   <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs-b3b62b13fba0.js" defer></script><script src="/reading-89b733c46043.js" defer></script>
   
   
-  
-  
-  
-  <link rel="stylesheet" href="/styles-fbbd4236e1e1.css">
+  <link rel="stylesheet" href="/vendor/waline/3.16.2/waline.css"><link rel="stylesheet" href="/fonts/comments-572c059eea12.css"><script type="module" src="/comments-0d49716e2a68.js"></script>
+  <script src="/toc.js" defer></script>
+  <script src="/media.js" defer></script>
+  <link rel="stylesheet" href="/styles-15e0139b1e1f.css">
 </head>
 <body class="is-reading">
   <a class="skip-link" href="#contents">跳到正文</a>
-  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/note-dsa/">数据结构与算法</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">优先队列</span></li></ol></nav>
-    <main class="reading" id="contents" tabindex="-1">
+  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/note-dsa/">数据结构与算法</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">堆与优先队列</span></li></ol></nav>
+    <main class="reading has-license" id="contents" tabindex="-1">
       <article aria-labelledby="post-title"><header class="post-header">
-        <h1 id="post-title">优先队列</h1>
-        <time datetime="2025-09-07" aria-label="发布于 2025.09.07">2025.09.07</time>
+        <h1 id="post-title">堆与优先队列</h1>
+        <time datetime="2023-06-18" aria-label="发布于 2023.06.18">2023.06.18</time>
       </header>
-      
-      <div class="prose"><p class="empty-note">这篇笔记还没有正文。</p></div></article>
+      <aside class="article-toc" data-article-toc>
+    <button class="toc-toggle" type="button" aria-label="打开本文目录" aria-expanded="false" aria-haspopup="dialog" aria-controls="article-toc-drawer" hidden><span aria-hidden="true">目录</span></button>
+    <div class="toc-panel">
+      <div class="toc-header"><p class="toc-label" id="article-toc-label">本文目录</p><button class="toc-close" type="button" aria-label="关闭本文目录" hidden><span aria-hidden="true"></span></button></div>
+      <nav id="article-toc-links" aria-label="页内目录">
+      <ol><li><a href="#Binary-Heap">Binary Heap</a><ol><li><a href="#Complete-Binary-Tree">Complete Binary Tree</a></li><li><a href="#Heap-Properties">Heap Properties</a></li><li><a href="#Promotion-and-Insertion">Promotion and Insertion</a></li><li><a href="#Demotion-and-Deletion">Demotion and Deletion</a></li><li><a href="#Construction">Construction</a></li></ol></li><li><a href="#Heap-Sort">Heap Sort</a></li><li><a href="#Priority-Queues">Priority Queues</a></li></ol>
+      </nav>
+    </div>
+    <dialog class="toc-drawer" id="article-toc-drawer" aria-labelledby="article-toc-label"></dialog>
+  </aside>
+      <div class="prose"><h2 id="Binary-Heap">Binary Heap</h2>
+<p>堆是一个很重要的数据结构；它是绝大多数优先队列 (priority queue) 的内部实现；其诞生也使得 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∼</mo><mi>N</mi><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\sim N\log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq> 的 in-place 排序算法成为可能。(堆排序) 但是堆排序仍然无法在日常应用中代替快速排序；它常常需要访问相距较远的地址取值，使得其底层的效率较为低下。</p>
+<h3 id="Complete-Binary-Tree">Complete Binary Tree</h3>
+<p>A binary tree is composed by recursively following the principles:</p>
+<ul>
+<li>It is empty.</li>
+<li>It is a node with links to left <u><strong>and</strong></u> right binary trees.</li>
+</ul>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Complete tree. Perfectly balanced, except for <strong>bottom level</strong>.</p>
+</div></div>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-2-binarytree-e8e8e988d4d1.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-2-binarytree-e8e8e988d4d1.webp" alt="Note that the bottom level is NOT balanced" loading="lazy" decoding="async"></a></p>
+<p>An important property. Height of the complete binary tree with <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq> nodes is <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">⌊</mo><mi>lg</mi><mo>⁡</mo><mi>N</mi><mo stretchy="false">⌋</mo></mrow><annotation encoding="application/x-tex">\lfloor \lg{N} \rfloor</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">⌊</span><span class="mop">l<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span><span class="mclose">⌋</span></span></span></span></eq>.</p>
+<h3 id="Heap-Properties">Heap Properties</h3>
+<p>A binary heap is a complete binary tree with the following properties:</p>
+<ul>
+<li>Largest key is <code>a[1]</code>, which is the <strong>root</strong> of binary tree.</li>
+<li>Parent's key <strong>NO</strong> smaller than children's keys.</li>
+</ul>
+<p>We often use arrays to represent a heap, it is simple and do not require explicit links.</p>
+<ul>
+<li>Indices start at <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></eq>.</li>
+<li>Take nodes in <strong>level</strong> order.</li>
+<li>Can use array indices to move through tree.
+<ul>
+<li>Parent of node at <code>k</code> is <code>k/2</code>.</li>
+<li>Children of node at <code>k</code> are at <code>2k</code> and <code>2k+1</code>.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Promotion-and-Insertion">Promotion and Insertion</h3>
+<p><strong>Promotion</strong> is needed when child's key <strong>becomes larger</strong> key than its parent's key.</p>
+<blockquote class="post-quote">
+<p>Promotion follows <strong>Peter Principle</strong>: Node promoted to level of incompetence.</p>
+</blockquote>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">private</span> <span class="hljs-type">void</span> <span class="hljs-title function_">swim</span><span class="hljs-params">(<span class="hljs-type">int</span> k)</span> {
+    <span class="hljs-keyword">while</span> (k &gt; <span class="hljs-number">1</span> &amp;&amp; less(k / <span class="hljs-number">2</span>, k)) {
+        exch(k, k / <span class="hljs-number">2</span>);
+        k /= <span class="hljs-number">2</span>;
+    }
+}
+</code></pre></figure>
+<p>This allows us to insert new nodes into a heap; We just add the node <strong>at end</strong>, then swim it up. It will cost at most <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>+</mo><mi>lg</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">1+\lg{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop">l<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq> compares.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-type">void</span> <span class="hljs-title function_">insert</span><span class="hljs-params">(Key x)</span> {
+    pq[++N] = x;
+    swim(N);
+}
+</code></pre></figure>
+<h3 id="Demotion-and-Deletion">Demotion and Deletion</h3>
+<p><strong>Demotion</strong> is needed when parent's key <strong>becomes smaller</strong> than one (or both) of its children's.</p>
+<blockquote class="post-quote">
+<p>Demotion shows <strong>power struggle</strong>: Better subordinate gets promoted.</p>
+</blockquote>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">private</span> <span class="hljs-type">void</span> <span class="hljs-title function_">sink</span><span class="hljs-params">(<span class="hljs-type">int</span> k)</span> {	<span class="hljs-comment">// top-down reheapify</span>
+    <span class="hljs-keyword">while</span> (<span class="hljs-number">2</span> * k &lt;= N) {
+        <span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">2</span> * k;
+        <span class="hljs-keyword">if</span> (j &lt; N &amp;&amp; less(j, j + <span class="hljs-number">1</span>))	++j;
+        <span class="hljs-keyword">if</span> (!less(k, j))	<span class="hljs-keyword">break</span>;
+        exch(k, j);
+        k = j;
+    }
+}
+</code></pre></figure>
+<p>This allows us to delete the root (maximum) in a heap; We exchange root with the node <strong>at end</strong>, then sink it down. It will cost at most <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>lg</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">2\lg N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">l<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq> compares.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-type">Key</span> <span class="hljs-title function_">delMax</span><span class="hljs-params">()</span> {
+    <span class="hljs-type">Key</span> <span class="hljs-variable">max</span> <span class="hljs-operator">=</span> pq[<span class="hljs-number">1</span>];
+    exch(<span class="hljs-number">1</span>, N--);
+    sink(<span class="hljs-number">1</span>);
+    pq[N + <span class="hljs-number">1</span>] = <span class="hljs-literal">null</span>;	<span class="hljs-comment">// prevent loitering</span>
+    <span class="hljs-keyword">return</span> max;
+}
+</code></pre></figure>
+<h3 id="Construction">Construction</h3>
+<p>A trivial way to build a heap given <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq> keys is to <strong>insert them one by one</strong> into an empty heap. However, this will cost <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∼</mo><mi>N</mi><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\sim N\log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq> compares and exchanges.</p>
+<p>In fact, there is a bottom-up linear-time method to construct a heap out of <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq> keys.</p>
+<p>For a node with links to left <strong>subheap</strong> and right <strong>subheap</strong>, we <u><strong>heapify</strong></u> the node by sinking it down. Therefore, from the <strong>last second</strong> level, we heapify the nodes level by level.</p>
+<p>The reason why we start from the last second level is that <strong>every single node is a subheap of size <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></eq>.</strong></p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-comment">// Note that it is a 1-based indexing</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">k</span> <span class="hljs-operator">=</span> N/<span class="hljs-number">2</span>; k &gt;= <span class="hljs-number">1</span>; --k) 
+    sink(a, k, N);
+<span class="hljs-comment">// Reverse traverse: We could heapify a node only if its two sons are both heaps</span>
+</code></pre></figure>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Proposition. <strong>Bottom-up</strong> heap construction uses (linear) <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≤</mo><mn>2</mn><mi>N</mi></mrow><annotation encoding="application/x-tex">\leq 2N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord">2</span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq> compares and exchanges.</p>
+</div></div>
+<p>Assume <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></eq> is the total number of compares and exchanges. Note that the number of compares and exchanges when heapifying (sinking down) a node is <strong>proportional to the its height</strong> <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi></mrow><annotation encoding="application/x-tex">h</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">h</span></span></span></span></eq>.</p>
+<p><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo>=</mo><msup><mn>2</mn><mn>0</mn></msup><mi>h</mi><mo>+</mo><msup><mn>2</mn><mn>1</mn></msup><mo stretchy="false">(</mo><mi>h</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo>+</mo><msup><mn>2</mn><mn>2</mn></msup><mo stretchy="false">(</mo><mi>h</mi><mo>−</mo><mn>2</mn><mo stretchy="false">)</mo><mo>+</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo>+</mo><msup><mn>2</mn><mi>k</mi></msup><mo stretchy="false">(</mo><mi>h</mi><mo>−</mo><mi>k</mi><mo stretchy="false">)</mo><mo>+</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo>+</mo><msup><mn>2</mn><mrow><mi>h</mi><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><msup><mn>2</mn><mrow><mi>h</mi><mo>+</mo><mn>1</mn></mrow></msup><mo>−</mo><mi>h</mi><mo>−</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">S=2^0h+2^1(h-1)+2^2(h-2)+...+2^k(h-k)+...+2^{h-1}=2^{h+1}-h-2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8974em;vertical-align:-0.0833em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord">...</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.0991em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord">...</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8491em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">h</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.9324em;vertical-align:-0.0833em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">h</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span></eq>. The height of heap is <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo>=</mo><mi>log</mi><mo>⁡</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">h=\log{n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">n</span></span></span></span></span></eq>, thus <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo>=</mo><mo>∼</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">S=\sim N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq>.</p>
+<h2 id="Heap-Sort">Heap Sort</h2>
+<p>The basic plan for in-place heap sort.</p>
+<ul>
+<li>Construct a max-heap with all <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq> keys. (<strong>linear-time</strong> bottom-up heap construction)</li>
+<li>Repeatedly remove the maximum key. (<strong>linearithmic-time</strong> sorting down process)</li>
+</ul>
+<p>See the complete Java code below:</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Heap</span> {
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">sort</span><span class="hljs-params">(Comparable[] a)</span> {
+        <span class="hljs-type">int</span> <span class="hljs-variable">N</span> <span class="hljs-operator">=</span> a.length;
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">k</span> <span class="hljs-operator">=</span> N/<span class="hljs-number">2</span>; k &gt;= <span class="hljs-number">1</span>; --k)	<span class="hljs-comment">// construction</span>
+            sink(a, k, N);
+        <span class="hljs-keyword">while</span> (N &gt; <span class="hljs-number">1</span>) {		 <span class="hljs-comment">// sorting down</span>
+            exch(a, <span class="hljs-number">1</span>, N);
+            sink(a, <span class="hljs-number">1</span>, --N);	<span class="hljs-comment">// Leave in array instead of nulling out</span>
+        }
+    }
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">sink</span><span class="hljs-params">(Comparable[] a, <span class="hljs-type">int</span> k, <span class="hljs-type">int</span> N)</span> { <span class="hljs-comment">/* as before */</span> }
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">less</span><span class="hljs-params">(Comparable[] a, <span class="hljs-type">int</span> i, <span class="hljs-type">int</span> j)</span> { <span class="hljs-comment">/* as before */</span> }
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">exch</span><span class="hljs-params">(Comparable[] a, <span class="hljs-type">int</span> i, <span class="hljs-type">int</span> j)</span> { <span class="hljs-comment">/* as before */</span> }
+}
+</code></pre></figure>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Proposition. Heapsort uses (linearithmic) <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≤</mo><mn>2</mn><mi>N</mi><mi>lg</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\leq 2N\lg{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">l<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq> compares and exchanges.</p>
+</div></div>
+<p>The significance of heap sort. <strong>In-place</strong> sorting algorithm with <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">N\log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq> worst-case.</p>
+<ul>
+<li>Mergesort: no, linear extra <strong>space</strong>. (in-place merge possible with high constants, not pratical)</li>
+<li>Quicksort: no, quadratic <strong>time</strong> in worst case.</li>
+<li>Heapsort: yes! <strong>Optimal</strong> in both time and space.</li>
+</ul>
+<p>However, there is still an unpratical bottom line for heap sort.</p>
+<ul>
+<li>Inner loop longer than quicksort's.</li>
+<li>Makes poor use of cache memory.</li>
+<li><strong>Not stable</strong>.</li>
+</ul>
+<h2 id="Priority-Queues">Priority Queues</h2>
+<p>We've introduced several <strong>collections</strong>. They all support insert and delete items. What differs them is the item to <strong>delete</strong>:</p>
+<ul>
+<li>Stack. Remove the item most recently added.</li>
+<li>Queue. Remove the item least recently added.</li>
+<li>Double-ended queue. Remove the item most or least recently added.</li>
+<li><strong>Priority queue</strong>. Remove the <strong>largest</strong> (or <strong>smallest</strong>) item.</li>
+</ul>
+<p>There are two kinds of PQs: <strong>elementary PQs</strong> (implemented with linked lists or resizing arrays) and <strong>heap-based PQs</strong>. See the order of growth of running time for PQs with <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq> items:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="表格，可横向滚动"><table>
+<thead>
+<tr>
+<th style="text-align:center">implementation</th>
+<th style="text-align:center">insert</th>
+<th style="text-align:center">del max</th>
+<th style="text-align:center">max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">(elementary) unordered array</td>
+<td style="text-align:center"><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></eq></td>
+<td style="text-align:center"><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq></td>
+<td style="text-align:center"><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq></td>
+</tr>
+<tr>
+<td style="text-align:center">(elementary) ordered array</td>
+<td style="text-align:center"><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq></td>
+<td style="text-align:center"><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></eq></td>
+<td style="text-align:center"><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></eq></td>
+</tr>
+<tr>
+<td style="text-align:center">binary heap</td>
+<td style="text-align:center"><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq></td>
+<td style="text-align:center"><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq></td>
+<td style="text-align:center"><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq></td>
+</tr>
+</tbody>
+</table></div>
+<p>It's natural and efficient to implement PQs with heap. See the complete Java code below:</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MaxPQ</span>&lt;Key&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Iterable</span>&lt;Key&gt; {
+    <span class="hljs-keyword">private</span> Key[] pq;
+    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> n;
+    <span class="hljs-keyword">private</span> Comparator&lt;Key&gt; comparator;
+    
+    <span class="hljs-comment">/*
+    	Constructors
+    */</span>
+    <span class="hljs-type">public</span> <span class="hljs-title function_">MaxPQ</span><span class="hljs-params">(<span class="hljs-type">int</span> initCapacity)</span> {
+        pq = (Key[]) <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>[initCapacity + <span class="hljs-number">1</span>];
+        n = <span class="hljs-number">0</span>;
+    }  
+    <span class="hljs-type">public</span> <span class="hljs-title function_">MaxPQ</span><span class="hljs-params">()</span> { <span class="hljs-built_in">this</span>(<span class="hljs-number">1</span>); }
+    
+    <span class="hljs-type">public</span> <span class="hljs-title function_">MaxPQ</span><span class="hljs-params">(<span class="hljs-type">int</span> initCapacity, Comparator&lt;Key&gt; comparator)</span> {
+        <span class="hljs-built_in">this</span>.comparator = comparator;
+        pq = (Key[]) <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>[initCapacity + <span class="hljs-number">1</span>];
+        n = <span class="hljs-number">0</span>;
+    }
+    <span class="hljs-type">public</span> <span class="hljs-title function_">MaxPQ</span><span class="hljs-params">(Comparator&lt;Key&gt; comparator)</span> { <span class="hljs-built_in">this</span>(<span class="hljs-number">1</span>, comparator); }
+    
+    <span class="hljs-comment">// Construct the heap using O(N) bottom-up method</span>
+    <span class="hljs-type">public</span> <span class="hljs-title function_">MaxPQ</span><span class="hljs-params">(Key[] keys)</span> {
+        n = keys.length;
+        pq = (Key[]) <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>[keys.length + <span class="hljs-number">1</span>];
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; ++i)	pq[i + <span class="hljs-number">1</span>] = keys[i];
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">k</span> <span class="hljs-operator">=</span> n/<span class="hljs-number">2</span>; k &gt;= <span class="hljs-number">1</span>; --k)	sink(k);
+        <span class="hljs-keyword">assert</span> isMaxHeap();
+    }
+    
+    <span class="hljs-comment">/*
+    	Priority Queue API (except resize)
+    */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isEmpty</span><span class="hljs-params">()</span> { <span class="hljs-keyword">return</span> n == <span class="hljs-number">0</span>; }
+    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">size</span><span class="hljs-params">()</span> { <span class="hljs-keyword">return</span> n; }
+    <span class="hljs-keyword">public</span> <span class="hljs-type">Key</span> <span class="hljs-title function_">max</span><span class="hljs-params">()</span> {
+        <span class="hljs-keyword">if</span> (isEmpty())	<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NoSuchElementException</span>(<span class="hljs-string">"Priority Queue Underflow"</span>);
+        <span class="hljs-keyword">return</span> pq[<span class="hljs-number">1</span>];
+    }
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-type">void</span> <span class="hljs-title function_">resize</span><span class="hljs-params">(<span class="hljs-type">int</span> capacity)</span> {	<span class="hljs-comment">// resizing heap</span>
+        <span class="hljs-keyword">assert</span> capacity &gt; n;
+        <span class="hljs-type">Key</span>[] <span class="hljs-variable">temp</span> <span class="hljs-operator">=</span> (Key[]) <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>[capacity];
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt;= n; ++i)	temp[i] = pq[i];
+        pq = temp;
+    }
+    
+    <span class="hljs-keyword">public</span> <span class="hljs-type">void</span> <span class="hljs-title function_">insert</span><span class="hljs-params">(Key x)</span> {
+        <span class="hljs-keyword">if</span> (n == pq.length - <span class="hljs-number">1</span>)	resize(<span class="hljs-number">2</span> * pq.length);
+        pq[++n] = x;
+        swim(n);
+        <span class="hljs-keyword">assert</span> isMaxHeap();
+    }
+    
+    <span class="hljs-keyword">public</span> <span class="hljs-type">Key</span> <span class="hljs-title function_">delMax</span><span class="hljs-params">()</span> {
+        <span class="hljs-keyword">if</span> (isEmpty())	<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NoSuchElementException</span>(<span class="hljs-string">"Priority Queue Underflow"</span>);
+        <span class="hljs-type">Key</span> <span class="hljs-variable">max</span> <span class="hljs-operator">=</span> pq[<span class="hljs-number">1</span>];
+        exch(<span class="hljs-number">1</span>, n--);
+        sink(<span class="hljs-number">1</span>);
+        pq[n + <span class="hljs-number">1</span>] = <span class="hljs-literal">null</span>;
+        <span class="hljs-keyword">if</span> ((n &gt; <span class="hljs-number">0</span>) &amp;&amp; (n == (pq.length - <span class="hljs-number">1</span>) / <span class="hljs-number">4</span>))	resize(pq.length / <span class="hljs-number">2</span>);
+        <span class="hljs-keyword">assert</span> isMaxHeap();
+        <span class="hljs-keyword">return</span> max;
+    }
+    
+    <span class="hljs-comment">/*
+    	Helper functions to restore the heap invariant
+    */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-type">void</span> <span class="hljs-title function_">swim</span><span class="hljs-params">(<span class="hljs-type">int</span> k)</span> {
+        <span class="hljs-keyword">while</span> (k &gt; <span class="hljs-number">1</span> &amp;&amp; less(k/<span class="hljs-number">2</span>, k)) {
+            exch(k/<span class="hljs-number">2</span>, k);
+            k /= <span class="hljs-number">2</span>;
+        }
+    }
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-type">void</span> <span class="hljs-title function_">sink</span><span class="hljs-params">(<span class="hljs-type">int</span> k)</span> {
+        <span class="hljs-keyword">while</span> (<span class="hljs-number">2</span>*k &lt;= n) {
+            <span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">2</span>*k;
+            <span class="hljs-keyword">if</span> (j &lt; n &amp;&amp; less(j, j+<span class="hljs-number">1</span>))	++j;
+            <span class="hljs-keyword">if</span> (!less(k, j))	<span class="hljs-keyword">break</span>;
+            exch(k, j);
+            k = j;
+        }
+    }
+    
+    <span class="hljs-comment">/*
+    	Helper functions for compares and swaps.
+    */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">less</span><span class="hljs-params">(<span class="hljs-type">int</span> i, <span class="hljs-type">int</span> j)</span> {
+        <span class="hljs-keyword">if</span> (comparator == <span class="hljs-literal">null</span>) {
+            <span class="hljs-keyword">return</span> ((Comparable&lt;Key&gt;) pq[i]).compareTo(pq[j]) &lt; <span class="hljs-number">0</span>;
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">return</span> comparator.compare(pq[i], pq[j]) &lt; <span class="hljs-number">0</span>;
+        }
+    }
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-type">void</span> <span class="hljs-title function_">exch</span><span class="hljs-params">(<span class="hljs-type">int</span> i, <span class="hljs-type">int</span> j)</span> {
+        <span class="hljs-type">Key</span> <span class="hljs-variable">swap</span> <span class="hljs-operator">=</span> pq[i]; pq[i] = pq[j]; pq[j] = swap;
+    }
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isMaxHeap</span><span class="hljs-params">()</span> {
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+            <span class="hljs-keyword">if</span> (pq[i] == <span class="hljs-literal">null</span>)	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        }
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> n+<span class="hljs-number">1</span>; i &lt; pq.length; ++i) {
+            <span class="hljs-keyword">if</span> (pq[i] != <span class="hljs-literal">null</span>)	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        }
+        <span class="hljs-keyword">if</span> (pq[<span class="hljs-number">0</span>] != <span class="hljs-literal">null</span>)	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">return</span> isMaxHeapOrdered(<span class="hljs-number">1</span>);
+    }
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isMaxHeapOrdered</span><span class="hljs-params">(<span class="hljs-type">int</span> k)</span> {
+        <span class="hljs-keyword">if</span> (k &gt; n)	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+        <span class="hljs-type">int</span> <span class="hljs-variable">left</span> <span class="hljs-operator">=</span> <span class="hljs-number">2</span>*k;
+        <span class="hljs-type">int</span> <span class="hljs-variable">right</span> <span class="hljs-operator">=</span> <span class="hljs-number">2</span>*k + <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">if</span> (left &lt;= n &amp;&amp; less(k, left))    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">if</span> (left &lt;= n &amp;&amp; less(k, right))   <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">return</span> isMaxHeapOrdered(left) &amp;&amp; isMaxHeapOrdered(right);
+    }
+    
+    <span class="hljs-comment">/*
+    	Iterator
+    */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">Iterator</span>&lt;Key&gt; <span class="hljs-title function_">iterator</span><span class="hljs-params">()</span> { <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">HeapIterator</span>(); }
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">HeapIterator</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Iterator</span>&lt;Key&gt; {
+        <span class="hljs-keyword">private</span> MaxPQ&lt;Key&gt; copy;
+        
+        <span class="hljs-comment">// copy the heap to avoid external mutation in next()</span>
+        <span class="hljs-type">public</span> <span class="hljs-title function_">HeapIterator</span><span class="hljs-params">()</span> {
+            <span class="hljs-keyword">if</span> (comparator == <span class="hljs-literal">null</span>)  copy = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MaxPQ</span>&lt;Key&gt;(size());
+            <span class="hljs-keyword">else</span>                     copy = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MaxPQ</span>&lt;Key&gt;(size(), comparator);
+            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt;= n; ++i)	MaxPQ.insert(pq[i]);
+        }
+        
+        <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">HasNext</span><span class="hljs-params">()</span> { <span class="hljs-keyword">return</span> !copy.isEmpty(); }
+        <span class="hljs-keyword">public</span> <span class="hljs-type">void</span> <span class="hljs-title function_">remove</span><span class="hljs-params">()</span>     { <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UnsupportedOperationException</span>(); }
+        
+        <span class="hljs-keyword">public</span> <span class="hljs-type">Key</span> <span class="hljs-title function_">next</span><span class="hljs-params">()</span> {
+            <span class="hljs-keyword">if</span> (!hasNext())	<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NoSuchElementException</span>();
+            <span class="hljs-keyword">return</span> copy.delMax();
+        }
+    }
+    
+    <span class="hljs-comment">/*
+    	Unit test (optional)
+    */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> {
+        ...
+    }
+}
+</code></pre></figure>
+</div><footer class="post-license"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="license" aria-label="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享" title="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享"><img src="/icons/cc-by-nc-sa.svg" width="88" height="31" alt="CC BY-NC-SA 4.0" loading="lazy" decoding="async"></a></footer></article>
       <nav class="post-end post-pagination" aria-label="读完之后">
         <a href="/notes/note-dsa/">← 返回专题目录</a>
-        <a href="/notes/note-dsa/quicksort/" rel="prev"><span>上一篇</span>快速排序</a>
+        <a href="/notes/note-dsa/quicksort/" rel="prev"><span>上一篇</span>快速排序与快速选择</a>
         <a class="next-post" href="/notes/note-dsa/symbol-tables/" rel="next"><span>下一篇</span>符号表</a>
       </nav>
-      
+      <section class="comments" id="comments" aria-label="评论" data-comments data-options="{&quot;meta&quot;:[&quot;nick&quot;,&quot;mail&quot;,&quot;link&quot;],&quot;requiredMeta&quot;:[&quot;nick&quot;],&quot;login&quot;:&quot;enable&quot;,&quot;commentSorting&quot;:&quot;oldest&quot;,&quot;pageSize&quot;:10,&quot;wordLimit&quot;:5000,&quot;emoji&quot;:[{&quot;name&quot;:&quot;QQ 2007&quot;,&quot;prefix&quot;:&quot;qq2007_&quot;,&quot;type&quot;:&quot;gif&quot;,&quot;icon&quot;:&quot;14&quot;,&quot;items&quot;:[&quot;0&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;10&quot;,&quot;11&quot;,&quot;12&quot;,&quot;13&quot;,&quot;14&quot;,&quot;15&quot;,&quot;16&quot;,&quot;17&quot;,&quot;18&quot;,&quot;19&quot;,&quot;20&quot;,&quot;21&quot;,&quot;22&quot;,&quot;23&quot;,&quot;24&quot;,&quot;25&quot;,&quot;26&quot;,&quot;27&quot;,&quot;28&quot;,&quot;29&quot;,&quot;30&quot;,&quot;31&quot;,&quot;32&quot;,&quot;33&quot;,&quot;34&quot;,&quot;35&quot;,&quot;36&quot;,&quot;37&quot;,&quot;38&quot;,&quot;39&quot;,&quot;40&quot;,&quot;41&quot;,&quot;42&quot;,&quot;43&quot;,&quot;44&quot;,&quot;45&quot;,&quot;46&quot;,&quot;47&quot;,&quot;48&quot;,&quot;49&quot;,&quot;50&quot;,&quot;51&quot;,&quot;52&quot;,&quot;53&quot;,&quot;54&quot;,&quot;55&quot;,&quot;56&quot;,&quot;57&quot;,&quot;58&quot;,&quot;59&quot;,&quot;60&quot;,&quot;61&quot;,&quot;62&quot;,&quot;63&quot;,&quot;64&quot;,&quot;65&quot;,&quot;66&quot;,&quot;67&quot;,&quot;68&quot;,&quot;69&quot;,&quot;70&quot;,&quot;71&quot;,&quot;72&quot;,&quot;73&quot;,&quot;74&quot;,&quot;75&quot;,&quot;76&quot;,&quot;77&quot;,&quot;78&quot;,&quot;79&quot;,&quot;80&quot;,&quot;81&quot;,&quot;82&quot;,&quot;83&quot;,&quot;84&quot;,&quot;85&quot;,&quot;86&quot;,&quot;87&quot;,&quot;88&quot;,&quot;89&quot;,&quot;92&quot;,&quot;93&quot;,&quot;94&quot;,&quot;95&quot;,&quot;96&quot;,&quot;97&quot;,&quot;98&quot;,&quot;99&quot;,&quot;100&quot;,&quot;101&quot;,&quot;102&quot;,&quot;103&quot;,&quot;104&quot;,&quot;105&quot;,&quot;106&quot;,&quot;107&quot;,&quot;108&quot;,&quot;109&quot;,&quot;110&quot;,&quot;111&quot;,&quot;112&quot;,&quot;113&quot;,&quot;114&quot;,&quot;115&quot;,&quot;116&quot;,&quot;117&quot;,&quot;118&quot;,&quot;119&quot;,&quot;120&quot;,&quot;121&quot;,&quot;122&quot;,&quot;123&quot;,&quot;124&quot;,&quot;125&quot;,&quot;126&quot;,&quot;127&quot;,&quot;128&quot;,&quot;129&quot;,&quot;130&quot;,&quot;131&quot;,&quot;132&quot;,&quot;133&quot;,&quot;134&quot;,&quot;135&quot;,&quot;136&quot;,&quot;137&quot;,&quot;138&quot;,&quot;139&quot;],&quot;folder&quot;:&quot;/emoji/qq-2007-v1&quot;},{&quot;name&quot;:&quot;小豆泥&quot;,&quot;prefix&quot;:&quot;azuki_&quot;,&quot;type&quot;:&quot;png&quot;,&quot;icon&quot;:&quot;004&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;,&quot;031&quot;,&quot;032&quot;,&quot;033&quot;,&quot;034&quot;,&quot;035&quot;,&quot;036&quot;,&quot;037&quot;,&quot;038&quot;,&quot;039&quot;,&quot;040&quot;],&quot;folder&quot;:&quot;/emoji/azuki-v1&quot;},{&quot;name&quot;:&quot;自嘲熊&quot;,&quot;prefix&quot;:&quot;jokebear_&quot;,&quot;type&quot;:&quot;webp&quot;,&quot;icon&quot;:&quot;002&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;],&quot;folder&quot;:&quot;/emoji/jokebear-v1&quot;}],&quot;search&quot;:false,&quot;imageUploader&quot;:false,&quot;reaction&quot;:false,&quot;noRss&quot;:true,&quot;noCopyright&quot;:false,&quot;serverURL&quot;:&quot;https://lalande-waline-xxz5.vercel.app&quot;,&quot;path&quot;:&quot;/notes/note-dsa/priority-queues/&quot;}">
+    <div class="comments-status" role="status"><span>正在加载评论…</span><button type="button" data-comments-retry hidden>重新加载</button></div>
+    <div class="comments-mount" translate="no"></div>
+    <noscript><p class="comments-help">开启 JavaScript 后即可阅读和留下评论。</p></noscript>
+  </section>
     </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
     <nav class="site-tools" aria-label="联系、订阅、搜索与语言">
     <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a><a href="/feed.xml" class="icon-link" aria-label="RSS 订阅" title="RSS 订阅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="5" cy="19" r="1" fill="currentColor" stroke="none"/><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/></svg></a><a href="/search/" class="icon-link" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>

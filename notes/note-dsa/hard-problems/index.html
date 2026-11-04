@@ -5,61 +5,247 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <link rel="canonical" href="https://www.thisisxxz.com/notes/note-dsa/hard-problems/">
-  <meta name="description" content="困难问题 · 数据结构与算法 — Lalande.">
+  <meta name="description" content="之前我们已经接触过一个简单的计算模型 (A simple model of computation): DFAs. 但 DFAs 难以执行除 pattern matching 外的计算任务。我们不禁要问：Is there a more powerful model of computation? 答案是肯定的：大名鼎鼎的 Turing machines 是一种 simple and univer…">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="困难问题">
+  <meta property="og:title" content="难解性与 NP 完全问题">
   <meta property="og:url" content="https://www.thisisxxz.com/notes/note-dsa/hard-problems/">
   <meta property="og:site_name" content="Lalande.">
-  <meta property="og:description" content="困难问题 · 数据结构与算法 — Lalande.">
+  <meta property="og:description" content="之前我们已经接触过一个简单的计算模型 (A simple model of computation): DFAs. 但 DFAs 难以执行除 pattern matching 外的计算任务。我们不禁要问：Is there a more powerful model of computation? 答案是肯定的：大名鼎鼎的 Turing machines 是一种 simple and univer…">
   <meta property="og:locale" content="zh_CN">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="困难问题">
-  <meta name="twitter:description" content="困难问题 · 数据结构与算法 — Lalande.">
-  <meta property="article:published_time" content="2025-09-07">
-  <meta property="article:modified_time" content="2025-09-07">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="难解性与 NP 完全问题">
+  <meta name="twitter:description" content="之前我们已经接触过一个简单的计算模型 (A simple model of computation): DFAs. 但 DFAs 难以执行除 pattern matching 外的计算任务。我们不禁要问：Is there a more powerful model of computation? 答案是肯定的：大名鼎鼎的 Turing machines 是一种 simple and univer…">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-7-polyreduction-9cef58f6d2f2.webp">
+  <meta property="og:image:alt" content="Karp&#39;s problems: more poly-time reductions from SAT">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-7-polyreduction-9cef58f6d2f2.webp">
+  <meta name="twitter:image:alt" content="Karp&#39;s problems: more poly-time reductions from SAT">
+  <meta property="article:published_time" content="2023-09-01">
+  <meta property="article:modified_time" content="2026-11-05">
   <meta property="article:author" content="XXZ">
-  <title>困难问题 — Lalande.</title>
+  <title>难解性与 NP 完全问题 — Lalande.</title>
   <link rel="alternate" type="application/rss+xml" title="Lalande" href="/feed.xml">
   <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f8f8f6'/%3E%3Ctext x='11' y='30' fill='%23525250' font-size='30' font-family='serif'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/jack-frost-16-fda80e58c167.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/jack-frost-32-39b58fec28d1.png">
   <link rel="preload" href="/fonts/source-serif-4-normal-940a76eda138.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/source-serif-4-italic-9d28b5749a1a.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-bdb0d67d70c4.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-6e3038eb1109.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-cde11610f994.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-970963a3a9a0.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-500-282101c36d82.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-500-dd3c2b76268f.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/fonts/lxgw-500-c9e374a69be3.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/fonts/page-00e97b4c12a6.css">
-  <meta name="traditional-fonts" content="/fonts/traditional-b54941eedc12.css">
+  <link rel="preload" href="/fonts/lxgw-500-cc1e507d8ca6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/page-ab815b2fd1ca.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-561198b408e3.css">
   <script type="module" src="/language.js"></script>
-  <script src="/search-shortcut-edd07b9fabdb.js" defer></script>
+  <script src="/search-shortcut-37dd56f27c33.js" defer></script>
   <script defer src="https://cloud.umami.is/script.js" data-website-id="45d476b5-0328-4eab-85f4-8651edd42b2f" data-domains="www.thisisxxz.com,thisisxxz.com" data-exclude-search="true" data-exclude-hash="true"></script>
   <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs-b3b62b13fba0.js" defer></script><script src="/reading-89b733c46043.js" defer></script>
   
   
-  
-  
-  
-  <link rel="stylesheet" href="/styles-fbbd4236e1e1.css">
+  <link rel="stylesheet" href="/vendor/waline/3.16.2/waline.css"><link rel="stylesheet" href="/fonts/comments-572c059eea12.css"><script type="module" src="/comments-0d49716e2a68.js"></script>
+  <script src="/toc.js" defer></script>
+  <script src="/media.js" defer></script>
+  <link rel="stylesheet" href="/styles-15e0139b1e1f.css">
 </head>
 <body class="is-reading">
   <a class="skip-link" href="#contents">跳到正文</a>
-  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/note-dsa/">数据结构与算法</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">困难问题</span></li></ol></nav>
-    <main class="reading" id="contents" tabindex="-1">
+  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/note-dsa/">数据结构与算法</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">难解性与 NP 完全问题</span></li></ol></nav>
+    <main class="reading has-license" id="contents" tabindex="-1">
       <article aria-labelledby="post-title"><header class="post-header">
-        <h1 id="post-title">困难问题</h1>
-        <time datetime="2025-09-07" aria-label="发布于 2025.09.07">2025.09.07</time>
+        <h1 id="post-title">难解性与 NP 完全问题</h1>
+        <time datetime="2023-09-01" aria-label="发布于 2023.09.01">2023.09.01</time>
       </header>
-      
-      <div class="prose"><p class="empty-note">这篇笔记还没有正文。</p></div></article>
+      <aside class="article-toc" data-article-toc>
+    <button class="toc-toggle" type="button" aria-label="打开本文目录" aria-expanded="false" aria-haspopup="dialog" aria-controls="article-toc-drawer" hidden><span aria-hidden="true">目录</span></button>
+    <div class="toc-panel">
+      <div class="toc-header"><p class="toc-label" id="article-toc-label">本文目录</p><button class="toc-close" type="button" aria-label="关闭本文目录" hidden><span aria-hidden="true"></span></button></div>
+      <nav id="article-toc-links" aria-label="页内目录">
+      <ol><li><a href="#Turing-Machines">Turing Machines</a></li><li><a href="#Intractability">Intractability</a></li><li><a href="#Search-Problems">Search Problems</a></li><li><a href="#P-v.s.-NP">P v.s. NP</a></li><li><a href="#NP-Completeness">NP-Completeness</a></li><li><a href="#Coping-with-Intractability">Coping with Intractability</a></li><li><a href="#%E8%AF%BE%E7%A8%8B%E5%B0%BE%E5%A3%B0">课程尾声</a></li></ol>
+      </nav>
+    </div>
+    <dialog class="toc-drawer" id="article-toc-drawer" aria-labelledby="article-toc-label"></dialog>
+  </aside>
+      <div class="prose"><h2 id="Turing-Machines">Turing Machines</h2>
+<p>之前我们已经接触过一个简单的计算模型 (A simple model of computation): DFAs. 但 DFAs 难以执行除 pattern matching 外的计算任务。我们不禁要问：Is there a more powerful model of computation?</p>
+<p>答案是肯定的：大名鼎鼎的 Turing machines 是一种 <em>simple and universal model of computation</em>. 构成其的基本单元仅仅是一个无限长的纸带 (tape) 与读写头 (tape head)。</p>
+<p>Tape.</p>
+<ul>
+<li>Store input, output, and intermediate results.</li>
+<li>One arbitrarily long strip, divide into cells.</li>
+<li>Finite alphabet of symbols.</li>
+</ul>
+<p>Tape head.</p>
+<ul>
+<li>Points to one cell of tape.</li>
+<li>Reads a symbol from active cell.</li>
+<li>Writes a symbol to active cell (according to the <em>table</em>).</li>
+<li>Moves one cell at a time.</li>
+</ul>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>[1936] Church-Turing thesis. Turing machines can compute any function that can be computed by a physically harnessable process of the natural world.</p>
+</div></div>
+<p>注意，我们在这里采用的名词是 <em>thesis</em> (论题)，而不是严谨的 mathematical <em>theorem</em> (定理)。这是因为 Church-Turing thesis is a statement about the physical world and not subject to proof.</p>
+<p>虽然难以被 (数学意义上的) 证明，论题是可以被证伪 (falsified) 的。然而自从 Church-Turing thesis 被提出以来还没有任何 counterexamples 被发现。</p>
+<p>并且许多已被发现的 models of computation turned out to be equivalent，这可以作为 Turing machines <em>universal</em> 性质的佐证。(注：We use simulation to prove models equivalent)</p>
+<p>Church-Turing thesis 有什么意义呢？它揭示了图灵机已经是一个通用的计算模型，因此我们：</p>
+<ul>
+<li>No need to seek more powerful machines or languages.</li>
+<li>Enables rigorous study of computation (in this universe).</li>
+</ul>
+<h2 id="Intractability">Intractability</h2>
+<p>Church-Turing thesis 解决了我们对是否存在 general-purpose computer 的疑问；在此基础之上，计算机科学家们开始探寻 the limits on the power of digital computers.</p>
+<p>对于某个问题，我们如何判断它是否能被计算机“高效地”解决？什么样的算法能被视为“高效的”？</p>
+<ul>
+<li>Measure running time as a function of input size <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq>.</li>
+<li>Useful in practice ("efficient") = polynomial time (<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><msup><mi>N</mi><mi>b</mi></msup></mrow><annotation encoding="application/x-tex">aN^b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8491em;"></span><span class="mord mathnormal">a</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">b</span></span></span></span></span></span></span></span></span></span></span></eq>) for all inputs.</li>
+</ul>
+<p>In practice，只有常数 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo separator="true">,</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">a,b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">b</span></span></span></span></eq> 都比较小的 poly-time 算法 (如 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><msup><mi>N</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">3N^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord">3</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></eq>) 才能应用到规模较大的问题上。常见的非 poly-time running time 有：</p>
+<ul>
+<li>Factorial running time: <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo stretchy="false">!</mo><mo>=</mo><mi>N</mi><mo stretchy="false">(</mo><mi>N</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo>×</mo><mn>2</mn><mo>×</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">N!=N(N-1)..\times2\times1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mclose">!</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mord">..</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></eq>.</li>
+<li>Exponential growth: <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><msup><mi>b</mi><mi>N</mi></msup></mrow><annotation encoding="application/x-tex">ab^N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8413em;"></span><span class="mord mathnormal">a</span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.109em;">N</span></span></span></span></span></span></span></span></span></span></span></eq>. Exponential growth dwarfs technological change.</li>
+</ul>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Bird's-eye view. A problem is <em>intractable</em> if it can't be solved in polynomial time.</p>
+</div></div>
+<p>我们的 desiderata: Prove that a problem is intractable；然而这样的证明通常十分困难：very few successes have been made. 现有的 two problems that probably require exponential time.</p>
+<ul>
+<li>Given a constant-size problem, does it halt in at most <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi></mrow><annotation encoding="application/x-tex">K</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span></span></span></span></eq> (input size = <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>+</mo><mi>lg</mi><mo>⁡</mo><mi>K</mi></mrow><annotation encoding="application/x-tex">c+\lg{K}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop">l<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span></span></span></span></span></eq>) steps?</li>
+<li>Given <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq>-by-<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq> checkers board position, can the first player force (forced capture rule) a win?</li>
+</ul>
+<h2 id="Search-Problems">Search Problems</h2>
+<p>LSOLVE (Linear Solve), LP (Linear Programming), ILP (Integer Linear Programming),  SAT (Boolean Satisfiability Problem) 常常被称为四大基本问题 (four fundamental problems)，这是因为许多计算问题都能归约到这四个问题上。因此，研究这四个问题有助于我们证明某个其他问题的 intractability 性质。</p>
+<ul>
+<li>LSOLVE. Given a system of linear equations, find a solution.</li>
+<li>LP. Given a system of linear inequalities, find a solution.</li>
+<li>ILP. Given a system of linear inequalities, find a 0-1 solution.</li>
+<li>SAT. Given a system of boolean equations, find a binary solution.</li>
+</ul>
+<p>其中 LSOLVE (Gaussian elimination <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∼</mo><msup><mi>N</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">\sim N^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span></eq>) 与 LP (Ellipsoid algorithm) 均存在 poly-time algorithms，而对于 ILP 与 SAT，No poly-time algorithm known or believed to exist. 因此我们可以 (暂时) 认为 ILP 与 SAT 问题是 intractable 的。</p>
+<p>这四大基本问题均属于 <em>search problem</em>：该类问题的重要特征之一是我们能很容易地判断某个解的正确性。以四大问题的某个解 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></eq> 为例，我们只需要 plug in values and verify each equation。</p>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Search problem. Given an instance <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi></mrow><annotation encoding="application/x-tex">I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">I</span></span></span></span></eq> of a problem, find a solution <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></eq>.</p>
+<p>Requirement. Must be able to efficiently <em>verify</em> that <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></eq> is a solution.</p>
+</div></div>
+<p>关于 search problem 的定义，可以看看这个<a href="https://cs.stackexchange.com/questions/105760/what-is-a-search-problem">帖子</a>下的讨论。说到底这个定义并不是非常严谨，但大多数情况下我们都可以通过 common sense 来进行判断。</p>
+<p>我们如何利用这四大基本问题来证明其他问题的 intractability？答案是通过 reduction。在目前的计算理论体系中，SAT 问题可以说是许多 intractable 问题的源头 [stay tuned for NP-completeness]。</p>
+<p>目前来讲，对于 SAT 的一个 general instance with <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></eq> variables，除了使用 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∼</mo><msup><mn>2</mn><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">\sim 2^n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6644em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span></span></eq> 的 exhaustive search 算法之外没有其他效率更高的算法。No poly-time algorithm for SAT (即，SAT is intractable) 已经成为了一个得到共识的 conjecture。</p>
+<p>基于这个 conjecture，我们可以得出这样一个结论：If SAT <u>poly-time reduces</u> to <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi></mrow><annotation encoding="application/x-tex">Y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">Y</span></span></span></span></eq>, then we conclude that <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi></mrow><annotation encoding="application/x-tex">Y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">Y</span></span></span></span></eq> is (probably) intractable. (注意，这里是 poly-time reduction 而非 linear-time reduction)</p>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Problem <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi></mrow><annotation encoding="application/x-tex">X</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span></span></span></span></eq> poly-time reduces [Cook reduction] to problem <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi></mrow><annotation encoding="application/x-tex">Y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">Y</span></span></span></span></eq> if <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi></mrow><annotation encoding="application/x-tex">X</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span></span></span></span></eq> can be solved with:</p>
+<ul>
+<li>Polynomial number of standard computational steps.</li>
+<li>Polynomial number of calls to <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi></mrow><annotation encoding="application/x-tex">Y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">Y</span></span></span></span></eq>.</li>
+</ul>
+</div></div>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-7-polyreduction-9cef58f6d2f2.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-7-polyreduction-9cef58f6d2f2.webp" alt="Karp's problems: more poly-time reductions from SAT" loading="lazy" decoding="async"></a></p>
+<h2 id="P-v.s.-NP">P v.s. NP</h2>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<ul>
+<li>NP is the class of all search problems.</li>
+<li>P is the class of search problems solvable in poly-time.</li>
+</ul>
+</div></div>
+<p>从实践意义的角度来定义，P 与 NP 分别是：</p>
+<ul>
+<li>NP. What scientists and engineers <em>aspire</em> to compute feasibly.</li>
+<li>P. What scientists and engineers <em>do</em> compute feasibly.</li>
+</ul>
+<p>从定义上来看，P 是 NP 的一个子集；四大问题显然均属于 NP，但只有 LSOLVE 与 LP 问题属于 P。NP 的 N 来自于 <u>N</u>ondeterministic: 之前我们在介绍 NFA 的时候已经简单了解过。Turing machine 同样也分为：</p>
+<ul>
+<li>Determinisitc: state, input determines next state.</li>
+<li>Nondeterministic: more than one possible next state.</li>
+</ul>
+<p>对于 nondeterministic machine, it can <em>guess</em> the desire solution. 据此我们引入 P 与 NP 的另一个定义：</p>
+<ul>
+<li>P. Search problems both <em>solvable</em> and <em>verifiable</em> on a deterministic TM.</li>
+<li>NP. Search problems <em>solvable</em> in poly-time on a nondeterministic TM and <em>verifiable</em> in poly-time on a deterministic TM.</li>
+</ul>
+<p>非确定性图灵机 (nondeterministic TM, NTM) 是一个理论模型，在 natural world 中 (至少到目前为止) 是无法实现的。我们可以将其理解为一种算法：It at every step tries all possible steps and chooses the best possible next step, therefore guessing the desired solution.</p>
+<p>NTM 这一概念存在的意义就是判断某个问题 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi></mrow><annotation encoding="application/x-tex">X</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span></span></span></span></eq> 是否属于 NP 问题：若我们能设计出一个能在 poly-time 内解决 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi></mrow><annotation encoding="application/x-tex">X</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span></span></span></span></eq> 的 NTM，那么 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi></mrow><annotation encoding="application/x-tex">X</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span></span></span></span></eq> 就属于 NP 问题。本质上来讲，verifying a solution in polynomial time with a TM is equivalent to solving in polynomial time with NTM. 这个<a href="https://stackoverflow.com/questions/3713293/what-are-the-consequences-of-saying-a-non-deterministic-turing-machine-can-solve">帖子</a>中的讨论值得参考。</p>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Extended Church-Turing thesis. P = search problems solvable in poly-time <em>in the natural world</em>.</p>
+</div></div>
+<ul>
+<li>Supporting evidence. True for all physical computers.</li>
+<li>Implication. Suffices to focus on improving implementation of existing designs to make future computers more efficient.</li>
+</ul>
+<p>Extended Church-Turing thesis 使我们的目光投向 existing designs，从而引出了计算机理论科学中最出名，最基本，最引人浮想联翩且至今仍悬而未决的问题 (the central question)：<u><strong>Does P = NP ?</strong></u></p>
+<ul>
+<li>If P <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo></mrow><annotation encoding="application/x-tex">=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">=</span></span></span></span></eq> NP... Polynomial-time algorithms for SAT, ILP, TSP, FACTOR, RSA, Diffie-Hellman... Most existing rules will collapse.</li>
+<li>If P <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo mathvariant="normal">≠</mo></mrow><annotation encoding="application/x-tex">\neq</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mrel"><span class="mrel"><span class="mord katex-vbox"><span class="katex-thinbox"><span class="rlap"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="katex-inner"><span class="mord"><span class="mrel"></span></span></span><span class="katex-fix"></span></span></span></span></span><span class="mspace nobreak"></span><span class="mrel">=</span></span></span></span></span></eq> NP... Would learn something fundamental about our universe.</li>
+<li>Overwhelming consensus: P <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo mathvariant="normal">≠</mo></mrow><annotation encoding="application/x-tex">\neq</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mrel"><span class="mrel"><span class="mord katex-vbox"><span class="katex-thinbox"><span class="rlap"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="katex-inner"><span class="mord"><span class="mrel"></span></span></span><span class="katex-fix"></span></span></span></span></span><span class="mspace nobreak"></span><span class="mrel">=</span></span></span></span></span></eq> NP.</li>
+</ul>
+<p>为什么人们普遍相信 P <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo mathvariant="normal">≠</mo></mrow><annotation encoding="application/x-tex">\neq</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mrel"><span class="mrel"><span class="mord katex-vbox"><span class="katex-thinbox"><span class="rlap"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="katex-inner"><span class="mord"><span class="mrel"></span></span></span><span class="katex-fix"></span></span></span></span></span><span class="mspace nobreak"></span><span class="mrel">=</span></span></span></span></span></eq> NP? 因为对于人类而言，验证一个某个问题解的正确性通常比解决某个问题简单许多。欣赏一首乐曲比创造一首乐曲更容易；验证一个定律比提出一个定律更容易，使用一个装置比发明一个装置更容易……如果 P <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo></mrow><annotation encoding="application/x-tex">=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">=</span></span></span></span></eq> NP，人类在经验主义下得到的这些结论将会被彻底的颠覆。</p>
+<blockquote class="post-quote">
+<p>反證法。設 P = NP。令 y 為一個 P = NP 的證明。證明y可以用一個合格的電腦科學家在多項式時間內驗證，我們認定這樣的科學家的存在性為真，但因為 P = NP，該證明y可在多項式時間內由這樣的科學家發現，但是這樣的發現還沒有發生（雖然這樣的科學家試圖發現這樣的一個證明），我們得到矛盾。</p>
+</blockquote>
+<h2 id="NP-Completeness">NP-Completeness</h2>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Def. An NP problem is NP-complete if every problem in NP poly-time reduce to it.</p>
+</div></div>
+<p>Proposition. [Cook 1971, Levin 1973] SAT is NP-complete.</p>
+<p>Extremely brief proof sketch.</p>
+<ul>
+<li>Convert non-deterministic TM notation to SAT notation.</li>
+<li>If you can solve SAT, you can solve any problem in NP.</li>
+</ul>
+<p>这是一个非常重要的发现：SAT 从此成为了 NP 问题的核心，弱点；攻破了它就相当于解决了 P <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo></mrow><annotation encoding="application/x-tex">=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">=</span></span></span></span></eq> NP 问题。</p>
+<ul>
+<li>SAT captures difficulty of whole class NP.</li>
+<li>Poly-time algorithm for SAT iff P <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo></mrow><annotation encoding="application/x-tex">=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">=</span></span></span></span></eq> NP.</li>
+<li>No poly-time algorithm for some NP problem <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\to</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span></eq> none for SAT.</li>
+</ul>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-7-polyreduction2-ce91d56c3106.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-7-polyreduction2-ce91d56c3106.webp" alt="Cook-Levin's problems: more poly-time reductions to SAT" loading="lazy" decoding="async"></a></p>
+<p>在 intractability 一节中，我们介绍由 Karp 发现的一系列问题 (Karp's problems)，它们均能够 reduce <em>from</em> SAT (箭头由 SAT 出发)；而 Cook-Levin 所发现的 SAT 的 NP-completeness 性质则告诉我们所有的 NP 问题均能 reduce <em>to</em> SAT (箭头指向 SAT)。</p>
+<p>结合 Karp 与 Cook-Levin 的理论，我们可以得到另一个重要的发现：所有的 Karp's problems 均能与 SAT 互相 poly-time reduce，因此它们是等价的；这意味着 <u>Every Karp's problem is NP-complete</u>. 或者这么说：We can replace SAT with any of Karp's problems.</p>
+<p>Karp's problems: SAT, ILP, HAMILTON-PATH, 3D-ISING, 3-COLOR, SUBSET-SUM...</p>
+<p>我们再次对已经 cover 的概念进行总结：</p>
+<ul>
+<li>P. Class of search problems solvable in poly-time (on deterministic TM).</li>
+<li>NP. Class of all search problems, some of which seem wickedly hard.</li>
+<li>NP-complete. Hardest problems in NP.</li>
+<li>Intractable. Problems with no poly-time algorithm.</li>
+</ul>
+<h2 id="Coping-with-Intractability">Coping with Intractability</h2>
+<p>如何解决 intractability？一个具有 intractability 性质的问题一定没有应用价值吗？</p>
+<p>Exploiting intractability.</p>
+<ul>
+<li>事实上，现代加密学的可靠性几乎全部建立在某些问题的 intractability 上 [具体请食用 COMP3357 的 hard problems 一节]，包括 FACTOR, RSA, DLOG 与 Diffie-Hellman 等等。</li>
+<li>[Shor 1994] 量子计算机能够在 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>n</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">n^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span></eq> 步内 factor an <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></eq>-bit integer - 我们还能相信 extended Church-Turing thesis 吗？</li>
+</ul>
+<p>Coping with intractability.</p>
+<ul>
+<li>Solve arbitrary instances of the program: special cases may be tractable.</li>
+<li>Solve the problem to optimality: 采取近似 non-determinism 的方法；develop a heuristic/approximation algorithm, and hope it produces a good solution.</li>
+<li>Solve the problem in poly-time in pratical case.</li>
+</ul>
+<h2 id="课程尾声">课程尾声</h2>
+<blockquote class="post-quote">
+<p>That's all, folks: just keep searching!</p>
+</blockquote>
+<p>[2023.9.2 - 23:19] 最感动的一集。风雨阵阵敲打着窗户，俏皮欢快的 <em>Find the Longest Path</em> 从电脑中传出，紧随其后的是 Sedgewick 教授潇洒的挥手告别。我无比庆幸这个世界是 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo mathvariant="normal">≠</mo><mi>N</mi><mi>P</mi></mrow><annotation encoding="application/x-tex">P\neq NP</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel"><span class="mrel"><span class="mord katex-vbox"><span class="katex-thinbox"><span class="rlap"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="katex-inner"><span class="mord"><span class="mrel"></span></span></span><span class="katex-fix"></span></span></span></span></span><span class="mspace nobreak"></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span></span></span></span></eq> 的，若非如此，找到人生的 longest path 将不费吹灰之力；那该是一个多么无聊的世界！</p>
+</div><footer class="post-license"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="license" aria-label="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享" title="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享"><img src="/icons/cc-by-nc-sa.svg" width="88" height="31" alt="CC BY-NC-SA 4.0" loading="lazy" decoding="async"></a></footer></article>
       <nav class="post-end post-pagination" aria-label="读完之后">
         <a href="/notes/note-dsa/">← 返回专题目录</a>
         <a href="/notes/note-dsa/linear-programming/" rel="prev"><span>上一篇</span>线性规划</a>
-        <a class="next-post" href="/notes/note-dsa/comp2119-ps/" rel="next"><span>下一篇</span>COMP2119-PS</a>
+        <a class="next-post" href="/notes/note-dsa/java-language/" rel="next"><span>下一篇</span>Java 配套笔记</a>
       </nav>
-      
+      <section class="comments" id="comments" aria-label="评论" data-comments data-options="{&quot;meta&quot;:[&quot;nick&quot;,&quot;mail&quot;,&quot;link&quot;],&quot;requiredMeta&quot;:[&quot;nick&quot;],&quot;login&quot;:&quot;enable&quot;,&quot;commentSorting&quot;:&quot;oldest&quot;,&quot;pageSize&quot;:10,&quot;wordLimit&quot;:5000,&quot;emoji&quot;:[{&quot;name&quot;:&quot;QQ 2007&quot;,&quot;prefix&quot;:&quot;qq2007_&quot;,&quot;type&quot;:&quot;gif&quot;,&quot;icon&quot;:&quot;14&quot;,&quot;items&quot;:[&quot;0&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;10&quot;,&quot;11&quot;,&quot;12&quot;,&quot;13&quot;,&quot;14&quot;,&quot;15&quot;,&quot;16&quot;,&quot;17&quot;,&quot;18&quot;,&quot;19&quot;,&quot;20&quot;,&quot;21&quot;,&quot;22&quot;,&quot;23&quot;,&quot;24&quot;,&quot;25&quot;,&quot;26&quot;,&quot;27&quot;,&quot;28&quot;,&quot;29&quot;,&quot;30&quot;,&quot;31&quot;,&quot;32&quot;,&quot;33&quot;,&quot;34&quot;,&quot;35&quot;,&quot;36&quot;,&quot;37&quot;,&quot;38&quot;,&quot;39&quot;,&quot;40&quot;,&quot;41&quot;,&quot;42&quot;,&quot;43&quot;,&quot;44&quot;,&quot;45&quot;,&quot;46&quot;,&quot;47&quot;,&quot;48&quot;,&quot;49&quot;,&quot;50&quot;,&quot;51&quot;,&quot;52&quot;,&quot;53&quot;,&quot;54&quot;,&quot;55&quot;,&quot;56&quot;,&quot;57&quot;,&quot;58&quot;,&quot;59&quot;,&quot;60&quot;,&quot;61&quot;,&quot;62&quot;,&quot;63&quot;,&quot;64&quot;,&quot;65&quot;,&quot;66&quot;,&quot;67&quot;,&quot;68&quot;,&quot;69&quot;,&quot;70&quot;,&quot;71&quot;,&quot;72&quot;,&quot;73&quot;,&quot;74&quot;,&quot;75&quot;,&quot;76&quot;,&quot;77&quot;,&quot;78&quot;,&quot;79&quot;,&quot;80&quot;,&quot;81&quot;,&quot;82&quot;,&quot;83&quot;,&quot;84&quot;,&quot;85&quot;,&quot;86&quot;,&quot;87&quot;,&quot;88&quot;,&quot;89&quot;,&quot;92&quot;,&quot;93&quot;,&quot;94&quot;,&quot;95&quot;,&quot;96&quot;,&quot;97&quot;,&quot;98&quot;,&quot;99&quot;,&quot;100&quot;,&quot;101&quot;,&quot;102&quot;,&quot;103&quot;,&quot;104&quot;,&quot;105&quot;,&quot;106&quot;,&quot;107&quot;,&quot;108&quot;,&quot;109&quot;,&quot;110&quot;,&quot;111&quot;,&quot;112&quot;,&quot;113&quot;,&quot;114&quot;,&quot;115&quot;,&quot;116&quot;,&quot;117&quot;,&quot;118&quot;,&quot;119&quot;,&quot;120&quot;,&quot;121&quot;,&quot;122&quot;,&quot;123&quot;,&quot;124&quot;,&quot;125&quot;,&quot;126&quot;,&quot;127&quot;,&quot;128&quot;,&quot;129&quot;,&quot;130&quot;,&quot;131&quot;,&quot;132&quot;,&quot;133&quot;,&quot;134&quot;,&quot;135&quot;,&quot;136&quot;,&quot;137&quot;,&quot;138&quot;,&quot;139&quot;],&quot;folder&quot;:&quot;/emoji/qq-2007-v1&quot;},{&quot;name&quot;:&quot;小豆泥&quot;,&quot;prefix&quot;:&quot;azuki_&quot;,&quot;type&quot;:&quot;png&quot;,&quot;icon&quot;:&quot;004&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;,&quot;031&quot;,&quot;032&quot;,&quot;033&quot;,&quot;034&quot;,&quot;035&quot;,&quot;036&quot;,&quot;037&quot;,&quot;038&quot;,&quot;039&quot;,&quot;040&quot;],&quot;folder&quot;:&quot;/emoji/azuki-v1&quot;},{&quot;name&quot;:&quot;自嘲熊&quot;,&quot;prefix&quot;:&quot;jokebear_&quot;,&quot;type&quot;:&quot;webp&quot;,&quot;icon&quot;:&quot;002&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;],&quot;folder&quot;:&quot;/emoji/jokebear-v1&quot;}],&quot;search&quot;:false,&quot;imageUploader&quot;:false,&quot;reaction&quot;:false,&quot;noRss&quot;:true,&quot;noCopyright&quot;:false,&quot;serverURL&quot;:&quot;https://lalande-waline-xxz5.vercel.app&quot;,&quot;path&quot;:&quot;/notes/note-dsa/hard-problems/&quot;}">
+    <div class="comments-status" role="status"><span>正在加载评论…</span><button type="button" data-comments-retry hidden>重新加载</button></div>
+    <div class="comments-mount" translate="no"></div>
+    <noscript><p class="comments-help">开启 JavaScript 后即可阅读和留下评论。</p></noscript>
+  </section>
     </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
     <nav class="site-tools" aria-label="联系、订阅、搜索与语言">
     <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a><a href="/feed.xml" class="icon-link" aria-label="RSS 订阅" title="RSS 订阅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="5" cy="19" r="1" fill="currentColor" stroke="none"/><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/></svg></a><a href="/search/" class="icon-link" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>

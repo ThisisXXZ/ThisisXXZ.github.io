@@ -5,60 +5,260 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <link rel="canonical" href="https://www.thisisxxz.com/notes/note-dsa/tries/">
-  <meta name="description" content="Trie 树 · 数据结构与算法 — Lalande.">
+  <meta name="description" content="String symbol table. Symbol table specialized to string keys. It avoids examing the entrie key (as with string sorting) thus perform better than traditional symbol tables with string keys. 用红黑树或 line…">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Trie 树">
+  <meta property="og:title" content="单词查找树">
   <meta property="og:url" content="https://www.thisisxxz.com/notes/note-dsa/tries/">
   <meta property="og:site_name" content="Lalande.">
-  <meta property="og:description" content="Trie 树 · 数据结构与算法 — Lalande.">
+  <meta property="og:description" content="String symbol table. Symbol table specialized to string keys. It avoids examing the entrie key (as with string sorting) thus perform better than traditional symbol tables with string keys. 用红黑树或 line…">
   <meta property="og:locale" content="zh_CN">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Trie 树">
-  <meta name="twitter:description" content="Trie 树 · 数据结构与算法 — Lalande.">
-  <meta property="article:published_time" content="2025-09-07">
-  <meta property="article:modified_time" content="2025-09-08">
+  <meta name="twitter:title" content="单词查找树">
+  <meta name="twitter:description" content="String symbol table. Symbol table specialized to string keys. It avoids examing the entrie key (as with string sorting) thus perform better than traditional symbol tables with string keys. 用红黑树或 line…">
+  <meta property="article:published_time" content="2023-08-27">
+  <meta property="article:modified_time" content="2026-11-05">
   <meta property="article:author" content="XXZ">
-  <title>Trie 树 — Lalande.</title>
+  <title>单词查找树 — Lalande.</title>
   <link rel="alternate" type="application/rss+xml" title="Lalande" href="/feed.xml">
   <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f8f8f6'/%3E%3Ctext x='11' y='30' fill='%23525250' font-size='30' font-family='serif'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/jack-frost-16-fda80e58c167.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/jack-frost-32-39b58fec28d1.png">
   <link rel="preload" href="/fonts/source-serif-4-normal-940a76eda138.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/source-serif-4-italic-9d28b5749a1a.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/fonts/lxgw-500-aa0ec0f23902.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/fonts/page-1438e7f5a7a3.css">
-  <meta name="traditional-fonts" content="/fonts/traditional-fc0a6ae2d233.css">
+  <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-6e3038eb1109.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-cde11610f994.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-e2cdde4a4e26.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-23ac863fd3f8.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/page-82a982723504.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-629213f07146.css">
   <script type="module" src="/language.js"></script>
-  <script src="/search-shortcut-edd07b9fabdb.js" defer></script>
+  <script src="/search-shortcut-37dd56f27c33.js" defer></script>
   <script defer src="https://cloud.umami.is/script.js" data-website-id="45d476b5-0328-4eab-85f4-8651edd42b2f" data-domains="www.thisisxxz.com,thisisxxz.com" data-exclude-search="true" data-exclude-hash="true"></script>
   <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs-b3b62b13fba0.js" defer></script><script src="/reading-89b733c46043.js" defer></script>
   
   
+  <link rel="stylesheet" href="/vendor/waline/3.16.2/waline.css"><link rel="stylesheet" href="/fonts/comments-572c059eea12.css"><script type="module" src="/comments-0d49716e2a68.js"></script>
+  <script src="/toc.js" defer></script>
   
-  
-  
-  <link rel="stylesheet" href="/styles-fbbd4236e1e1.css">
+  <link rel="stylesheet" href="/styles-15e0139b1e1f.css">
 </head>
 <body class="is-reading">
   <a class="skip-link" href="#contents">跳到正文</a>
-  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/note-dsa/">数据结构与算法</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">Trie 树</span></li></ol></nav>
-    <main class="reading" id="contents" tabindex="-1">
+  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/note-dsa/">数据结构与算法</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">单词查找树</span></li></ol></nav>
+    <main class="reading has-license" id="contents" tabindex="-1">
       <article aria-labelledby="post-title"><header class="post-header">
-        <h1 id="post-title">Trie 树</h1>
-        <time datetime="2025-09-07" aria-label="发布于 2025.09.07">2025.09.07</time>
+        <h1 id="post-title">单词查找树</h1>
+        <time datetime="2023-08-27" aria-label="发布于 2023.08.27">2023.08.27</time>
       </header>
-      
-      <div class="prose"><p class="empty-note">这篇笔记还没有正文。</p></div></article>
+      <aside class="article-toc" data-article-toc>
+    <button class="toc-toggle" type="button" aria-label="打开本文目录" aria-expanded="false" aria-haspopup="dialog" aria-controls="article-toc-drawer" hidden><span aria-hidden="true">目录</span></button>
+    <div class="toc-panel">
+      <div class="toc-header"><p class="toc-label" id="article-toc-label">本文目录</p><button class="toc-close" type="button" aria-label="关闭本文目录" hidden><span aria-hidden="true"></span></button></div>
+      <nav id="article-toc-links" aria-label="页内目录">
+      <ol><li><a href="#Tries">Tries</a><ol><li><a href="#R-way-Tries">R-way Tries</a></li><li><a href="#Ternary-Search-Tries">Ternary Search Tries</a></li></ol></li><li><a href="#Character-Based-Operations">Character-Based Operations</a></li></ol>
+      </nav>
+    </div>
+    <dialog class="toc-drawer" id="article-toc-drawer" aria-labelledby="article-toc-label"></dialog>
+  </aside>
+      <div class="prose"><h2 id="Tries">Tries</h2>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>String symbol table. Symbol table specialized to string keys. It avoids examing the entrie key (as with string sorting) thus perform better than traditional symbol tables with string keys.</p>
+</div></div>
+<p>用红黑树或 linear-probing hashing 实现的 string symbol tables 已经拥有较为优秀的效率；但一个更为 ingenious 的，string-specialized 的数据结构是 tries (字典树)。</p>
+<h3 id="R-way-Tries">R-way Tries</h3>
+<p>Tries 的名字来源于 re<em>trie</em>val，但读作 try。相当简单优雅的数据结构，就不详细介绍了。</p>
+<ul>
+<li>Search hit. Need to examine all <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span></span></span></span></eq> characters for equality.</li>
+<li>Search miss. (typical case) examine only a few characters (sublinear).</li>
+<li>Space. <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0077em;">R</span></span></span></span></eq> null links at each leaf.</li>
+</ul>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Bottom line. Fast search hit and even faster search miss, but <em>wasted space</em>.</p>
+</div></div>
+<p>trie 的删除操作也十分简单：</p>
+<ul>
+<li>Find the node corresponding to key and set value to null.</li>
+<li>If node has null value and all null links, remove that node (and recur).</li>
+</ul>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-comment">// This is a Trie Symbol Table, which associate a value with each string key. </span>
+<span class="hljs-comment">// To create a Trie plainly storing strings, use Trie Set.</span>
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TrieST</span>&lt;Value&gt; {
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">R</span> <span class="hljs-operator">=</span> <span class="hljs-number">256</span>;
+    <span class="hljs-keyword">private</span> <span class="hljs-type">Node</span> <span class="hljs-variable">root</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Node</span>();
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Node</span> {
+        <span class="hljs-comment">// use Object instead of Value since no generic array creation in Java</span>
+        <span class="hljs-keyword">private</span> Object value;
+        <span class="hljs-keyword">private</span> <span class="hljs-type">Node</span>[] <span class="hljs-variable">next</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Node</span>[R];
+    }
+    
+    <span class="hljs-keyword">public</span> <span class="hljs-type">void</span> <span class="hljs-title function_">put</span><span class="hljs-params">(String key, Value val)</span> {
+        root = put(root, key, value, <span class="hljs-number">0</span>);
+    }
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-type">Node</span> <span class="hljs-title function_">put</span><span class="hljs-params">(Node x, String key, Value val, <span class="hljs-type">int</span> d)</span> {
+        <span class="hljs-keyword">if</span> (x == <span class="hljs-literal">null</span>) x = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Node</span>();
+        <span class="hljs-keyword">if</span> (d == key.length()) {
+            x.val = val;
+            <span class="hljs-keyword">return</span> x;
+        }
+        <span class="hljs-type">char</span> <span class="hljs-variable">c</span> <span class="hljs-operator">=</span> key.charAt(d);
+        x.next[c] = put(x.next[c], key, val, d+<span class="hljs-number">1</span>);
+        <span class="hljs-keyword">return</span> x;
+    }
+    
+    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">contains</span><span class="hljs-params">(String key)</span> {
+        <span class="hljs-keyword">return</span> get(key) != <span class="hljs-literal">null</span>;
+    }
+    
+    <span class="hljs-keyword">public</span> <span class="hljs-type">Value</span> <span class="hljs-title function_">get</span><span class="hljs-params">(String key)</span> {
+        <span class="hljs-type">Node</span> <span class="hljs-variable">x</span> <span class="hljs-operator">=</span> get(root, key, <span class="hljs-number">0</span>);
+        <span class="hljs-keyword">if</span> (x == <span class="hljs-literal">null</span>)	<span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+        <span class="hljs-keyword">return</span> (Value) x.val;    <span class="hljs-comment">// cast needed</span>
+    }
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-type">Node</span> <span class="hljs-title function_">get</span><span class="hljs-params">(Node x, String key, <span class="hljs-type">int</span> d)</span> {
+        <span class="hljs-keyword">if</span> (x == <span class="hljs-literal">null</span>)	<span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+        <span class="hljs-keyword">if</span> (d == key.length())	<span class="hljs-keyword">return</span> x;
+        <span class="hljs-type">char</span> <span class="hljs-variable">c</span> <span class="hljs-operator">=</span> key.charAt(d);
+        <span class="hljs-keyword">return</span> get(x.next[c], key, d+<span class="hljs-number">1</span>);
+    }
+}
+</code></pre></figure>
+<h3 id="Ternary-Search-Tries">Ternary Search Tries</h3>
+<p>又是 Sedgewick 教授发明的算法之一 (Bentley &amp; <em>Sedgewick</em>)，ORZ。</p>
+<ul>
+<li>Store characters and values in nodes (not keys).</li>
+<li>Each node has 3 children: smaller (left), equal (middle), larger (right).</li>
+<li>Search or Insert.
+<ul>
+<li>If less, take left link; If greater, take right link.</li>
+<li>If equal, take the middle link and move to the next key character.</li>
+</ul>
+</li>
+</ul>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>TST is as fast as hashing (for string keys), space efficient.</p>
+</div></div>
+<p>TSTs 改善了传统 R-way tries 耗费空间过多的缺点 (从 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>R</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">(R+1)N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0077em;">R</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq> 优化至 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mi>N</mi></mrow><annotation encoding="application/x-tex">4N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord">4</span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq>)，同时仍然维持了 tries 优秀的时间效率 (从 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span></span></span></span></eq> 到可以接受的 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>+</mo><mi>ln</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">L+\ln{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq>)。</p>
+<p>TSTs 还存在许多 variants：balanced TSTs via rotations (can achieve worst-case <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>+</mo><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">L+\log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq> guarantees) 与 TSTs with <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>R</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">R^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0077em;">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></eq> branching (对特定的输入进一步提升时空效率)。</p>
+<p>总而言之，TST 是这样的一种数据结构，它：</p>
+<ul>
+<li>Faster than hashing (especially for search misses).</li>
+<li>More space-efficient than R-way tries.</li>
+<li>More flexible than red-black BSTs.</li>
+</ul>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TST</span>&lt;Value&gt; {
+    <span class="hljs-keyword">private</span> Node root;
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Node</span> {
+        <span class="hljs-keyword">private</span> Value val;
+        <span class="hljs-keyword">private</span> <span class="hljs-type">char</span> c;
+        <span class="hljs-keyword">private</span> Node left, mid, right;
+    }
+    
+    <span class="hljs-keyword">public</span> <span class="hljs-type">void</span> <span class="hljs-title function_">put</span><span class="hljs-params">(String key, Value val)</span> {
+        root = put(root, key, val, <span class="hljs-number">0</span>);
+    }
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-type">Node</span> <span class="hljs-title function_">put</span><span class="hljs-params">(Node x, String key, Value val, <span class="hljs-type">int</span> d)</span> {
+        <span class="hljs-type">char</span> <span class="hljs-variable">c</span> <span class="hljs-operator">=</span> key.charAt(d);
+        <span class="hljs-keyword">if</span> (x == <span class="hljs-literal">null</span>)	{ x = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Node</span>(); x.c = c; }
+        <span class="hljs-keyword">if</span>      (c &lt; x.c)               x.left  = put(x.left,  key, val, d);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (c &gt; x.c)               x.right = put(x.right, key, val, d);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (d &lt; key.length() - <span class="hljs-number">1</span>)  x.mid   = put(x.mid,   key, val, d+<span class="hljs-number">1</span>);
+        <span class="hljs-keyword">else</span>                            x.val = val;
+        <span class="hljs-keyword">return</span> x;
+    }
+    
+    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">contains</span><span class="hljs-params">(String key)</span> {
+        <span class="hljs-keyword">return</span> get(key) != <span class="hljs-literal">null</span>; 
+    }
+    
+    <span class="hljs-keyword">public</span> <span class="hljs-type">Value</span> <span class="hljs-title function_">get</span><span class="hljs-params">(String key)</span> {
+        <span class="hljs-type">Node</span> <span class="hljs-variable">x</span> <span class="hljs-operator">=</span> get(root, key, <span class="hljs-number">0</span>);
+        <span class="hljs-keyword">if</span> (x == <span class="hljs-literal">null</span>)	<span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+        <span class="hljs-keyword">return</span> x.val;
+    }
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-type">Node</span> <span class="hljs-title function_">get</span><span class="hljs-params">(Node x, String key, <span class="hljs-type">int</span> d)</span> {
+        <span class="hljs-keyword">if</span> (x == <span class="hljs-literal">null</span>)	<span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+        <span class="hljs-type">char</span> <span class="hljs-variable">c</span> <span class="hljs-operator">=</span> key.charAt(d);
+        <span class="hljs-keyword">if</span>      (c &lt; x.c)               <span class="hljs-keyword">return</span> get(x.left,  key, d);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (c &gt; x.c)               <span class="hljs-keyword">return</span> get(x.right, key, d);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (d &lt; key.length() - <span class="hljs-number">1</span>)  <span class="hljs-keyword">return</span> get(x.mid,   key, d+<span class="hljs-number">1</span>);
+        <span class="hljs-keyword">else</span>                            <span class="hljs-keyword">return</span> x;
+    }
+}
+</code></pre></figure>
+<h2 id="Character-Based-Operations">Character-Based Operations</h2>
+<p>以 string 作为键值的 string symbol table implemented with tries 不仅仅支持以 string 为基本单位的操作，更支持基于字符的操作 (character-based operations)。</p>
+<ul>
+<li>Ordered iteration (引入了利用 trie 进行 string sorting 的新思路).
+<ul>
+<li>Do inorder traversal of trie; add keys encountered to a queue.</li>
+<li>Maintain a sequence of characters on path from root to node.</li>
+</ul>
+</li>
+<li>Prefix matches. Find all keys in a symbol table starting with a given prefix.</li>
+<li>Longest prefix. Find longest key in symbol table that is a prefix of query string.</li>
+<li>T9 texting.
+<ul>
+<li>Multi-tap input. 不断按某键直到切换到想要的字母。</li>
+<li>T9 text input. Find all words that correspond to given sequence of numbers.</li>
+</ul>
+</li>
+<li>Patricia trie (crit-bit tree, radix tree). 将 trie 上的 internal one-way branching (象征着多个字符串的共同前缀) 压缩成一个节点，提升了 trie 的空间利用率。</li>
+<li>Suffix tree. Patricia trie of suffixes of a string; can be constructed in linear time.</li>
+</ul>
+<p>最后，我们再来对 string symbol table 的不同实现进行一个全面的比较与总结：</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="表格，可横向滚动"><table>
+<thead>
+<tr>
+<th style="text-align:center">Implementation</th>
+<th style="text-align:center">Performance Guarantee</th>
+<th style="text-align:center">Features</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Red-black BST.</td>
+<td style="text-align:center"><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq> <em>key</em> (string) compares.</td>
+<td style="text-align:center">Supports ordered symbol table API.</td>
+</tr>
+<tr>
+<td style="text-align:center">Hash tables.</td>
+<td style="text-align:center">constant number of probes.</td>
+<td style="text-align:center">Requires good hash function for key type.</td>
+</tr>
+<tr>
+<td style="text-align:center">R-way tries or TSTs.</td>
+<td style="text-align:center"><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq> <em>characters</em> accessed.</td>
+<td style="text-align:center">Supports character-based operations.</td>
+</tr>
+</tbody>
+</table></div>
+</div><footer class="post-license"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="license" aria-label="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享" title="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享"><img src="/icons/cc-by-nc-sa.svg" width="88" height="31" alt="CC BY-NC-SA 4.0" loading="lazy" decoding="async"></a></footer></article>
       <nav class="post-end post-pagination" aria-label="读完之后">
         <a href="/notes/note-dsa/">← 返回专题目录</a>
-        <a href="/notes/note-dsa/radix-sorts/" rel="prev"><span>上一篇</span>基数排序</a>
+        <a href="/notes/note-dsa/radix-sorts/" rel="prev"><span>上一篇</span>基数排序与后缀数组</a>
         <a class="next-post" href="/notes/note-dsa/substring-search/" rel="next"><span>下一篇</span>子串查找</a>
       </nav>
-      
+      <section class="comments" id="comments" aria-label="评论" data-comments data-options="{&quot;meta&quot;:[&quot;nick&quot;,&quot;mail&quot;,&quot;link&quot;],&quot;requiredMeta&quot;:[&quot;nick&quot;],&quot;login&quot;:&quot;enable&quot;,&quot;commentSorting&quot;:&quot;oldest&quot;,&quot;pageSize&quot;:10,&quot;wordLimit&quot;:5000,&quot;emoji&quot;:[{&quot;name&quot;:&quot;QQ 2007&quot;,&quot;prefix&quot;:&quot;qq2007_&quot;,&quot;type&quot;:&quot;gif&quot;,&quot;icon&quot;:&quot;14&quot;,&quot;items&quot;:[&quot;0&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;10&quot;,&quot;11&quot;,&quot;12&quot;,&quot;13&quot;,&quot;14&quot;,&quot;15&quot;,&quot;16&quot;,&quot;17&quot;,&quot;18&quot;,&quot;19&quot;,&quot;20&quot;,&quot;21&quot;,&quot;22&quot;,&quot;23&quot;,&quot;24&quot;,&quot;25&quot;,&quot;26&quot;,&quot;27&quot;,&quot;28&quot;,&quot;29&quot;,&quot;30&quot;,&quot;31&quot;,&quot;32&quot;,&quot;33&quot;,&quot;34&quot;,&quot;35&quot;,&quot;36&quot;,&quot;37&quot;,&quot;38&quot;,&quot;39&quot;,&quot;40&quot;,&quot;41&quot;,&quot;42&quot;,&quot;43&quot;,&quot;44&quot;,&quot;45&quot;,&quot;46&quot;,&quot;47&quot;,&quot;48&quot;,&quot;49&quot;,&quot;50&quot;,&quot;51&quot;,&quot;52&quot;,&quot;53&quot;,&quot;54&quot;,&quot;55&quot;,&quot;56&quot;,&quot;57&quot;,&quot;58&quot;,&quot;59&quot;,&quot;60&quot;,&quot;61&quot;,&quot;62&quot;,&quot;63&quot;,&quot;64&quot;,&quot;65&quot;,&quot;66&quot;,&quot;67&quot;,&quot;68&quot;,&quot;69&quot;,&quot;70&quot;,&quot;71&quot;,&quot;72&quot;,&quot;73&quot;,&quot;74&quot;,&quot;75&quot;,&quot;76&quot;,&quot;77&quot;,&quot;78&quot;,&quot;79&quot;,&quot;80&quot;,&quot;81&quot;,&quot;82&quot;,&quot;83&quot;,&quot;84&quot;,&quot;85&quot;,&quot;86&quot;,&quot;87&quot;,&quot;88&quot;,&quot;89&quot;,&quot;92&quot;,&quot;93&quot;,&quot;94&quot;,&quot;95&quot;,&quot;96&quot;,&quot;97&quot;,&quot;98&quot;,&quot;99&quot;,&quot;100&quot;,&quot;101&quot;,&quot;102&quot;,&quot;103&quot;,&quot;104&quot;,&quot;105&quot;,&quot;106&quot;,&quot;107&quot;,&quot;108&quot;,&quot;109&quot;,&quot;110&quot;,&quot;111&quot;,&quot;112&quot;,&quot;113&quot;,&quot;114&quot;,&quot;115&quot;,&quot;116&quot;,&quot;117&quot;,&quot;118&quot;,&quot;119&quot;,&quot;120&quot;,&quot;121&quot;,&quot;122&quot;,&quot;123&quot;,&quot;124&quot;,&quot;125&quot;,&quot;126&quot;,&quot;127&quot;,&quot;128&quot;,&quot;129&quot;,&quot;130&quot;,&quot;131&quot;,&quot;132&quot;,&quot;133&quot;,&quot;134&quot;,&quot;135&quot;,&quot;136&quot;,&quot;137&quot;,&quot;138&quot;,&quot;139&quot;],&quot;folder&quot;:&quot;/emoji/qq-2007-v1&quot;},{&quot;name&quot;:&quot;小豆泥&quot;,&quot;prefix&quot;:&quot;azuki_&quot;,&quot;type&quot;:&quot;png&quot;,&quot;icon&quot;:&quot;004&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;,&quot;031&quot;,&quot;032&quot;,&quot;033&quot;,&quot;034&quot;,&quot;035&quot;,&quot;036&quot;,&quot;037&quot;,&quot;038&quot;,&quot;039&quot;,&quot;040&quot;],&quot;folder&quot;:&quot;/emoji/azuki-v1&quot;},{&quot;name&quot;:&quot;自嘲熊&quot;,&quot;prefix&quot;:&quot;jokebear_&quot;,&quot;type&quot;:&quot;webp&quot;,&quot;icon&quot;:&quot;002&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;],&quot;folder&quot;:&quot;/emoji/jokebear-v1&quot;}],&quot;search&quot;:false,&quot;imageUploader&quot;:false,&quot;reaction&quot;:false,&quot;noRss&quot;:true,&quot;noCopyright&quot;:false,&quot;serverURL&quot;:&quot;https://lalande-waline-xxz5.vercel.app&quot;,&quot;path&quot;:&quot;/notes/note-dsa/tries/&quot;}">
+    <div class="comments-status" role="status"><span>正在加载评论…</span><button type="button" data-comments-retry hidden>重新加载</button></div>
+    <div class="comments-mount" translate="no"></div>
+    <noscript><p class="comments-help">开启 JavaScript 后即可阅读和留下评论。</p></noscript>
+  </section>
     </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
     <nav class="site-tools" aria-label="联系、订阅、搜索与语言">
     <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a><a href="/feed.xml" class="icon-link" aria-label="RSS 订阅" title="RSS 订阅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="5" cy="19" r="1" fill="currentColor" stroke="none"/><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/></svg></a><a href="/search/" class="icon-link" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>

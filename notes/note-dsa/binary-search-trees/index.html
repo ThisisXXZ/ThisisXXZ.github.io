@@ -5,62 +5,342 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <link rel="canonical" href="https://www.thisisxxz.com/notes/note-dsa/binary-search-trees/">
-  <meta name="description" content="二叉查找树 · 数据结构与算法 — Lalande.">
+  <meta name="description" content="这一节需要配合快排部分的 partition 思想食用。两个算法之间的 correspondence 真的很奇妙啊！ Definition. A BST is a binary tree in symmetric order. Symmetric order. Each node has a key, and every node&#39;s key is: Larger than all keys i…">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="二叉查找树">
+  <meta property="og:title" content="二叉搜索树与平衡树">
   <meta property="og:url" content="https://www.thisisxxz.com/notes/note-dsa/binary-search-trees/">
   <meta property="og:site_name" content="Lalande.">
-  <meta property="og:description" content="二叉查找树 · 数据结构与算法 — Lalande.">
+  <meta property="og:description" content="这一节需要配合快排部分的 partition 思想食用。两个算法之间的 correspondence 真的很奇妙啊！ Definition. A BST is a binary tree in symmetric order. Symmetric order. Each node has a key, and every node&#39;s key is: Larger than all keys i…">
   <meta property="og:locale" content="zh_CN">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="二叉查找树">
-  <meta name="twitter:description" content="二叉查找树 · 数据结构与算法 — Lalande.">
-  <meta property="article:published_time" content="2025-09-07">
-  <meta property="article:modified_time" content="2025-09-07">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="二叉搜索树与平衡树">
+  <meta name="twitter:description" content="这一节需要配合快排部分的 partition 思想食用。两个算法之间的 correspondence 真的很奇妙啊！ Definition. A BST is a binary tree in symmetric order. Symmetric order. Each node has a key, and every node&#39;s key is: Larger than all keys i…">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-hibbard-ce0adc43bce7.webp">
+  <meta property="og:image:alt" content="An example for Hibbard deletion">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-hibbard-ce0adc43bce7.webp">
+  <meta name="twitter:image:alt" content="An example for Hibbard deletion">
+  <meta property="article:published_time" content="2023-06-20">
+  <meta property="article:modified_time" content="2026-11-05">
   <meta property="article:author" content="XXZ">
-  <title>二叉查找树 — Lalande.</title>
+  <title>二叉搜索树与平衡树 — Lalande.</title>
   <link rel="alternate" type="application/rss+xml" title="Lalande" href="/feed.xml">
   <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f8f8f6'/%3E%3Ctext x='11' y='30' fill='%23525250' font-size='30' font-family='serif'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/jack-frost-16-fda80e58c167.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/jack-frost-32-39b58fec28d1.png">
   <link rel="preload" href="/fonts/source-serif-4-normal-940a76eda138.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-bdb0d67d70c4.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-6e3038eb1109.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-cde11610f994.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-e62f6d8a1760.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/fonts/lxgw-500-d58a2079b17a.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/fonts/page-3b2033e674f8.css">
-  <meta name="traditional-fonts" content="/fonts/traditional-4f1bd351b93d.css">
+  <link rel="preload" href="/fonts/lxgw-500-345da879ff2a.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/page-1ef693a42637.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-054fb7b60b9c.css">
   <script type="module" src="/language.js"></script>
-  <script src="/search-shortcut-edd07b9fabdb.js" defer></script>
+  <script src="/search-shortcut-37dd56f27c33.js" defer></script>
   <script defer src="https://cloud.umami.is/script.js" data-website-id="45d476b5-0328-4eab-85f4-8651edd42b2f" data-domains="www.thisisxxz.com,thisisxxz.com" data-exclude-search="true" data-exclude-hash="true"></script>
   <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs-b3b62b13fba0.js" defer></script><script src="/reading-89b733c46043.js" defer></script>
   
   
-  
-  
-  
-  <link rel="stylesheet" href="/styles-fbbd4236e1e1.css">
+  <link rel="stylesheet" href="/vendor/waline/3.16.2/waline.css"><link rel="stylesheet" href="/fonts/comments-572c059eea12.css"><script type="module" src="/comments-0d49716e2a68.js"></script>
+  <script src="/toc.js" defer></script>
+  <script src="/media.js" defer></script>
+  <link rel="stylesheet" href="/styles-15e0139b1e1f.css">
 </head>
 <body class="is-reading">
   <a class="skip-link" href="#contents">跳到正文</a>
-  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/note-dsa/">数据结构与算法</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">二叉查找树</span></li></ol></nav>
-    <main class="reading" id="contents" tabindex="-1">
+  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/note-dsa/">数据结构与算法</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">二叉搜索树与平衡树</span></li></ol></nav>
+    <main class="reading has-license" id="contents" tabindex="-1">
       <article aria-labelledby="post-title"><header class="post-header">
-        <h1 id="post-title">二叉查找树</h1>
-        <time datetime="2025-09-07" aria-label="发布于 2025.09.07">2025.09.07</time>
+        <h1 id="post-title">二叉搜索树与平衡树</h1>
+        <time datetime="2023-06-20" aria-label="发布于 2023.06.20">2023.06.20</time>
       </header>
-      
-      <div class="prose"><p class="empty-note">这篇笔记还没有正文。</p></div></article>
+      <aside class="article-toc" data-article-toc>
+    <button class="toc-toggle" type="button" aria-label="打开本文目录" aria-expanded="false" aria-haspopup="dialog" aria-controls="article-toc-drawer" hidden><span aria-hidden="true">目录</span></button>
+    <div class="toc-panel">
+      <div class="toc-header"><p class="toc-label" id="article-toc-label">本文目录</p><button class="toc-close" type="button" aria-label="关闭本文目录" hidden><span aria-hidden="true"></span></button></div>
+      <nav id="article-toc-links" aria-label="页内目录">
+      <ol><li><a href="#Binary-Search-Tree">Binary Search Tree</a><ol><li><a href="#BST-Properties">BST Properties</a></li><li><a href="#Insertion-and-Deletion">Insertion and Deletion</a></li><li><a href="#BSTs-and-Quicksort-Partitioning">BSTs and Quicksort Partitioning</a></li></ol></li><li><a href="#2-3-Search-Trees">2-3 Search Trees</a><ol><li><a href="#2-3-Tree-Properties">2-3 Tree Properties</a></li><li><a href="#Insertion">Insertion</a></li><li><a href="#Performance">Performance</a></li></ol></li><li><a href="#Red-Black-BSTs">Red-Black BSTs</a><ol><li><a href="#Properties">Properties</a></li><li><a href="#Elementary-operations">Elementary operations</a></li><li><a href="#Insertion-2">Insertion</a></li><li><a href="#Performance-2">Performance</a></li></ol></li></ol>
+      </nav>
+    </div>
+    <dialog class="toc-drawer" id="article-toc-drawer" aria-labelledby="article-toc-label"></dialog>
+  </aside>
+      <div class="prose"><h2 id="Binary-Search-Tree">Binary Search Tree</h2>
+<p>这一节需要配合快排部分的 partition 思想食用。两个算法之间的 correspondence 真的很奇妙啊！</p>
+<h3 id="BST-Properties">BST Properties</h3>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Definition. A BST is a binary tree in <strong>symmetric order</strong>.</p>
+</div></div>
+<p>Symmetric order. Each node has a key, and every node's key is:</p>
+<ul>
+<li>Larger than all keys in its left subtree.</li>
+<li>Smaller than all keys in its right subtree.</li>
+</ul>
+<p>Therefore, <strong>inorder traversal of a BST yields keys in ascending order</strong>.</p>
+<p>A node in BST should contain three four fields: key, value, references to left node and right node.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">private</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Node</span> {
+    <span class="hljs-keyword">private</span> Key key;
+    <span class="hljs-keyword">private</span> Value val;
+    <span class="hljs-keyword">private</span> Node left, right;
+    <span class="hljs-type">public</span> <span class="hljs-title function_">Node</span><span class="hljs-params">(Key key, Value val)</span> {
+        <span class="hljs-built_in">this</span>.key = key;
+        <span class="hljs-built_in">this</span>.val = val;
+    }
+}
+</code></pre></figure>
+<p>Note that <code>Key</code> and <code>Value</code> are generic types; <code>Key</code> is <code>Comparable</code>.</p>
+<h3 id="Insertion-and-Deletion">Insertion and Deletion</h3>
+<p>Operation <code>put</code>: Associate value with key.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-type">void</span> <span class="hljs-title function_">put</span><span class="hljs-params">(Key key, Value val)</span> { root = put(root, key, val); }
+
+<span class="hljs-keyword">private</span> <span class="hljs-type">Node</span> <span class="hljs-title function_">put</span><span class="hljs-params">(Node x, Key key, Value val)</span> {
+    <span class="hljs-keyword">if</span> (x == <span class="hljs-literal">null</span>)	<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Node</span>(key, val);
+    <span class="hljs-type">int</span> <span class="hljs-variable">cmp</span> <span class="hljs-operator">=</span> key.compareTo(x.key);
+    <span class="hljs-keyword">if</span> (cmp &lt; <span class="hljs-number">0</span>)
+        x.left = put(x.left, key, val);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cmp &gt; <span class="hljs-number">0</span>)
+        x.right = put(x.left, key, val);
+    <span class="hljs-keyword">else</span>
+        x.val = val;
+    <span class="hljs-keyword">return</span> x;
+}
+</code></pre></figure>
+<p>Deletion is BST is much more tricky. The lazy approach is to set <strong>tombstones</strong>, which easily leads to memory overload. So we introduce <strong>Hibbard deletion</strong> here.</p>
+<p>To delete a node with key <code>k</code>; search for node <code>t</code> containing key <code>k</code>.</p>
+<ul>
+<li>Case 0. [0 children] Delete <code>t</code> by setting parent link to <code>null</code>.</li>
+<li>Case 1. [1 child] Delete <code>t</code> by replacing parent link to its child.</li>
+<li>Case 2. [2 children] Delete <code>t</code>'s <strong>predecessor or successor</strong> and replace <code>t</code> with it.
+<ul>
+<li>Find the successor <code>x</code> of <code>t</code>.</li>
+<li>Delete <code>x</code>, but don't garbage collect it. <strong>(<code>x</code> has no left child, so it will be case 0 or 1)</strong></li>
+<li>Put <code>x</code> in <code>t</code>'s spot.</li>
+</ul>
+</li>
+</ul>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Definition. the <strong>neighboring nodes in inorder traversal</strong>.</p>
+<ul>
+<li>predecessor: the rightmost node in the left subtree.</li>
+<li>successor: the leftmost node in the right subtree.</li>
+</ul>
+</div></div>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-hibbard-ce0adc43bce7.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-hibbard-ce0adc43bce7.webp" alt="An example for Hibbard deletion" loading="lazy" decoding="async"></a></p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-type">void</span> <span class="hljs-title function_">delete</span><span class="hljs-params">(Key key)</span> { root = delete(root, key); }
+
+<span class="hljs-keyword">public</span> <span class="hljs-type">void</span> <span class="hljs-title function_">deleteMin</span><span class="hljs-params">()</span> { root = deleteMin(root); }
+
+<span class="hljs-keyword">private</span> <span class="hljs-type">Node</span> <span class="hljs-title function_">deleteMin</span><span class="hljs-params">(Node x)</span> {
+    <span class="hljs-keyword">if</span> (x.left == <span class="hljs-literal">null</span>)	<span class="hljs-keyword">return</span> x.right;
+    x.left = deleteMin(x.left);
+    <span class="hljs-keyword">return</span> x;
+}
+
+<span class="hljs-keyword">private</span> <span class="hljs-type">Node</span> <span class="hljs-title function_">delete</span><span class="hljs-params">(Node x, Key key)</span> {
+    <span class="hljs-keyword">if</span> (x == <span class="hljs-literal">null</span>)	<span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;               <span class="hljs-comment">// case 0</span>
+    <span class="hljs-type">int</span> <span class="hljs-variable">cmp</span> <span class="hljs-operator">=</span> key.compareTo(x.key);
+    <span class="hljs-keyword">if</span> (cmp &lt; <span class="hljs-number">0</span>)
+        x.left = delete(x.left, key);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cmp &gt; <span class="hljs-number">0</span>)
+        x.right = delete(x.right, key);
+    <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">if</span> (x.right == <span class="hljs-literal">null</span>)    <span class="hljs-keyword">return</span> x.left;   <span class="hljs-comment">// case 1</span>
+        <span class="hljs-keyword">if</span> (x.left == <span class="hljs-literal">null</span>)     <span class="hljs-keyword">return</span> x.right;  <span class="hljs-comment">// case 1</span>
+        <span class="hljs-type">Node</span> <span class="hljs-variable">t</span> <span class="hljs-operator">=</span> x;                              <span class="hljs-comment">// case 2</span>
+        x = min(t.right);
+        x.right = deleteMin(t.right);            <span class="hljs-comment">// replace t with x, update sons link</span>
+        x.left = t.left;
+    }
+    <span class="hljs-keyword">return</span> x;                                    <span class="hljs-comment">// replace t with x, update father link</span>
+}
+</code></pre></figure>
+<p>Hibbard deletion is <strong>NOT symmetric</strong>; it may lead to BST <strong>degenerating</strong> with height <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∼</mo><msqrt><mi>N</mi></msqrt></mrow><annotation encoding="application/x-tex">\sim\sqrt{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.04em;vertical-align:-0.1133em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9267em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span><span style="top:-2.8867em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"></path></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1133em;"><span></span></span></span></span></span></span></span></span></eq>.</p>
+<p>If for every Hibbard deletion, we flip a coin to decide whether replacing <code>t</code> with its predecessor or successor, then the expected height of BST will be <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∼</mo><mi>lg</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\sim \lg{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop">l<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq>. (this lacks rigorous mathematics proof)</p>
+<h3 id="BSTs-and-Quicksort-Partitioning">BSTs and Quicksort Partitioning</h3>
+<p>BSTs highly correspond to quicksort partitioning. Given <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq> <strong>distinct</strong> keys, we could simply build a BST using quicksort partitioning.</p>
+<p>Here is the basic idea:</p>
+<ul>
+<li>Set the current partitioning item <code>a[j]</code> as the root.</li>
+<li>Note that <code>a[lo...j-1]</code> are no larger than <code>a[j]</code>, and <code>a[j+1...hi]</code> are no smaller than <code>a[j]</code>; **this corresponds to BST's symmetric order. **</li>
+<li>Set the partitioning item in <code>[lo, j-1]</code> as <code>a[j]</code>'s left son, and the one in <code>[j+1, hi]</code> as the right son.</li>
+</ul>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-partition-ce3f799277ea.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-partition-ce3f799277ea.webp" alt="Correspondence between BSTs and quicksort partitioning" loading="lazy" decoding="async"></a></p>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Proposition. If <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq> <strong>distinct</strong> keys are inserted into a BST in <strong>random</strong> order, the expected number of compares for a search/insert operation is <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∼</mo><mn>2</mn><mi>ln</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\sim 2\ln N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq>.</p>
+</div></div>
+<p>The proof is 1-1 correspondence with quicksort partitioning.</p>
+<p>Therefore, we could see that just like the efficiency of quicksort depends on the random shuffle of the items, <strong>the efficiency of BST highly depends on the randomness of inserting keys.</strong></p>
+<p>If <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq> distinct keys are inserted in random order, the expected height of BST is <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∼</mo><mn>4.311</mn><mi>ln</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\sim4.311\ln{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord">4.311</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq>. But <strong>worst-case height of BST is <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq></strong>, which means <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∼</mo><msup><mi>N</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\sim N^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></eq> compares are needed for a search/insert.</p>
+<h2 id="2-3-Search-Trees">2-3 Search Trees</h2>
+<blockquote class="post-quote">
+<p>接下来我们将介绍两种著名的<strong>平衡搜索树 (Balanced Search Tree)</strong>，2-3 树与红黑树。与二叉搜索树 BST 不同，无论插入的键值顺序是否随机，平衡搜索树总能维持平衡；其树高是稳定的 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∼</mo><mi>lg</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\sim \lg{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop">l<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq>。</p>
+<p>Robert Sedgewick 教授总能把这种复杂的算法讲得深入浅出；之前一直对红黑树望而却步的我第一次理解了其本质：它其实是<strong>左倾 2-3 树的二叉树表现形式</strong>。(后来我才发现 Sedgewick 教授本人就是红黑树的发明者之一，甚至 Red Black Tree 这个名字也是他参与提出的)</p>
+</blockquote>
+<h3 id="2-3-Tree-Properties">2-3 Tree Properties</h3>
+<p><strong>2-3 tree allows 1 or 2 keys per node.</strong> It consists of two kinds of nodes:</p>
+<ul>
+<li>2-node: one key, two children.</li>
+<li>3-node: two keys, three children.</li>
+</ul>
+<p>For a 3-node with keys <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi></mrow><annotation encoding="application/x-tex">l</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span></span></span></span></eq> and <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span></span></span></span></eq>, the keys in left subtree are <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mi>l</mi></mrow><annotation encoding="application/x-tex">&lt;l</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span></span></span></span></eq>, the keys in middle subtree are between <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi></mrow><annotation encoding="application/x-tex">l</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span></span></span></span></eq> and <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span></span></span></span></eq>, and the keys in right subtree are <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&gt;</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">&gt; r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span></span></span></span></eq>.</p>
+<p>Therefore, just like BST, <strong>the inorder traversal of 2-3 tree yields keys in ascending order.</strong></p>
+<p>2-3 tree also achieves <strong>perfect balance</strong>.</p>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Perfect balance. <strong>Every path from root to null link has the same length.</strong></p>
+</div></div>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-2-3tree-9e5d6cb8d977.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-2-3tree-9e5d6cb8d977.webp" alt="Note that the keys in 3-node is also in order" loading="lazy" decoding="async"></a></p>
+<h3 id="Insertion">Insertion</h3>
+<p>When inserting a key into 2-3 tree.</p>
+<ul>
+<li>Find the corresponding <strong>bottom node</strong>.</li>
+<li>If it is a 2-node at bottom.
+<ul>
+<li>Insert the key into the 2-node so it becomes a 3-node.</li>
+</ul>
+</li>
+<li>If it is a 3-node at bottom.
+<ul>
+<li>Insert the key into the 3-node to create a temporary 4-node. (contains ascending 3 keys)</li>
+<li>Move middle key in 4-node into parent and <strong>split it into two 2-nodes</strong>.</li>
+<li>Repeat up the tree as necessary.</li>
+<li>If you reach the root and it's a 4-node, <strong>split it into three 2-nodes</strong>. (height increases)</li>
+</ul>
+</li>
+</ul>
+<p>Note that <strong>each transformation maintains symmetric order and perfect balance</strong>; the height of 2-3 tree increases only when <strong>every node on the search path from the root is a 3-node</strong>.</p>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-2-3insert-33db6fbd4948.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-2-3insert-33db6fbd4948.webp" alt="The local transformations achieve perfect balance; it does NOT change height" loading="lazy" decoding="async"></a></p>
+<h3 id="Performance">Performance</h3>
+<p>Perfect balance of 2-3 trees guarantees <strong>logarithmic performance</strong> for search and insert.</p>
+<p>Tree height.</p>
+<ul>
+<li>Worst case [all 2-nodes]: <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>lg</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\lg{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop">l<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq>.</li>
+<li>Best case [all 3-nodes]: <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi>log</mi><mo>⁡</mo></mrow><mn>3</mn></msub><mi>N</mi><mo>≈</mo><mn>.631</mn><mi>lg</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\log_3{N}\approx .631\lg{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9386em;vertical-align:-0.2441em;"></span><span class="mop"><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.207em;"><span style="top:-2.4559em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2441em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord">.631</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">l<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq>.</li>
+</ul>
+<p>The order of growth of symbol table implemented with 2-3 tree is <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∼</mo><mi>c</mi><mi>lg</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\sim c\lg{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">l<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq>; the constants depend upon implementation.</p>
+<h2 id="Red-Black-BSTs">Red-Black BSTs</h2>
+<p>We will introduce left-leaning red-black BSTs. <strong>It is essentially a representation of 2-3 tree as a BST</strong>. In particular, we use <strong>internal</strong> left-leaning links as "glue" for 3-nodes.</p>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-glue-13633ff61ecb.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-glue-13633ff61ecb.webp" alt="Transfer 3-nodes into BST representation" loading="lazy" decoding="async"></a></p>
+<p>The internal links are marked as <strong>red links</strong>, while the rest of the links (the external links connecting different nodes) are marked as <strong>black links</strong>.</p>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-2-3andrbt-616fd0400dd0.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-2-3andrbt-616fd0400dd0.webp" alt="2-3 tree and corresponding red-black BST" loading="lazy" decoding="async"></a></p>
+<p>We encode color of links in nodes since each node is pointed by precisely one link from its parent.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">boolean</span> <span class="hljs-variable">RED</span>   <span class="hljs-operator">=</span> <span class="hljs-literal">true</span>;
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">boolean</span> <span class="hljs-variable">BLACK</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;
+
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Node</span> {
+    Key key;
+    Value val;
+    Node left, right;
+    <span class="hljs-type">boolean</span> color;  <span class="hljs-comment">// color of parent link</span>
+}
+
+<span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isRed</span><span class="hljs-params">(Node x)</span> {
+    <span class="hljs-keyword">if</span> (x == <span class="hljs-literal">null</span>)	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">return</span> x.color == RED;
+}
+</code></pre></figure>
+<h3 id="Properties">Properties</h3>
+<p>Red Black Trees is a BST such that:</p>
+<ol>
+<li>No node has two red links connect to it.</li>
+<li><strong>Perfect black balance</strong>: Every path from root to null link has the same number of black links.</li>
+<li>Red links lean left.</li>
+</ol>
+<p>The above properties could be easily observed due to <strong>1-1 correspondence between 2-3 and LLRB</strong>.</p>
+<ol>
+<li>Any 3-node corresponds to only one internal red link.</li>
+<li>2-3 tree achieves perfect balance.</li>
+</ol>
+<h3 id="Elementary-operations">Elementary operations</h3>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Invariants. Maintains symmetric order and perfect black balance.</p>
+</div></div>
+<ul>
+<li><strong>Left rotation</strong>. Orient a (temporarily) right-leaning red link to lean left.</li>
+<li><strong>Right rotation.</strong> Orient a left-leaning red link to (temporarily) lean right.</li>
+<li><strong>Color flip.</strong> Recolor to split a (temporary) 4-node.</li>
+</ul>
+<p>Left &amp; Right rotation are mirror images of each other; They change the leaning direction of a red link <strong>without violating symmetric order and perfect black balance</strong>.</p>
+<p>Color flip simulates the splitting of a temporary 4-node; for a node with two red son links (they glue it and its sons together), we flip the color of its two son links and its parent link.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">private</span> <span class="hljs-type">void</span> <span class="hljs-title function_">flipColors</span><span class="hljs-params">(Node h)</span> {
+    <span class="hljs-keyword">assert</span> !isRed(h);
+    <span class="hljs-keyword">assert</span> isRed(h.left);
+    <span class="hljs-keyword">assert</span> isRed(h.right);
+    h.color = RED;
+    h.left.color = BLACK;
+    h.right.color = BLACK;
+}
+</code></pre></figure>
+<h3 id="Insertion-2">Insertion</h3>
+<p>The insertion in a LLRB tree maintains 1-1 correspondence with 2-3 trees by applying elementary red-black BST operations.</p>
+<p>Case 1. Insert into a 2-node at bottom.</p>
+<ul>
+<li>Do standard BST insert; color new link red.</li>
+<li>If new red link is a right link, rotate left.</li>
+</ul>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-rbtree-ins1-943ecc148f4e.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-rbtree-ins1-943ecc148f4e.webp" alt="See how &quot;internal&quot; red links corresponds to 3-nodes" loading="lazy" decoding="async"></a></p>
+<p>Case 2. Insert into a 3-node at bottom.</p>
+<ul>
+<li>DO standart BST insert; color new link red.</li>
+<li>Rotate to balance the 4-node (if needed).</li>
+<li>Flip colors to pass red link up one level.</li>
+<li>Rotate to make lean left (if needed).</li>
+<li><strong>Repeat case 1 or case 2 up the tree (if needed)</strong>.</li>
+</ul>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-rbtree-ins2-06cf18aa642d.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-rbtree-ins2-06cf18aa642d.webp" alt="Note that in this example the &quot;black height&quot; increases by 1" loading="lazy" decoding="async"></a></p>
+<p>See the Java implementation below: this is the code for all cases.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">private</span> <span class="hljs-type">Node</span> <span class="hljs-title function_">put</span><span class="hljs-params">(Node h, Key key, Value val)</span> {
+    <span class="hljs-keyword">if</span> (h == <span class="hljs-literal">null</span>)	<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Node</span>(key, val, RED);
+    <span class="hljs-type">int</span> <span class="hljs-variable">cmp</span> <span class="hljs-operator">=</span> key.compareTo(h.key);
+    <span class="hljs-keyword">if</span>      (cmp &lt; <span class="hljs-number">0</span>)	h.left  = put(h.left, key, val);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cmp &gt; <span class="hljs-number">0</span>)	h.right = put(h.right, key, val);
+    <span class="hljs-keyword">else</span>             	h.val = val;
+    
+    <span class="hljs-keyword">if</span> (isRed(h.right) &amp;&amp; !isRed(h.left))   	h = rotateLeft(h);    <span class="hljs-comment">// lean left</span>
+    <span class="hljs-keyword">if</span> (isRed(h.left) &amp;&amp; isRed(h.left.left))	h = rotateRight(h);   <span class="hljs-comment">// balance 4-node</span>
+    <span class="hljs-keyword">if</span> (isRed(h.left) &amp;&amp; isRed(h.right))    	flipColors(h);        <span class="hljs-comment">// split 4-node</span>
+    <span class="hljs-keyword">return</span> h;
+}
+</code></pre></figure>
+<h3 id="Performance-2">Performance</h3>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Proposition. Height of tree is <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≤</mo><mn>2</mn><mi>lg</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\leq 2\lg{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">l<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq> in the worst case.</p>
+</div></div>
+<p>Proof (guaranteed by properties).</p>
+<ul>
+<li>Black balance. Every path from root to null link has the same number of black links.</li>
+<li>Never two red links in-a-row.</li>
+</ul>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-rbtree-cb54b974bb23.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-rbtree-cb54b974bb23.webp" alt="Height of RB Tree is  in typical applications like symbol table" loading="lazy" decoding="async"></a></p>
+</div><footer class="post-license"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="license" aria-label="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享" title="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享"><img src="/icons/cc-by-nc-sa.svg" width="88" height="31" alt="CC BY-NC-SA 4.0" loading="lazy" decoding="async"></a></footer></article>
       <nav class="post-end post-pagination" aria-label="读完之后">
         <a href="/notes/note-dsa/">← 返回专题目录</a>
         <a href="/notes/note-dsa/symbol-tables/" rel="prev"><span>上一篇</span>符号表</a>
-        <a class="next-post" href="/notes/note-dsa/kd-trees/" rel="next"><span>下一篇</span>KD 树</a>
+        <a class="next-post" href="/notes/note-dsa/kd-trees/" rel="next"><span>下一篇</span>几何查找与 Kd 树</a>
       </nav>
-      
+      <section class="comments" id="comments" aria-label="评论" data-comments data-options="{&quot;meta&quot;:[&quot;nick&quot;,&quot;mail&quot;,&quot;link&quot;],&quot;requiredMeta&quot;:[&quot;nick&quot;],&quot;login&quot;:&quot;enable&quot;,&quot;commentSorting&quot;:&quot;oldest&quot;,&quot;pageSize&quot;:10,&quot;wordLimit&quot;:5000,&quot;emoji&quot;:[{&quot;name&quot;:&quot;QQ 2007&quot;,&quot;prefix&quot;:&quot;qq2007_&quot;,&quot;type&quot;:&quot;gif&quot;,&quot;icon&quot;:&quot;14&quot;,&quot;items&quot;:[&quot;0&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;10&quot;,&quot;11&quot;,&quot;12&quot;,&quot;13&quot;,&quot;14&quot;,&quot;15&quot;,&quot;16&quot;,&quot;17&quot;,&quot;18&quot;,&quot;19&quot;,&quot;20&quot;,&quot;21&quot;,&quot;22&quot;,&quot;23&quot;,&quot;24&quot;,&quot;25&quot;,&quot;26&quot;,&quot;27&quot;,&quot;28&quot;,&quot;29&quot;,&quot;30&quot;,&quot;31&quot;,&quot;32&quot;,&quot;33&quot;,&quot;34&quot;,&quot;35&quot;,&quot;36&quot;,&quot;37&quot;,&quot;38&quot;,&quot;39&quot;,&quot;40&quot;,&quot;41&quot;,&quot;42&quot;,&quot;43&quot;,&quot;44&quot;,&quot;45&quot;,&quot;46&quot;,&quot;47&quot;,&quot;48&quot;,&quot;49&quot;,&quot;50&quot;,&quot;51&quot;,&quot;52&quot;,&quot;53&quot;,&quot;54&quot;,&quot;55&quot;,&quot;56&quot;,&quot;57&quot;,&quot;58&quot;,&quot;59&quot;,&quot;60&quot;,&quot;61&quot;,&quot;62&quot;,&quot;63&quot;,&quot;64&quot;,&quot;65&quot;,&quot;66&quot;,&quot;67&quot;,&quot;68&quot;,&quot;69&quot;,&quot;70&quot;,&quot;71&quot;,&quot;72&quot;,&quot;73&quot;,&quot;74&quot;,&quot;75&quot;,&quot;76&quot;,&quot;77&quot;,&quot;78&quot;,&quot;79&quot;,&quot;80&quot;,&quot;81&quot;,&quot;82&quot;,&quot;83&quot;,&quot;84&quot;,&quot;85&quot;,&quot;86&quot;,&quot;87&quot;,&quot;88&quot;,&quot;89&quot;,&quot;92&quot;,&quot;93&quot;,&quot;94&quot;,&quot;95&quot;,&quot;96&quot;,&quot;97&quot;,&quot;98&quot;,&quot;99&quot;,&quot;100&quot;,&quot;101&quot;,&quot;102&quot;,&quot;103&quot;,&quot;104&quot;,&quot;105&quot;,&quot;106&quot;,&quot;107&quot;,&quot;108&quot;,&quot;109&quot;,&quot;110&quot;,&quot;111&quot;,&quot;112&quot;,&quot;113&quot;,&quot;114&quot;,&quot;115&quot;,&quot;116&quot;,&quot;117&quot;,&quot;118&quot;,&quot;119&quot;,&quot;120&quot;,&quot;121&quot;,&quot;122&quot;,&quot;123&quot;,&quot;124&quot;,&quot;125&quot;,&quot;126&quot;,&quot;127&quot;,&quot;128&quot;,&quot;129&quot;,&quot;130&quot;,&quot;131&quot;,&quot;132&quot;,&quot;133&quot;,&quot;134&quot;,&quot;135&quot;,&quot;136&quot;,&quot;137&quot;,&quot;138&quot;,&quot;139&quot;],&quot;folder&quot;:&quot;/emoji/qq-2007-v1&quot;},{&quot;name&quot;:&quot;小豆泥&quot;,&quot;prefix&quot;:&quot;azuki_&quot;,&quot;type&quot;:&quot;png&quot;,&quot;icon&quot;:&quot;004&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;,&quot;031&quot;,&quot;032&quot;,&quot;033&quot;,&quot;034&quot;,&quot;035&quot;,&quot;036&quot;,&quot;037&quot;,&quot;038&quot;,&quot;039&quot;,&quot;040&quot;],&quot;folder&quot;:&quot;/emoji/azuki-v1&quot;},{&quot;name&quot;:&quot;自嘲熊&quot;,&quot;prefix&quot;:&quot;jokebear_&quot;,&quot;type&quot;:&quot;webp&quot;,&quot;icon&quot;:&quot;002&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;],&quot;folder&quot;:&quot;/emoji/jokebear-v1&quot;}],&quot;search&quot;:false,&quot;imageUploader&quot;:false,&quot;reaction&quot;:false,&quot;noRss&quot;:true,&quot;noCopyright&quot;:false,&quot;serverURL&quot;:&quot;https://lalande-waline-xxz5.vercel.app&quot;,&quot;path&quot;:&quot;/notes/note-dsa/binary-search-trees/&quot;}">
+    <div class="comments-status" role="status"><span>正在加载评论…</span><button type="button" data-comments-retry hidden>重新加载</button></div>
+    <div class="comments-mount" translate="no"></div>
+    <noscript><p class="comments-help">开启 JavaScript 后即可阅读和留下评论。</p></noscript>
+  </section>
     </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
     <nav class="site-tools" aria-label="联系、订阅、搜索与语言">
     <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a><a href="/feed.xml" class="icon-link" aria-label="RSS 订阅" title="RSS 订阅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="5" cy="19" r="1" fill="currentColor" stroke="none"/><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/></svg></a><a href="/search/" class="icon-link" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>

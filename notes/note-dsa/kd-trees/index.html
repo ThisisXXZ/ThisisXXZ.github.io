@@ -5,60 +5,249 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <link rel="canonical" href="https://www.thisisxxz.com/notes/note-dsa/kd-trees/">
-  <meta name="description" content="KD 树 · 数据结构与算法 — Lalande.">
+  <meta name="description" content="在学习二叉搜索树与平衡树之后，我们将介绍其在图形化搜索中的重要应用。这一节包括了： 1d range search: 基本数据是点，询问区间 [lo,hi] 中包含的点。 1d interval search: 基本数据是区间，询问区间 [lo,hi] 所相交的所有区间。 Geometric interpretation: Keys are point on a line. Count/find…">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="KD 树">
+  <meta property="og:title" content="几何查找与 Kd 树">
   <meta property="og:url" content="https://www.thisisxxz.com/notes/note-dsa/kd-trees/">
   <meta property="og:site_name" content="Lalande.">
-  <meta property="og:description" content="KD 树 · 数据结构与算法 — Lalande.">
+  <meta property="og:description" content="在学习二叉搜索树与平衡树之后，我们将介绍其在图形化搜索中的重要应用。这一节包括了： 1d range search: 基本数据是点，询问区间 [lo,hi] 中包含的点。 1d interval search: 基本数据是区间，询问区间 [lo,hi] 所相交的所有区间。 Geometric interpretation: Keys are point on a line. Count/find…">
   <meta property="og:locale" content="zh_CN">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="KD 树">
-  <meta name="twitter:description" content="KD 树 · 数据结构与算法 — Lalande.">
-  <meta property="article:published_time" content="2025-09-07">
-  <meta property="article:modified_time" content="2025-09-08">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="几何查找与 Kd 树">
+  <meta name="twitter:description" content="在学习二叉搜索树与平衡树之后，我们将介绍其在图形化搜索中的重要应用。这一节包括了： 1d range search: 基本数据是点，询问区间 [lo,hi] 中包含的点。 1d interval search: 基本数据是区间，询问区间 [lo,hi] 所相交的所有区间。 Geometric interpretation: Keys are point on a line. Count/find…">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-intervalSearch-1cf9e592dac8.webp">
+  <meta property="og:image:alt" content="A BST created this way is called interval search trees">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-intervalSearch-1cf9e592dac8.webp">
+  <meta name="twitter:image:alt" content="A BST created this way is called interval search trees">
+  <meta property="article:published_time" content="2023-06-20">
+  <meta property="article:modified_time" content="2026-11-05">
   <meta property="article:author" content="XXZ">
-  <title>KD 树 — Lalande.</title>
+  <title>几何查找与 Kd 树 — Lalande.</title>
   <link rel="alternate" type="application/rss+xml" title="Lalande" href="/feed.xml">
   <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f8f8f6'/%3E%3Ctext x='11' y='30' fill='%23525250' font-size='30' font-family='serif'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/jack-frost-16-fda80e58c167.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/jack-frost-32-39b58fec28d1.png">
   <link rel="preload" href="/fonts/source-serif-4-normal-940a76eda138.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-bdb0d67d70c4.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/fonts/lxgw-500-aa0ec0f23902.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/fonts/page-1438e7f5a7a3.css">
-  <meta name="traditional-fonts" content="/fonts/traditional-2b586369b7c8.css">
+  <link rel="preload" href="/fonts/lxgw-400-6e3038eb1109.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-f1036eab7672.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-335589be311a.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/page-6fc897c335b2.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-b66c0926d507.css">
   <script type="module" src="/language.js"></script>
-  <script src="/search-shortcut-edd07b9fabdb.js" defer></script>
+  <script src="/search-shortcut-37dd56f27c33.js" defer></script>
   <script defer src="https://cloud.umami.is/script.js" data-website-id="45d476b5-0328-4eab-85f4-8651edd42b2f" data-domains="www.thisisxxz.com,thisisxxz.com" data-exclude-search="true" data-exclude-hash="true"></script>
   <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs-b3b62b13fba0.js" defer></script><script src="/reading-89b733c46043.js" defer></script>
   
   
-  
-  
-  
-  <link rel="stylesheet" href="/styles-fbbd4236e1e1.css">
+  <link rel="stylesheet" href="/vendor/waline/3.16.2/waline.css"><link rel="stylesheet" href="/fonts/comments-572c059eea12.css"><script type="module" src="/comments-0d49716e2a68.js"></script>
+  <script src="/toc.js" defer></script>
+  <script src="/media.js" defer></script>
+  <link rel="stylesheet" href="/styles-15e0139b1e1f.css">
 </head>
 <body class="is-reading">
   <a class="skip-link" href="#contents">跳到正文</a>
-  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/note-dsa/">数据结构与算法</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">KD 树</span></li></ol></nav>
-    <main class="reading" id="contents" tabindex="-1">
+  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/note-dsa/">数据结构与算法</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">几何查找与 Kd 树</span></li></ol></nav>
+    <main class="reading has-license" id="contents" tabindex="-1">
       <article aria-labelledby="post-title"><header class="post-header">
-        <h1 id="post-title">KD 树</h1>
-        <time datetime="2025-09-07" aria-label="发布于 2025.09.07">2025.09.07</time>
+        <h1 id="post-title">几何查找与 Kd 树</h1>
+        <time datetime="2023-06-20" aria-label="发布于 2023.06.20">2023.06.20</time>
       </header>
-      
-      <div class="prose"><p class="empty-note">这篇笔记还没有正文。</p></div></article>
+      <aside class="article-toc" data-article-toc>
+    <button class="toc-toggle" type="button" aria-label="打开本文目录" aria-expanded="false" aria-haspopup="dialog" aria-controls="article-toc-drawer" hidden><span aria-hidden="true">目录</span></button>
+    <div class="toc-panel">
+      <div class="toc-header"><p class="toc-label" id="article-toc-label">本文目录</p><button class="toc-close" type="button" aria-label="关闭本文目录" hidden><span aria-hidden="true"></span></button></div>
+      <nav id="article-toc-links" aria-label="页内目录">
+      <ol><li><a href="#1d-Geometric-Search">1d Geometric Search</a><ol><li><a href="#1d-Range-Search">1d Range Search</a></li><li><a href="#1d-Interval-Search">1d Interval Search</a></li></ol></li><li><a href="#Sweep-Line-Algorithm">Sweep-Line Algorithm</a></li><li><a href="#Kd-Tree">Kd Tree</a><ol><li><a href="#2d-Orthogonal-Range-Search">2d Orthogonal Range Search</a></li><li><a href="#2d-Tree">2d Tree</a></li><li><a href="#From-2d-to-Kd">From 2d to Kd</a></li></ol></li></ol>
+      </nav>
+    </div>
+    <dialog class="toc-drawer" id="article-toc-drawer" aria-labelledby="article-toc-label"></dialog>
+  </aside>
+      <div class="prose"><h2 id="1d-Geometric-Search">1d Geometric Search</h2>
+<p>在学习二叉搜索树与平衡树之后，我们将介绍其在图形化搜索中的重要应用。这一节包括了：</p>
+<ul>
+<li>1d range search: 基本数据是点，询问区间 <code>[lo,hi]</code> 中包含的点。</li>
+<li>1d interval search: 基本数据是区间，询问区间 <code>[lo,hi]</code> 所相交的所有区间。</li>
+</ul>
+<h3 id="1d-Range-Search">1d Range Search</h3>
+<p>Geometric interpretation:</p>
+<ul>
+<li>Keys are point on a <strong>line</strong>.</li>
+<li>Count/find points in a given <strong>1d interval</strong>.</li>
+</ul>
+<p>Build a BST out of the given keys (points).</p>
+<ul>
+<li>count [<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∼</mo><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\sim \log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq>]. return <code>rank(hi)-rank(lo)+1</code>.</li>
+<li>find [<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∼</mo><mi>log</mi><mo>⁡</mo><mi>N</mi><mo>+</mo><mi>R</mi></mrow><annotation encoding="application/x-tex">\sim\log{N}+R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0077em;">R</span></span></span></span></eq>].
+<ul>
+<li>Recursively find all keys in left subtree (if any could fall in range).</li>
+<li>Check key in current node.</li>
+<li>Recursively find all keys in right subtree (if any could fall in range).</li>
+</ul>
+</li>
+</ul>
+<p><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq> is the total number of points, <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0077em;">R</span></span></span></span></eq> is the matching points in a single search.</p>
+<h3 id="1d-Interval-Search">1d Interval Search</h3>
+<p>Create a BST, where each node stores an interval <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>l</mi><mi>o</mi><mo separator="true">,</mo><mi>h</mi><mi>i</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(lo, hi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">o</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">hi</span><span class="mclose">)</span></span></span></span></eq>.</p>
+<ul>
+<li>Use left endpoint as BST key.</li>
+<li>Store <strong>max endpoint</strong> in subtree rooted at node.</li>
+</ul>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-intervalSearch-1cf9e592dac8.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-intervalSearch-1cf9e592dac8.webp" alt="A BST created this way is called interval search trees" loading="lazy" decoding="async"></a></p>
+<p>To search for intervals that intersects query interval <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>l</mi><mi>o</mi><mo separator="true">,</mo><mi>h</mi><mi>i</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(lo, hi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">o</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">hi</span><span class="mclose">)</span></span></span></span></eq>:</p>
+<ul>
+<li>Check the interval in current node.</li>
+<li>If interval in node intersects query interval:
+<ul>
+<li>Recursively search all intervals in left subtree.</li>
+<li>Recursively search all intervals in right subtree.</li>
+</ul>
+</li>
+<li>If interval in node <strong>doesn't</strong> intersects query interval: (# see proof below)
+<ul>
+<li>If left subtree is null, go right.</li>
+<li>Else if max endpoint in left subtree is less than <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi></mrow><annotation encoding="application/x-tex">lo</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">o</span></span></span></span></eq>, go right.</li>
+<li>Else go left.</li>
+</ul>
+</li>
+</ul>
+<p>A tricky case: If the current interval doesn't intersect and search goes <strong>left</strong>, then there is <strong>either an intersection in left subtree or no intersections at all</strong>.</p>
+<p>Pf. (#) We assume the interval with the max endpoint is <code>[c, max]</code>. no intersections in left subtree <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\to</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span></eq> <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><mo>&lt;</mo><mi>h</mi><mi>i</mi><mo>&lt;</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">lo&lt;hi&lt;c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7335em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">o</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7335em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">hi</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">c</span></span></span></span></eq> <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\to</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span></eq> no intersections in right.</p>
+<p>The order of growth of running time for <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq> intervals is <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∼</mo><mi>R</mi><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\sim R\log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0077em;">R</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq> in average. It is better to use a red-black RST to guarantee performance.</p>
+<h2 id="Sweep-Line-Algorithm">Sweep-Line Algorithm</h2>
+<p>Sweep-line algorithm coverts:</p>
+<ul>
+<li>Orthogonal line segment intersection problem <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\to</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span></eq> 1d range search.</li>
+<li>Orthogonal rectangle intersection problem <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\to</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span></eq> 1d interval search.</li>
+</ul>
+<p><strong>Orthogonal line segment intersection</strong>.</p>
+<p>Given <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq> horizontal and vertical line segments, find all intersections. (non-degeneracy assumption: all x- and y-coordinates are distinct).</p>
+<p>To solve this, we maintain a <strong>sweep vertical line</strong> from left to right.</p>
+<ul>
+<li>x-coordinates define events. [<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">N\log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq>]</li>
+<li>horizontal segment (left endpoint): insert y-coordinate into BST. [<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">N\log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq>]</li>
+<li>horizontal segment (right endpoint): remove y-coordinate from BST. [<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">N\log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq>]</li>
+<li>vertical segment: <strong>range search</strong> for interval of y-endpoints. [<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mi>log</mi><mo>⁡</mo><mi>N</mi><mo>+</mo><mi>R</mi></mrow><annotation encoding="application/x-tex">N\log{N}+R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0077em;">R</span></span></span></span></eq>]</li>
+</ul>
+<p>Note that <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0077em;">R</span></span></span></span></eq> refers to the number of intersections.</p>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-sweepline1-561aaa4c8933.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-sweepline1-561aaa4c8933.webp" alt="Sweep line reduces 2d line segment intersection to 1d range search" loading="lazy" decoding="async"></a></p>
+<p><strong>Orthogonal rectangle intersection.</strong></p>
+<p>Find all intersections among a set of <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq> orthogonal rectangles. (non-degeneracy assumption: all x- and y-coordinates are distinct)</p>
+<p>To solve this, we maintain a <strong>sweep vertical</strong> line from left to right.</p>
+<ul>
+<li>x-coordinate of left and right endpoints define events. [<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">N\log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq>]</li>
+<li>Maintain set of rectangles that intersect the sweep line in an <strong>interval search tree</strong> using y-intervals of rectangle. [<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mi>log</mi><mo>⁡</mo><mi>N</mi><mo>+</mo><mi>R</mi><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">N\log{N}+R\log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0077em;">R</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq>]</li>
+<li>Left endpoint: interval search for y-interval of rectangle; insert y-interval. [<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">N\log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq>]</li>
+<li>Right endpoint: remove y-interval. [<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">N\log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq>]</li>
+</ul>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-sweepline2-b510185bce82.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-sweepline2-b510185bce82.webp" alt="Sweep line reduces 2d orthogonal rectangle intersection to 1d interval search" loading="lazy" decoding="async"></a></p>
+<h2 id="Kd-Tree">Kd Tree</h2>
+<p>普通的 BST 以及平衡树已经能够解决许多一维的图形搜索问题；借助扫描线算法的转化，它们也能够解决部分的二维图形搜索问题。那么当我们的基本数据有着大于等于二的维度呢？此时就需要依靠其他的空间划分树 (space partitioning tree) 来进行处理了。这里将会介绍其中一个简单优美的 k 维空间划分树：KD 树。</p>
+<h3 id="2d-Orthogonal-Range-Search">2d Orthogonal Range Search</h3>
+<p>Given <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq> distinct 2d keys in a plane.</p>
+<ul>
+<li>Range search: find all keys that lie in a 2d range.</li>
+<li>Range count: number of keys that lie in a 2d range.</li>
+</ul>
+<p>A simple solution is the <strong>grid implementation</strong>.</p>
+<ul>
+<li>Divide space into M-by-M grid of squares. [rule of thumbs: <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><mo>=</mo><msqrt><mi>N</mi></msqrt></mrow><annotation encoding="application/x-tex">M=\sqrt{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.04em;vertical-align:-0.1133em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9267em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span><span style="top:-2.8867em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"></path></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1133em;"><span></span></span></span></span></span></span></span></span></eq>]</li>
+<li>Create list of points contained in each square.</li>
+<li>Use 2d array to directly index relevant square.</li>
+<li>Insert: add <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">)</span></span></span></span></eq> to list for corresponding square.</li>
+<li>Range search: examine only squares that intersect 2d range query.</li>
+</ul>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-grid-0b5bfe52b301.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-grid-0b5bfe52b301.webp" alt="" loading="lazy" decoding="async"></a></p>
+<p>Grid implementation is a fast, simple algorithm for <strong>evenly-distributed points</strong>.</p>
+<ul>
+<li>Initialization. [<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq>]</li>
+<li>Insert point. [<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></eq>]</li>
+<li>Range search. [<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0077em;">R</span></span></span></span></eq>]</li>
+</ul>
+<p>However, it becomes inefficient when <strong>clustering</strong> happens. To solve this, we need data structures that adapts gracefully to data.</p>
+<h3 id="2d-Tree">2d Tree</h3>
+<p>2d tree is a <strong>space-partitioning tree</strong> that recursively divide space into two halfplanes.</p>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Space-partitioning trees. Use a tree to represent a recursive subdivision of 2d space.</p>
+<p>Ex. 2d tree, Quadtree, BSP tree.</p>
+</div></div>
+<p>2d tree is essentially a BST, but <strong>alternate using x- and y-coordinates as key.</strong></p>
+<ul>
+<li>Search operation gives the rectangle containing point.</li>
+<li>Insert operation <strong>further subdivides the plane</strong>.</li>
+</ul>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-2dtree-ed78f31943da.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-2dtree-ed78f31943da.webp" alt="2d tree partitions the plane according to the inserting points" loading="lazy" decoding="async"></a></p>
+<p>Here is the inner class <code>Node</code> for a typical 2D tree implementation.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Node</span> {
+    <span class="hljs-keyword">private</span> Point2D p;    <span class="hljs-comment">// the partitioning point</span>
+    <span class="hljs-keyword">private</span> RectHV rect;  <span class="hljs-comment">// the partitioning rectangle</span>
+    <span class="hljs-keyword">private</span> Node lb;      <span class="hljs-comment">// left or bottom</span>
+    <span class="hljs-keyword">private</span> Node rt;      <span class="hljs-comment">// right or top</span>
+}
+</code></pre></figure>
+<p>View my code repository for this course; it contains two applications of 2d tree:</p>
+<ul>
+<li>2d orthogonal range search.
+<ul>
+<li>Typical case. [<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>+</mo><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">R+\log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0077em;">R</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq>]</li>
+<li>Worst case (even if tree is balanced). [<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>+</mo><msqrt><mi>N</mi></msqrt></mrow><annotation encoding="application/x-tex">R+\sqrt{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0077em;">R</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.04em;vertical-align:-0.1133em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9267em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span><span style="top:-2.8867em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"></path></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1133em;"><span></span></span></span></span></span></span></span></span></eq>]</li>
+</ul>
+</li>
+<li>Nearest neighbor - find closest point to query point.
+<ul>
+<li>Typical case. [<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\log{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></span></eq>]</li>
+<li>Worst case (even if tree is balanced). [<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq>]</li>
+</ul>
+</li>
+</ul>
+<h3 id="From-2d-to-Kd">From 2d to Kd</h3>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Kd tree. Recursively partition k-dimensional space into 2 halfspaces.</p>
+</div></div>
+<p>Kd tree is the generalization of 2d tree. It is an efficient data structure for processing <strong>k-dimensional</strong> data. The implementation is similar to 2d tree: we just cycle through dimensions ala 2d trees.</p>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-kdtree-65832f8aa859.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-3-kdtree-65832f8aa859.webp" alt="Cycle through every k dimensions level by level" loading="lazy" decoding="async"></a></p>
+</div><footer class="post-license"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="license" aria-label="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享" title="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享"><img src="/icons/cc-by-nc-sa.svg" width="88" height="31" alt="CC BY-NC-SA 4.0" loading="lazy" decoding="async"></a></footer></article>
       <nav class="post-end post-pagination" aria-label="读完之后">
         <a href="/notes/note-dsa/">← 返回专题目录</a>
-        <a href="/notes/note-dsa/binary-search-trees/" rel="prev"><span>上一篇</span>二叉查找树</a>
-        <a class="next-post" href="/notes/note-dsa/hash-tables/" rel="next"><span>下一篇</span>哈希表</a>
+        <a href="/notes/note-dsa/binary-search-trees/" rel="prev"><span>上一篇</span>二叉搜索树与平衡树</a>
+        <a class="next-post" href="/notes/note-dsa/hash-tables/" rel="next"><span>下一篇</span>散列表</a>
       </nav>
-      
+      <section class="comments" id="comments" aria-label="评论" data-comments data-options="{&quot;meta&quot;:[&quot;nick&quot;,&quot;mail&quot;,&quot;link&quot;],&quot;requiredMeta&quot;:[&quot;nick&quot;],&quot;login&quot;:&quot;enable&quot;,&quot;commentSorting&quot;:&quot;oldest&quot;,&quot;pageSize&quot;:10,&quot;wordLimit&quot;:5000,&quot;emoji&quot;:[{&quot;name&quot;:&quot;QQ 2007&quot;,&quot;prefix&quot;:&quot;qq2007_&quot;,&quot;type&quot;:&quot;gif&quot;,&quot;icon&quot;:&quot;14&quot;,&quot;items&quot;:[&quot;0&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;10&quot;,&quot;11&quot;,&quot;12&quot;,&quot;13&quot;,&quot;14&quot;,&quot;15&quot;,&quot;16&quot;,&quot;17&quot;,&quot;18&quot;,&quot;19&quot;,&quot;20&quot;,&quot;21&quot;,&quot;22&quot;,&quot;23&quot;,&quot;24&quot;,&quot;25&quot;,&quot;26&quot;,&quot;27&quot;,&quot;28&quot;,&quot;29&quot;,&quot;30&quot;,&quot;31&quot;,&quot;32&quot;,&quot;33&quot;,&quot;34&quot;,&quot;35&quot;,&quot;36&quot;,&quot;37&quot;,&quot;38&quot;,&quot;39&quot;,&quot;40&quot;,&quot;41&quot;,&quot;42&quot;,&quot;43&quot;,&quot;44&quot;,&quot;45&quot;,&quot;46&quot;,&quot;47&quot;,&quot;48&quot;,&quot;49&quot;,&quot;50&quot;,&quot;51&quot;,&quot;52&quot;,&quot;53&quot;,&quot;54&quot;,&quot;55&quot;,&quot;56&quot;,&quot;57&quot;,&quot;58&quot;,&quot;59&quot;,&quot;60&quot;,&quot;61&quot;,&quot;62&quot;,&quot;63&quot;,&quot;64&quot;,&quot;65&quot;,&quot;66&quot;,&quot;67&quot;,&quot;68&quot;,&quot;69&quot;,&quot;70&quot;,&quot;71&quot;,&quot;72&quot;,&quot;73&quot;,&quot;74&quot;,&quot;75&quot;,&quot;76&quot;,&quot;77&quot;,&quot;78&quot;,&quot;79&quot;,&quot;80&quot;,&quot;81&quot;,&quot;82&quot;,&quot;83&quot;,&quot;84&quot;,&quot;85&quot;,&quot;86&quot;,&quot;87&quot;,&quot;88&quot;,&quot;89&quot;,&quot;92&quot;,&quot;93&quot;,&quot;94&quot;,&quot;95&quot;,&quot;96&quot;,&quot;97&quot;,&quot;98&quot;,&quot;99&quot;,&quot;100&quot;,&quot;101&quot;,&quot;102&quot;,&quot;103&quot;,&quot;104&quot;,&quot;105&quot;,&quot;106&quot;,&quot;107&quot;,&quot;108&quot;,&quot;109&quot;,&quot;110&quot;,&quot;111&quot;,&quot;112&quot;,&quot;113&quot;,&quot;114&quot;,&quot;115&quot;,&quot;116&quot;,&quot;117&quot;,&quot;118&quot;,&quot;119&quot;,&quot;120&quot;,&quot;121&quot;,&quot;122&quot;,&quot;123&quot;,&quot;124&quot;,&quot;125&quot;,&quot;126&quot;,&quot;127&quot;,&quot;128&quot;,&quot;129&quot;,&quot;130&quot;,&quot;131&quot;,&quot;132&quot;,&quot;133&quot;,&quot;134&quot;,&quot;135&quot;,&quot;136&quot;,&quot;137&quot;,&quot;138&quot;,&quot;139&quot;],&quot;folder&quot;:&quot;/emoji/qq-2007-v1&quot;},{&quot;name&quot;:&quot;小豆泥&quot;,&quot;prefix&quot;:&quot;azuki_&quot;,&quot;type&quot;:&quot;png&quot;,&quot;icon&quot;:&quot;004&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;,&quot;031&quot;,&quot;032&quot;,&quot;033&quot;,&quot;034&quot;,&quot;035&quot;,&quot;036&quot;,&quot;037&quot;,&quot;038&quot;,&quot;039&quot;,&quot;040&quot;],&quot;folder&quot;:&quot;/emoji/azuki-v1&quot;},{&quot;name&quot;:&quot;自嘲熊&quot;,&quot;prefix&quot;:&quot;jokebear_&quot;,&quot;type&quot;:&quot;webp&quot;,&quot;icon&quot;:&quot;002&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;],&quot;folder&quot;:&quot;/emoji/jokebear-v1&quot;}],&quot;search&quot;:false,&quot;imageUploader&quot;:false,&quot;reaction&quot;:false,&quot;noRss&quot;:true,&quot;noCopyright&quot;:false,&quot;serverURL&quot;:&quot;https://lalande-waline-xxz5.vercel.app&quot;,&quot;path&quot;:&quot;/notes/note-dsa/kd-trees/&quot;}">
+    <div class="comments-status" role="status"><span>正在加载评论…</span><button type="button" data-comments-retry hidden>重新加载</button></div>
+    <div class="comments-mount" translate="no"></div>
+    <noscript><p class="comments-help">开启 JavaScript 后即可阅读和留下评论。</p></noscript>
+  </section>
     </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
     <nav class="site-tools" aria-label="联系、订阅、搜索与语言">
     <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a><a href="/feed.xml" class="icon-link" aria-label="RSS 订阅" title="RSS 订阅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="5" cy="19" r="1" fill="currentColor" stroke="none"/><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/></svg></a><a href="/search/" class="icon-link" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>

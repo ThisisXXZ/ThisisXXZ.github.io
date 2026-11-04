@@ -5,61 +5,266 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <link rel="canonical" href="https://www.thisisxxz.com/notes/note-dsa/regex/">
-  <meta name="description" content="正则表达式 · 数据结构与算法 — Lalande.">
+  <meta name="description" content="A regular expression is a notation to specify a set (possibly infinite) of strings. 正则表达式是解决 pattern matching 问题的有力武器。与 substring search 问题不同，pattern matching 问题要求在文本中找到所有匹配给定 pattern 的字符串集合，而不是某个单独的…">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="正则表达式">
+  <meta property="og:title" content="正则表达式与自动机">
   <meta property="og:url" content="https://www.thisisxxz.com/notes/note-dsa/regex/">
   <meta property="og:site_name" content="Lalande.">
-  <meta property="og:description" content="正则表达式 · 数据结构与算法 — Lalande.">
+  <meta property="og:description" content="A regular expression is a notation to specify a set (possibly infinite) of strings. 正则表达式是解决 pattern matching 问题的有力武器。与 substring search 问题不同，pattern matching 问题要求在文本中找到所有匹配给定 pattern 的字符串集合，而不是某个单独的…">
   <meta property="og:locale" content="zh_CN">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="正则表达式">
-  <meta name="twitter:description" content="正则表达式 · 数据结构与算法 — Lalande.">
-  <meta property="article:published_time" content="2025-09-07">
-  <meta property="article:modified_time" content="2025-09-07">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="正则表达式与自动机">
+  <meta name="twitter:description" content="A regular expression is a notation to specify a set (possibly infinite) of strings. 正则表达式是解决 pattern matching 问题的有力武器。与 substring search 问题不同，pattern matching 问题要求在文本中找到所有匹配给定 pattern 的字符串集合，而不是某个单独的…">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-6-NFA-624a484da3b7.webp">
+  <meta property="og:image:alt" content="NFA corresponding to the pattern ( ( A*B | AC ) D )">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-6-NFA-624a484da3b7.webp">
+  <meta name="twitter:image:alt" content="NFA corresponding to the pattern ( ( A*B | AC ) D )">
+  <meta property="article:published_time" content="2023-08-27">
+  <meta property="article:modified_time" content="2026-11-05">
   <meta property="article:author" content="XXZ">
-  <title>正则表达式 — Lalande.</title>
+  <title>正则表达式与自动机 — Lalande.</title>
   <link rel="alternate" type="application/rss+xml" title="Lalande" href="/feed.xml">
   <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f8f8f6'/%3E%3Ctext x='11' y='30' fill='%23525250' font-size='30' font-family='serif'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/jack-frost-16-fda80e58c167.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/jack-frost-32-39b58fec28d1.png">
   <link rel="preload" href="/fonts/source-serif-4-normal-940a76eda138.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/source-serif-4-italic-9d28b5749a1a.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-6e3038eb1109.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-cde11610f994.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-4cfe08a98d59.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-500-05ef0ec5e05a.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/fonts/page-8f9a4c6d9e61.css">
-  <meta name="traditional-fonts" content="/fonts/traditional-146cc655bbb5.css">
+  <link rel="stylesheet" href="/fonts/page-416144238728.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-c1ecad69d5a4.css">
   <script type="module" src="/language.js"></script>
-  <script src="/search-shortcut-edd07b9fabdb.js" defer></script>
+  <script src="/search-shortcut-37dd56f27c33.js" defer></script>
   <script defer src="https://cloud.umami.is/script.js" data-website-id="45d476b5-0328-4eab-85f4-8651edd42b2f" data-domains="www.thisisxxz.com,thisisxxz.com" data-exclude-search="true" data-exclude-hash="true"></script>
   <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs-b3b62b13fba0.js" defer></script><script src="/reading-89b733c46043.js" defer></script>
   
   
-  
-  
-  
-  <link rel="stylesheet" href="/styles-fbbd4236e1e1.css">
+  <link rel="stylesheet" href="/vendor/waline/3.16.2/waline.css"><link rel="stylesheet" href="/fonts/comments-572c059eea12.css"><script type="module" src="/comments-0d49716e2a68.js"></script>
+  <script src="/toc.js" defer></script>
+  <script src="/media.js" defer></script>
+  <link rel="stylesheet" href="/styles-15e0139b1e1f.css">
 </head>
 <body class="is-reading">
   <a class="skip-link" href="#contents">跳到正文</a>
-  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/note-dsa/">数据结构与算法</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">正则表达式</span></li></ol></nav>
-    <main class="reading" id="contents" tabindex="-1">
+  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/note-dsa/">数据结构与算法</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">正则表达式与自动机</span></li></ol></nav>
+    <main class="reading has-license" id="contents" tabindex="-1">
       <article aria-labelledby="post-title"><header class="post-header">
-        <h1 id="post-title">正则表达式</h1>
-        <time datetime="2025-09-07" aria-label="发布于 2025.09.07">2025.09.07</time>
+        <h1 id="post-title">正则表达式与自动机</h1>
+        <time datetime="2023-08-27" aria-label="发布于 2023.08.27">2023.08.27</time>
       </header>
-      
-      <div class="prose"><p class="empty-note">这篇笔记还没有正文。</p></div></article>
+      <aside class="article-toc" data-article-toc>
+    <button class="toc-toggle" type="button" aria-label="打开本文目录" aria-expanded="false" aria-haspopup="dialog" aria-controls="article-toc-drawer" hidden><span aria-hidden="true">目录</span></button>
+    <div class="toc-panel">
+      <div class="toc-header"><p class="toc-label" id="article-toc-label">本文目录</p><button class="toc-close" type="button" aria-label="关闭本文目录" hidden><span aria-hidden="true"></span></button></div>
+      <nav id="article-toc-links" aria-label="页内目录">
+      <ol><li><a href="#Regular-Expression">Regular Expression</a></li><li><a href="#Nondeterministic-Finite-State-Automata">Nondeterministic Finite-State Automata</a></li><li><a href="#NFA-Simulation">NFA Simulation</a></li><li><a href="#NFA-Construction">NFA Construction</a></li><li><a href="#Regex-Miscellaneous">Regex Miscellaneous</a><ol><li><a href="#Generalized-RE-Print">Generalized RE Print</a></li><li><a href="#Not-So-Regular-Expressions">Not-So-Regular Expressions</a></li><li><a href="#Abstract-Machines">Abstract Machines</a></li></ol></li></ol>
+      </nav>
+    </div>
+    <dialog class="toc-drawer" id="article-toc-drawer" aria-labelledby="article-toc-label"></dialog>
+  </aside>
+      <div class="prose"><h2 id="Regular-Expression">Regular Expression</h2>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>A regular expression is a notation to specify a set (possibly infinite) of strings.</p>
+</div></div>
+<p>正则表达式是解决 pattern matching 问题的有力武器。与 substring search 问题不同，pattern matching 问题要求在文本中找到所有匹配给定 pattern 的字符串集合，而不是某个单独的精确匹配的子串。</p>
+<p>正则表达式的基本 operations 有四种，按优先级从大到小分别是 ：</p>
+<ul>
+<li>parentheses. ex. <code>(AB)*A</code></li>
+<li>closure. ex. <code>AB*A</code></li>
+<li>concatenation. ex. <code>ABA</code></li>
+<li>or. ex. <code>AA | ABA</code></li>
+</ul>
+<p>此外还有几个约定俗成的 additional operations，比如：</p>
+<ul>
+<li>wildcard. ex. <code>.U.U.U.</code></li>
+<li>character class. ex. <code>[A-Za-z][a-z]*</code></li>
+<li>at least <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></eq>. ex. <code>A(BC)+DE</code></li>
+<li>exactly <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></eq>. ex. <code>[0-9]{5}-[0-9]{4}</code></li>
+</ul>
+<p>教授在这一节的末尾对正则表达式做了一个很精准的总结："REs are amazingly powerful and expressive, but using them in applications can be amazingly complex and error-prone."</p>
+<h2 id="Nondeterministic-Finite-State-Automata">Nondeterministic Finite-State Automata</h2>
+<p>在介绍 KMP 算法时，我们引入了 DFA (deterministic finite-state automata, 确定性有限状态自动机) 的概念并以此为基础构造了 KMP 自动机。类似的，对于 RE 我们也能构建对应的 DFA。根据 Kleene's theorem 有:</p>
+<ul>
+<li>For any DFA, there exists a RE that describes the same set of strings.</li>
+<li>For any RE, there exists a DFA that recognizes the same set of strings.</li>
+</ul>
+<p>因此，我们能够提出用 RE 实现 pattern matching 的 basic plan：</p>
+<ul>
+<li>Build DFA from RE.</li>
+<li>Simulate DFA with text as input. Pattern matched if it reaches the halting state.</li>
+</ul>
+<p>然而，理想很美好，现实很残酷，basic plan 实际上是 infeasible 的。这是因为我们构建的 DFA may have exponential number of states. 例如给出的 pattern 为 <code>a.......</code>，每多一个 wildcard，DFA 的状态数就将增加 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0077em;">R</span></span></span></span></eq> 倍；有 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></eq> 个 wildcard 的 RE 所构建的 DFA 将具有至少 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>R</mi><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">R^n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0077em;">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span></span></eq> 个状态。</p>
+<p>为了解决这个问题，NFA (nondeterministic finite-state automata，非确定性有限状态自动机) 横空出世。不得不说这真的是一个非常天才的想法。我们构造 Regular-expression-matching NFA 如下：</p>
+<ul>
+<li>We assume RE enclosed in parentheses.</li>
+<li><u>One state pre RE character</u> (start = 0, accept = M).</li>
+<li>Red <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi></mrow><annotation encoding="application/x-tex">\varepsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">ε</span></span></span></span></eq>-transition only changes state, but do <em>not</em> scan text.</li>
+<li>Black match transition changes state and scan to next text char.</li>
+<li>Accept if <em>any</em> sequence of transitions ends in accept state.</li>
+</ul>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-6-NFA-624a484da3b7.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-6-NFA-624a484da3b7.webp" alt="NFA corresponding to the pattern ( ( A*B | AC ) D )" loading="lazy" decoding="async"></a></p>
+<p>可以看到，NFA 中的状态数只与 RE 的长度有关；并且它巧妙地将 transitions 分为两种，红色的 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi></mrow><annotation encoding="application/x-tex">\varepsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">ε</span></span></span></span></eq> 转移与黑色的 match 转移。其中，利用 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi></mrow><annotation encoding="application/x-tex">\varepsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">ε</span></span></span></span></eq> 转移可以在不读入字符的前提下转移到新的状态。</p>
+<p>这一设计虽然天才，但是也同时带来了不确定性 (nondeterminism)。与 DFA 中 sequence 作为一个确定的 “解” 不同，NFA 中的 sequence 更像是：</p>
+<ul>
+<li>One view: machine can <em>guess</em> the proper sequence of state transitions.</li>
+<li>Another view: sequence is a proof that machine accepts the text.</li>
+</ul>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-6-NFA2-db50f88dece8.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-6-NFA2-db50f88dece8.webp" alt="AAAABD sequence matched by the above NFA" loading="lazy" decoding="async"></a></p>
+<p>可以看到，NFA 中存在若干个 applicable transitions，因此 NFA simulation 远比 DFA simulation 更加 tricky: we need to systematically consider <em>all</em> possible transition sequences.</p>
+<h2 id="NFA-Simulation">NFA Simulation</h2>
+<p>在理解了 NFA 的原理之后，其 simulation 也变得十分简单。我们利用类似多源 BFS 的思路模拟每一步能够到达的状态的集合 (“一步”代表读入一个 text character)。具体实现上，我们：</p>
+<ul>
+<li>State names. Integers from <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></eq> to <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span></span></span></span></eq> (number of symbols in RE).</li>
+<li>Match-transitions. Keep regular expression in array <code>re[]</code>.</li>
+<li><eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi></mrow><annotation encoding="application/x-tex">\varepsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">ε</span></span></span></span></eq>-transitions. Store in a diagraph <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi></mrow><annotation encoding="application/x-tex">G</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">G</span></span></span></span></eq>.</li>
+<li>Simulation. Maintain set of all possible (reachable) states that NFA could be in after reading in the first <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></eq> text characters. 其中 reachable states 用 DFS 即可找到。</li>
+</ul>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-6-NFA3-a0d99fe62f1a.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-6-NFA3-a0d99fe62f1a.webp" alt="One step in simulating an NFA" loading="lazy" decoding="async"></a></p>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Determining whether an <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq>-character text is recognized by the NFA corresponding to an <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span></span></span></span></eq>-character pattern takes time proportional to <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><mi>N</mi></mrow><annotation encoding="application/x-tex">MN</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq> in the worst case.</p>
+</div></div>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">NFA</span> {
+    <span class="hljs-keyword">private</span> <span class="hljs-type">char</span>[] re;    <span class="hljs-comment">// match transitions</span>
+    <span class="hljs-keyword">private</span> Digraph G;    <span class="hljs-comment">// epsilon-transition digraph</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> M;        <span class="hljs-comment">// number of states</span>
+    
+    <span class="hljs-type">public</span> <span class="hljs-title function_">NFA</span><span class="hljs-params">(String regexp)</span> {
+        M  = regexp.length();
+        re = regexp.toCharArray();
+        G  = buildEpsilonTransitionDigraph();
+    }
+    
+    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">recognizes</span><span class="hljs-params">(String txt)</span> {
+        <span class="hljs-type">Bag</span>&lt;Integer&gt; <span class="hljs-variable">pc</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Bag</span>&lt;Integer&gt;();
+        <span class="hljs-type">DirectedDFS</span> <span class="hljs-variable">dfs</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">DirectedDFS</span>(G, <span class="hljs-number">0</span>);
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">v</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; v &lt; G.V(); ++v)
+            <span class="hljs-keyword">if</span> (dfs.marked(v))	pc.add(v);
+        
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; txt.length(); ++i) {
+            <span class="hljs-type">Bag</span>&lt;Integer&gt; <span class="hljs-variable">states</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Bag</span>&lt;Integer&gt;();
+            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> v : pc) {
+                <span class="hljs-comment">// not necessarily a match since RE needs to match full text</span>
+                <span class="hljs-keyword">if</span> (v == M)	<span class="hljs-keyword">continue</span>;  
+                <span class="hljs-keyword">if</span> ((re[v] == txt.charAt(i)) || re[v] == <span class="hljs-string">'.'</span>)  <span class="hljs-comment">// follow match transitions</span>
+                    states.add(v+<span class="hljs-number">1</span>);
+            }
+            dfs = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DirectedDFS</span>(G, states);    <span class="hljs-comment">// follow epsilon-transitions</span>
+            pc = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Bag</span>&lt;Integer&gt;();
+            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">v</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; v &lt; G.V(); ++v)
+                <span class="hljs-keyword">if</span> (dfs.marked(v))	pc.add(v);
+        }
+    }
+    
+    <span class="hljs-keyword">public</span> <span class="hljs-type">Digraph</span> <span class="hljs-title function_">buildEpsilonTransitionDigraph</span><span class="hljs-params">()</span> {
+        <span class="hljs-comment">/* stay tuned */</span>
+    }
+}
+</code></pre></figure>
+<h2 id="NFA-Construction">NFA Construction</h2>
+<p>NFA construction 本质上是图的构建，而图的形式是由 RE 对各种 operations 的定义决定的。这里将着重介绍 RE 中四种基本 operations 的连边方式。(slide 54RegularExpressions.pdf 上有对应的实例图，很清晰)</p>
+<ul>
+<li>Concatenation. Add <em>match-transition</em> edge from state corresponding to characters to next state.</li>
+<li>Parentheses. Add a <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi></mrow><annotation encoding="application/x-tex">\varepsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">ε</span></span></span></span></eq>-transition edge from parentheses to next state.</li>
+<li>Closure. Add three <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi></mrow><annotation encoding="application/x-tex">\varepsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">ε</span></span></span></span></eq>-transition edges for each <code>*</code> operator.
+<ul>
+<li>character/closure expression to <code>*</code>.</li>
+<li><code>*</code> to characte/closure expression.</li>
+<li><code>*</code> to next state.</li>
+</ul>
+</li>
+<li>Or. Add two <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi></mrow><annotation encoding="application/x-tex">\varepsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">ε</span></span></span></span></eq>-transition edges for each <code>|</code> operator.</li>
+</ul>
+<p>可以发现 or 操作一定是与 parentheses 伴生的，且只有在右括号的位置确定后才能确定如何连边，因此用栈来维护是一个很自然的想法。</p>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Proposition. Building the NFA corresponding to an <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span></span></span></span></eq>-character regular expresssion takes time and space proportional to <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span></span></span></span></eq>.</p>
+</div></div>
+<p>对于长度为 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span></span></span></span></eq> 的RE 中的每个字符，我们最多执行三次连边操作与两次栈操作，可以视为 constant-time。</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">private</span> <span class="hljs-type">Digraph</span> <span class="hljs-title function_">buildEpsilonTransitionDigraph</span><span class="hljs-params">()</span> {
+    <span class="hljs-type">Digraph</span> <span class="hljs-variable">G</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Digraph</span>(M+<span class="hljs-number">1</span>);
+    <span class="hljs-type">Stack</span>&lt;Integer&gt; <span class="hljs-variable">ops</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Stack</span>&lt;Integer&gt;();
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; M; ++i) {
+        <span class="hljs-type">int</span> <span class="hljs-variable">lp</span> <span class="hljs-operator">=</span> i;
+        
+        <span class="hljs-keyword">if</span> (re[i] == <span class="hljs-string">'('</span> || re[i] == <span class="hljs-string">'|'</span>) ops.push(i);    <span class="hljs-comment">// left parentheses and |</span>
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (re[i] == <span class="hljs-string">')'</span>) {
+            <span class="hljs-type">int</span> <span class="hljs-variable">or</span> <span class="hljs-operator">=</span> ops.pop();
+            <span class="hljs-keyword">if</span> (re[or] == <span class="hljs-string">'|'</span>) {                          <span class="hljs-comment">// 2-way or</span>
+                lp = ops.pop();
+                G.addEdge(lp, or+<span class="hljs-number">1</span>);
+                G.addEdge(or, i);
+            }
+            <span class="hljs-keyword">else</span> lp = or;
+        }
+        <span class="hljs-keyword">if</span> (i &lt; M-<span class="hljs-number">1</span> &amp;&amp; re[i+<span class="hljs-number">1</span>] == <span class="hljs-string">'*'</span>) {                  <span class="hljs-comment">// closure</span>
+            G.addEdge(lp, i+<span class="hljs-number">1</span>);
+            G.addEdge(i+<span class="hljs-number">1</span>, lp);
+        }
+        
+        <span class="hljs-keyword">if</span> (re[i] == <span class="hljs-string">'('</span> || re[i] == <span class="hljs-string">'*'</span> || re[i] == <span class="hljs-string">')'</span>) <span class="hljs-comment">// metasymbols</span>
+            G.addEdge(i, i+<span class="hljs-number">1</span>);
+    }
+    <span class="hljs-keyword">return</span> G;
+}
+</code></pre></figure>
+<h2 id="Regex-Miscellaneous">Regex Miscellaneous</h2>
+<h3 id="Generalized-RE-Print">Generalized RE Print</h3>
+<p>Generalized/Global regular expression print (grep, 全局正则表达式打印) 我们应该再熟悉不过了。在学习了 RE NFA 的 simulation 与 construction 之后，我们也能自己实现 grep。</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">GREP</span> {
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> {
+        <span class="hljs-type">String</span> <span class="hljs-variable">re</span> <span class="hljs-operator">=</span> <span class="hljs-string">"(.*"</span> + args[<span class="hljs-number">0</span>] + <span class="hljs-string">".*)"</span>;    <span class="hljs-comment">// contains RE as a substring</span>
+        <span class="hljs-type">NFA</span> <span class="hljs-variable">nfa</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NFA</span>(re);
+        <span class="hljs-keyword">while</span> (StdIn.hasNextLine()) {
+            <span class="hljs-type">String</span> <span class="hljs-variable">line</span> <span class="hljs-operator">=</span> StdIn.readLine();
+            <span class="hljs-keyword">if</span> (nfa.recognized(line))
+                StdOut.println(line);
+        }
+    }
+}
+</code></pre></figure>
+<p>grep 的最坏时间复杂度与 substring search 问题的 brute-force 算法相同，均是 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∼</mo><mi>M</mi><mi>N</mi></mrow><annotation encoding="application/x-tex">\sim MN</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq>；但 pattern matching 问题确实要比 substring search 更加 fundamental。</p>
+<h3 id="Not-So-Regular-Expressions">Not-So-Regular Expressions</h3>
+<p>正则表达式能描述特定的字符串集合 (pattern)，那么是否所有的 pattern 都能被正则表达式表示呢？答案是否定的。举几个非正则 (non-regular) pattern 的例子：</p>
+<ul>
+<li>String of the form <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mi>w</mi></mrow><annotation encoding="application/x-tex">ww</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span></span></span></span></eq> for some string <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span></span></span></span></eq>: <code>beriberi</code>.</li>
+<li>Unary strings with a composite number of 1s: <code>111111</code>, <code>1111</code>, <code>11</code>...</li>
+<li>Bitstrings with an equal number of 0s and 1s: <code>01110100</code>.</li>
+<li>Palindromes. <code>abccba</code>.</li>
+</ul>
+<p>还有一个许多编程语言中支持的 RE additional operation, <em>back-references</em>: <code>\1</code> notation matches subexpression that was matched earlier. 但实际上，这一 feature 将会令 pattern matching 问题变得 intractable。</p>
+<h3 id="Abstract-Machines">Abstract Machines</h3>
+<p>Abstract machines, languages, and nondeterminism.</p>
+<ul>
+<li>Basis of the theory of computation.</li>
+<li>Basis of programming languages.</li>
+</ul>
+<p>实际上我们熟悉的 compiler 本质上与 DFA，NFA 这些 abstract machines 没有区别：它们都将某种“程序” (program) 翻译成另一种“机器码” (machine code)，再由 executor (即 simulator) 进行执行。</p>
+<ul>
+<li>KMP:  string =&gt; DFA =&gt; DFA simulator.</li>
+<li><code>grep</code>: RE =? NFA =&gt; NFA simulator.</li>
+<li><code>javac</code>: Java language =&gt; Java byte code =&gt; JVM.</li>
+</ul>
+</div><footer class="post-license"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="license" aria-label="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享" title="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享"><img src="/icons/cc-by-nc-sa.svg" width="88" height="31" alt="CC BY-NC-SA 4.0" loading="lazy" decoding="async"></a></footer></article>
       <nav class="post-end post-pagination" aria-label="读完之后">
         <a href="/notes/note-dsa/">← 返回专题目录</a>
         <a href="/notes/note-dsa/substring-search/" rel="prev"><span>上一篇</span>子串查找</a>
         <a class="next-post" href="/notes/note-dsa/data-compression/" rel="next"><span>下一篇</span>数据压缩</a>
       </nav>
-      
+      <section class="comments" id="comments" aria-label="评论" data-comments data-options="{&quot;meta&quot;:[&quot;nick&quot;,&quot;mail&quot;,&quot;link&quot;],&quot;requiredMeta&quot;:[&quot;nick&quot;],&quot;login&quot;:&quot;enable&quot;,&quot;commentSorting&quot;:&quot;oldest&quot;,&quot;pageSize&quot;:10,&quot;wordLimit&quot;:5000,&quot;emoji&quot;:[{&quot;name&quot;:&quot;QQ 2007&quot;,&quot;prefix&quot;:&quot;qq2007_&quot;,&quot;type&quot;:&quot;gif&quot;,&quot;icon&quot;:&quot;14&quot;,&quot;items&quot;:[&quot;0&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;10&quot;,&quot;11&quot;,&quot;12&quot;,&quot;13&quot;,&quot;14&quot;,&quot;15&quot;,&quot;16&quot;,&quot;17&quot;,&quot;18&quot;,&quot;19&quot;,&quot;20&quot;,&quot;21&quot;,&quot;22&quot;,&quot;23&quot;,&quot;24&quot;,&quot;25&quot;,&quot;26&quot;,&quot;27&quot;,&quot;28&quot;,&quot;29&quot;,&quot;30&quot;,&quot;31&quot;,&quot;32&quot;,&quot;33&quot;,&quot;34&quot;,&quot;35&quot;,&quot;36&quot;,&quot;37&quot;,&quot;38&quot;,&quot;39&quot;,&quot;40&quot;,&quot;41&quot;,&quot;42&quot;,&quot;43&quot;,&quot;44&quot;,&quot;45&quot;,&quot;46&quot;,&quot;47&quot;,&quot;48&quot;,&quot;49&quot;,&quot;50&quot;,&quot;51&quot;,&quot;52&quot;,&quot;53&quot;,&quot;54&quot;,&quot;55&quot;,&quot;56&quot;,&quot;57&quot;,&quot;58&quot;,&quot;59&quot;,&quot;60&quot;,&quot;61&quot;,&quot;62&quot;,&quot;63&quot;,&quot;64&quot;,&quot;65&quot;,&quot;66&quot;,&quot;67&quot;,&quot;68&quot;,&quot;69&quot;,&quot;70&quot;,&quot;71&quot;,&quot;72&quot;,&quot;73&quot;,&quot;74&quot;,&quot;75&quot;,&quot;76&quot;,&quot;77&quot;,&quot;78&quot;,&quot;79&quot;,&quot;80&quot;,&quot;81&quot;,&quot;82&quot;,&quot;83&quot;,&quot;84&quot;,&quot;85&quot;,&quot;86&quot;,&quot;87&quot;,&quot;88&quot;,&quot;89&quot;,&quot;92&quot;,&quot;93&quot;,&quot;94&quot;,&quot;95&quot;,&quot;96&quot;,&quot;97&quot;,&quot;98&quot;,&quot;99&quot;,&quot;100&quot;,&quot;101&quot;,&quot;102&quot;,&quot;103&quot;,&quot;104&quot;,&quot;105&quot;,&quot;106&quot;,&quot;107&quot;,&quot;108&quot;,&quot;109&quot;,&quot;110&quot;,&quot;111&quot;,&quot;112&quot;,&quot;113&quot;,&quot;114&quot;,&quot;115&quot;,&quot;116&quot;,&quot;117&quot;,&quot;118&quot;,&quot;119&quot;,&quot;120&quot;,&quot;121&quot;,&quot;122&quot;,&quot;123&quot;,&quot;124&quot;,&quot;125&quot;,&quot;126&quot;,&quot;127&quot;,&quot;128&quot;,&quot;129&quot;,&quot;130&quot;,&quot;131&quot;,&quot;132&quot;,&quot;133&quot;,&quot;134&quot;,&quot;135&quot;,&quot;136&quot;,&quot;137&quot;,&quot;138&quot;,&quot;139&quot;],&quot;folder&quot;:&quot;/emoji/qq-2007-v1&quot;},{&quot;name&quot;:&quot;小豆泥&quot;,&quot;prefix&quot;:&quot;azuki_&quot;,&quot;type&quot;:&quot;png&quot;,&quot;icon&quot;:&quot;004&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;,&quot;031&quot;,&quot;032&quot;,&quot;033&quot;,&quot;034&quot;,&quot;035&quot;,&quot;036&quot;,&quot;037&quot;,&quot;038&quot;,&quot;039&quot;,&quot;040&quot;],&quot;folder&quot;:&quot;/emoji/azuki-v1&quot;},{&quot;name&quot;:&quot;自嘲熊&quot;,&quot;prefix&quot;:&quot;jokebear_&quot;,&quot;type&quot;:&quot;webp&quot;,&quot;icon&quot;:&quot;002&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;],&quot;folder&quot;:&quot;/emoji/jokebear-v1&quot;}],&quot;search&quot;:false,&quot;imageUploader&quot;:false,&quot;reaction&quot;:false,&quot;noRss&quot;:true,&quot;noCopyright&quot;:false,&quot;serverURL&quot;:&quot;https://lalande-waline-xxz5.vercel.app&quot;,&quot;path&quot;:&quot;/notes/note-dsa/regex/&quot;}">
+    <div class="comments-status" role="status"><span>正在加载评论…</span><button type="button" data-comments-retry hidden>重新加载</button></div>
+    <div class="comments-mount" translate="no"></div>
+    <noscript><p class="comments-help">开启 JavaScript 后即可阅读和留下评论。</p></noscript>
+  </section>
     </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
     <nav class="site-tools" aria-label="联系、订阅、搜索与语言">
     <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a><a href="/feed.xml" class="icon-link" aria-label="RSS 订阅" title="RSS 订阅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="5" cy="19" r="1" fill="currentColor" stroke="none"/><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/></svg></a><a href="/search/" class="icon-link" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>

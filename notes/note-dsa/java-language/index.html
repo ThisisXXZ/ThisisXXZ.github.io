@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <link rel="canonical" href="https://www.thisisxxz.com/notes/note-dsa/java-language/">
+  <meta name="description" content="这是 Algorithms I &amp; II, Princeton 课程的 Java 配套笔记。零基础接触 Java，就从这门课开始吧！这篇笔记将会记录课程中覆盖到的关于 Java 的各类语言知识。 Java 的语法和 C++ 还是挺像的，想要入门并不困难。因此这里将主要记录一些不一样的东西......！ Suppose we&#39;ve implemented a data structure Stac…">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Java 配套笔记">
+  <meta property="og:url" content="https://www.thisisxxz.com/notes/note-dsa/java-language/">
+  <meta property="og:site_name" content="Lalande.">
+  <meta property="og:description" content="这是 Algorithms I &amp; II, Princeton 课程的 Java 配套笔记。零基础接触 Java，就从这门课开始吧！这篇笔记将会记录课程中覆盖到的关于 Java 的各类语言知识。 Java 的语法和 C++ 还是挺像的，想要入门并不困难。因此这里将主要记录一些不一样的东西......！ Suppose we&#39;ve implemented a data structure Stac…">
+  <meta property="og:locale" content="zh_CN">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Java 配套笔记">
+  <meta name="twitter:description" content="这是 Algorithms I &amp; II, Princeton 课程的 Java 配套笔记。零基础接触 Java，就从这门课开始吧！这篇笔记将会记录课程中覆盖到的关于 Java 的各类语言知识。 Java 的语法和 C++ 还是挺像的，想要入门并不困难。因此这里将主要记录一些不一样的东西......！ Suppose we&#39;ve implemented a data structure Stac…">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-8-orders-d381de0a3625.webp">
+  <meta property="og:image:alt" content="natural order and alternate orders of letter-string">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-8-orders-d381de0a3625.webp">
+  <meta name="twitter:image:alt" content="natural order and alternate orders of letter-string">
+  <meta property="article:published_time" content="2023-09-05">
+  <meta property="article:modified_time" content="2026-11-05">
+  <meta property="article:author" content="XXZ">
+  <title>Java 配套笔记 — Lalande.</title>
+  <link rel="alternate" type="application/rss+xml" title="Lalande" href="/feed.xml">
+  <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/jack-frost-16-fda80e58c167.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/jack-frost-32-39b58fec28d1.png">
+  <link rel="preload" href="/fonts/source-serif-4-normal-940a76eda138.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/source-serif-4-italic-9d28b5749a1a.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-6e3038eb1109.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-cde11610f994.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-a4c1774b084b.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-dd9002ff9906.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-50b2d3895a8d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/page-9aa9fd4f41bb.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-17f2547631ef.css">
+  <script type="module" src="/language.js"></script>
+  <script src="/search-shortcut-37dd56f27c33.js" defer></script>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="45d476b5-0328-4eab-85f4-8651edd42b2f" data-domains="www.thisisxxz.com,thisisxxz.com" data-exclude-search="true" data-exclude-hash="true"></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs-b3b62b13fba0.js" defer></script><script src="/reading-89b733c46043.js" defer></script>
+  
+  
+  <link rel="stylesheet" href="/vendor/waline/3.16.2/waline.css"><link rel="stylesheet" href="/fonts/comments-572c059eea12.css"><script type="module" src="/comments-0d49716e2a68.js"></script>
+  <script src="/toc.js" defer></script>
+  <script src="/media.js" defer></script>
+  <link rel="stylesheet" href="/styles-15e0139b1e1f.css">
+</head>
+<body class="is-reading">
+  <a class="skip-link" href="#contents">跳到正文</a>
+  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/note-dsa/">数据结构与算法</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">Java 配套笔记</span></li></ol></nav>
+    <main class="reading has-license" id="contents" tabindex="-1">
+      <article aria-labelledby="post-title"><header class="post-header">
+        <h1 id="post-title">Java 配套笔记</h1>
+        <time datetime="2023-09-05" aria-label="发布于 2023.09.05">2023.09.05</time>
+      </header>
+      <aside class="article-toc" data-article-toc>
+    <button class="toc-toggle" type="button" aria-label="打开本文目录" aria-expanded="false" aria-haspopup="dialog" aria-controls="article-toc-drawer" hidden><span aria-hidden="true">目录</span></button>
+    <div class="toc-panel">
+      <div class="toc-header"><p class="toc-label" id="article-toc-label">本文目录</p><button class="toc-close" type="button" aria-label="关闭本文目录" hidden><span aria-hidden="true"></span></button></div>
+      <nav id="article-toc-links" aria-label="页内目录">
+      <ol><li><a href="#Generics">Generics</a></li><li><a href="#Iterator-Interface">Iterator Interface</a></li><li><a href="#Comparable-Interface">Comparable Interface</a></li><li><a href="#Assertion-Statement">Assertion Statement</a></li><li><a href="#Comparator-Interface">Comparator Interface</a></li><li><a href="#Immutability">Immutability</a></li><li><a href="#Equality-Test">Equality Test</a></li><li><a href="#Hash-Function">Hash Function</a></li><li><a href="#String-in-Java">String in Java</a></li><li><a href="#Java-Language-Style">Java Language Style</a></li></ol>
+      </nav>
+    </div>
+    <dialog class="toc-drawer" id="article-toc-drawer" aria-labelledby="article-toc-label"></dialog>
+  </aside>
+      <div class="prose"><p>这是 <a href="/notes/note-dsa/">Algorithms I &amp; II, Princeton</a> 课程的 Java 配套笔记。零基础接触 Java，就从这门课开始吧！这篇笔记将会记录课程中覆盖到的关于 Java 的各类语言知识。</p>
+<p>Java 的语法和 C++ 还是挺像的，想要入门并不困难。因此这里将主要记录一些<strong>不一样的东西</strong>......！</p>
+<h2 id="Generics">Generics</h2>
+<p>Suppose we've implemented a data structure <code>StackOfStrings</code>, what could we do if the clients also want <code>StackOfURLs</code>, <code>StackOfInts</code>, <code>StackOfVans</code>...?</p>
+<ul>
+<li>
+<p>Attempt 1. Implement a seperate stack class for each type. (<eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>×</mo></mrow><annotation encoding="application/x-tex">\times</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord">×</span></span></span></span></eq>)</p>
+</li>
+<li>
+<p><strong>Attempt 2. Implement a stack with items of type <code>Object</code></strong>. See codes below:</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-type">StackOfObjects</span> <span class="hljs-variable">s</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StackOfObjects</span>();
+<span class="hljs-type">Apple</span>  <span class="hljs-variable">a</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Apple</span>();
+<span class="hljs-type">Orange</span> <span class="hljs-variable">b</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Orange</span>();
+s.push(a);
+s.push(b);
+a = (Apple) (s.pop());			<span class="hljs-comment">// error-prone: this will cause run-time error!</span>
+</code></pre></figure>
+<p>The type <code>Object</code> could be seen as the base class in C++. <code>Apple</code> and <code>Orange</code> are derived classes. However, this requires <strong>casting</strong> in client, which may cause <strong>run-time error</strong> if types mismatch.</p>
+</li>
+<li>
+<p><strong>Attempt 3. Applying Java generics</strong>. See codes below:</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-type">Stack</span>&lt;Apple&gt; <span class="hljs-variable">s</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Stack</span>&lt;Apple&gt;();
+<span class="hljs-type">Apple</span>  <span class="hljs-variable">a</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Apple</span>();
+<span class="hljs-type">Orange</span> <span class="hljs-variable">b</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Orange</span>();
+s.push(a);
+s.push(b);						<span class="hljs-comment">// compile-time error happens!</span>
+a = s.pop();
+</code></pre></figure>
+<p>Using Java generics avoid casting in client and could discover type dismatch errors <strong>at compile-time instead of run-time</strong>.</p>
+</li>
+</ul>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Guiding principles. <strong>Welcome compile-time errors; avoid run-time errors.</strong></p>
+</div></div>
+<p>Note that Java does <strong>NOT</strong> support <strong>generic array</strong>. To achieve this, proper casting is needed:</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">private</span> Item[] s;
+...
+    s = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Item</span>[capacity];              <span class="hljs-comment">// Wrong! Java doesn't support generic array</span>
+	s = (Item[]) <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>[capacity];   <span class="hljs-comment">// Acceptable. the "ugly" cast</span>
+<span class="hljs-comment">// Even with casting, Java will warn you for "unchecked cast"</span>
+</code></pre></figure>
+<p>Q. What to do about <strong>primitive types</strong>?</p>
+<p>To create a generic stack with primitive types like <code>int</code>, we use the corresponding <strong>wrapper types</strong>. Note that Java supports <strong>autoboxing</strong> which allows <strong>automatic cast</strong> between a primitive type and its wrapper.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-type">Stack</span>&lt;Integer&gt; <span class="hljs-variable">s</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Stack</span>&lt;Integer&gt;();
+s.push(<span class="hljs-number">17</span>);       <span class="hljs-comment">// s.push(Integer.valueOf(17));</span>
+<span class="hljs-type">int</span> <span class="hljs-variable">a</span> <span class="hljs-operator">=</span> s.pop();  <span class="hljs-comment">// int a = s.pop().IntValue();</span>
+</code></pre></figure>
+<blockquote class="post-quote">
+<p>学到这里，我发现 Java 的泛型 (generics) 与 C++ 中的类模板 (templates) 很相似，就连定义的语法都同样采用 diamond operator <code>&lt;&gt;</code>。上网搜索发现，Java 的泛型 (即 attempt 3) 本质上是上文中 attempt 2 的语法糖。这也是为什么 Java 的泛型又被称作<strong>类型参数化 (type parameterization)</strong>。</p>
+<p>具体来说，在 Java 中，两个泛型栈实例 <code>Stack&lt;Apple&gt;</code> 与 <code>Stack&lt;Orange&gt;</code> 将共享 <code>Stack</code> 类的静态变量；而在 C++ 中则不会，这两个模板栈属于完全不同的类。</p>
+</blockquote>
+<h2 id="Iterator-Interface">Iterator Interface</h2>
+<p>By implementing the <code>java.lang.Iterable</code> interface, we could support <strong>iteration</strong> over data structure items by clients, without revealing the internal representation of the data structure.</p>
+<p>There are <strong>two interfaces</strong> that we need to implement in our data structure:</p>
+<ul>
+<li>
+<p><code>Iterable</code> : Has a method that returns an <code>Iterator</code>.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Iterable</span>&lt;Item&gt; {
+    <span class="hljs-type">Iterator</span>&lt;Item&gt; <span class="hljs-title function_">iterator</span><span class="hljs-params">()</span>;
+}
+</code></pre></figure>
+</li>
+<li>
+<p><code>Iterator</code>: Has methods <code>hasNext()</code> and <code>next()</code>.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Iterator</span>&lt;Item&gt; {
+    <span class="hljs-type">boolean</span> <span class="hljs-title function_">hasNext</span><span class="hljs-params">()</span>;
+    <span class="hljs-type">Item</span> <span class="hljs-title function_">next</span><span class="hljs-params">()</span>;
+    <span class="hljs-comment">// optional: void remove(); </span>
+}
+</code></pre></figure>
+</li>
+</ul>
+<p>If the above two interfaces are properly implemented, Java supports elegant client code (<strong>"foreach" statement</strong>) for interating items in your data structures.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-comment">// foreach statement code (shorthand):</span>
+<span class="hljs-keyword">for</span> (String s : stack)	StdOut.println(s);
+
+<span class="hljs-comment">// equivalent code (longhand):</span>
+<span class="hljs-type">Iterator</span>&lt;String&gt; <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> stack.iterator();
+<span class="hljs-keyword">while</span> (i.hasNext()) {
+    <span class="hljs-type">String</span> <span class="hljs-variable">s</span> <span class="hljs-operator">=</span> i.next();
+    StdOut.println(s);
+}
+</code></pre></figure>
+<p>Here is a sample code on how to implement a <strong>reverse iterator</strong> for an array-based stack.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">import</span> java.util.Iterator;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Stack</span>&lt;Item&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Iterable</span>&lt;Item&gt; {
+    ...
+    <span class="hljs-keyword">public</span> <span class="hljs-type">Iterator</span>&lt;Item&gt; <span class="hljs-title function_">iterator</span><span class="hljs-params">()</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ReverseArrayIterator</span>();
+    }
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ReverseArrayIterator</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Iterator</span>&lt;Item&gt; {
+        <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> N;
+        
+        <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">hasNext</span><span class="hljs-params">()</span> { <span class="hljs-keyword">return</span> i &gt; <span class="hljs-number">0</span>;  }
+        <span class="hljs-keyword">public</span> <span class="hljs-type">Item</span> <span class="hljs-title function_">next</span><span class="hljs-params">()</span>       { <span class="hljs-keyword">return</span> s[--i]; }
+    }
+}
+</code></pre></figure>
+<h2 id="Comparable-Interface">Comparable Interface</h2>
+<p>Implementing the <code>Comparable</code> interface allows us to sort <strong>any</strong> type of data.</p>
+<p>For a simple <strong>sort client</strong>:</p>
+<figure class="code-block"><div class="code-tools"><span>JAva</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Student</span> {
+    ...
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> {
+        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> Integer.parseInt(args[<span class="hljs-number">0</span>]);
+        <span class="hljs-type">Student</span>[] <span class="hljs-variable">stu</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Student</span>[n];
+        Insertion.sort(stu);
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; ++i)
+            StdOut.println(stu[i].getName());
+    }
+}
+</code></pre></figure>
+<p>We need to implement the <code>Comparable</code> interface in class <code>Student</code> as a callback.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Comparable</span>&lt;Item&gt; {
+    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">compareTo</span><span class="hljs-params">(Item that)</span>;
+}
+</code></pre></figure>
+<p>In particular, the object implementation requires to implement the <code>compareTo</code> method.</p>
+<p>Note that the <code>compareTo</code> method should follow the <strong>total order</strong>.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Student</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Comparable</span>&lt;Student&gt; {
+    ...
+    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">compareTo</span><span class="hljs-params">(Student that)</span> {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.grades &lt; that.grades)
+            <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.grades &gt; that.grades)
+            <span class="hljs-keyword">return</span> +<span class="hljs-number">1</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    }
+}
+</code></pre></figure>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>A <u><strong>total order</strong></u> is a binary relation <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≤</mo></mrow><annotation encoding="application/x-tex">\leq</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mrel">≤</span></span></span></span></eq> that satisfies:</p>
+<ul>
+<li>Antisymmetry: if <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>≤</mo><mi>w</mi></mrow><annotation encoding="application/x-tex">v\leq w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span></span></span></span></eq> and <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo>≤</mo><mi>v</mi></mrow><annotation encoding="application/x-tex">w\leq v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></eq>, then <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><mi>w</mi></mrow><annotation encoding="application/x-tex">v=w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span></span></span></span></eq>.</li>
+<li>Transitivity: if <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>≤</mo><mi>w</mi></mrow><annotation encoding="application/x-tex">v\leq w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span></span></span></span></eq> and <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo>≤</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">w\leq x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></eq>, then <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>≤</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">v\leq x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></eq>.</li>
+<li>Totality: either <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>≤</mo><mi>w</mi></mrow><annotation encoding="application/x-tex">v\leq w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span></span></span></span></eq> or <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo>≤</mo><mi>v</mi></mrow><annotation encoding="application/x-tex">w\leq v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></eq> or both.</li>
+</ul>
+</div></div>
+<p>Finally, we implement the sorting algorithm. The key point is that there should be <strong>NO dependence</strong> on <code>Student</code> data type.</p>
+<p>For convenience, two useful sorting abstractions <code>less</code> and <code>exch</code> are introduced.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Insertion</span> {
+	<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">sort</span><span class="hljs-params">(Comparable[] a)</span> {
+    	<span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> a.length;
+    	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; N; ++i)
+        	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> i; j &gt; <span class="hljs-number">0</span>; --j) {
+            	<span class="hljs-keyword">if</span> (a[j].compareTo(a[j - <span class="hljs-number">1</span>]) &lt; <span class="hljs-number">0</span>)
+                	exch(a, j, j - <span class="hljs-number">1</span>);
+    			<span class="hljs-keyword">else</span>
+                	<span class="hljs-keyword">break</span>;
+        	}
+	}
+
+	<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">less</span><span class="hljs-params">(Comparable v, Comparable w)</span> {
+        <span class="hljs-keyword">return</span> v.compareTo(w) &lt; <span class="hljs-number">0</span>;
+    }
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">exch</span><span class="hljs-params">(Comparable[] a, <span class="hljs-type">int</span> i, <span class="hljs-type">int</span> j)</span> {
+        <span class="hljs-type">Comparable</span> <span class="hljs-variable">swap</span> <span class="hljs-operator">=</span> a[i];
+        a[i] = a[j];
+        a[j] = swap;
+    }
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isSorted</span><span class="hljs-params">(Comparable[] a)</span> {
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt; a.length; ++i)
+            <span class="hljs-keyword">if</span> (less(a[i], a[i - <span class="hljs-number">1</span>]))	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    }
+	
+}
+</code></pre></figure>
+<h2 id="Assertion-Statement">Assertion Statement</h2>
+<p>Assertion is the statement to <strong>test assumptions</strong> about the program.</p>
+<ul>
+<li>Helps detect <strong>logic</strong> bugs.</li>
+<li>Documents code.</li>
+</ul>
+<p>Java assert statement throws an exception unless boolean condition is true.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">assert</span> isSorted(a, lo, hi);
+<span class="hljs-comment">// if a[lo]...a[hi] is not sorted, throws an exception</span>
+</code></pre></figure>
+<p>Java assert statement could be enabled or disabled <strong>at runtime</strong>. <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>⇒</mo></mrow><annotation encoding="application/x-tex">\Rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">⇒</span></span></span></span></eq> No cost in production code.</p>
+<figure class="code-block"><div class="code-tools"><span>bash</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>java -ea MyProgram	// <span class="hljs-built_in">enable</span> assertions
+java -da MyProgram	// <span class="hljs-built_in">disable</span> assertions (default)
+</code></pre></figure>
+<p>Note that assertions are better used to check <strong>internal invariants</strong>; do <strong>NOT</strong> use for external argument checking.</p>
+<h2 id="Comparator-Interface">Comparator Interface</h2>
+<p>We have introduced <code>Comparable</code> interface in the previous section; It is usually implemented with a type's <strong>natural order</strong>.</p>
+<p>However, when we want to sort using one or more <strong>alternate orders</strong> (must be a <strong>total order</strong>), we need to implement the <code>Comparator</code> interface.</p>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-8-orders-d381de0a3625.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-8-orders-d381de0a3625.webp" alt="natural order and alternate orders of letter-string" loading="lazy" decoding="async"></a></p>
+<p>See the following <strong>Java system sort</strong> clients:</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>String[] a;
+...
+Arrays.sort(a);		<span class="hljs-comment">// uses natural order defined in Comparable interface</span>
+...
+Arrays.sort(a, String.CASE_INSENCITIVE_ORDER);
+Arrays.sort(a, Collator.getInstance(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Locale</span>(<span class="hljs-string">"es"</span>)));
+Arrays.sort(a, <span class="hljs-keyword">new</span> <span class="hljs-title class_">BritshPhoneBookOrder</span>());
+</code></pre></figure>
+<p>Note that the second argument passed into <code>Arrays.sort()</code> is a <code>Comparator</code> object.</p>
+<p>To create such objects, we need to implement <code>Comparator</code> interface in the corresponding class:</p>
+<ul>
+<li>Define a <strong>(nested) class</strong> that implements the <code>Comparator</code> interface.</li>
+<li>Implement the <code>compare()</code> method.</li>
+</ul>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Student</span> {
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Comparator</span>&lt;Student&gt; <span class="hljs-variable">BY_NAME</span>    <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ByName</span>();
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Comparator</span>&lt;Student&gt; <span class="hljs-variable">BY_SECTION</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BySection</span>();
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String name;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> section;
+    ...
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ByName</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Comparator</span>&lt;Student&gt; {
+        <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">compare</span><span class="hljs-params">(Student v, Student w)</span> {
+            <span class="hljs-keyword">return</span> v.name.compareTo(w.name);
+        }
+    }
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BySection</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Comparator</span>&lt;Student&gt; {
+        <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">compare</span><span class="hljs-params">(Student v, Student w)</span> {
+            <span class="hljs-keyword">return</span> v.section - w.section;
+        }
+    }
+} 
+</code></pre></figure>
+<p>If we want to support comparators in our own sort implementations:</p>
+<ul>
+<li>Use <code>Object</code> instead of <code>Comparable</code>.</li>
+<li>Pass <code>Comparator</code> to <code>sort()</code> and <code>less()</code> and use it in <code>less()</code>.</li>
+</ul>
+<p>Here is a sample code of insertion sort using a Comparator.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">sort</span><span class="hljs-params">(Object[] a, Comparator comparator)</span> {
+    <span class="hljs-type">int</span> <span class="hljs-variable">N</span> <span class="hljs-operator">=</span> a.length;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; N; ++i)
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> i; j &gt; <span class="hljs-number">0</span> &amp;&amp; less(comparator, a[j], a[j - <span class="hljs-number">1</span>]); --j)
+            exch(a, j, j - <span class="hljs-number">1</span>);
+}
+
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">less</span><span class="hljs-params">(Comparator c, Object v, Object w)</span> {
+    <span class="hljs-keyword">return</span> c.compare(v, w) &lt; <span class="hljs-number">0</span>;	<span class="hljs-comment">// compare() is used here in less()</span>
+}
+
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">exch</span><span class="hljs-params">(Object[] a, <span class="hljs-type">int</span> i, <span class="hljs-type">int</span> j)</span> {	<span class="hljs-comment">// no need to pass comparator in</span>
+    <span class="hljs-type">Object</span> <span class="hljs-variable">swap</span> <span class="hljs-operator">=</span> a[i]; a[i] = a[j]; a[j] = swap;
+}
+</code></pre></figure>
+<h2 id="Immutability">Immutability</h2>
+<blockquote class="post-quote">
+<p>Classes should be immutable unless there's a very good reason to make them mutable.</p>
+<p>—— Joshua Bloch (Java architect)</p>
+</blockquote>
+<p>If we make a data type <strong>immutable</strong>, it means we can't change the data type value once created.</p>
+<p>To achieve immutability in Java, we need to:</p>
+<ul>
+<li><code>final</code> in class definition: make sure the class <strong>can't override</strong> instance methods.</li>
+<li><code>final</code> in instance variables: make all instance variables <strong>private and final</strong>.</li>
+<li>make <strong>defensive copy</strong> of mutable instance variables in constructor.</li>
+<li>make sure all instance methods don't change instance variables.</li>
+</ul>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Vector</span> {
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> N;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-type">double</span>[] data;
+    
+    <span class="hljs-type">public</span> <span class="hljs-title function_">Vector</span><span class="hljs-params">(<span class="hljs-type">double</span>[] data)</span> {
+        <span class="hljs-built_in">this</span>.N = data.length;
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; N; ++i)
+            <span class="hljs-built_in">this</span>.data[i] = data[i];	<span class="hljs-comment">// make defensive copy</span>
+    }
+    
+    ... <span class="hljs-comment">// instance methods don't change instance variables</span>
+}
+</code></pre></figure>
+<p>Advantages of immutability.</p>
+<ul>
+<li>Simplifies debugging.</li>
+<li>Safer in presence of hostile code.</li>
+<li>Simplifies concurrent programming.</li>
+</ul>
+<h2 id="Equality-Test">Equality Test</h2>
+<p>All Java classes inherit a method <code>equals()</code>.</p>
+<p>For a user-defined type, it is typically unsafe to use <code>equals()</code> with inheritance as it may violate symmetry.  So we need to overwrite <code>equals()</code> as a callback.</p>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Java requirements. For any references x, y and z, the below <strong>equivalence relation</strong> must hold.</p>
+<ul>
+<li>Reflective. <code>x.equals(x)</code> is <code>true</code>.</li>
+<li>Symmetric. <code>x.equals(y)</code> iff <code>y.equals(x)</code>.</li>
+<li>Transitive. if <code>x.equals(y)</code> and <code>y.equals(z)</code>, then <code>x.equals(z)</code>.</li>
+<li>Non-null. <code>x.equals(null)</code> is <code>false</code>.</li>
+</ul>
+</div></div>
+<p><strong>Standard recipe</strong> of equals design for user-designed types is as follows:</p>
+<ul>
+<li>Optimization for reference equality. (<code>==</code>)</li>
+<li>Check against <code>null</code>.</li>
+<li>Check whether two objects are of the same type and cast.</li>
+<li>Compare each significant field.
+<ul>
+<li>if field is a primitive type, use <code>==</code>.</li>
+<li>if field is an object, use <code>equals()</code>. (thus apply rule recursively)</li>
+<li>if field is an array, apply to each entry. (lazy approaches: use <code>Arrays.equals(a,b)</code> or <code>Arrays.deepEquals(a,b)</code>)</li>
+</ul>
+</li>
+</ul>
+<p>Best practices of equals design to <strong>improve efficiency</strong>.</p>
+<ul>
+<li>No need to use calculated fields that depent on other fields.</li>
+<li>Compare fields mostly likely to differ first.</li>
+<li>Make <code>compareTo()</code> consistent with <code>equals()</code>. (<code>x.equals(y)</code> iff <code>(x.compareTo(y) == 0)</code>)</li>
+</ul>
+<p>See an example equals design for the class <code>Date</code>.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Date</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Comparable</span>&lt;Date&gt; {
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> month;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> day;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> year;
+    
+    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">equals</span><span class="hljs-params">(Object y)</span> {         <span class="hljs-comment">// Note that argument type should be Object</span>
+        <span class="hljs-keyword">if</span> (y == <span class="hljs-built_in">this</span>)	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;          <span class="hljs-comment">// optimize for reference equality</span>
+        <span class="hljs-keyword">if</span> (y == <span class="hljs-literal">null</span>)	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;         <span class="hljs-comment">// check for null</span>
+        <span class="hljs-keyword">if</span> (y.getClass() != <span class="hljs-built_in">this</span>.getClass())  <span class="hljs-comment">// objects must be in the same class</span>
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        <span class="hljs-type">Date</span> <span class="hljs-variable">that</span> <span class="hljs-operator">=</span> (Date) y;                 <span class="hljs-comment">// cast</span>
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.day   != that.day  )	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.month != that.month)	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.year  != that.year )	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    }
+}
+</code></pre></figure>
+<h2 id="Hash-Function">Hash Function</h2>
+<p>All Java classes inherit a method <code>hashCode()</code>, which returns a 32-bit <code>int</code>.</p>
+<ul>
+<li>Requirement. If <code>x.equals(y)</code>, then <code>(x.hashCode() == y.hashCode())</code>.</li>
+<li>Highly desirable. If <code>!x.equals(y)</code>, then <code>(x.hashCode() != y.hashCode())</code>.</li>
+</ul>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Horner's method. Use <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span></span></span></span></eq> multiplies/adds to hash string of length <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span></span></span></span></eq>.</p>
+</div></div>
+<p>Horner's method usually uses gen 31 to hash string of length <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span></span></span></span></eq>: <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo>=</mo><msub><mi>s</mi><mn>0</mn></msub><msup><mn>31</mn><mrow><mi>L</mi><mo>−</mo><mn>1</mn></mrow></msup><mo>+</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><msub><mi>s</mi><mrow><mi>L</mi><mo>−</mo><mn>2</mn></mrow></msub><msup><mn>31</mn><mn>1</mn></msup><mo>+</mo><msub><mi>s</mi><mrow><mi>L</mi><mo>−</mo><mn>1</mn></mrow></msub><msup><mn>31</mn><mn>0</mn></msup></mrow><annotation encoding="application/x-tex">h=s_031^{L-1}+...s_{L-2}31^1+s_{L-1}31^0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.9913em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">3</span><span class="mord"><span class="mord">1</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">L</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.0224em;vertical-align:-0.2083em;"></span><span class="mord">...</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">L</span><span class="mbin mtight">−</span><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mord">3</span><span class="mord"><span class="mord">1</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.0224em;vertical-align:-0.2083em;"></span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">L</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mord">3</span><span class="mord"><span class="mord">1</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span></span></span></span></eq>.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-comment">// Java library implementation</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">String</span> {
+    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> <span class="hljs-variable">hash</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;	<span class="hljs-comment">// cache of hash code</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-type">char</span>[] s;
+    ...
+    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">hashCode</span><span class="hljs-params">()</span> {
+        <span class="hljs-type">int</span> <span class="hljs-variable">h</span> <span class="hljs-operator">=</span> hash;
+        <span class="hljs-keyword">if</span> (h != <span class="hljs-number">0</span>)	<span class="hljs-keyword">return</span> h;
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; length(); ++i)	hash = s[i] + (<span class="hljs-number">31</span> * hash);
+        hash = h;
+        <span class="hljs-keyword">return</span> h;
+    }
+}
+</code></pre></figure>
+<p><strong>Standard recipe</strong> of hash code design for user-defined types is as follows:</p>
+<ul>
+<li>Combine each significant field using the <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>31</mn><mi>x</mi><mo>+</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">31x+y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">31</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span></span></span></eq> rule.</li>
+<li>If field is a primitive type, use wrapper type <code>hashCode()</code>.</li>
+<li>If field is null, return 0.</li>
+<li>If field is a reference type, use <code>hashCode()</code>. (thus applies rule recursively)</li>
+<li>If field is an array, apply to each entry. (lazy approach: use <code>Arrays.deepHashCode()</code>)</li>
+</ul>
+<p>This recipe works resonably well <strong>in practice</strong> and is widely used in Java libraries.</p>
+<h2 id="String-in-Java">String in Java</h2>
+<p>Java 中的字符串类型主要有 <code>String</code>, <code>StringBuilder</code> 两种，实现的不同决定了其应用场景的不同。</p>
+<p><code>String</code> 类：</p>
+<ul>
+<li>Sequence of <em>immutable</em> characters.</li>
+<li>Underlying implementation. Immutable <code>char[]</code> array, offset, and length.</li>
+</ul>
+<p><code>StringBuilder</code> 类：</p>
+<ul>
+<li>Sequence of <em>mutable</em> characters.</li>
+<li>Underlying implementation. Resizing <code>char[]</code> array and length.</li>
+</ul>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-8-string-3d149c162a04.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-8-string-3d149c162a04.webp" alt="常见 string operations 的效率对比" loading="lazy" decoding="async"></a></p>
+<p>immutability 上的差异造成了这两种字符串实现在 <code>concat()</code> 与 <code>substring()</code> 操作上的表现差异。</p>
+<p>值得注意的是 <code>substring()</code> 函数：<code>String</code> 类的 immutability 允许它使用 copy of reference to original char array，因此创建一个 substring 仅仅需要 constant time。</p>
+<p>除了以上提到的 built-in functions 之外，一些其他常见的字符串操作也会因为字符串实现的不同而产生效率上的差异。例如：</p>
+<ul>
+<li>字符串翻转函数 <code>rev()</code>。<code>String</code> 类需要 quadratic time：每一次添加新字符都需要 linear time。而 <code>StringBuilder</code> 类只需要 linear time：使用 <code>append()</code> 函数，每一次添加新字符仅需 constant time。</li>
+<li>Form array of suffixes。<code>String</code> 类需要 linear time &amp; space：如上所述，每次创建一个 substring 仅需要 constant time。而 <code>StringBuilder</code> 类需要 quadratic time &amp; space。</li>
+</ul>
+<h2 id="Java-Language-Style">Java Language Style</h2>
+<p>这门课的 projects 设计实在是太良心了，在评分反馈里居然还包含 style check！难以想象教职员们为课程的准备倾注了多少心血……至少我从来没有见过有一门课的评分标准里还包含 coding style。</p>
+<ol>
+<li>The instance variable name must start with <strong>a lowercase letter and use camelCase</strong>.</li>
+<li>The class name must start with <strong>a uppercase letter and use CamelCase</strong>.</li>
+<li>Remove unused import statements.</li>
+<li>Typecast (类型转换) must <strong>be followed by a whitespace</strong>.</li>
+<li>Define constructors after static and instance variables but before methods.</li>
+<li>Define constant variables to hold the constants used more than once.</li>
+<li>If a private instance (or static) variable is initialized only in the declaration or constructor, then you should make it <strong>final</strong>.</li>
+<li>Declare static variables <strong>before</strong> instance variables, constructors, and methods.</li>
+<li>It is bad design (and a violation of the API) for the success of calling one method to depend on the client previously calling another method.</li>
+</ol>
+</div><footer class="post-license"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="license" aria-label="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享" title="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享"><img src="/icons/cc-by-nc-sa.svg" width="88" height="31" alt="CC BY-NC-SA 4.0" loading="lazy" decoding="async"></a></footer></article>
+      <nav class="post-end post-pagination" aria-label="读完之后">
+        <a href="/notes/note-dsa/">← 返回专题目录</a>
+        <a href="/notes/note-dsa/hard-problems/" rel="prev"><span>上一篇</span>难解性与 NP 完全问题</a>
+        <a class="next-post" href="/notes/note-dsa/comp2119-ps/" rel="next"><span>下一篇</span>COMP2119A 数据结构与算法问题集</a>
+      </nav>
+      <section class="comments" id="comments" aria-label="评论" data-comments data-options="{&quot;meta&quot;:[&quot;nick&quot;,&quot;mail&quot;,&quot;link&quot;],&quot;requiredMeta&quot;:[&quot;nick&quot;],&quot;login&quot;:&quot;enable&quot;,&quot;commentSorting&quot;:&quot;oldest&quot;,&quot;pageSize&quot;:10,&quot;wordLimit&quot;:5000,&quot;emoji&quot;:[{&quot;name&quot;:&quot;QQ 2007&quot;,&quot;prefix&quot;:&quot;qq2007_&quot;,&quot;type&quot;:&quot;gif&quot;,&quot;icon&quot;:&quot;14&quot;,&quot;items&quot;:[&quot;0&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;10&quot;,&quot;11&quot;,&quot;12&quot;,&quot;13&quot;,&quot;14&quot;,&quot;15&quot;,&quot;16&quot;,&quot;17&quot;,&quot;18&quot;,&quot;19&quot;,&quot;20&quot;,&quot;21&quot;,&quot;22&quot;,&quot;23&quot;,&quot;24&quot;,&quot;25&quot;,&quot;26&quot;,&quot;27&quot;,&quot;28&quot;,&quot;29&quot;,&quot;30&quot;,&quot;31&quot;,&quot;32&quot;,&quot;33&quot;,&quot;34&quot;,&quot;35&quot;,&quot;36&quot;,&quot;37&quot;,&quot;38&quot;,&quot;39&quot;,&quot;40&quot;,&quot;41&quot;,&quot;42&quot;,&quot;43&quot;,&quot;44&quot;,&quot;45&quot;,&quot;46&quot;,&quot;47&quot;,&quot;48&quot;,&quot;49&quot;,&quot;50&quot;,&quot;51&quot;,&quot;52&quot;,&quot;53&quot;,&quot;54&quot;,&quot;55&quot;,&quot;56&quot;,&quot;57&quot;,&quot;58&quot;,&quot;59&quot;,&quot;60&quot;,&quot;61&quot;,&quot;62&quot;,&quot;63&quot;,&quot;64&quot;,&quot;65&quot;,&quot;66&quot;,&quot;67&quot;,&quot;68&quot;,&quot;69&quot;,&quot;70&quot;,&quot;71&quot;,&quot;72&quot;,&quot;73&quot;,&quot;74&quot;,&quot;75&quot;,&quot;76&quot;,&quot;77&quot;,&quot;78&quot;,&quot;79&quot;,&quot;80&quot;,&quot;81&quot;,&quot;82&quot;,&quot;83&quot;,&quot;84&quot;,&quot;85&quot;,&quot;86&quot;,&quot;87&quot;,&quot;88&quot;,&quot;89&quot;,&quot;92&quot;,&quot;93&quot;,&quot;94&quot;,&quot;95&quot;,&quot;96&quot;,&quot;97&quot;,&quot;98&quot;,&quot;99&quot;,&quot;100&quot;,&quot;101&quot;,&quot;102&quot;,&quot;103&quot;,&quot;104&quot;,&quot;105&quot;,&quot;106&quot;,&quot;107&quot;,&quot;108&quot;,&quot;109&quot;,&quot;110&quot;,&quot;111&quot;,&quot;112&quot;,&quot;113&quot;,&quot;114&quot;,&quot;115&quot;,&quot;116&quot;,&quot;117&quot;,&quot;118&quot;,&quot;119&quot;,&quot;120&quot;,&quot;121&quot;,&quot;122&quot;,&quot;123&quot;,&quot;124&quot;,&quot;125&quot;,&quot;126&quot;,&quot;127&quot;,&quot;128&quot;,&quot;129&quot;,&quot;130&quot;,&quot;131&quot;,&quot;132&quot;,&quot;133&quot;,&quot;134&quot;,&quot;135&quot;,&quot;136&quot;,&quot;137&quot;,&quot;138&quot;,&quot;139&quot;],&quot;folder&quot;:&quot;/emoji/qq-2007-v1&quot;},{&quot;name&quot;:&quot;小豆泥&quot;,&quot;prefix&quot;:&quot;azuki_&quot;,&quot;type&quot;:&quot;png&quot;,&quot;icon&quot;:&quot;004&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;,&quot;031&quot;,&quot;032&quot;,&quot;033&quot;,&quot;034&quot;,&quot;035&quot;,&quot;036&quot;,&quot;037&quot;,&quot;038&quot;,&quot;039&quot;,&quot;040&quot;],&quot;folder&quot;:&quot;/emoji/azuki-v1&quot;},{&quot;name&quot;:&quot;自嘲熊&quot;,&quot;prefix&quot;:&quot;jokebear_&quot;,&quot;type&quot;:&quot;webp&quot;,&quot;icon&quot;:&quot;002&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;],&quot;folder&quot;:&quot;/emoji/jokebear-v1&quot;}],&quot;search&quot;:false,&quot;imageUploader&quot;:false,&quot;reaction&quot;:false,&quot;noRss&quot;:true,&quot;noCopyright&quot;:false,&quot;serverURL&quot;:&quot;https://lalande-waline-xxz5.vercel.app&quot;,&quot;path&quot;:&quot;/notes/note-dsa/java-language/&quot;}">
+    <div class="comments-status" role="status"><span>正在加载评论…</span><button type="button" data-comments-retry hidden>重新加载</button></div>
+    <div class="comments-mount" translate="no"></div>
+    <noscript><p class="comments-help">开启 JavaScript 后即可阅读和留下评论。</p></noscript>
+  </section>
+    </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
+    <nav class="site-tools" aria-label="联系、订阅、搜索与语言">
+    <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a><a href="/feed.xml" class="icon-link" aria-label="RSS 订阅" title="RSS 订阅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="5" cy="19" r="1" fill="currentColor" stroke="none"/><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/></svg></a><a href="/search/" class="icon-link" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>
+    <div class="language-switch" role="group" aria-label="中文简繁切换" translate="no" hidden><button type="button" data-chinese-script="cn" lang="zh-Hans" aria-pressed="true" aria-label="简体中文（原文）">简</button><span aria-hidden="true">/</span><button type="button" data-chinese-script="tw" lang="zh-Hant" aria-pressed="false" aria-label="繁體中文">繁</button></div>
+  </nav><p class="language-status" role="status" translate="no" hidden></p>
+  </footer></div>
+</body>
+</html>

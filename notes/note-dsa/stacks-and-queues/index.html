@@ -5,61 +5,227 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <link rel="canonical" href="https://www.thisisxxz.com/notes/note-dsa/stacks-and-queues/">
-  <meta name="description" content="栈与队列 · 数据结构与算法 — Lalande.">
+  <meta name="description" content="No need to give a detailed introduction on these two famous data structures. We will focus on how to implement them in two different approaches - linked lists or resizing arrays. Approach 1. linked l…">
   <meta property="og:type" content="article">
   <meta property="og:title" content="栈与队列">
   <meta property="og:url" content="https://www.thisisxxz.com/notes/note-dsa/stacks-and-queues/">
   <meta property="og:site_name" content="Lalande.">
-  <meta property="og:description" content="栈与队列 · 数据结构与算法 — Lalande.">
+  <meta property="og:description" content="No need to give a detailed introduction on these two famous data structures. We will focus on how to implement them in two different approaches - linked lists or resizing arrays. Approach 1. linked l…">
   <meta property="og:locale" content="zh_CN">
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="栈与队列">
-  <meta name="twitter:description" content="栈与队列 · 数据结构与算法 — Lalande.">
-  <meta property="article:published_time" content="2025-09-07">
-  <meta property="article:modified_time" content="2025-09-07">
+  <meta name="twitter:description" content="No need to give a detailed introduction on these two famous data structures. We will focus on how to implement them in two different approaches - linked lists or resizing arrays. Approach 1. linked l…">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-1-resize-e2afb65496ab.webp">
+  <meta property="og:image:alt" content="Note that the array size grow exponentially:  for t-th growth">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-1-resize-e2afb65496ab.webp">
+  <meta name="twitter:image:alt" content="Note that the array size grow exponentially:  for t-th growth">
+  <meta property="article:published_time" content="2023-06-16">
+  <meta property="article:modified_time" content="2026-11-05">
   <meta property="article:author" content="XXZ">
   <title>栈与队列 — Lalande.</title>
   <link rel="alternate" type="application/rss+xml" title="Lalande" href="/feed.xml">
   <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f8f8f6'/%3E%3Ctext x='11' y='30' fill='%23525250' font-size='30' font-family='serif'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/jack-frost-16-fda80e58c167.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/jack-frost-32-39b58fec28d1.png">
   <link rel="preload" href="/fonts/source-serif-4-normal-940a76eda138.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-abfb8a29ae84.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/lxgw-500-14fb5ac73cd9.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/fonts/page-4d317551a2f4.css">
-  <meta name="traditional-fonts" content="/fonts/traditional-e91236de38a0.css">
+  <link rel="stylesheet" href="/fonts/page-034ff93432f1.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-b8b5f6c9b731.css">
   <script type="module" src="/language.js"></script>
-  <script src="/search-shortcut-edd07b9fabdb.js" defer></script>
+  <script src="/search-shortcut-37dd56f27c33.js" defer></script>
   <script defer src="https://cloud.umami.is/script.js" data-website-id="45d476b5-0328-4eab-85f4-8651edd42b2f" data-domains="www.thisisxxz.com,thisisxxz.com" data-exclude-search="true" data-exclude-hash="true"></script>
   <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs-b3b62b13fba0.js" defer></script><script src="/reading-89b733c46043.js" defer></script>
   
   
-  
-  
-  
-  <link rel="stylesheet" href="/styles-fbbd4236e1e1.css">
+  <link rel="stylesheet" href="/vendor/waline/3.16.2/waline.css"><link rel="stylesheet" href="/fonts/comments-572c059eea12.css"><script type="module" src="/comments-0d49716e2a68.js"></script>
+  <script src="/toc.js" defer></script>
+  <script src="/media.js" defer></script>
+  <link rel="stylesheet" href="/styles-15e0139b1e1f.css">
 </head>
 <body class="is-reading">
   <a class="skip-link" href="#contents">跳到正文</a>
   <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/note-dsa/">数据结构与算法</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">栈与队列</span></li></ol></nav>
-    <main class="reading" id="contents" tabindex="-1">
+    <main class="reading has-license" id="contents" tabindex="-1">
       <article aria-labelledby="post-title"><header class="post-header">
         <h1 id="post-title">栈与队列</h1>
-        <time datetime="2025-09-07" aria-label="发布于 2025.09.07">2025.09.07</time>
+        <time datetime="2023-06-16" aria-label="发布于 2023.06.16">2023.06.16</time>
       </header>
-      
-      <div class="prose"><p class="empty-note">这篇笔记还没有正文。</p></div></article>
+      <aside class="article-toc" data-article-toc>
+    <button class="toc-toggle" type="button" aria-label="打开本文目录" aria-expanded="false" aria-haspopup="dialog" aria-controls="article-toc-drawer" hidden><span aria-hidden="true">目录</span></button>
+    <div class="toc-panel">
+      <div class="toc-header"><p class="toc-label" id="article-toc-label">本文目录</p><button class="toc-close" type="button" aria-label="关闭本文目录" hidden><span aria-hidden="true"></span></button></div>
+      <nav id="article-toc-links" aria-label="页内目录">
+      <ol><li><a href="#Stack-%26-Queue">Stack &amp; Queue</a><ol><li><a href="#Resizing-Array-Implementation">Resizing-Array Implementation</a></li><li><a href="#Linked-Lists-Versus-Resizing-Arrays">Linked Lists Versus Resizing Arrays</a></li><li><a href="#Code-Implementation">Code Implementation</a></li></ol></li></ol>
+      </nav>
+    </div>
+    <dialog class="toc-drawer" id="article-toc-drawer" aria-labelledby="article-toc-label"></dialog>
+  </aside>
+      <div class="prose"><h2 id="Stack-&amp;-Queue">Stack &amp; Queue</h2>
+<p>No need to give a detailed introduction on these two famous data structures. We will focus on how to implement them in two different approaches - <strong>linked lists or resizing arrays</strong>.</p>
+<ul>
+<li>Approach 1. linked lists. (ez)</li>
+<li><strong>Approach 2. resizing arrays.</strong></li>
+</ul>
+<h3 id="Resizing-Array-Implementation">Resizing-Array Implementation</h3>
+<p>Consider an array-based stack. The implementation is trivial; however, we need to know the size <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span></eq> of the input data to avoid <strong>stack overflow</strong>.</p>
+<p>Therefore, we introduce the resizing arrays to this problem: the resizing arrays <strong>grow and shrink</strong> dynamically according to the current data size.</p>
+<ul>
+<li>How to grow array? (operation <code>push()</code>)
+If <strong>array is full</strong>, create a new array of <strong>twice (repeated doubling)</strong> the size, and copy items.</li>
+<li>How to shrink array? (operation <code>pop()</code>)
+If <strong>array is one-quarter full</strong>, create a new array of <strong>half the size</strong>, and copy items.</li>
+</ul>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Note that we shrink array when it is <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi mathvariant="normal">/</mi><mn>4</mn></mrow><annotation encoding="application/x-tex">1/4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1/4</span></span></span></span></eq> full instead of <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi mathvariant="normal">/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">1/2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1/2</span></span></span></span></eq> full to avoid the worst case: <strong>push-pop-push-pop...sequence when array is full</strong>.</p>
+</div></div>
+<p>It is proven that the <strong>amortized running time</strong> of a single push/pop is <strong>constant</strong>. (in particular, <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn></mrow><annotation encoding="application/x-tex">3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">3</span></span></span></span></eq>)</p>
+<p><a class="image-zoom" data-image="" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-1-resize-e2afb65496ab.webp"><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image@affbbaf26495964cc9be9dfb4750a0bd07918234/notes/dsa/algorithm-1-resize-e2afb65496ab.webp" alt="Note that the array size grow exponentially:  for t-th growth" loading="lazy" decoding="async"></a></p>
+<h3 id="Linked-Lists-Versus-Resizing-Arrays">Linked Lists Versus Resizing Arrays</h3>
+<div class="table-scroll" tabindex="0" role="region" aria-label="表格，可横向滚动"><table>
+<thead>
+<tr>
+<th style="text-align:center">implementation/cost</th>
+<th style="text-align:center">time</th>
+<th style="text-align:center">space</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Linked Lists</td>
+<td style="text-align:center">Every operation takes constant time in the <strong>worst case</strong>.</td>
+<td style="text-align:center">Use extra space to deal with the links.</td>
+</tr>
+<tr>
+<td style="text-align:center">Resizing Arrays</td>
+<td style="text-align:center">Every operation takes constant <strong>amortized</strong> time.</td>
+<td style="text-align:center">Less wasted space.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="Code-Implementation">Code Implementation</h3>
+<p>Here is a <strong>resizing-array</strong> implementation for a queue.</p>
+<figure class="code-block"><div class="code-tools"><span>java</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ResizingArrayQueue</span>&lt;Item&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Iterable</span>&lt;Item&gt; {
+    <span class="hljs-comment">// initial capacity of underlying resizing array</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">INIT_CAPACITY</span> <span class="hljs-operator">=</span> <span class="hljs-number">8</span>;
+
+    <span class="hljs-keyword">private</span> Item[] q;       <span class="hljs-comment">// queue elements</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> n;          <span class="hljs-comment">// number of elements on queue</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> first;      <span class="hljs-comment">// index of first element of queue</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> last;       <span class="hljs-comment">// index of next available slot</span>
+
+    <span class="hljs-comment">// Initializes an empty queue.</span>
+    <span class="hljs-type">public</span> <span class="hljs-title function_">ResizingArrayQueue</span><span class="hljs-params">()</span> {
+        q = (Item[]) <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>[INIT_CAPACITY];
+        n = <span class="hljs-number">0</span>;
+        first = <span class="hljs-number">0</span>;
+        last = <span class="hljs-number">0</span>;
+    }
+
+    <span class="hljs-comment">// return true if this queue is empty; false otherwise</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isEmpty</span><span class="hljs-params">()</span> {
+        <span class="hljs-keyword">return</span> n == <span class="hljs-number">0</span>;
+    }
+
+    <span class="hljs-comment">// Returns the number of items in this queue.</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">size</span><span class="hljs-params">()</span> {
+        <span class="hljs-keyword">return</span> n;
+    }
+
+    <span class="hljs-comment">// resize the underlying array</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-type">void</span> <span class="hljs-title function_">resize</span><span class="hljs-params">(<span class="hljs-type">int</span> capacity)</span> {
+        <span class="hljs-keyword">assert</span> capacity &gt;= n;
+        <span class="hljs-type">Item</span>[] <span class="hljs-variable">copy</span> <span class="hljs-operator">=</span> (Item[]) <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>[capacity];
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) {
+            copy[i] = q[(first + i) % q.length];
+        }
+        q = copy;
+        first = <span class="hljs-number">0</span>;
+        last  = n;
+    }
+
+    <span class="hljs-comment">// Adds the item to this queue.</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">void</span> <span class="hljs-title function_">enqueue</span><span class="hljs-params">(Item item)</span> {
+        <span class="hljs-comment">// double size of array if necessary and recopy to front of array</span>
+        <span class="hljs-keyword">if</span> (n == q.length) resize(<span class="hljs-number">2</span>*q.length);   <span class="hljs-comment">// double size of array if necessary</span>
+        q[last++] = item;                        <span class="hljs-comment">// add item</span>
+        <span class="hljs-keyword">if</span> (last == q.length) last = <span class="hljs-number">0</span>;          <span class="hljs-comment">// wrap-around</span>
+        n++;
+    }
+
+
+    <span class="hljs-comment">// Removes and returns the item on this queue that was least recently added.</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">Item</span> <span class="hljs-title function_">dequeue</span><span class="hljs-params">()</span> {
+        <span class="hljs-keyword">if</span> (isEmpty()) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NoSuchElementException</span>(<span class="hljs-string">"Queue underflow"</span>);
+        <span class="hljs-type">Item</span> <span class="hljs-variable">item</span> <span class="hljs-operator">=</span> q[first];
+        q[first] = <span class="hljs-literal">null</span>;                            <span class="hljs-comment">// to avoid loitering</span>
+        n--;
+        first++;
+        <span class="hljs-keyword">if</span> (first == q.length) first = <span class="hljs-number">0</span>;           <span class="hljs-comment">// wrap-around</span>
+        <span class="hljs-comment">// shrink size of array if necessary</span>
+        <span class="hljs-keyword">if</span> (n &gt; <span class="hljs-number">0</span> &amp;&amp; n == q.length/<span class="hljs-number">4</span>) resize(q.length/<span class="hljs-number">2</span>);
+        <span class="hljs-keyword">return</span> item;
+    }
+
+    <span class="hljs-comment">// Returns the item least recently added to this queue.</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">Item</span> <span class="hljs-title function_">peek</span><span class="hljs-params">()</span> {
+        <span class="hljs-keyword">if</span> (isEmpty()) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NoSuchElementException</span>(<span class="hljs-string">"Queue underflow"</span>);
+        <span class="hljs-keyword">return</span> q[first];
+    }
+
+
+    <span class="hljs-keyword">public</span> <span class="hljs-type">Iterator</span>&lt;Item&gt; <span class="hljs-title function_">iterator</span><span class="hljs-params">()</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayIterator</span>();
+    }
+
+    <span class="hljs-comment">// an array iterator, from first to last-1</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ArrayIterator</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Iterator</span>&lt;Item&gt; {
+        <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;
+
+        <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">hasNext</span><span class="hljs-params">()</span> {
+            <span class="hljs-keyword">return</span> i &lt; n;
+        }
+
+        <span class="hljs-keyword">public</span> <span class="hljs-type">Item</span> <span class="hljs-title function_">next</span><span class="hljs-params">()</span> {
+            <span class="hljs-keyword">if</span> (!hasNext()) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NoSuchElementException</span>();
+            <span class="hljs-type">Item</span> <span class="hljs-variable">item</span> <span class="hljs-operator">=</span> q[(i + first) % q.length];
+            i++;
+            <span class="hljs-keyword">return</span> item;
+        }
+    }
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> {
+        <span class="hljs-type">ResizingArrayQueue</span>&lt;String&gt; <span class="hljs-variable">queue</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ResizingArrayQueue</span>&lt;String&gt;();
+        <span class="hljs-keyword">while</span> (!StdIn.isEmpty()) {
+            <span class="hljs-type">String</span> <span class="hljs-variable">item</span> <span class="hljs-operator">=</span> StdIn.readString();
+            <span class="hljs-keyword">if</span> (!item.equals(<span class="hljs-string">"-"</span>)) queue.enqueue(item);
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!queue.isEmpty()) StdOut.print(queue.dequeue() + <span class="hljs-string">" "</span>);
+        }
+        StdOut.println(<span class="hljs-string">"("</span> + queue.size() + <span class="hljs-string">" left on queue)"</span>);
+    }
+
+}
+</code></pre></figure>
+</div><footer class="post-license"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="license" aria-label="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享" title="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享"><img src="/icons/cc-by-nc-sa.svg" width="88" height="31" alt="CC BY-NC-SA 4.0" loading="lazy" decoding="async"></a></footer></article>
       <nav class="post-end post-pagination" aria-label="读完之后">
         <a href="/notes/note-dsa/">← 返回专题目录</a>
         <a href="/notes/note-dsa/algorithm-analysis/" rel="prev"><span>上一篇</span>算法分析</a>
         <a class="next-post" href="/notes/note-dsa/elementary-sorts/" rel="next"><span>下一篇</span>基础排序</a>
       </nav>
-      
+      <section class="comments" id="comments" aria-label="评论" data-comments data-options="{&quot;meta&quot;:[&quot;nick&quot;,&quot;mail&quot;,&quot;link&quot;],&quot;requiredMeta&quot;:[&quot;nick&quot;],&quot;login&quot;:&quot;enable&quot;,&quot;commentSorting&quot;:&quot;oldest&quot;,&quot;pageSize&quot;:10,&quot;wordLimit&quot;:5000,&quot;emoji&quot;:[{&quot;name&quot;:&quot;QQ 2007&quot;,&quot;prefix&quot;:&quot;qq2007_&quot;,&quot;type&quot;:&quot;gif&quot;,&quot;icon&quot;:&quot;14&quot;,&quot;items&quot;:[&quot;0&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;10&quot;,&quot;11&quot;,&quot;12&quot;,&quot;13&quot;,&quot;14&quot;,&quot;15&quot;,&quot;16&quot;,&quot;17&quot;,&quot;18&quot;,&quot;19&quot;,&quot;20&quot;,&quot;21&quot;,&quot;22&quot;,&quot;23&quot;,&quot;24&quot;,&quot;25&quot;,&quot;26&quot;,&quot;27&quot;,&quot;28&quot;,&quot;29&quot;,&quot;30&quot;,&quot;31&quot;,&quot;32&quot;,&quot;33&quot;,&quot;34&quot;,&quot;35&quot;,&quot;36&quot;,&quot;37&quot;,&quot;38&quot;,&quot;39&quot;,&quot;40&quot;,&quot;41&quot;,&quot;42&quot;,&quot;43&quot;,&quot;44&quot;,&quot;45&quot;,&quot;46&quot;,&quot;47&quot;,&quot;48&quot;,&quot;49&quot;,&quot;50&quot;,&quot;51&quot;,&quot;52&quot;,&quot;53&quot;,&quot;54&quot;,&quot;55&quot;,&quot;56&quot;,&quot;57&quot;,&quot;58&quot;,&quot;59&quot;,&quot;60&quot;,&quot;61&quot;,&quot;62&quot;,&quot;63&quot;,&quot;64&quot;,&quot;65&quot;,&quot;66&quot;,&quot;67&quot;,&quot;68&quot;,&quot;69&quot;,&quot;70&quot;,&quot;71&quot;,&quot;72&quot;,&quot;73&quot;,&quot;74&quot;,&quot;75&quot;,&quot;76&quot;,&quot;77&quot;,&quot;78&quot;,&quot;79&quot;,&quot;80&quot;,&quot;81&quot;,&quot;82&quot;,&quot;83&quot;,&quot;84&quot;,&quot;85&quot;,&quot;86&quot;,&quot;87&quot;,&quot;88&quot;,&quot;89&quot;,&quot;92&quot;,&quot;93&quot;,&quot;94&quot;,&quot;95&quot;,&quot;96&quot;,&quot;97&quot;,&quot;98&quot;,&quot;99&quot;,&quot;100&quot;,&quot;101&quot;,&quot;102&quot;,&quot;103&quot;,&quot;104&quot;,&quot;105&quot;,&quot;106&quot;,&quot;107&quot;,&quot;108&quot;,&quot;109&quot;,&quot;110&quot;,&quot;111&quot;,&quot;112&quot;,&quot;113&quot;,&quot;114&quot;,&quot;115&quot;,&quot;116&quot;,&quot;117&quot;,&quot;118&quot;,&quot;119&quot;,&quot;120&quot;,&quot;121&quot;,&quot;122&quot;,&quot;123&quot;,&quot;124&quot;,&quot;125&quot;,&quot;126&quot;,&quot;127&quot;,&quot;128&quot;,&quot;129&quot;,&quot;130&quot;,&quot;131&quot;,&quot;132&quot;,&quot;133&quot;,&quot;134&quot;,&quot;135&quot;,&quot;136&quot;,&quot;137&quot;,&quot;138&quot;,&quot;139&quot;],&quot;folder&quot;:&quot;/emoji/qq-2007-v1&quot;},{&quot;name&quot;:&quot;小豆泥&quot;,&quot;prefix&quot;:&quot;azuki_&quot;,&quot;type&quot;:&quot;png&quot;,&quot;icon&quot;:&quot;004&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;,&quot;031&quot;,&quot;032&quot;,&quot;033&quot;,&quot;034&quot;,&quot;035&quot;,&quot;036&quot;,&quot;037&quot;,&quot;038&quot;,&quot;039&quot;,&quot;040&quot;],&quot;folder&quot;:&quot;/emoji/azuki-v1&quot;},{&quot;name&quot;:&quot;自嘲熊&quot;,&quot;prefix&quot;:&quot;jokebear_&quot;,&quot;type&quot;:&quot;webp&quot;,&quot;icon&quot;:&quot;002&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;],&quot;folder&quot;:&quot;/emoji/jokebear-v1&quot;}],&quot;search&quot;:false,&quot;imageUploader&quot;:false,&quot;reaction&quot;:false,&quot;noRss&quot;:true,&quot;noCopyright&quot;:false,&quot;serverURL&quot;:&quot;https://lalande-waline-xxz5.vercel.app&quot;,&quot;path&quot;:&quot;/notes/note-dsa/stacks-and-queues/&quot;}">
+    <div class="comments-status" role="status"><span>正在加载评论…</span><button type="button" data-comments-retry hidden>重新加载</button></div>
+    <div class="comments-mount" translate="no"></div>
+    <noscript><p class="comments-help">开启 JavaScript 后即可阅读和留下评论。</p></noscript>
+  </section>
     </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
     <nav class="site-tools" aria-label="联系、订阅、搜索与语言">
     <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a><a href="/feed.xml" class="icon-link" aria-label="RSS 订阅" title="RSS 订阅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="5" cy="19" r="1" fill="currentColor" stroke="none"/><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/></svg></a><a href="/search/" class="icon-link" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>

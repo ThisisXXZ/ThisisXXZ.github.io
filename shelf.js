@@ -4,7 +4,7 @@ if (shelf) {
   shelf.dataset.hoverReady = '';
   const hover = matchMedia('(hover: hover) and (pointer: fine)');
   let active;
-  let openTimer;
+  let pending;
   let closeTimer;
   let restoringFocus = false;
 
@@ -38,13 +38,18 @@ if (shelf) {
     card.style.left = `${Math.max(padding, Math.min(x, innerWidth - width - padding))}px`;
     card.style.top = `${Math.max(padding, Math.min(y, innerHeight - height - padding))}px`;
   };
+  const cancelPending = () => {
+    pending?.item.classList.remove('is-comment-filling');
+    pending = undefined;
+  };
   const close = (restoreFocus = false) => {
-    clearTimeout(openTimer);
+    cancelPending();
     clearTimeout(closeTimer);
     if (!active) return;
     const previous = active;
     active = undefined;
     previous.pinned = false;
+    previous.item.classList.remove('is-comment-open');
     previous.details.open = false;
     previous.summary.setAttribute('aria-expanded', 'false');
     if (restoreFocus && previous.card.contains(document.activeElement)) {
@@ -54,18 +59,21 @@ if (shelf) {
     }
   };
   const open = (entry, pinned = false) => {
-    clearTimeout(openTimer);
+    cancelPending();
     clearTimeout(closeTimer);
     if (active !== entry) close();
     active = entry;
     entry.pinned = pinned || entry.pinned;
+    entry.item.classList.add('is-comment-open');
     entry.details.open = true;
     entry.summary.setAttribute('aria-expanded', 'true');
     position();
   };
   const scheduleClose = (entry) => {
-    clearTimeout(openTimer);
+    if (pending === entry) cancelPending();
     clearTimeout(closeTimer);
+    if (active !== entry || entry.pinned || entry.item.contains(document.activeElement)) return;
+    entry.item.classList.remove('is-comment-open');
     closeTimer = setTimeout(() => {
       if (active !== entry || entry.pinned) return;
       if (!entry.item.matches(':hover') && !entry.item.contains(document.activeElement)) close();
@@ -83,16 +91,26 @@ if (shelf) {
     entry.item.addEventListener('pointerenter', (event) => {
       if (!hover.matches || event.pointerType === 'touch') return;
       clearTimeout(closeTimer);
-      clearTimeout(openTimer);
-      if (active === entry) return;
-      openTimer = setTimeout(() => {
-        entry.pinned = false;
-        open(entry);
-      }, 240);
+      if (active === entry) {
+        entry.item.classList.add('is-comment-open');
+        return;
+      }
+      close();
+      pending = entry;
+      entry.item.classList.add('is-comment-filling');
+    });
+    entry.item.addEventListener('animationend', (event) => {
+      // Let the cue finish before showing the note, including with reduced motion.
+      if (event.animationName === 'comment-fill' && pending === entry) open(entry);
     });
     entry.item.addEventListener('pointerleave', () => scheduleClose(entry));
-    entry.card.addEventListener('pointerenter', () => clearTimeout(closeTimer));
-    entry.card.addEventListener('pointerleave', () => scheduleClose(entry));
+    entry.card.addEventListener('pointerenter', () => {
+      clearTimeout(closeTimer);
+      if (active === entry) entry.item.classList.add('is-comment-open');
+    });
+    entry.card.addEventListener('pointerleave', (event) => {
+      if (!entry.item.contains(event.relatedTarget)) scheduleClose(entry);
+    });
     entry.item.addEventListener('focusin', (event) => {
       if (!restoringFocus && event.target.matches(':focus-visible') && !entry.card.contains(event.target))
         open(entry);
