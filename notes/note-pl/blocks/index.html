@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <link rel="canonical" href="https://www.thisisxxz.com/notes/note-pl/blocks/">
+  <meta name="description" content="Blocks. 最常见，最简单，最富争议，最具有 Ruby 风格方式的闭包是 blocks。 接下来我们介绍 Ruby 中一个非常有特色的 feature —— blocks，它的存在使得 while 或 for 这种传统的循环控制语句在 Ruby 中的使用率大大降低。例如，以下程序将重复输出三次 hi： These blocks are almost closures. 也就是说，blocks…">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="代码块">
+  <meta property="og:url" content="https://www.thisisxxz.com/notes/note-pl/blocks/">
+  <meta property="og:site_name" content="Lalande.">
+  <meta property="og:description" content="Blocks. 最常见，最简单，最富争议，最具有 Ruby 风格方式的闭包是 blocks。 接下来我们介绍 Ruby 中一个非常有特色的 feature —— blocks，它的存在使得 while 或 for 这种传统的循环控制语句在 Ruby 中的使用率大大降低。例如，以下程序将重复输出三次 hi： These blocks are almost closures. 也就是说，blocks…">
+  <meta property="og:locale" content="zh_CN">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="代码块">
+  <meta name="twitter:description" content="Blocks. 最常见，最简单，最富争议，最具有 Ruby 风格方式的闭包是 blocks。 接下来我们介绍 Ruby 中一个非常有特色的 feature —— blocks，它的存在使得 while 或 for 这种传统的循环控制语句在 Ruby 中的使用率大大降低。例如，以下程序将重复输出三次 hi： These blocks are almost closures. 也就是说，blocks…">
+  <meta property="article:published_time" content="2023-07-22">
+  <meta property="article:modified_time" content="2023-07-22">
+  <meta property="article:author" content="XXZ">
+  <title>代码块 — Lalande.</title>
+  <link rel="alternate" type="application/rss+xml" title="Lalande" href="/feed.xml">
+  <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f8f8f6'/%3E%3Ctext x='11' y='30' fill='%23525250' font-size='30' font-family='serif'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="/fonts/inter-normal-693b77d4f32e.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-italic-e564f652916d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-bdb0d67d70c4.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-6e3038eb1109.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-cde11610f994.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-fe0d7222da28.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-bc0f1afcd54b.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/page-5967ed077623.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-068bc1592ddb.css">
+  <script type="module" src="/language.js"></script>
+  <script src="/search-shortcut-edd07b9fabdb.js" defer></script>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="45d476b5-0328-4eab-85f4-8651edd42b2f" data-domains="www.thisisxxz.com,thisisxxz.com" data-exclude-search="true" data-exclude-hash="true"></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs-b3b62b13fba0.js" defer></script><script src="/reading-89b733c46043.js" defer></script>
+  
+  
+  <link rel="stylesheet" href="/vendor/waline/3.16.2/waline.css"><link rel="stylesheet" href="/fonts/comments-7fb90dfdd7b1.css"><script type="module" src="/comments-b1c16dadfc20.js"></script>
+  
+  
+  <link rel="stylesheet" href="/styles-5a3306ccc666.css">
+</head>
+<body class="is-reading">
+  <a class="skip-link" href="#contents">跳到正文</a>
+  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/note-pl/">编程语言</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">代码块</span></li></ol></nav>
+    <main class="reading has-license" id="contents" tabindex="-1">
+      <article aria-labelledby="post-title"><header class="post-header">
+        <h1 id="post-title">代码块</h1>
+        <time datetime="2023-07-22" aria-label="发布于 2023.07.22">2023.07.22</time>
+      </header>
+      
+      <div class="prose"><p>Blocks.</p>
+<h2 id="Passing-Blocks">Passing Blocks</h2>
+<blockquote class="post-quote">
+<p>最常见，最简单，最富争议，最具有 Ruby 风格方式的闭包是 blocks。</p>
+</blockquote>
+<p>接下来我们介绍 Ruby 中一个非常有特色的 feature —— <em>blocks</em>，它的存在使得 <code>while</code> 或 <code>for</code> 这种传统的循环控制语句在 Ruby 中的使用率大大降低。例如，以下程序将重复输出三次 hi：</p>
+<figure class="code-block"><div class="code-tools"><span>ruby</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>x = <span class="hljs-number">3</span>
+x.times { puts <span class="hljs-string">"hi"</span> }
+</code></pre></figure>
+<p>These blocks are <em>almost</em> closures. 也就是说，blocks 是一种形式的 function value，其包含：</p>
+<ul>
+<li>code of function body.</li>
+<li>environment: variables in scope where the block is defined.</li>
+</ul>
+<p><code>each</code> 是一个常见的与 blocks 交互的方法。对于 list 中的每个元素，<code>each</code> 方法执行一次传入的 block。执行下述程序后变量 <code>y</code> 将变为 10：这是因为对于数组中的每个元素，<code>each</code> 都将执行一次 <code>y += 1</code> 语句。</p>
+<figure class="code-block"><div class="code-tools"><span>ruby</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>y = <span class="hljs-number">7</span>
+[<span class="hljs-number">4</span>, <span class="hljs-number">6</span>, <span class="hljs-number">8</span>].each { y += <span class="hljs-number">1</span> }
+</code></pre></figure>
+<p>另外，block 也能 take arguments：与函数一样，block is executed under the environment (where it is defined) extended with the argument bindings. 在 block 中定义形参的语法是 <code>{ |i| e }</code> 或 <code>do |i| e end</code>。其中 <code>i</code> 为输入 block 的参数，<code>e</code> 为被执行的代码主体。</p>
+<p>当某个 block <code>{ |i| e }</code> 被传入 <code>each</code> 方法时，list 中的每个元素将会作为参数逐个传入 block，与 <code>i</code> 绑定后在扩展后的环境中执行 <code>e</code>。以下是一个经典的统计数组中数字之和的程序，执行它将逐行输出 4，10，18。</p>
+<figure class="code-block"><div class="code-tools"><span>ruby</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>sum = <span class="hljs-number">0</span>
+[<span class="hljs-number">4</span>, <span class="hljs-number">6</span>, <span class="hljs-number">8</span>].each { |<span class="hljs-params">x</span>|
+    sum += x
+    puts sum
+}
+</code></pre></figure>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Blocks, surprisingly, are NOT objects.</p>
+</div></div>
+<p>We cannot pass blocks as "regular" arguments to a method. Rather, any method can be passed either 0 or 1 blocks, after any other "regular" arguments.</p>
+<p><code>inject</code> 方法与 ML 中的 <code>fold</code> 类似，其维护一个参数  accumulator 并逐个处理数组中的元素。我们可以看到，<code>inject</code> 本身需要传入 accumulator 的初始值，此即为所谓 regular argument；而作为非对象的 block 在所有 regular argument 之后被传入。</p>
+<figure class="code-block"><div class="code-tools"><span>ruby</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>sum = [<span class="hljs-number">4</span>,<span class="hljs-number">6</span>,<span class="hljs-number">8</span>].inject(<span class="hljs-number">0</span>) { |<span class="hljs-params">acc, elt</span>| acc + elt }
+</code></pre></figure>
+<p>对 <code>inject</code>  方法而言，传入其中的 block 可以有两个参数 <code>acc</code>, <code>elt</code>。其中 <code>acc</code> 与 <code>inject</code> 中的 accumulator 绑定，<code>elt</code> 逐个与数组中的元素绑定。</p>
+<p>当调用允许传入 blocks 的方法时，我们需要了解该方法允许向 blocks 中传入参数的个数。对 <code>inject</code> 方法来说，允许的参数个数为 2；对 <code>each</code> 方法来说，允许的参数个数为 1；但当我们不需要向 blocks 中传入参数时，在定义中忽略 <code>| ... |</code> 部分即可。</p>
+<p>在 Ruby 中，很多容器 (collections) 都定义了大量的 <em>block-taking methods</em>；这使得它在某种程度上实现了一部分 functional programming 的功能。</p>
+<p>我们可以模仿 ML 中的定义方式，将 blocks 视作某个匿名函数的值，实现 <code>map</code>，<code>filter</code> (<code>select</code> as in Ruby) 等类高阶函数。<code>any?</code>, <code>all?</code> 等遍历方法结合 blocks 更是在很多应用环境下替代了循环控制语句。</p>
+<h2 id="Using-Blocks">Using Blocks</h2>
+<p>We can define our own block-taking methods. We just pass a block to <em>any</em> method, and method body calls the block using the keyword <code>yield</code>.</p>
+<figure class="code-block"><div class="code-tools"><span>ruby</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">def</span> <span class="hljs-title function_">foo</span> x
+    <span class="hljs-keyword">if</span> x
+        <span class="hljs-keyword">yield</span>
+    <span class="hljs-keyword">else</span>
+        <span class="hljs-keyword">yield</span>
+        <span class="hljs-keyword">yield</span>
+    <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+foo (<span class="hljs-literal">true</span>) { puts <span class="hljs-string">"true"</span> }
+foo (<span class="hljs-literal">false</span>) { puts <span class="hljs-string">"false"</span> }
+</code></pre></figure>
+<p>The above code prints <code>"true"</code> and then prints <code>"false"</code> 2 times. We could also pass arguments to a block by simply putting arguments after the <code>yield</code>, e.g., <code>yield 7</code> or <code>yield(8, "str")</code>.</p>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>The fact that a method may expect block is <em>implicit</em>; it is just that its body might use <code>yield</code>.</p>
+</div></div>
+<p>当方法的主体部分中使用了 <code>yield</code> 但调用方法时未向其传入 blocks，程序将会报错；In situations where a method may or may not expect a block, often other regular arguments determine whether a block should be present. If not, use <code>block_given?</code> method.</p>
+<figure class="code-block"><div class="code-tools"><span>ruby</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-keyword">def</span> <span class="hljs-title function_">count</span> i
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">yield</span> i
+        <span class="hljs-number">1</span>
+    <span class="hljs-keyword">else</span>
+        <span class="hljs-number">1</span> + (count(i+<span class="hljs-number">1</span>) { |<span class="hljs-params">x</span>| <span class="hljs-keyword">yield</span> x })
+    <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+</code></pre></figure>
+<p>以上的方法将以递增的参数调用传入的 block，并统计最终在第几次调用时返回 true。注意到这个奇怪的 block：<code>{ |x| yield x }</code>，it passes the caller's block as the callee's block argument.</p>
+<p>在第 n + 1 层递归中，<code>yield</code> 将调用这个 "pipe" block。而其主体部分 <code>{ |x| yield x }</code> 中又将执行一次 <code>yield</code>；而在参数绑定之后，该 <code>yield</code> 调用的是第 n 层递归中的 block。</p>
+<p>这就是 lexical scope 的威力：它保证了 pipe block <code>{ |x| yield x }</code> 被执行时的环境是其被定义处的环境 (即第n 层递归中的环境)，以这种方式实现了 block 由 caller-side 到 callee-side 的传递。</p>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Blocks are not <em>first-class values</em>: we cannot store them in a field, pass them as a regular method argument, assign them to a variable, put them in an array, etc.</p>
+</div></div>
+<p>再次强调，blocks 并不是对象：因此 (在 Ruby 中) 其并非“一等公民”。这是它与 closure 最大的区别。但是 Ruby 提供了将 blocks 升级为一等公民的方式。</p>
+<p><code>Proc</code> 类是真正的 closure，其实例化的对象可以被储存，作为普通的参数传入函数……我们只需要调用 <code>lambda</code> 方法，就能将 blocks 升级为 <code>Proc</code> 类的对象。</p>
+<p>Ruby's design is an interesting contrast from ML and Racket, which just provide full closures as the natural choice. In Ruby, blocks are more convenient to use then <code>Proc</code> objects and suffice in most uses, but programmers still have <code>Proc</code> objects when needed. 这是一个很值得探讨的问题：</p>
+<div class="tag-plugin colorful note" role="note" aria-label="补充说明"><div class="body">
+<p>Is it better to distinguish blocks from closures and make the more common case easier with a less powerful construct, or is it better just to have one general fully powerful feature?</p>
+</div></div>
+</div><footer class="post-license"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="license" aria-label="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享" title="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享"><img src="/icons/cc-by-nc-sa.svg" width="88" height="31" alt="CC BY-NC-SA 4.0" loading="lazy" decoding="async"></a></footer></article>
+      <nav class="post-end post-pagination" aria-label="读完之后">
+        <a href="/notes/note-pl/">← 返回专题目录</a>
+        <a href="/notes/note-pl/duck-typing/" rel="prev"><span>上一篇</span>鸭子类型</a>
+        <a class="next-post" href="/notes/note-pl/dynamic-dispatch/" rel="next"><span>下一篇</span>动态分派</a>
+      </nav>
+      <section class="comments" id="comments" aria-label="评论" data-comments data-options="{&quot;meta&quot;:[&quot;nick&quot;,&quot;mail&quot;,&quot;link&quot;],&quot;requiredMeta&quot;:[&quot;nick&quot;],&quot;login&quot;:&quot;enable&quot;,&quot;commentSorting&quot;:&quot;oldest&quot;,&quot;pageSize&quot;:10,&quot;wordLimit&quot;:5000,&quot;emoji&quot;:[{&quot;name&quot;:&quot;QQ 2007&quot;,&quot;prefix&quot;:&quot;qq2007_&quot;,&quot;type&quot;:&quot;gif&quot;,&quot;icon&quot;:&quot;14&quot;,&quot;items&quot;:[&quot;0&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;10&quot;,&quot;11&quot;,&quot;12&quot;,&quot;13&quot;,&quot;14&quot;,&quot;15&quot;,&quot;16&quot;,&quot;17&quot;,&quot;18&quot;,&quot;19&quot;,&quot;20&quot;,&quot;21&quot;,&quot;22&quot;,&quot;23&quot;,&quot;24&quot;,&quot;25&quot;,&quot;26&quot;,&quot;27&quot;,&quot;28&quot;,&quot;29&quot;,&quot;30&quot;,&quot;31&quot;,&quot;32&quot;,&quot;33&quot;,&quot;34&quot;,&quot;35&quot;,&quot;36&quot;,&quot;37&quot;,&quot;38&quot;,&quot;39&quot;,&quot;40&quot;,&quot;41&quot;,&quot;42&quot;,&quot;43&quot;,&quot;44&quot;,&quot;45&quot;,&quot;46&quot;,&quot;47&quot;,&quot;48&quot;,&quot;49&quot;,&quot;50&quot;,&quot;51&quot;,&quot;52&quot;,&quot;53&quot;,&quot;54&quot;,&quot;55&quot;,&quot;56&quot;,&quot;57&quot;,&quot;58&quot;,&quot;59&quot;,&quot;60&quot;,&quot;61&quot;,&quot;62&quot;,&quot;63&quot;,&quot;64&quot;,&quot;65&quot;,&quot;66&quot;,&quot;67&quot;,&quot;68&quot;,&quot;69&quot;,&quot;70&quot;,&quot;71&quot;,&quot;72&quot;,&quot;73&quot;,&quot;74&quot;,&quot;75&quot;,&quot;76&quot;,&quot;77&quot;,&quot;78&quot;,&quot;79&quot;,&quot;80&quot;,&quot;81&quot;,&quot;82&quot;,&quot;83&quot;,&quot;84&quot;,&quot;85&quot;,&quot;86&quot;,&quot;87&quot;,&quot;88&quot;,&quot;89&quot;,&quot;92&quot;,&quot;93&quot;,&quot;94&quot;,&quot;95&quot;,&quot;96&quot;,&quot;97&quot;,&quot;98&quot;,&quot;99&quot;,&quot;100&quot;,&quot;101&quot;,&quot;102&quot;,&quot;103&quot;,&quot;104&quot;,&quot;105&quot;,&quot;106&quot;,&quot;107&quot;,&quot;108&quot;,&quot;109&quot;,&quot;110&quot;,&quot;111&quot;,&quot;112&quot;,&quot;113&quot;,&quot;114&quot;,&quot;115&quot;,&quot;116&quot;,&quot;117&quot;,&quot;118&quot;,&quot;119&quot;,&quot;120&quot;,&quot;121&quot;,&quot;122&quot;,&quot;123&quot;,&quot;124&quot;,&quot;125&quot;,&quot;126&quot;,&quot;127&quot;,&quot;128&quot;,&quot;129&quot;,&quot;130&quot;,&quot;131&quot;,&quot;132&quot;,&quot;133&quot;,&quot;134&quot;,&quot;135&quot;,&quot;136&quot;,&quot;137&quot;,&quot;138&quot;,&quot;139&quot;],&quot;folder&quot;:&quot;/emoji/qq-2007-v1&quot;},{&quot;name&quot;:&quot;小豆泥&quot;,&quot;prefix&quot;:&quot;azuki_&quot;,&quot;type&quot;:&quot;png&quot;,&quot;icon&quot;:&quot;004&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;,&quot;031&quot;,&quot;032&quot;,&quot;033&quot;,&quot;034&quot;,&quot;035&quot;,&quot;036&quot;,&quot;037&quot;,&quot;038&quot;,&quot;039&quot;,&quot;040&quot;],&quot;folder&quot;:&quot;/emoji/azuki-v1&quot;},{&quot;name&quot;:&quot;自嘲熊&quot;,&quot;prefix&quot;:&quot;jokebear_&quot;,&quot;type&quot;:&quot;webp&quot;,&quot;icon&quot;:&quot;002&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;],&quot;folder&quot;:&quot;/emoji/jokebear-v1&quot;}],&quot;search&quot;:false,&quot;imageUploader&quot;:false,&quot;reaction&quot;:false,&quot;noRss&quot;:true,&quot;noCopyright&quot;:false,&quot;serverURL&quot;:&quot;https://lalande-waline-xxz5.vercel.app&quot;,&quot;path&quot;:&quot;/notes/note-pl/blocks/&quot;}">
+    <div class="comments-status" role="status"><span>正在加载评论…</span><button type="button" data-comments-retry hidden>重新加载</button></div>
+    <div class="comments-mount" translate="no"></div>
+    <noscript><p class="comments-help">开启 JavaScript 后即可阅读和留下评论。</p></noscript>
+  </section>
+    </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
+    <nav class="site-tools" aria-label="联系、订阅、搜索与语言">
+    <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a><a href="/feed.xml" class="icon-link" aria-label="RSS 订阅" title="RSS 订阅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="5" cy="19" r="1" fill="currentColor" stroke="none"/><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/></svg></a><a href="/search/" class="icon-link" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>
+    <div class="language-switch" role="group" aria-label="中文简繁切换" translate="no" hidden><button type="button" data-chinese-script="cn" lang="zh-Hans" aria-pressed="true" aria-label="简体中文（原文）">简</button><span aria-hidden="true">/</span><button type="button" data-chinese-script="tw" lang="zh-Hant" aria-pressed="false" aria-label="繁體中文">繁</button></div>
+  </nav><p class="language-status" role="status" translate="no" hidden></p>
+  </footer></div>
+</body>
+</html>

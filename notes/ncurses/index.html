@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <link rel="canonical" href="https://www.thisisxxz.com/notes/ncurses/">
+  <meta name="description" content="实现终端 GUI 的神奇小工具">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="ncurses 库学习笔记">
+  <meta property="og:url" content="https://www.thisisxxz.com/notes/ncurses/">
+  <meta property="og:site_name" content="Lalande.">
+  <meta property="og:description" content="实现终端 GUI 的神奇小工具">
+  <meta property="og:locale" content="zh_CN">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="ncurses 库学习笔记">
+  <meta name="twitter:description" content="实现终端 GUI 的神奇小工具">
+  <meta property="article:published_time" content="2023-04-14">
+  <meta property="article:modified_time" content="2025-11-18">
+  <meta property="article:author" content="XXZ">
+  <title>ncurses 库学习笔记 — Lalande.</title>
+  <link rel="alternate" type="application/rss+xml" title="Lalande" href="/feed.xml">
+  <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f8f8f6'/%3E%3Ctext x='11' y='30' fill='%23525250' font-size='30' font-family='serif'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="/fonts/inter-normal-693b77d4f32e.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-6e3038eb1109.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-cde11610f994.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-b461077000c5.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-dd9002ff9906.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-dd3c2b76268f.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-78aff9aef9b7.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/page-97a7852b163c.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-b3441763c67e.css">
+  <script type="module" src="/language.js"></script>
+  <script src="/search-shortcut-edd07b9fabdb.js" defer></script>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="45d476b5-0328-4eab-85f4-8651edd42b2f" data-domains="www.thisisxxz.com,thisisxxz.com" data-exclude-search="true" data-exclude-hash="true"></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs-b3b62b13fba0.js" defer></script><script src="/reading-89b733c46043.js" defer></script>
+  
+  
+  <link rel="stylesheet" href="/vendor/waline/3.16.2/waline.css"><link rel="stylesheet" href="/fonts/comments-7fb90dfdd7b1.css"><script type="module" src="/comments-b1c16dadfc20.js"></script>
+  <script src="/toc.js" defer></script>
+  
+  <link rel="stylesheet" href="/styles-5a3306ccc666.css">
+</head>
+<body class="is-reading">
+  <a class="skip-link" href="#contents">跳到正文</a>
+  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">ncurses 库学习笔记</span></li></ol></nav>
+    <main class="reading has-license" id="contents" tabindex="-1">
+      <article aria-labelledby="post-title"><header class="post-header">
+        <h1 id="post-title">ncurses 库学习笔记</h1>
+        <time datetime="2023-04-14" aria-label="发布于 2023.04.14">2023.04.14</time>
+      </header>
+      <aside class="article-toc" data-article-toc>
+    <button class="toc-toggle" type="button" aria-label="打开本文目录" aria-expanded="false" aria-haspopup="dialog" aria-controls="article-toc-drawer" hidden><span aria-hidden="true">目录</span></button>
+    <div class="toc-panel">
+      <div class="toc-header"><p class="toc-label" id="article-toc-label">本文目录</p><button class="toc-close" type="button" aria-label="关闭本文目录" hidden><span aria-hidden="true"></span></button></div>
+      <nav id="article-toc-links" aria-label="页内目录">
+      <ol><li><a href="#Installation">Installation</a></li><li><a href="#Compilation">Compilation</a></li><li><a href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E7%AA%97%E5%8F%A3%E5%AF%B9%E8%B1%A1">初始化窗口对象</a></li><li><a href="#%E8%BF%94%E5%9B%9E%E5%B8%B8%E8%A7%84%E7%BB%88%E7%AB%AF%E6%A8%A1%E5%BC%8F">返回常规终端模式</a></li><li><a href="#%E8%BE%93%E5%85%A5%2F%E8%BE%93%E5%87%BA">输入/输出</a></li><li><a href="#%E5%9C%A8%E6%8C%87%E5%AE%9A%E4%BD%8D%E7%BD%AE%E8%BE%93%E5%87%BA">在指定位置输出</a></li><li><a href="#%E6%96%B0%E7%AA%97%E5%8F%A3%2F%E5%AD%90%E7%AA%97%E5%8F%A3">新窗口/子窗口</a><ol><li><a href="#%E5%88%9B%E5%BB%BA%E6%96%B0%E7%AA%97%E5%8F%A3%2F%E5%AD%90%E7%AA%97%E5%8F%A3">创建新窗口/子窗口</a></li><li><a href="#%E5%88%A0%E9%99%A4%E6%96%B0%E7%AA%97%E5%8F%A3%2F%E5%AD%90%E7%AA%97%E5%8F%A3">删除新窗口/子窗口</a></li><li><a href="#%E9%9D%9E%E6%A0%87%E5%87%86%E7%AA%97%E5%8F%A3%E7%9A%84%E4%BA%A4%E4%BA%92%E6%93%8D%E4%BD%9C">非标准窗口的交互操作</a></li><li><a href="#%E5%AD%90%E7%AA%97%E5%8F%A3%E4%B8%8E%E7%88%B6%E7%AA%97%E5%8F%A3">子窗口与父窗口</a></li></ol></li><li><a href="#%E7%AA%97%E5%8F%A3%E8%BD%AC%E5%82%A8">窗口转储</a><ol><li><a href="#%E6%A0%87%E5%87%86%E7%AA%97%E5%8F%A3%E8%BD%AC%E5%82%A8">标准窗口转储</a></li><li><a href="#%E9%9D%9E%E6%A0%87%E5%87%86%E7%AA%97%E5%8F%A3%E8%BD%AC%E5%82%A8">非标准窗口转储</a></li></ol></li><li><a href="#%E6%BB%9A%E5%B1%8F%E6%93%8D%E4%BD%9C">滚屏操作</a></li><li><a href="#%E9%A2%9C%E8%89%B2%E8%AE%BE%E7%BD%AE">颜色设置</a></li><li><a href="#%E5%85%B6%E4%BB%96%E8%BE%93%E5%87%BA%E6%96%87%E6%9C%AC%E6%95%88%E6%9E%9C">其他输出文本效果</a></li><li><a href="#Reference">Reference</a></li></ol>
+      </nav>
+    </div>
+    <dialog class="toc-drawer" id="article-toc-drawer" aria-labelledby="article-toc-label"></dialog>
+  </aside>
+      <div class="prose"><p>这次 ENGG1340 课程的 group project 是设计并实现一个 <strong>text-base game</strong>，作为终端上运行的游戏，有一个出彩的 GUI 肯定是一个加分项！</p>
+<p>在未老师的介绍下，我知道了有 <code>&lt;ncurses.h&gt;</code> 库这么一个神奇的东西；最重要的是，虽然它不属于 C++ 标准库，但是在学校 server 里居然默认下载好了 (可见其出名的功能强大)。
+据说很多热门的终端程序，例如 Vim，SL 都用到了 ncurses。</p>
+<p>花了一个下午学习了一下用法，在这里简单的总结一下，并且附上一些简单 GUI 组成的实例。</p>
+<h2 id="Installation">Installation</h2>
+<p>官方 release 网址在<a href="https://invisible-island.net/ncurses/announce.html">这里</a></p>
+<p>在终端上输入命令 <code>sudo apt-get install libncurses5</code> 进行安装。</p>
+<h2 id="Compilation">Compilation</h2>
+<p>所有使用了 <code>&lt;ncurses.h&gt;</code> 库的程序，在编译时需要添加参数 <code>-l ncurses</code> 使编译器链接到 ncurses 库。</p>
+<p>例: <code>g++ -o test test.cpp -lncurses</code></p>
+<h2 id="初始化窗口对象">初始化窗口对象</h2>
+<p>使用 <code>initscr()</code> 初始化标准窗口对象 stdscr (WINDOW 类)。</p>
+<p>初始化过后，我们接下来将与该窗口对象进行交互: std::cin/out, scan/printf 等标准输入输出将失效。</p>
+<h2 id="返回常规终端模式">返回常规终端模式</h2>
+<p>当使用完 ncurses，想回到常规终端模式时，使用 <code>endwin()</code> 来关闭窗口。</p>
+<p>通常在程序退出前调用 <code>endwin()</code>。</p>
+<h2 id="输入/输出">输入/输出</h2>
+<p>在调用 <code>endwin()</code> 之前，标准输入输出将失效。</p>
+<p>想要与初始化后的窗口对象交互，我们需要使用 ncurses 库提供的输入/输出函数。</p>
+<figure class="code-block"><div class="code-tools"><span>cpp</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;ncurses.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">scanw</span><span class="hljs-params">(<span class="hljs-type">char</span>* format, ...)</span></span>;   <span class="hljs-comment">// 用法与 scanf 相同</span>
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">printw</span><span class="hljs-params">(<span class="hljs-type">char</span>* format, ...)</span></span>;  <span class="hljs-comment">// 用法与 printf 相同</span>
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">getch</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span>;                <span class="hljs-comment">// 用法同 getchar, 有阻碍程序继续的功能</span>
+</code></pre></figure>
+<p>由于 gp 中使用了很多 string，我自定义了两个接口用来处理 string 类型的输入输出：</p>
+<figure class="code-block"><div class="code-tools"><span>cpp</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;ncurses.h&gt;</span></span>
+
+<span class="hljs-function">string <span class="hljs-title">instr</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-type">char</span> s[<span class="hljs-number">1024</span>];
+  <span class="hljs-built_in">scanw</span>(<span class="hljs-string">"%[^\n]"</span>, s);   <span class="hljs-comment">// 这里对标的是 getline, 回车时结束读入</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-built_in">string</span>(s);
+}
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">outstr</span><span class="hljs-params">(string s)</span> </span>{
+  <span class="hljs-built_in">printw</span>(<span class="hljs-string">"%s"</span>, s.<span class="hljs-built_in">c_str</span>());
+}
+</code></pre></figure>
+<h2 id="在指定位置输出">在指定位置输出</h2>
+<p>在 ncurses 模式中，我们可以通过 <code>mv()</code> 函数轻松控制光标的位置，从而实现在终端的指定位置输出。</p>
+<p><code>mv(x, y)</code> 将光标移动到当前窗口的第 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></eq> 行第 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span></span></span></eq> 列 (<strong>行列均从 <eq><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></eq> 开始</strong>)，且接下来输出的内容都将从该位置开始。</p>
+<p>以下实例将在<strong>从屏幕中央开始</strong> (注意，是开始而不是位于) 输出 "Hello World!"：</p>
+<figure class="code-block"><div class="code-tools"><span>cpp</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;ncurses.h&gt;</span></span>
+
+...
+<span class="hljs-type">int</span> scrLine, scrCol;
+<span class="hljs-built_in">getmaxyx</span>(stdscr, scrLine, scrCol);       <span class="hljs-comment">// 获取标准屏幕的行/列数</span>
+<span class="hljs-built_in">move</span>(scrLine / <span class="hljs-number">2</span> - <span class="hljs-number">1</span>, scrCol / <span class="hljs-number">2</span> - <span class="hljs-number">1</span>);   <span class="hljs-comment">// 将光标移至屏幕中央</span>
+<span class="hljs-built_in">printw</span>(<span class="hljs-string">"Hello World!"</span>);
+...
+</code></pre></figure>
+<p>移动光标和输出可以在同一个函数 <code>mvprintw()</code> 中完成: 例如上例程序可写成 <code>mvprintw(scrLine / 2 - 1, scrCol / 2 - 1, "Hello World!")</code>。</p>
+<p>在输出完毕后，使用 <code>refresh()</code> 进行刷新，将输出显示到当前屏幕上。</p>
+<h2 id="新窗口/子窗口">新窗口/子窗口</h2>
+<h3 id="创建新窗口/子窗口">创建新窗口/子窗口</h3>
+<p>在未指定的情况下，<code>initscr()</code> 初始化的窗口是标准屏幕 <code>stdscr</code>。</p>
+<p>而有时我们需要多个窗口；这可以通过创建新窗口 (<code>newwin</code>) 或子窗口 (<code>subwin</code>) 实现。</p>
+<p>创建新窗口时，其会被分配一个新的内存；而子窗口与其父窗口共用内存。</p>
+<figure class="code-block"><div class="code-tools"><span>cpp</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-function">WINDOW* <span class="hljs-title">newwin</span><span class="hljs-params">(<span class="hljs-type">int</span> line, <span class="hljs-type">int</span> col, <span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y)</span></span>;                 <span class="hljs-comment">// 创建新窗口</span>
+<span class="hljs-function">WINDOW* <span class="hljs-title">submin</span><span class="hljs-params">(WINDOW* parent, <span class="hljs-type">int</span> line, <span class="hljs-type">int</span> col, <span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y)</span></span>; <span class="hljs-comment">// 创建子窗口，其父窗口为 parent</span>
+</code></pre></figure>
+<h3 id="删除新窗口/子窗口">删除新窗口/子窗口</h3>
+<p>使用 <code>del(win)</code> 删除窗口 win，即，释放其所占用的内存。</p>
+<ul>
+<li>
+<p>删除窗口 win 并<strong>不代表</strong> 屏幕上 win 输出的内容会消失，因此在删除之前调用 <code>wclear(win)</code> 与 <code>wrefresh(win)</code> 进行清屏。</p>
+</li>
+<li>
+<p>不要删除 ncurses 的默认窗口 <code>stdscr</code>, 结束它使用 <code>endwin()</code> 即可。</p>
+</li>
+</ul>
+<h3 id="非标准窗口的交互操作">非标准窗口的交互操作</h3>
+<p>超级简单易懂，之前我们介绍的所有对 <code>stdscr</code> 的函数，加上前缀 <strong>w</strong>，再添加对应窗口的指针作为参数就得到了与非标准窗口交互的函数。</p>
+<p>例如：<code>printw()</code> 对应 <code>wprintw(win)</code>, <code>refresh()</code> 对应 <code>wrefresh(win)</code>, <code>mvprinrw()</code> 对应 <code>mvwprintw(win)</code> (这个位置稍有不同)</p>
+<figure class="code-block"><div class="code-tools"><span>cpp</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>WINDOW* win = newwin(<span class="hljs-number">30</span>, <span class="hljs-number">30</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+<span class="hljs-built_in">wmvprintw</span>(win, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-string">"Joker"</span>);     <span class="hljs-comment">// 注意，这里的 (1, 1) 是对于窗口 win 的相对位置，而不是对于 stdscr 的绝对位置</span>
+<span class="hljs-built_in">wrefresh</span>(win);                     <span class="hljs-comment">// 进行刷新，使内容显示到屏幕上</span>
+<span class="hljs-keyword">or</span>
+WINDOW* sub = <span class="hljs-built_in">subwin</span>(stdscr, <span class="hljs-number">30</span>, <span class="hljs-number">30</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);    <span class="hljs-comment">// sub 是标准窗口的子窗口</span>
+<span class="hljs-built_in">wmvprintw</span>(sub, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-string">"Skull"</span>); 
+<span class="hljs-built_in">touchwin</span>(stdscr);                              <span class="hljs-comment">// 由于 sub 与标准窗口共用内存，我们用 touchwin() 函数标记标准窗口被修改即可，而非使用 wrefresh()</span>
+</code></pre></figure>
+<h3 id="子窗口与父窗口">子窗口与父窗口</h3>
+<p>当我们使用 <code>wmove()</code> 或其他对非标准窗口的交互函数对子窗口进行操作时，父窗口 (或其他子窗口) 输出的内容会暂时消失。</p>
+<p>解决方法是：在 <code>touchwin(fascr)</code> 过后，再对父窗口进行<strong>刷新。</strong></p>
+<p>即 <code>wrefresh(father_scr)</code> 或 <code>refresh()</code> (当父窗口是标准窗口时)。</p>
+<figure class="code-block"><div class="code-tools"><span>cpp</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>WINDOW* upwin = <span class="hljs-built_in">subwin</span>(stdscr, scrLine / <span class="hljs-number">2</span>, scrCol, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+WINDOW* downwin = <span class="hljs-built_in">subwin</span>(stdscr, scrLine / <span class="hljs-number">2</span>, scrCol, scrLine / <span class="hljs-number">2</span>, <span class="hljs-number">0</span>);
+
+<span class="hljs-built_in">box</span>(upwin, <span class="hljs-string">'|'</span>, <span class="hljs-string">'+'</span>);
+<span class="hljs-built_in">box</span>(downwin, <span class="hljs-string">'|'</span>, <span class="hljs-string">'+'</span>);
+<span class="hljs-built_in">touchwin</span>(stdscr);
+
+<span class="hljs-built_in">wmove</span>(downwin, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);
+<span class="hljs-comment">// refresh();</span>
+<span class="hljs-type">int</span> a;
+<span class="hljs-built_in">wscanw</span>(downwin, <span class="hljs-string">"%d"</span>, &amp;a);
+
+<span class="hljs-built_in">getch</span>();
+</code></pre></figure>
+<p>当未加 <code>refresh()</code> 时，<code>upwin</code> 窗口的输出内容 (即 box 绘出的边框) 将不会显示。</p>
+<p>只有将对父窗口重新刷新 <code>refresh()</code> 之后，所有的输出内容才会显示。</p>
+<h2 id="窗口转储">窗口转储</h2>
+<p>这在实现 text-base game 中是一个很实用的功能，它可以用来实现场景的切换，与<strong>读/存档功能</strong>。</p>
+<p>例如，"开始" 界面可以进入 "游戏" 界面，但从 "游戏" 界面返回时，由于屏幕已经被 "游戏" 界面所在窗口覆盖，我们需要重新加载 "开始" 界面。</p>
+<p>此时，利用窗口的转储，我们可以直接恢复之前的界面。</p>
+<h3 id="标准窗口转储">标准窗口转储</h3>
+<p>标准窗口 stdscr 可以利用下面的两个函数进行存储与读取:</p>
+<figure class="code-block"><div class="code-tools"><span>cpp</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">scr_dump</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>*)</span></span>;    <span class="hljs-comment">// 参数是当前目录下文件的名称: scr_dump 将会把标准窗口中的内容存储到对应名称的文件中</span>
+                              <span class="hljs-comment">// 若当前目录下没有该名称的文件，将会创建一个</span>
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">scr_restore</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>*)</span></span>; <span class="hljs-comment">// scr_restore 函数将会读取对应文件中存储的内容，并将其载入到标准窗口中</span>
+</code></pre></figure>
+<p>以下是一个简单的例程 (gp 中的界面转换可以以此为基础)：</p>
+<figure class="code-block"><div class="code-tools"><span>cpp</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-built_in">printw</span>(<span class="hljs-string">"Main Menu\n"</span>);          <span class="hljs-comment">// 标准窗口作为主界面 main menu</span>
+<span class="hljs-built_in">refresh</span>();
+<span class="hljs-built_in">scr_dump</span>(<span class="hljs-string">"a"</span>);                  <span class="hljs-comment">// 储存当前标准窗口的内容</span>
+
+<span class="hljs-built_in">getch</span>();
+WINDOW* win = newwin(scrLine, scrCol, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+<span class="hljs-built_in">wprintw</span>(<span class="hljs-string">"Game Started!\n"</span>);     <span class="hljs-comment">// 一个与标准窗口相同大小的新窗口 win 作为游戏界面</span>
+<span class="hljs-built_in">wrefresh</span>(win);
+
+<span class="hljs-built_in">getch</span>();
+<span class="hljs-built_in">wclear</span>(win);
+<span class="hljs-built_in">wrefresh</span>(win);                  <span class="hljs-comment">// 游戏界面结束，将屏幕清空</span>
+<span class="hljs-built_in">delwin</span>(win);                    <span class="hljs-comment">// 释放游戏界面所在窗口 win 的内存</span>
+
+<span class="hljs-comment">// getch();</span>
+<span class="hljs-built_in">scr_restore</span>(<span class="hljs-string">"a"</span>);               <span class="hljs-comment">// 返回主界面 main menu, 使用 scr_restore() 恢复</span>
+<span class="hljs-built_in">refresh</span>();
+</code></pre></figure>
+<p>若有时我们需要暂时退出 ncurses 模式，回到行缓冲模式，我们可以储存当前标准窗口的内容后再退出。</p>
+<p>(或使用 <code>def_prog_mode()</code> 与 <code>reset_prog_mode()</code> 函数，由于 gp 中可能不会用到，这里不多介绍)</p>
+<h3 id="非标准窗口转储">非标准窗口转储</h3>
+<p>当然，除了标准窗口 stdscr，其他任何我们新创建的窗口都可以进行转储。</p>
+<p>使用以下的两个函数:</p>
+<figure class="code-block"><div class="code-tools"><span>cpp</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">putwin</span><span class="hljs-params">(WINDOW*, FILE*)</span></span>;     <span class="hljs-comment">// 存</span>
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">getwin</span><span class="hljs-params">(WINDOW*, FILE*)</span></span>;     <span class="hljs-comment">// 读</span>
+                                <span class="hljs-comment">// 注意，这两个函数的文件参数不是文件名 (字符串)，而是文件指针</span>
+</code></pre></figure>
+<h2 id="滚屏操作">滚屏操作</h2>
+<p>在行缓冲模式中，若输出的内容超过了终端的 bottom line，将会自动滚屏 (旧的输出将会向上滚动，为新的输出留位置)。</p>
+<p>我以为 ncurses 中的窗口默认滚屏，结果当输出超出屏幕时，反而向右溢出了；</p>
+<p>我翻了好久的库文档，终于找到了对应的函数 (<a href="https://manpages.debian.org/bullseye/ncurses-doc/scrollok.3ncurses.en.html">这里</a>)：</p>
+<figure class="code-block"><div class="code-tools"><span>cpp</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">scrollok</span><span class="hljs-params">(WIN*, <span class="hljs-type">bool</span>)</span></span>;        <span class="hljs-comment">// 在 WIN 指针指向的窗口中开启 (true)/关闭 (false) 滚屏</span>
+<span class="hljs-built_in">setscrreg</span>(<span class="hljs-type">int</span> x, <span class="hljs-type">int</span> line);      <span class="hljs-comment">// 在 scrollok 开启后，可以在窗口中设立一个滚屏区，在该区域内有滚屏</span>
+                                 <span class="hljs-comment">// 滚屏区从第 [x] 行开始，共占 [line] 行</span>
+</code></pre></figure>
+<h2 id="颜色设置">颜色设置</h2>
+<p>有时候我们希望改变窗口的背景与文本颜色， ncurses 库对此也提供了支持。</p>
+<p>在使用之前，我们先初始化颜色设置：</p>
+<figure class="code-block"><div class="code-tools"><span>cpp</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">has_color</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span>;            <span class="hljs-comment">// 返回该环境是否支持颜色设置</span>
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">start_color</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span>;           <span class="hljs-comment">// 初始化颜色设置</span>
+</code></pre></figure>
+<p>在 <code>start_color()</code> 成功调用后，一系列的常量将会产生，例 <code>COLOR</code> (支持的颜色数量)，<code>COLOR_BLACK</code> (黑色), <code>COLOR_WHITE</code>...</p>
+<p>我们使用 <code>init_pair()</code> 函数来创建 <strong>背景-文本</strong> 的颜色对，并用 <code>attron()</code> 函数激活。</p>
+<p>接下来，直到 <code>attroff()</code> 关闭之前，所有输出的 背景-文本 都将是指定的颜色对。</p>
+<figure class="code-block"><div class="code-tools"><span>cpp</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code><span class="hljs-built_in">init_pair</span>(<span class="hljs-number">1</span>, COLOR_BLACK, COLOR_WHITE);  <span class="hljs-comment">// [黑]底[白]字为第 1 个颜色对</span>
+                                         <span class="hljs-comment">// 注意，每一种颜色对的编号必须是不同的！</span>
+<span class="hljs-built_in">attron</span>(<span class="hljs-built_in">COLOR_PAIR</span>(<span class="hljs-number">1</span>));                   <span class="hljs-comment">// 传入之前定义的颜色对作为参数 (以编号表示)，开启颜色设置</span>
+<span class="hljs-built_in">printw</span>(<span class="hljs-string">"Black background white text\n"</span>);
+<span class="hljs-built_in">attroff</span>(<span class="hljs-built_in">COLOR_PAIR</span>(<span class="hljs-number">1</span>));                  <span class="hljs-comment">// 关闭颜色设置，恢复默认</span>
+                                         <span class="hljs-comment">// 此处也可以直接 attron 其他颜色对，而无需先 attroff</span>
+</code></pre></figure>
+<p>对非标准窗口的操作使用 <code>wattron(WINDOW*, ...)</code> 与 <code>wattroff(WINDOW*, ...)</code>。</p>
+<h2 id="其他输出文本效果">其他输出文本效果</h2>
+<p><code>attron()</code> 与 <code>attroff()</code> 不仅可以用来设定颜色，还能够实现许多输出文本效果。</p>
+<p>这些效果通过一系列常量来代表: <code>A_BLINK</code>, <code>A_DIM</code>, <code>A_UNDERLINE</code>...</p>
+<p>例如: <code>attron(A_BLINK)</code>，那么在 <code>attronoff(A_BLINK)</code> 之前输出的文本都将闪烁显示。</p>
+<p>这些效果的复合 (甚至与颜色的复合) 可以通过常量间的或 <code>|</code> 运算简单的实现 (这与 windows 对终端文本颜色的操作很相似)。</p>
+<p>例如 <code>attron(A_BLINK | A_UNDERLINE)</code> 代表文本闪烁且加下划线显示。</p>
+<p>这里附上 ncurses 提供的所有输出文本效果常量：</p>
+<figure class="code-block"><div class="code-tools"><span>cpp</span><button type="button" data-copy-code="">复制</button></div><pre tabindex="0"><code>A_NORMAL       <span class="hljs-comment">// 普通字符输出(不加亮显示)</span>
+A_STANDOUT     <span class="hljs-comment">// 终端字符最亮</span>
+A_UNDERLINE    <span class="hljs-comment">// 下划线</span>
+A_REVERSE      <span class="hljs-comment">// 字符反白显示</span>
+A_BLINK        <span class="hljs-comment">// 闪动显示</span>
+A_DIM          <span class="hljs-comment">// 半亮显示</span>
+A_BOLD         <span class="hljs-comment">// 加亮加粗</span>
+A_PROTECT      <span class="hljs-comment">// 保护模式</span>
+A_INVIS        <span class="hljs-comment">// 空白显示模式</span>
+A_ALTCHARSET   <span class="hljs-comment">// 字符交替</span>
+A_CHARTEXT     <span class="hljs-comment">// 字符掩盖</span>
+<span class="hljs-built_in">COLOR_PAIR</span>(n)  <span class="hljs-comment">// 前景、背景色设置</span>
+</code></pre></figure>
+<h2 id="Reference">Reference</h2>
+<ol>
+<li><a href="https://manpages.debian.org/bullseye/ncurses-doc/">Debian ncurses manpage</a>
+<ul>
+<li><a href="https://manpages.debian.org/bullseye/ncurses-doc/scrollok.3ncurses.en.html">滚屏 scrollok</a></li>
+<li><a href="https://manpages.debian.org/testing/ncurses-bin/scr_dump.5.en.html">窗口转储 scr_dump</a></li>
+</ul>
+</li>
+<li><a href="https://blog.csdn.net/tingya/article/details/4800120?spm=1001.2101.3001.6650.1&amp;utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-4800120-blog-80753248.235%5Ev28%5Epc_relevant_t0_download&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-4800120-blog-80753248.235%5Ev28%5Epc_relevant_t0_download&amp;utm_relevant_index=2">tiga-Unix/Linux下的Curses库开发指南——第三章curses库窗口</a> (转载的，但是翻译的很好，也很全)</li>
+<li><a href="https://kewth.github.io/2019/10/01/ncurses/">KeBlog-ncurses</a> (Kewth NB)</li>
+<li><a href="https://blog.csdn.net/ztq_12345/article/details/100560314">ztq-ncurses库 常用函数及基本使用</a> (有一个通过子窗口实现分屏的程序，gp 可以借鉴，修改一下参数)</li>
+<li><a href="https://blog.csdn.net/Rong_Toa/article/details/80763206">ncurses 输出修饰</a> (包含了 ncurses 提供的一系列 attr 前缀函数，对输出进行修饰，很有用)</li>
+</ol>
+</div><footer class="post-license"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="license" aria-label="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享" title="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享"><img src="/icons/cc-by-nc-sa.svg" width="88" height="31" alt="CC BY-NC-SA 4.0" loading="lazy" decoding="async"></a></footer></article>
+      <nav class="post-end post-pagination" aria-label="读完之后">
+        <a href="/notes/">← 返回笔记目录</a>
+        <a href="/notes/anth2350/" rel="prev"><span>上一篇</span>ANTH2350 人生的意义</a>
+        
+      </nav>
+      <section class="comments" id="comments" aria-label="评论" data-comments data-options="{&quot;meta&quot;:[&quot;nick&quot;,&quot;mail&quot;,&quot;link&quot;],&quot;requiredMeta&quot;:[&quot;nick&quot;],&quot;login&quot;:&quot;enable&quot;,&quot;commentSorting&quot;:&quot;oldest&quot;,&quot;pageSize&quot;:10,&quot;wordLimit&quot;:5000,&quot;emoji&quot;:[{&quot;name&quot;:&quot;QQ 2007&quot;,&quot;prefix&quot;:&quot;qq2007_&quot;,&quot;type&quot;:&quot;gif&quot;,&quot;icon&quot;:&quot;14&quot;,&quot;items&quot;:[&quot;0&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;10&quot;,&quot;11&quot;,&quot;12&quot;,&quot;13&quot;,&quot;14&quot;,&quot;15&quot;,&quot;16&quot;,&quot;17&quot;,&quot;18&quot;,&quot;19&quot;,&quot;20&quot;,&quot;21&quot;,&quot;22&quot;,&quot;23&quot;,&quot;24&quot;,&quot;25&quot;,&quot;26&quot;,&quot;27&quot;,&quot;28&quot;,&quot;29&quot;,&quot;30&quot;,&quot;31&quot;,&quot;32&quot;,&quot;33&quot;,&quot;34&quot;,&quot;35&quot;,&quot;36&quot;,&quot;37&quot;,&quot;38&quot;,&quot;39&quot;,&quot;40&quot;,&quot;41&quot;,&quot;42&quot;,&quot;43&quot;,&quot;44&quot;,&quot;45&quot;,&quot;46&quot;,&quot;47&quot;,&quot;48&quot;,&quot;49&quot;,&quot;50&quot;,&quot;51&quot;,&quot;52&quot;,&quot;53&quot;,&quot;54&quot;,&quot;55&quot;,&quot;56&quot;,&quot;57&quot;,&quot;58&quot;,&quot;59&quot;,&quot;60&quot;,&quot;61&quot;,&quot;62&quot;,&quot;63&quot;,&quot;64&quot;,&quot;65&quot;,&quot;66&quot;,&quot;67&quot;,&quot;68&quot;,&quot;69&quot;,&quot;70&quot;,&quot;71&quot;,&quot;72&quot;,&quot;73&quot;,&quot;74&quot;,&quot;75&quot;,&quot;76&quot;,&quot;77&quot;,&quot;78&quot;,&quot;79&quot;,&quot;80&quot;,&quot;81&quot;,&quot;82&quot;,&quot;83&quot;,&quot;84&quot;,&quot;85&quot;,&quot;86&quot;,&quot;87&quot;,&quot;88&quot;,&quot;89&quot;,&quot;92&quot;,&quot;93&quot;,&quot;94&quot;,&quot;95&quot;,&quot;96&quot;,&quot;97&quot;,&quot;98&quot;,&quot;99&quot;,&quot;100&quot;,&quot;101&quot;,&quot;102&quot;,&quot;103&quot;,&quot;104&quot;,&quot;105&quot;,&quot;106&quot;,&quot;107&quot;,&quot;108&quot;,&quot;109&quot;,&quot;110&quot;,&quot;111&quot;,&quot;112&quot;,&quot;113&quot;,&quot;114&quot;,&quot;115&quot;,&quot;116&quot;,&quot;117&quot;,&quot;118&quot;,&quot;119&quot;,&quot;120&quot;,&quot;121&quot;,&quot;122&quot;,&quot;123&quot;,&quot;124&quot;,&quot;125&quot;,&quot;126&quot;,&quot;127&quot;,&quot;128&quot;,&quot;129&quot;,&quot;130&quot;,&quot;131&quot;,&quot;132&quot;,&quot;133&quot;,&quot;134&quot;,&quot;135&quot;,&quot;136&quot;,&quot;137&quot;,&quot;138&quot;,&quot;139&quot;],&quot;folder&quot;:&quot;/emoji/qq-2007-v1&quot;},{&quot;name&quot;:&quot;小豆泥&quot;,&quot;prefix&quot;:&quot;azuki_&quot;,&quot;type&quot;:&quot;png&quot;,&quot;icon&quot;:&quot;004&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;,&quot;031&quot;,&quot;032&quot;,&quot;033&quot;,&quot;034&quot;,&quot;035&quot;,&quot;036&quot;,&quot;037&quot;,&quot;038&quot;,&quot;039&quot;,&quot;040&quot;],&quot;folder&quot;:&quot;/emoji/azuki-v1&quot;},{&quot;name&quot;:&quot;自嘲熊&quot;,&quot;prefix&quot;:&quot;jokebear_&quot;,&quot;type&quot;:&quot;webp&quot;,&quot;icon&quot;:&quot;002&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;],&quot;folder&quot;:&quot;/emoji/jokebear-v1&quot;}],&quot;search&quot;:false,&quot;imageUploader&quot;:false,&quot;reaction&quot;:false,&quot;noRss&quot;:true,&quot;noCopyright&quot;:false,&quot;serverURL&quot;:&quot;https://lalande-waline-xxz5.vercel.app&quot;,&quot;path&quot;:&quot;/notes/ncurses/&quot;}">
+    <div class="comments-status" role="status"><span>正在加载评论…</span><button type="button" data-comments-retry hidden>重新加载</button></div>
+    <div class="comments-mount" translate="no"></div>
+    <noscript><p class="comments-help">开启 JavaScript 后即可阅读和留下评论。</p></noscript>
+  </section>
+    </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
+    <nav class="site-tools" aria-label="联系、订阅、搜索与语言">
+    <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a><a href="/feed.xml" class="icon-link" aria-label="RSS 订阅" title="RSS 订阅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="5" cy="19" r="1" fill="currentColor" stroke="none"/><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/></svg></a><a href="/search/" class="icon-link" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>
+    <div class="language-switch" role="group" aria-label="中文简繁切换" translate="no" hidden><button type="button" data-chinese-script="cn" lang="zh-Hans" aria-pressed="true" aria-label="简体中文（原文）">简</button><span aria-hidden="true">/</span><button type="button" data-chinese-script="tw" lang="zh-Hant" aria-pressed="false" aria-label="繁體中文">繁</button></div>
+  </nav><p class="language-status" role="status" translate="no" hidden></p>
+  </footer></div>
+</body>
+</html>

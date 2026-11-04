@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <link rel="canonical" href="https://www.thisisxxz.com/notes/note-os/virtualize-cpu/">
+  <meta name="description" content="CPU 虚拟化 (CPU virtualization) 创造出一种假象 (illusion)：每个进程都有独立属于自己的 CPU 与寄存器状态，从而允许多进程在同一时间运行。 CPU 的时分复用 (time sharing)：OS 快速切换进程，使得它们「感觉」自己独占了 CPU。 为此 OS 发展出与 CPU，进程交互的多种底层机制 (mechanism) 与高层策略 (policy)。 系…">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="CPU 虚拟化机制">
+  <meta property="og:url" content="https://www.thisisxxz.com/notes/note-os/virtualize-cpu/">
+  <meta property="og:site_name" content="Lalande.">
+  <meta property="og:description" content="CPU 虚拟化 (CPU virtualization) 创造出一种假象 (illusion)：每个进程都有独立属于自己的 CPU 与寄存器状态，从而允许多进程在同一时间运行。 CPU 的时分复用 (time sharing)：OS 快速切换进程，使得它们「感觉」自己独占了 CPU。 为此 OS 发展出与 CPU，进程交互的多种底层机制 (mechanism) 与高层策略 (policy)。 系…">
+  <meta property="og:locale" content="zh_CN">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CPU 虚拟化机制">
+  <meta name="twitter:description" content="CPU 虚拟化 (CPU virtualization) 创造出一种假象 (illusion)：每个进程都有独立属于自己的 CPU 与寄存器状态，从而允许多进程在同一时间运行。 CPU 的时分复用 (time sharing)：OS 快速切换进程，使得它们「感觉」自己独占了 CPU。 为此 OS 发展出与 CPU，进程交互的多种底层机制 (mechanism) 与高层策略 (policy)。 系…">
+  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/comp3230-LDEP.png">
+  <meta property="og:image:alt" content="系统调用的有限直接执行协议 LDEP (Limited Direct Execution Protocol)">
+  <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/comp3230-LDEP.png">
+  <meta name="twitter:image:alt" content="系统调用的有限直接执行协议 LDEP (Limited Direct Execution Protocol)">
+  <meta property="article:published_time" content="2025-12-03">
+  <meta property="article:modified_time" content="2025-12-13">
+  <meta property="article:author" content="XXZ">
+  <title>CPU 虚拟化机制 — Lalande.</title>
+  <link rel="alternate" type="application/rss+xml" title="Lalande" href="/feed.xml">
+  <link rel="preload" as="image" href="/images/station-background-4387eeabe5ce.png" media="screen and (min-width: 1000px) and (forced-colors: none)" fetchpriority="high">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f8f8f6'/%3E%3Ctext x='11' y='30' fill='%23525250' font-size='30' font-family='serif'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="/fonts/inter-normal-693b77d4f32e.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-italic-e564f652916d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-eebefc43537d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-ffdde9d611bd.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-376f4f0828cc.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-7108c34562d1.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-efb58af743d9.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-1792539316cb.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-00713215119d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-6e3038eb1109.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-634cc95e7dd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-cde11610f994.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-400-00d1ddb2186d.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-dd9002ff9906.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-3d43341ecfd6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-dd3c2b76268f.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/lxgw-500-9ef682a68487.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/page-052198ab329d.css">
+  <meta name="traditional-fonts" content="/fonts/traditional-4e2746de43a2.css">
+  <script type="module" src="/language.js"></script>
+  <script src="/search-shortcut-edd07b9fabdb.js" defer></script>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="45d476b5-0328-4eab-85f4-8651edd42b2f" data-domains="www.thisisxxz.com,thisisxxz.com" data-exclude-search="true" data-exclude-hash="true"></script>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css"><script src="/stellar-tabs-b3b62b13fba0.js" defer></script><script src="/reading-89b733c46043.js" defer></script>
+  
+  
+  <link rel="stylesheet" href="/vendor/waline/3.16.2/waline.css"><link rel="stylesheet" href="/fonts/comments-7fb90dfdd7b1.css"><script type="module" src="/comments-b1c16dadfc20.js"></script>
+  <script src="/toc.js" defer></script>
+  <script src="/media.js" defer></script>
+  <link rel="stylesheet" href="/styles-5a3306ccc666.css">
+</head>
+<body class="is-reading">
+  <a class="skip-link" href="#contents">跳到正文</a>
+  <div class="page"><nav class="breadcrumbs" aria-label="面包屑"><ol><li><a href="/">首页</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/">笔记</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><a href="/notes/note-os/">操作系统</a></li><li><span class="breadcrumb-separator" aria-hidden="true">/</span><span aria-current="page">CPU 虚拟化机制</span></li></ol></nav>
+    <main class="reading has-license" id="contents" tabindex="-1">
+      <article aria-labelledby="post-title"><header class="post-header">
+        <h1 id="post-title">CPU 虚拟化机制</h1>
+        <time datetime="2025-12-03" aria-label="发布于 2025.12.03">2025.12.03</time>
+      </header>
+      <aside class="article-toc" data-article-toc>
+    <button class="toc-toggle" type="button" aria-label="打开本文目录" aria-expanded="false" aria-haspopup="dialog" aria-controls="article-toc-drawer" hidden><span aria-hidden="true">目录</span></button>
+    <div class="toc-panel">
+      <div class="toc-header"><p class="toc-label" id="article-toc-label">本文目录</p><button class="toc-close" type="button" aria-label="关闭本文目录" hidden><span aria-hidden="true"></span></button></div>
+      <nav id="article-toc-links" aria-label="页内目录">
+      <ol><li><a href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8">系统调用</a></li><li><a href="#%E4%B8%AD%E6%96%AD">中断</a></li><li><a href="#%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2">上下文切换</a></li><li><a href="#%E9%98%85%E8%AF%BB">阅读</a></li></ol>
+      </nav>
+    </div>
+    <dialog class="toc-drawer" id="article-toc-drawer" aria-labelledby="article-toc-label"></dialog>
+  </aside>
+      <div class="prose"><p><strong>CPU 虚拟化 (CPU virtualization)</strong> 创造出一种假象 (illusion)：每个进程都有独立属于自己的 CPU 与寄存器状态，从而允许多进程在同一时间运行。</p>
+<p>CPU 的<strong>时分复用 (time sharing)</strong>：OS 快速切换进程，使得它们「感觉」自己独占了 CPU。</p>
+<ul>
+<li>为此 OS 发展出与 CPU，进程交互的多种底层机制 (mechanism) 与高层策略 (policy)。</li>
+</ul>
+<h2 id="系统调用">系统调用</h2>
+<p><strong>系统调用 (system call)</strong> 是 OS 提供的一系列 API。这一机制使得进程能够请求内核执行受限操作 (restricted operations)，如与磁盘的 I/O，获取 CPU 与内存的更多系统资源等。</p>
+<p>CPU 的两种工作模式：</p>
+<ul>
+<li><strong>内核态 (kernel mode)</strong>：OS 内核运行在内核态下，具有最高权限。</li>
+<li><strong>用户态 (user mode)</strong>：应用程序运行在用户态下，只能执行有限指令，不能直接访问物理资源。</li>
+</ul>
+<p><strong>陷阱 (trap)</strong> 是 CPU 主动引发的一种同步异常，使 CPU 「陷入」到内核态执行系统调用。</p>
+<p><strong>陷阱表 (trap table)</strong> 在启动时初始化，OS 将所有陷阱处理器 (trap handlers) 注册在硬件中。</p>
+<figure class="post-image"><a class="image-zoom" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/comp3230-LDEP.png" data-image=""><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/comp3230-LDEP.png" alt="系统调用的有限直接执行协议 LDEP (Limited Direct Execution Protocol)" loading="lazy" decoding="async" style="width:450px;object-fit:contain"></a><figcaption>系统调用的有限直接执行协议 LDEP (Limited Direct Execution Protocol)</figcaption></figure>
+<h2 id="中断">中断</h2>
+<p>CPU 在执行其他进程时，OS 被架空了。</p>
+<ul>
+<li>我信你 (cooperative approach)：依赖进程进行系统调用使 CPU 陷入内核态，OS 重获控制权 (regain control) =&gt; 死循环进程一直占据 CPU，只能重启。</li>
+<li>我真得控制你了 (<strong>non-cooperative approach</strong>)：<strong>计时器中断 (timer interrupt)</strong>。计时器定期触发中断迫使 CPU 暂停当前进程，转而执行内核的<strong>中断处理器 (interrupt handler)</strong>。</li>
+</ul>
+<p>CPU 通过<strong>中断 (interrupt)</strong> 通知 OS 某个事件的发生（而信号通知的是进程）。</p>
+<ul>
+<li>同步中断 (synchronous interrupt): 同步与当前进程的执行，又称<strong>异常 (exception)</strong>。
+<ul>
+<li><strong>错误 (fault)</strong>：指令执行之前，如页错误，段错误。</li>
+<li><strong>陷阱 (trap)</strong>：指令执行之后，如系统调用后。</li>
+<li><strong>中止 (abort)</strong>：不可恢复的错误。</li>
+</ul>
+</li>
+<li>异步中断 (asynchronous interrupt)
+<ul>
+<li>与当前进程执行无关，如硬件设备（计时器，键盘，鼠标）触发。</li>
+</ul>
+</li>
+</ul>
+<p>中断 v.s. 信号 (e.g. 除零错误)</p>
+<ul>
+<li><strong>CPU</strong> 侦测到异常 <code>1/0</code>，触发 <code>#DE</code> <strong>中断</strong> [中断：CPU 触发 OS 接收]</li>
+<li><strong>OS</strong> 收到通知，CPU 切换到内核态</li>
+<li>OS 执行 <code>divide_error</code> 处理器，判断该异常无法自动修复</li>
+<li><strong>OS 向出错的进程发送信号</strong> <code>SIGFPE</code> [信号：OS 发送进程接收]</li>
+</ul>
+<p><strong>中断向量表 (interrupt vector table)</strong> 在启动时初始化，OS 将中断处理器注册在硬件中。</p>
+<h2 id="上下文切换">上下文切换</h2>
+<p><strong>上下文切换 (context switching)</strong> 允许 OS 无缝切换进程。「上下文」指的是进程对应的相关 CPU 寄存器状态。</p>
+<p><strong>内核栈 (kernel stack)</strong> 是一块每个进程独有，仅在内核态执行时使用的内存空间，用于保存陷阱现场，承载内核函数的调用。</p>
+<figure class="post-image"><a class="image-zoom" href="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/comp3230-LDEP2.png" data-image=""><img src="https://cdn.jsdelivr.net/gh/ThisisXXZ/blog-image/comp3230-LDEP2.png" alt="计时器中断的 LDEP" loading="lazy" decoding="async" style="width:450px;object-fit:contain"></a><figcaption>计时器中断的 LDEP</figcaption></figure>
+<p>两个层级的上下文。</p>
+<ul>
+<li><strong>用户态陷阱上下文</strong>，进程陷入内核前的用户态寄存器现场，保存在该进程的内核栈中，对应<strong>模式切换 (model switching)</strong>。</li>
+<li><strong>内核调度上下文</strong>，进程在内核中被调度切换时的内核态寄存器现场，保存在该进程的 PCB 中，对应<strong>上下文切换</strong>。</li>
+</ul>
+<p>恢复进程 B 时，先从 PCB 恢复 B 的内核调度上下文，再在 <code>return-from-trap</code> 后从内核栈恢复 B 的用户态陷阱上下文，从而创造出 B 连续运行的假象。</p>
+<h2 id="阅读">阅读</h2>
+<p>Chapter 6, Mechanism: Limited Direct Execution, <em>OSTEP</em>,
+<a href="http://pages.cs.wisc.edu/~remzi/OSTEP/cpu-mechanisms.pdf">http://pages.cs.wisc.edu/~remzi/OSTEP/cpu-mechanisms.pdf</a></p>
+</div><footer class="post-license"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="license" aria-label="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享" title="原创内容采用 CC BY-NC-SA 4.0：署名—非商业性使用—相同方式共享"><img src="/icons/cc-by-nc-sa.svg" width="88" height="31" alt="CC BY-NC-SA 4.0" loading="lazy" decoding="async"></a></footer></article>
+      <nav class="post-end post-pagination" aria-label="读完之后">
+        <a href="/notes/note-os/">← 返回专题目录</a>
+        <a href="/notes/note-os/process/" rel="prev"><span>上一篇</span>进程</a>
+        <a class="next-post" href="/notes/note-os/scheduling/" rel="next"><span>下一篇</span>调度策略</a>
+      </nav>
+      <section class="comments" id="comments" aria-label="评论" data-comments data-options="{&quot;meta&quot;:[&quot;nick&quot;,&quot;mail&quot;,&quot;link&quot;],&quot;requiredMeta&quot;:[&quot;nick&quot;],&quot;login&quot;:&quot;enable&quot;,&quot;commentSorting&quot;:&quot;oldest&quot;,&quot;pageSize&quot;:10,&quot;wordLimit&quot;:5000,&quot;emoji&quot;:[{&quot;name&quot;:&quot;QQ 2007&quot;,&quot;prefix&quot;:&quot;qq2007_&quot;,&quot;type&quot;:&quot;gif&quot;,&quot;icon&quot;:&quot;14&quot;,&quot;items&quot;:[&quot;0&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;10&quot;,&quot;11&quot;,&quot;12&quot;,&quot;13&quot;,&quot;14&quot;,&quot;15&quot;,&quot;16&quot;,&quot;17&quot;,&quot;18&quot;,&quot;19&quot;,&quot;20&quot;,&quot;21&quot;,&quot;22&quot;,&quot;23&quot;,&quot;24&quot;,&quot;25&quot;,&quot;26&quot;,&quot;27&quot;,&quot;28&quot;,&quot;29&quot;,&quot;30&quot;,&quot;31&quot;,&quot;32&quot;,&quot;33&quot;,&quot;34&quot;,&quot;35&quot;,&quot;36&quot;,&quot;37&quot;,&quot;38&quot;,&quot;39&quot;,&quot;40&quot;,&quot;41&quot;,&quot;42&quot;,&quot;43&quot;,&quot;44&quot;,&quot;45&quot;,&quot;46&quot;,&quot;47&quot;,&quot;48&quot;,&quot;49&quot;,&quot;50&quot;,&quot;51&quot;,&quot;52&quot;,&quot;53&quot;,&quot;54&quot;,&quot;55&quot;,&quot;56&quot;,&quot;57&quot;,&quot;58&quot;,&quot;59&quot;,&quot;60&quot;,&quot;61&quot;,&quot;62&quot;,&quot;63&quot;,&quot;64&quot;,&quot;65&quot;,&quot;66&quot;,&quot;67&quot;,&quot;68&quot;,&quot;69&quot;,&quot;70&quot;,&quot;71&quot;,&quot;72&quot;,&quot;73&quot;,&quot;74&quot;,&quot;75&quot;,&quot;76&quot;,&quot;77&quot;,&quot;78&quot;,&quot;79&quot;,&quot;80&quot;,&quot;81&quot;,&quot;82&quot;,&quot;83&quot;,&quot;84&quot;,&quot;85&quot;,&quot;86&quot;,&quot;87&quot;,&quot;88&quot;,&quot;89&quot;,&quot;92&quot;,&quot;93&quot;,&quot;94&quot;,&quot;95&quot;,&quot;96&quot;,&quot;97&quot;,&quot;98&quot;,&quot;99&quot;,&quot;100&quot;,&quot;101&quot;,&quot;102&quot;,&quot;103&quot;,&quot;104&quot;,&quot;105&quot;,&quot;106&quot;,&quot;107&quot;,&quot;108&quot;,&quot;109&quot;,&quot;110&quot;,&quot;111&quot;,&quot;112&quot;,&quot;113&quot;,&quot;114&quot;,&quot;115&quot;,&quot;116&quot;,&quot;117&quot;,&quot;118&quot;,&quot;119&quot;,&quot;120&quot;,&quot;121&quot;,&quot;122&quot;,&quot;123&quot;,&quot;124&quot;,&quot;125&quot;,&quot;126&quot;,&quot;127&quot;,&quot;128&quot;,&quot;129&quot;,&quot;130&quot;,&quot;131&quot;,&quot;132&quot;,&quot;133&quot;,&quot;134&quot;,&quot;135&quot;,&quot;136&quot;,&quot;137&quot;,&quot;138&quot;,&quot;139&quot;],&quot;folder&quot;:&quot;/emoji/qq-2007-v1&quot;},{&quot;name&quot;:&quot;小豆泥&quot;,&quot;prefix&quot;:&quot;azuki_&quot;,&quot;type&quot;:&quot;png&quot;,&quot;icon&quot;:&quot;004&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;,&quot;031&quot;,&quot;032&quot;,&quot;033&quot;,&quot;034&quot;,&quot;035&quot;,&quot;036&quot;,&quot;037&quot;,&quot;038&quot;,&quot;039&quot;,&quot;040&quot;],&quot;folder&quot;:&quot;/emoji/azuki-v1&quot;},{&quot;name&quot;:&quot;自嘲熊&quot;,&quot;prefix&quot;:&quot;jokebear_&quot;,&quot;type&quot;:&quot;webp&quot;,&quot;icon&quot;:&quot;002&quot;,&quot;items&quot;:[&quot;001&quot;,&quot;002&quot;,&quot;003&quot;,&quot;004&quot;,&quot;005&quot;,&quot;006&quot;,&quot;007&quot;,&quot;008&quot;,&quot;009&quot;,&quot;010&quot;,&quot;011&quot;,&quot;012&quot;,&quot;013&quot;,&quot;014&quot;,&quot;015&quot;,&quot;016&quot;,&quot;017&quot;,&quot;018&quot;,&quot;019&quot;,&quot;020&quot;,&quot;021&quot;,&quot;022&quot;,&quot;023&quot;,&quot;024&quot;,&quot;025&quot;,&quot;026&quot;,&quot;027&quot;,&quot;028&quot;,&quot;029&quot;,&quot;030&quot;],&quot;folder&quot;:&quot;/emoji/jokebear-v1&quot;}],&quot;search&quot;:false,&quot;imageUploader&quot;:false,&quot;reaction&quot;:false,&quot;noRss&quot;:true,&quot;noCopyright&quot;:false,&quot;serverURL&quot;:&quot;https://lalande-waline-xxz5.vercel.app&quot;,&quot;path&quot;:&quot;/notes/note-os/virtualize-cpu/&quot;}">
+    <div class="comments-status" role="status"><span>正在加载评论…</span><button type="button" data-comments-retry hidden>重新加载</button></div>
+    <div class="comments-mount" translate="no"></div>
+    <noscript><p class="comments-help">开启 JavaScript 后即可阅读和留下评论。</p></noscript>
+  </section>
+    </main><footer class="site-footer"><span lang="en">XXZ <span class="separator" aria-hidden="true">/</span> Since 2023</span><p>愿我拥有改变可改变之物的勇气，与接受不可改变之物的平静。</p>
+    <nav class="site-tools" aria-label="联系、订阅、搜索与语言">
+    <a href="https://github.com/ThisisXXZ" lang="en" class="icon-link" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a><a href="mailto:xxz.7203@gmail.com" class="icon-link" aria-label="邮件" title="邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="开往" title="开往"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 11h14M12 3v8M8 18l-2 3m10-3 2 3"/><path d="M8 14.5h.01m7.99 0h.01" stroke-width="2.4"/></svg></a><a href="/feed.xml" class="icon-link" aria-label="RSS 订阅" title="RSS 订阅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="5" cy="19" r="1" fill="currentColor" stroke="none"/><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/></svg></a><a href="/search/" class="icon-link" aria-label="搜索" title="搜索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>
+    <div class="language-switch" role="group" aria-label="中文简繁切换" translate="no" hidden><button type="button" data-chinese-script="cn" lang="zh-Hans" aria-pressed="true" aria-label="简体中文（原文）">简</button><span aria-hidden="true">/</span><button type="button" data-chinese-script="tw" lang="zh-Hant" aria-pressed="false" aria-label="繁體中文">繁</button></div>
+  </nav><p class="language-status" role="status" translate="no" hidden></p>
+  </footer></div>
+</body>
+</html>
