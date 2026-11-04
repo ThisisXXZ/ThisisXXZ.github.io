@@ -8,6 +8,16 @@ if (shelf) {
   let closeTimer;
   let restoringFocus = false;
 
+  shelf.addEventListener('click', (event) => {
+    const spoiler = event.target.closest('.comment-spoiler');
+    if (!spoiler) return;
+    const revealed = spoiler.getAttribute('aria-expanded') !== 'true';
+    spoiler.setAttribute('aria-expanded', String(revealed));
+    spoiler.querySelector('span').setAttribute('aria-hidden', String(!revealed));
+    if (revealed) spoiler.removeAttribute('aria-label');
+    else spoiler.setAttribute('aria-label', '显示剧透');
+  });
+
   const position = () => {
     if (!active) return;
     const { item, card } = active;

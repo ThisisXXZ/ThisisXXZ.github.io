@@ -6,7 +6,8 @@
   --ink: #595957;
   --strong: #353533;
   --muted: #6d6d69;
-  --font-body: 'InterVariable', 'LXGW WenKai', 'Microsoft YaHei', sans-serif;
+  --font-latin: 'Source Serif 4';
+  --font-body: var(--font-latin), 'LXGW WenKai', 'Microsoft YaHei', sans-serif;
   --font-emphasis: var(--font-body);
   --font-mono: Consolas, 'Cascadia Code', monospace;
   --body-size: 16px;
@@ -28,7 +29,7 @@
   -webkit-font-smoothing: antialiased;
 }
 :root[lang='zh-Hant'] {
-  --font-body: 'InterVariable', 'LXGW WenKai Traditional', 'LXGW WenKai', 'Microsoft YaHei', sans-serif;
+  --font-body: var(--font-latin), 'LXGW WenKai Traditional', 'LXGW WenKai', 'Microsoft YaHei', sans-serif;
 }
 
 /* base.css */
@@ -181,7 +182,7 @@ h2 {
 }
 .arrow {
   color: var(--muted);
-  font-family: 'InterVariable', 'Inter', sans-serif;
+  font-family: var(--font-latin), sans-serif;
   font-size: 12px;
 }
 .english {
@@ -444,7 +445,7 @@ h2 {
   color: var(--muted);
   padding: 2px 5px;
   font:
-    18px/1.4 'InterVariable',
+    18px/1.4 var(--font-latin),
     sans-serif;
   cursor: pointer;
 }
@@ -478,6 +479,25 @@ h2 {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+.comment-spoiler {
+  max-width: 100%;
+  padding: 0 0.12em;
+  border: 0;
+  border-radius: 2px;
+  background: #dfdfd8;
+  color: transparent;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+.comment-spoiler[aria-expanded='true'] {
+  color: inherit;
+  background: #efefe8;
+}
+.comment-spoiler:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 2px;
+}
 [data-hover-ready] .comment-card {
   position: fixed;
   z-index: 20;
@@ -504,35 +524,6 @@ h2 {
   [data-hover-ready] .comment-card {
     animation: none;
   }
-}
-.prose .history-list {
-  list-style: none;
-  padding: 0;
-  margin: 24px 0 0;
-  display: grid;
-  gap: 26px;
-}
-.prose .history-list > li {
-  padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: 104px minmax(0, 1fr);
-  gap: 24px;
-}
-.history-list time {
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 2.5;
-  font-variant-numeric: tabular-nums;
-}
-.history-list .prose {
-  font-size: inherit;
-}
-.history-list .prose p {
-  margin-bottom: 0.6em;
-}
-.history-list .prose > :last-child {
-  margin-bottom: 0;
 }
 .media-credit {
   margin-top: 36px;
@@ -705,7 +696,7 @@ h2 {
   font-size: 12px;
 }
 .shelf-entry-arrow {
-  font-family: 'InterVariable', sans-serif;
+  font-family: var(--font-latin), sans-serif;
   font-size: 17px;
   color: var(--ink);
 }
@@ -1004,7 +995,7 @@ h2 {
   justify-content: space-between;
   padding: 10px 18px 0;
   font:
-    12px/1.6 InterVariable,
+    12px/1.6 var(--font-latin),
     sans-serif;
   color: var(--muted);
 }
@@ -3580,7 +3571,7 @@ a.post-link-card {
 /* comments.css */
 .comments {
   /* Dynamic headings and emphasis need the comment font family too, not page subsets. */
-  --font-body: 'InterVariable', 'LXGW Comments', 'LXGW WenKai', 'Microsoft YaHei', sans-serif;
+  --font-body: var(--font-latin), 'LXGW Comments', 'LXGW WenKai', 'Microsoft YaHei', sans-serif;
   --font-emphasis: var(--font-body);
   font-family: var(--font-body);
   margin-top: 3.5rem;
@@ -3925,10 +3916,6 @@ a.post-link-card {
   }
   .shelf-creator {
     font-size: 11px;
-  }
-  .prose .history-list > li {
-    grid-template-columns: 1fr;
-    gap: 3px;
   }
   .archive-header {
     margin-bottom: 38px;
