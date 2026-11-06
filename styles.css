@@ -3838,6 +3838,12 @@ a.post-link-card {
 .comments [hidden] {
   display: none !important;
 }
+
+/* The outer notice replaces Waline's generic error retry, using the same action. */
+.comments[data-comments-state='error'] [data-waline] > .wl-operation,
+.comments[data-comments-state='timeout'] [data-waline] > .wl-operation {
+  display: none;
+}
 @media (max-width: 600px) {
   .comments {
     margin-top: 2.5rem;
@@ -4028,7 +4034,9 @@ body {
 }
 
 @media screen and (min-width: 1000px) {
-  @supports (mask-image: linear-gradient(to right, transparent, black)) {
+  /* Chromium before 120 requires the prefixed mask property. */
+  @supports (mask-image: linear-gradient(to right, transparent, black)) or
+    (-webkit-mask-image: linear-gradient(to right, transparent, black)) {
     body::before,
     body::after {
       content: '';
@@ -4045,12 +4053,14 @@ body {
 
     body::before {
       left: 0;
+      -webkit-mask-image: linear-gradient(to right, black 20%, transparent 80%);
       mask-image: linear-gradient(to right, black 20%, transparent 80%);
     }
 
     body::after {
       right: 0;
       background-position: right top;
+      -webkit-mask-image: linear-gradient(to left, black 20%, transparent 80%);
       mask-image: linear-gradient(to left, black 20%, transparent 80%);
     }
 

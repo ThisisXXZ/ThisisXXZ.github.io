@@ -1,5 +1,5 @@
 import { Converter } from '/vendor/opencc/cn2t-1.4.1.js';
-import { createSearchEngine, queryTerms } from '/search-core-6eca752619d7.js';
+import { createSearchEngine, queryTerms } from '/search-core-fcd45164fdbb.js';
 import { convertChineseText } from './chinese-text.js';
 
 const form = document.querySelector('[data-search-form]');

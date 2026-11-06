@@ -8,6 +8,8 @@ if (section) {
   const retry = section.querySelector('[data-comments-retry]');
   let loading;
   let instance;
+  let phase = 'loading';
+  let latestRequest = 0;
   const language = () => (document.documentElement.lang === 'zh-Hant' ? 'zh-TW' : 'zh-CN');
   const locale = () =>
     language() === 'zh-TW'
@@ -30,16 +32,54 @@ if (section) {
           hottest: '热门',
         };
 
+  const refreshButton = () => mount.querySelector('[data-waline] > .wl-operation > button');
+  const renderStatus = () => {
+    const traditional = language() === 'zh-TW';
+    const failed = phase === 'error' || phase === 'timeout';
+    section.dataset.commentsState = phase;
+    section.setAttribute('aria-busy', String(phase === 'loading'));
+    status.hidden = !failed && (phase !== 'loading' || Boolean(instance));
+    message.textContent =
+      phase === 'timeout'
+        ? traditional
+          ? '評論連線逾時，請稍後重試。'
+          : '评论连接超时，请稍后重试。'
+        : phase === 'error'
+          ? traditional
+            ? '評論暫時無法載入，請稍後重試。'
+            : '评论暂时无法加载，请稍后重试。'
+          : traditional
+            ? '正在載入評論…'
+            : '正在加载评论…';
+    retry.textContent = traditional ? '重試' : '重试';
+    retry.hidden = !failed;
+    retry.disabled = failed && Boolean(instance) && !refreshButton();
+  };
+  window.addEventListener('blog:comments-request', ({ detail }) => {
+    const url = new URL(detail.url);
+    const server = new URL(options.serverURL);
+    if (url.origin !== server.origin || url.searchParams.get('path') !== options.path) return;
+    if (detail.id < latestRequest) return;
+    latestRequest = detail.id;
+    phase = detail.phase === 'success' || detail.phase === 'cancelled' ? 'ready' : detail.phase;
+    renderStatus();
+  });
+
   async function start() {
     if (instance || loading) return loading;
-    status.hidden = false;
-    retry.hidden = true;
-    section.setAttribute('aria-busy', 'true');
+    phase = 'loading';
+    renderStatus();
     loading = (async () => {
+      let timer;
       try {
-        const [{ init }, { default: katex }] = await Promise.all([
-          import('/vendor/waline/3.16.2/waline.js'),
-          import('/vendor/katex/0.19.1/katex.mjs'),
+        const [{ init }, { default: katex }] = await Promise.race([
+          Promise.all([import('/vendor/waline/3.16.2/waline-dc7a6f8ee1dc.js'), import('/vendor/katex/0.19.1/katex.mjs')]),
+          new Promise((_, reject) => {
+            timer = setTimeout(
+              () => reject(new DOMException('Comment module timed out', 'TimeoutError')),
+              15_000
+            );
+          }),
         ]);
         instance = init({
           ...options,
@@ -52,22 +92,27 @@ if (section) {
           texRenderer: (blockMode, tex) =>
             katex.renderToString(tex, { displayMode: blockMode, throwOnError: false, trust: false }),
         });
-        status.hidden = true;
-      } catch {
-        message.textContent = '评论暂时无法加载。';
-        retry.hidden = false;
+        renderStatus();
+      } catch (error) {
+        phase = error.name === 'TimeoutError' ? 'timeout' : 'error';
+        renderStatus();
       } finally {
-        section.removeAttribute('aria-busy');
+        clearTimeout(timer);
         loading = undefined;
       }
     })();
     return loading;
   }
 
-  retry.addEventListener('click', start);
+  retry.addEventListener('click', () => {
+    if (instance) refreshButton()?.click();
+    else start();
+  });
   // The upstream sort controls are list items; retain their appearance while
   // exposing the same actions to keyboard and assistive technology.
   const decorate = () => {
+    // Vue creates the native refresh button after the request rejects.
+    if (phase === 'error' || phase === 'timeout') renderStatus();
     // The editor placeholder explains optional fields; keep their labels concise.
     for (const label of mount.querySelectorAll('.wl-header label')) {
       const text = label.textContent.replace(/[（(](?:选填|選填)[）)]$/, '');
@@ -98,6 +143,7 @@ if (section) {
   window.addEventListener('blog:languagechange', () => {
     // Waline resets path on update unless it is explicitly supplied.
     instance?.update({ path: options.path, lang: language(), locale: locale() });
+    renderStatus();
   });
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver(
